@@ -10,6 +10,9 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+// maybe do all relations to user on "userId" instead of "id" since if you
+// have to compare from client side then we will be getting the clerk userId
+
 model Post {
     id        Int      @id @default(autoincrement())
     name      String
@@ -17,4 +20,82 @@ model Post {
     updatedAt DateTime @updatedAt
 
     @@index([name])
+}
+
+// TODO: create ChatMessage and Chat models, maybe also a global restaurantConfig or something
+// singleton model which could have a field for delayNewOrdersUntil which would be the final 
+// DateTime to resume accepting new orders
+
+model MenuCategory {
+    id        Int        @id @default(autoincrement())
+    createdAt DateTime   @default(now())
+    name      String
+    active    Boolean    @default(true)
+    order     Int        @default(autoincrement())
+    menuItems MenuItem[]
+
+    @@index([name])
+}
+
+model MenuItem {
+    id               Int          @id @default(autoincrement())
+    createdAt        DateTime     @default(now())
+    name             String
+    description      String
+    imageUrl         String
+    price            Float
+    ingredientsPrice Float // never expose to the frontend
+    available        Boolean      @default(true)
+    order            Int          @default(autoincrement())
+    menuCategoryId   Int
+    MenuCategory     MenuCategory @relation(fields: [menuCategoryId], references: [id])
+}
+
+model Order {
+    id               Int       @id @default(autoincrement())
+    createdAt        DateTime  @default(now())
+    orderStartedAt   DateTime?
+    orderCompletedAt DateTime?
+    details          Json // This is the entire order, including all items, prices, etc. that appears on the ticket
+    status           String    @default("pending") // "pending", "inProgress", "completed" (maybe "cancelled" too?)
+    // TODO: maybe need to have "code" on here if not allowed to be added by the pos api
+    firstName        String
+    lastName         String
+    email            String
+    phoneNumber      String
+    // ^ probably don't want to show user's email/phone number on the ticket
+    // so we are storing their main contact info here instead
+    User             User?     @relation(fields: [userId], references: [userId])
+    userId           String?
+}
+
+model Reward {
+    id             Int       @id @default(autoincrement())
+    createdAt      DateTime  @default(now())
+    type           String // either "discount" or "promotionMeal"
+    value          Int?
+    expirationDate DateTime? // not sure if this is worth it, but could simplify frontend logic a bit
+    User           User?     @relation(fields: [userId], references: [userId])
+    userId         String?
+}
+
+model User {
+    id                       Int      @id @default(autoincrement())
+    createdAt                DateTime @default(now())
+    userId                   String   @unique // retrieved from Clerk
+    firstName                String
+    lastName                 String
+    email                    String   @unique
+    phoneNumber              String   @unique
+    birthday                 DateTime
+    specialInstructions      String // used for allergies/dietary restrictions
+    allowsNotificationEmails Boolean  @default(true)
+    allowsPromotionalEmails  Boolean  @default(true)
+    memberRank               String   @default("member") // I think we would just use the string name of each rank?
+    // if doing belts: "white"/"blue"
+
+    currentOrder Json
+
+    rewards      Reward[]
+    recentOrders Order[]
 }
