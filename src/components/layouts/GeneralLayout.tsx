@@ -1,7 +1,5 @@
 import { AnimatePresence } from "framer-motion";
 import { useEffect, type ReactNode } from "react";
-// import Footer from "../Footer/Footer";
-// import GeneralLayoutStatefulShell from "./GeneralLayoutStatefulShell";
 import { EB_Garamond } from "next/font/google";
 import HeaderShell from "~/components/headers/HeaderShell";
 import Footer from "~/components/Footer";
@@ -38,7 +36,6 @@ function GeneralLayout({ children }: GeneralLayout) {
     <main
       className={`${ebGaramond.className} baseVertFlex relative min-h-[100dvh] !justify-between`}
     >
-      {/* <GeneralLayoutStatefulShell /> */}
       <HeaderShell />
 
       {/* still use mode="wait"? */}
