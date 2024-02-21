@@ -1,24 +1,22 @@
 import * as React from "react";
+import { useState } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "~/utils/shadcnuiUtils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition active:brightness-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+        default: "bg-primary text-primary-foreground",
+        destructive: "bg-destructive text-destructive-foreground",
+        outline: "border border-input bg-background",
+        secondary: "bg-secondary text-secondary-foreground",
+        ghost: "",
         link: "underlineAnimation text-primary underline-offset-4",
-        text: "text-neutral-400 hover:text-neutral-700",
+        text: "text-neutral-400",
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -43,9 +41,48 @@ export interface ButtonProps
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
+
+    const [brightness, setBrightness] = useState(1);
+
+    console.log("brightness", brightness);
+
+    // Retains the default hover styles, but makes them behave as they should
+    // on touch devices as well.
+    function getDynamicStyles() {
+      if (variant === "default" || variant === undefined) {
+        return `${brightness !== 1 ? "bg-primary/90" : ""}`;
+      } else if (variant === "destructive") {
+        return `${brightness !== 1 ? "bg-destructive/90" : ""}`;
+      } else if (variant === "outline") {
+        return `${brightness !== 1 ? "bg-accent text-accent-foreground" : ""}`;
+      } else if (variant === "secondary") {
+        return `${brightness !== 1 ? "bg-secondary/80" : ""}`;
+      } else if (variant === "ghost") {
+        return `${brightness !== 1 ? "bg-accent text-accent-foreground" : ""}`;
+      } else if (variant === "link") {
+        return `${brightness !== 1 ? "!text-activeLink" : ""}`; // saturate-200 least sure about this one, kind of just want to make them darker
+      } else if (variant === "text") {
+        return `${brightness !== 1 ? "text-neutral-700" : ""}`;
+      }
+    }
+
+    // TODO: tweak these, for example I don't necessarily think we want the primary button to
+    // get 0.9 brightness on hover, the bg-primary/90 is good enough. Just some tweaking necessary
+
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        onMouseEnter={() => setBrightness(0.9)}
+        onMouseLeave={() => setBrightness(1)}
+        onPointerDown={() => setBrightness(0.75)}
+        onPointerUp={() => setBrightness(1)}
+        onPointerLeave={() => setBrightness(1)}
+        style={{
+          filter: `brightness(${brightness}`,
+        }}
+        className={cn(
+          buttonVariants({ variant, size, className }),
+          getDynamicStyles(),
+        )}
         ref={ref}
         {...props}
       />
