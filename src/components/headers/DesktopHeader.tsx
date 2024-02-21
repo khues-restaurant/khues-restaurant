@@ -77,7 +77,6 @@ function DesktopHeader() {
               : undefined,
             color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
           }}
-          className={classes.explore}
         >
           <Link href={"/menu"} className="!text-xl">
             Menu
@@ -93,7 +92,6 @@ function DesktopHeader() {
               : undefined,
             color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
           }}
-          className={classes.explore}
         >
           <Link href={"/order-now"} className="!text-xl">
             Order now
@@ -109,7 +107,6 @@ function DesktopHeader() {
               : undefined,
             color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
           }}
-          className={classes.explore}
         >
           <a href={"/resylink"} className="!text-xl">
             Reservations
@@ -125,7 +122,6 @@ function DesktopHeader() {
               : undefined,
             color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
           }}
-          className={classes.explore}
         >
           <Link href={"/rewards"} className="!text-xl">
             Rewards
@@ -141,7 +137,6 @@ function DesktopHeader() {
               : undefined,
             color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
           }}
-          className={classes.explore}
         >
           <Link href={"/our-story"} className="!text-xl">
             Our story
@@ -157,7 +152,6 @@ function DesktopHeader() {
               : undefined,
             color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
           }}
-          className={classes.explore}
         >
           <Link href={"/media"} className="!text-xl">
             Media
@@ -237,7 +231,7 @@ function DesktopHeader() {
           </div>
         )}
 
-        {true && (
+        {isSignedIn && (
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className="baseFlex gap-2">
@@ -315,18 +309,13 @@ function DesktopHeader() {
         <DialogTrigger asChild>
           <Button
             variant="outline"
-            className="absolute right-[15%] top-0 text-primary"
+            size={"sm"}
+            className="absolute right-[15%] top-0 rounded-t-none text-primary"
           >
             Hours & Location
           </Button>
         </DialogTrigger>
         <DialogContent className="max-w-[900px]">
-          {/* <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
-            <DialogDescription>
-              Make changes to your profile here. Click save when you're done.
-            </DialogDescription>
-          </DialogHeader> */}
           <div className="baseFlex w-[850px] !items-start gap-8">
             <div className="baseVertFlex w-64 !items-start gap-2">
               <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
@@ -334,7 +323,7 @@ function DesktopHeader() {
                 Hours
               </div>
               <div className="mt-1 grid w-full grid-cols-2">
-                <div className="baseVertFlex w-full !items-start">
+                <div className="baseVertFlex w-full !items-start gap-2">
                   <p>Monday</p>
                   <p>Tuesday</p>
                   <p>Wednesday</p>
@@ -343,7 +332,7 @@ function DesktopHeader() {
                   <p>Saturday</p>
                   <p>Sunday</p>
                 </div>
-                <div className="baseVertFlex w-full !items-start">
+                <div className="baseVertFlex w-full !items-start gap-2">
                   <p>Closed</p>
                   <p>3pm-10pm</p>
                   <p>3pm-10pm</p>
