@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
@@ -21,6 +18,8 @@ model Post {
 
     @@index([name])
 }
+
+// ratings model (tied to User)
 
 // TODO: create ChatMessage and Chat models, maybe also a global restaurantConfig or something
 // singleton model which could have a field for delayNewOrdersUntil which would be the final 
@@ -45,7 +44,8 @@ model MenuItem {
     imageUrl         String
     price            Float
     ingredientsPrice Float // never expose to the frontend
-    available        Boolean      @default(true)
+    available        Boolean      @default(true) // whether item is able to be ordered
+    discontinued     Boolean      @default(false) // whether item is no longer on the menu
     order            Int          @default(autoincrement())
     menuCategoryId   Int
     MenuCategory     MenuCategory @relation(fields: [menuCategoryId], references: [id])
@@ -65,8 +65,12 @@ model Order {
     phoneNumber      String
     // ^ probably don't want to show user's email/phone number on the ticket
     // so we are storing their main contact info here instead
-    User             User?     @relation(fields: [userId], references: [userId])
-    userId           String?
+
+    // could have the userDescription field on here to be populated by chatGPT response to if
+    // the user is noteworthy. Prob want to delay this until order is first created though, just a setTimeout()
+    // in prisma .create method?
+    User   User?   @relation(fields: [userId], references: [userId])
+    userId String?
 }
 
 model Reward {
@@ -75,26 +79,34 @@ model Reward {
     type           String // either "discount" or "promotionMeal"
     value          Int?
     expirationDate DateTime? // not sure if this is worth it, but could simplify frontend logic a bit
-    User           User?     @relation(fields: [userId], references: [userId])
+    User           User?     @relation(fields: [userId], references: [userId], onDelete: Cascade)
     userId         String?
 }
 
 model User {
-    id                       Int      @id @default(autoincrement())
-    createdAt                DateTime @default(now())
-    userId                   String   @unique // retrieved from Clerk
-    firstName                String
-    lastName                 String
-    email                    String   @unique
-    phoneNumber              String   @unique
-    birthday                 DateTime
-    specialInstructions      String // used for allergies/dietary restrictions
-    allowsNotificationEmails Boolean  @default(true)
-    allowsPromotionalEmails  Boolean  @default(true)
-    memberRank               String   @default("member") // I think we would just use the string name of each rank?
-    // if doing belts: "white"/"blue"
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
 
-    currentOrder Json
+    userId              String   @unique // retrieved from Clerk
+    firstName           String
+    lastName            String
+    email               String   @unique
+    phoneNumber         String   @unique
+    birthday            DateTime
+    specialInstructions String // used for allergies/dietary restrictions
+
+    allowsNotificationEmails Boolean @default(true)
+    allowsPromotionalEmails  Boolean @default(true)
+
+    rewardsRank   Int @default(1) // I think we would just use the string name of each rank?
+    rewardsPoints Int @default(150) // TODO: most likely change this later
+
+    previousRewardsRank   Int @default(1)
+    previousRewardsPoints Int @default(0)
+
+    showRewardsNotification Boolean @default(false)
+
+    currentOrder Json?
 
     rewards      Reward[]
     recentOrders Order[]

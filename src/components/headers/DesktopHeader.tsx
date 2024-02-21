@@ -36,11 +36,13 @@ import { SlPresent } from "react-icons/sl";
 import { TfiReceipt } from "react-icons/tfi";
 
 import classes from "./DesktopHeader.module.css";
+import useGetUserId from "~/hooks/useGetUserId";
 
 function DesktopHeader() {
-  const { userId, isSignedIn } = useAuth();
+  const { isSignedIn } = useAuth();
   const { user } = useUser();
   const { asPath } = useRouter();
+  const userId = useGetUserId();
 
   // const localStorageTabData = useLocalStorageValue("tabData");
   // const localStorageRedirectRoute = useLocalStorageValue("redirectRoute");
@@ -50,15 +52,15 @@ function DesktopHeader() {
 
   return (
     <nav
-      className={`${classes.desktopHeader} sticky left-0 top-0 grid h-32 w-full grid-cols-1 grid-rows-1 shadow-md`}
+      className={`${classes.desktopHeader} fixed left-0 top-0 grid h-32 w-full grid-cols-1 grid-rows-1 shadow-md`}
     >
       <Link href={"/"} className={`${classes.logo ?? ""}`}>
         <Image
           src="/logo.webp"
           alt="Khue's header logo"
-          // style={{
-          //   filter: "drop-shadow(0px 1px 0.5px hsla(336, 84%, 17%, 0.25))",
-          // }}
+          style={{
+            filter: "drop-shadow(0px 1px 0.5px hsla(336, 84%, 17%, 0.25))", // keep this?
+          }}
           width={200}
           height={185}
           priority

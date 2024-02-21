@@ -39,22 +39,13 @@ import { LiaShoppingBagSolid } from "react-icons/lia";
 import { FaUserAlt } from "react-icons/fa";
 import { SlPresent } from "react-icons/sl";
 import { TfiReceipt } from "react-icons/tfi";
-
-const opacityAndScaleVariants = {
-  expanded: {
-    opacity: 1,
-    transform: "translateY(0)",
-  },
-  closed: {
-    opacity: 0,
-    transform: "translateY(-100%)",
-  },
-};
+import useGetUserId from "~/hooks/useGetUserId";
 
 function MobileHeader() {
   const [mobileHeaderIsOpen, setMobileHeaderIsOpen] = useState(false);
 
-  const { userId, isSignedIn } = useAuth();
+  const { isSignedIn } = useAuth();
+  const userId = useGetUserId();
   const { asPath } = useRouter();
 
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
@@ -76,16 +67,16 @@ function MobileHeader() {
   // }, [mobileHeaderModal]);
 
   return (
-    <nav className="baseFlex sticky h-24 w-full !justify-between p-2 shadow-md">
+    <nav className="baseFlex fixed h-24 w-full !justify-between p-2 shadow-md">
       <Link
         href={"/"}
         className="baseFlex h-12 pl-2 transition-[filter] hover:brightness-[1.05] active:brightness-[0.95]"
       >
         <Image
           src="/logo.webp"
-          alt="Autostrum header logo"
+          alt="Khue's header logo"
           style={{
-            filter: "drop-shadow(0px 1px 0.5px hsla(336, 84%, 17%, 0.25))",
+            filter: "drop-shadow(0px 1px 0.5px hsla(336, 84%, 17%, 0.25))", // keep this?
           }}
           width={100}
           height={50}
@@ -111,7 +102,7 @@ function MobileHeader() {
           <SheetTrigger asChild>
             <Button
               variant="ghost"
-              className=" relative"
+              className="relative mr-2"
               // TODO: come back to trying to get this to stay on top of <Sheet> component.
               // maybe have to use portals?
             >
@@ -125,7 +116,7 @@ function MobileHeader() {
                     //   : "translateY(0)",
                   }
                 }
-                className="absolute top-[12px] block h-0.5 w-5 bg-current transition duration-500 ease-in-out"
+                className="absolute top-[12px] block h-0.5 w-6 bg-current transition duration-500 ease-in-out"
               ></span>
               <span
                 aria-hidden="true"
@@ -134,7 +125,7 @@ function MobileHeader() {
                     // opacity: sheetIsOpen ? "0" : "1",
                   }
                 }
-                className="absolute block h-0.5 w-5 bg-current transition duration-500 ease-in-out"
+                className="absolute block h-0.5 w-6 bg-current transition duration-500 ease-in-out"
               ></span>
               <span
                 aria-hidden="true"
@@ -146,17 +137,11 @@ function MobileHeader() {
                     //   : "translateY(0)",
                   }
                 }
-                className="absolute top-[26px] block h-0.5 w-5 bg-current  transition duration-500 ease-in-out"
+                className="absolute top-[26px] block h-0.5 w-6 bg-current transition duration-500 ease-in-out"
               ></span>
             </Button>
           </SheetTrigger>
           <SheetContent className="!h-dvh !overflow-auto">
-            {/* <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
-          <SheetDescription>
-            Make changes to your profile here. Click save when you're done.
-          </SheetDescription>
-        </SheetHeader> */}
             <div className="baseVertFlex !justify-start gap-4 overflow-y-scroll pt-12">
               {!isSignedIn && (
                 <div className="baseFlex gap-4">
