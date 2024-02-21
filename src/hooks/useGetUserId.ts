@@ -10,6 +10,9 @@ function useGetUserId() {
     if (!isLoaded) return;
 
     if (isSignedIn) {
+      // just in case this is still in localStorage
+      localStorage.removeItem("khue's-userId");
+
       setUserId(clerkUserId);
     } else {
       const localStorageUserId = localStorage.getItem("khue's-userId");
@@ -19,6 +22,7 @@ function useGetUserId() {
       } else {
         const userId = crypto.randomUUID();
         localStorage.setItem("khue's-userId", userId);
+
         setUserId(userId);
       }
     }
