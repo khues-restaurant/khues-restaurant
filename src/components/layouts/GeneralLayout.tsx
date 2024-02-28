@@ -3,7 +3,12 @@ import { useEffect, type ReactNode } from "react";
 import { EB_Garamond } from "next/font/google";
 import HeaderShell from "~/components/headers/HeaderShell";
 import Footer from "~/components/Footer";
-import { type OrderDetails, useMainStore } from "~/stores/MainStore";
+import { api } from "~/utils/api";
+import {
+  useMainStore,
+  type OrderDetails,
+  type StoreMenuItems,
+} from "~/stores/MainStore";
 import PostSignUpDialog from "~/components/PostSignUpDialog";
 
 const ebGaramond = EB_Garamond({
@@ -18,9 +23,25 @@ interface GeneralLayout {
 }
 
 function GeneralLayout({ children }: GeneralLayout) {
-  const { setOrderDetails } = useMainStore((state) => ({
+  const { setOrderDetails, setMenuItems } = useMainStore((state) => ({
     setOrderDetails: state.setOrderDetails,
+    setMenuItems: state.setMenuItems,
   }));
+
+  const { data: menuCategories } = api.menuCategory.getAll.useQuery();
+
+  useEffect(() => {
+    if (!menuCategories) return;
+
+    const menuItems = menuCategories.flatMap((category) => category.menuItems);
+
+    const menuItemsObject = menuItems.reduce((acc, menuItem) => {
+      acc[menuItem.name] = menuItem;
+      return acc;
+    }, {} as StoreMenuItems);
+
+    setMenuItems(menuItemsObject);
+  }, [menuCategories, setMenuItems]);
 
   useEffect(() => {
     const localStorageOrder = localStorage.getItem("khue's-orderDetails");
@@ -39,7 +60,7 @@ function GeneralLayout({ children }: GeneralLayout) {
       <HeaderShell />
 
       {/* still use mode="wait"? */}
-      <AnimatePresence mode="wait">{children}</AnimatePresence>
+      <AnimatePresence>{children}</AnimatePresence>
 
       <Footer />
 

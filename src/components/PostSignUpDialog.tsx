@@ -21,6 +21,7 @@ import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import useGetUserId from "~/hooks/useGetUserId";
 import { api } from "~/utils/api";
+import { formatPhoneNumber } from "~/utils/formatPhoneNumber";
 
 const mainFormSchema = z.object({
   firstName: z
@@ -57,35 +58,11 @@ const mainFormSchema = z.object({
   ),
 });
 
-const specialInstructionsSchema = z.object({
-  specialInstructions: z
+const dietaryRestrictionsSchema = z.object({
+  dietaryRestrictions: z
     .string()
     .max(100, { message: "Must be at most 100 characters" }),
 });
-
-const formatPhoneNumber = (value: string) => {
-  if (!value) return value;
-
-  // Remove all non-digit characters
-  let phoneNumber = value.replace(/[^\d]/g, "");
-
-  // Remove leading "1" if the phone number length is greater than 10
-  if (phoneNumber.length > 10 && phoneNumber.startsWith("1")) {
-    phoneNumber = phoneNumber.substring(1);
-  }
-
-  // After potentially removing the country code, determine formatting based on length
-  const phoneNumberLength = phoneNumber.length;
-
-  if (phoneNumberLength < 4) return phoneNumber;
-
-  if (phoneNumberLength < 7) {
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-  }
-
-  // Format as (XXX) XXX-XXXX
-  return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
-};
 
 const spring = {
   type: "spring",
@@ -131,8 +108,8 @@ function PostSignUpDialog() {
   const [mainFormValues, setMainFormValues] = useState<z.infer<
     typeof mainFormSchema
   > | null>(null);
-  const [specialInstructionsValues, setSpecialInstructionsValues] =
-    useState<z.infer<typeof specialInstructionsSchema> | null>(null);
+  const [dietaryRestrictionsValues, setdietaryRestrictionsValues] =
+    useState<z.infer<typeof dietaryRestrictionsSchema> | null>(null);
 
   useEffect(() => {
     if (userId && isSignedIn && !userExists) {
@@ -155,19 +132,19 @@ function PostSignUpDialog() {
     setStep(2);
   }
 
-  const specialInstructionsForm = useForm<
-    z.infer<typeof specialInstructionsSchema>
+  const dietaryRestrictionsForm = useForm<
+    z.infer<typeof dietaryRestrictionsSchema>
   >({
-    resolver: zodResolver(specialInstructionsSchema),
+    resolver: zodResolver(dietaryRestrictionsSchema),
     defaultValues: {
-      specialInstructions: "",
+      dietaryRestrictions: "",
     },
   });
 
-  function onSpecialInstructionsFormSubmit(
-    values: z.infer<typeof specialInstructionsSchema>,
+  function onDietaryRestrictionsFormSubmit(
+    values: z.infer<typeof dietaryRestrictionsSchema>,
   ) {
-    setSpecialInstructionsValues(values);
+    setdietaryRestrictionsValues(values);
     setStep(3);
   }
 
@@ -190,7 +167,7 @@ function PostSignUpDialog() {
       if (isSaving || showSuccessCheckmark) return "50px";
       return "100px";
     } else if (step === 2) {
-      if (specialInstructionsForm.formState.isDirty) return "175px";
+      if (dietaryRestrictionsForm.formState.isDirty) return "175px";
       return "100px";
     }
 
@@ -463,12 +440,12 @@ function PostSignUpDialog() {
                 transition={{ duration: 0.35 }}
                 className="baseVertFlex min-h-48 w-full"
               >
-                <Form {...specialInstructionsForm}>
+                <Form {...dietaryRestrictionsForm}>
                   <form className="baseVertFlex w-full gap-16">
                     <div className="baseVertFlex">
                       <FormField
-                        control={specialInstructionsForm.control}
-                        name="specialInstructions"
+                        control={dietaryRestrictionsForm.control}
+                        name="dietaryRestrictions"
                         render={({ field }) => (
                           <FormItem className="px-2 tablet:w-[500px]">
                             <FormLabel className="font-semibold">
@@ -572,8 +549,8 @@ function PostSignUpDialog() {
                 if (step === 1) {
                   void mainForm.handleSubmit(onMainFormSubmit)();
                 } else if (step === 2) {
-                  void specialInstructionsForm.handleSubmit(
-                    onSpecialInstructionsFormSubmit,
+                  void dietaryRestrictionsForm.handleSubmit(
+                    onDietaryRestrictionsFormSubmit,
                   )();
                 } else {
                   if (!user) return;
@@ -582,7 +559,7 @@ function PostSignUpDialog() {
                     userId,
                     email: user.primaryEmailAddress!.emailAddress, // guaranteed to exist
                     ...mainFormValues!,
-                    ...specialInstructionsValues!,
+                    ...dietaryRestrictionsValues!,
                     birthday: new Date(mainFormValues!.birthday),
                   });
                 }
@@ -590,7 +567,7 @@ function PostSignUpDialog() {
             >
               <AnimatePresence mode="wait">
                 {step !== 2 ||
-                (step === 2 && specialInstructionsForm.formState.isDirty) ? (
+                (step === 2 && dietaryRestrictionsForm.formState.isDirty) ? (
                   step === 3 ? (
                     <motion.div
                       key="save"

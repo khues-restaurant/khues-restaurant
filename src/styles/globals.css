@@ -2,12 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-.baseFlex {
-  @apply flex items-center justify-center;
-}
+@layer utilities {
+  .baseFlex {
+    @apply flex items-center justify-center;
+  }
 
-.baseVertFlex {
-  @apply flex flex-col items-center justify-center;
+  .baseVertFlex {
+    @apply flex flex-col items-center justify-center;
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
 }
 
 /* TODO: remove for production */
@@ -29,6 +44,42 @@
     );
   background-size: 56px 56px;
   /* This sets the size of the squares that form the stripes */
+}
+
+.experimentalBorder {
+  background-position: 0 0, 0 0, 100% 0, 0 100%;
+  background-size: 3px 100%, 100% 3px, 3px 100%, 100% 3px;
+  background-repeat: no-repeat;
+
+  background-image:
+    /* left */
+    linear-gradient(0deg,
+      rgb(255, 80, 80),
+      rgb(255, 80, 80) 25%,
+      transparent 25%,
+      transparent 75%,
+      rgb(255, 80, 80) 75%),
+    /* top */
+    linear-gradient(90deg,
+      rgb(255, 80, 80),
+      rgb(255, 80, 80) 25%,
+      transparent 25%,
+      transparent 75%,
+      rgb(255, 80, 80) 75%),
+    /* right */
+    linear-gradient(180deg,
+      rgb(255, 80, 80),
+      rgb(255, 80, 80) 25%,
+      transparent 25%,
+      transparent 75%,
+      rgb(255, 80, 80) 75%),
+    /* // bottom */
+    linear-gradient(270deg,
+      rgb(255, 80, 80),
+      rgb(255, 80, 80) 25%,
+      transparent 25%,
+      transparent 75%,
+      rgb(255, 80, 80) 75%)
 }
 
 @layer base {

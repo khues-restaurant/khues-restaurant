@@ -37,6 +37,7 @@ import { TfiReceipt } from "react-icons/tfi";
 
 import classes from "./DesktopHeader.module.css";
 import useGetUserId from "~/hooks/useGetUserId";
+import CartButton from "~/components/cart/CartButton";
 
 function DesktopHeader() {
   const { isSignedIn } = useAuth();
@@ -52,7 +53,8 @@ function DesktopHeader() {
 
   return (
     <nav
-      className={`${classes.desktopHeader} fixed left-0 top-0 grid h-32 w-full grid-cols-1 grid-rows-1 shadow-md`}
+      id="header"
+      className={`${classes.desktopHeader} fixed left-0 top-0 z-50 grid h-32 w-full grid-cols-1 grid-rows-1 bg-white shadow-md`}
     >
       <Link href={"/"} className={`${classes.logo ?? ""}`}>
         <Image
@@ -161,18 +163,7 @@ function DesktopHeader() {
 
       {/* order icon and auth buttons/user icon */}
       <div className={`${classes.authentication} baseFlex gap-4`}>
-        <Button
-          variant={"outline"}
-          style={{
-            backgroundColor: asPath.includes("/explore")
-              ? "#be185d"
-              : undefined,
-            color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-          }}
-          className="baseFlex"
-        >
-          <LiaShoppingBagSolid className="h-6 w-6" />
-        </Button>
+        <CartButton />
 
         {/* opting for double "&&" instead of ternary for better readability */}
         {!isSignedIn && (

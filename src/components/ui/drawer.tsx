@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
+import { Button } from "~/components/ui/button";
 
 import { cn } from "~/utils/shadcnuiUtils";
 
@@ -8,6 +9,7 @@ const Drawer = ({
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
   <DrawerPrimitive.Root
+    preventScrollRestoration
     shouldScaleBackground={shouldScaleBackground}
     {...props}
   />
@@ -41,12 +43,23 @@ const DrawerContent = React.forwardRef<
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background",
+        // TODO: should we just put the max-h-[85dvh] right here?
+        "fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-[10px] bg-background",
         className,
       )}
       {...props}
     >
-      <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
+      <DrawerClose
+        className="absolute right-4 top-8 z-10"
+        asChild
+        onClick={() => console.log("hi")}
+      >
+        <Button variant="underline">Close</Button>
+      </DrawerClose>
+
+      <div className="baseFlex h-8 w-full shadow-md">
+        <div className="mx-auto my-1 h-2 w-[75px] rounded-full bg-gray-300" />
+      </div>
       {children}
     </DrawerPrimitive.Content>
   </DrawerPortal>
@@ -69,7 +82,7 @@ const DrawerFooter = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn("mt-auto flex flex-col gap-2 p-4", className)}
+    className={cn("fixed bottom-0 left-0 mt-auto w-full", className)}
     {...props}
   />
 );

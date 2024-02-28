@@ -1,12 +1,14 @@
 import { cn } from "~/utils/shadcnuiUtils";
 
-function Skeleton({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+  index: number;
+}
+
+function Skeleton({ className, index, ...props }: SkeletonProps) {
   return (
     <div
-      className={cn("animate-pulse rounded-md bg-muted", className)}
+      style={{ animationDelay: `${index * 0.25}s` }}
+      className={cn("animate-pulse rounded-md bg-primary/40", className)}
       {...props}
     />
   );

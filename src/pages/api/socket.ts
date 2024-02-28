@@ -23,6 +23,10 @@ export default function SocketHandler(
     socket.on("disconnect", () => {
       console.log("user disconnected");
     });
+
+    socket.on("newOrderCreated", () => {
+      console.log("new order created");
+    });
   };
 
   io.on("connection", onConnection);

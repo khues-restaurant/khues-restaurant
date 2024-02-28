@@ -15,7 +15,9 @@ const buttonVariants = cva(
         outline: "border border-input bg-background",
         secondary: "bg-secondary text-secondary-foreground",
         ghost: "",
-        link: "underlineAnimation text-primary underline-offset-4",
+        link: "underlineAnimation text-primary", // TODO: should have an option for the offset animation
+        // to not be so far from text. mainly would be used for smaller text situations
+        underline: "text-primary underline underline-offset-2",
         text: "text-neutral-400",
       },
       size: {
@@ -23,6 +25,7 @@ const buttonVariants = cva(
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",
+        underline: "h-min py-1", // this probably doesn't translate to other text sizes
       },
     },
     defaultVariants: {
@@ -44,8 +47,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const [brightness, setBrightness] = useState(1);
 
-    console.log("brightness", brightness);
-
     // Retains the default hover styles, but makes them behave as they should
     // on touch devices as well.
     function getDynamicStyles() {
@@ -61,7 +62,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         return `${brightness !== 1 ? "bg-accent text-accent-foreground" : ""}`;
       } else if (variant === "link") {
         return `${brightness !== 1 ? "!text-activeLink" : ""}`; // saturate-200 least sure about this one, kind of just want to make them darker
-      } else if (variant === "text") {
+      }
+      // else if (variant === "underline") {
+      //   return `${brightness !== 1 ? "text-primary" : ""}`;
+      // }
+      else if (variant === "text") {
         return `${brightness !== 1 ? "text-neutral-700" : ""}`;
       }
     }
@@ -71,7 +76,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <Comp
-        onMouseEnter={() => setBrightness(0.9)}
+        onMouseEnter={() => {
+          // if (variant === "ghost") {
+          //   setAlternateIndicator(true);
+          //   return;
+          // } ah yeah idk best way since doing every logical check through just brightness is
+          // pretty ugly
+
+          setBrightness(0.9);
+        }}
         onMouseLeave={() => setBrightness(1)}
         onPointerDown={() => setBrightness(0.75)}
         onPointerUp={() => setBrightness(1)}

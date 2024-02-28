@@ -6,7 +6,7 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
-  reactStrictMode: true, // TODO: be willing to change this to `false` if it's too much of a pain
+  reactStrictMode: false, // TODO: be willing to change this to `false` if it's too much of a pain
 
   // not sure if these are really necessary since we will just be using generic user icons right?
   images: {

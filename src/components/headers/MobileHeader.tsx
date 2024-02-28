@@ -40,13 +40,14 @@ import { FaUserAlt } from "react-icons/fa";
 import { SlPresent } from "react-icons/sl";
 import { TfiReceipt } from "react-icons/tfi";
 import useGetUserId from "~/hooks/useGetUserId";
+import CartButton from "~/components/cart/CartButton";
 
 function MobileHeader() {
   const [mobileHeaderIsOpen, setMobileHeaderIsOpen] = useState(false);
 
   const { isSignedIn } = useAuth();
   const userId = useGetUserId();
-  const { asPath } = useRouter();
+  const { asPath, events } = useRouter();
 
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
 
@@ -66,8 +67,22 @@ function MobileHeader() {
   //   }
   // }, [mobileHeaderModal]);
 
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setSheetIsOpen(false);
+    };
+
+    events.on("routeChangeStart", handleRouteChange);
+
+    return () => {
+      events.off("routeChangeStart", handleRouteChange);
+    };
+  }, [events]);
   return (
-    <nav className="baseFlex fixed h-24 w-full !justify-between p-2 shadow-md">
+    <nav
+      id="header"
+      className="baseFlex fixed left-0 top-0 z-50 h-24 w-full !justify-between bg-white p-2 shadow-md"
+    >
       <Link
         href={"/"}
         className="baseFlex h-12 pl-2 transition-[filter] hover:brightness-[1.05] active:brightness-[0.95]"
@@ -85,18 +100,7 @@ function MobileHeader() {
       </Link>
 
       <div className="baseFlex gap-4">
-        <Button
-          variant={"outline"}
-          style={{
-            backgroundColor: asPath.includes("/explore")
-              ? "#be185d"
-              : undefined,
-            color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-          }}
-          className="baseFlex"
-        >
-          <LiaShoppingBagSolid className="h-6 w-6" />
-        </Button>
+        <CartButton />
 
         <Sheet open={sheetIsOpen} onOpenChange={(open) => setSheetIsOpen(open)}>
           <SheetTrigger asChild>

@@ -34,7 +34,7 @@ export const userRouter = createTRPCRouter({
           .max(20)
           .regex(/^\+?[0-9\s-]+$/),
         birthday: z.date(),
-        specialInstructions: z.string().max(100),
+        dietaryRestrictions: z.string().max(100),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -45,7 +45,43 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
-  // update: protectedProcedure
+  get: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input: userId }) => {
+      return ctx.prisma.user.findFirst({
+        where: {
+          userId,
+        },
+      });
+    }),
+
+  update: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string().min(1).max(100),
+        email: z.string().email(),
+        firstName: z.string().min(1).max(100),
+        lastName: z.string().min(1).max(100),
+        phoneNumber: z
+          .string()
+          .min(10)
+          .max(20)
+          .regex(/^\+?[0-9\s-]+$/),
+        birthday: z.date(),
+        dietaryRestrictions: z.string().max(100),
+        currentOrder: z.any(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.user.update({
+        where: {
+          userId: input.userId,
+        },
+        data: {
+          ...input,
+        },
+      });
+    }),
 
   delete: protectedProcedure
     .input(z.string())
@@ -58,10 +94,4 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
-
-  // getLatest: publicProcedure.query(({ ctx }) => {
-  //   return ctx.prisma.post.findFirst({
-  //     orderBy: { createdAt: "desc" },
-  //   });
-  // }),
 });

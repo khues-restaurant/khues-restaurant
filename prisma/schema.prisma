@@ -10,61 +10,74 @@ datasource db {
 // maybe do all relations to user on "userId" instead of "id" since if you
 // have to compare from client side then we will be getting the clerk userId
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@index([name])
-}
-
 // ratings model (tied to User)
 
 // TODO: create ChatMessage and Chat models, maybe also a global restaurantConfig or something
 // singleton model which could have a field for delayNewOrdersUntil which would be the final 
 // DateTime to resume accepting new orders
 
+model FavoriteItem {
+    id String @id @default(uuid())
+
+    menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+    menuItemId String
+    User       User?    @relation(fields: [userId], references: [userId], onDelete: Cascade)
+    userId     String?
+}
+
 model MenuCategory {
-    id        Int        @id @default(autoincrement())
+    id        String     @id @default(uuid())
     createdAt DateTime   @default(now())
     name      String
     active    Boolean    @default(true)
-    order     Int        @default(autoincrement())
+    listOrder Int        @default(autoincrement())
     menuItems MenuItem[]
-
-    @@index([name])
 }
 
 model MenuItem {
-    id               Int          @id @default(autoincrement())
-    createdAt        DateTime     @default(now())
+    id String @id @default(uuid())
+
+    createdAt        DateTime       @default(now())
     name             String
     description      String
     imageUrl         String
     price            Float
     ingredientsPrice Float // never expose to the frontend
-    available        Boolean      @default(true) // whether item is able to be ordered
-    discontinued     Boolean      @default(false) // whether item is no longer on the menu
-    order            Int          @default(autoincrement())
-    menuCategoryId   Int
-    MenuCategory     MenuCategory @relation(fields: [menuCategoryId], references: [id])
+    available        Boolean        @default(true) // whether item is able to be ordered
+    discontinued     Boolean        @default(false) // whether item is no longer on the menu
+    listOrder        Int            @default(autoincrement())
+    menuCategoryId   String
+    MenuCategory     MenuCategory   @relation(fields: [menuCategoryId], references: [id])
+    FavoriteItem     FavoriteItem[]
+}
+
+// used to store the order details so before stripe session is created
+// so that upon completion the stripe webhook can fetch the order details
+// and properly create the Order row in the database
+model TransientOrder {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    details   Json
+    userId    String   @unique // not related to User model so that customers can still place order as a guest
 }
 
 model Order {
-    id               Int       @id @default(autoincrement())
-    createdAt        DateTime  @default(now())
-    orderStartedAt   DateTime?
-    orderCompletedAt DateTime?
-    details          Json // This is the entire order, including all items, prices, etc. that appears on the ticket
-    status           String    @default("pending") // "pending", "inProgress", "completed" (maybe "cancelled" too?)
-    // TODO: maybe need to have "code" on here if not allowed to be added by the pos api
-    firstName        String
-    lastName         String
-    email            String
-    phoneNumber      String
-    // ^ probably don't want to show user's email/phone number on the ticket
-    // so we are storing their main contact info here instead
+    id                String    @id @default(uuid()) // first 6 digits will be used for any customer-facing order number
+    createdAt         DateTime  @default(now())
+    orderStartedAt    DateTime?
+    orderCompletedAt  DateTime?
+    status            String    @default("received") // "received", "inProgress", "completed" (maybe "cancelled" too?)
+    firstName         String
+    lastName          String
+    email             String
+    phoneNumber       String
+    details           Json // This is the entire order, including all items, prices, etc. that appears on the ticket
+    prevRewardsPoints Int
+    rewardsPoints     Int
+    prevRewardsRank   Int
+    rewardsRank       Int
+
+    stripeSessionId String @unique // used for tracking the order in Stripe
 
     // could have the userDescription field on here to be populated by chatGPT response to if
     // the user is noteworthy. Prob want to delay this until order is first created though, just a setTimeout()
@@ -84,7 +97,7 @@ model Reward {
 }
 
 model User {
-    id        Int      @id @default(autoincrement())
+    id        String   @id @default(uuid())
     createdAt DateTime @default(now())
 
     userId              String   @unique // retrieved from Clerk
@@ -93,7 +106,7 @@ model User {
     email               String   @unique
     phoneNumber         String   @unique
     birthday            DateTime
-    specialInstructions String // used for allergies/dietary restrictions
+    dietaryRestrictions String
 
     allowsNotificationEmails Boolean @default(true)
     allowsPromotionalEmails  Boolean @default(true)
@@ -108,6 +121,7 @@ model User {
 
     currentOrder Json?
 
-    rewards      Reward[]
-    recentOrders Order[]
+    rewards       Reward[]
+    recentOrders  Order[]
+    favoriteItems FavoriteItem[]
 }
