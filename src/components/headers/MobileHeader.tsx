@@ -145,7 +145,7 @@ function MobileHeader() {
               ></span>
             </Button>
           </SheetTrigger>
-          <SheetContent className="!h-dvh !overflow-auto">
+          <SheetContent className="!h-dvh !overflow-auto p-6">
             <div className="baseVertFlex !justify-start gap-4 overflow-y-scroll pt-12">
               {!isSignedIn && (
                 <div className="baseFlex gap-4">
@@ -430,7 +430,7 @@ function MobileHeader() {
                           </p>
 
                           <div className="baseFlex gap-2">
-                            <FaMapSigns />
+                            <FaMapSigns className="size-6" />
                             <a
                               href="https://facebook.com"
                               target="_blank"

@@ -1,3 +1,4 @@
+import { minimumOrderPickupTimeRouter } from "./routers/minimumOrderPickupTime";
 import { transientOrderRouter } from "./routers/transientOrder";
 import { menuCategoryRouter } from "./routers/menuCategory";
 import { createTRPCRouter } from "~/server/api/trpc";
@@ -11,6 +12,7 @@ export const appRouter = createTRPCRouter({
   payment: paymentRouter,
   transientOrder: transientOrderRouter,
   order: orderRouter,
+  minimOrderPickupTime: minimumOrderPickupTimeRouter,
 });
 
 // export type definition of API

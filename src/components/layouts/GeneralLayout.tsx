@@ -50,6 +50,9 @@ function GeneralLayout({ children }: GeneralLayout) {
 
     const parsedOrder = JSON.parse(localStorageOrder) as OrderDetails;
 
+    parsedOrder.dateToPickUp = new Date(parsedOrder.dateToPickUp);
+    // TODO: this should be moved/consolidated into one massive localstorage handler hook I think.
+
     setOrderDetails(parsedOrder);
   }, [setOrderDetails]);
 

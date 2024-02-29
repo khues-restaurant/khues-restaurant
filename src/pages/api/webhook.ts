@@ -130,6 +130,8 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
         // 5) send websocket emit to dashboard
 
+        // seems like we may have to do some extra work to get this to send to
+        // backend socket.ts
         socket.emit("newOrderCreated");
 
         // TODO

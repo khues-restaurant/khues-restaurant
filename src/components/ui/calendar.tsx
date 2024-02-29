@@ -10,11 +10,15 @@ export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 function Calendar({
   className,
   classNames,
-  showOutsideDays = true,
+  showOutsideDays = false,
   ...props
 }: CalendarProps) {
+  // TODO: idk what happened to the ghost hover/active stylings..
+
   return (
     <DayPicker
+      fromMonth={new Date()}
+      toMonth={new Date(new Date().getFullYear(), new Date().getMonth() + 1)}
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       classNames={{

@@ -3,9 +3,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import React, { useState, type Dispatch, type SetStateAction } from "react";
 import CartDrawer from "~/components/cart/CartDrawer";
 import CartSheet from "~/components/cart/CartSheet";
+import GuestCheckoutDialog from "~/components/cart/GuestCheckoutDialog";
 import GuestCheckoutDrawer from "~/components/cart/GuestCheckoutDrawer";
 import ItemCustomizationDialog from "~/components/itemCustomization/ItemCustomizationDialog";
 import ItemCustomizationDrawer from "~/components/itemCustomization/ItemCustomizationDrawer";
+import { Dialog } from "~/components/ui/dialog";
 import { Sheet, SheetContent } from "~/components/ui/sheet";
 import { useMainStore, type Item } from "~/stores/MainStore";
 
@@ -32,11 +34,9 @@ function CartSheetWrapper({
   );
   const [initialItemState, setInitialItemState] = useState<Item>();
 
+  // might want to eventually do just a ~50% viewport height if there
+  // are no items in the user's cart
   function getSheetHeight() {
-    if (orderDetails.items.length === 0) {
-      return "350px";
-    }
-
     return "100dvh";
   }
 
@@ -59,17 +59,17 @@ function CartSheetWrapper({
             style={{
               height: getSheetHeight(),
               transition: "height 0.3s ease-in-out",
+              justifyContent:
+                orderDetails.items.length === 0 ? "center" : "flex-start",
             }}
-            className="baseVertFlex relative h-full w-full !justify-start"
-            // TODO: currently since this is flex, upon transitioning both the prev and current contianers
-            // will be rendered one on top of each other so it looks like the component is slightly moving
-            // down/up, see if you can't readjust structure to maybe be under same div somehow?
+            className="baseVertFlex relative h-full w-full"
           >
             <CartSheet
               setShowCartSheet={setShowCartSheet}
               setItemBeingModified={setItemBeingModified}
               setInitialItemState={setInitialItemState}
               setGuestCheckoutView={setGuestCheckoutView}
+              setIsEditingItem={setIsEditingItem}
             />
           </div>
         </SheetContent>
@@ -84,14 +84,10 @@ function CartSheetWrapper({
         forCart
       />
 
-      {/* {guestCheckoutView !== "notShowing" && (
-        <motion.div key="guest" className="baseVertFlex h-full w-full">
-          <GuestCheckoutDialog
-            guestCheckoutView={guestCheckoutView}
-            setGuestCheckoutView={setGuestCheckoutView}
-          />
-        </motion.div>
-      )} */}
+      <GuestCheckoutDialog
+        guestCheckoutView={guestCheckoutView}
+        setGuestCheckoutView={setGuestCheckoutView}
+      />
     </>
   );
 }

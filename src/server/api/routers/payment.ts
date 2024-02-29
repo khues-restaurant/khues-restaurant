@@ -61,6 +61,8 @@ export const paymentRouter = createTRPCRouter({
         });
       }
 
+      console.log(createLineItemsFromOrder(input.orderDetails.items));
+
       return stripe.checkout.sessions.create({
         mode: "payment",
         payment_method_types: ["card"],
@@ -83,6 +85,7 @@ export const paymentRouter = createTRPCRouter({
         success_url:
           "http://localhost:3000/payment-success?session_id={CHECKOUT_SESSION_ID}",
         cancel_url: "http://localhost:3000/",
+        // expires_at: Math.floor(Date.now() / 1000) + 60 * 60 * 2, // Checkout will auto-expire in 2 hours
       });
     }),
   getStripeSession: publicProcedure

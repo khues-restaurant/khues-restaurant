@@ -16,6 +16,14 @@ datasource db {
 // singleton model which could have a field for delayNewOrdersUntil which would be the final 
 // DateTime to resume accepting new orders
 
+model MinimumOrderPickupTime {
+    id Int @id @default(1)
+
+    value Int @default(0) // will just be 600 for "6:00 PM" for example to make easier to work with on client side
+    // ^ 0 will be used to indicate no minimum order time
+    // ^ 1159 will be used to indicate to not accept any more orders for the day
+}
+
 model FavoriteItem {
     id String @id @default(uuid())
 
@@ -26,29 +34,32 @@ model FavoriteItem {
 }
 
 model MenuCategory {
-    id        String     @id @default(uuid())
-    createdAt DateTime   @default(now())
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+
     name      String
-    active    Boolean    @default(true)
-    listOrder Int        @default(autoincrement())
+    active    Boolean @default(true)
+    listOrder Int     @default(autoincrement())
+
     menuItems MenuItem[]
 }
 
 model MenuItem {
-    id String @id @default(uuid())
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
 
-    createdAt        DateTime       @default(now())
     name             String
     description      String
     imageUrl         String
     price            Float
     ingredientsPrice Float // never expose to the frontend
-    available        Boolean        @default(true) // whether item is able to be ordered
-    discontinued     Boolean        @default(false) // whether item is no longer on the menu
-    listOrder        Int            @default(autoincrement())
-    menuCategoryId   String
-    MenuCategory     MenuCategory   @relation(fields: [menuCategoryId], references: [id])
-    FavoriteItem     FavoriteItem[]
+    available        Boolean @default(true) // whether item is able to be ordered (86'd or not)
+    discontinued     Boolean @default(false) // whether item is no longer on the menu
+    listOrder        Int     @default(autoincrement())
+
+    MenuCategory   MenuCategory   @relation(fields: [menuCategoryId], references: [id])
+    menuCategoryId String
+    FavoriteItem   FavoriteItem[]
 }
 
 // used to store the order details so before stripe session is created
@@ -57,13 +68,15 @@ model MenuItem {
 model TransientOrder {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
-    details   Json
-    userId    String   @unique // not related to User model so that customers can still place order as a guest
+
+    details Json
+    userId  String @unique // not related to User model so that customers can still place order as a guest
 }
 
 model Order {
-    id                String    @id @default(uuid()) // first 6 digits will be used for any customer-facing order number
-    createdAt         DateTime  @default(now())
+    id        String   @id @default(uuid()) // first 6 digits will be used for any customer-facing order number
+    createdAt DateTime @default(now())
+
     orderStartedAt    DateTime?
     orderCompletedAt  DateTime?
     status            String    @default("received") // "received", "inProgress", "completed" (maybe "cancelled" too?)
@@ -87,8 +100,9 @@ model Order {
 }
 
 model Reward {
-    id             Int       @id @default(autoincrement())
-    createdAt      DateTime  @default(now())
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+
     type           String // either "discount" or "promotionMeal"
     value          Int?
     expirationDate DateTime? // not sure if this is worth it, but could simplify frontend logic a bit
@@ -112,10 +126,7 @@ model User {
     allowsPromotionalEmails  Boolean @default(true)
 
     rewardsRank   Int @default(1) // I think we would just use the string name of each rank?
-    rewardsPoints Int @default(150) // TODO: most likely change this later
-
-    previousRewardsRank   Int @default(1)
-    previousRewardsPoints Int @default(0)
+    rewardsPoints Int @default(50) // TODO: most likely change this later
 
     showRewardsNotification Boolean @default(false)
 

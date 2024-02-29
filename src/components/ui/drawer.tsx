@@ -49,13 +49,11 @@ const DrawerContent = React.forwardRef<
       )}
       {...props}
     >
-      <DrawerClose
-        className="absolute right-4 top-8 z-10"
-        asChild
-        onClick={() => console.log("hi")}
-      >
+      {/* TODO: this should be relative so it doesn't follow scrolling w/in the drawer, but wasn't
+      able to easily get it to be nestled in top right for w/e reason */}
+      {/* <DrawerClose className="absolute right-4 top-8 z-10" asChild>
         <Button variant="underline">Close</Button>
-      </DrawerClose>
+      </DrawerClose> */}
 
       <div className="baseFlex h-8 w-full shadow-md">
         <div className="mx-auto my-1 h-2 w-[75px] rounded-full bg-gray-300" />
@@ -82,7 +80,7 @@ const DrawerFooter = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn("fixed bottom-0 left-0 mt-auto w-full", className)}
+    className={cn("sticky bottom-0 left-0 mt-auto w-full", className)}
     {...props}
   />
 );

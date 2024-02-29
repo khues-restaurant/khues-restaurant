@@ -60,7 +60,6 @@ const mainFormSchema = z.object({
       },
     ),
 });
-mainFormSchema;
 
 interface GuestCheckoutDrawer {
   guestCheckoutView: "credentialsForm" | "mainView" | "notShowing";
