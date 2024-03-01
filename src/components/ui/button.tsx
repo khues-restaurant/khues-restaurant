@@ -17,6 +17,7 @@ const buttonVariants = cva(
         ghost: "",
         link: "underlineAnimation text-primary", // TODO: should have an option for the offset animation
         // to not be so far from text. mainly would be used for smaller text situations
+        // TODO: should also have an "activeLink" variant for header links when user is on that page
         underline: "text-primary underline underline-offset-2",
         text: "text-neutral-400",
       },

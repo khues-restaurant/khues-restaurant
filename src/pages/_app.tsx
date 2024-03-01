@@ -5,6 +5,8 @@ import { io } from "socket.io-client";
 
 import "~/styles/globals.css";
 import GeneralLayout from "~/components/layouts/GeneralLayout";
+import { useRouter } from "next/router";
+import DashboardLayout from "~/components/dashboard/DashboardLayout";
 
 export const socket = io({
   path: "/api/socket",
@@ -18,6 +20,8 @@ type ComponentWithPageLayout = AppProps & {
 };
 
 function MyApp({ Component, pageProps }: ComponentWithPageLayout) {
+  const { asPath } = useRouter();
+
   return (
     <ClerkProvider
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
@@ -37,16 +41,22 @@ function MyApp({ Component, pageProps }: ComponentWithPageLayout) {
       }}
       {...pageProps}
     >
-      <GeneralLayout>
-        {Component.PageLayout ? (
-          // @ts-expect-error TODO: fix this type error later
-          <Component.PageLayout>
-            <Component {...pageProps} />
-          </Component.PageLayout>
-        ) : (
+      {asPath.includes("/dashboard") ? (
+        <DashboardLayout>
           <Component {...pageProps} />
-        )}
-      </GeneralLayout>
+        </DashboardLayout>
+      ) : (
+        <GeneralLayout>
+          {Component.PageLayout ? (
+            // @ts-expect-error TODO: fix this type error later
+            <Component.PageLayout>
+              <Component {...pageProps} />
+            </Component.PageLayout>
+          ) : (
+            <Component {...pageProps} />
+          )}
+        </GeneralLayout>
+      )}
     </ClerkProvider>
   );
 }

@@ -18,21 +18,28 @@ const AccordionItem = React.forwardRef<
 ));
 AccordionItem.displayName = "AccordionItem";
 
+interface AccordionTriggerProps
+  extends React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger> {
+  useCustomTrigger?: boolean;
+}
+
 const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
-  <AccordionPrimitive.Header className="flex">
+  AccordionTriggerProps
+>(({ className, children, useCustomTrigger, ...props }, ref) => (
+  <AccordionPrimitive.Header className="relative flex">
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "relative flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
+        `flex flex-1 items-center justify-between ${useCustomTrigger ? "" : "py-4"} font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180`,
         className,
       )}
       {...props}
     >
       {children}
-      <ChevronDown className="absolute right-0 top-4 h-4 w-4 shrink-0 transition-transform duration-200" />
+      <ChevronDown
+        className={`absolute ${useCustomTrigger ? "-right-6 -top-6 text-primary" : "right-0 top-4"} h-4 w-4 shrink-0 transition-transform duration-200`}
+      />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ));

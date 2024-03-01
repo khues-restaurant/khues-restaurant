@@ -5,10 +5,12 @@ import { createTRPCRouter } from "~/server/api/trpc";
 import { userRouter } from "~/server/api/routers/user";
 import { paymentRouter } from "~/server/api/routers/payment";
 import { orderRouter } from "~/server/api/routers/order";
+import { menuItemRouter } from "~/server/api/routers/menuItem";
 
 export const appRouter = createTRPCRouter({
   user: userRouter,
   menuCategory: menuCategoryRouter,
+  menuItem: menuItemRouter,
   payment: paymentRouter,
   transientOrder: transientOrderRouter,
   order: orderRouter,

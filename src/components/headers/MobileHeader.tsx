@@ -104,12 +104,7 @@ function MobileHeader() {
 
         <Sheet open={sheetIsOpen} onOpenChange={(open) => setSheetIsOpen(open)}>
           <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              className="relative mr-2"
-              // TODO: come back to trying to get this to stay on top of <Sheet> component.
-              // maybe have to use portals?
-            >
+            <Button variant="ghost" className="relative mr-2">
               <span
                 aria-hidden="true"
                 style={
@@ -381,7 +376,6 @@ function MobileHeader() {
 
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1" className="border-none">
-                  {/* maybe need specific variant or just some custom code here to  */}
                   <AccordionTrigger className="baseFlex py-2 text-xl text-primary !no-underline">
                     Hours & Location
                   </AccordionTrigger>
@@ -417,7 +411,6 @@ function MobileHeader() {
 
                       <Separator className="w-4/5 self-center" />
 
-                      {/* maybe worthwhile to do textual introduction like "We are located just outside of the HarMar Mall in Roseville, Minnesota." */}
                       <div className="baseVertFlex !items-start">
                         <div className="baseVertFlex w-full !items-start gap-2">
                           <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">

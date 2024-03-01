@@ -15,8 +15,9 @@ export const userRouter = createTRPCRouter({
         where: {
           userId,
         },
-        select: {},
       });
+
+      console.log("user", user, Boolean(user));
 
       return Boolean(user);
     }),
@@ -32,7 +33,7 @@ export const userRouter = createTRPCRouter({
           .string()
           .min(10)
           .max(20)
-          .regex(/^\+?[0-9\s-]+$/),
+          .regex(/^\(\d{3}\) \d{3}-\d{4}$/),
         birthday: z.date(),
         dietaryRestrictions: z.string().max(100),
       }),

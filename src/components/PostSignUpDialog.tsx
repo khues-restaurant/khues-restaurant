@@ -76,11 +76,7 @@ function PostSignUpDialog() {
   const { user } = useUser();
   const userId = useGetUserId();
 
-  const {
-    data: userExists,
-    // isFetching: fetchingTabCreator,
-    // refetch: refetchTabCreator,
-  } = api.user.isUserRegistered.useQuery(userId, {
+  const { data: userExists } = api.user.isUserRegistered.useQuery(userId, {
     enabled: Boolean(userId && isSignedIn),
   });
 
@@ -98,8 +94,6 @@ function PostSignUpDialog() {
       },
     });
 
-  // need api.user.create() here
-
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [initialRewardsPoints, setInitialRewardsPoints] = useState(0);
@@ -112,7 +106,7 @@ function PostSignUpDialog() {
     useState<z.infer<typeof dietaryRestrictionsSchema> | null>(null);
 
   useEffect(() => {
-    if (userId && isSignedIn && !userExists) {
+    if (userId && isSignedIn && userExists !== undefined && !userExists) {
       setIsOpen(true);
     }
   }, [isSignedIn, userExists, userId]);
@@ -599,7 +593,7 @@ function PostSignUpDialog() {
                                 cy="12"
                                 r="10"
                                 stroke="currentColor"
-                                stroke-width="4"
+                                strokeWidth="4"
                               ></circle>
                               <path
                                 className="opacity-75"

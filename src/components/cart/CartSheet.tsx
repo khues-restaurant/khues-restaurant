@@ -109,7 +109,7 @@ function CartSheet({
           return date >= now;
         },
         {
-          message: "Pickup date must be today or later",
+          message: "The pickup date cannot be in the past.",
         },
       ),
     timeToPickUp: z
@@ -213,7 +213,7 @@ function CartSheet({
       </div>
 
       {/* location + date & time picker  (TODO: why doesn't horizontal margin work here with w-full..) */}
-      <div className="baseFlex my-4 w-[70%] flex-wrap !justify-start gap-2 rounded-md border-b bg-gray-200 p-4 px-8">
+      <div className="baseFlex my-4 w-[80%] flex-wrap !justify-start gap-2 rounded-md border-b bg-gray-200 p-4 px-8">
         <span>Your order will be available for pickup at</span>
         <div className="baseFlex gap-2">
           <div className="baseFlex gap-2">
@@ -227,13 +227,13 @@ function CartSheet({
         </div>
 
         <Form {...mainForm}>
-          <form className="baseVertFlex !items-start gap-2">
+          <form className="baseFlex !items-start gap-2">
             <FormField
               control={mainForm.control}
               name="dateToPickUp"
               render={({ field, fieldState: { invalid } }) => (
                 <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                  <div className="baseFlex gap-2">
+                  <div className="baseVertFlex !items-start gap-2">
                     <FormLabel className="font-semibold">Pickup date</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
@@ -288,7 +288,7 @@ function CartSheet({
               name="timeToPickUp"
               render={({ field, fieldState: { invalid } }) => (
                 <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                  <div className="baseFlex gap-2">
+                  <div className="baseVertFlex !items-start gap-2">
                     <FormLabel className="font-semibold">Pickup time</FormLabel>
                     <Select
                       onValueChange={field.onChange}

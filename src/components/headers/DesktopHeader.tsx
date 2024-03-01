@@ -34,6 +34,7 @@ import { FaMapSigns } from "react-icons/fa";
 import { Separator } from "~/components/ui/separator";
 import { SlPresent } from "react-icons/sl";
 import { TfiReceipt } from "react-icons/tfi";
+import { api } from "~/utils/api";
 
 import classes from "./DesktopHeader.module.css";
 import useGetUserId from "~/hooks/useGetUserId";
@@ -41,12 +42,10 @@ import CartButton from "~/components/cart/CartButton";
 
 function DesktopHeader() {
   const { isSignedIn } = useAuth();
-  const { user } = useUser();
   const { asPath } = useRouter();
   const userId = useGetUserId();
 
-  // const localStorageTabData = useLocalStorageValue("tabData");
-  // const localStorageRedirectRoute = useLocalStorageValue("redirectRoute");
+  const { data: user } = api.user.get.useQuery(userId);
 
   // okay I want to not show rewards/auth buttons until user auth status is known,
   // however I *really* want to show the page as soon as possible, what options do I have here?
@@ -222,12 +221,12 @@ function DesktopHeader() {
           </div>
         )}
 
-        {isSignedIn && (
+        {isSignedIn && user && (
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className="baseFlex gap-2">
                 <FaUserAlt />
-                Firstname
+                {user.firstName}
               </Button>
             </PopoverTrigger>
             <PopoverContent side="bottom" align="end">
@@ -338,7 +337,6 @@ function DesktopHeader() {
 
             <Separator orientation="vertical" className="h-4/5 self-center" />
 
-            {/* maybe worthwhile to do textual introduction like "We are located just outside of the HarMar Mall in Roseville, Minnesota." */}
             <div className="baseVertFlex !items-start">
               <div className="baseVertFlex !items-start gap-2">
                 <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
@@ -372,8 +370,6 @@ function DesktopHeader() {
           </div>
         </DialogContent>
       </Dialog>
-
-      <div></div>
     </nav>
   );
 }

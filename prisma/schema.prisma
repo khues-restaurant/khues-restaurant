@@ -77,9 +77,20 @@ model Order {
     id        String   @id @default(uuid()) // first 6 digits will be used for any customer-facing order number
     createdAt DateTime @default(now())
 
-    orderStartedAt    DateTime?
-    orderCompletedAt  DateTime?
-    status            String    @default("received") // "received", "inProgress", "completed" (maybe "cancelled" too?)
+    orderStartedAt   DateTime?
+    orderCompletedAt DateTime?
+
+    // datetimeToPickup DateTime
+
+    // TODO: do we want to instead just have a datetime for date to be picked up?
+    // that includes the time as well? Think about tradeoffs and what exactly would
+    // need to happen conversion wise.
+    // ^ although if they really are the raw datetimes then would just have to
+    // set the minOrderTime to the actual datetime instead of the number value
+    // and then it would just be datetimeToPickup >= minOrderDatetime
+    // so then in cron it would reset to the new day's 00:00 datetime of that day!
+
+    status            String @default("received") // "received", "inProgress", "completed" (maybe "cancelled" too?)
     firstName         String
     lastName          String
     email             String
