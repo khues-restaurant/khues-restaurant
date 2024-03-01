@@ -272,6 +272,7 @@ function GuestCheckoutDialog({
                                 }
                                 onBlur={onBlur}
                                 placeholder="(012) 345-6789"
+                                type={"tel"}
                                 className="w-full"
                               />
                             </FormControl>
