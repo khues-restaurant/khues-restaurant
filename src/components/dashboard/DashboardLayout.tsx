@@ -1,7 +1,7 @@
 import { AnimatePresence } from "framer-motion";
 import { useEffect, type ReactNode, useState } from "react";
 import { socket } from "~/pages/_app";
-import { EB_Garamond } from "next/font/google";
+import { Noto_Serif } from "next/font/google";
 import HeaderShell from "~/components/headers/HeaderShell";
 import Footer from "~/components/Footer";
 import { api } from "~/utils/api";
@@ -16,7 +16,7 @@ import OrderManagement from "~/components/dashboard/OrderManagement";
 import CustomerChats from "~/components/dashboard/CustomerChats";
 import ItemManagement from "~/components/dashboard/ItemManagement";
 
-const ebGaramond = EB_Garamond({
+const notoSerif = Noto_Serif({
   weight: ["400", "500", "600", "700"], // TODO: probably want to relook at these and only import ones we are using
   style: ["normal", "italic"],
   subsets: ["latin"],
@@ -60,7 +60,7 @@ function DashboardLayout({ children }: DashboardLayout) {
 
   return (
     <main
-      className={`${ebGaramond.className} baseVertFlex relative min-h-[100dvh] w-full !justify-between`}
+      className={`${notoSerif.className} baseVertFlex relative min-h-[100dvh] w-full !justify-between`}
     >
       <DashboardHeaderShell viewState={viewState} setViewState={setViewState} />
 

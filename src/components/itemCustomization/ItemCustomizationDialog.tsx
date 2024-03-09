@@ -1,5 +1,5 @@
-import { type MenuItem } from "@prisma/client";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { type CustomizationChoice } from "@prisma/client";
+import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
 import { LuMinus, LuPlus } from "react-icons/lu";
 import AnimatedPrice from "~/components/AnimatedPrice";
 import { Button } from "~/components/ui/button";
@@ -10,17 +10,27 @@ import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
-import { useMainStore, type Item } from "~/stores/MainStore";
+import {
+  useMainStore,
+  type Item,
+  type StoreCustomizationChoice,
+} from "~/stores/MainStore";
 import { api } from "~/utils/api";
+import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { formatPrice } from "~/utils/formatPrice";
-import { safeMultiplyPriceAndQuantity } from "~/utils/safeMultiplyPriceAndQuantity";
 import isEqual from "lodash.isequal";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  type StoreCustomizationCategory,
+  type FullMenuItem,
+} from "~/server/api/routers/menuCategory";
+import useCalculateRelativeTotal from "~/hooks/useCalculateRelativeTotal";
 
 interface ItemCustomizationDialog {
   isDialogOpen: boolean;
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
-  itemToCustomize: MenuItem | null;
-  setItemToCustomize: Dispatch<SetStateAction<MenuItem | null>>;
+  itemToCustomize: FullMenuItem | null;
+  setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
   itemOrderDetails?: Item;
   forCart?: boolean;
 }
@@ -60,7 +70,7 @@ function ItemCustomizationDialog({
 export default ItemCustomizationDialog;
 
 interface ItemCustomizerDialogContent {
-  itemToCustomize: MenuItem;
+  itemToCustomize: FullMenuItem;
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
   itemOrderDetails?: Item;
   forCart?: boolean;
@@ -81,16 +91,19 @@ function ItemCustomizerDialogContent({
   }));
 
   const { updateOrder } = useUpdateOrder();
+  const { calculateRelativeTotal } = useCalculateRelativeTotal();
 
   const [localItemOrderDetails, setLocalItemOrderDetails] = useState(
     itemOrderDetails ?? {
       id: crypto.randomUUID(),
       name: itemToCustomize.name,
-      customizations: [],
+      customizations: [] as StoreCustomizationChoice[],
       specialInstructions: "",
       includeDietaryRestrictions: false,
       quantity: 1,
       price: itemToCustomize.price,
+      itemId: itemToCustomize.id,
+      discountId: itemToCustomize.activeDiscountId,
     },
   );
 
@@ -119,8 +132,24 @@ function ItemCustomizerDialogContent({
           </div>
 
           {/* Customizations */}
-          {/* <div className="baseVertFlex w-full gap-2">
-          </div> */}
+          {itemToCustomize.customizationCategory.length > 0 && (
+            <div className="baseVertFlex w-full !items-start gap-2">
+              <p className="text-lg underline underline-offset-2">
+                Customizations
+              </p>
+
+              <div className="baseVertFlex w-full gap-2">
+                {itemToCustomize.customizationCategory.map((category) => (
+                  <CustomizationGroup
+                    key={category.id}
+                    category={category}
+                    localItemOrderDetails={localItemOrderDetails}
+                    setLocalItemOrderDetails={setLocalItemOrderDetails}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Special instructions */}
           <div className="baseVertFlex w-full !items-start gap-2">
@@ -269,10 +298,7 @@ function ItemCustomizerDialogContent({
                   -
                   <AnimatedPrice
                     price={formatPrice(
-                      safeMultiplyPriceAndQuantity(
-                        localItemOrderDetails.price,
-                        localItemOrderDetails.quantity,
-                      ),
+                      calculateRelativeTotal([localItemOrderDetails]),
                     )}
                   />
                 </div>
@@ -282,5 +308,138 @@ function ItemCustomizerDialogContent({
         </DialogFooter>
       </div>
     </DialogContent>
+  );
+}
+
+interface CustomizationGroup {
+  category: StoreCustomizationCategory;
+  localItemOrderDetails: Item;
+  setLocalItemOrderDetails: Dispatch<SetStateAction<Item>>;
+}
+
+function CustomizationGroup({
+  category,
+  localItemOrderDetails,
+  setLocalItemOrderDetails,
+}: CustomizationGroup) {
+  const [priceOfSelectedChoiceId, setPriceOfSelectedChoiceId] = useState(0);
+
+  useEffect(() => {
+    const selectedCustomizationId =
+      localItemOrderDetails.customizations?.find(
+        (c) => c.categoryId === category.id,
+      )?.choiceId ?? category.defaultChoiceId;
+
+    setPriceOfSelectedChoiceId(
+      category.customizationChoice.find((c) => c.id === selectedCustomizationId)
+        ?.priceAdjustment ?? 0,
+    );
+  }, [
+    localItemOrderDetails.customizations,
+    category.customizationChoice,
+    category.defaultChoiceId,
+    category.id,
+  ]);
+
+  return (
+    <div key={category.id} className="baseVertFlex w-full !items-start">
+      <p className="text-lg font-semibold">{category.name}</p>
+      <p className="text-gray-400">{category.description}</p>
+      <div className="baseFlex mt-2 gap-2">
+        <RadioGroup
+          value={
+            localItemOrderDetails.customizations?.find(
+              (c) => c.categoryId === category.id,
+            )?.choiceId ?? category.defaultChoiceId
+          }
+        >
+          {category.customizationChoice.map((choice) => (
+            <CustomizationOption
+              key={choice.id}
+              choice={choice}
+              isSelected={
+                localItemOrderDetails.customizations?.find(
+                  (c) => c.categoryId === category.id,
+                )?.choiceId === choice.id
+              }
+              relativePrice={choice.priceAdjustment - priceOfSelectedChoiceId}
+              setLocalItemOrderDetails={setLocalItemOrderDetails}
+            />
+          ))}
+        </RadioGroup>
+      </div>
+    </div>
+  );
+}
+
+interface CustomizationOption {
+  choice: CustomizationChoice;
+  isSelected: boolean;
+  relativePrice: number;
+  setLocalItemOrderDetails: Dispatch<SetStateAction<Item>>;
+}
+
+function CustomizationOption({
+  choice,
+  isSelected,
+  relativePrice,
+  setLocalItemOrderDetails,
+}: CustomizationOption) {
+  // const [choiceIsSelected, setChoiceIsSelected] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div
+      key={choice.id}
+      // style={{
+      //   borderColor: isHovered ? "var(--color-primary)" : "var(--color-gray-300)",
+      // }}
+      className={`baseFlex relative min-w-96 cursor-pointer !justify-start gap-4 rounded-md border-2 p-4 transition-all ${isHovered || isSelected ? "border-primary" : "border-gray-300"}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onTouchStart={() => setIsHovered(true)}
+      onTouchEnd={() => setIsHovered(false)}
+      onTouchCancel={() => setIsHovered(false)}
+      onClick={() => {
+        setLocalItemOrderDetails((prev) => {
+          const newCustomizations = prev.customizations.filter(
+            (c) => c.categoryId !== choice.customizationCategoryId,
+          );
+
+          newCustomizations.push({
+            categoryId: choice.customizationCategoryId,
+            choiceId: choice.id,
+          });
+
+          return {
+            ...prev,
+            customizations: newCustomizations,
+          };
+        });
+      }}
+      // prob have onClick be a function that sets the radio button
+    >
+      <RadioGroupItem id={choice.id} value={choice.id} />
+      <div className="baseVertFlex h-full w-full gap-2">
+        <Label htmlFor={choice.id} className="self-start">
+          {choice.name}
+        </Label>
+        <p className="self-start text-gray-400">{choice.description}</p>
+        <AnimatePresence>
+          {!isSelected && (
+            <motion.p
+              key={choice.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute bottom-2 right-4"
+            >
+              {formatPrice(relativePrice)}
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
   );
 }

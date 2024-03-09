@@ -1,7 +1,8 @@
 import { devtools } from "zustand/middleware";
 import { createWithEqualityFn } from "zustand/traditional";
 import { shallow } from "zustand/shallow";
-import { type MenuItem } from "@prisma/client";
+import { type Discount, type MenuItem } from "@prisma/client";
+import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 
 // might want to use this pattern at some point based on some route navigation
 // const initialStoreState = {};
@@ -17,18 +18,17 @@ import { type MenuItem } from "@prisma/client";
 
 export type StoreMenuItems = Record<string, MenuItem>;
 
-type Customization = Record<string, string>;
+export interface StoreCustomizationChoice {
+  categoryId: string;
+  choiceId: string;
+}
 
 export interface Item {
-  id: string;
+  id: string; // unique uuid to identify the item
+  itemId: string; // tied to database row id
   name: string;
-  customizations: Customization[];
-  // {
-  // this will be depending on exactly what is being ordered right?
-  // like for a fountain drink you would probably need:
-  // type: “Coke” | “Sprite” | etc..
-  // size: “Small” | “Medium” | “Large”
-  // };
+  customizations: StoreCustomizationChoice[];
+  discountId: string | null; // tied to database row id (not an array because should only allow one discount per item)
   specialInstructions: string;
   includeDietaryRestrictions: boolean;
   quantity: number;
@@ -37,21 +37,34 @@ export interface Item {
 
 export interface OrderDetails {
   dateToPickUp?: Date;
-  timeToPickUp?: string; // will be in the direct form of "6:00 PM" or w/e in intervals of 15 minutes
+  timeToPickUp?: string; // will be in the direct form of "6:00 PM" or w/e in intervals of 30 minutes
   items: Item[];
-  discount?: {
-    title: string;
-    value: number;
+  includeNapkinsAndUtensils: boolean;
+
+  rewardBeingRedeemed?: {
+    reward: Discount;
+    item: Item;
   };
+
   // subtotal, tax, and total will be calculated dynamically
   // based on what the items are and what the discount is
 }
+
+// TODO: need absolutely airtight validation on initialization from localStorage/db values
 
 interface StoreState {
   orderDetails: OrderDetails;
   setOrderDetails: (orderDetails: OrderDetails) => void;
   menuItems: StoreMenuItems;
   setMenuItems: (menuItems: StoreMenuItems) => void;
+
+  customizationChoices: Record<string, CustomizationChoiceAndCategory>;
+  setCustomizationChoices: (
+    customizationChoices: Record<string, CustomizationChoiceAndCategory>,
+  ) => void;
+
+  discounts: Record<string, Discount>;
+  setDiscounts: (discounts: Record<string, Discount>) => void;
 }
 
 export const useMainStore = createWithEqualityFn<StoreState>()(
@@ -61,10 +74,7 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
         dateToPickUp: new Date(),
         timeToPickUp: "",
         items: [],
-        discount: {
-          title: "",
-          value: 0,
-        },
+        includeNapkinsAndUtensils: false,
       },
       setOrderDetails: (orderDetails: OrderDetails) => {
         set({ orderDetails });
@@ -74,6 +84,18 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
       // constantly have to be ?. chaining
       setMenuItems: (menuItems: StoreMenuItems) => {
         set({ menuItems });
+      },
+
+      customizationChoices: {},
+      setCustomizationChoices: (
+        customizationChoices: Record<string, CustomizationChoiceAndCategory>,
+      ) => {
+        set({ customizationChoices });
+      },
+
+      discounts: {},
+      setDiscounts: (discounts: Record<string, Discount>) => {
+        set({ discounts });
       },
     }),
     shallow,

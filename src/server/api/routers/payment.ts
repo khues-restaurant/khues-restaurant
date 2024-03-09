@@ -85,7 +85,9 @@ export const paymentRouter = createTRPCRouter({
         success_url:
           "http://localhost:3000/payment-success?session_id={CHECKOUT_SESSION_ID}",
         cancel_url: "http://localhost:3000/",
-        // expires_at: Math.floor(Date.now() / 1000) + 60 * 60 * 2, // Checkout will auto-expire in 2 hours
+        expires_at: Math.floor(Date.now() / 1000) + 60 * 15, // Checkout will auto-expire in 15mins. Should be
+        // long enough for customer to sort out their payment while covering us from people ordering later
+        // and forcing kitchen to prepare order way faster than they should have to.
       });
     }),
   getStripeSession: publicProcedure

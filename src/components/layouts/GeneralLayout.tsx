@@ -1,6 +1,6 @@
 import { AnimatePresence } from "framer-motion";
 import { useEffect, type ReactNode } from "react";
-import { EB_Garamond } from "next/font/google";
+import { Noto_Serif } from "next/font/google";
 import HeaderShell from "~/components/headers/HeaderShell";
 import Footer from "~/components/Footer";
 import { api } from "~/utils/api";
@@ -11,7 +11,7 @@ import {
 } from "~/stores/MainStore";
 import PostSignUpDialog from "~/components/PostSignUpDialog";
 
-const ebGaramond = EB_Garamond({
+const notoSerif = Noto_Serif({
   weight: ["400", "500", "600", "700"], // TODO: probably want to relook at these and only import ones we are using
   style: ["normal", "italic"],
   subsets: ["latin"],
@@ -23,12 +23,54 @@ interface GeneralLayout {
 }
 
 function GeneralLayout({ children }: GeneralLayout) {
-  const { setOrderDetails, setMenuItems } = useMainStore((state) => ({
+  const {
+    setOrderDetails,
+    setMenuItems,
+    customizationChoices,
+    setCustomizationChoices,
+    discounts,
+    setDiscounts,
+  } = useMainStore((state) => ({
     setOrderDetails: state.setOrderDetails,
     setMenuItems: state.setMenuItems,
+    customizationChoices: state.customizationChoices,
+    setCustomizationChoices: state.setCustomizationChoices,
+    discounts: state.discounts,
+    setDiscounts: state.setDiscounts,
   }));
 
   const { data: menuCategories } = api.menuCategory.getAll.useQuery();
+  const { data: databaseCustomizationChoices } =
+    api.customizationChoice.getAll.useQuery();
+  const { data: databaseDiscounts } = api.discount.getAll.useQuery();
+
+  useEffect(() => {
+    console.log(
+      customizationChoices,
+      discounts,
+      customizationChoices,
+      discounts,
+    );
+
+    if (
+      (Object.keys(customizationChoices).length !== 0 &&
+        Object.keys(discounts).length !== 0) ||
+      !databaseCustomizationChoices ||
+      !databaseDiscounts
+    )
+      return;
+
+    setCustomizationChoices(databaseCustomizationChoices);
+
+    setDiscounts(databaseDiscounts);
+  }, [
+    customizationChoices,
+    setCustomizationChoices,
+    discounts,
+    setDiscounts,
+    databaseCustomizationChoices,
+    databaseDiscounts,
+  ]);
 
   useEffect(() => {
     if (!menuCategories) return;
@@ -58,7 +100,7 @@ function GeneralLayout({ children }: GeneralLayout) {
 
   return (
     <main
-      className={`${ebGaramond.className} baseVertFlex relative min-h-[100dvh] !justify-between`}
+      className={`${notoSerif.className} baseVertFlex relative min-h-[100dvh] !justify-between`}
     >
       <HeaderShell />
 

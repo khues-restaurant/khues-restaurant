@@ -56,6 +56,35 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
+  getRewards: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input: userId }) => {
+      console.log(userId, "userId");
+
+      const rewards = await ctx.prisma.user.findFirst({
+        where: {
+          userId,
+        },
+        select: {
+          discounts: {
+            where: {
+              expirationDate: {
+                gt: new Date(),
+              },
+              active: true,
+              userId: {
+                equals: userId,
+              },
+            },
+          },
+        },
+      });
+
+      console.log("rewards", rewards?.discounts);
+
+      return rewards?.discounts;
+    }),
+
   update: protectedProcedure
     .input(
       z.object({

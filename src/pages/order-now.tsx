@@ -1,5 +1,5 @@
 import { useAuth } from "@clerk/nextjs";
-import { type MenuItem } from "@prisma/client";
+import { type Discount, type MenuItem } from "@prisma/client";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import {
   useEffect,
@@ -17,9 +17,12 @@ import { Drawer, DrawerContent } from "~/components/ui/drawer";
 import { Skeleton } from "~/components/ui/skeleton";
 import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
+import { FullMenuItem } from "~/server/api/routers/menuCategory";
 import { useMainStore } from "~/stores/MainStore";
+import useCalculateRelativeTotal from "~/hooks/useCalculateRelativeTotal";
 import { api } from "~/utils/api";
 import { formatPrice } from "~/utils/formatPrice";
+import { getLineItemPrice } from "~/utils/getLineItemPrice";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
@@ -39,7 +42,9 @@ function OrderNow() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const [itemToCustomize, setItemToCustomize] = useState<MenuItem | null>(null);
+  const [itemToCustomize, setItemToCustomize] = useState<FullMenuItem | null>(
+    null,
+  );
 
   const viewportLabel = useGetViewportLabel();
 
@@ -203,7 +208,8 @@ function OrderNow() {
                 <MenuCategory
                   key={category.id}
                   name={category.name}
-                  menuItems={category.menuItems}
+                  activeDiscount={category.activeDiscount}
+                  menuItems={category.menuItems as FullMenuItem[]}
                   currentlyInViewCategory={currentlyInViewCategory}
                   setCurrentlyInViewCategory={setCurrentlyInViewCategory}
                   programmaticallyScrolling={programmaticallyScrolling}
@@ -299,17 +305,19 @@ function MenuCategoryButton({
 
 interface MenuCategory {
   name: string;
-  menuItems: MenuItem[];
+  activeDiscount: Discount | null;
+  menuItems: FullMenuItem[];
   currentlyInViewCategory: string;
   setCurrentlyInViewCategory: Dispatch<SetStateAction<string>>;
   programmaticallyScrolling: boolean;
   setIsDrawerOpen: Dispatch<SetStateAction<boolean>>;
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
-  setItemToCustomize: Dispatch<SetStateAction<MenuItem | null>>;
+  setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
 }
 
 function MenuCategory({
   name,
+  activeDiscount,
   menuItems,
   currentlyInViewCategory,
   setCurrentlyInViewCategory,
@@ -354,9 +362,17 @@ function MenuCategory({
       animate={{ opacity: 1 }}
       className="baseVertFlex w-full scroll-m-44 !items-start gap-4 p-2"
     >
-      <p className="text-lg font-semibold underline underline-offset-2">
-        {name}
-      </p>
+      <div className="baseFlex gap-4">
+        <p className="text-lg font-semibold underline underline-offset-2">
+          {name}
+        </p>
+
+        {activeDiscount && (
+          <div className="baseFlex rounded-md bg-primary px-4 py-0.5 text-white">
+            <p>{activeDiscount.name}</p>
+          </div>
+        )}
+      </div>
 
       {/* wrapping container for each food item in the category */}
       <div className="baseFlex w-full flex-wrap !justify-start gap-4">
@@ -364,6 +380,7 @@ function MenuCategory({
           <MenuItemPreviewButton
             key={item.id}
             menuItem={item}
+            activeDiscount={activeDiscount}
             setIsDialogOpen={setIsDialogOpen}
             setIsDrawerOpen={setIsDrawerOpen}
             setItemToCustomize={setItemToCustomize}
@@ -375,14 +392,16 @@ function MenuCategory({
 }
 
 interface MenuItemPreviewButton {
-  menuItem: MenuItem;
+  menuItem: FullMenuItem;
+  activeDiscount: Discount | null;
   setIsDrawerOpen: Dispatch<SetStateAction<boolean>>;
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
-  setItemToCustomize: Dispatch<SetStateAction<MenuItem | null>>;
+  setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
 }
 
 function MenuItemPreviewButton({
   menuItem,
+  activeDiscount,
   setIsDialogOpen,
   setIsDrawerOpen,
   setItemToCustomize,
@@ -396,6 +415,7 @@ function MenuItemPreviewButton({
   const [showCheckmark, setShowCheckmark] = useState(false);
 
   const { updateOrder } = useUpdateOrder();
+  const { calculateRelativeTotal } = useCalculateRelativeTotal();
 
   return (
     <div className="relative h-48 w-full max-w-96">
@@ -424,7 +444,27 @@ function MenuItemPreviewButton({
               {menuItem.description}
             </p>
           </div>
-          <p className="self-end text-base">{formatPrice(menuItem.price)}</p>
+          <p
+            className={`self-end text-base ${activeDiscount ? "rounded-md bg-primary px-4 py-0.5 text-white" : ""}`}
+          >
+            {formatPrice(
+              calculateRelativeTotal([
+                {
+                  price: menuItem.price,
+                  quantity: 1,
+                  discountId: activeDiscount?.id ?? null,
+
+                  // only necessary to fit Item shape
+                  id: menuItem.id,
+                  itemId: menuItem.id,
+                  customizations: [],
+                  includeDietaryRestrictions: false,
+                  name: menuItem.name,
+                  specialInstructions: "",
+                },
+              ]),
+            )}
+          </p>
         </div>
       </Button>
 
@@ -444,12 +484,14 @@ function MenuItemPreviewButton({
                 ...orderDetails.items,
                 {
                   id: crypto.randomUUID(),
+                  itemId: menuItem.id,
                   name: menuItem.name,
                   customizations: [],
                   specialInstructions: "",
                   includeDietaryRestrictions: false,
                   quantity: 1,
                   price: menuItem.price,
+                  discountId: activeDiscount?.id ?? null,
                 },
               ],
             },

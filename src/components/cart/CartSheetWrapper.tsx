@@ -5,6 +5,7 @@ import CartDrawer from "~/components/cart/CartDrawer";
 import CartSheet from "~/components/cart/CartSheet";
 import GuestCheckoutDialog from "~/components/cart/GuestCheckoutDialog";
 import GuestCheckoutDrawer from "~/components/cart/GuestCheckoutDrawer";
+import RewardsDialog from "~/components/cart/RewardsDialog";
 import ItemCustomizationDialog from "~/components/itemCustomization/ItemCustomizationDialog";
 import ItemCustomizationDrawer from "~/components/itemCustomization/ItemCustomizationDrawer";
 import { Dialog } from "~/components/ui/dialog";
@@ -24,6 +25,8 @@ function CartSheetWrapper({
   }));
 
   const [isEditingItem, setIsEditingItem] = useState(false);
+
+  const [showRewardsDialog, setShowRewardsDialog] = useState(false);
 
   const [guestCheckoutView, setGuestCheckoutView] = useState<
     "credentialsForm" | "mainView" | "notShowing"
@@ -70,10 +73,16 @@ function CartSheetWrapper({
               setInitialItemState={setInitialItemState}
               setGuestCheckoutView={setGuestCheckoutView}
               setIsEditingItem={setIsEditingItem}
+              setShowRewardsDialog={setShowRewardsDialog}
             />
           </div>
         </SheetContent>
       </Sheet>
+
+      <RewardsDialog
+        showRewardsDialog={showRewardsDialog}
+        setShowRewardsDialog={setShowRewardsDialog}
+      />
 
       <ItemCustomizationDialog
         isDialogOpen={isEditingItem}

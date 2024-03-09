@@ -43,7 +43,7 @@ import { api } from "~/utils/api";
 import { formatPrice } from "~/utils/formatPrice";
 import { getDisabledDates } from "~/utils/getDisabledPickupDates";
 import { parseTimeToNumber } from "~/utils/parseTimeToNumber";
-import { safeMultiplyPriceAndQuantity } from "~/utils/safeMultiplyPriceAndQuantity";
+import { getLineItemPrice } from "~/utils/getLineItemPrice";
 import { cn } from "~/utils/shadcnuiUtils";
 
 interface OrderCost {
@@ -455,7 +455,7 @@ function CartDrawer({
                   <div className="baseVertFlex !items-end">
                     <AnimatedPrice
                       price={formatPrice(
-                        safeMultiplyPriceAndQuantity(item.price, item.quantity),
+                        getLineItemPrice(item.price, item.quantity),
                       )}
                     />
                     <Button

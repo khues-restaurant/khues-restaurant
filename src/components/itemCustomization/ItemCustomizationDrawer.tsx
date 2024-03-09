@@ -12,7 +12,7 @@ import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { useMainStore, type Item } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import AnimatedPrice from "~/components/AnimatedPrice";
-import { safeMultiplyPriceAndQuantity } from "~/utils/safeMultiplyPriceAndQuantity";
+import { getLineItemPrice } from "~/utils/getLineItemPrice";
 import { formatPrice } from "~/utils/formatPrice";
 import { motion } from "framer-motion";
 import { IoIosArrowBack } from "react-icons/io";
@@ -258,7 +258,7 @@ function ItemCustomizationDrawer({
                 -
                 <AnimatedPrice
                   price={formatPrice(
-                    safeMultiplyPriceAndQuantity(
+                    getLineItemPrice(
                       localItemOrderDetails.price,
                       localItemOrderDetails.quantity,
                     ),
