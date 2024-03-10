@@ -45,13 +45,6 @@ function GeneralLayout({ children }: GeneralLayout) {
   const { data: databaseDiscounts } = api.discount.getAll.useQuery();
 
   useEffect(() => {
-    console.log(
-      customizationChoices,
-      discounts,
-      customizationChoices,
-      discounts,
-    );
-
     if (
       (Object.keys(customizationChoices).length !== 0 &&
         Object.keys(discounts).length !== 0) ||

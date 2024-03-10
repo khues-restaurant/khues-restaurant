@@ -47,8 +47,6 @@ function AvailablePickupTimes({
   ]);
 
   useEffect(() => {
-    console.log(minPickupTime);
-
     if (minPickupTime === undefined) return;
 
     let basePickupTimes = [
@@ -82,12 +80,8 @@ function AvailablePickupTimes({
       });
     }
 
-    console.log("setting to", basePickupTimes);
-
     setAvailablePickupTimes(basePickupTimes);
   }, [selectedDate, minPickupTime]);
-
-  console.log(minPickupTime, availablePickupTimes);
 
   return (
     <SelectGroup>

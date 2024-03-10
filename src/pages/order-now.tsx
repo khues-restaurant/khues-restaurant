@@ -19,7 +19,7 @@ import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { FullMenuItem } from "~/server/api/routers/menuCategory";
 import { useMainStore } from "~/stores/MainStore";
-import useCalculateRelativeTotal from "~/hooks/useCalculateRelativeTotal";
+import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { api } from "~/utils/api";
 import { formatPrice } from "~/utils/formatPrice";
 import { getLineItemPrice } from "~/utils/getLineItemPrice";
@@ -406,16 +406,19 @@ function MenuItemPreviewButton({
   setIsDrawerOpen,
   setItemToCustomize,
 }: MenuItemPreviewButton) {
-  const { orderDetails } = useMainStore((state) => ({
-    orderDetails: state.orderDetails,
-  }));
+  const { orderDetails, customizationChoices, discounts } = useMainStore(
+    (state) => ({
+      orderDetails: state.orderDetails,
+      customizationChoices: state.customizationChoices,
+      discounts: state.discounts,
+    }),
+  );
 
   const viewportLabel = useGetViewportLabel();
 
   const [showCheckmark, setShowCheckmark] = useState(false);
 
   const { updateOrder } = useUpdateOrder();
-  const { calculateRelativeTotal } = useCalculateRelativeTotal();
 
   return (
     <div className="relative h-48 w-full max-w-96">
@@ -448,21 +451,25 @@ function MenuItemPreviewButton({
             className={`self-end text-base ${activeDiscount ? "rounded-md bg-primary px-4 py-0.5 text-white" : ""}`}
           >
             {formatPrice(
-              calculateRelativeTotal([
-                {
-                  price: menuItem.price,
-                  quantity: 1,
-                  discountId: activeDiscount?.id ?? null,
+              calculateRelativeTotal({
+                items: [
+                  {
+                    price: menuItem.price,
+                    quantity: 1,
+                    discountId: activeDiscount?.id ?? null,
 
-                  // only necessary to fit Item shape
-                  id: menuItem.id,
-                  itemId: menuItem.id,
-                  customizations: [],
-                  includeDietaryRestrictions: false,
-                  name: menuItem.name,
-                  specialInstructions: "",
-                },
-              ]),
+                    // only necessary to fit Item shape
+                    id: menuItem.id,
+                    itemId: menuItem.id,
+                    customizations: [],
+                    includeDietaryRestrictions: false,
+                    name: menuItem.name,
+                    specialInstructions: "",
+                  },
+                ],
+                customizationChoices,
+                discounts,
+              }),
             )}
           </p>
         </div>

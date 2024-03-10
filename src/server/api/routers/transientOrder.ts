@@ -15,9 +15,16 @@ export const transientOrderRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.transientOrder.create({
-        data: {
+      return ctx.prisma.transientOrder.upsert({
+        where: {
           userId: input.userId,
+        },
+        create: {
+          userId: input.userId,
+          // @ts-expect-error details is just json object
+          details: input.details as unknown as Record<string, unknown>,
+        },
+        update: {
           // @ts-expect-error details is just json object
           details: input.details as unknown as Record<string, unknown>,
         },

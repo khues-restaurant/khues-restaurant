@@ -6,6 +6,7 @@ import React, {
   useEffect,
   type Dispatch,
   type SetStateAction,
+  useMemo,
 } from "react";
 import { Button } from "~/components/ui/button";
 import { Calendar } from "~/components/ui/calendar";
@@ -57,7 +58,9 @@ import useGetUserId from "~/hooks/useGetUserId";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { FaCakeCandles } from "react-icons/fa6";
-import useCalculateRelativeTotal from "~/hooks/useCalculateRelativeTotal";
+import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
+import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
+import useInitializeCheckout from "~/hooks/useInitializeCheckout";
 
 interface OrderCost {
   subtotal: number;
@@ -108,8 +111,7 @@ function CartSheet({
   const { data: minPickupTime } = api.minimOrderPickupTime.get.useQuery();
   const { data: userRewards } = api.user.getRewards.useQuery(userId);
 
-  const { calculateRelativeTotal, calculateOrderTotals } =
-    useCalculateRelativeTotal();
+  const { initializeCheckout } = useInitializeCheckout();
 
   const mainFormSchema = z.object({
     dateToPickUp: z
@@ -121,6 +123,7 @@ function CartSheet({
           const now = new Date();
           now.setHours(0, 0, 0, 0);
 
+          // fyi: returns message if expression is false
           return date >= now;
         },
         {
@@ -137,6 +140,9 @@ function CartSheet({
             return false;
           }
 
+          console.log(time, parseTimeToNumber, minPickupTime.value);
+
+          // fyi: returns message if expression is false
           return parseTimeToNumber(time) >= minPickupTime.value;
         },
         {
@@ -187,16 +193,23 @@ function CartSheet({
 
     // maybe do an isEqual here before setting the state?
 
-    setOrderCost(calculateOrderTotals(items));
+    setOrderCost(
+      calculateTotalCartPrices({
+        items,
+        customizationChoices,
+        discounts,
+      }),
+    );
   }, [
     orderDetails.items,
-    calculateOrderTotals,
     orderDetails.rewardBeingRedeemed,
+    customizationChoices,
+    discounts,
   ]);
 
   async function onMainFormSubmit(values: z.infer<typeof mainFormSchema>) {
     if (isSignedIn) {
-      // send to stripe (copy logic from <GuestCheckoutForm />)
+      await initializeCheckout(); // TODO: await or void or what here
     } else {
       setGuestCheckoutView("mainView");
     }
@@ -228,8 +241,6 @@ function CartSheet({
       </div>
     );
   }
-
-  console.log(userRewards);
 
   return (
     <div className="baseVertFlex relative h-full w-full !justify-start">
@@ -496,7 +507,13 @@ function CartSheet({
                         </div>
                       )}
                       <AnimatedPrice
-                        price={formatPrice(calculateRelativeTotal([item]))}
+                        price={formatPrice(
+                          calculateRelativeTotal({
+                            items: [item],
+                            customizationChoices,
+                            discounts,
+                          }),
+                        )}
                       />
                     </div>
 
@@ -570,9 +587,11 @@ function CartSheet({
                 <div className="baseVertFlex !items-end">
                   <AnimatedPrice
                     price={formatPrice(
-                      calculateRelativeTotal([
-                        orderDetails.rewardBeingRedeemed.item,
-                      ]),
+                      calculateRelativeTotal({
+                        items: [orderDetails.rewardBeingRedeemed.item],
+                        customizationChoices,
+                        discounts,
+                      }),
                     )}
                   />
                   <Button
@@ -636,7 +655,6 @@ function CartSheet({
                 // variant="underline"
                 className="baseFlex gap-2 font-semibold"
                 onClick={() => {
-                  console.log("showing dialog");
                   setShowRewardsDialog(true);
                 }}
               >
@@ -671,10 +689,9 @@ function CartSheet({
               <Button
                 variant="default"
                 className="text-xs font-semibold tablet:text-sm"
-                asChild
                 onClick={() => void mainForm.handleSubmit(onMainFormSubmit)()}
               >
-                <a href="/stripeCheckout">Proceed to checkout</a>
+                Proceed to checkout
               </Button>
             ) : (
               <Button

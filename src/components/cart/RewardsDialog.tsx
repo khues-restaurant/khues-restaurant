@@ -1,5 +1,5 @@
 import { type Discount } from "@prisma/client";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { CiGift } from "react-icons/ci";
@@ -346,14 +346,7 @@ function RewardOption({
                   <div className="imageFiller h-full w-full rounded-md" />
                   <div className="baseFlex absolute bottom-0 left-4 gap-2 rounded-t-md bg-white px-2">
                     {orderDetails.rewardBeingRedeemed && (
-                      <p>
-                        {
-                          rewardsItems.items[
-                            orderDetails.rewardBeingRedeemed.item
-                              .itemId as keyof typeof rewardsItems.items
-                          ].name
-                        }
-                      </p>
+                      <p>{orderDetails.rewardBeingRedeemed.item.name}</p>
                     )}
 
                     <Button
@@ -437,7 +430,12 @@ function RewardItemGroup({
 
   const { updateOrder } = useUpdateOrder();
 
-  console.log(selectedItemOption);
+  // console.log(selectedItemOption?.itemId);
+
+  console.log(
+    selectedItemOption?.itemId,
+    orderDetails.rewardBeingRedeemed?.item.itemId,
+  );
 
   return (
     <div className="baseFlex relative h-full w-full !items-start">
@@ -452,7 +450,6 @@ function RewardItemGroup({
               rewardItem={rewardItem}
               isSelected={(selectedItemOption?.itemId ?? "") === rewardItem.id}
               orderDetails={orderDetails}
-              itemPickerState={itemPickerState}
               setSelectedItemOption={setSelectedItemOption}
             />
           ))}
@@ -461,9 +458,8 @@ function RewardItemGroup({
 
       <Button
         disabled={
-          !selectedItemOption ||
-          selectedItemOption.itemId ===
-            orderDetails.rewardBeingRedeemed?.item.itemId
+          selectedItemOption?.itemId ===
+          orderDetails.rewardBeingRedeemed?.item.itemId
         }
         className="absolute bottom-0 right-0"
         onClick={() => {
@@ -475,22 +471,7 @@ function RewardItemGroup({
               ...orderDetails,
               rewardBeingRedeemed: {
                 reward: rewardBeingRedeemed,
-                item: {
-                  id: crypto.randomUUID(),
-                  itemId: selectedItemOption.id,
-                  name: selectedItemOption.name,
-                  customizations: [],
-                  discountId: rewardBeingRedeemed.id, // TODO: does this logically work out?
-
-                  // too tired right now, but can't we just use the reward id from the reward that should
-                  // already be on the rewardBeingRedeemed object? since it kind of had to be defined in order
-                  // to move onto this screen right? verify logic but I think plan on this lowkey.
-                  // just extract above here and use it as the discountId
-                  specialInstructions: "",
-                  includeDietaryRestrictions: false, // TODO: is this correct ?
-                  quantity: 1,
-                  price: selectedItemOption.price,
-                },
+                item: selectedItemOption,
               },
             },
           });
@@ -498,14 +479,6 @@ function RewardItemGroup({
       >
         Confirm selection
       </Button>
-
-      {/* start here!
-      
-      
-      
-      okay, I believe this mostly works, but just need to either get rid of dialog after onClick of
-      confirm selection, or get it so that the component "fully" rerenders so that selectedItemOption
-      state will now be defaulted/respect the new orderDetails state that was just updated */}
     </div>
   );
 }
@@ -514,7 +487,6 @@ interface RewardItemOption {
   rewardItem: RewardItem;
   isSelected: boolean;
   orderDetails: OrderDetails;
-  itemPickerState: "points" | "birthday" | "notShowing";
   setSelectedItemOption: Dispatch<SetStateAction<Item | undefined>>;
 }
 
@@ -522,11 +494,8 @@ function RewardItemOption({
   rewardItem,
   isSelected,
   orderDetails,
-
-  itemPickerState,
   setSelectedItemOption,
 }: RewardItemOption) {
-  // const [choiceIsSelected, setChoiceIsSelected] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -560,66 +529,9 @@ function RewardItemOption({
 
       <p className="self-start text-gray-400">{rewardItem.description}</p>
 
-      <RadioGroupItem
-        id={rewardItem.id}
-        value={rewardItem.id}
-        // className="h-full"
-      />
+      <RadioGroupItem id={rewardItem.id} value={rewardItem.id} />
     </motion.div>
   );
-}
-
-// use this inside:
-{
-  /* prob will just be a "Save" button in bottom right */
-}
-{
-  /* <Button
-  variant="default"
-  disabled={isEqual(localItemOrderDetails, initialItemState)}
-  className="text-xs font-semibold tablet:text-sm"
-  onClick={() => {
-    const newOrderDetails = structuredClone(orderDetails);
-
-    // just need to update the existing item
-    if (forCart) {
-      const existingItemIndex = newOrderDetails.items.findIndex(
-        (i) => i.name === itemToCustomize.name,
-      );
-
-      if (existingItemIndex !== -1) {
-        newOrderDetails.items[existingItemIndex] = localItemOrderDetails;
-      }
-    } else {
-      newOrderDetails.items.push(localItemOrderDetails);
-    }
-
-    updateOrder({
-      newOrderDetails,
-    });
-
-    setIsDialogOpen?.(false);
-  }}
->
-  <div className="baseFlex gap-2">
-    <span>{itemOrderDetails ? "Update" : "Add to order"}</span>
-    -
-    <AnimatedPrice
-      price={formatPrice(
-        calculateRelativeTotal([
-          {
-            basePrice: itemToCustomize.price,
-            quantity: localItemOrderDetails.quantity,
-            customizationChoiceIds: localItemOrderDetails.customizations.map(
-              (c) => c.choiceId,
-            ),
-            discountId: localItemOrderDetails.discountId,
-          },
-        ]),
-      )}
-    />
-  </div>
-</Button>; */
 }
 
 // vvv can prob still use this horizontal layout for mobile drawer layout!

@@ -24,7 +24,7 @@ import {
   type StoreCustomizationCategory,
   type FullMenuItem,
 } from "~/server/api/routers/menuCategory";
-import useCalculateRelativeTotal from "~/hooks/useCalculateRelativeTotal";
+import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 
 interface ItemCustomizationDialog {
   isDialogOpen: boolean;
@@ -86,12 +86,15 @@ function ItemCustomizerDialogContent({
 
   const { data: user } = api.user.get.useQuery(userId);
 
-  const { orderDetails } = useMainStore((state) => ({
-    orderDetails: state.orderDetails,
-  }));
+  const { orderDetails, customizationChoices, discounts } = useMainStore(
+    (state) => ({
+      orderDetails: state.orderDetails,
+      customizationChoices: state.customizationChoices,
+      discounts: state.discounts,
+    }),
+  );
 
   const { updateOrder } = useUpdateOrder();
-  const { calculateRelativeTotal } = useCalculateRelativeTotal();
 
   const [localItemOrderDetails, setLocalItemOrderDetails] = useState(
     itemOrderDetails ?? {
@@ -298,7 +301,11 @@ function ItemCustomizerDialogContent({
                   -
                   <AnimatedPrice
                     price={formatPrice(
-                      calculateRelativeTotal([localItemOrderDetails]),
+                      calculateRelativeTotal({
+                        items: [localItemOrderDetails],
+                        customizationChoices,
+                        discounts,
+                      }),
                     )}
                   />
                 </div>

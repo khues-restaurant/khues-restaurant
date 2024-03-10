@@ -1,0 +1,61 @@
+import { Decimal } from "decimal.js";
+import { type Discount } from "@prisma/client";
+import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
+import { type Item } from "~/stores/MainStore";
+
+interface CalculateRelativeTotal {
+  items: Item[];
+  customizationChoices: Record<string, CustomizationChoiceAndCategory>;
+  discounts: Record<string, Discount>;
+}
+
+export function calculateRelativeTotal({
+  items,
+  customizationChoices,
+  discounts,
+}: CalculateRelativeTotal): number {
+  let total = new Decimal(0);
+
+  const customizationChoiceIds = items.flatMap((i) =>
+    i.customizations.map((c) => c.choiceId),
+  );
+
+  for (const item of items) {
+    let price = new Decimal(item.price);
+
+    if (customizationChoiceIds) {
+      for (const choiceId of customizationChoiceIds) {
+        const priceAdjustment = customizationChoices[choiceId]?.priceAdjustment;
+        if (priceAdjustment) {
+          price = price.add(new Decimal(priceAdjustment));
+        }
+      }
+    }
+
+    if (item.discountId) {
+      const discount = discounts[item.discountId];
+      if (discount) {
+        // Points/Birthday free rewards
+        if (
+          discount.name.includes("Points") ||
+          discount.name.includes("Birthday")
+        ) {
+          continue;
+        }
+
+        if (discount.name === "10% off") {
+          price = price.mul(0.9);
+        } else if (discount.name === "20% off") {
+          price = price.mul(0.8);
+        }
+        // Add additional discount logic as needed
+      }
+    }
+
+    price = price.mul(item.quantity);
+
+    total = total.add(price);
+  }
+
+  return total.toNumber(); // Converts the Decimal total to a JavaScript number
+}
