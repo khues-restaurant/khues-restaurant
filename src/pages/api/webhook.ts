@@ -6,7 +6,7 @@ import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 
 import { socket } from "~/pages/_app";
-import { OrderDetails } from "~/stores/MainStore";
+import { type OrderDetails } from "~/stores/MainStore";
 import { orderDetailsSchema } from "~/server/api/routers/payment";
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
@@ -167,8 +167,6 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       // fyi: prisma already assigns the uuid of the order being created here to orderId field
 
-      // Assume orderDetails.items is an array of items that the user wants to order,
-      // and each item may have customizations.
       const orderItemsData = orderDetails.items.map((item) => ({
         name: item.name,
         quantity: item.quantity,
@@ -195,7 +193,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         phoneNumber: paymentMetadata.phoneNumber,
         prevRewardsPoints: prevPoints,
         rewardsPoints: currPoints,
-        userId: user ? user.userId : null, // Assuming `null` is acceptable for guests
+        userId: user ? user.userId : null,
         orderItems: {
           create: orderItemsData, // Nested array for order items and their customizations
         },
@@ -204,6 +202,18 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       const order = await prisma.order.create({
         data: orderData,
       });
+
+      // 3.5) set any reward discount to inactive if it was used
+      if (orderDetails.rewardBeingRedeemed) {
+        await prisma.discount.update({
+          where: {
+            id: orderDetails.rewardBeingRedeemed.reward.id,
+          },
+          data: {
+            active: false,
+          },
+        });
+      }
 
       // 4) update user rewards points/rank
       if (user) {
