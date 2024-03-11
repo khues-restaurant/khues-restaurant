@@ -116,7 +116,6 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       try {
         // This will throw an error if the object does not match the schema
-        // @ts-expect-error fix "date as string" types soon
         orderDetails = orderDetailsSchema.parse(transientOrder.details);
       } catch (error) {
         console.error("Validation failed:", error);

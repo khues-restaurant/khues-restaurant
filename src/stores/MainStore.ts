@@ -36,7 +36,7 @@ export interface Item {
 }
 
 export interface OrderDetails {
-  dateToPickUp?: Date;
+  dateToPickUp: Date;
   timeToPickUp?: string; // will be in the direct form of "6:00 PM" or w/e in intervals of 30 minutes
   items: Item[];
   includeNapkinsAndUtensils: boolean;

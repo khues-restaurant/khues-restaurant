@@ -1,12 +1,10 @@
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { z } from "zod";
-import Stripe from "stripe";
-import { env } from "~/env";
-import { type LineItem } from "@stripe/stripe-js";
-import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { type Discount } from "@prisma/client";
-import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import Decimal from "decimal.js";
+import Stripe from "stripe";
+import { z } from "zod";
+import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 
 export const config = {
   api: {
@@ -23,12 +21,10 @@ export const storeCustomizationChoiceSchema = z.object({
 
 const discountSchema = z.object({
   id: z.string(),
-  createdAt: z.date().or(z.string()), // TODO: this feels bad, but how to properly keep as Date throughout whole
-  // "lifecycle" of the transaction?
+  createdAt: z.date().or(z.string().transform((val) => new Date(val))),
   name: z.string(),
   description: z.string(),
-  expirationDate: z.date().or(z.string()), // TODO: this feels bad, but how to properly keep as Date throughout whole
-  // "lifecycle" of the transaction?
+  expirationDate: z.date().or(z.string().transform((val) => new Date(val))),
   active: z.boolean(),
   userId: z.string().nullable(),
 });
@@ -46,7 +42,7 @@ export const itemSchema = z.object({
 });
 
 export const orderDetailsSchema = z.object({
-  dateToPickUp: z.date().optional().or(z.string().optional()), // same deal here...
+  dateToPickUp: z.date().or(z.string().transform((val) => new Date(val))),
   timeToPickUp: z.string().optional(),
   items: z.array(itemSchema),
   includeNapkinsAndUtensils: z.boolean(),
@@ -63,27 +59,6 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 });
 
 export const paymentRouter = createTRPCRouter({
-  // isPaidEmail: publicProcedure
-  //   .input(
-  //     z.object({
-  //       email: z.string(),
-  //     }),
-  //   )
-  //   .query(async ({ input }) => {
-  //     const account = await client
-  //       .get({
-  //         TableName: env.TABLE_NAME,
-  //         Key: {
-  //           pk: `email|${input.email}`,
-  //           sk: `email|${input.email}`,
-  //         },
-  //       })
-  //       .promise();
-
-  //     return {
-  //       isValid: account.Item ? true : false,
-  //     };
-  //   }),
   createCheckout: publicProcedure
     .input(
       z.object({

@@ -134,7 +134,7 @@ function CartDrawer({
   mainForm.watch((value) => {
     const newOrderDetails = structuredClone(orderDetails);
 
-    newOrderDetails.dateToPickUp = value.dateToPickUp;
+    newOrderDetails.dateToPickUp = value.dateToPickUp ?? new Date();
     newOrderDetails.timeToPickUp = value.timeToPickUp;
 
     updateOrder({
@@ -259,7 +259,11 @@ function CartDrawer({
                           mode="single"
                           disabled={getDisabledDates()}
                           selected={field.value}
-                          onSelect={field.onChange}
+                          onSelect={(e) => {
+                            if (e instanceof Date) {
+                              field.onChange(e);
+                            }
+                          }}
                           initialFocus
                         />
                       </PopoverContent>
