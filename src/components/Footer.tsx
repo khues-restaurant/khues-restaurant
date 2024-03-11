@@ -9,7 +9,7 @@ import { Button } from "~/components/ui/button";
 
 function Footer() {
   return (
-    <div className="baseVertFlex min-h-10 w-full gap-8 bg-primary p-4 text-white  tablet:!flex-row tablet:!justify-between tablet:gap-0">
+    <div className="baseVertFlex min-h-10 w-full gap-8 bg-primary p-4 text-white tablet:!flex-row tablet:!justify-between tablet:gap-0">
       {/* contact info */}
       <div className="baseVertFlex gap-2 tablet:!items-start tablet:!justify-start tablet:gap-0">
         <p className="font-semibold underline underline-offset-2">Contact</p>
