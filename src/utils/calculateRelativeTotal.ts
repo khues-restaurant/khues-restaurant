@@ -16,12 +16,10 @@ export function calculateRelativeTotal({
 }: CalculateRelativeTotal): number {
   let total = new Decimal(0);
 
-  const customizationChoiceIds = items.flatMap((i) =>
-    i.customizations.map((c) => c.choiceId),
-  );
-
   for (const item of items) {
     let price = new Decimal(item.price);
+
+    const customizationChoiceIds = Object.values(item.customizations);
 
     if (customizationChoiceIds) {
       for (const choiceId of customizationChoiceIds) {

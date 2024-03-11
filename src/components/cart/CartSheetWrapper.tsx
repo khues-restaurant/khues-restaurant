@@ -1,15 +1,11 @@
 import { type MenuItem } from "@prisma/client";
-import { AnimatePresence, motion } from "framer-motion";
-import React, { useState, type Dispatch, type SetStateAction } from "react";
-import CartDrawer from "~/components/cart/CartDrawer";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import CartSheet from "~/components/cart/CartSheet";
 import GuestCheckoutDialog from "~/components/cart/GuestCheckoutDialog";
-import GuestCheckoutDrawer from "~/components/cart/GuestCheckoutDrawer";
-import RewardsDialog from "~/components/cart/RewardsDialog";
+import RewardsDialogSheet from "~/components/cart/RewardsDialogSheet";
 import ItemCustomizationDialog from "~/components/itemCustomization/ItemCustomizationDialog";
-import ItemCustomizationDrawer from "~/components/itemCustomization/ItemCustomizationDrawer";
-import { Dialog } from "~/components/ui/dialog";
 import { Sheet, SheetContent } from "~/components/ui/sheet";
+import { FullMenuItem } from "~/server/api/routers/menuCategory";
 import { useMainStore, type Item } from "~/stores/MainStore";
 
 interface CartSheetWrapper {
@@ -32,9 +28,8 @@ function CartSheetWrapper({
     "credentialsForm" | "mainView" | "notShowing"
   >("notShowing");
 
-  const [itemBeingModified, setItemBeingModified] = useState<MenuItem | null>(
-    null,
-  );
+  const [itemBeingModified, setItemBeingModified] =
+    useState<FullMenuItem | null>(null);
   const [initialItemState, setInitialItemState] = useState<Item>();
 
   // might want to eventually do just a ~50% viewport height if there
@@ -79,7 +74,7 @@ function CartSheetWrapper({
         </SheetContent>
       </Sheet>
 
-      <RewardsDialog
+      <RewardsDialogSheet
         showRewardsDialog={showRewardsDialog}
         setShowRewardsDialog={setShowRewardsDialog}
       />

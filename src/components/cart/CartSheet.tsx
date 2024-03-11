@@ -61,6 +61,7 @@ import { FaCakeCandles } from "react-icons/fa6";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
 import useInitializeCheckout from "~/hooks/useInitializeCheckout";
+import { FullMenuItem } from "~/server/api/routers/menuCategory";
 
 interface OrderCost {
   subtotal: number;
@@ -70,7 +71,7 @@ interface OrderCost {
 
 interface CartSheet {
   setShowCartSheet: Dispatch<SetStateAction<boolean>>;
-  setItemBeingModified: Dispatch<SetStateAction<MenuItem | null>>;
+  setItemBeingModified: Dispatch<SetStateAction<FullMenuItem | null>>;
   setInitialItemState: Dispatch<SetStateAction<Item | undefined>>;
   setGuestCheckoutView: Dispatch<
     SetStateAction<"credentialsForm" | "mainView" | "notShowing">
@@ -487,16 +488,18 @@ function CartSheet({
                     </div>
 
                     <div className="baseVertFlex mt-2 w-full !items-start text-sm">
-                      {item.customizations.map((customization, idx) => (
-                        <p key={idx}>
-                          -{" "}
-                          {
-                            customizationChoices[customization.choiceId]
-                              ?.customizationCategory.name
-                          }
-                          : {customizationChoices[customization.choiceId]?.name}
-                        </p>
-                      ))}
+                      {Object.values(item.customizations).map(
+                        (choiceId, idx) => (
+                          <p key={idx}>
+                            -{" "}
+                            {
+                              customizationChoices[choiceId]
+                                ?.customizationCategory.name
+                            }
+                            : {customizationChoices[choiceId]?.name}
+                          </p>
+                        ),
+                      )}
                       {item.specialInstructions && (
                         <p>- {item.specialInstructions}</p>
                       )}
@@ -526,7 +529,7 @@ function CartSheet({
                       size={"underline"}
                       onClick={() => {
                         setIsEditingItem(true);
-                        setItemBeingModified(menuItems[item.name]!);
+                        setItemBeingModified(menuItems[item.name] ?? null);
                         setInitialItemState(item);
                       }}
                     >

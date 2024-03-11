@@ -12,12 +12,7 @@ export const config = {
   },
 };
 
-export const storeCustomizationChoiceSchema = z.object({
-  categoryId: z.string(),
-  choiceId: z.string(),
-});
-
-// do you have to manually transform each string into a date before sending to this api?
+const storeCustomizationChoiceSchema = z.record(z.string());
 
 const discountSchema = z.object({
   id: z.string(),
@@ -29,11 +24,11 @@ const discountSchema = z.object({
   userId: z.string().nullable(),
 });
 
-export const itemSchema = z.object({
+const itemSchema = z.object({
   id: z.string(),
   itemId: z.string(),
   name: z.string(),
-  customizations: z.array(storeCustomizationChoiceSchema),
+  customizations: storeCustomizationChoiceSchema,
   discountId: z.string().nullable(),
   specialInstructions: z.string(),
   includeDietaryRestrictions: z.boolean(),
@@ -131,15 +126,13 @@ export const paymentRouter = createTRPCRouter({
 
           let description = "";
 
-          if (item.customizations.length > 0) {
+          if (Object.values(item.customizations).length > 0) {
             description += "Customizations: ";
-            for (const customization of item.customizations) {
+            for (const choiceId of Object.values(item.customizations)) {
               const customizationCategory =
-                customizationChoices[customization.choiceId]
-                  ?.customizationCategory;
+                customizationChoices[choiceId]?.customizationCategory;
 
-              const customizationChoice =
-                customizationChoices[customization.choiceId]?.name;
+              const customizationChoice = customizationChoices[choiceId]?.name;
 
               if (customizationCategory && customizationChoice) {
                 description += `${customizationCategory.name} - ${customizationChoice}`;
@@ -150,7 +143,7 @@ export const paymentRouter = createTRPCRouter({
           if (item.discountId) {
             const discount = discounts[item.discountId];
             if (discount) {
-              description += `\n ${item.customizations.length > 0 ? " | " : ""}Discount: ${discount.name}`;
+              description += `\n ${Object.values(item.customizations).length > 0 ? " | " : ""}Discount: ${discount.name}`;
             }
           }
 
@@ -192,15 +185,13 @@ export const paymentRouter = createTRPCRouter({
 
         let description = "";
 
-        if (item.customizations.length > 0) {
+        if (Object.values(item.customizations).length > 0) {
           description += "Customizations: ";
-          for (const customization of item.customizations) {
+          for (const choiceId of Object.values(item.customizations)) {
             const customizationCategory =
-              customizationChoices[customization.choiceId]
-                ?.customizationCategory;
+              customizationChoices[choiceId]?.customizationCategory;
 
-            const customizationChoice =
-              customizationChoices[customization.choiceId]?.name;
+            const customizationChoice = customizationChoices[choiceId]?.name;
 
             if (customizationCategory && customizationChoice) {
               description += `${customizationCategory.name} - ${customizationChoice}`;
@@ -211,7 +202,7 @@ export const paymentRouter = createTRPCRouter({
         if (item.discountId) {
           const discount = discounts[item.discountId];
           if (discount) {
-            description += `${item.customizations.length > 0 ? " | " : ""}Discount: ${discount.name}`;
+            description += `${Object.values(item.customizations).length > 0 ? " | " : ""}Discount: ${discount.name}`;
           }
         }
 

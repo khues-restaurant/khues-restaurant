@@ -13,7 +13,7 @@ import useUpdateOrder from "~/hooks/useUpdateOrder";
 import {
   useMainStore,
   type Item,
-  type StoreCustomizationChoice,
+  type StoreCustomizations,
 } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
@@ -69,6 +69,13 @@ function ItemCustomizationDialog({
 
 export default ItemCustomizationDialog;
 
+function getDefaultCustomizationChoices(item: FullMenuItem) {
+  return item.customizationCategory.reduce((acc, category) => {
+    acc[category.id] = category.defaultChoiceId;
+    return acc;
+  }, {} as StoreCustomizations);
+}
+
 interface ItemCustomizerDialogContent {
   itemToCustomize: FullMenuItem;
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
@@ -100,7 +107,7 @@ function ItemCustomizerDialogContent({
     itemOrderDetails ?? {
       id: crypto.randomUUID(),
       name: itemToCustomize.name,
-      customizations: [] as StoreCustomizationChoice[],
+      customizations: getDefaultCustomizationChoices(itemToCustomize),
       specialInstructions: "",
       includeDietaryRestrictions: false,
       quantity: 1,
@@ -332,14 +339,10 @@ function CustomizationGroup({
   const [priceOfSelectedChoiceId, setPriceOfSelectedChoiceId] = useState(0);
 
   useEffect(() => {
-    const selectedCustomizationId =
-      localItemOrderDetails.customizations?.find(
-        (c) => c.categoryId === category.id,
-      )?.choiceId ?? category.defaultChoiceId;
-
     setPriceOfSelectedChoiceId(
-      category.customizationChoice.find((c) => c.id === selectedCustomizationId)
-        ?.priceAdjustment ?? 0,
+      category.customizationChoice.find(
+        (c) => c.id === localItemOrderDetails.customizations[category.id],
+      )?.priceAdjustment ?? 0,
     );
   }, [
     localItemOrderDetails.customizations,
@@ -353,21 +356,13 @@ function CustomizationGroup({
       <p className="text-lg font-semibold">{category.name}</p>
       <p className="text-gray-400">{category.description}</p>
       <div className="baseFlex mt-2 gap-2">
-        <RadioGroup
-          value={
-            localItemOrderDetails.customizations?.find(
-              (c) => c.categoryId === category.id,
-            )?.choiceId ?? category.defaultChoiceId
-          }
-        >
+        <RadioGroup value={localItemOrderDetails.customizations[category.id]}>
           {category.customizationChoice.map((choice) => (
             <CustomizationOption
               key={choice.id}
               choice={choice}
               isSelected={
-                localItemOrderDetails.customizations?.find(
-                  (c) => c.categoryId === category.id,
-                )?.choiceId === choice.id
+                localItemOrderDetails.customizations[category.id] === choice.id
               }
               relativePrice={choice.priceAdjustment - priceOfSelectedChoiceId}
               setLocalItemOrderDetails={setLocalItemOrderDetails}
@@ -395,6 +390,8 @@ function CustomizationOption({
   // const [choiceIsSelected, setChoiceIsSelected] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
+  console.log("isSelected", isSelected);
+
   return (
     <div
       key={choice.id}
@@ -409,14 +406,10 @@ function CustomizationOption({
       onTouchCancel={() => setIsHovered(false)}
       onClick={() => {
         setLocalItemOrderDetails((prev) => {
-          const newCustomizations = prev.customizations.filter(
-            (c) => c.categoryId !== choice.customizationCategoryId,
-          );
-
-          newCustomizations.push({
-            categoryId: choice.customizationCategoryId,
-            choiceId: choice.id,
-          });
+          const newCustomizations = {
+            ...prev.customizations,
+            [choice.customizationCategoryId]: choice.id,
+          };
 
           return {
             ...prev,
@@ -424,7 +417,6 @@ function CustomizationOption({
           };
         });
       }}
-      // prob have onClick be a function that sets the radio button
     >
       <RadioGroupItem id={choice.id} value={choice.id} />
       <div className="baseVertFlex h-full w-full gap-2">

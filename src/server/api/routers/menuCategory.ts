@@ -8,7 +8,7 @@ interface Discount {
   description: string;
   expirationDate: Date;
   active: boolean;
-  userId?: string;
+  userId: string | null;
 }
 
 interface CustomizationChoice {
@@ -40,7 +40,7 @@ export interface FullMenuItem {
   discontinued: boolean;
   listOrder: number;
   menuCategoryId: string;
-  activeDiscount?: Discount;
+  activeDiscount: Discount | null;
   activeDiscountId: string | null;
   customizationCategory: StoreCustomizationCategory[];
 }

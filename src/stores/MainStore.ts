@@ -1,8 +1,9 @@
 import { devtools } from "zustand/middleware";
 import { createWithEqualityFn } from "zustand/traditional";
 import { shallow } from "zustand/shallow";
-import { type Discount, type MenuItem } from "@prisma/client";
+import { type Discount } from "@prisma/client";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
+import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 
 // might want to use this pattern at some point based on some route navigation
 // const initialStoreState = {};
@@ -16,18 +17,15 @@ import { type CustomizationChoiceAndCategory } from "~/server/api/routers/custom
 // and still have a socket.io listener for whenever an item is 86'd to refetch the data
 // and update the store.
 
-export type StoreMenuItems = Record<string, MenuItem>;
+export type StoreMenuItems = Record<string, FullMenuItem>;
 
-export interface StoreCustomizationChoice {
-  categoryId: string;
-  choiceId: string;
-}
+export type StoreCustomizations = Record<string, string>;
 
 export interface Item {
   id: string; // unique uuid to identify the item
   itemId: string; // tied to database row id
   name: string;
-  customizations: StoreCustomizationChoice[];
+  customizations: StoreCustomizations;
   discountId: string | null; // tied to database row id (not an array because should only allow one discount per item)
   specialInstructions: string;
   includeDietaryRestrictions: boolean;

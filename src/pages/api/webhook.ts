@@ -175,10 +175,12 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         specialInstructions: item.specialInstructions,
         includeDietaryRestrictions: item.includeDietaryRestrictions,
         customizations: {
-          create: item.customizations.map((customization) => ({
-            customizationCategoryId: customization.categoryId,
-            customizationChoiceId: customization.choiceId,
-          })),
+          create: Object.entries(item.customizations).map(
+            ([categoryId, choiceId]) => ({
+              customizationCategoryId: categoryId,
+              customizationChoiceId: choiceId,
+            }),
+          ),
         },
         discountId: item.discountId,
       }));

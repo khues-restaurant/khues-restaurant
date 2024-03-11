@@ -11,19 +11,19 @@ import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
-import { type OrderDetails, useMainStore, Item } from "~/stores/MainStore";
+import { type OrderDetails, useMainStore, type Item } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { rewardsItems } from "~/utils/rewardsItems";
 
-interface RewardsDialog {
+interface RewardsDialogSheet {
   showRewardsDialog: boolean;
   setShowRewardsDialog: Dispatch<SetStateAction<boolean>>;
 }
 
-function RewardsDialog({
+function RewardsDialogSheet({
   showRewardsDialog,
   setShowRewardsDialog,
-}: RewardsDialog) {
+}: RewardsDialogSheet) {
   const [itemPickerState, setItemPickerState] = useState<
     "points" | "birthday" | "notShowing"
   >("notShowing");
@@ -46,7 +46,7 @@ function RewardsDialog({
   );
 }
 
-export default RewardsDialog;
+export default RewardsDialogSheet;
 
 interface RewardsDialogContent {
   itemPickerState: "points" | "birthday" | "notShowing";
@@ -66,8 +66,6 @@ function RewardsDialogContent({
   const { orderDetails } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
   }));
-
-  const { updateOrder } = useUpdateOrder();
 
   const [pointsReward, setPointsReward] = useState<Discount | null>(null);
   const [birthdayReward, setBirthdayReward] = useState<Discount | null>(null);
@@ -132,7 +130,6 @@ function RewardsDialogContent({
                       : rewardsItems.birthday
                   }
                   orderDetails={orderDetails}
-                  itemPickerState={itemPickerState}
                 />
               </div>
             </motion.div>
@@ -316,7 +313,7 @@ function RewardOption({
                 id: crypto.randomUUID(),
                 itemId: defaultRewardItem.id,
                 name: defaultRewardItem.name,
-                customizations: [],
+                customizations: {},
                 discountId: reward.id,
                 specialInstructions: "",
                 includeDietaryRestrictions: false, // TODO: is this correct ?
@@ -416,21 +413,14 @@ interface RewardItem {
 interface RewardItemGroup {
   rewardItems: RewardItem[];
   orderDetails: OrderDetails;
-  itemPickerState: "points" | "birthday" | "notShowing";
 }
 
-function RewardItemGroup({
-  rewardItems,
-  orderDetails,
-  itemPickerState,
-}: RewardItemGroup) {
+function RewardItemGroup({ rewardItems, orderDetails }: RewardItemGroup) {
   const [selectedItemOption, setSelectedItemOption] = useState(
     orderDetails.rewardBeingRedeemed?.item,
   );
 
   const { updateOrder } = useUpdateOrder();
-
-  // console.log(selectedItemOption?.itemId);
 
   console.log(
     selectedItemOption?.itemId,
@@ -512,7 +502,7 @@ function RewardItemOption({
           id: crypto.randomUUID(),
           itemId: rewardItem.id,
           name: rewardItem.name,
-          customizations: [],
+          customizations: {},
           discountId: orderDetails.rewardBeingRedeemed!.reward.id, // TODO: should always be defined right?
           specialInstructions: "",
           includeDietaryRestrictions: false, // TODO: is this correct ?
