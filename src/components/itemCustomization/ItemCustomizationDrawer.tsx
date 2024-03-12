@@ -1,27 +1,42 @@
-import { type MenuItem } from "@prisma/client";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { type CustomizationChoice } from "@prisma/client";
+import { AnimatePresence, motion } from "framer-motion";
+import isEqual from "lodash.isequal";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { IoIosArrowBack } from "react-icons/io";
 import { LuMinus, LuPlus } from "react-icons/lu";
+import AnimatedPrice from "~/components/AnimatedPrice";
 import { Button } from "~/components/ui/button";
-import { DrawerContent, DrawerFooter } from "~/components/ui/drawer";
-import { Input } from "~/components/ui/input";
+import { DrawerFooter } from "~/components/ui/drawer";
 import { Label } from "~/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
-import { useMainStore, type Item } from "~/stores/MainStore";
+import {
+  type FullMenuItem,
+  type StoreCustomizationCategory,
+} from "~/server/api/routers/menuCategory";
+import {
+  useMainStore,
+  type Item,
+  type StoreCustomizations,
+} from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import AnimatedPrice from "~/components/AnimatedPrice";
-import { getLineItemPrice } from "~/utils/getLineItemPrice";
+import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { formatPrice } from "~/utils/formatPrice";
-import { motion } from "framer-motion";
-import { IoIosArrowBack } from "react-icons/io";
-import isEqual from "lodash.isequal";
+
+function getDefaultCustomizationChoices(item: FullMenuItem) {
+  return item.customizationCategory.reduce((acc, category) => {
+    acc[category.id] = category.defaultChoiceId;
+    return acc;
+  }, {} as StoreCustomizations);
+}
 
 interface ItemCustomizationDrawer {
   setIsDrawerOpen?: Dispatch<SetStateAction<boolean>>;
-  itemToCustomize: MenuItem;
-  setItemToCustomize?: Dispatch<SetStateAction<MenuItem | null>>;
+  itemToCustomize: FullMenuItem;
+  setItemToCustomize?: Dispatch<SetStateAction<FullMenuItem | null>>;
   itemOrderDetails?: Item;
   forCart?: boolean;
 }
@@ -37,9 +52,13 @@ function ItemCustomizationDrawer({
 
   const { data: user } = api.user.get.useQuery(userId);
 
-  const { orderDetails } = useMainStore((state) => ({
-    orderDetails: state.orderDetails,
-  }));
+  const { orderDetails, customizationChoices, discounts } = useMainStore(
+    (state) => ({
+      orderDetails: state.orderDetails,
+      customizationChoices: state.customizationChoices,
+      discounts: state.discounts,
+    }),
+  );
 
   const { updateOrder } = useUpdateOrder();
 
@@ -47,11 +66,13 @@ function ItemCustomizationDrawer({
     itemOrderDetails ?? {
       id: crypto.randomUUID(),
       name: itemToCustomize.name,
-      customizations: [],
+      customizations: getDefaultCustomizationChoices(itemToCustomize),
       specialInstructions: "",
       includeDietaryRestrictions: false,
       quantity: 1,
       price: itemToCustomize.price,
+      itemId: itemToCustomize.id,
+      discountId: itemToCustomize.activeDiscountId,
     },
   );
 
@@ -73,7 +94,7 @@ function ItemCustomizationDrawer({
         <Button
           variant="underline"
           size="sm"
-          className="baseFlex absolute left-4 top-1 gap-2"
+          className="baseFlex absolute left-0 top-1 gap-2"
           onClick={() => {
             setItemToCustomize?.(null);
           }}
@@ -103,8 +124,24 @@ function ItemCustomizationDrawer({
         </div>
 
         {/* Customizations */}
-        {/* <div className="baseVertFlex w-full gap-2">
-          </div> */}
+        {itemToCustomize.customizationCategory.length > 0 && (
+          <div className="baseVertFlex w-full !items-start gap-2">
+            <p className="text-lg underline underline-offset-2">
+              Customizations
+            </p>
+
+            <div className="baseVertFlex w-full gap-2">
+              {itemToCustomize.customizationCategory.map((category) => (
+                <CustomizationGroup
+                  key={category.id}
+                  category={category}
+                  localItemOrderDetails={localItemOrderDetails}
+                  setLocalItemOrderDetails={setLocalItemOrderDetails}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Special instructions */}
         <div className="baseVertFlex w-full !items-start gap-2">
@@ -222,7 +259,6 @@ function ItemCustomizationDrawer({
 
             <Button
               variant="default"
-              size="sm"
               disabled={isEqual(localItemOrderDetails, initialItemState)}
               className="text-xs font-semibold tablet:text-sm"
               onClick={() => {
@@ -246,11 +282,9 @@ function ItemCustomizationDrawer({
                   newOrderDetails,
                 });
 
-                if (forCart) {
-                  setItemToCustomize?.(null);
-                } else {
-                  setIsDrawerOpen?.(false);
-                }
+                setItemToCustomize?.(null);
+
+                setIsDrawerOpen?.(false);
               }}
             >
               <div className="baseFlex gap-2">
@@ -258,10 +292,11 @@ function ItemCustomizationDrawer({
                 -
                 <AnimatedPrice
                   price={formatPrice(
-                    getLineItemPrice(
-                      localItemOrderDetails.price,
-                      localItemOrderDetails.quantity,
-                    ),
+                    calculateRelativeTotal({
+                      items: [localItemOrderDetails],
+                      customizationChoices,
+                      discounts,
+                    }),
                   )}
                 />
               </div>
@@ -274,3 +309,124 @@ function ItemCustomizationDrawer({
 }
 
 export default ItemCustomizationDrawer;
+
+interface CustomizationGroup {
+  category: StoreCustomizationCategory;
+  localItemOrderDetails: Item;
+  setLocalItemOrderDetails: Dispatch<SetStateAction<Item>>;
+}
+
+function CustomizationGroup({
+  category,
+  localItemOrderDetails,
+  setLocalItemOrderDetails,
+}: CustomizationGroup) {
+  const [priceOfSelectedChoiceId, setPriceOfSelectedChoiceId] = useState(0);
+
+  useEffect(() => {
+    setPriceOfSelectedChoiceId(
+      category.customizationChoice.find(
+        (c) => c.id === localItemOrderDetails.customizations[category.id],
+      )?.priceAdjustment ?? 0,
+    );
+  }, [
+    localItemOrderDetails.customizations,
+    category.customizationChoice,
+    category.defaultChoiceId,
+    category.id,
+  ]);
+
+  return (
+    <div key={category.id} className="baseVertFlex w-full !items-start">
+      <p className="text-lg font-semibold">{category.name}</p>
+      <p className="text-gray-400">{category.description}</p>
+      <div className="baseFlex mt-2 w-full !justify-start gap-2">
+        <RadioGroup
+          value={localItemOrderDetails.customizations[category.id]}
+          className="w-full max-w-lg"
+        >
+          {category.customizationChoice.map((choice) => (
+            <CustomizationOption
+              key={choice.id}
+              choice={choice}
+              isSelected={
+                localItemOrderDetails.customizations[category.id] === choice.id
+              }
+              relativePrice={choice.priceAdjustment - priceOfSelectedChoiceId}
+              setLocalItemOrderDetails={setLocalItemOrderDetails}
+            />
+          ))}
+        </RadioGroup>
+      </div>
+    </div>
+  );
+}
+
+interface CustomizationOption {
+  choice: CustomizationChoice;
+  isSelected: boolean;
+  relativePrice: number;
+  setLocalItemOrderDetails: Dispatch<SetStateAction<Item>>;
+}
+
+function CustomizationOption({
+  choice,
+  isSelected,
+  relativePrice,
+  setLocalItemOrderDetails,
+}: CustomizationOption) {
+  // const [choiceIsSelected, setChoiceIsSelected] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  console.log("isSelected", isSelected);
+
+  return (
+    <div
+      key={choice.id}
+      // style={{
+      //   borderColor: isHovered ? "var(--color-primary)" : "var(--color-gray-300)",
+      // }}
+      className={`baseFlex relative w-full cursor-pointer !justify-start gap-4 rounded-md border-2 p-4 transition-all ${isHovered || isSelected ? "border-primary" : "border-gray-300"}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onTouchStart={() => setIsHovered(true)}
+      onTouchEnd={() => setIsHovered(false)}
+      onTouchCancel={() => setIsHovered(false)}
+      onClick={() => {
+        setLocalItemOrderDetails((prev) => {
+          const newCustomizations = {
+            ...prev.customizations,
+            [choice.customizationCategoryId]: choice.id,
+          };
+
+          return {
+            ...prev,
+            customizations: newCustomizations,
+          };
+        });
+      }}
+    >
+      <RadioGroupItem id={choice.id} value={choice.id} />
+      <div className="baseVertFlex h-full w-full gap-2">
+        <Label htmlFor={choice.id} className="self-start">
+          {choice.name}
+        </Label>
+        <p className="self-start text-gray-400">{choice.description}</p>
+        <AnimatePresence>
+          {!isSelected && (
+            <motion.p
+              key={choice.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute bottom-2 right-4"
+            >
+              {formatPrice(relativePrice)}
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}

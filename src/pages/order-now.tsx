@@ -18,7 +18,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { FullMenuItem } from "~/server/api/routers/menuCategory";
-import { useMainStore } from "~/stores/MainStore";
+import { StoreCustomizations, useMainStore } from "~/stores/MainStore";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { api } from "~/utils/api";
 import { formatPrice } from "~/utils/formatPrice";
@@ -461,7 +461,7 @@ function MenuItemPreviewButton({
                     // only necessary to fit Item shape
                     id: menuItem.id,
                     itemId: menuItem.id,
-                    customizations: [],
+                    customizations: {}, // not necessary since all default choices are already included in price
                     includeDietaryRestrictions: false,
                     name: menuItem.name,
                     specialInstructions: "",
@@ -484,6 +484,13 @@ function MenuItemPreviewButton({
           // directly add to order w/ defaults + trigger toast notification
           setShowCheckmark(true);
 
+          function getDefaultCustomizationChoices(item: FullMenuItem) {
+            return item.customizationCategory.reduce((acc, category) => {
+              acc[category.id] = category.defaultChoiceId;
+              return acc;
+            }, {} as StoreCustomizations);
+          }
+
           updateOrder({
             newOrderDetails: {
               ...orderDetails,
@@ -493,7 +500,7 @@ function MenuItemPreviewButton({
                   id: crypto.randomUUID(),
                   itemId: menuItem.id,
                   name: menuItem.name,
-                  customizations: [],
+                  customizations: getDefaultCustomizationChoices(menuItem),
                   specialInstructions: "",
                   includeDietaryRestrictions: false,
                   quantity: 1,

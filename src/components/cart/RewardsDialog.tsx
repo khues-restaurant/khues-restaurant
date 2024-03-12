@@ -15,15 +15,15 @@ import { type OrderDetails, useMainStore, type Item } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { rewardsItems } from "~/utils/rewardsItems";
 
-interface RewardsDialogSheet {
+interface RewardsDialog {
   showRewardsDialog: boolean;
   setShowRewardsDialog: Dispatch<SetStateAction<boolean>>;
 }
 
-function RewardsDialogSheet({
+function RewardsDialog({
   showRewardsDialog,
   setShowRewardsDialog,
-}: RewardsDialogSheet) {
+}: RewardsDialog) {
   const [itemPickerState, setItemPickerState] = useState<
     "points" | "birthday" | "notShowing"
   >("notShowing");
@@ -46,7 +46,7 @@ function RewardsDialogSheet({
   );
 }
 
-export default RewardsDialogSheet;
+export default RewardsDialog;
 
 interface RewardsDialogContent {
   itemPickerState: "points" | "birthday" | "notShowing";

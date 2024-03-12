@@ -51,7 +51,7 @@ function CartButton() {
               transition={{ duration: 0.35 }}
               className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-white"
             >
-              <AnimatedNumbers value={totalItems} fontSize={16} padding={4} />
+              <AnimatedNumbers value={totalItems} fontSize={14} padding={6} />
             </motion.div>
           )}
         </AnimatePresence>

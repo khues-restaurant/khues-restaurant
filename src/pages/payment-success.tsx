@@ -38,10 +38,7 @@ function PaymentSuccess() {
           dateToPickUp: new Date(),
           timeToPickUp: "",
           items: [],
-          discount: {
-            title: "",
-            value: 0,
-          },
+          includeNapkinsAndUtensils: false,
         },
       });
 

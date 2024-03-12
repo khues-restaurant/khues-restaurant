@@ -1,14 +1,13 @@
 import { useAuth } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type MenuItem } from "@prisma/client";
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { useForm } from "react-hook-form";
-import { CiCalendarDate, CiLocationOn } from "react-icons/ci";
+import { CiCalendarDate, CiGift, CiLocationOn } from "react-icons/ci";
 import { FaTrashAlt } from "react-icons/fa";
-import { FaRegClock } from "react-icons/fa6";
+import { FaCakeCandles, FaRegClock } from "react-icons/fa6";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { LuMinus, LuPlus } from "react-icons/lu";
 import { z } from "zod";
@@ -43,8 +42,14 @@ import { api } from "~/utils/api";
 import { formatPrice } from "~/utils/formatPrice";
 import { getDisabledDates } from "~/utils/getDisabledPickupDates";
 import { parseTimeToNumber } from "~/utils/parseTimeToNumber";
-import { getLineItemPrice } from "~/utils/getLineItemPrice";
 import { cn } from "~/utils/shadcnuiUtils";
+import { type FullMenuItem } from "~/server/api/routers/menuCategory";
+import useInitializeCheckout from "~/hooks/useInitializeCheckout";
+import useGetUserId from "~/hooks/useGetUserId";
+import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
+import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
+import { Label } from "~/components/ui/label";
+import { Switch } from "~/components/ui/switch";
 
 interface OrderCost {
   subtotal: number;
@@ -54,11 +59,12 @@ interface OrderCost {
 
 interface CartDrawer {
   setShowCartDrawer: Dispatch<SetStateAction<boolean>>;
-  setItemBeingModified: Dispatch<SetStateAction<MenuItem | null>>;
+  setItemBeingModified: Dispatch<SetStateAction<FullMenuItem | null>>;
   setInitialItemState: Dispatch<SetStateAction<Item | undefined>>;
   setGuestCheckoutView: Dispatch<
     SetStateAction<"credentialsForm" | "mainView" | "notShowing">
   >;
+  setShowRewardsDrawer: Dispatch<SetStateAction<boolean>>;
 }
 
 function CartDrawer({
@@ -68,13 +74,18 @@ function CartDrawer({
   setItemBeingModified,
   setInitialItemState,
   setGuestCheckoutView,
+  setShowRewardsDrawer,
 }: CartDrawer) {
   const { isSignedIn } = useAuth();
+  const userId = useGetUserId();
 
-  const { orderDetails, menuItems } = useMainStore((state) => ({
-    orderDetails: state.orderDetails,
-    menuItems: state.menuItems,
-  }));
+  const { orderDetails, menuItems, customizationChoices, discounts } =
+    useMainStore((state) => ({
+      orderDetails: state.orderDetails,
+      menuItems: state.menuItems,
+      customizationChoices: state.customizationChoices,
+      discounts: state.discounts,
+    }));
 
   const [numberOfItems, setNumberOfItems] = useState(0);
 
@@ -87,6 +98,9 @@ function CartDrawer({
   const { updateOrder } = useUpdateOrder();
 
   const { data: minPickupTime } = api.minimOrderPickupTime.get.useQuery();
+  const { data: userRewards } = api.user.getRewards.useQuery(userId);
+
+  const { initializeCheckout } = useInitializeCheckout();
 
   const mainFormSchema = z.object({
     dateToPickUp: z
@@ -98,10 +112,11 @@ function CartDrawer({
           const now = new Date();
           now.setHours(0, 0, 0, 0);
 
+          // fyi: returns message if expression is false
           return date >= now;
         },
         {
-          message: "Pickup date must be today or later",
+          message: "The pickup date cannot be in the past.",
         },
       ),
     timeToPickUp: z
@@ -114,6 +129,9 @@ function CartDrawer({
             return false;
           }
 
+          console.log(time, parseTimeToNumber(time), minPickupTime.value);
+
+          // fyi: returns message if expression is false
           return parseTimeToNumber(time) >= minPickupTime.value;
         },
         {
@@ -148,16 +166,39 @@ function CartDrawer({
     orderDetails.items.forEach((item) => {
       sum += item.quantity;
     });
+
+    if (orderDetails.rewardBeingRedeemed) {
+      sum++;
+    }
+
     setNumberOfItems(sum);
-  }, [orderDetails.items]);
+  }, [orderDetails.items, orderDetails.rewardBeingRedeemed]);
 
   useEffect(() => {
-    setOrderCost(calculateCosts(orderDetails.items));
-  }, [orderDetails.items]);
+    const items = [...orderDetails.items];
+    if (orderDetails.rewardBeingRedeemed) {
+      items.push(orderDetails.rewardBeingRedeemed.item);
+    }
+
+    // maybe do an isEqual here before setting the state?
+
+    setOrderCost(
+      calculateTotalCartPrices({
+        items,
+        customizationChoices,
+        discounts,
+      }),
+    );
+  }, [
+    orderDetails.items,
+    orderDetails.rewardBeingRedeemed,
+    customizationChoices,
+    discounts,
+  ]);
 
   async function onMainFormSubmit(values: z.infer<typeof mainFormSchema>) {
     if (isSignedIn) {
-      // send to stripe (copy logic from <GuestCheckoutForm />)
+      await initializeCheckout(); // TODO: await or void or what here
     } else {
       setGuestCheckoutView("mainView");
     }
@@ -443,13 +484,19 @@ function CartDrawer({
                       </Button>
                     </div>
 
-                    <div className="baseVertFlex mt-2 w-full !items-start gap-2 text-sm">
-                      {/* TODO: customizations and custom instructions */}
-                      {item.customizations.map((customization, idx) => (
-                        <p key={idx}>
-                          - {customization.name}: {customization.value}
-                        </p>
-                      ))}
+                    <div className="baseVertFlex mt-2 w-full !items-start text-sm">
+                      {Object.values(item.customizations).map(
+                        (choiceId, idx) => (
+                          <p key={idx}>
+                            -{" "}
+                            {
+                              customizationChoices[choiceId]
+                                ?.customizationCategory.name
+                            }
+                            : {customizationChoices[choiceId]?.name}
+                          </p>
+                        ),
+                      )}
                       {item.specialInstructions && (
                         <p>- {item.specialInstructions}</p>
                       )}
@@ -457,16 +504,28 @@ function CartDrawer({
                   </div>
 
                   <div className="baseVertFlex !items-end">
-                    <AnimatedPrice
-                      price={formatPrice(
-                        getLineItemPrice(item.price, item.quantity),
+                    <div className="baseFlex gap-2">
+                      {item.discountId && (
+                        <div className="baseFlex gap-2 rounded-md bg-primary px-2 py-0.5 text-xs font-semibold text-white">
+                          <p>{discounts[item.discountId]?.name}</p>
+                        </div>
                       )}
-                    />
+                      <AnimatedPrice
+                        price={formatPrice(
+                          calculateRelativeTotal({
+                            items: [item],
+                            customizationChoices,
+                            discounts,
+                          }),
+                        )}
+                      />
+                    </div>
+
                     <Button
                       variant={"underline"}
                       size={"underline"}
                       onClick={() => {
-                        setItemBeingModified(menuItems[item.name]!);
+                        setItemBeingModified(menuItems[item.name] ?? null);
                         setInitialItemState(item);
                       }}
                     >
@@ -479,18 +538,135 @@ function CartDrawer({
           </AnimatePresence>
         </div>
 
-        {/* dietary restrictions legend */}
-        {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
-        {orderDetails.items.some((item) => item.includeDietaryRestrictions) && (
-          <div className="baseFlex gap-2">
-            <div className="size-2 rounded-full bg-primary/25" />
-            <p className="text-sm">
-              Item will be prepared according to your dietary restrictions
-            </p>
-          </div>
-        )}
+        {/* rewards item (if present) */}
+        <AnimatePresence mode="wait">
+          {orderDetails.rewardBeingRedeemed && (
+            <motion.div
+              key={orderDetails.rewardBeingRedeemed.item.id}
+              initial={{
+                opacity: 0,
+              }}
+              animate={{
+                opacity: 1,
+              }}
+              exit={{
+                opacity: 0,
+              }}
+              transition={{
+                duration: 0.2,
+              }}
+              className="baseFlex w-full !items-start gap-4"
+            >
+              {/* preview image of item */}
+              <div className="imageFiller size-16 rounded-md" />
 
-        {/* TODO rewards section */}
+              <div className="baseFlex w-full !items-start !justify-between">
+                <div className="baseVertFlex !items-start">
+                  {/* item name, dietary restrictions, and edit button */}
+                  <div className="baseFlex !items-start gap-2">
+                    <p className="text-lg">
+                      {orderDetails.rewardBeingRedeemed.item.name}
+                    </p>
+
+                    {orderDetails.rewardBeingRedeemed.item
+                      .includeDietaryRestrictions && (
+                      <div className="size-2 rounded-full bg-primary/25" />
+                    )}
+                  </div>
+
+                  {/* reward name + icon */}
+                  <div className="baseFlex gap-2 rounded-md bg-primary px-2 py-1 text-xs font-semibold text-white">
+                    {orderDetails.rewardBeingRedeemed.reward.name.includes(
+                      "Points",
+                    ) ? (
+                      <CiGift className="size-5" />
+                    ) : (
+                      <FaCakeCandles className="size-7" />
+                    )}
+                    <p>{orderDetails.rewardBeingRedeemed.reward.name}</p>
+                  </div>
+                </div>
+
+                <div className="baseVertFlex !items-end">
+                  <AnimatedPrice
+                    price={formatPrice(
+                      calculateRelativeTotal({
+                        items: [orderDetails.rewardBeingRedeemed.item],
+                        customizationChoices,
+                        discounts,
+                      }),
+                    )}
+                  />
+                  <Button
+                    variant={"underline"}
+                    size={"underline"}
+                    onClick={() => {
+                      setShowRewardsDrawer(true);
+                      // TODO: also need to set maybe zustand state to directly show the item picker view
+                    }}
+                  >
+                    Edit
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="baseVertFlex w-full !items-start gap-4">
+          {/* dietary restrictions legend */}
+          {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
+          {orderDetails.items.some(
+            (item) => item.includeDietaryRestrictions,
+          ) && (
+            <div className="baseFlex gap-2">
+              <div className="size-2 rounded-full bg-primary/25" />
+              <p className="text-sm">
+                Item will be prepared according to your dietary restrictions
+              </p>
+            </div>
+          )}
+
+          <div
+            style={{
+              justifyContent:
+                userRewards && userRewards.length > 0
+                  ? "space-between"
+                  : "flex-start",
+            }}
+            className="baseFlex w-full gap-4"
+          >
+            <div className="baseFlex gap-2">
+              <Switch
+                id="prefersNapkinsAndUtensilsSwitch"
+                checked={orderDetails.includeNapkinsAndUtensils}
+                onCheckedChange={(checked) =>
+                  updateOrder({
+                    newOrderDetails: {
+                      ...orderDetails,
+                      includeNapkinsAndUtensils: checked,
+                    },
+                  })
+                }
+              />
+              <Label htmlFor="prefersNapkinsAndUtensilsSwitch">
+                Include napkins and utensils
+              </Label>
+            </div>
+            {userRewards && userRewards.length > 0 && (
+              <Button
+                className="baseFlex gap-2 text-xs font-semibold"
+                onClick={() => {
+                  console.log("hi");
+                  setShowRewardsDrawer(true);
+                }}
+              >
+                <CiGift className="size-5" />
+                Redeem a reward
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* TODO: why does this scroll a bit along with body when drawer is scrolled? */}
@@ -516,10 +692,9 @@ function CartDrawer({
               <Button
                 variant="default"
                 className="text-xs font-semibold tablet:text-sm"
-                asChild
                 onClick={() => void mainForm.handleSubmit(onMainFormSubmit)()}
               >
-                <a href="/stripeCheckout">Proceed to checkout</a>
+                Proceed to checkout
               </Button>
             ) : (
               <Button
@@ -538,20 +713,3 @@ function CartDrawer({
 }
 
 export default CartDrawer;
-
-function calculateCosts(items: Item[]) {
-  let subtotal = 0;
-  let tax = 0;
-  let total = 0;
-
-  // TODO: is this safe floating point wise?
-  items.forEach((item) => {
-    subtotal += item.price * item.quantity;
-  });
-
-  tax = subtotal * 0.07;
-
-  total = subtotal + tax;
-
-  return { subtotal, tax, total };
-}

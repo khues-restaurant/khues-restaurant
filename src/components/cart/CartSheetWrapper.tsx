@@ -2,10 +2,10 @@ import { type MenuItem } from "@prisma/client";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import CartSheet from "~/components/cart/CartSheet";
 import GuestCheckoutDialog from "~/components/cart/GuestCheckoutDialog";
-import RewardsDialogSheet from "~/components/cart/RewardsDialogSheet";
+import RewardsDialog from "~/components/cart/RewardsDialog";
 import ItemCustomizationDialog from "~/components/itemCustomization/ItemCustomizationDialog";
 import { Sheet, SheetContent } from "~/components/ui/sheet";
-import { FullMenuItem } from "~/server/api/routers/menuCategory";
+import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { useMainStore, type Item } from "~/stores/MainStore";
 
 interface CartSheetWrapper {
@@ -74,7 +74,7 @@ function CartSheetWrapper({
         </SheetContent>
       </Sheet>
 
-      <RewardsDialogSheet
+      <RewardsDialog
         showRewardsDialog={showRewardsDialog}
         setShowRewardsDialog={setShowRewardsDialog}
       />

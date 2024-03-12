@@ -61,7 +61,7 @@ import { FaCakeCandles } from "react-icons/fa6";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
 import useInitializeCheckout from "~/hooks/useInitializeCheckout";
-import { FullMenuItem } from "~/server/api/routers/menuCategory";
+import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 
 interface OrderCost {
   subtotal: number;
