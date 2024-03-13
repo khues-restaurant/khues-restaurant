@@ -90,7 +90,7 @@ function DiscountManagement() {
       <AlertDialogTrigger asChild>
         <Button
           variant={"link"}
-          className="text-xl"
+          className="text-lg tablet:text-xl"
           onClick={() => setShowDialog(true)}
         >
           Add a discount

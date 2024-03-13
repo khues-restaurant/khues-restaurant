@@ -123,7 +123,7 @@ function DelayNewOrders() {
       <AlertDialogTrigger asChild>
         <Button
           variant={"link"}
-          className="text-xl"
+          className="text-lg tablet:text-xl"
           onClick={() => setShowDialog(true)}
         >
           Delay new orders

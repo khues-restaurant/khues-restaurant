@@ -42,6 +42,16 @@ export const discountRouter = createTRPCRouter({
         },
       });
 
+      // set the activeDiscount field of the menu category to the new discount
+      await ctx.prisma.menuCategory.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          activeDiscountId: discount.id,
+        },
+      });
+
       // loop through all menu items and add the discount to the activeDiscount field
       // of the menu items
       const menuItems = await ctx.prisma.menuItem.findMany({
