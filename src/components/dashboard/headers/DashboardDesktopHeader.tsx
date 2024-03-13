@@ -18,13 +18,17 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogCancel,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 import useGetUserId from "~/hooks/useGetUserId";
 import { api } from "~/utils/api";
 import { LuLayoutDashboard } from "react-icons/lu";
+import { IoMdMore } from "react-icons/io";
+
 import classes from "./DashboardDesktopHeader.module.css";
-import { AlertDialogCancel } from "@radix-ui/react-alert-dialog";
+import DiscountManagement from "~/components/dashboard/DiscountManagement";
+import DelayNewOrders from "~/components/dashboard/DelayNewOrders";
 
 interface DashboardDesktopHeader {
   viewState: "orderManagement" | "customerChats" | "itemManagement" | "stats";
@@ -44,12 +48,6 @@ function DashboardDesktopHeader({
   const userId = useGetUserId();
 
   const { data: user } = api.user.get.useQuery(userId);
-
-  // const localStorageTabData = useLocalStorageValue("tabData");
-  // const localStorageRedirectRoute = useLocalStorageValue("redirectRoute");
-
-  // okay I want to not show rewards/auth buttons until user auth status is known,
-  // however I *really* want to show the page as soon as possible, what options do I have here?
 
   return (
     <nav
@@ -99,31 +97,21 @@ function DashboardDesktopHeader({
           Item management
         </Button>
 
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant={"link"} className="text-xl">
-              Delay new orders
+        <DelayNewOrders />
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size={"icon"} className="baseFlex gap-2">
+              <IoMdMore className="size-8 text-primary" />
             </Button>
-          </AlertDialogTrigger>
-
-          <AlertDialogContent>
-            <AlertDialogHeader>Delay new orders</AlertDialogHeader>
-            <AlertDialogDescription>
-              Are you sure you want to delay new orders?
-            </AlertDialogDescription>
-
-            {/* "Delay length: " and select w/ dropdown for times */}
-
-            <AlertDialogFooter>
-              <AlertDialogCancel asChild>
-                <Button variant="secondary">Cancel</Button>
-              </AlertDialogCancel>
-              <AlertDialogAction asChild>
-                <Button>Delay</Button>
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+          </PopoverTrigger>
+          <PopoverContent side="bottom" align="end">
+            <div className="baseVertFlex gap-2">
+              <DiscountManagement />
+              <div>TODO: Reviews</div>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
 
       {/* order icon and auth buttons/user icon */}

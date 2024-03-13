@@ -6,6 +6,73 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 
+interface CustomizationChoice {
+  id: string;
+  name: string;
+  description: string;
+  priceAdjustment: number;
+
+  customizationCategoryId: string;
+}
+
+interface CustomizationCategory {
+  id: string;
+  name: string;
+  description: string;
+  defaultChoiceId: string;
+
+  customizationChoice: CustomizationChoice[];
+}
+
+interface Discount {
+  id: string;
+  name: string;
+  description: string;
+  expirationDate: Date;
+  active: boolean;
+}
+
+interface OrderItemCustomization {
+  id: string;
+  customizationChoice: CustomizationChoice;
+  customizationCategory: CustomizationCategory;
+}
+
+export interface DashboardOrderItem {
+  id: string;
+  name: string;
+  specialInstructions: string;
+  includeDietaryRestrictions: boolean;
+  quantity: number;
+  price: number;
+  customizations: OrderItemCustomization[];
+  discount: Discount | null;
+}
+
+export interface DashboardOrder {
+  id: string;
+  createdAt: Date;
+  orderStartedAt: Date | null;
+  orderCompletedAt: Date | null;
+  datetimeToPickup: Date;
+
+  status: string; // better types?
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  includeNapkinsAndUtensils: boolean;
+
+  orderItems: DashboardOrderItem[];
+
+  prevRewardsPoints: number;
+  rewardsPoints: number;
+
+  stripeSessionId: string;
+
+  userId: string | null;
+}
+
 export const orderRouter = createTRPCRouter({
   getById: publicProcedure
     .input(z.string())
@@ -25,15 +92,74 @@ export const orderRouter = createTRPCRouter({
         },
       });
     }),
+  // getTodaysOrders: protectedProcedure.query(async ({ ctx }) => {
+  //   return ctx.prisma.order.findMany({
+  //     // TODO: uncomment this for production
+  //     // where: {
+  //     //   datetimeToPickup: {
+  //     //     gte: new Date(new Date().setHours(0, 0, 0, 0)),
+  //     //     lte: new Date(new Date().setHours(23, 59, 59, 999)),
+  //     //   },
+  //     // },
+  //     include: {
+  //       orderItems: {
+  //         include: {
+  //           // customizations: {
+  //           //   include: {
+  //           //     orderItem: true,
+  //           //     customizationChoice: true,
+  //           //     customizationCategory: true,
+  //           //   },
+  //           // },
+  //           // menuItem: {
+  //           //   include: {
+  //           //     activeDiscount: true,
+  //           //     customizationCategory: {
+  //           //       include: {
+  //           //         customizationChoice: true,
+  //           //       },
+  //           //     },
+  //           //   },
+  //           // },
+  //           customizations: true,
+  //           discount: true,
+  //           menuItem: true,
+  //           order: true,
+  //         },
+  //       },
+  //     },
+  //   });
+  // }),
+
+  // prob don't want this below:
+  // menuItem: {
+  //   include: {
+  //     menuCategory: true,
+  //     activeDiscount: true,
+  //     customizationCategory: {
+  //       include: {
+  //         customizationChoice: true,
+  //       },
+  //     },
+  //   },
+  // },
+
   getTodaysOrders: protectedProcedure.query(async ({ ctx }) => {
     return ctx.prisma.order.findMany({
-      // TODO once we have a datetimeToPickUp field, use this
+      // Uncomment and adjust according to your requirements
       // where: {
-      //   datetimeToPickUp: {
+      //   datetimeToPickup: {
       //     gte: new Date(new Date().setHours(0, 0, 0, 0)),
       //     lte: new Date(new Date().setHours(23, 59, 59, 999)),
       //   },
       // },
+      include: {
+        orderItems: {
+          include: {
+            customizations: true,
+          },
+        },
+      },
     });
   }),
   startOrder: protectedProcedure

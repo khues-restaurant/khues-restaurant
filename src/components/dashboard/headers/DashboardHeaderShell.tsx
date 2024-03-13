@@ -19,6 +19,8 @@ function DashboardHeaderShell({
   const viewportLabel = useGetViewportLabel();
   // maybe want to also expose width/height from hook as well?
 
+  // TODO: set discounts ActionDialog, link to set discounts and reviews page
+
   return (
     <>
       {viewportLabel.includes("mobile") ? (

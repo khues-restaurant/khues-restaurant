@@ -40,6 +40,60 @@ function DashboardLayout({ children }: DashboardLayout) {
     "orderManagement" | "customerChats" | "itemManagement" | "stats"
   >("orderManagement");
 
+  const {
+    setOrderDetails,
+    setMenuItems,
+    customizationChoices,
+    setCustomizationChoices,
+    discounts,
+    setDiscounts,
+  } = useMainStore((state) => ({
+    setOrderDetails: state.setOrderDetails,
+    setMenuItems: state.setMenuItems,
+    customizationChoices: state.customizationChoices,
+    setCustomizationChoices: state.setCustomizationChoices,
+    discounts: state.discounts,
+    setDiscounts: state.setDiscounts,
+  }));
+
+  const { data: databaseCustomizationChoices } =
+    api.customizationChoice.getAll.useQuery();
+  const { data: databaseDiscounts } = api.discount.getAll.useQuery();
+
+  useEffect(() => {
+    if (
+      (Object.keys(customizationChoices).length !== 0 &&
+        Object.keys(discounts).length !== 0) ||
+      !databaseCustomizationChoices ||
+      !databaseDiscounts
+    )
+      return;
+
+    setCustomizationChoices(databaseCustomizationChoices);
+
+    setDiscounts(databaseDiscounts);
+  }, [
+    customizationChoices,
+    setCustomizationChoices,
+    discounts,
+    setDiscounts,
+    databaseCustomizationChoices,
+    databaseDiscounts,
+  ]);
+
+  useEffect(() => {
+    if (!menuCategories) return;
+
+    const menuItems = menuCategories.flatMap((category) => category.menuItems);
+
+    const menuItemsObject = menuItems.reduce((acc, menuItem) => {
+      acc[menuItem.name] = menuItem;
+      return acc;
+    }, {} as StoreMenuItems);
+
+    setMenuItems(menuItemsObject);
+  }, [menuCategories, setMenuItems]);
+
   // useEffect(() => {
   //   function handleNewOrder() {
   //     refetchOrders();
@@ -50,7 +104,7 @@ function DashboardLayout({ children }: DashboardLayout) {
   //   }
 
   //   socket.on("newOrder", handleNewOrder);
-  //   socket.on("newChat", handleNewChat);
+  // socket.on("newChat", handleNewChat);
 
   //   return () => {
   //     socket.off("newOrder", handleNewOrder);
@@ -74,6 +128,8 @@ function DashboardLayout({ children }: DashboardLayout) {
           {viewState === "itemManagement" && menuCategories && (
             <ItemManagement menuCategories={menuCategories} />
           )}
+
+          {/* TODO: reviews component */}
         </>
       </AnimatePresence>
     </main>

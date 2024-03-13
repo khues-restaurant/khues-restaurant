@@ -475,89 +475,95 @@ function MenuItemPreviewButton({
         </div>
       </Button>
 
-      <Button
-        variant={"outline"}
-        size={"icon"}
-        disabled={showCheckmark}
-        className="baseFlex absolute right-0 top-0 h-10 w-10 rounded-none rounded-bl-md rounded-tr-md border-2 text-primary"
-        onClick={() => {
-          // directly add to order w/ defaults + trigger toast notification
-          setShowCheckmark(true);
+      {menuItem.available ? (
+        <Button
+          variant={"outline"}
+          size={"icon"}
+          disabled={showCheckmark}
+          className="baseFlex absolute right-0 top-0 h-10 w-10 rounded-none rounded-bl-md rounded-tr-md border-2 text-primary"
+          onClick={() => {
+            // directly add to order w/ defaults + trigger toast notification
+            setShowCheckmark(true);
 
-          function getDefaultCustomizationChoices(item: FullMenuItem) {
-            return item.customizationCategory.reduce((acc, category) => {
-              acc[category.id] = category.defaultChoiceId;
-              return acc;
-            }, {} as StoreCustomizations);
-          }
+            function getDefaultCustomizationChoices(item: FullMenuItem) {
+              return item.customizationCategory.reduce((acc, category) => {
+                acc[category.id] = category.defaultChoiceId;
+                return acc;
+              }, {} as StoreCustomizations);
+            }
 
-          updateOrder({
-            newOrderDetails: {
-              ...orderDetails,
-              items: [
-                ...orderDetails.items,
-                {
-                  id: crypto.randomUUID(),
-                  itemId: menuItem.id,
-                  name: menuItem.name,
-                  customizations: getDefaultCustomizationChoices(menuItem),
-                  specialInstructions: "",
-                  includeDietaryRestrictions: false,
-                  quantity: 1,
-                  price: menuItem.price,
-                  discountId: activeDiscount?.id ?? null,
-                },
-              ],
-            },
-          });
+            updateOrder({
+              newOrderDetails: {
+                ...orderDetails,
+                items: [
+                  ...orderDetails.items,
+                  {
+                    id: crypto.randomUUID(),
+                    itemId: menuItem.id,
+                    name: menuItem.name,
+                    customizations: getDefaultCustomizationChoices(menuItem),
+                    specialInstructions: "",
+                    includeDietaryRestrictions: false,
+                    quantity: 1,
+                    price: menuItem.price,
+                    discountId: activeDiscount?.id ?? null,
+                  },
+                ],
+              },
+            });
 
-          setTimeout(() => {
-            setShowCheckmark(false);
-          }, 1000);
-        }}
-      >
-        <AnimatePresence mode="wait">
-          {showCheckmark ? (
-            <motion.svg
-              key={`quickAddToOrderCheckmark-${menuItem.id}`}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0 }}
-              transition={{ duration: 0.3 }}
-              className="text-primary"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <motion.path
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{
-                  delay: 0.2,
-                  type: "tween",
-                  ease: "easeOut",
-                  duration: 0.3,
-                }}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M5 13l4 4L19 7"
-              />
-            </motion.svg>
-          ) : (
-            <motion.div
-              key={`quickAddToOrder-${menuItem.id}`}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0 }}
-              transition={{ duration: 0.3 }}
-              className="baseFlex h-10 w-10 rounded-md"
-            >
-              <LuPlus />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </Button>
+            setTimeout(() => {
+              setShowCheckmark(false);
+            }, 1000);
+          }}
+        >
+          <AnimatePresence mode="wait">
+            {showCheckmark ? (
+              <motion.svg
+                key={`quickAddToOrderCheckmark-${menuItem.id}`}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0 }}
+                transition={{ duration: 0.3 }}
+                className="text-primary"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <motion.path
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{
+                    delay: 0.2,
+                    type: "tween",
+                    ease: "easeOut",
+                    duration: 0.3,
+                  }}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5 13l4 4L19 7"
+                />
+              </motion.svg>
+            ) : (
+              <motion.div
+                key={`quickAddToOrder-${menuItem.id}`}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0 }}
+                transition={{ duration: 0.3 }}
+                className="baseFlex h-10 w-10 rounded-md"
+              >
+                <LuPlus />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </Button>
+      ) : (
+        <div className="absolute right-2 top-2 rounded-md bg-gray-100 px-2 py-0.5 text-gray-400">
+          <p className="text-xs italic">Currently unavailable</p>
+        </div>
+      )}
     </div>
   );
 }

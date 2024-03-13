@@ -4,8 +4,7 @@ import { env } from "~/env";
 import Stripe from "stripe";
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
-
-import { socket } from "~/pages/_app";
+import { emitNewOrderThroughSocket } from "~/utils/emitNewOrderThroughSocket";
 import { type OrderDetails } from "~/stores/MainStore";
 import { orderDetailsSchema } from "~/server/api/routers/payment";
 
@@ -234,7 +233,8 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       // seems like we may have to do some extra work to get this to send to
       // backend socket.ts
-      socket.emit("newOrderCreated");
+      // socket.emit("newOrderCreated");
+      emitNewOrderThroughSocket();
 
       // TODO
 

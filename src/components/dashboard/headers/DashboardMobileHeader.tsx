@@ -6,6 +6,8 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 // import { useTabStore } from "~/stores/TabStore";
 import { FaUserAlt } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
+import DelayNewOrders from "~/components/dashboard/DelayNewOrders";
+import DiscountManagement from "~/components/dashboard/DiscountManagement";
 import {
   Accordion,
   AccordionContent,
@@ -180,35 +182,9 @@ function DashboardMobileHeader({
                 Item management
               </Button>
 
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant={"link"} className="text-lg">
-                    Delay new orders
-                  </Button>
-                </AlertDialogTrigger>
+              <DelayNewOrders />
 
-                <AlertDialogContent>
-                  <AlertDialogHeader className="text-lg">
-                    Delay new orders
-                  </AlertDialogHeader>
-                  <AlertDialogDescription>
-                    Are you sure you want to delay new orders?
-                  </AlertDialogDescription>
-
-                  {/* "Delay length: " and select w/ dropdown for times */}
-
-                  <AlertDialogFooter className="w-full !flex-row !justify-center gap-4">
-                    <AlertDialogCancel asChild>
-                      <Button variant="secondary" className="mt-0">
-                        Cancel
-                      </Button>
-                    </AlertDialogCancel>
-                    <AlertDialogAction asChild>
-                      <Button className="mt-0">Delay</Button>
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <DiscountManagement />
             </div>
           </SheetContent>
         </Sheet>

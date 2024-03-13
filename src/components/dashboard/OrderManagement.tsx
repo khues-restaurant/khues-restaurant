@@ -1,4 +1,10 @@
-import { type Order } from "@prisma/client";
+import {
+  OrderItemCustomization,
+  type Order,
+  Discount,
+  MenuItem,
+  OrderItem,
+} from "@prisma/client";
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "~/components/ui/button";
@@ -17,24 +23,38 @@ import {
   AlertDialogDescription,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import { type OrderDetails } from "~/stores/MainStore";
+import { useMainStore, type OrderDetails } from "~/stores/MainStore";
 import { ChevronDown } from "lucide-react";
+import { DashboardOrder } from "~/server/api/routers/order";
+
+// type FullOrderItems = OrderItem & {
+//   customizations: OrderItemCustomization[];
+//   discount: Discount;
+//   // menuItem: MenuItem;
+//   // order: Order;
+// };
+
+type OrderItemTest = OrderItem & {
+  customizations: OrderItemCustomization[];
+};
+
+type OrderTest = Order & {
+  orderItems: OrderItemTest[];
+};
 
 interface OrderManagement {
-  orders: Order[];
+  // orders: DashboardOrder[];
+  orders: OrderTest[];
 }
 
 function OrderManagement({ orders }: OrderManagement) {
-  const [notStartedOrders, setNotStartedOrders] = useState<Order[]>([]);
-  const [startedOrders, setStartedOrders] = useState<Order[]>([]);
-  const [completedOrders, setCompletedOrders] = useState<Order[]>([]);
+  const [notStartedOrders, setNotStartedOrders] = useState<OrderTest[]>([]);
+  const [startedOrders, setStartedOrders] = useState<OrderTest[]>([]);
+  const [completedOrders, setCompletedOrders] = useState<OrderTest[]>([]);
 
   const [selectedTab, setSelectedTab] = useState<
     "notStarted" | "started" | "completed"
   >("notStarted");
-
-  // TODO: again I *really* think that we should consolidate the date + time into one
-  // datetime
 
   useEffect(() => {
     const notStarted = [];
@@ -52,24 +72,15 @@ function OrderManagement({ orders }: OrderManagement) {
       }
     }
 
-    // sort by ascending timeToPickUp
+    // sort by ascending datetimeToPickup
     notStarted.sort((a, b) => {
-      return (
-        new Date(a.details.timeToPickUp).getTime() -
-        new Date(b.details.timeToPickUp).getTime()
-      );
+      return a.datetimeToPickup.getTime() - b.datetimeToPickup.getTime();
     });
     started.sort((a, b) => {
-      return (
-        new Date(a.details.timeToPickUp).getTime() -
-        new Date(b.details.timeToPickUp).getTime()
-      );
+      return a.datetimeToPickup.getTime() - b.datetimeToPickup.getTime();
     });
     completed.sort((a, b) => {
-      return (
-        new Date(a.details.timeToPickUp).getTime() -
-        new Date(b.details.timeToPickUp).getTime()
-      );
+      return a.datetimeToPickup.getTime() - b.datetimeToPickup.getTime();
     });
 
     setNotStartedOrders(notStarted);
@@ -127,7 +138,7 @@ function OrderManagement({ orders }: OrderManagement) {
             className="baseFlex w-full"
           >
             <AnimatePresence>
-              <div className="baseVertFlex mt-8 w-11/12 tablet:w-full tablet:max-w-2xl">
+              <div className="baseVertFlex mt-8 w-11/12 tablet:w-full tablet:max-w-3xl">
                 {notStartedOrders ? (
                   <>
                     {notStartedOrders.map((order) => (
@@ -211,7 +222,7 @@ function OrderManagement({ orders }: OrderManagement) {
 export default OrderManagement;
 
 interface CustomerOrder {
-  order: Order;
+  order: OrderTest;
   view: "notStarted" | "started" | "completed";
 }
 
@@ -309,10 +320,10 @@ function CustomerOrder({ order, view }: CustomerOrder) {
             <div className="baseFlex w-full !justify-between gap-4 tablet:w-auto tablet:!justify-center">
               <p className="baseFlex gap-2 text-lg font-semibold">
                 <>
-                  {view === "completed" ? (
+                  {view === "completed" && order.orderCompletedAt ? (
                     <>Completed at {formatTime(order.orderCompletedAt)}</>
                   ) : (
-                    <>Due at {order.details!.timeToPickUp!}</>
+                    <>Due at {formatTime(order.datetimeToPickup)}</>
                   )}
                 </>
               </p>
@@ -404,12 +415,12 @@ function CustomerOrder({ order, view }: CustomerOrder) {
               onClick={() => {
                 setAccordionOpen(accordionOpen === "open" ? "closed" : "open");
               }}
-              className={`absolute -right-10 bottom-0 h-4 w-4 shrink-0 text-primary transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=open]:rotate-180`}
+              className={`absolute bottom-4 right-[-40px] h-4 w-4 shrink-0 text-primary transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=open]:rotate-180 tablet:bottom-2 tablet:right-[-25px]`}
             />
           </div>
 
           <AccordionContent>
-            <OrderItems details={order.details!} />
+            <OrderItems order={order} />
           </AccordionContent>
         </AccordionItem>
       </Accordion>
@@ -418,30 +429,48 @@ function CustomerOrder({ order, view }: CustomerOrder) {
 }
 
 interface OrderItems {
-  details: OrderDetails;
+  order: OrderTest;
 }
 
-function OrderItems({ details }: OrderItems) {
+function OrderItems({ order }: OrderItems) {
+  const { orderDetails, menuItems, customizationChoices, discounts } =
+    useMainStore((state) => ({
+      orderDetails: state.orderDetails,
+      menuItems: state.menuItems,
+      customizationChoices: state.customizationChoices,
+      discounts: state.discounts,
+    }));
+
   return (
     <div className="baseVertFlex mt-4 !items-start gap-2 border-t p-2 pt-4">
       {/* TODO: if chatgpt search reveals this person is influential, put disclaimer right here,
       also obv make the background of the accordion "trigger" goldish */}
 
-      {details.items.map((item) => (
+      {order.orderItems.map((item) => (
         <div key={item.id} className="baseFlex gap-4">
           <div className="imageFiller size-12 rounded-md" />
 
-          <div className="baseVertFlex !items-start gap-2">
+          {/* TODO: idk why I couldn't just generically have this be h-full... 
+              setting h-12 but don't want this to be hardcoded */}
+          <div className="baseVertFlex h-full min-h-12 !items-start !justify-start gap-2">
             <div className="baseFlex gap-2 text-xl font-semibold">
               <p>{item.quantity}</p>
               <p>{item.name}</p>
             </div>
 
-            <div className="baseVertFlex mt-2 w-full !items-start gap-2 text-sm">
-              {/* TODO: customizations and custom instructions */}
-              {item.customizations.map((customization, idx) => (
+            <div className="baseVertFlex w-full !items-start gap-2 text-sm">
+              {Object.values(item.customizations).map((customization, idx) => (
                 <p key={idx}>
-                  - {customization.name}: {customization.value}
+                  -{" "}
+                  {
+                    customizationChoices[customization.customizationChoiceId]
+                      ?.customizationCategory.name
+                  }
+                  :{" "}
+                  {
+                    customizationChoices[customization.customizationChoiceId]
+                      ?.name
+                  }
                 </p>
               ))}
               {item.specialInstructions && <p>- {item.specialInstructions}</p>}

@@ -28,7 +28,7 @@ function ItemManagement({ menuCategories }: ItemManagement) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex mt-8 h-full w-full tablet:mt-0"
+      className="baseVertFlex my-8 h-full max-w-3xl tablet:mb-24 tablet:mt-48"
     >
       {menuCategories?.map((category) => (
         <MenuCategoryContainer
@@ -49,6 +49,8 @@ interface MenuCategoryContainer {
 }
 
 function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
+  const ctx = api.useUtils();
+
   const [openDialogId, setOpenDialogId] = useState<string | null>(null);
   const [itemIdBeingMutated, setItemIdBeingMutated] = useState<string | null>(
     null,
@@ -61,6 +63,7 @@ function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
         // toast this error
       },
       onSettled: () => {
+        void ctx.menuCategory.getAll.refetch();
         setOpenDialogId(null);
         setItemIdBeingMutated(null);
       },
@@ -92,7 +95,9 @@ function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
             <AlertDialog open={openDialogId === item.id}>
               <AlertDialogTrigger asChild>
                 <Button
-                  className={`${
+                  className={`
+                    mr-4
+                  ${
                     item.available
                       ? "bg-red-500 text-white"
                       : "bg-green-500 text-white"

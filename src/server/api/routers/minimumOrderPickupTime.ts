@@ -14,7 +14,7 @@ export const minimumOrderPickupTimeRouter = createTRPCRouter({
       },
     });
   }),
-  set: protectedProcedure.input(z.number()).query(async ({ ctx, input }) => {
+  set: protectedProcedure.input(z.number()).mutation(async ({ ctx, input }) => {
     return ctx.prisma.minimumOrderPickupTime.update({
       where: {
         id: 1,
