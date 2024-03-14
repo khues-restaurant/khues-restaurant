@@ -38,19 +38,20 @@ type OrderItemTest = OrderItem & {
   customizations: OrderItemCustomization[];
 };
 
-type OrderTest = Order & {
+type OrderWithItems = Order & {
   orderItems: OrderItemTest[];
 };
 
 interface OrderManagement {
-  // orders: DashboardOrder[];
-  orders: OrderTest[];
+  orders: OrderWithItems[];
 }
 
 function OrderManagement({ orders }: OrderManagement) {
-  const [notStartedOrders, setNotStartedOrders] = useState<OrderTest[]>([]);
-  const [startedOrders, setStartedOrders] = useState<OrderTest[]>([]);
-  const [completedOrders, setCompletedOrders] = useState<OrderTest[]>([]);
+  const [notStartedOrders, setNotStartedOrders] = useState<OrderWithItems[]>(
+    [],
+  );
+  const [startedOrders, setStartedOrders] = useState<OrderWithItems[]>([]);
+  const [completedOrders, setCompletedOrders] = useState<OrderWithItems[]>([]);
 
   const [selectedTab, setSelectedTab] = useState<
     "notStarted" | "started" | "completed"
@@ -222,7 +223,7 @@ function OrderManagement({ orders }: OrderManagement) {
 export default OrderManagement;
 
 interface CustomerOrder {
-  order: OrderTest;
+  order: OrderWithItems;
   view: "notStarted" | "started" | "completed";
 }
 
@@ -429,7 +430,7 @@ function CustomerOrder({ order, view }: CustomerOrder) {
 }
 
 interface OrderItems {
-  order: OrderTest;
+  order: OrderWithItems;
 }
 
 function OrderItems({ order }: OrderItems) {

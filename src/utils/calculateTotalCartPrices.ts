@@ -3,9 +3,10 @@ import { Decimal } from "decimal.js";
 import { type Discount } from "@prisma/client";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { type Item } from "~/stores/MainStore";
+import { DBOrderSummaryItem } from "~/server/api/routers/order";
 
 interface CalculateTotalCartPrices {
-  items: Item[];
+  items: Item[] | DBOrderSummaryItem[];
   customizationChoices: Record<string, CustomizationChoiceAndCategory>;
   discounts: Record<string, Discount>;
 }

@@ -1,3 +1,4 @@
+import { Order, OrderItem } from "@prisma/client";
 import { z } from "zod";
 
 import {
@@ -73,15 +74,53 @@ export interface DashboardOrder {
   userId: string | null;
 }
 
+export type DBOrderSummary = Order & {
+  orderItems: DBOrderSummaryItem[];
+};
+
+export type DBOrderSummaryItem = OrderItem & {
+  customizations: Record<string, string>;
+  discount: Discount | null;
+};
+
 export const orderRouter = createTRPCRouter({
   getById: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input: id }) => {
-      return ctx.prisma.order.findFirst({
+      const order = await ctx.prisma.order.findFirst({
         where: {
           id,
         },
+        include: {
+          orderItems: {
+            include: {
+              customizations: true,
+              discount: true,
+            },
+          },
+        },
       });
+
+      if (!order) return null;
+
+      // turn the item customizations into a Record<string, string>
+      // for easier access in the frontend
+      order.orderItems = order.orderItems.map((item) => {
+        // @ts-expect-error asdf
+        item.customizations = item.customizations.reduce(
+          (acc, customization) => {
+            acc[customization.customizationCategoryId] =
+              customization.customizationChoiceId;
+            return acc;
+          },
+          {} as Record<string, string>,
+        );
+
+        return item;
+      });
+
+      // @ts-expect-error asdf
+      return order as DBOrderSummary;
     }),
   getByStripeSessionId: publicProcedure
     .input(z.string())

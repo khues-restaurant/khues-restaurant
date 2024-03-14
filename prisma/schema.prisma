@@ -143,6 +143,7 @@ model Order {
     orderCompletedAt DateTime?
     datetimeToPickup DateTime
 
+    // do we really need this status field? can just infer from timestamps
     status                    String  @default("received") // "received", "inProgress", "completed" (maybe "cancelled" too?)
     firstName                 String
     lastName                  String

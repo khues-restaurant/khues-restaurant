@@ -2,9 +2,10 @@ import { Decimal } from "decimal.js";
 import { type Discount } from "@prisma/client";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { type Item } from "~/stores/MainStore";
+import { type DBOrderSummaryItem } from "~/server/api/routers/order";
 
 interface CalculateRelativeTotal {
-  items: Item[];
+  items: Item[] | DBOrderSummaryItem[];
   customizationChoices: Record<string, CustomizationChoiceAndCategory>;
   discounts: Record<string, Discount>;
 }
