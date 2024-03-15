@@ -207,4 +207,6 @@ model User {
     recentOrders  Order[]
     favoriteItems FavoriteItem[]
     discounts     Discount[]
+
+    @@index([userId])
 }

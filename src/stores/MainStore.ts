@@ -4,6 +4,7 @@ import { shallow } from "zustand/shallow";
 import { type Discount } from "@prisma/client";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
+import { z } from "zod";
 
 // might want to use this pattern at some point based on some route navigation
 // const initialStoreState = {};
@@ -16,6 +17,42 @@ import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 // and then we can just always directly reference the store for the menu items
 // and still have a socket.io listener for whenever an item is 86'd to refetch the data
 // and update the store.
+
+const storeCustomizationChoiceSchema = z.record(z.string());
+
+const discountSchema = z.object({
+  id: z.string(),
+  createdAt: z.date().or(z.string().transform((val) => new Date(val))),
+  name: z.string(),
+  description: z.string(),
+  expirationDate: z.date().or(z.string().transform((val) => new Date(val))),
+  active: z.boolean(),
+  userId: z.string().nullable(),
+});
+
+const itemSchema = z.object({
+  id: z.string(),
+  itemId: z.string(),
+  name: z.string(),
+  customizations: storeCustomizationChoiceSchema,
+  discountId: z.string().nullable(),
+  specialInstructions: z.string(),
+  includeDietaryRestrictions: z.boolean(),
+  quantity: z.number(),
+  price: z.number(),
+});
+
+export const orderDetailsSchema = z.object({
+  datetimeToPickUp: z.date().or(z.string().transform((val) => new Date(val))),
+  items: z.array(itemSchema),
+  includeNapkinsAndUtensils: z.boolean(),
+  rewardBeingRedeemed: z
+    .object({
+      reward: discountSchema,
+      item: itemSchema,
+    })
+    .optional(),
+});
 
 export type StoreMenuItems = Record<string, FullMenuItem>;
 
@@ -68,6 +105,11 @@ interface StoreState {
 
   discounts: Record<string, Discount>;
   setDiscounts: (discounts: Record<string, Discount>) => void;
+
+  itemNamesRemovedFromCart: string[];
+  setItemNamesRemovedFromCart: (itemNamesRemovedFromCart: string[]) => void;
+  cartInitiallyValidated: boolean;
+  setCartInitiallyValidated: (cartInitiallyValidated: boolean) => void;
 }
 
 export const useMainStore = createWithEqualityFn<StoreState>()(
@@ -98,6 +140,15 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
       discounts: {},
       setDiscounts: (discounts: Record<string, Discount>) => {
         set({ discounts });
+      },
+
+      itemNamesRemovedFromCart: [],
+      setItemNamesRemovedFromCart: (itemNamesRemovedFromCart: string[]) => {
+        set({ itemNamesRemovedFromCart });
+      },
+      cartInitiallyValidated: false,
+      setCartInitiallyValidated: (cartInitiallyValidated: boolean) => {
+        set({ cartInitiallyValidated });
       },
     }),
     shallow,

@@ -2,6 +2,7 @@ import { useAuth } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
+import { X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { useForm } from "react-hook-form";
@@ -83,13 +84,21 @@ function CartSheet({
   const { isSignedIn } = useAuth();
   const userId = useGetUserId();
 
-  const { orderDetails, menuItems, customizationChoices, discounts } =
-    useMainStore((state) => ({
-      orderDetails: state.orderDetails,
-      menuItems: state.menuItems,
-      customizationChoices: state.customizationChoices,
-      discounts: state.discounts,
-    }));
+  const {
+    orderDetails,
+    menuItems,
+    customizationChoices,
+    discounts,
+    itemNamesRemovedFromCart,
+    setItemNamesRemovedFromCart,
+  } = useMainStore((state) => ({
+    orderDetails: state.orderDetails,
+    menuItems: state.menuItems,
+    customizationChoices: state.customizationChoices,
+    discounts: state.discounts,
+    itemNamesRemovedFromCart: state.itemNamesRemovedFromCart,
+    setItemNamesRemovedFromCart: state.setItemNamesRemovedFromCart,
+  }));
 
   const [numberOfItems, setNumberOfItems] = useState(0);
 
@@ -101,7 +110,7 @@ function CartSheet({
 
   const { updateOrder } = useUpdateOrder();
 
-  const { data: minPickupTime } = api.minimOrderPickupTime.get.useQuery();
+  const { data: minPickupTime } = api.minimumOrderPickupTime.get.useQuery();
   const { data: userRewards } = api.user.getRewards.useQuery(userId);
 
   const { initializeCheckout } = useInitializeCheckout();
@@ -407,8 +416,61 @@ function CartSheet({
       <p className="ml-4 !self-start text-lg font-semibold underline underline-offset-2">
         Items
       </p>
+
+      <AnimatePresence>
+        {itemNamesRemovedFromCart.length > 0 && (
+          <motion.div
+            key={"cartSheetRemovedItemsCard"}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{
+              opacity: 1,
+              height: `${300 + itemNamesRemovedFromCart.length * 24}px`, // TODO: prob requires tweaking on mobile
+            }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ overflow: "hidden" }}
+          >
+            <motion.div
+              layout
+              className="baseVertFlex relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 pr-16 text-white"
+            >
+              <p className="font-semibold underline underline-offset-2">
+                Your order has been modified.
+              </p>
+
+              <p>
+                {itemNamesRemovedFromCart.length > 1
+                  ? "These items are"
+                  : "This item is"}{" "}
+                not currently available.
+              </p>
+              <ul className="list-disc pl-6">
+                {itemNamesRemovedFromCart.map((name, idx) => (
+                  <li key={idx}>{name}</li>
+                ))}
+              </ul>
+
+              <Button
+                variant={"outline"} // prob diff variant or make a new one
+                // rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary
+                className="absolute right-2 top-2 size-6 bg-primary !p-0 text-white"
+                onClick={() => {
+                  setItemNamesRemovedFromCart([]);
+                }}
+              >
+                <X className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+              </Button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* summary of items in cart */}
-      <div className="baseVertFlex h-full w-full !items-start !justify-start gap-2 overflow-y-auto border-b p-4  pb-36">
+      <motion.div
+        layout
+        className="baseVertFlex h-full w-full !items-start !justify-start gap-2 overflow-y-auto border-b p-4  pb-36"
+      >
         <div className="baseVertFlex w-full">
           <AnimatePresence>
             {orderDetails.items.map((item, idx) => (
@@ -694,7 +756,7 @@ function CartSheet({
             )}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* TODO: why does this scroll a bit along with body when drawer is scrolled? */}
       <SheetFooter>

@@ -10,6 +10,7 @@ import {
   AlertDialogDescription,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
+import { socket } from "~/pages/_app";
 import { Button } from "~/components/ui/button";
 import { TRPCClientErrorLike } from "@trpc/client";
 import { UseMutateFunction } from "@tanstack/react-query";
@@ -66,6 +67,9 @@ function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
         void ctx.menuCategory.getAll.refetch();
         setOpenDialogId(null);
         setItemIdBeingMutated(null);
+
+        // emit an event to the socket server
+        socket.emit("menuItemAvailabilityChanged");
       },
     });
 

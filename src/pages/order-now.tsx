@@ -1,5 +1,5 @@
 import { useAuth } from "@clerk/nextjs";
-import { type Discount, type MenuItem } from "@prisma/client";
+import { type Discount } from "@prisma/client";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import {
   useEffect,
@@ -17,12 +17,11 @@ import { Drawer, DrawerContent } from "~/components/ui/drawer";
 import { Skeleton } from "~/components/ui/skeleton";
 import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
-import { FullMenuItem } from "~/server/api/routers/menuCategory";
-import { StoreCustomizations, useMainStore } from "~/stores/MainStore";
+import { type FullMenuItem } from "~/server/api/routers/menuCategory";
+import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { api } from "~/utils/api";
 import { formatPrice } from "~/utils/formatPrice";
-import { getLineItemPrice } from "~/utils/getLineItemPrice";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
@@ -141,6 +140,7 @@ function OrderNow() {
                     <MenuCategoryButton
                       key={category.id}
                       name={category.name}
+                      listOrder={category.listOrder}
                       currentlyInViewCategory={currentlyInViewCategory}
                       setProgrammaticallyScrolling={
                         setProgrammaticallyScrolling
@@ -210,6 +210,7 @@ function OrderNow() {
                   name={category.name}
                   activeDiscount={category.activeDiscount}
                   menuItems={category.menuItems as FullMenuItem[]}
+                  listOrder={category.listOrder}
                   currentlyInViewCategory={currentlyInViewCategory}
                   setCurrentlyInViewCategory={setCurrentlyInViewCategory}
                   programmaticallyScrolling={programmaticallyScrolling}
@@ -263,12 +264,14 @@ export default OrderNow;
 interface MenuCategoryButton {
   currentlyInViewCategory: string;
   name: string;
+  listOrder: number;
   setProgrammaticallyScrolling: Dispatch<SetStateAction<boolean>>;
 }
 
 function MenuCategoryButton({
   currentlyInViewCategory,
   name,
+  listOrder,
   setProgrammaticallyScrolling,
 }: MenuCategoryButton) {
   return (
@@ -277,6 +280,9 @@ function MenuCategoryButton({
       id={`${name}Button`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+      style={{
+        order: listOrder,
+      }}
       className="flex-none shrink-0 snap-center text-center"
       onClick={() => {
         const categoryContainer = document.getElementById(`${name}Container`);
@@ -307,6 +313,7 @@ interface MenuCategory {
   name: string;
   activeDiscount: Discount | null;
   menuItems: FullMenuItem[];
+  listOrder: number;
   currentlyInViewCategory: string;
   setCurrentlyInViewCategory: Dispatch<SetStateAction<string>>;
   programmaticallyScrolling: boolean;
@@ -319,6 +326,7 @@ function MenuCategory({
   name,
   activeDiscount,
   menuItems,
+  listOrder,
   currentlyInViewCategory,
   setCurrentlyInViewCategory,
   programmaticallyScrolling,
@@ -360,6 +368,9 @@ function MenuCategory({
       id={`${name}Container`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+      style={{
+        order: listOrder,
+      }}
       className="baseVertFlex w-full scroll-m-44 !items-start gap-4 p-2"
     >
       <div className="baseFlex gap-4">
@@ -381,6 +392,7 @@ function MenuCategory({
             key={item.id}
             menuItem={item}
             activeDiscount={activeDiscount}
+            listOrder={item.listOrder}
             setIsDialogOpen={setIsDialogOpen}
             setIsDrawerOpen={setIsDrawerOpen}
             setItemToCustomize={setItemToCustomize}
@@ -394,6 +406,7 @@ function MenuCategory({
 interface MenuItemPreviewButton {
   menuItem: FullMenuItem;
   activeDiscount: Discount | null;
+  listOrder: number;
   setIsDrawerOpen: Dispatch<SetStateAction<boolean>>;
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
   setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
@@ -402,6 +415,7 @@ interface MenuItemPreviewButton {
 function MenuItemPreviewButton({
   menuItem,
   activeDiscount,
+  listOrder,
   setIsDialogOpen,
   setIsDrawerOpen,
   setItemToCustomize,
@@ -421,9 +435,15 @@ function MenuItemPreviewButton({
   const { updateOrder } = useUpdateOrder();
 
   return (
-    <div className="relative h-48 w-full max-w-96">
+    <div
+      style={{
+        order: listOrder,
+      }}
+      className="relative h-48 w-full max-w-96"
+    >
       <Button
         variant="outline"
+        disabled={!menuItem.available}
         className="baseFlex h-full w-full gap-4 border-2 py-6"
         onClick={() => {
           setItemToCustomize(menuItem);

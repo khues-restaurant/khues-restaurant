@@ -167,6 +167,7 @@ function RewardsDialogContent({
                   </motion.div>
                 ) : (
                   <motion.div
+                    key={"rewardsDialogSpinner"}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}

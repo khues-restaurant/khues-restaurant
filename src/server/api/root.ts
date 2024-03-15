@@ -8,6 +8,7 @@ import { paymentRouter } from "~/server/api/routers/payment";
 import { orderRouter } from "~/server/api/routers/order";
 import { menuItemRouter } from "~/server/api/routers/menuItem";
 import { discountRouter } from "~/server/api/routers/discount";
+import { validateOrderRouter } from "~/server/api/routers/validateOrder";
 
 export const appRouter = createTRPCRouter({
   user: userRouter,
@@ -16,9 +17,10 @@ export const appRouter = createTRPCRouter({
   payment: paymentRouter,
   transientOrder: transientOrderRouter,
   order: orderRouter,
-  minimOrderPickupTime: minimumOrderPickupTimeRouter,
+  minimumOrderPickupTime: minimumOrderPickupTimeRouter,
   customizationChoice: customizationChoiceRouter,
   discount: discountRouter,
+  validateOrder: validateOrderRouter,
 });
 
 // export type definition of API

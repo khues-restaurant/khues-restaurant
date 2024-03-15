@@ -1,5 +1,6 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { z } from "zod";
+import { orderDetailsSchema } from "~/stores/MainStore";
 
 import {
   createTRPCRouter,
@@ -15,9 +16,10 @@ export const userRouter = createTRPCRouter({
         where: {
           userId,
         },
+        select: {
+          userId: true, // could have selected anything, just want easy reduction of payload
+        },
       });
-
-      console.log("user", user, Boolean(user));
 
       return Boolean(user);
     }),
@@ -92,14 +94,10 @@ export const userRouter = createTRPCRouter({
         email: z.string().email(),
         firstName: z.string().min(1).max(100),
         lastName: z.string().min(1).max(100),
-        phoneNumber: z
-          .string()
-          .min(10)
-          .max(20)
-          .regex(/^\+?[0-9\s-]+$/),
+        phoneNumber: z.string().regex(/^\(\d{3}\) \d{3}-\d{4}$/),
         birthday: z.date(),
         dietaryRestrictions: z.string().max(100),
-        currentOrder: z.any(),
+        currentOrder: orderDetailsSchema,
       }),
     )
     .mutation(async ({ ctx, input }) => {

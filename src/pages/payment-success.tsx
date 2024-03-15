@@ -1,25 +1,14 @@
-import { type NextPage } from "next";
-import Head from "next/head";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { TextGenerateEffect } from "~/components/ui/TextGenerateEffect";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { api } from "~/utils/api";
-import { motion } from "framer-motion";
-import { TextGenerateEffect } from "~/components/ui/TextGenerateEffect";
 
 function PaymentSuccess() {
   const { push, isReady } = useRouter();
   const sessionId = useRouter().query.session_id as string;
-
-  // const session = api.payment.getStripeSession.useQuery(
-  //   { sessionId },
-  //   {
-  //     enabled: isReady,
-  //   },
-  // );
-  // ^ I feel like this was copy pasted, since why would we want/need to get the session
-  // at this point? The session should already be complete when this page is loaded
 
   const { data: order } = api.order.getByStripeSessionId.useQuery(sessionId, {
     enabled: isReady,
@@ -98,6 +87,7 @@ function PaymentSuccess() {
           />
 
           <motion.div
+            key={"paymentSuccessSpinner"}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 3.5 }}

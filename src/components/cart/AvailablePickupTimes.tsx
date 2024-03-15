@@ -76,15 +76,6 @@ function AvailablePickupTimes({
           is30MinsFromDatetime(datetime, new Date()) &&
           datetime >= minPickupTime
         ) {
-          console.log(
-            "letting",
-            time,
-            "through",
-            datetime,
-            minPickupTime,
-            today,
-          );
-
           return true;
         }
       });

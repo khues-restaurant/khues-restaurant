@@ -6,7 +6,7 @@ import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { emitNewOrderThroughSocket } from "~/utils/emitNewOrderThroughSocket";
 import { type OrderDetails } from "~/stores/MainStore";
-import { orderDetailsSchema } from "~/server/api/routers/payment";
+import { orderDetailsSchema } from "~/stores/MainStore";
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16",

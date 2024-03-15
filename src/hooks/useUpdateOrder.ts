@@ -4,7 +4,22 @@ import { useMainStore, type OrderDetails, type Item } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import isEqual from "lodash.isequal";
 import debounce from "lodash.debounce";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
+
+interface UpdateOrder {
+  newOrderDetails: OrderDetails;
+}
+
+interface UpdateUserData {
+  userId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  birthday: Date;
+  dietaryRestrictions: string;
+  currentOrder: OrderDetails;
+}
 
 function useUpdateOrder() {
   const { isSignedIn } = useAuth();
@@ -17,17 +32,11 @@ function useUpdateOrder() {
   const { data: user } = api.user.get.useQuery(userId);
   const { mutate: updateUser } = api.user.update.useMutation();
 
-  interface UpdateOrder {
-    newOrderDetails: OrderDetails;
-  }
-
-  // is there any argument for keeping this to only take in / update just the items field rather than
-  // taking in the whole OrderDetails object and updating the whole thing?
-
-  // TODO: hopefully don't have to explicitly set state or something for cart icon+number
-  // to update, but maybe too many edge cases if just comparing previous state of
-  // orderDetails to current one?
-  // ^ nah that's probably the way
+  const debouncedUpdateUser = useRef(
+    debounce((updatedUserData: UpdateUserData) => {
+      updateUser(updatedUserData);
+    }, 1000),
+  ).current;
 
   function attemptToMergeDuplicateItems(newOrderDetails: OrderDetails) {
     const newItems = newOrderDetails.items;
@@ -66,21 +75,19 @@ function useUpdateOrder() {
       const sanitizedNewOrderDetails =
         attemptToMergeDuplicateItems(newOrderDetails);
 
+      console.log("setting store state", sanitizedNewOrderDetails);
+
       // setting store state
       setOrderDetails(sanitizedNewOrderDetails);
 
       // update user's order details in database
       if (isSignedIn && user) {
-        debounce(() => {
-          // should be fine to pass user object here because
-          // we aren't actually updating any of those values, they only can be changed
-          // on the initial post signup/profile routes
-          updateUser({
-            ...user,
-            currentOrder: sanitizedNewOrderDetails,
-          });
-        }, 1000); // TODO: I have no clue if this actually does what I want it to
+        debouncedUpdateUser({
+          ...user,
+          currentOrder: sanitizedNewOrderDetails,
+        });
       }
+
       // setting local storage state
       else {
         localStorage.setItem(
@@ -89,7 +96,7 @@ function useUpdateOrder() {
         );
       }
     },
-    [isSignedIn, user, updateUser, setOrderDetails],
+    [isSignedIn, user, debouncedUpdateUser, setOrderDetails],
   );
 
   return {

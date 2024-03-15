@@ -46,33 +46,33 @@ function Track() {
     },
   );
 
-  // I don't think that we actually need this
-  // const [prevStatus, setPrevStatus] = useState("");
+  // const [status, setStatus] = useState(
+  //   // order.orderCompletedAt
+  //   //   ? "completed"
+  //   //   : order.orderStartedAt
+  //   //     ? "started"
+  //   //     : "received",
+  //   "",
+  // );
 
-  const [status, setStatus] = useState(
-    // order.orderCompletedAt
-    //   ? "completed"
-    //   : order.orderStartedAt
-    //     ? "started"
-    //     : "received",
-    "",
-  );
+  // useEffect(() => {
+  //   if (!order) return;
 
-  useEffect(() => {
-    if (!order) return;
-
-    if (order.orderCompletedAt) {
-      setStatus("completed");
-    } else if (order.orderStartedAt) {
-      setStatus("started");
-    } else {
-      setStatus("received");
-    }
-  }, [order]);
+  //   if (order.orderCompletedAt) {
+  //     setStatus("completed");
+  //   } else if (order.orderStartedAt) {
+  //     setStatus("started");
+  //   } else {
+  //     setStatus("received");
+  //   }
+  // }, [order]);
 
   useEffect(() => {
-    function refetchOrderStatus() {
-      void refetch();
+    function refetchOrderStatus(orderIdToRefetch: string) {
+      if (orderId === orderIdToRefetch) {
+        console.log("refetching new order status");
+        void refetch();
+      }
     }
 
     socket.on("orderStatusUpdated", refetchOrderStatus);
@@ -80,7 +80,7 @@ function Track() {
     return () => {
       socket.off("orderStatusUpdated", refetchOrderStatus);
     };
-  }, [refetch]);
+  }, [orderId, refetch]);
 
   const [isMobileViewport, setIsMobileViewport] = useState(true);
 
@@ -130,20 +130,7 @@ function Track() {
     }, 5000);
 
     setRewardsPointsTimerSet(true);
-  }, [order, rewardsPointsTimerSet]);
-
-  console.log(offset, rewardsPointsEarned);
-
-  // Calculate the length of the visible part of the stroke based on the percentage
-  const arcLengthTest = (circumference - gapLength) * (90 / 100);
-
-  // The offset for the dasharray to create the effect of the circle filling up
-  const offsetTest = circumference - arcLengthTest;
-
-  console.log("test", offsetTest, offset);
-  console.log(order?.prevRewardsPoints, order?.rewardsPoints);
-
-  // we will have a skeleton that will crossfade into actual content when order is loaded from trpc
+  }, [order, rewardsPointsTimerSet, circumference]);
 
   if (typeof orderId !== "string") return null;
 

@@ -23,6 +23,7 @@ import { api } from "~/utils/api";
 import { formatTimeString } from "~/utils/formatTimeString";
 import { getHoursAndMinutesFromDate } from "~/utils/getHoursAndMinutesFromDate";
 import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
+import { socket } from "~/pages/_app";
 
 const times = [
   "15:00",
@@ -44,12 +45,16 @@ const times = [
 
 function DelayNewOrders() {
   const ctx = api.useUtils();
-  const { data: minOrderPickupTime } = api.minimOrderPickupTime.get.useQuery();
+  const { data: minOrderPickupTime } =
+    api.minimumOrderPickupTime.get.useQuery();
   const { mutate: setDBValue, isLoading: isUpdatingNewMinOrderPickupTime } =
-    api.minimOrderPickupTime.set.useMutation({
+    api.minimumOrderPickupTime.set.useMutation({
       onSuccess: () => {
-        void ctx.minimOrderPickupTime.get.refetch();
+        void ctx.minimumOrderPickupTime.get.refetch();
         setShowDialog(false);
+
+        // send out emit to sever to send actual emit to all clients
+        socket.emit("minOrderPickupTimeChanged");
       },
       onError: (e) => {
         // toast notification here

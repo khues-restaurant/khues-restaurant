@@ -4,6 +4,7 @@ import Stripe from "stripe";
 import { z } from "zod";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { orderDetailsSchema } from "~/stores/MainStore";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 
 export const config = {
@@ -11,42 +12,6 @@ export const config = {
     bodyParser: false,
   },
 };
-
-const storeCustomizationChoiceSchema = z.record(z.string());
-
-const discountSchema = z.object({
-  id: z.string(),
-  createdAt: z.date().or(z.string().transform((val) => new Date(val))),
-  name: z.string(),
-  description: z.string(),
-  expirationDate: z.date().or(z.string().transform((val) => new Date(val))),
-  active: z.boolean(),
-  userId: z.string().nullable(),
-});
-
-const itemSchema = z.object({
-  id: z.string(),
-  itemId: z.string(),
-  name: z.string(),
-  customizations: storeCustomizationChoiceSchema,
-  discountId: z.string().nullable(),
-  specialInstructions: z.string(),
-  includeDietaryRestrictions: z.boolean(),
-  quantity: z.number(),
-  price: z.number(),
-});
-
-export const orderDetailsSchema = z.object({
-  datetimeToPickUp: z.date().or(z.string().transform((val) => new Date(val))),
-  items: z.array(itemSchema),
-  includeNapkinsAndUtensils: z.boolean(),
-  rewardBeingRedeemed: z
-    .object({
-      reward: discountSchema,
-      item: itemSchema,
-    })
-    .optional(),
-});
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16",

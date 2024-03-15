@@ -27,6 +27,18 @@ export default function SocketHandler(
     socket.on("newOrderCreated", () => {
       console.log("new order created");
     });
+
+    socket.on("orderStatusUpdate", (orderId) => {
+      socket.emit("orderStatusUpdated", orderId);
+    });
+
+    socket.on("menuItemAvailabilityChanged", () => {
+      socket.emit("refetchMenuCategories");
+    });
+
+    socket.on("minOrderPickupTimeChanged", () => {
+      socket.emit("refetchMinOrderPickupTime");
+    });
   };
 
   io.on("connection", onConnection);
