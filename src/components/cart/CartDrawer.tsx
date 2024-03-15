@@ -41,7 +41,6 @@ import { useMainStore, type Item } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { formatPrice } from "~/utils/formatPrice";
 import { getDisabledDates } from "~/utils/getDisabledPickupDates";
-import { parseTimeToNumber } from "~/utils/parseTimeToNumber";
 import { cn } from "~/utils/shadcnuiUtils";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import useInitializeCheckout from "~/hooks/useInitializeCheckout";
@@ -50,6 +49,11 @@ import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
+import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
+import { is30MinsFromDatetime } from "~/utils/is30MinsFromDatetime";
+import { getHoursAndMinutesFromDate } from "~/utils/getHoursAndMinutesFromDate";
+import { getMidnightDate } from "~/utils/getMidnightDate";
+import { selectedDateIsToday } from "~/utils/selectedDateIsToday";
 
 interface OrderCost {
   subtotal: number;
@@ -129,10 +133,21 @@ function CartDrawer({
             return false;
           }
 
-          console.log(time, parseTimeToNumber(time), minPickupTime.value);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          const datetime = mergeDateAndTime(
+            mainForm.getValues().dateToPickUp,
+            time,
+          );
+
+          if (!datetime) return false;
 
           // fyi: returns message if expression is false
-          return parseTimeToNumber(time) >= minPickupTime.value;
+          return (
+            is30MinsFromDatetime(datetime, today) &&
+            datetime >= minPickupTime.value
+          );
         },
         {
           message:
@@ -144,16 +159,24 @@ function CartDrawer({
   const mainForm = useForm<z.infer<typeof mainFormSchema>>({
     resolver: zodResolver(mainFormSchema),
     values: {
-      dateToPickUp: orderDetails.dateToPickUp ?? new Date(),
-      timeToPickUp: orderDetails.timeToPickUp ?? "",
+      dateToPickUp: getMidnightDate(orderDetails.datetimeToPickUp),
+      timeToPickUp: getHoursAndMinutesFromDate(orderDetails.datetimeToPickUp),
     },
   });
 
+  // watches for any changes to date/time values and combines them into a single
+  // Date value to updateOrder() with.
   mainForm.watch((value) => {
+    if (value.dateToPickUp === undefined || value.timeToPickUp === undefined)
+      return;
+
     const newOrderDetails = structuredClone(orderDetails);
 
-    newOrderDetails.dateToPickUp = value.dateToPickUp ?? new Date();
-    newOrderDetails.timeToPickUp = value.timeToPickUp;
+    const newDate = mergeDateAndTime(value.dateToPickUp, value.timeToPickUp);
+
+    if (newDate === undefined) return;
+
+    newOrderDetails.datetimeToPickUp = newDate;
 
     updateOrder({
       newOrderDetails,
@@ -348,7 +371,17 @@ function CartDrawer({
                           />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent side="bottom" className="h-[250px]">
+                      <SelectContent
+                        side="bottom"
+                        className={`${
+                          selectedDateIsToday(
+                            mainForm.getValues().dateToPickUp,
+                          ) &&
+                          mainForm.getValues().dateToPickUp.getHours() >= 22
+                            ? ""
+                            : "h-[250px]"
+                        }`}
+                      >
                         <AvailablePickupTimes
                           selectedDate={mainForm.getValues().dateToPickUp}
                           minPickupTime={minPickupTime?.value}

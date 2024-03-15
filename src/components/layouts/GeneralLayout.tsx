@@ -79,13 +79,15 @@ function GeneralLayout({ children }: GeneralLayout) {
   }, [menuCategories, setMenuItems]);
 
   useEffect(() => {
+    // TODO: should check if user is signed in, if so get their db json instead of localstorage
+
     const localStorageOrder = localStorage.getItem("khue's-orderDetails");
 
     if (!localStorageOrder) return;
 
     const parsedOrder = JSON.parse(localStorageOrder) as OrderDetails;
 
-    parsedOrder.dateToPickUp = new Date(parsedOrder.dateToPickUp);
+    parsedOrder.datetimeToPickUp = new Date(parsedOrder.datetimeToPickUp);
     // TODO: this should be moved/consolidated into one massive localstorage handler hook I think.
 
     setOrderDetails(parsedOrder);

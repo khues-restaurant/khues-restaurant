@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import {
   AlertDialog,
@@ -19,83 +20,57 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { api } from "~/utils/api";
+import { formatTimeString } from "~/utils/formatTimeString";
+import { getHoursAndMinutesFromDate } from "~/utils/getHoursAndMinutesFromDate";
+import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
 
-// currently only supporting PM times
 const times = [
-  "2:00",
-  "2:30",
-  "3:00",
-  "3:30",
-  "4:00",
-  "4:30",
-  "5:00",
-  "5:30",
-  "6:00",
-  "6:30",
-  "7:00",
-  "7:30",
-  "8:00",
-  "8:30",
-  "9:00",
-  "9:30",
+  "15:00",
+  "15:30",
+  "16:00",
+  "16:30",
+  "17:00",
+  "17:30",
+  "18:00",
+  "18:30",
+  "19:00",
+  "19:30",
+  "20:00",
+  "20:30",
+  "21:00",
+  "21:30",
+  "22:00",
 ];
-
-function getFormattedTime(date: Date, time: string) {
-  if (time === "") return "";
-
-  // console.log(date, time);
-  const [hours, minutes] = time.split(":").map(Number);
-
-  // console.log(hours, minutes);
-
-  if (hours === undefined || minutes === undefined)
-    throw new Error("Invalid time");
-
-  const newDate = new Date(date);
-  newDate.setHours(hours);
-  newDate.setMinutes(minutes);
-  const timeDiff = newDate.getTime() - Date.now();
-  const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
-  const minutesDiff = Math.floor((timeDiff / (1000 * 60)) % 60);
-  return `${time} PM - ${hoursDiff > 0 ? `${hoursDiff} hour${hoursDiff > 1 ? "s" : ""} ` : ""}${minutesDiff} minute${minutesDiff > 1 ? "s" : ""}`;
-}
-
-function formatNumberToTime(num: number): string {
-  const hours = Math.floor(num / 100);
-  const minutes = num % 100;
-  // Padding the minutes to ensure two digits are always displayed
-  const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-  return `${hours}:${formattedMinutes}`;
-}
 
 function DelayNewOrders() {
   const ctx = api.useUtils();
   const { data: minOrderPickupTime } = api.minimOrderPickupTime.get.useQuery();
-  const {
-    mutate: setNewMinOrderPickupTime,
-    isLoading: isUpdatingNewMinOrderPickupTime,
-  } = api.minimOrderPickupTime.set.useMutation({
-    onSuccess: () => {
-      void ctx.minimOrderPickupTime.get.refetch();
-      setShowDialog(false);
-    },
-    onError: (e) => {
-      // toast notification here
-      console.error(e);
-    },
-  });
+  const { mutate: setDBValue, isLoading: isUpdatingNewMinOrderPickupTime } =
+    api.minimOrderPickupTime.set.useMutation({
+      onSuccess: () => {
+        void ctx.minimOrderPickupTime.get.refetch();
+        setShowDialog(false);
+      },
+      onError: (e) => {
+        // toast notification here
+        console.error(e);
+      },
+    });
 
   const [showDialog, setShowDialog] = useState(false);
 
-  // setTimeout for every minute to update the current date/time?
   const [currentDate, setCurrentDate] = useState(new Date());
   const [minOrderPickupTimeValue, setMinOrderPickupTimeValue] = useState("");
 
+  const todayAtMidnight = new Date();
+  todayAtMidnight.setHours(0, 0, 0, 0);
+
   useEffect(() => {
-    if (minOrderPickupTime && minOrderPickupTime?.value !== 0) {
-      const value = formatNumberToTime(minOrderPickupTime.value);
-      setMinOrderPickupTimeValue(value);
-    }
+    if (!minOrderPickupTime) return;
+
+    setMinOrderPickupTimeValue(
+      getHoursAndMinutesFromDate(minOrderPickupTime.value),
+    );
   }, [showDialog, minOrderPickupTime]);
 
   useEffect(() => {
@@ -106,11 +81,6 @@ function DelayNewOrders() {
   }, []); // not exactly what you want, but it's close enough I think
   // ^ TODO: maybe need to have actual AlertDialogContent be in a separate component so you can properly
   // tap into the lifcycle hooks?
-
-  // TODO: technically want to make an effect here that will check to see if the current time is past
-  // the minOrderPickupTime and if so, then set the new minOrderPickupTime to 0
-
-  console.log(minOrderPickupTimeValue);
 
   return (
     <AlertDialog
@@ -131,19 +101,24 @@ function DelayNewOrders() {
       </AlertDialogTrigger>
 
       <AlertDialogContent>
-        {minOrderPickupTime !== undefined && minOrderPickupTime !== null && (
+        {minOrderPickupTime && (
           <div className="baseVertFlex w-full">
             <div className="baseVertFlex gap-8">
-              {minOrderPickupTime.value !== 0 ? (
+              {/* TODO: why is typescript mad at this? */}
+              {minOrderPickupTime.value.getTime() !==
+              todayAtMidnight.getTime() ? (
                 <div className="baseVertFlex gap-4">
                   <p>
                     Online ordering is paused until{" "}
-                    {formatNumberToTime(minOrderPickupTime.value) + " PM"}.
+                    {format(minOrderPickupTime.value, "p")}.
                   </p>
                   <Button
                     variant="destructive"
                     onClick={() => {
-                      setNewMinOrderPickupTime(0);
+                      const todayAtMidnight = new Date();
+                      todayAtMidnight.setHours(0, 0, 0, 0);
+
+                      setDBValue(todayAtMidnight);
                     }}
                     disabled={isUpdatingNewMinOrderPickupTime}
                   >
@@ -151,7 +126,7 @@ function DelayNewOrders() {
                   </Button>
                 </div>
               ) : (
-                <p>Online ordering is accepting new orders as normal.</p>
+                <p>Currently accepting new orders as normal.</p>
               )}
 
               {/*  */}
@@ -171,18 +146,18 @@ function DelayNewOrders() {
                         <SelectLabel>Delay until</SelectLabel>
                         {times.map((time) => (
                           <>
+                            {/* only show times in the future */}
                             {currentDate.getTime() <
-                              new Date().setHours(
-                                parseInt(time.split(":")[0]), // still jank, consider making db minOrderPickupTime an actual Date (optionally null)
-                                parseInt(time.split(":")[1]), // still jank, consider making db minOrderPickupTime an actual Date (optionally null)
-                              ) && (
+                              (mergeDateAndTime(new Date(), time)?.getTime() ??
+                                new Date().getTime()) && (
                               <SelectItem key={time} value={time}>
-                                {/* this is probably useless information... check in with Eric to be sure */}
                                 {/* {getFormattedTime(
                                   currentDate ?? new Date(),
                                   time,
                                 )} */}
-                                {time} PM
+                                {/* ^ the total delay in HH:MM is probably useless information... 
+                                    check in with Eric to be sure */}
+                                {formatTimeString(time)}
                               </SelectItem>
                             )}
                           </>
@@ -209,17 +184,19 @@ function DelayNewOrders() {
                 isUpdatingNewMinOrderPickupTime
               }
               onClick={() => {
-                const [hours, minutes] = minOrderPickupTimeValue.split(":");
+                const newMinOrderPickupTime = mergeDateAndTime(
+                  currentDate,
+                  minOrderPickupTimeValue,
+                );
 
-                if (hours === undefined || minutes === undefined)
-                  throw new Error("Invalid time");
+                if (!newMinOrderPickupTime) return;
 
-                const newMinOrderPickupTime =
-                  parseInt(hours) * 100 + parseInt(minutes);
-                setNewMinOrderPickupTime(newMinOrderPickupTime);
+                setDBValue(newMinOrderPickupTime);
               }}
             >
-              {minOrderPickupTime?.value === 0 ? "Pause" : "Update"}
+              {/* if value is "" then that equates to minOrderPickupTime 
+                  to be at midnight of current dat */}
+              {minOrderPickupTimeValue === "" ? "Pause" : "Update"}
               {/* TODO: add spinner + checkmark for mutation */}
             </Button>
           </AlertDialogAction>

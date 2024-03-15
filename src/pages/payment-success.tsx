@@ -40,8 +40,7 @@ function PaymentSuccess() {
       // reset order since it's been paid for
       updateOrder({
         newOrderDetails: {
-          dateToPickUp: new Date(),
-          timeToPickUp: "",
+          datetimeToPickUp: new Date(),
           items: [],
           includeNapkinsAndUtensils: false,
         },

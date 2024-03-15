@@ -7,9 +7,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-// maybe do all relations to user on "userId" instead of "id" since if you
-// have to compare from client side then we will be getting the clerk userId
-
 // ratings model (tied to User)
 
 // TODO: create ChatMessage and Chat models, maybe also a global restaurantConfig or something
@@ -19,9 +16,7 @@ datasource db {
 model MinimumOrderPickupTime {
     id Int @id @default(1)
 
-    value Int @default(0) // will just be 600 for "6:00 PM" for example to make easier to work with on client side
-    // ^ 0 will be used to indicate no minimum order time
-    // ^ 1159 will be used to indicate to not accept any more orders for the day
+    value DateTime @default(now()) // will get reset to midnight of current day every day by a cron job
 }
 
 model FavoriteItem {

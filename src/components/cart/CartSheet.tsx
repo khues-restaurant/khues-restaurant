@@ -1,35 +1,21 @@
-import { type MenuItem } from "@prisma/client";
+import { useAuth } from "@clerk/nextjs";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import React, {
-  useState,
-  useEffect,
-  type Dispatch,
-  type SetStateAction,
-  useMemo,
-} from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useForm } from "react-hook-form";
+import { CiCalendarDate, CiGift, CiLocationOn } from "react-icons/ci";
+import { FaRegClock, FaTrashAlt } from "react-icons/fa";
+import { FaCakeCandles } from "react-icons/fa6";
+import { LiaShoppingBagSolid } from "react-icons/lia";
+import { LuMinus, LuPlus } from "react-icons/lu";
+import { z } from "zod";
+import AnimatedNumbers from "~/components/AnimatedNumbers";
+import AnimatedPrice from "~/components/AnimatedPrice";
+import AvailablePickupTimes from "~/components/cart/AvailablePickupTimes";
 import { Button } from "~/components/ui/button";
 import { Calendar } from "~/components/ui/calendar";
-import { SheetFooter } from "~/components/ui/sheet";
-import { FaRegClock, FaTrashAlt } from "react-icons/fa";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
-import { useMainStore, type Item } from "~/stores/MainStore";
-import { CiCalendarDate, CiGift, CiLocationOn } from "react-icons/ci";
-import { cn } from "~/utils/shadcnuiUtils";
-import { LiaShoppingBagSolid } from "react-icons/lia";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
 import {
   Form,
   FormControl,
@@ -38,30 +24,36 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import AnimatedPrice from "~/components/AnimatedPrice";
-import { getLineItemPrice } from "~/utils/getLineItemPrice";
-import { LuMinus, LuPlus } from "react-icons/lu";
-import useUpdateOrder from "~/hooks/useUpdateOrder";
-import { formatPrice } from "~/utils/formatPrice";
-import { AnimatePresence, motion } from "framer-motion";
-import { useAuth } from "@clerk/nextjs";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { api } from "~/utils/api";
-import { HiOutlineInformationCircle } from "react-icons/hi";
-import { getDisabledDates } from "~/utils/getDisabledPickupDates";
-import AvailablePickupTimes from "~/components/cart/AvailablePickupTimes";
-import { parseTimeToNumber } from "~/utils/parseTimeToNumber";
-import AnimatedNumbers from "~/components/AnimatedNumbers";
-import useGetUserId from "~/hooks/useGetUserId";
 import { Label } from "~/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import { SheetFooter } from "~/components/ui/sheet";
 import { Switch } from "~/components/ui/switch";
-import { FaCakeCandles } from "react-icons/fa6";
+import useGetUserId from "~/hooks/useGetUserId";
+import useInitializeCheckout from "~/hooks/useInitializeCheckout";
+import useUpdateOrder from "~/hooks/useUpdateOrder";
+import { type FullMenuItem } from "~/server/api/routers/menuCategory";
+import { useMainStore, type Item } from "~/stores/MainStore";
+import { api } from "~/utils/api";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
-import useInitializeCheckout from "~/hooks/useInitializeCheckout";
-import { type FullMenuItem } from "~/server/api/routers/menuCategory";
+import { formatPrice } from "~/utils/formatPrice";
+import { getDisabledDates } from "~/utils/getDisabledPickupDates";
+import { getHoursAndMinutesFromDate } from "~/utils/getHoursAndMinutesFromDate";
+import { getMidnightDate } from "~/utils/getMidnightDate";
+import { is30MinsFromDatetime } from "~/utils/is30MinsFromDatetime";
+import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
+import { selectedDateIsToday } from "~/utils/selectedDateIsToday";
+import { cn } from "~/utils/shadcnuiUtils";
 
 interface OrderCost {
   subtotal: number;
@@ -141,10 +133,21 @@ function CartSheet({
             return false;
           }
 
-          console.log(time, parseTimeToNumber, minPickupTime.value);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          const datetime = mergeDateAndTime(
+            mainForm.getValues().dateToPickUp,
+            time,
+          );
+
+          if (!datetime) return false;
 
           // fyi: returns message if expression is false
-          return parseTimeToNumber(time) >= minPickupTime.value;
+          return (
+            is30MinsFromDatetime(datetime, today) &&
+            datetime >= minPickupTime.value
+          );
         },
         {
           message:
@@ -156,16 +159,24 @@ function CartSheet({
   const mainForm = useForm<z.infer<typeof mainFormSchema>>({
     resolver: zodResolver(mainFormSchema),
     values: {
-      dateToPickUp: orderDetails.dateToPickUp ?? new Date(),
-      timeToPickUp: orderDetails.timeToPickUp ?? "",
+      dateToPickUp: getMidnightDate(orderDetails.datetimeToPickUp),
+      timeToPickUp: getHoursAndMinutesFromDate(orderDetails.datetimeToPickUp),
     },
   });
 
+  // watches for any changes to date/time values and combines them into a single
+  // Date value to updateOrder() with.
   mainForm.watch((value) => {
+    if (value.dateToPickUp === undefined || value.timeToPickUp === undefined)
+      return;
+
     const newOrderDetails = structuredClone(orderDetails);
 
-    newOrderDetails.dateToPickUp = value.dateToPickUp ?? new Date();
-    newOrderDetails.timeToPickUp = value.timeToPickUp;
+    const newDate = mergeDateAndTime(value.dateToPickUp, value.timeToPickUp);
+
+    if (newDate === undefined) return;
+
+    newOrderDetails.datetimeToPickUp = newDate;
 
     updateOrder({
       newOrderDetails,
@@ -185,6 +196,8 @@ function CartSheet({
 
     setNumberOfItems(sum);
   }, [orderDetails.items, orderDetails.rewardBeingRedeemed]);
+
+  console.log(minPickupTime?.value);
 
   useEffect(() => {
     const items = [...orderDetails.items];
@@ -352,7 +365,17 @@ function CartSheet({
                           />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent side="bottom" className="h-[250px]">
+                      <SelectContent
+                        side="bottom"
+                        className={`${
+                          selectedDateIsToday(
+                            mainForm.getValues().dateToPickUp,
+                          ) &&
+                          mainForm.getValues().dateToPickUp.getHours() >= 22
+                            ? ""
+                            : "h-[250px]"
+                        }`}
+                      >
                         <AvailablePickupTimes
                           selectedDate={mainForm.getValues().dateToPickUp}
                           minPickupTime={minPickupTime?.value}

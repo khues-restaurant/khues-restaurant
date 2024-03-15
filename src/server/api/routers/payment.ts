@@ -37,8 +37,7 @@ const itemSchema = z.object({
 });
 
 export const orderDetailsSchema = z.object({
-  dateToPickUp: z.date().or(z.string().transform((val) => new Date(val))),
-  timeToPickUp: z.string().optional(),
+  datetimeToPickUp: z.date().or(z.string().transform((val) => new Date(val))),
   items: z.array(itemSchema),
   includeNapkinsAndUtensils: z.boolean(),
   rewardBeingRedeemed: z

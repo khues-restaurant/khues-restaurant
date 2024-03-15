@@ -186,8 +186,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const orderData = {
         stripeSessionId: payment.id,
-        datetimeToPickup: new Date(orderDetails.dateToPickUp ?? Date.now()),
-        // ^ dateToPickup field obv shouldn't be allowed to be undefined...
+        datetimeToPickup: new Date(orderDetails.datetimeToPickUp),
         firstName: paymentMetadata.firstName,
         lastName: paymentMetadata.lastName,
         email: paymentMetadata.email,
