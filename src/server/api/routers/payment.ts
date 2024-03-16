@@ -191,7 +191,7 @@ export const paymentRouter = createTRPCRouter({
 
       console.dir(lineItems);
 
-      return stripe.checkout.sessions.create({
+      const session = await stripe.checkout.sessions.create({
         mode: "payment",
         payment_method_types: ["card"],
         customer_email: input.email,
@@ -213,16 +213,19 @@ export const paymentRouter = createTRPCRouter({
         success_url:
           "http://localhost:3000/payment-success?session_id={CHECKOUT_SESSION_ID}",
         cancel_url: "http://localhost:3000/",
-
-        expires_at: Math.floor(Date.now() / 1000) + 60 * 30,
-        // Checkout will auto-expire in 15mins. Should be long enough for customer to sort out
-        // their payment while covering us from people ordering later and forcing the kitchen to
-        // prepare the order faster than they should have to.
-
-        // ^^^ okay stripe actually limits this to be minimum of 30 mins, which seems bad for us given the
-        // circumstances. what would an implementation look like with this? some kind of cron to invoke?
-        // https://docs.stripe.com/api/checkout/sessions/expire
       });
+
+      setTimeout(
+        () => {
+          void stripe.checkout.sessions.expire(session.id).then((session) => {
+            console.log("expired session", session);
+          });
+        },
+        1000 * 60 * 10,
+      ); // 10 mins
+
+      // TODO: if this doesn't work in production, then prob have to make a cron job to handle this
+      // but what mess you would have to have the checking frequency be so often... hopefully this works
     }),
   getStripeSession: publicProcedure
     .input(
