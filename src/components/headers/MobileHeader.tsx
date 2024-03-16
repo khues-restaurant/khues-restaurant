@@ -41,6 +41,7 @@ import { SlPresent } from "react-icons/sl";
 import { TfiReceipt } from "react-icons/tfi";
 import useGetUserId from "~/hooks/useGetUserId";
 import CartButton from "~/components/cart/CartButton";
+import { clearLocalStorage } from "~/utils/clearLocalStorage";
 
 function MobileHeader() {
   const [mobileHeaderIsOpen, setMobileHeaderIsOpen] = useState(false);
@@ -269,7 +270,14 @@ function MobileHeader() {
                         </Button>
 
                         <SignOutButton>
-                          <Button variant={"link"}>Log out</Button>
+                          <Button
+                            variant={"link"}
+                            onClick={() => {
+                              clearLocalStorage();
+                            }}
+                          >
+                            Log out
+                          </Button>
                         </SignOutButton>
                       </div>
                     </AccordionContent>

@@ -38,6 +38,7 @@ export const userRouter = createTRPCRouter({
           .regex(/^\(\d{3}\) \d{3}-\d{4}$/),
         birthday: z.date(),
         dietaryRestrictions: z.string().max(100),
+        currentOrder: orderDetailsSchema,
       }),
     )
     .mutation(async ({ ctx, input }) => {

@@ -226,6 +226,10 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
             showRewardsDiscountNotification,
           },
         });
+
+        // TODO: probably want to set showRewardsDiscountNotification to be false
+        // if you are redeeming a reward discount on this order. Only exception would be
+        // if this order brought the user back over the threshold for a new reward discount.
       }
 
       // 5) send websocket emit to dashboard

@@ -20,6 +20,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import useGetUserId from "~/hooks/useGetUserId";
+import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { formatPhoneNumber } from "~/utils/formatPhoneNumber";
 
@@ -76,9 +77,18 @@ function PostSignUpDialog() {
   const { user } = useUser();
   const userId = useGetUserId();
 
+  const { orderDetails } = useMainStore((state) => ({
+    orderDetails: state.orderDetails,
+  }));
+
   const { data: userExists } = api.user.isUserRegistered.useQuery(userId, {
     enabled: Boolean(userId && isSignedIn),
   });
+
+  // TODO: probably if you are going with the storing of the orderId in a "redeemedOrders" model
+  // in the database, you would have a query here checking whether the redeemedOrder is available to
+  // be redeemed still? I think there's no other way really besides storing this id inside of a new
+  // variable in localStorage. def low priority atm though.
 
   const { mutate: createUser, isLoading: isSaving } =
     api.user.create.useMutation({
@@ -556,6 +566,7 @@ function PostSignUpDialog() {
                     ...mainFormValues!,
                     ...dietaryRestrictionsValues!,
                     birthday: new Date(mainFormValues!.birthday),
+                    currentOrder: orderDetails,
                   });
                 }
               }}

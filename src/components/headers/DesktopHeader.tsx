@@ -39,6 +39,7 @@ import { api } from "~/utils/api";
 import classes from "./DesktopHeader.module.css";
 import useGetUserId from "~/hooks/useGetUserId";
 import CartButton from "~/components/cart/CartButton";
+import { clearLocalStorage } from "~/utils/clearLocalStorage";
 
 function DesktopHeader() {
   const { isSignedIn } = useAuth();
@@ -287,7 +288,14 @@ function DesktopHeader() {
                 </Button>
 
                 <SignOutButton>
-                  <Button variant={"link"}>Log out</Button>
+                  <Button
+                    variant={"link"}
+                    onClick={() => {
+                      clearLocalStorage();
+                    }}
+                  >
+                    Log out
+                  </Button>
                 </SignOutButton>
               </div>
             </PopoverContent>

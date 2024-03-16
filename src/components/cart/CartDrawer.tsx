@@ -367,10 +367,7 @@ function CartDrawer({
                 <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
                   <div className="baseFlex gap-2">
                     <FormLabel className="font-semibold">Pickup time</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger className="w-max gap-2 pl-4 pr-2">
                           <FaRegClock />
