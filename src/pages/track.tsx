@@ -139,7 +139,7 @@ function Track() {
 
   return (
     <motion.div
-      key={"payment-success"}
+      key={"tracking"}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}

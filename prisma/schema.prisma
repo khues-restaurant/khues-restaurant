@@ -59,6 +59,8 @@ model MenuItem {
     activeDiscount   Discount?    @relation(fields: [activeDiscountId], references: [id])
     activeDiscountId String?
 
+    chefsChoice Boolean @default(false)
+
     favoriteItem          FavoriteItem[]
     customizationCategory CustomizationCategory[]
     orderItem             OrderItem[]
