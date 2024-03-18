@@ -354,11 +354,16 @@ export default function Home() {
 
         {/* Rewards program promo section */}
         <div
-          style={{
-            background:
-              "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
-          }}
-          className="baseVertFlex w-full max-w-3xl gap-4 rounded-md p-4 text-white shadow-md tablet:p-8"
+          style={
+            {
+              // background:
+              //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+              // border: "4px solid transparent" /* Set the border width */,
+              // borderImage:
+              //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%) 1 stretch",
+            }
+          }
+          className="baseVertFlex rewardsGoldBorder w-full max-w-3xl gap-4 rounded-md p-4 text-yellow-500 shadow-md tablet:p-8"
         >
           <div className="baseFlex gap-4">
             <LeftAccentSwirls />
@@ -385,6 +390,7 @@ export default function Home() {
             }${asPath}`}
           >
             <Button
+              variant={"rewards"}
               // size={"lg"}
               // onClick={() => {
               //   if (asPath.includes("/create")) {

@@ -20,6 +20,7 @@ const buttonVariants = cva(
         // TODO: should also have an "activeLink" variant for header links when user is on that page
         underline: "text-primary underline underline-offset-2",
         text: "text-neutral-400",
+        rewards: "text-white",
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -92,6 +93,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         onPointerLeave={() => setBrightness(1)}
         style={{
           filter: `brightness(${brightness}`,
+          background:
+            variant === "rewards"
+              ? "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)"
+              : "",
         }}
         className={cn(
           buttonVariants({ variant, size, className }),

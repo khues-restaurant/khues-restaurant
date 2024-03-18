@@ -22,11 +22,12 @@ import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { api } from "~/utils/api";
 import { formatPrice } from "~/utils/formatPrice";
+import { Separator } from "~/components/ui/separator";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
 
-function OrderNow() {
+function Menu() {
   const { isLoaded, isSignedIn } = useAuth();
 
   const { data: menuCategories } = api.menuCategory.getAll.useQuery();
@@ -67,7 +68,7 @@ function OrderNow() {
 
   return (
     <motion.div
-      key={"order-now"}
+      key={"menu"}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -91,7 +92,7 @@ function OrderNow() {
 
         <div className="baseFlex z-10 rounded-md bg-white p-2 shadow-lg">
           <div className="experimentalBorder baseFlex px-8 py-4 text-xl font-semibold tablet:text-2xl">
-            Order
+            Menu
           </div>
         </div>
       </div>
@@ -259,7 +260,7 @@ function OrderNow() {
   );
 }
 
-export default OrderNow;
+export default Menu;
 
 interface MenuCategoryButton {
   currentlyInViewCategory: string;
@@ -378,16 +379,16 @@ function MenuCategory({
           {name}
         </p>
 
-        {activeDiscount && (
+        {/* {activeDiscount && (
           <div className="baseFlex rounded-md bg-primary px-4 py-0.5 text-white">
             <p>{activeDiscount.name}</p>
           </div>
-        )}
+        )} */}
       </div>
 
       {/* wrapping container for each food item in the category */}
-      <div className="baseFlex w-full flex-wrap !justify-start gap-4">
-        {menuItems.map((item) => (
+      <div className="baseFlex w-full flex-wrap !justify-start p-1 tablet:gap-16">
+        {menuItems.map((item, idx) => (
           <MenuItemPreviewButton
             key={item.id}
             menuItem={item}
@@ -428,162 +429,58 @@ function MenuItemPreviewButton({
     }),
   );
 
-  const viewportLabel = useGetViewportLabel();
-
-  const [showCheckmark, setShowCheckmark] = useState(false);
-
-  const { updateOrder } = useUpdateOrder();
-
   return (
     <div
       style={{
-        order: listOrder,
+        order: listOrder + 1,
       }}
       className="relative h-48 w-full max-w-96"
     >
-      <Button
-        variant="outline"
-        disabled={!menuItem.available}
-        className="baseFlex h-full w-full gap-4 border-2 py-6"
-        onClick={() => {
-          setItemToCustomize(menuItem);
+      <div className="baseFlex h-full w-full gap-4 py-6">
+        <div className="imageFiller size-24 rounded-md"></div>
 
-          // open up the customizer for the item
-          if (viewportLabel.includes("mobile")) {
-            setIsDrawerOpen(true);
-          } else {
-            setIsDialogOpen(true);
-          }
-        }}
-      >
-        <div className="imageFiller h-32 w-32 rounded-md"></div>
+        <div className="baseVertFlex h-full w-full !items-start !justify-between">
+          <div className="baseFlex w-full !justify-between">
+            <div className="baseVertFlex !items-start gap-2">
+              <p className="text-lg font-semibold underline underline-offset-2">
+                {menuItem.name}
+              </p>
+              <p className="max-w-48 text-wrap text-left text-gray-400">
+                {menuItem.description}
+              </p>
+            </div>
+            <p
+              //  ${activeDiscount ? "rounded-md bg-primary px-4 py-0.5 text-white" : ""}
 
-        <div className="baseVertFlex h-full w-48 !items-start !justify-between">
-          <div className="baseVertFlex !items-start gap-2">
-            <p className="text-lg font-semibold underline underline-offset-2">
-              {menuItem.name}
-            </p>
-            <p className="max-w-48 text-wrap text-left text-gray-400">
-              {menuItem.description}
+              className={`self-end text-base 
+              `}
+            >
+              {formatPrice(
+                calculateRelativeTotal({
+                  items: [
+                    {
+                      price: menuItem.price,
+                      quantity: 1,
+                      discountId: null, //activeDiscount?.id ?? null,
+
+                      // only necessary to fit Item shape
+                      id: menuItem.id,
+                      itemId: menuItem.id,
+                      customizations: {}, // not necessary since all default choices are already included in price
+                      includeDietaryRestrictions: false,
+                      name: menuItem.name,
+                      specialInstructions: "",
+                    },
+                  ],
+                  customizationChoices,
+                  discounts: {}, // TODO: do we want to show discount prices on menu? I feel like we should keep it
+                  // to just the regular prices..
+                }),
+              )}
             </p>
           </div>
-          <p
-            className={`self-end text-base ${activeDiscount ? "rounded-md bg-primary px-4 py-0.5 text-white" : ""}`}
-          >
-            {formatPrice(
-              calculateRelativeTotal({
-                items: [
-                  {
-                    price: menuItem.price,
-                    quantity: 1,
-                    discountId: activeDiscount?.id ?? null,
-
-                    // only necessary to fit Item shape
-                    id: menuItem.id,
-                    itemId: menuItem.id,
-                    customizations: {}, // not necessary since all default choices are already included in price
-                    includeDietaryRestrictions: false,
-                    name: menuItem.name,
-                    specialInstructions: "",
-                  },
-                ],
-                customizationChoices,
-                discounts,
-              }),
-            )}
-          </p>
         </div>
-      </Button>
-
-      {menuItem.available ? (
-        <Button
-          variant={"outline"}
-          size={"icon"}
-          disabled={showCheckmark}
-          className="baseFlex absolute right-0 top-0 h-10 w-10 rounded-none rounded-bl-md rounded-tr-md border-2 text-primary"
-          onClick={() => {
-            // directly add to order w/ defaults + trigger toast notification
-            setShowCheckmark(true);
-
-            function getDefaultCustomizationChoices(item: FullMenuItem) {
-              return item.customizationCategory.reduce((acc, category) => {
-                acc[category.id] = category.defaultChoiceId;
-                return acc;
-              }, {} as StoreCustomizations);
-            }
-
-            updateOrder({
-              newOrderDetails: {
-                ...orderDetails,
-                items: [
-                  ...orderDetails.items,
-                  {
-                    id: crypto.randomUUID(),
-                    itemId: menuItem.id,
-                    name: menuItem.name,
-                    customizations: getDefaultCustomizationChoices(menuItem),
-                    specialInstructions: "",
-                    includeDietaryRestrictions: false,
-                    quantity: 1,
-                    price: menuItem.price,
-                    discountId: activeDiscount?.id ?? null,
-                  },
-                ],
-              },
-            });
-
-            setTimeout(() => {
-              setShowCheckmark(false);
-            }, 1000);
-          }}
-        >
-          <AnimatePresence mode="wait">
-            {showCheckmark ? (
-              <motion.svg
-                key={`quickAddToOrderCheckmark-${menuItem.id}`}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-                transition={{ duration: 0.3 }}
-                className="text-primary"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <motion.path
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{
-                    delay: 0.2,
-                    type: "tween",
-                    ease: "easeOut",
-                    duration: 0.3,
-                  }}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 13l4 4L19 7"
-                />
-              </motion.svg>
-            ) : (
-              <motion.div
-                key={`quickAddToOrder-${menuItem.id}`}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-                transition={{ duration: 0.3 }}
-                className="baseFlex h-10 w-10 rounded-md"
-              >
-                <LuPlus />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </Button>
-      ) : (
-        <div className="absolute right-2 top-2 rounded-md bg-gray-100 px-2 py-0.5 text-gray-400">
-          <p className="text-xs italic">Currently unavailable</p>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
