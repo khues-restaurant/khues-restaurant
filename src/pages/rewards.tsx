@@ -25,7 +25,7 @@ function Rewards() {
           backgroundImage:
             "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
         }}
-        className="baseFlex tablet:[125vw] relative h-56 w-full tablet:h-72 tablet:overflow-x-hidden"
+        className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72 tablet:overflow-x-hidden"
       >
         <div className="baseFlex mr-12 hidden w-full gap-8 tablet:flex">
           <div className="imageFiller rounded-md shadow-md tablet:h-48 tablet:w-64"></div>
