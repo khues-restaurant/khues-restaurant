@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { SelectGroup, SelectItem, SelectLabel } from "~/components/ui/select";
 import { formatTimeString } from "~/utils/formatTimeString";
 import { is30MinsFromDatetime } from "~/utils/is30MinsFromDatetime";
+import { isAbleToRenderASAPTimeSlot } from "~/utils/isAbleToRenderASAPTimeSlot";
 import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
 
 interface AvailablePickupTimes {
@@ -14,6 +15,7 @@ function AvailablePickupTimes({
   minPickupTime,
 }: AvailablePickupTimes) {
   const [availablePickupTimes, setAvailablePickupTimes] = useState<string[]>([
+    "ASAP (~20 mins)",
     "15:00",
     "15:30",
     "16:00",
@@ -35,6 +37,7 @@ function AvailablePickupTimes({
     if (!minPickupTime) return;
 
     let basePickupTimes = [
+      "ASAP (~20 mins)",
       "15:00",
       "15:30",
       "16:00",
@@ -55,36 +58,38 @@ function AvailablePickupTimes({
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // TODO: also make function from chatgpt to take in a Date and return true if
-    // that date is greater than or equal to 30 minutes from now
-    // ^^ only check this if selectedDate is today
-
-    // "parseTimeToNumber" will have to be refactored to "parseTimeToDate" and take in
-    // the time string and the date to then return the combined date.
-
     // if selectedDate is today, then we need to check if the current time
     // is past the minimum pickup time
     if (selectedDate.getTime() === today.getTime() && minPickupTime) {
-      basePickupTimes = basePickupTimes.filter((time) => {
+      basePickupTimes = basePickupTimes.filter((time, index) => {
         const datetime = mergeDateAndTime(selectedDate, time);
 
         if (!datetime) return false;
 
+        // ASAP time slot validation,
         // Time is 30+ mins from now to allow kitchen to prepare on time, and
         // also after the minPickupTime.
         if (
+          (index !== 0 ||
+            (index === 0 && isAbleToRenderASAPTimeSlot(new Date()))) &&
           is30MinsFromDatetime(datetime, new Date()) &&
           datetime >= minPickupTime
         ) {
           return true;
         }
       });
+    } else {
+      basePickupTimes.splice(0, 1); // remove ASAP time slot
     }
 
     setAvailablePickupTimes(basePickupTimes);
   }, [selectedDate, minPickupTime]);
 
-  if (minPickupTime && minPickupTime.getHours() >= 22) {
+  // if it's past 10pm, we don't want to accept any new orders
+  if (
+    (minPickupTime && minPickupTime.getHours() >= 22) ??
+    new Date().getHours() >= 22
+  ) {
     return (
       <div className="baseVertFlex w-64 !items-start gap-2 p-4">
         <p className="font-semibold underline underline-offset-2">Notice:</p>
@@ -115,7 +120,10 @@ function AvailablePickupTimes({
           >
             {availablePickupTimes.map((time) => (
               <SelectItem key={time} value={time}>
-                {formatTimeString(time)}
+                {/* I know this looks weird, but I think it's honestly fine */}
+                {time === "ASAP (~20 mins)"
+                  ? "ASAP (~20 mins)"
+                  : formatTimeString(time)}
               </SelectItem>
             ))}
           </motion.div>

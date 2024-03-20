@@ -185,6 +185,12 @@ function CartDrawer({
 
     if (newDate === undefined) return;
 
+    // if the date was changed (aka value.dateToPickUp !== mainForm.getValues().dateToPickUp)
+    // then just always set the time to be midnight of w/e the new date is
+    if (value.dateToPickUp !== orderDetails.datetimeToPickUp) {
+      newDate.setHours(0, 0, 0, 0);
+    }
+
     newOrderDetails.datetimeToPickUp = newDate;
 
     updateOrder({

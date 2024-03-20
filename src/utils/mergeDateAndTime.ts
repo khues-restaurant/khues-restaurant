@@ -1,5 +1,7 @@
 export function mergeDateAndTime(date: Date, time: string) {
-  const hoursAndMinutes = time.split(":");
+  // TODO: validate this, adding this logic while tired
+  const hoursAndMinutes = time === "" ? ["0", "0"] : time.split(":");
+
   if (hoursAndMinutes.length !== 2) return;
 
   const hours = Number(hoursAndMinutes[0]);

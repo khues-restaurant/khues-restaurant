@@ -59,6 +59,10 @@ function OrderManagement({ orders }: OrderManagement) {
     "notStarted" | "started" | "completed"
   >("notStarted");
 
+  // TODO/FYI: if not already stated, do NOT want to ever clear the "notification" numbers
+  // on the not started/in progress tabs, since they are strictly the number of current orders
+  // in their respective states.
+
   useEffect(() => {
     const notStarted = [];
     const started = [];
