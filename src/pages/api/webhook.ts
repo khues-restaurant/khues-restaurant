@@ -191,6 +191,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         lastName: paymentMetadata.lastName,
         email: paymentMetadata.email,
         phoneNumber: paymentMetadata.phoneNumber,
+        dietaryRestrictions: user?.dietaryRestrictions ?? null,
         prevRewardsPoints: prevPoints,
         rewardsPoints: currPoints,
         userId: user ? user.userId : null,

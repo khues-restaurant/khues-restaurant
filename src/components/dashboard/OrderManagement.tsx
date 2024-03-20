@@ -27,6 +27,7 @@ import { useMainStore, type OrderDetails } from "~/stores/MainStore";
 import { ChevronDown } from "lucide-react";
 import { DashboardOrder } from "~/server/api/routers/order";
 import { socket } from "~/pages/_app";
+import { FaUtensils } from "react-icons/fa6";
 
 // type FullOrderItems = OrderItem & {
 //   customizations: OrderItemCustomization[];
@@ -464,6 +465,9 @@ function OrderItems({ order }: OrderItems) {
             <div className="baseFlex gap-2 text-xl font-semibold">
               <p>{item.quantity}</p>
               <p>{item.name}</p>
+              {item.includeDietaryRestrictions && (
+                <div className="size-2 rounded-full bg-primary/25" />
+              )}
             </div>
 
             <div className="baseVertFlex w-full !items-start gap-2 text-sm">
@@ -486,6 +490,25 @@ function OrderItems({ order }: OrderItems) {
           </div>
         </div>
       ))}
+
+      {order.dietaryRestrictions && (
+        <div className="baseVertFlex gap-2">
+          <div className="baseFlex gap-2">
+            <div className="size-2 rounded-full bg-primary/25" />
+            Item needs to follow these dietary restrictions:
+          </div>
+          <p className="text-sm">{order.dietaryRestrictions}</p>
+        </div>
+      )}
+
+      {order.includeNapkinsAndUtensils && (
+        <div className="baseFlex w-full">
+          <div className="baseFlex gap-2 text-sm italic text-gray-400">
+            <FaUtensils className="size-4" />
+            <p>Napkins and utensils were requested.</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

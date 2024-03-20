@@ -1,12 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
-import useGetViewportLabel from "~/hooks/useGetViewportLabel";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "~/components/ui/accordion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { Button } from "~/components/ui/button";
 

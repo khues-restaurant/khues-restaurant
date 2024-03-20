@@ -126,11 +126,14 @@ function OrderSummary({ order }: OrderSummary) {
           {/* dietary restrictions legend */}
           {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
           {order.orderItems.some((item) => item.includeDietaryRestrictions) && (
-            <div className="baseFlex gap-2">
-              <div className="size-2 rounded-full bg-primary/25" />
-              <p className="text-sm">
-                Item will be prepared according to your dietary restrictions
-              </p>
+            <div className="baseVertFlex gap-2">
+              <div className="baseFlex gap-2">
+                <div className="size-2 rounded-full bg-primary/25" />
+                <p className="text-sm">
+                  Item will be prepared according to your dietary restrictions:
+                </p>
+              </div>
+              <p className="text-sm">{order.dietaryRestrictions}</p>
             </div>
           )}
 
