@@ -38,8 +38,8 @@ function Media() {
       </div>
 
       <div className="baseVertFlex relative w-full gap-8 pb-8 pt-16 tablet:w-3/4 tablet:!flex-row">
-        <div className="baseVertFlex w-72 rounded-md border-2 border-primary shadow-md tablet:max-w-lg">
-          <div className="baseVertFlex w-full gap-8 bg-primary p-4">
+        <div className="baseVertFlex w-72 rounded-md border-2 border-primary shadow-md tablet:w-[350px]">
+          <div className="baseVertFlex w-full gap-6 bg-primary p-4">
             <Image
               src="/press/StarTribune.png"
               alt="Star Tribune"
@@ -68,8 +68,8 @@ function Media() {
           </div>
         </div>
 
-        <div className="baseVertFlex w-72 rounded-md border-2 border-primary shadow-md tablet:max-w-lg">
-          <div className="baseVertFlex w-full gap-8 bg-primary p-4">
+        <div className="baseVertFlex w-72 rounded-md border-2 border-primary shadow-md tablet:w-[350px]">
+          <div className="baseVertFlex w-full gap-6 bg-primary p-4">
             <Image
               src="/press/StarTribune.png"
               alt="Star Tribune"
@@ -98,8 +98,8 @@ function Media() {
           </div>
         </div>
 
-        <div className="baseVertFlex w-72 rounded-md border-2 border-primary shadow-md tablet:max-w-lg">
-          <div className="baseVertFlex w-full gap-8 bg-primary p-4">
+        <div className="baseVertFlex w-72 rounded-md border-2 border-primary shadow-md tablet:w-[350px]">
+          <div className="baseVertFlex w-full gap-6 bg-primary p-4">
             <Image
               src="/press/StarTribune.png"
               alt="Star Tribune"

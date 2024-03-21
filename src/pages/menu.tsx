@@ -203,7 +203,7 @@ function Menu() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="baseVertFlex mt-8 h-full w-full tablet:mt-0"
+              className="baseVertFlex mt-8 h-full w-full gap-8 tablet:mt-0"
             >
               {menuCategories?.map((category) => (
                 <MenuCategory
@@ -375,7 +375,7 @@ function MenuCategory({
       className="baseVertFlex w-full scroll-m-44 !items-start gap-4 p-2"
     >
       <div className="baseFlex gap-4">
-        <p className="text-xl font-medium underline underline-offset-2">
+        <p className="ml-1 text-xl font-semibold underline underline-offset-2">
           {name}
         </p>
 
@@ -442,7 +442,7 @@ function MenuItemPreviewButton({
         <div className="baseVertFlex h-full w-full !items-start !justify-between">
           <div className="baseFlex w-full !justify-between">
             <div className="baseVertFlex !items-start gap-2">
-              <p className="text-lg font-semibold underline underline-offset-2">
+              <p className="text-lg font-medium underline underline-offset-2">
                 {menuItem.name}
               </p>
               <p className="max-w-48 text-wrap text-left text-gray-400">

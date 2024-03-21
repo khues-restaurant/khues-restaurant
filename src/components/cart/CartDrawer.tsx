@@ -279,13 +279,13 @@ function CartDrawer({
       }}
       className="baseVertFlex relative max-h-[85dvh] w-full !justify-start overflow-y-auto"
     >
-      <div className="baseVertFlex w-full !items-start border-b-2 p-4">
-        <div className="baseFlex gap-2">
+      <div className="baseVertFlex w-full !items-start gap-1 border-b-2 p-4">
+        <div className="baseFlex !items-start gap-1">
           <LiaShoppingBagSolid className="h-6 w-6" />
-          <p className="text-lg">Your order</p>
+          <p className="text-lg font-medium">Your order</p>
         </div>
-        <p className="baseFlex gap-2 text-sm">
-          <AnimatedNumbers value={numberOfItems} fontSize={15} padding={0} />
+        <p className="baseFlex ml-1 h-4 gap-1.5">
+          <AnimatedNumbers value={numberOfItems} fontSize={16} padding={0} />
 
           {`item${numberOfItems > 1 ? "s" : ""}`}
         </p>
