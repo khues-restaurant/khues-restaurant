@@ -24,6 +24,7 @@ function AnimatedNumbers({
       style={{ fontSize }}
       className="flex space-x-0 overflow-hidden rounded"
     >
+      {value > 999 && <Digit place={1000} value={value} height={height} />}
       {value > 99 && <Digit place={100} value={value} height={height} />}
       {value > 9 && <Digit place={10} value={value} height={height} />}
       <Digit place={1} value={value} height={height} />

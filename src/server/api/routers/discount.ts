@@ -9,7 +9,15 @@ import {
 
 export const discountRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
-    const discounts = await ctx.prisma.discount.findMany();
+    const discounts = await ctx.prisma.discount.findMany({
+      where: {
+        active: true,
+        expirationDate: {
+          gte: new Date(),
+        },
+        userId: null,
+      },
+    });
 
     const formattedDiscounts = discounts.reduce(
       (acc, discount) => {
@@ -21,6 +29,30 @@ export const discountRouter = createTRPCRouter({
 
     return formattedDiscounts;
   }),
+
+  getUserRewards: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input: userId }) => {
+      const discounts = await ctx.prisma.discount.findMany({
+        where: {
+          userId,
+          active: true,
+          expirationDate: {
+            gte: new Date(),
+          },
+        },
+      });
+
+      const formattedRewards = discounts.reduce(
+        (acc, discount) => {
+          acc[discount.id] = discount;
+          return acc;
+        },
+        {} as Record<string, Discount>,
+      );
+
+      return formattedRewards;
+    }),
 
   createCategoryDiscount: protectedProcedure
     .input(

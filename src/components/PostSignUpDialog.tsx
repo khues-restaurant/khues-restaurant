@@ -34,8 +34,6 @@ const mainFormSchema = z.object({
     .min(1, { message: "Must be at least 1 character" })
     .max(30, { message: "Must be at most 30 characters" }),
 
-  // TODO: should automatically wrap first three in () and add a space after the first three digits
-  // and then add a dash after the next three digits
   phoneNumber: z
     .string()
     .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Invalid phone number format")

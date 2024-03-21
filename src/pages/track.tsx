@@ -1,7 +1,12 @@
 import { type GetServerSideProps, type NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { ComponentProps, ReactNode, useEffect, useState } from "react";
+import {
+  type ComponentProps,
+  type ReactNode,
+  useEffect,
+  useState,
+} from "react";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { api } from "~/utils/api";
 import { AnimatePresence, motion } from "framer-motion";
@@ -17,6 +22,8 @@ import AnimatedNumbers from "~/components/AnimatedNumbers";
 import OrderSummary from "~/components/cart/OrderSummary";
 import { useAuth } from "@clerk/nextjs";
 import { SignInButton } from "@clerk/nextjs";
+import WideFancySwirls from "~/components/ui/wideFancySwirls";
+import RevealFromTop from "~/components/ui/RevealFromTop";
 
 // stretch, but if you really wanted to have the order "number" but just numbers,
 // you could just have a function that takes in whole id and returns first 6 numbers,
@@ -84,6 +91,7 @@ function Track() {
 
   const [isMobileViewport, setIsMobileViewport] = useState(true);
 
+  // TODO: was there an issue with useGetViewportLabel()?
   useEffect(() => {
     function handleResize() {
       setIsMobileViewport(window.innerWidth < 1000 || window.innerHeight < 700);
@@ -151,285 +159,316 @@ function Track() {
           Order {orderId.toUpperCase().substring(0, 6)}
         </p>
         <AnimatePresence>
-          {order ? (
-            <motion.div
-              key={"trackingContent"}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="baseVertFlex h-full w-full !justify-start gap-8 p-4"
-            >
-              <RevealFromTop
-                initialDelay={0}
-                className="baseVertFlex w-full gap-2"
+          {
+            order ? (
+              <motion.div
+                key={"trackingContent"}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="baseVertFlex h-full w-full !justify-start gap-8 p-4"
               >
-                {/* animated progress bar */}
-                <div className="relative h-10 w-full overflow-hidden rounded-full border-2 border-primary shadow-md ">
-                  <div className="baseFlex absolute left-0 top-0 h-full w-full">
-                    {/* pre-first checkpoint */}
-                    <div className="relative h-full w-[21%]">
-                      <motion.div
-                        initial={{ scaleX: "0%" }}
-                        animate={{ scaleX: "100%" }}
-                        transition={{
-                          duration: 1,
-                          ease:
-                            !order.orderCompletedAt && !order.orderStartedAt
-                              ? "easeOut"
-                              : "linear",
-                          delay: 0.5,
-                        }}
-                        className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
-                      ></motion.div>
-                    </div>
-
-                    {/* first checkpoint w/ animated checkmark */}
-                    <div className="absolute left-[14.25%] top-1 z-10">
-                      <Step status={"completed"} />
-                    </div>
-
-                    {/* pre-second checkpoint */}
-                    <div className="relative h-full w-[35%]">
-                      {(order.orderStartedAt ?? order.orderCompletedAt) && (
-                        <motion.div
-                          initial={{ scaleX: "0%" }}
-                          animate={{ scaleX: "100%" }}
-                          transition={{
-                            duration: 1,
-                            ease: "easeOut",
-                            delay: 1.5,
-                          }}
-                          className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
-                        ></motion.div>
-                      )}
-                    </div>
-
-                    {/* second checkpoint w/ animated checkmark */}
-                    <div className="absolute left-[47.15%] top-1 z-10">
-                      <Step
-                        status={
-                          order.orderCompletedAt
-                            ? "completed"
-                            : order.orderStartedAt
-                              ? "inProgress"
-                              : "notStarted"
-                        }
-                      />
-                    </div>
-
-                    {/* pre-third checkpoint */}
-                    <div className="relative h-full w-[35%]">
-                      {order.orderCompletedAt && (
-                        <motion.div
-                          initial={{ scaleX: "0%" }}
-                          animate={{ scaleX: "100%" }}
-                          transition={{
-                            duration: 1,
-                            ease: "easeOut",
-                            delay: 2.5,
-                          }}
-                          className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
-                        ></motion.div>
-                      )}
-                    </div>
-
-                    {/* first checkpoint w/ animated checkmark */}
-                    <div className="absolute left-[80%] top-1 z-10">
-                      <Step
-                        status={
-                          order.orderCompletedAt ? "completed" : "notStarted"
-                        }
-                      />
-                    </div>
-
-                    {/* post-third checkpoint */}
-                    <div className="relative h-full w-[15%]">
-                      {order.orderCompletedAt && (
-                        <motion.div
-                          initial={{ scaleX: "0%" }}
-                          animate={{ scaleX: "100%" }}
-                          transition={{
-                            duration: 1,
-                            ease: "easeOut",
-                            delay: 3.5,
-                          }}
-                          className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
-                        ></motion.div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div className="relative h-6 w-full">
-                  <div className="absolute left-[15%] top-0">
-                    <TfiReceipt className="h-6 w-6 text-primary" />
-                  </div>
-                  <div className="absolute left-[47.5%] top-0">
-                    <PiCookingPotBold className="h-6 w-6 text-primary" />
-                  </div>
-                  <div className="absolute left-[80%] top-0">
-                    <LiaShoppingBagSolid className="h-6 w-6 text-primary" />
-                  </div>
-                </div>
-              </RevealFromTop>
-
-              <RevealFromTop initialDelay={1.5} className="baseFlex w-full">
-                <p className="text-lg">
-                  {order.orderCompletedAt
-                    ? "Your order is ready to be picked up!"
-                    : order.orderStartedAt
-                      ? "Your order is being prepared."
-                      : "Your order has been received."}
-                </p>
-              </RevealFromTop>
-
-              {/* rewards + pickup time + address */}
-              <RevealFromTop
-                initialDelay={2}
-                className="baseVertFlex w-full gap-2"
-              >
-                <div className="baseVertFlex w-full !items-start gap-2 tablet:!flex-row tablet:!justify-between tablet:gap-0">
-                  <div className="baseVertFlex !items-start text-sm">
-                    <p className="text-gray-400 underline underline-offset-2">
-                      Pickup time
-                    </p>
-                    <p>{format(order.datetimeToPickup, "PPPp")}</p>
-                  </div>
-
-                  <p className="baseVertFlex !items-start text-sm tablet:!items-end">
-                    <p className="text-gray-400 underline underline-offset-2">
-                      Address
-                    </p>
-                    <Button variant={"link"} className="h-4 !p-0">
-                      1234 Lorem Ipsum Dr. Roseville, MN 12345
-                    </Button>
-                  </p>
-                </div>
-                <div
-                  style={{
-                    background:
-                      "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
-                  }}
-                  className="baseVertFlex relative h-64 w-full rounded-md shadow-md tablet:h-96 tablet:max-w-2xl"
+                <RevealFromTop
+                  initialDelay={0}
+                  className="baseVertFlex w-full gap-2"
                 >
-                  <svg
-                    viewBox={isMobileViewport ? "-5 0 46 1" : "-12 -5 60 1"}
-                    className="size-40 tablet:size-64"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      className="circle-bg"
-                      d={`M ${(36 - gapLength) / 2},18 a ${radius},${radius} 0 1,1 ${gapLength},0`}
-                      fill="none"
-                      stroke="#eee"
-                      strokeWidth={strokeWidth}
-                      strokeDasharray={`${circumference} ${circumference}`}
-                      strokeLinecap="round"
-                    />
-                    <motion.path
-                      className="size-40 tablet:size-64"
-                      d={`M ${(36 - gapLength) / 2},18 a ${radius},${radius} 0 1,1 ${gapLength},0`}
-                      fill="none"
-                      stroke="hsl(5.3deg, 72.11%, 50.78%)"
-                      strokeWidth={strokeWidth}
-                      strokeLinecap="round"
-                      initial={{ strokeDashoffset: circumference }}
-                      animate={{
-                        strokeDashoffset: offset,
-                        // need to conditionally animate color to the bright gold one after animation hits
-                        // 1500 points, and then animate back to the original color when you set
-                        // the points back to w/e they ended up at
-                      }}
-                      transition={{ duration: 2, ease: "easeInOut" }}
-                      strokeDasharray={`${circumference} ${circumference}`}
-                    />
-                  </svg>
-
-                  <div className="baseVertFlex absolute left-1/2 top-[40%] -translate-x-1/2 -translate-y-1/2 font-bold text-primary tablet:top-[45%]">
-                    <AnimatedNumbers
-                      value={rewardsPointsEarned}
-                      fontSize={isMobileViewport ? 30 : 48}
-                      padding={0}
-                    />
-                    points
-                  </div>
-
-                  <RevealFromTop
-                    initialDelay={6}
-                    className={`baseVertFlex w-full text-primary ${isMobileViewport ? "text-sm" : ""} `}
-                  >
-                    {isSignedIn ? (
-                      <>
-                        {/* maybe drop this first part? seems a bit redundant but idk */}
-                        <div className="baseFlex gap-1">
-                          You earned
-                          <div className="font-bold">
-                            <AnimatedNumbers
-                              value={
-                                rewardsPointsEarned - order.prevRewardsPoints
-                              }
-                              fontSize={isMobileViewport ? 14 : 16}
-                              padding={0}
-                            />
-                          </div>
-                          points for this order.
-                        </div>
-                        {/* TODO: fix this css */}
-                        <div className="w-48 text-center">
-                          <span className="text-center">You are</span>
-                          <div className="text-center font-bold">
-                            <AnimatedNumbers
-                              value={1500 - rewardsPointsEarned}
-                              fontSize={isMobileViewport ? 14 : 16}
-                              padding={0}
-                              // className=
-                            />
-                          </div>
-                          <span className="text-center">
-                            points away from your next free meal!
-                          </span>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="baseVertFlex gap-2">
-                        <SignInButton
-                          mode="modal"
-                          afterSignUpUrl={`${
-                            process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                          }/postSignUpRegistration`}
-                          afterSignInUrl={`${
-                            process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                          }${asPath}`}
-                        >
-                          <Button
-                          // className="h-11"
-                          // onClick={() => {
-                          //   if (asPath.includes("/create")) {
-                          //     localStorageTabData.set(getStringifiedTabData());
-                          //   }
-
-                          //   // technically can sign in from signup page and vice versa
-                          //   if (!userId) localStorageRedirectRoute.set(asPath);
-                          //   // ^^ but technically could just append it onto the postSignupRegistration route right?
-                          // }}
-                          >
-                            Sign in
-                          </Button>
-                        </SignInButton>
-                        to redeem your points for this order.
+                  {/* animated progress bar */}
+                  <div className="relative h-10 w-full overflow-hidden rounded-full border-2 border-primary shadow-md ">
+                    <div className="baseFlex absolute left-0 top-0 h-full w-full">
+                      {/* pre-first checkpoint */}
+                      <div className="relative h-full w-[21%]">
+                        <motion.div
+                          initial={{ scaleX: "0%" }}
+                          animate={{ scaleX: "100%" }}
+                          transition={{
+                            duration: 1,
+                            ease:
+                              !order.orderCompletedAt && !order.orderStartedAt
+                                ? "easeOut"
+                                : "linear",
+                            delay: 0.5,
+                          }}
+                          className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
+                        ></motion.div>
                       </div>
-                    )}
+
+                      {/* first checkpoint w/ animated checkmark */}
+                      <div className="absolute left-[14.25%] top-1 z-10">
+                        <Step status={"completed"} />
+                      </div>
+
+                      {/* pre-second checkpoint */}
+                      <div className="relative h-full w-[35%]">
+                        {(order.orderStartedAt ?? order.orderCompletedAt) && (
+                          <motion.div
+                            initial={{ scaleX: "0%" }}
+                            animate={{ scaleX: "100%" }}
+                            transition={{
+                              duration: 1,
+                              ease: "easeOut",
+                              delay: 1.5,
+                            }}
+                            className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
+                          ></motion.div>
+                        )}
+                      </div>
+
+                      {/* second checkpoint w/ animated checkmark */}
+                      <div className="absolute left-[47.15%] top-1 z-10">
+                        <Step
+                          status={
+                            order.orderCompletedAt
+                              ? "completed"
+                              : order.orderStartedAt
+                                ? "inProgress"
+                                : "notStarted"
+                          }
+                        />
+                      </div>
+
+                      {/* pre-third checkpoint */}
+                      <div className="relative h-full w-[35%]">
+                        {order.orderCompletedAt && (
+                          <motion.div
+                            initial={{ scaleX: "0%" }}
+                            animate={{ scaleX: "100%" }}
+                            transition={{
+                              duration: 1,
+                              ease: "easeOut",
+                              delay: 2.5,
+                            }}
+                            className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
+                          ></motion.div>
+                        )}
+                      </div>
+
+                      {/* first checkpoint w/ animated checkmark */}
+                      <div className="absolute left-[80%] top-1 z-10">
+                        <Step
+                          status={
+                            order.orderCompletedAt ? "completed" : "notStarted"
+                          }
+                        />
+                      </div>
+
+                      {/* post-third checkpoint */}
+                      <div className="relative h-full w-[15%]">
+                        {order.orderCompletedAt && (
+                          <motion.div
+                            initial={{ scaleX: "0%" }}
+                            animate={{ scaleX: "100%" }}
+                            transition={{
+                              duration: 1,
+                              ease: "easeOut",
+                              delay: 3.5,
+                            }}
+                            className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
+                          ></motion.div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="relative h-6 w-full">
+                    <div className="absolute left-[15%] top-0">
+                      <TfiReceipt className="h-6 w-6 text-primary" />
+                    </div>
+                    <div className="absolute left-[47.5%] top-0">
+                      <PiCookingPotBold className="h-6 w-6 text-primary" />
+                    </div>
+                    <div className="absolute left-[80%] top-0">
+                      <LiaShoppingBagSolid className="h-6 w-6 text-primary" />
+                    </div>
+                  </div>
+                </RevealFromTop>
+
+                <RevealFromTop initialDelay={1.5} className="baseFlex w-full">
+                  <p className="text-lg">
+                    {order.orderCompletedAt
+                      ? "Your order is ready to be picked up!"
+                      : order.orderStartedAt
+                        ? "Your order is being prepared."
+                        : "Your order has been received."}
+                  </p>
+                </RevealFromTop>
+
+                {/* rewards + pickup time + address */}
+                <div className="baseVertFlex w-full gap-2">
+                  <div className="baseVertFlex w-full !items-start gap-2 tablet:!flex-row tablet:!justify-between tablet:gap-0">
+                    <div className="baseVertFlex !items-start text-sm">
+                      <p className="text-gray-400 underline underline-offset-2">
+                        Pickup time
+                      </p>
+                      <p>{format(order.datetimeToPickup, "PPPp")}</p>
+                    </div>
+
+                    <p className="baseVertFlex !items-start text-sm tablet:!items-end">
+                      <p className="text-gray-400 underline underline-offset-2">
+                        Address
+                      </p>
+                      <Button variant={"link"} className="h-4 !p-0">
+                        1234 Lorem Ipsum Dr. Roseville, MN 12345
+                      </Button>
+                    </p>
+                  </div>
+                  <RevealFromTop
+                    initialDelay={2}
+                    className="rewardsGoldBorder baseVertFlex relative w-full rounded-md shadow-md tablet:max-w-2xl"
+                  >
+                    <svg
+                      viewBox={isMobileViewport ? "-7 0 50 1" : "-12 -5 60 1"}
+                      className="size-40 tablet:size-64"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <defs>
+                        <linearGradient
+                          id="myGradient"
+                          x1="0%"
+                          y1="0%"
+                          x2="100%"
+                          y2="100%"
+                        >
+                          <stop
+                            offset="0%"
+                            style={{
+                              stopColor: "rgb(255 217 114)",
+                              stopOpacity: "1",
+                            }}
+                          />
+                          <stop
+                            offset="100%"
+                            style={{
+                              stopColor: "rgb(212, 175, 55)",
+                              stopOpacity: "1",
+                            }}
+                          />
+                        </linearGradient>
+                      </defs>
+
+                      <path
+                        className="circle-bg"
+                        d={`M ${(36 - gapLength) / 2},18 a ${radius},${radius} 0 1,1 ${gapLength},0`}
+                        fill="none"
+                        stroke="url(#myGradient)"
+                        strokeWidth={9}
+                        strokeDasharray={`${circumference} ${circumference}`}
+                        strokeLinecap="round"
+                      />
+
+                      <path
+                        className="circle-bg"
+                        d={`M ${(36 - gapLength) / 2},18 a ${radius},${radius} 0 1,1 ${gapLength},0`}
+                        fill="none"
+                        stroke="#fff"
+                        strokeWidth={strokeWidth}
+                        strokeDasharray={`${circumference} ${circumference}`}
+                        strokeLinecap="round"
+                      />
+
+                      <motion.path
+                        className="size-40 tablet:size-64"
+                        d={`M ${(36 - gapLength) / 2},18 a ${radius},${radius} 0 1,1 ${gapLength},0`}
+                        fill="none"
+                        stroke="url(#myGradient)" // Reference to our gradient
+                        strokeWidth={strokeWidth}
+                        strokeLinecap="round"
+                        initial={{ strokeDashoffset: circumference }}
+                        animate={{
+                          strokeDashoffset: offset,
+                          // Add any conditional animation logic here
+                        }}
+                        transition={{ duration: 2, ease: "easeInOut" }}
+                        strokeDasharray={`${circumference} ${circumference}`}
+                      />
+                    </svg>
+
+                    <div className="baseVertFlex absolute left-1/2 top-[35%] -translate-x-1/2 -translate-y-1/2 font-bold text-yellow-500 tablet:top-[38%]">
+                      <AnimatedNumbers
+                        value={rewardsPointsEarned}
+                        fontSize={isMobileViewport ? 25 : 48}
+                        padding={0}
+                      />
+                      points
+                    </div>
+
+                    <WideFancySwirls />
+
+                    <RevealFromTop
+                      initialDelay={6}
+                      className={`baseVertFlex w-full text-yellow-500 ${isMobileViewport ? "text-sm" : ""} `}
+                    >
+                      {isSignedIn ? (
+                        <>
+                          {/* maybe drop this first part? seems a bit redundant but idk */}
+                          <div className="baseFlex gap-1">
+                            You earned
+                            <div className="font-bold">
+                              <AnimatedNumbers
+                                value={
+                                  rewardsPointsEarned - order.prevRewardsPoints
+                                }
+                                fontSize={isMobileViewport ? 14 : 16}
+                                padding={0}
+                              />
+                            </div>
+                            points for this order.
+                          </div>
+                          {/* TODO: fix this css */}
+                          <div className="w-64 text-center">
+                            <span className="text-center">You are</span>{" "}
+                            <div className="inline-block text-center font-bold">
+                              <AnimatedNumbers
+                                value={1500 - rewardsPointsEarned}
+                                fontSize={isMobileViewport ? 14 : 16}
+                                padding={0}
+                              />
+                            </div>{" "}
+                            <span className="text-center">
+                              points away from your next free meal!
+                            </span>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="baseVertFlex gap-2">
+                          <SignInButton
+                            mode="modal"
+                            afterSignUpUrl={`${
+                              process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
+                            }/postSignUpRegistration`}
+                            afterSignInUrl={`${
+                              process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
+                            }${asPath}`}
+                          >
+                            <Button
+                            // className="h-11"
+                            // onClick={() => {
+                            //   if (asPath.includes("/create")) {
+                            //     localStorageTabData.set(getStringifiedTabData());
+                            //   }
+
+                            //   // technically can sign in from signup page and vice versa
+                            //   if (!userId) localStorageRedirectRoute.set(asPath);
+                            //   // ^^ but technically could just append it onto the postSignupRegistration route right?
+                            // }}
+                            >
+                              Sign in
+                            </Button>
+                          </SignInButton>
+                          to redeem your points for this order.
+                        </div>
+                      )}
+                    </RevealFromTop>
                   </RevealFromTop>
                 </div>
-              </RevealFromTop>
 
-              <RevealFromTop initialDelay={5}>
-                <OrderSummary order={order} />
-              </RevealFromTop>
-            </motion.div>
-          ) : (
-            <OrderSkeleton />
-          )}
+                <RevealFromTop initialDelay={1}>
+                  <OrderSummary order={order} />
+                </RevealFromTop>
+              </motion.div>
+            ) : null
+            // TODO: replace this with the animated logo dashoffsetarray
+            // <OrderSkeleton />
+          }
         </AnimatePresence>
       </div>
     </motion.div>
@@ -464,46 +503,6 @@ function OrderSkeleton() {
         <Skeleton className="h-10 w-24 " index={4} />
         <Skeleton className="h-80 w-full" index={4} />
       </div>
-    </motion.div>
-  );
-}
-
-interface RevealFromTopProps {
-  initialDelay: number;
-  className?: string;
-  children: ReactNode;
-}
-
-function RevealFromTop({
-  initialDelay,
-  className,
-  children,
-}: RevealFromTopProps) {
-  const revealVariants = {
-    hidden: {
-      clipPath: "inset(0 0 100% 0)", // Start with full vertical clipping
-      opacity: 0,
-    },
-    visible: {
-      clipPath: "inset(0 0 0 0)", // End with no clipping
-      opacity: 1,
-      transition: {
-        delay: initialDelay, // Delay the animation start
-        duration: 1.5, // Adjust the animation duration as needed
-        ease: "easeOut",
-      },
-    },
-  };
-
-  return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={revealVariants}
-      style={{ overflow: "hidden" }} // Ensure the overflow content is hidden during animation
-      className={className}
-    >
-      {children}
     </motion.div>
   );
 }

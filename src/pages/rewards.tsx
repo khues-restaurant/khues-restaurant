@@ -68,7 +68,7 @@ function Rewards() {
         </p>
 
         <div className="baseVertFlex gap-8 tablet:!flex-row">
-          <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md bg-yellow-50 shadow-md tablet:m-0 tablet:h-[350px] tablet:w-full tablet:justify-start">
+          <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[325px] tablet:w-full tablet:justify-start">
             <div className="baseFlex h-24 w-full">
               <CiGift className="size-24 text-yellow-500" />
             </div>
@@ -81,7 +81,7 @@ function Rewards() {
             </div>
           </div>
 
-          <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md bg-yellow-50 shadow-md tablet:m-0 tablet:h-[350px] tablet:w-full tablet:justify-start">
+          <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[325px] tablet:w-full tablet:justify-start">
             <div className="baseFlex h-24 w-full">
               <FaCakeCandles className="size-16 text-yellow-500" />
             </div>
@@ -93,15 +93,14 @@ function Rewards() {
             </div>
           </div>
 
-          <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md bg-yellow-50 shadow-md tablet:m-0 tablet:h-[350px] tablet:w-full tablet:justify-start">
+          <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[325px] tablet:w-full tablet:justify-start">
             <BiTimer className="size-24 text-yellow-500" />
             <div className="border-t border-yellow-500 p-4 text-center">
-              Exclusive offers just for you! As a member of our rewards program,
-              you&apos;ll have access to special deals that make every visit a
-              little more special. From 10% off your favorite appetizers to
-              exclusive seasonal offers, there&apos;s always something to look
-              forward to. Keep an eye out for our emails or check back here for
-              the latest deals!
+              Access special deals that make every visit a little more special.
+              From 10% off your favorite appetizers to exclusive access to items
+              before they arrive on the menu, there&apos;s always something to
+              look forward to. Keep an eye out for our emails or check back here
+              for the latest deals!
             </div>
           </div>
         </div>
@@ -122,14 +121,14 @@ function Rewards() {
         </p>
 
         <div className="baseVertFlex gap-8 tablet:!flex-row">
-          <div className="rewardsGoldBorder baseVertFlex max-w-72 gap-4 rounded-md bg-yellow-50 !p-4 shadow-md tablet:h-36 tablet:w-96">
+          <div className="rewardsGoldBorder baseVertFlex max-w-72 gap-4 rounded-md !p-4 shadow-md tablet:h-36 tablet:w-96">
             <FaRedo className="size-6 text-yellow-500" />
             <div className="border-yellow-500 text-center">
               Effortless one-tap reordering of your previous orders.
             </div>
           </div>
 
-          <div className="rewardsGoldBorder baseVertFlex max-w-72 gap-2 rounded-md bg-yellow-50 !p-4 shadow-md tablet:h-36 tablet:w-96">
+          <div className="rewardsGoldBorder baseVertFlex max-w-72 gap-2 rounded-md !p-4 shadow-md tablet:h-36 tablet:w-96">
             <IoMdHeart className="size-8 text-yellow-500" />
             <div className="border-yellow-500 text-center tablet:max-w-64">
               Favorite your most loved dishes for quick and easy access.

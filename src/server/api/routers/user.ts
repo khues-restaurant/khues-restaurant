@@ -112,6 +112,31 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
+  // prob refactor this, just didn't want to send over the current order through this
+  // just wanted it to be localized
+  updatePreferences: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string().min(1).max(100),
+        email: z.string().email(),
+        firstName: z.string().min(1).max(100),
+        lastName: z.string().min(1).max(100),
+        phoneNumber: z.string().regex(/^\(\d{3}\) \d{3}-\d{4}$/),
+        birthday: z.date(),
+        dietaryRestrictions: z.string().max(100),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.user.update({
+        where: {
+          userId: input.userId,
+        },
+        data: {
+          dietaryRestrictions: input.dietaryRestrictions,
+        },
+      });
+    }),
+
   delete: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input: userId }) => {

@@ -1,4 +1,4 @@
-import { Order, OrderItem } from "@prisma/client";
+import { type Order, type OrderItem } from "@prisma/client";
 import { z } from "zod";
 
 import {
@@ -122,6 +122,54 @@ export const orderRouter = createTRPCRouter({
       // @ts-expect-error asdf
       return order as DBOrderSummary;
     }),
+
+  // TODO: technically want this to be infinite scroll
+  getUsersRecentOrders: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input: userId }) => {
+      const recentOrders = await ctx.prisma.order.findMany({
+        where: {
+          userId,
+        },
+        include: {
+          orderItems: {
+            include: {
+              customizations: true,
+              discount: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      if (!recentOrders) return null;
+
+      // Iterate over each order to transform the item customizations
+      // into a Record<string, string> for each order's items
+      const transformedOrders = recentOrders.map((order) => {
+        order.orderItems = order.orderItems.map((item) => {
+          // @ts-expect-error asdf
+          item.customizations = item.customizations.reduce(
+            (acc, customization) => {
+              acc[customization.customizationCategoryId] =
+                customization.customizationChoiceId;
+              return acc;
+            },
+            {} as Record<string, string>,
+          );
+
+          return item;
+        });
+
+        return order;
+      });
+
+      // @ts-expect-error asdf
+      return transformedOrders as DBOrderSummary[];
+    }),
+
   getByStripeSessionId: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input: stripeSessionId }) => {
@@ -131,57 +179,6 @@ export const orderRouter = createTRPCRouter({
         },
       });
     }),
-  // getTodaysOrders: protectedProcedure.query(async ({ ctx }) => {
-  //   return ctx.prisma.order.findMany({
-  //     // TODO: uncomment this for production
-  //     // where: {
-  //     //   datetimeToPickup: {
-  //     //     gte: new Date(new Date().setHours(0, 0, 0, 0)),
-  //     //     lte: new Date(new Date().setHours(23, 59, 59, 999)),
-  //     //   },
-  //     // },
-  //     include: {
-  //       orderItems: {
-  //         include: {
-  //           // customizations: {
-  //           //   include: {
-  //           //     orderItem: true,
-  //           //     customizationChoice: true,
-  //           //     customizationCategory: true,
-  //           //   },
-  //           // },
-  //           // menuItem: {
-  //           //   include: {
-  //           //     activeDiscount: true,
-  //           //     customizationCategory: {
-  //           //       include: {
-  //           //         customizationChoice: true,
-  //           //       },
-  //           //     },
-  //           //   },
-  //           // },
-  //           customizations: true,
-  //           discount: true,
-  //           menuItem: true,
-  //           order: true,
-  //         },
-  //       },
-  //     },
-  //   });
-  // }),
-
-  // prob don't want this below:
-  // menuItem: {
-  //   include: {
-  //     menuCategory: true,
-  //     activeDiscount: true,
-  //     customizationCategory: {
-  //       include: {
-  //         customizationChoice: true,
-  //       },
-  //     },
-  //   },
-  // },
 
   getTodaysOrders: protectedProcedure.query(async ({ ctx }) => {
     return ctx.prisma.order.findMany({

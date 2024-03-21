@@ -40,14 +40,21 @@ function OrderSummary({ order }: OrderSummary) {
   }, [order, customizationChoices, discounts]);
 
   return (
-    <div className="baseVertFlex w-full !items-start gap-4 rounded-md bg-gray-100 p-4">
+    <motion.div
+      key={`${order.id}-summary`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="baseVertFlex w-full !items-start gap-4 rounded-md border-2 bg-gray-100 p-4"
+    >
       <div className="baseFlex gap-2 text-lg">
         <span className="underline underline-offset-2">Items</span>
         <span>({order.orderItems.length})</span>
       </div>
 
       <div className="baseVertFlex h-full w-full !items-start !justify-start gap-2 rounded-md">
-        <div className="baseVertFlex w-full gap-2">
+        <div className="baseVertFlex w-full gap-4">
           {order.orderItems.map((item, idx) => (
             <motion.div
               key={item.id}
@@ -122,7 +129,7 @@ function OrderSummary({ order }: OrderSummary) {
           ))}
         </div>
 
-        <div className="baseVertFlex mt-4 w-full !items-start gap-4">
+        <div className="baseVertFlex mt-8 w-full !items-start gap-4">
           {/* dietary restrictions legend */}
           {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
           {order.orderItems.some((item) => item.includeDietaryRestrictions) && (
@@ -149,26 +156,24 @@ function OrderSummary({ order }: OrderSummary) {
           </div>
         </div>
 
-        <div className="baseFlex w-full !items-end !justify-between rounded-md border-t bg-gray-200 p-4 shadow-inner">
-          <div className="baseVertFlex !items-start">
-            <div className="baseFlex w-full !justify-start gap-2 text-sm">
-              <p>Subtotal</p>
-              <p>{formatPrice(orderCost.subtotal)}</p>
-            </div>
-
-            <div className="baseFlex w-full !justify-start gap-2 text-sm">
-              <p>Tax</p>
-              <p>{formatPrice(orderCost.tax)}</p>
-            </div>
+        <div className="baseVertFlex w-full rounded-md border-t bg-gray-200 p-4 shadow-inner">
+          <div className="baseFlex w-full !justify-between gap-2 text-sm">
+            <p>Subtotal</p>
+            <p>{formatPrice(orderCost.subtotal)}</p>
           </div>
 
-          <div className="baseFlex gap-2 text-lg font-semibold">
+          <div className="baseFlex w-full !justify-between gap-2 text-sm">
+            <p>Tax</p>
+            <p>{formatPrice(orderCost.tax)}</p>
+          </div>
+
+          <div className="baseFlex w-full !justify-between gap-2 text-lg font-semibold">
             <p>Total</p>
             <p>{formatPrice(orderCost.total)}</p>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 export default OrderSummary;
