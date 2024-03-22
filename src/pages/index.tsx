@@ -367,7 +367,7 @@ export default function Home() {
         >
           <div className="baseFlex gap-4">
             <LeftAccentSwirls />
-            <p className="text-lg font-medium">
+            <p className="text-xl font-medium">
               Join our rewards program today!
             </p>
             <RightAccentSwirls />

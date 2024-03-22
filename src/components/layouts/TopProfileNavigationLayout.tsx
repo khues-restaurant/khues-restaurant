@@ -18,13 +18,13 @@ function TopProfileNavigationLayout({ children }: Layout) {
 
   const finalQueryOfUrl = useMemo(() => {
     if (asPath.includes("/rewards")) return "rewards";
-    if (asPath.includes("/recent-orders")) return "recent-orders";
+    if (asPath.includes("/my-orders")) return "my-orders";
     if (asPath.includes("/preferences")) return "preferences";
     return "preferences";
   }, [asPath]);
 
   const [tabValue, setTabValue] = useState<
-    "preferences" | "rewards" | "recent-orders"
+    "preferences" | "rewards" | "my-orders"
   >(finalQueryOfUrl);
 
   function getDynamicWidth() {
@@ -58,7 +58,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
         defaultValue={finalQueryOfUrl}
         value={tabValue}
         onValueChange={(value) => {
-          setTabValue(value as "preferences" | "rewards" | "recent-orders");
+          setTabValue(value as "preferences" | "rewards" | "my-orders");
           void push(`/profile/${value}`);
         }}
         className="baseVertFlex relative my-36 mb-24 w-full tablet:mt-48"
@@ -77,16 +77,22 @@ function TopProfileNavigationLayout({ children }: Layout) {
           <TabsTrigger
             value="rewards"
             className="baseVertFlex w-full gap-2 tablet:!flex-row"
+            onClick={() => {
+              void push(`/profile/rewards`);
+            }}
           >
             <CiGift className="size-5" />
             Rewards
           </TabsTrigger>
           <TabsTrigger
-            value="recent-orders"
+            value="my-orders"
             className="baseVertFlex w-full gap-2 tablet:!flex-row"
+            onClick={() => {
+              void push(`/profile/my-orders`);
+            }}
           >
             <TfiReceipt className="size-5" />
-            Recent orders
+            My orders
           </TabsTrigger>
         </TabsList>
         <div

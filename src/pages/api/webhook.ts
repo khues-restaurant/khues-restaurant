@@ -94,7 +94,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       // 1) get user object (if exists) from user table
       const user = await prisma.user.findFirst({
         where: {
-          id: payment.metadata.userId,
+          userId: payment.metadata.userId,
         },
       });
 
@@ -192,6 +192,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         email: paymentMetadata.email,
         phoneNumber: paymentMetadata.phoneNumber,
         dietaryRestrictions: user?.dietaryRestrictions ?? null,
+        includeNapkinsAndUtensils: orderDetails.includeNapkinsAndUtensils,
         prevRewardsPoints: prevPoints,
         rewardsPoints: currPoints,
         userId: user ? user.userId : null,
@@ -199,6 +200,8 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
           create: orderItemsData, // Nested array for order items and their customizations
         },
       };
+
+      console.log("userId is", user?.userId);
 
       const order = await prisma.order.create({
         data: orderData,
@@ -220,7 +223,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       if (user) {
         await prisma.user.update({
           where: {
-            id: payment.metadata.userId,
+            userId: payment.metadata.userId,
           },
           data: {
             rewardsPoints: currPoints,

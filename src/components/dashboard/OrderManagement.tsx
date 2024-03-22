@@ -299,7 +299,7 @@ function CustomerOrder({ order, view }: CustomerOrder) {
         marginTop: { duration: 0.2 },
         marginBottom: { duration: 0.2 },
       }}
-      className="baseFlex w-full rounded-md border px-8 py-4"
+      className="baseFlex w-full rounded-md border px-4 py-4 tablet:px-8"
     >
       <Accordion
         type="single"
@@ -428,7 +428,7 @@ function CustomerOrder({ order, view }: CustomerOrder) {
               onClick={() => {
                 setAccordionOpen(accordionOpen === "open" ? "closed" : "open");
               }}
-              className={`absolute bottom-4 right-[-40px] h-4 w-4 shrink-0 text-primary transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=open]:rotate-180 tablet:bottom-2 tablet:right-[-25px]`}
+              className={`absolute bottom-2.5 right-[-30px] h-4 w-4 shrink-0 cursor-pointer text-primary transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=open]:rotate-180 tablet:bottom-2 tablet:right-[-25px]`}
             />
           </div>
 

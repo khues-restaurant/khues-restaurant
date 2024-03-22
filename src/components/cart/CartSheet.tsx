@@ -136,6 +136,10 @@ function CartSheet({
       .string({
         required_error: "Pickup time must be specified",
       })
+      .refine((val) => val.trim().length > 0, {
+        // Ensures the string is not just whitespace
+        message: "Pickup time must be specified",
+      })
       .refine(
         (time) => {
           if (minPickupTime === null || minPickupTime === undefined) {

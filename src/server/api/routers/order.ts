@@ -124,7 +124,7 @@ export const orderRouter = createTRPCRouter({
     }),
 
   // TODO: technically want this to be infinite scroll
-  getUsersRecentOrders: protectedProcedure
+  getUsersOrders: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input: userId }) => {
       const recentOrders = await ctx.prisma.order.findMany({

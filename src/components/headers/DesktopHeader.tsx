@@ -279,10 +279,10 @@ function DesktopHeader() {
                   }}
                 >
                   <Link
-                    href={"/profile/recent-orders"}
+                    href={"/profile/my-orders"}
                     className="baseFlex w-full !justify-between !text-lg"
                   >
-                    Recent orders
+                    My orders
                     <TfiReceipt />
                   </Link>
                 </Button>

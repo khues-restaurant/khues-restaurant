@@ -13,6 +13,20 @@ datasource db {
 // singleton model which could have a field for delayNewOrdersUntil which would be the final 
 // DateTime to resume accepting new orders
 
+model Review {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+
+    message           String
+    allowedToBePublic Boolean
+
+    order   Order  @relation(fields: [orderId], references: [id])
+    orderId String
+
+    user   User   @relation(fields: [userId], references: [userId])
+    userId String
+}
+
 model MinimumOrderPickupTime {
     id Int @id @default(1)
 
@@ -140,7 +154,7 @@ model Order {
     orderCompletedAt DateTime?
     datetimeToPickup DateTime
 
-    // do we really need this status field? can just infer from timestamps
+    // TODO: remove status, just infer from orderStartedAt and orderCompletedAt
     status                    String  @default("received") // "received", "inProgress", "completed" (maybe "cancelled" too?)
     firstName                 String
     lastName                  String
@@ -161,6 +175,9 @@ model Order {
     // in prisma .create method?
     user   User?   @relation(fields: [userId], references: [userId])
     userId String?
+
+    reviews Review[] // these are just the direct reviews on the order, so that the dashboard can show the user's order
+    // alongside their feedback. This isn't to be confused with the to be made "MenuItemReview" model
 }
 
 model Discount {
@@ -211,6 +228,7 @@ model User {
     recentOrders  Order[]
     favoriteItems FavoriteItem[]
     discounts     Discount[]
+    reviews       Review[]
 
     @@index([userId])
 }
