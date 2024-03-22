@@ -6,6 +6,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 // import { useTabStore } from "~/stores/TabStore";
 import { FaUserAlt } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
+import AnimatedNumbers from "~/components/AnimatedNumbers";
 import DelayNewOrders from "~/components/dashboard/DelayNewOrders";
 import DiscountManagement from "~/components/dashboard/DiscountManagement";
 import {
@@ -52,6 +53,20 @@ function DashboardMobileHeader({
   const { data: user } = api.user.get.useQuery(userId);
 
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
+
+  const { data: todaysOrders } = api.order.getTodaysOrders.useQuery();
+
+  const [numberOfActiveOrders, setNumberOfActiveOrders] = useState(0);
+
+  useEffect(() => {
+    if (!todaysOrders) return;
+
+    const activeOrders = todaysOrders.filter(
+      (order) => order.orderCompletedAt === null,
+    );
+
+    setNumberOfActiveOrders(activeOrders.length);
+  }, [todaysOrders]);
 
   return (
     <nav
@@ -115,6 +130,15 @@ function DashboardMobileHeader({
                 }
                 className="absolute top-[26px] block h-0.5 w-6 bg-current transition duration-500 ease-in-out"
               ></span>
+
+              {/* TODO: combine numberOfActiveOrders with unreadMessages */}
+              <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-white">
+                <AnimatedNumbers
+                  value={numberOfActiveOrders}
+                  fontSize={14}
+                  padding={6}
+                />
+              </div>
             </Button>
           </SheetTrigger>
           <SheetContent className="!h-dvh !overflow-auto p-6">
@@ -149,27 +173,53 @@ function DashboardMobileHeader({
 
               <Separator className="mt-2 w-4/5 self-center" />
 
-              <Button
-                variant={"link"}
-                className="relative text-lg"
-                onClick={() => {
-                  setViewState("orderManagement");
-                  setSheetIsOpen(false);
-                }}
-              >
-                Order management
-              </Button>
+              <div className="relative">
+                <Button
+                  variant={"link"}
+                  className=" text-lg"
+                  onClick={() => {
+                    setViewState("orderManagement");
+                    setSheetIsOpen(false);
+                  }}
+                >
+                  Order management
+                </Button>
 
-              <Button
-                variant={"link"}
-                className="relative text-lg"
-                onClick={() => {
-                  setViewState("customerChats");
-                  setSheetIsOpen(false);
-                }}
-              >
-                Customer chats
-              </Button>
+                {/* notification count */}
+                {numberOfActiveOrders > 0 && (
+                  <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-white">
+                    <AnimatedNumbers
+                      value={numberOfActiveOrders}
+                      fontSize={14}
+                      padding={6}
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="relative">
+                <Button
+                  variant={"link"}
+                  className="text-lg"
+                  onClick={() => {
+                    setViewState("customerChats");
+                    setSheetIsOpen(false);
+                  }}
+                >
+                  Customer chats
+                </Button>
+
+                {/* unreadMessages > 0 && */}
+                {false && (
+                  <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-white">
+                    <AnimatedNumbers
+                      value={numberOfActiveOrders}
+                      fontSize={14}
+                      padding={6}
+                    />
+                  </div>
+                )}
+              </div>
 
               <Button
                 variant={"link"}

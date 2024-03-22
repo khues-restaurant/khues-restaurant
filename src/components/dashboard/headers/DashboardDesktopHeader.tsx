@@ -10,7 +10,7 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 
-import { type Dispatch, type SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,6 +29,7 @@ import { IoMdMore } from "react-icons/io";
 import classes from "./DashboardDesktopHeader.module.css";
 import DiscountManagement from "~/components/dashboard/DiscountManagement";
 import DelayNewOrders from "~/components/dashboard/DelayNewOrders";
+import AnimatedNumbers from "~/components/AnimatedNumbers";
 
 interface DashboardDesktopHeader {
   viewState: "orderManagement" | "customerChats" | "itemManagement" | "stats";
@@ -48,6 +49,20 @@ function DashboardDesktopHeader({
   const userId = useGetUserId();
 
   const { data: user } = api.user.get.useQuery(userId);
+
+  const { data: todaysOrders } = api.order.getTodaysOrders.useQuery();
+
+  const [numberOfActiveOrders, setNumberOfActiveOrders] = useState(0);
+
+  useEffect(() => {
+    if (!todaysOrders) return;
+
+    const activeOrders = todaysOrders.filter(
+      (order) => order.orderCompletedAt === null,
+    );
+
+    setNumberOfActiveOrders(activeOrders.length);
+  }, [todaysOrders]);
 
   return (
     <nav
@@ -73,21 +88,47 @@ function DashboardDesktopHeader({
       </div>
 
       <div className={`${classes.mainLinks} baseFlex gap-2`}>
-        <Button
-          variant={"link"}
-          className="relative text-xl"
-          onClick={() => setViewState("orderManagement")}
-        >
-          Order management
-        </Button>
+        <div className="relative">
+          <Button
+            variant={"link"}
+            className="text-xl"
+            onClick={() => setViewState("orderManagement")}
+          >
+            Order management
+          </Button>
 
-        <Button
-          variant={"link"}
-          className="relative text-xl"
-          onClick={() => setViewState("customerChats")}
-        >
-          Customer chats
-        </Button>
+          {/* notification count */}
+          {numberOfActiveOrders > 0 && (
+            <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-white">
+              <AnimatedNumbers
+                value={numberOfActiveOrders}
+                fontSize={14}
+                padding={6}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="relative">
+          <Button
+            variant={"link"}
+            className="text-xl"
+            onClick={() => setViewState("customerChats")}
+          >
+            Customer chats
+          </Button>
+
+          {/* unreadMessages > 0 && */}
+          {false && (
+            <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-white">
+              <AnimatedNumbers
+                value={numberOfActiveOrders}
+                fontSize={14}
+                padding={6}
+              />
+            </div>
+          )}
+        </div>
 
         <Button
           variant={"link"}

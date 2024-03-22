@@ -28,6 +28,7 @@ import { ChevronDown } from "lucide-react";
 import { DashboardOrder } from "~/server/api/routers/order";
 import { socket } from "~/pages/_app";
 import { FaUtensils } from "react-icons/fa6";
+import AnimatedNumbers from "~/components/AnimatedNumbers";
 
 // type FullOrderItems = OrderItem & {
 //   customizations: OrderItemCustomization[];
@@ -107,23 +108,47 @@ function OrderManagement({ orders }: OrderManagement) {
       className="baseVertFlex mt-32 h-full w-full tablet:mt-48"
     >
       <div className="baseFlex w-11/12 !justify-between  tablet:w-full tablet:max-w-lg">
-        <Button
-          variant={"link"}
-          onClick={() => setSelectedTab("notStarted")}
-          className="relative text-xl"
-        >
-          Not started
-          {/* TODO: notification number */}
-        </Button>
+        <div className="relative">
+          <Button
+            variant={"link"}
+            onClick={() => setSelectedTab("notStarted")}
+            className="text-xl"
+          >
+            Not started
+          </Button>
 
-        <Button
-          variant={"link"}
-          onClick={() => setSelectedTab("started")}
-          className="relative text-xl"
-        >
-          Started
-          {/* TODO: notification number */}
-        </Button>
+          {/* notification count */}
+          {notStartedOrders.length > 0 && (
+            <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-white">
+              <AnimatedNumbers
+                value={notStartedOrders.length}
+                fontSize={14}
+                padding={6}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="relative">
+          <Button
+            variant={"link"}
+            onClick={() => setSelectedTab("started")}
+            className="text-xl"
+          >
+            Started
+          </Button>
+
+          {/* notification count */}
+          {startedOrders.length > 0 && (
+            <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-white">
+              <AnimatedNumbers
+                value={startedOrders.length}
+                fontSize={14}
+                padding={6}
+              />
+            </div>
+          )}
+        </div>
 
         <Button
           variant={"link"}
