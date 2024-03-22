@@ -67,9 +67,9 @@ function RecentOrders() {
     if (orders) {
       const sortedOrders = orders.sort((a, b) => {
         if (sortDirection === "desc") {
-          return b.createdAt.getTime() - a.createdAt.getTime();
+          return b.datetimeToPickup.getTime() - a.datetimeToPickup.getTime();
         } else {
-          return a.createdAt.getTime() - b.createdAt.getTime();
+          return a.datetimeToPickup.getTime() - b.datetimeToPickup.getTime();
         }
       });
       setSortedOrders(sortedOrders);
