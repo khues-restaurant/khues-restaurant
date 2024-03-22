@@ -6,6 +6,7 @@ import AnimatedNumbers from "~/components/AnimatedNumbers";
 import CartDrawerWrapper from "~/components/cart/CartDrawerWrapper";
 import CartSheetWrapper from "~/components/cart/CartSheetWrapper";
 import { Button } from "~/components/ui/button";
+import { useToast } from "~/components/ui/use-toast";
 import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import { useMainStore } from "~/stores/MainStore";
 
@@ -27,6 +28,8 @@ function CartButton() {
     0,
   );
 
+  const { dismiss: dismissToasts } = useToast();
+
   return (
     <>
       <Button
@@ -34,6 +37,8 @@ function CartButton() {
         disabled={!cartInitiallyValidated}
         className="baseFlex relative"
         onClick={() => {
+          dismissToasts();
+
           if (viewportLabel.includes("mobile")) {
             setShowCartDrawer(true);
           } else {

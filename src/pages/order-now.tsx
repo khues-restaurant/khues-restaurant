@@ -22,6 +22,8 @@ import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { api } from "~/utils/api";
 import { formatPrice } from "~/utils/formatPrice";
+import { useToast } from "~/components/ui/use-toast";
+import { ToastAction } from "~/components/ui/toast";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
@@ -420,19 +422,27 @@ function MenuItemPreviewButton({
   setIsDrawerOpen,
   setItemToCustomize,
 }: MenuItemPreviewButton) {
-  const { orderDetails, customizationChoices, discounts } = useMainStore(
-    (state) => ({
-      orderDetails: state.orderDetails,
-      customizationChoices: state.customizationChoices,
-      discounts: state.discounts,
-    }),
-  );
+  const {
+    orderDetails,
+    getPrevOrderDetails,
+    setPrevOrderDetails,
+    customizationChoices,
+    discounts,
+  } = useMainStore((state) => ({
+    orderDetails: state.orderDetails,
+    getPrevOrderDetails: state.getPrevOrderDetails,
+    setPrevOrderDetails: state.setPrevOrderDetails,
+    customizationChoices: state.customizationChoices,
+    discounts: state.discounts,
+  }));
 
   const viewportLabel = useGetViewportLabel();
 
   const [showCheckmark, setShowCheckmark] = useState(false);
 
   const { updateOrder } = useUpdateOrder();
+
+  const { toast, dismiss: dismissToasts } = useToast();
 
   return (
     <div
@@ -446,6 +456,8 @@ function MenuItemPreviewButton({
         disabled={!menuItem.available}
         className="baseFlex h-full w-full gap-4 border-2 py-6"
         onClick={() => {
+          dismissToasts();
+
           setItemToCustomize(menuItem);
 
           // open up the customizer for the item
@@ -502,6 +514,24 @@ function MenuItemPreviewButton({
           disabled={showCheckmark}
           className="baseFlex absolute right-0 top-0 h-10 w-10 rounded-none rounded-bl-md rounded-tr-md border-2 text-primary"
           onClick={() => {
+            // set prev order details so we can revert if necessary
+            // with toast's undo button
+            setPrevOrderDetails(orderDetails);
+
+            toast({
+              description: `${menuItem.name} added to your order.`,
+              action: (
+                <ToastAction
+                  altText={`Undo the addition of ${menuItem.name} to your order.`}
+                  onClick={() => {
+                    updateOrder({ newOrderDetails: getPrevOrderDetails() });
+                  }}
+                >
+                  Undo
+                </ToastAction>
+              ),
+            });
+
             // directly add to order w/ defaults + trigger toast notification
             setShowCheckmark(true);
 
@@ -544,8 +574,8 @@ function MenuItemPreviewButton({
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0 }}
-                transition={{ duration: 0.3 }}
-                className="text-primary"
+                transition={{ duration: 0.2 }}
+                className="size-6 text-primary"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -571,7 +601,7 @@ function MenuItemPreviewButton({
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.2 }}
                 className="baseFlex h-10 w-10 rounded-md"
               >
                 <LuPlus />

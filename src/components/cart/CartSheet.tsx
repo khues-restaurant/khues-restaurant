@@ -111,7 +111,9 @@ function CartSheet({
   const { updateOrder } = useUpdateOrder();
 
   const { data: minPickupTime } = api.minimumOrderPickupTime.get.useQuery();
-  const { data: userRewards } = api.user.getRewards.useQuery(userId);
+  const { data: userRewards } = api.user.getRewards.useQuery(userId, {
+    enabled: isSignedIn,
+  });
 
   const { initializeCheckout } = useInitializeCheckout();
 

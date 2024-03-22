@@ -7,6 +7,7 @@ import PostSignUpDialog from "~/components/PostSignUpDialog";
 import useHandleLocalStorage from "~/hooks/useHandleLocalStorage";
 import useKeepOrderDetailsValidated from "~/hooks/useKeepOrderDetailsValidated";
 import useAttachSocketListeners from "~/hooks/useAttachSocketListeners";
+import { Toaster } from "~/components/ui/toaster";
 
 const notoSerif = Noto_Serif({
   weight: ["400", "500", "600", "700"], // TODO: probably want to relook at these and only import ones we are using
@@ -36,6 +37,8 @@ function GeneralLayout({ children }: GeneralLayout) {
       <Footer />
 
       <PostSignUpDialog />
+
+      <Toaster />
     </main>
   );
 }

@@ -95,6 +95,13 @@ function getTodayAtMidnight() {
 interface StoreState {
   orderDetails: OrderDetails;
   setOrderDetails: (orderDetails: OrderDetails) => void;
+
+  // used for "Undo" button on order-now menu item toasts
+  prevOrderDetails: OrderDetails;
+  setPrevOrderDetails: (orderDetails: OrderDetails) => void;
+  getPrevOrderDetails: () => OrderDetails; // needed since getting prevOrderDetails inside onClick
+  // was returning stale state
+
   menuItems: StoreMenuItems;
   setMenuItems: (menuItems: StoreMenuItems) => void;
 
@@ -123,6 +130,19 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
       setOrderDetails: (orderDetails: OrderDetails) => {
         set({ orderDetails });
       },
+
+      prevOrderDetails: {
+        datetimeToPickUp: getTodayAtMidnight(),
+        items: [],
+        includeNapkinsAndUtensils: false,
+      },
+      setPrevOrderDetails: (prevOrderDetails: OrderDetails) => {
+        set({ prevOrderDetails });
+      },
+      getPrevOrderDetails: () => {
+        return get().prevOrderDetails;
+      },
+
       menuItems: {} as StoreMenuItems, // TODO: this isn't great, might have to allow it to be null, and then do
       // a heavy-handed if (!menuItems) return; outright before return jsx of function. I just don't want to
       // constantly have to be ?. chaining
