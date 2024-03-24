@@ -44,15 +44,26 @@ import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import isEqual from "lodash.isequal";
 import { Button } from "~/components/ui/button";
 import { FaUserAlt } from "react-icons/fa";
+import { useRouter } from "next/router";
 
 function Preferences() {
   const userId = useGetUserId();
+  const ctx = api.useUtils();
+  const { push } = useRouter();
+
   const { data: user } = api.user.get.useQuery(userId, {
     enabled: !!userId,
   });
+
   const { mutate: updateUser } = api.user.updatePreferences.useMutation({
-    onSuccess: () => {
-      // TODO
+    onSuccess: async () => {
+      await ctx.user.invalidate();
+
+      setTimeout(() => setSaveButtonText("Saved"), 2000);
+
+      setTimeout(() => {
+        setSaveButtonText("Save changes");
+      }, 4000);
     },
     onError: (error) => {
       console.log(error);
@@ -60,8 +71,14 @@ function Preferences() {
     },
   });
   const { mutate: deleteUser } = api.user.delete.useMutation({
-    onSuccess: () => {
-      // TODO
+    onSuccess: async () => {
+      await ctx.user.invalidate();
+
+      setTimeout(() => setDeleteButtonText("Account deleted"), 2000);
+
+      setTimeout(() => {
+        void push("/");
+      }, 4000);
     },
     onError: (error) => {
       console.log(error);
@@ -74,17 +91,27 @@ function Preferences() {
     useState(false);
   const [showDeleteUserDialog, setShowDeleteUserDialog] = useState(false);
 
+  const [saveButtonText, setSaveButtonText] = useState("Save changes");
+  const [deleteButtonText, setDeleteButtonText] = useState("Delete account");
+
   const formSchema = z.object({
     firstName: z
-      .string()
+      .string({
+        required_error: "First name cannot be empty",
+      })
       .min(1, { message: "Must be at least 1 character" })
       .max(30, { message: "Must be at most 30 characters" }),
+
     lastName: z
-      .string()
+      .string({
+        required_error: "Last name cannot be empty",
+      })
       .min(1, { message: "Must be at least 1 character" })
       .max(30, { message: "Must be at most 30 characters" }),
     phoneNumber: z
-      .string()
+      .string({
+        required_error: "Phone number cannot be empty",
+      })
       .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Invalid phone number format")
       .refine(
         async (phoneNumber) => {
@@ -125,6 +152,17 @@ function Preferences() {
       allowsPromotionalEmails: user?.allowsPromotionalEmails ?? false,
     },
   });
+
+  async function onFormSubmit(values: z.infer<typeof formSchema>) {
+    if (!user) return;
+
+    setSaveButtonText("Saving");
+
+    updateUser({
+      ...user,
+      ...values,
+    });
+  }
 
   return (
     <motion.div
@@ -239,7 +277,7 @@ function Preferences() {
                       <div className="baseVertFlex relative !items-start gap-2">
                         <FormLabel className="font-semibold">Email</FormLabel>
                         <Input placeholder="Email" {...field} disabled />
-                        <FaLock className="absolute bottom-3 right-2 size-4 text-gray-300" />
+                        <FaLock className="absolute bottom-3 right-2 size-3.5 text-gray-300" />
                       </div>
                       <AnimatePresence>
                         {invalid && (
@@ -272,7 +310,7 @@ function Preferences() {
                           value={format(field.value, "PPP")}
                           disabled
                         />
-                        <FaLock className="absolute bottom-3 right-2 size-4 text-gray-300" />
+                        <FaLock className="absolute bottom-3 right-2 size-3.5 text-gray-300" />
                       </div>
                       <AnimatePresence>
                         {invalid && (
@@ -398,29 +436,73 @@ function Preferences() {
 
         {!viewportLabel.includes("mobile") && (
           <Button
-            disabled={isEqual(form.getValues(), {
-              firstName: user?.firstName,
-              lastName: user?.lastName,
-              phoneNumber: user?.phoneNumber,
-              email: user?.email,
-              birthday: user?.birthday,
-              dietaryRestrictions: user?.dietaryRestrictions,
-              allowsEmailReceipts: user?.allowsEmailReceipts,
-              allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails,
-              allowsPromotionalEmails: user?.allowsPromotionalEmails,
-            })}
+            disabled={
+              saveButtonText !== "Save changes" ||
+              isEqual(form.getValues(), {
+                firstName: user?.firstName,
+                lastName: user?.lastName,
+                phoneNumber: user?.phoneNumber,
+                email: user?.email,
+                birthday: user?.birthday,
+                dietaryRestrictions: user?.dietaryRestrictions,
+                allowsEmailReceipts: user?.allowsEmailReceipts,
+                allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails,
+                allowsPromotionalEmails: user?.allowsPromotionalEmails,
+              })
+            }
             className="absolute right-4 top-4"
             onClick={() => {
-              if (!user) return;
-
-              updateUser({
-                ...user,
-                ...form.getValues(),
-              });
+              void form.handleSubmit(onFormSubmit)();
             }}
           >
-            Save changes
-            {/* TODO: animation for async stuff */}
+            <AnimatePresence mode={"popLayout"}>
+              <motion.div
+                key={saveButtonText}
+                layout
+                // whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{
+                  duration: 0.25,
+                }}
+                className="baseFlex gap-2"
+              >
+                {saveButtonText}
+                {saveButtonText === "Saving" && (
+                  <div
+                    className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                    role="status"
+                    aria-label="loading"
+                  >
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                )}
+                {saveButtonText === "Saved" && (
+                  <svg
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    className="size-4 text-white"
+                  >
+                    <motion.path
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{
+                        delay: 0.2,
+                        type: "tween",
+                        ease: "easeOut",
+                        duration: 0.3,
+                      }}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                )}
+              </motion.div>
+            </AnimatePresence>
           </Button>
         )}
 
@@ -483,14 +565,63 @@ function Preferences() {
                     <AlertDialogAction asChild>
                       <Button
                         variant={"destructive"}
+                        disabled={deleteButtonText !== "Delete account"}
                         onClick={() => {
+                          setDeleteButtonText("Deleting account");
                           deleteUser(userId);
                         }}
-                        className="baseFlex gap-2"
                       >
-                        <FaTrashAlt />
-                        Delete account
-                        {/* TODO: add spinner + checkmark for mutation */}
+                        <AnimatePresence mode={"popLayout"}>
+                          <motion.div
+                            key={deleteButtonText}
+                            layout
+                            // whileTap={{ scale: 0.95 }}
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 20 }}
+                            transition={{
+                              duration: 0.25,
+                            }}
+                            className="baseFlex gap-2"
+                          >
+                            <FaTrashAlt />
+
+                            {deleteButtonText}
+
+                            {deleteButtonText === "Deleting account" && (
+                              <div
+                                className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                                role="status"
+                                aria-label="loading"
+                              >
+                                <span className="sr-only">Loading...</span>
+                              </div>
+                            )}
+                            {deleteButtonText === "Account deleted" && (
+                              <svg
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                                className="size-4 text-white"
+                              >
+                                <motion.path
+                                  initial={{ pathLength: 0 }}
+                                  animate={{ pathLength: 1 }}
+                                  transition={{
+                                    delay: 0.2,
+                                    type: "tween",
+                                    ease: "easeOut",
+                                    duration: 0.3,
+                                  }}
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M5 13l4 4L19 7"
+                                />
+                              </svg>
+                            )}
+                          </motion.div>
+                        </AnimatePresence>
                       </Button>
                     </AlertDialogAction>
                   </AlertDialogFooter>
@@ -501,49 +632,78 @@ function Preferences() {
         </Accordion>
       </TabsContent>
 
-      <AnimatePresence>
-        {viewportLabel.includes("mobile") &&
-          !isEqual(form.getValues(), {
-            firstName: user?.firstName,
-            lastName: user?.lastName,
-            phoneNumber: user?.phoneNumber,
-            email: user?.email,
-            birthday: user?.birthday,
-            dietaryRestrictions: user?.dietaryRestrictions,
-            allowsEmailReceipts: user?.allowsEmailReceipts,
-            allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails,
-            allowsPromotionalEmails: user?.allowsPromotionalEmails,
-          }) && (
-            <motion.div
-              key={"saveChangesCard"}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 50 }}
-              transition={{
-                spring: {
-                  type: "spring",
-                  stiffness: 500,
-                  damping: 30,
-                },
-              }}
-              className="baseVertFlex sticky bottom-8 right-4 pb-8"
-            >
-              <Button
-                onClick={() => {
-                  if (!user) return;
-
-                  updateUser({
-                    ...user,
-                    ...form.getValues(),
-                  });
+      {viewportLabel.includes("mobile") && (
+        <div className="baseFlex w-11/12 border-t py-8">
+          <Button
+            disabled={
+              saveButtonText !== "Save changes" ||
+              isEqual(form.getValues(), {
+                firstName: user?.firstName,
+                lastName: user?.lastName,
+                phoneNumber: user?.phoneNumber,
+                email: user?.email,
+                birthday: user?.birthday,
+                dietaryRestrictions: user?.dietaryRestrictions,
+                allowsEmailReceipts: user?.allowsEmailReceipts,
+                allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails,
+                allowsPromotionalEmails: user?.allowsPromotionalEmails,
+              })
+            }
+            onClick={() => {
+              void form.handleSubmit(onFormSubmit)();
+            }}
+          >
+            <AnimatePresence mode={"popLayout"}>
+              <motion.div
+                key={saveButtonText}
+                layout
+                // whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{
+                  duration: 0.25,
                 }}
+                className="baseFlex gap-2"
               >
-                Save changes
-                {/* TODO: animation for async stuff */}
-              </Button>
-            </motion.div>
-          )}
-      </AnimatePresence>
+                {saveButtonText}
+                {saveButtonText === "Saving" && (
+                  <div
+                    className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                    role="status"
+                    aria-label="loading"
+                  >
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                )}
+                {saveButtonText === "Saved" && (
+                  <svg
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    className="size-4 text-white"
+                  >
+                    <motion.path
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{
+                        delay: 0.2,
+                        type: "tween",
+                        ease: "easeOut",
+                        duration: 0.3,
+                      }}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </Button>
+        </div>
+      )}
     </motion.div>
   );
 }
@@ -551,3 +711,19 @@ function Preferences() {
 Preferences.PageLayout = TopProfileNavigationLayout;
 
 export default Preferences;
+
+// incase you want to go back to the animated fixed save changes button for mobile
+// <motion.div
+//               key={"saveChangesCard"}
+//               initial={{ opacity: 0, y: 50 }}
+//               animate={{ opacity: 1, y: 0 }}
+//               exit={{ opacity: 0, y: 50 }}
+//               transition={{
+//                 spring: {
+//                   type: "spring",
+//                   stiffness: 500,
+//                   damping: 30,
+//                 },
+//               }}
+//               className="baseVertFlex sticky bottom-8 right-4 pb-8"
+//             ></motion.div>

@@ -5,6 +5,7 @@ import { CiGift } from "react-icons/ci";
 import { FaCakeCandles } from "react-icons/fa6";
 import { IoMdHeart } from "react-icons/io";
 import { FaRedo } from "react-icons/fa";
+import { IoToggle } from "react-icons/io5";
 import { Button } from "~/components/ui/button";
 import { SignUpButton } from "@clerk/nextjs";
 import WideFancySwirls from "~/components/ui/wideFancySwirls";
@@ -49,7 +50,7 @@ function Rewards() {
       </div>
 
       {/* Intro */}
-      <p className="max-w-72 text-base text-yellow-500 tablet:max-w-2xl">
+      <p className="max-w-72 text-yellow-500 tablet:max-w-3xl tablet:font-medium">
         Welcome to Khue&apos;s Rewards — where every bite takes you closer to
         delightful rewards! As a token of our appreciation, we&apos;ve crafted
         an exclusive program designed to celebrate our loyal customers. Indulge
@@ -134,11 +135,19 @@ function Rewards() {
               Favorite your most loved dishes for quick and easy access.
             </div>
           </div>
+
+          <div className="rewardsGoldBorder baseVertFlex max-w-72 gap-2 rounded-md !p-4 shadow-md tablet:h-36 tablet:w-96">
+            <IoToggle className="size-9 text-yellow-500" />
+            <div className="border-yellow-500 text-center tablet:max-w-64">
+              Easily add your profile&apos;s dietary preferences to your orders.
+            </div>
+          </div>
         </div>
       </div>
+
       {/* Join */}
       {/* TODO: figure out why rewardsGoldBorder doesn't apply at tablet viewport. maybe some kind of
-      inherent tailwind restriction? */}
+        inherent tailwind restriction? */}
       <div className="baseVertFlex tablet:rewardsGoldBorder mb-16 mt-8 max-w-xl gap-8 border-y-4 border-b-yellow-600 border-t-yellow-500 !p-8 text-yellow-500 shadow-md">
         <p className="text-center">
           Joining Khue&apos;s Rewards is easy! Simply create an account with us

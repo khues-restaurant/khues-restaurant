@@ -225,7 +225,7 @@ export const paymentRouter = createTRPCRouter({
       ); // 10 mins
 
       return session; // TODO: okay shoot I believe when we return we will be ending the http request,
-      // and therefor the setTimeout will not be able to run... maybe we need to make a separate tprc endpoint
+      // and therefore the setTimeout will not be able to run... maybe we need to make a separate tprc endpoint
       // that will be passed in the session id and simply just have the setTimeout in there?
 
       // TODO: if this doesn't work in production, then prob have to make a cron job to handle this

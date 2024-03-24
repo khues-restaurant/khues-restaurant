@@ -10,15 +10,22 @@ import { useState } from "react";
 import { MdOutlineMoneyOff } from "react-icons/md";
 import { BsSpeedometer2 } from "react-icons/bs";
 import { TfiReceipt } from "react-icons/tfi";
-import { SignUpButton } from "@clerk/nextjs";
+import { SignUpButton, useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import WideFancySwirls from "~/components/ui/wideFancySwirls";
 import LeftAccentSwirls from "~/components/ui/LeftAccentSwirls";
 import RightAccentSwirls from "~/components/ui/RightAccentSwirls";
 
 export default function Home() {
+  const { isLoaded, isSignedIn } = useAuth();
   const { asPath } = useRouter();
   const [reviewBeingViewed, setReviewBeingViewed] = useState(0);
+
+  // TODO: for masonry images, might want to play around with slightly vertically
+  // scrolling the images as the page is scrolled? The whole footprint would stay the same,
+  // but the "camera" would move up and down slightly, giving the illusion of depth.
+  // I don't know if we would have to artificially "zoom in" on the images so we could scroll
+  // on them per se, or just kind of use them as is and have "viewport" into image be a bit arbitrary
 
   return (
     <motion.div
@@ -353,60 +360,62 @@ export default function Home() {
         {/* </ResponsiveMasonry> */}
 
         {/* Rewards program promo section */}
-        <div
-          style={
-            {
-              // background:
-              //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
-              // border: "4px solid transparent" /* Set the border width */,
-              // borderImage:
-              //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%) 1 stretch",
+        {isLoaded && !isSignedIn && (
+          <div
+            style={
+              {
+                // background:
+                //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+                // border: "4px solid transparent" /* Set the border width */,
+                // borderImage:
+                //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%) 1 stretch",
+              }
             }
-          }
-          className="baseVertFlex rewardsGoldBorder w-full max-w-3xl gap-4 rounded-md p-4 text-yellow-500 shadow-md tablet:p-8"
-        >
-          <div className="baseFlex gap-4">
-            <LeftAccentSwirls />
-            <p className="text-xl font-medium">
-              Join our rewards program today!
-            </p>
-            <RightAccentSwirls />
-          </div>
-          <p>
-            As valued customers, members gain access to exclusive, limited time
-            discounts, can build up to earn free meals, and get a free birthday
-            dessert of their choice!
-          </p>
-
-          <WideFancySwirls />
-
-          <SignUpButton
-            mode="modal"
-            afterSignUpUrl={`${
-              process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-            }/postSignUpRegistration`}
-            afterSignInUrl={`${
-              process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-            }${asPath}`}
+            className="baseVertFlex rewardsGoldBorder w-full max-w-3xl gap-4 rounded-md p-4 !pb-8 text-yellow-500 shadow-md tablet:p-8"
           >
-            <Button
-              variant={"rewards"}
-              // size={"lg"}
-              // onClick={() => {
-              //   if (asPath.includes("/create")) {
-              //     localStorageTabData.set(getStringifiedTabData());
-              //   }
+            <div className="baseFlex gap-4">
+              <LeftAccentSwirls />
+              <p className="text-center text-xl font-medium">
+                Join our rewards program today!
+              </p>
+              <RightAccentSwirls />
+            </div>
+            <p>
+              As valued customers, members gain access to exclusive, limited
+              time discounts, can build up to earn free meals, and get a free
+              birthday dessert of their choice!
+            </p>
 
-              //   // technically can sign in from signup page and vice versa
-              //   if (!userId) localStorageRedirectRoute.set(asPath);
-              //   // ^^ but technically could just append it onto the postSignupRegistration route right?
-              // }}
-              className="px-8"
+            <WideFancySwirls />
+
+            <SignUpButton
+              mode="modal"
+              afterSignUpUrl={`${
+                process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
+              }/postSignUpRegistration`}
+              afterSignInUrl={`${
+                process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
+              }${asPath}`}
             >
-              Sign up
-            </Button>
-          </SignUpButton>
-        </div>
+              <Button
+                variant={"rewards"}
+                // size={"lg"}
+                // onClick={() => {
+                //   if (asPath.includes("/create")) {
+                //     localStorageTabData.set(getStringifiedTabData());
+                //   }
+
+                //   // technically can sign in from signup page and vice versa
+                //   if (!userId) localStorageRedirectRoute.set(asPath);
+                //   // ^^ but technically could just append it onto the postSignupRegistration route right?
+                // }}
+                className="px-8"
+              >
+                Sign up
+              </Button>
+            </SignUpButton>
+          </div>
+        )}
 
         {/* Explore Our Favorites section (hardcoded for seo) */}
         {/* <div className="baseVertFlex gap-4 tablet:max-w-2xl">

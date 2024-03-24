@@ -108,6 +108,10 @@ function CartSheet({
     total: 0,
   });
 
+  const [checkoutButtonText, setCheckoutButtonText] = useState(
+    "Proceed to checkout",
+  );
+
   const { updateOrder } = useUpdateOrder();
 
   const { data: minPickupTime } = api.minimumOrderPickupTime.get.useQuery();
@@ -244,6 +248,8 @@ function CartSheet({
 
   async function onMainFormSubmit(values: z.infer<typeof mainFormSchema>) {
     if (isSignedIn) {
+      setCheckoutButtonText("Loading");
+
       await initializeCheckout(); // TODO: await or void or what here
     } else {
       setGuestCheckoutView("mainView");
@@ -786,23 +792,38 @@ function CartSheet({
               <AnimatedPrice price={formatPrice(orderCost.total)} />
             </div>
 
-            {isSignedIn ? (
-              <Button
-                variant="default"
-                className="text-xs font-semibold tablet:text-sm"
-                onClick={() => void mainForm.handleSubmit(onMainFormSubmit)()}
-              >
-                Proceed to checkout
-              </Button>
-            ) : (
-              <Button
-                variant="default"
-                className="text-xs font-semibold tablet:text-sm"
-                onClick={() => void mainForm.handleSubmit(onMainFormSubmit)()}
-              >
-                Proceed to checkout
-              </Button>
-            )}
+            <Button
+              variant="default"
+              disabled={checkoutButtonText !== "Proceed to checkout"}
+              className="text-xs font-semibold tablet:text-sm"
+              onClick={() => void mainForm.handleSubmit(onMainFormSubmit)()}
+            >
+              <AnimatePresence mode={"popLayout"}>
+                <motion.div
+                  key={`cartSheet-${checkoutButtonText}`}
+                  layout
+                  // whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{
+                    duration: 0.25,
+                  }}
+                  className="baseFlex gap-2"
+                >
+                  {checkoutButtonText}
+                  {checkoutButtonText === "Loading" && (
+                    <div
+                      className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                      role="status"
+                      aria-label="loading"
+                    >
+                      <span className="sr-only">Loading...</span>
+                    </div>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </Button>
           </div>
         </div>
       </SheetFooter>

@@ -24,6 +24,8 @@ import { api } from "~/utils/api";
 import { formatPrice } from "~/utils/formatPrice";
 import { useToast } from "~/components/ui/use-toast";
 import { ToastAction } from "~/components/ui/toast";
+import { DBOrderSummary } from "~/server/api/routers/order";
+import { format } from "date-fns";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
@@ -206,6 +208,10 @@ function OrderNow() {
               transition={{ duration: 0.5 }}
               className="baseVertFlex mt-8 h-full w-full gap-8 tablet:mt-0"
             >
+              {/* TODO: if applicable, user's recent orders (scroll-snap-x wrapper) */}
+
+              {/* TODO: if applicable user's favorited items (scroll-snap-x wrapper) */}
+
               {menuCategories?.map((category) => (
                 <MenuCategory
                   key={category.id}
@@ -375,20 +381,28 @@ function MenuCategory({
       }}
       className="baseVertFlex w-full scroll-m-44 !items-start gap-4 p-2"
     >
-      <div className="baseFlex gap-4">
-        <p className="ml-1 text-xl font-semibold underline underline-offset-2">
-          {name}
-        </p>
+      <div className="baseFlex relative w-full rounded-md">
+        {/* TODO: one image w/ 3 dishes from category on mobile, three separate images on desktop
+            so image isn't distorted */}
+        <div className="imageFiller h-48 w-full rounded-md"></div>
+        <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md border-2 border-primary bg-white px-4 py-2 shadow-md tablet:!flex-row tablet:!items-center tablet:gap-4">
+          <p className="ml-1 text-xl font-semibold underline underline-offset-2">
+            {name}
+          </p>
 
-        {activeDiscount && (
-          <div className="baseFlex rounded-md bg-primary px-4 py-0.5 text-white">
-            <p>{activeDiscount.name}</p>
-          </div>
-        )}
+          {activeDiscount && (
+            <div className="rewardsGoldBorder baseFlex gap-1 rounded-md bg-primary px-4 py-0.5 text-sm font-medium text-yellow-500">
+              <span>{activeDiscount.name}</span>
+              <span>
+                until {format(activeDiscount.expirationDate, "MM/dd")}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* wrapping container for each food item in the category */}
-      <div className="baseFlex w-full flex-wrap !justify-start gap-4">
+      <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {menuItems.map((item) => (
           <MenuItemPreviewButton
             key={item.id}
@@ -480,7 +494,8 @@ function MenuItemPreviewButton({
             </p>
           </div>
           <p
-            className={`self-end text-base ${activeDiscount ? "rounded-md bg-primary px-4 py-0.5 text-white" : ""}`}
+            // TODO: idk about either the goldBorder or rewardsGoldBorder here...
+            className={`self-end text-base ${activeDiscount ? "goldBorder rounded-md !py-0.5 px-4 text-white" : ""}`}
           >
             {formatPrice(
               calculateRelativeTotal({
@@ -614,6 +629,72 @@ function MenuItemPreviewButton({
           <p className="text-xs italic">Currently unavailable</p>
         </div>
       )}
+    </div>
+  );
+}
+interface PreviousOrder {
+  order: DBOrderSummary;
+}
+
+function PreviousOrder({ order }: PreviousOrder) {
+  const {
+    orderDetails,
+    getPrevOrderDetails,
+    setPrevOrderDetails,
+    customizationChoices,
+    discounts,
+  } = useMainStore((state) => ({
+    orderDetails: state.orderDetails,
+    getPrevOrderDetails: state.getPrevOrderDetails,
+    setPrevOrderDetails: state.setPrevOrderDetails,
+    customizationChoices: state.customizationChoices,
+    discounts: state.discounts,
+  }));
+
+  const viewportLabel = useGetViewportLabel();
+
+  const [showCheckmark, setShowCheckmark] = useState(false);
+
+  const { updateOrder } = useUpdateOrder();
+
+  const { toast, dismiss: dismissToasts } = useToast();
+
+  // TODO: ^ yeah most likely have toast be "{order.items.length} item(s) added to your order. Undo"
+
+  return (
+    <div className="relative h-48 w-full max-w-96">
+      <div className="baseFlex h-full w-full gap-4 border-2 py-6">
+        <div className="grid grid-cols-2 grid-rows-2 gap-1">
+          {/* TODO: make this correct + conditional like my-orders */}
+          <div className="imageFiller size-8 rounded-md"></div>
+          <div className="imageFiller size-8 rounded-md"></div>
+          <div className="imageFiller size-8 rounded-md"></div>
+          <div className="imageFiller size-8 rounded-md"></div>
+        </div>
+
+        <div className="baseVertFlex h-full w-48 !items-start !justify-between">
+          <div className="baseVertFlex !items-start gap-2">
+            <p className="text-lg font-medium underline underline-offset-2">
+              {format(order.datetimeToPickup, "PPP")}
+            </p>
+            <div className="baseVertFlex text-sm text-gray-400"></div>
+            {/* TODO: same thing here */}
+            <p>1 App Two</p>
+            <p>1 App Two</p>
+            <p>1 App Two</p>
+            <p>+3 more</p>
+          </div>
+          <Button
+            className={`self-end text-base`}
+            onClick={() => {
+              // TODO: will most likely want to create dialog/modal for the summary of this order
+              // TODO: add the contents of this order to the current order
+            }}
+          >
+            Reorder
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

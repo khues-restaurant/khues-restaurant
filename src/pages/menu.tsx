@@ -445,7 +445,7 @@ function MenuItemPreviewButton({
               <p className="text-lg font-medium underline underline-offset-2">
                 {menuItem.name}
               </p>
-              <p className="max-w-48 text-wrap text-left text-gray-400">
+              <p className="max-w-48 text-wrap text-left text-sm text-gray-400">
                 {menuItem.description}
               </p>
             </div>

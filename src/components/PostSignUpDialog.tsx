@@ -492,6 +492,8 @@ function PostSignUpDialog() {
                   transition={{ duration: 0.2, delay: 0.2 }}
                   className="baseVertFlex gap-4"
                 >
+                  {/* TODO: come back and bring this styling to current rewards styling +
+                  figure out what exactly makes sense to dislay for text */}
                   <p className="font-semibold">Rank One: Lorem Ipsum</p>
 
                   <div className="imageFiller baseFlex h-16 w-16">
@@ -575,14 +577,35 @@ function PostSignUpDialog() {
                   step === 3 ? (
                     <motion.div
                       key="save"
+                      layout
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <AnimatePresence>
+                      <AnimatePresence mode={"popLayout"}>
                         {showSuccessCheckmark ? (
-                          <CheckIcon className="h-5 w-5 text-white" />
+                          <svg
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                            className="size-4 text-white"
+                          >
+                            <motion.path
+                              initial={{ pathLength: 0 }}
+                              animate={{ pathLength: 1 }}
+                              transition={{
+                                delay: 0.2,
+                                type: "tween",
+                                ease: "easeOut",
+                                duration: 0.3,
+                              }}
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
                         ) : isSaving ? (
                           <motion.div
                             key="saveSpinner"
@@ -592,7 +615,7 @@ function PostSignUpDialog() {
                             transition={{ duration: 0.2 }}
                           >
                             <svg
-                              className="h-5 w-5 animate-spin"
+                              className="size-4 animate-spin"
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
                               viewBox="0 0 24 24"

@@ -37,16 +37,26 @@ const useStripe = () => {
 
 const mainFormSchema = z.object({
   firstName: z
-    .string()
+    .string({
+      required_error: "First name cannot be empty",
+    })
     .min(1, { message: "Must be at least 1 character" })
     .max(30, { message: "Must be at most 30 characters" }),
   lastName: z
-    .string()
+    .string({
+      required_error: "Last name cannot be empty",
+    })
     .min(1, { message: "Must be at least 1 character" })
     .max(30, { message: "Must be at most 30 characters" }),
-  email: z.string().email({ message: "Invalid email format" }),
+  email: z
+    .string({
+      required_error: "Email cannot be empty",
+    })
+    .email({ message: "Invalid email format" }),
   phoneNumber: z
-    .string()
+    .string({
+      required_error: "Phone number cannot be empty",
+    })
     .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Invalid phone number format")
     .refine(
       async (phoneNumber) => {
@@ -100,9 +110,9 @@ function GuestCheckoutDrawer({
     }
   }
 
-  // const [mainFormValues, setMainFormValues] = useState<z.infer<
-  //   typeof mainFormSchema
-  // > | null>(null);
+  const [checkoutButtonText, setCheckoutButtonText] = useState(
+    "Proceed to checkout",
+  );
 
   const mainForm = useForm<z.infer<typeof mainFormSchema>>({
     resolver: zodResolver(mainFormSchema),
@@ -117,6 +127,9 @@ function GuestCheckoutDrawer({
   async function onMainFormSubmit(values: z.infer<typeof mainFormSchema>) {
     // call stripe POST url here w/ mainForm values & orderDetails
     console.log(values);
+
+    setCheckoutButtonText("Loading");
+
     await createTransientOrder({
       userId,
       details: orderDetails,
@@ -302,26 +315,37 @@ function GuestCheckoutDrawer({
               </form>
             </Form>
 
-            {/* <form action="/api/checkoutSession" method="POST">
-              <section>
-                <button type="submit" role="link">
-                  Checkout
-                </button>
-              </section>
-            </form> */}
             <Button
+              variant="default"
+              disabled={checkoutButtonText !== "Proceed to checkout"}
               className="mt-6 font-medium"
-              onClick={() => {
-                // okay but can we just directly tie state to the link in template string
-                // look up stripe shape it expects maybe
-
-                void mainForm.handleSubmit(onMainFormSubmit)();
-              }}
-              // asChild uncomment this as well
+              onClick={() => void mainForm.handleSubmit(onMainFormSubmit)()}
             >
-              <div>Continue to checkout</div>
-              {isLoading && <div>Loading...</div>}
-              {/* <a href="clerklink">Continue to checkout</a> */}
+              <AnimatePresence mode={"popLayout"}>
+                <motion.div
+                  key={`guestCheckoutDrawer-${checkoutButtonText}`}
+                  layout
+                  // whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{
+                    duration: 0.25,
+                  }}
+                  className="baseFlex gap-2"
+                >
+                  {checkoutButtonText}
+                  {checkoutButtonText === "Loading" && (
+                    <div
+                      className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                      role="status"
+                      aria-label="loading"
+                    >
+                      <span className="sr-only">Loading...</span>
+                    </div>
+                  )}
+                </motion.div>
+              </AnimatePresence>
             </Button>
           </motion.div>
         ) : (
