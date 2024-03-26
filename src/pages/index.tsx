@@ -3,10 +3,10 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { api } from "~/utils/api";
 import { Button } from "~/components/ui/button";
-import ScrollSnapContainer from "~/components/ui/ScrollSnapContainer";
+import ScrollSnapXContainer from "~/components/ui/ScrollSnapXContainer";
 import Image from "next/image";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdOutlineMoneyOff } from "react-icons/md";
 import { BsSpeedometer2 } from "react-icons/bs";
 import { TfiReceipt } from "react-icons/tfi";
@@ -15,11 +15,57 @@ import { useRouter } from "next/router";
 import WideFancySwirls from "~/components/ui/wideFancySwirls";
 import LeftAccentSwirls from "~/components/ui/LeftAccentSwirls";
 import RightAccentSwirls from "~/components/ui/RightAccentSwirls";
+import {
+  Carousel,
+  CarouselContent,
+  type CarouselApi,
+  CarouselItem,
+} from "~/components/ui/carousel";
+import { useMainStore } from "~/stores/MainStore";
 
 export default function Home() {
   const { isLoaded, isSignedIn } = useAuth();
   const { asPath } = useRouter();
-  const [reviewBeingViewed, setReviewBeingViewed] = useState(0);
+
+  // I think we will ditch this approach and just do the hardcoded approach for now
+  // due to seo + lack of need for loading skeletons while menu is being fetched
+  // const { menuItems } = useMainStore((state) => ({
+  //   menuItems: state.menuItems,
+  // }));
+
+  // const chefsChoiceMenuItems = Object.values(menuItems).filter(
+  //   (menuItem) => menuItem.chefsChoice,
+  // );
+
+  const [pressReviewsApi, setPressReviewsApi] = useState<CarouselApi>();
+  const [pressReviewsSlide, setPressReviewsSlide] = useState(0);
+
+  const [chefSpecialsApi, setChefSpecialsApi] = useState<CarouselApi>();
+  const [chefSpecialsSlide, setChefSpecialsSlide] = useState(0);
+
+  useEffect(() => {
+    if (!pressReviewsApi || !chefSpecialsApi) {
+      return;
+    }
+
+    setPressReviewsSlide(pressReviewsApi.selectedScrollSnap());
+    setChefSpecialsSlide(chefSpecialsApi.selectedScrollSnap());
+
+    pressReviewsApi.on("select", () => {
+      setPressReviewsSlide(pressReviewsApi.selectedScrollSnap());
+    });
+
+    chefSpecialsApi.on("select", () => {
+      setChefSpecialsSlide(chefSpecialsApi.selectedScrollSnap());
+    });
+
+    chefSpecialsApi.on("resize", () => {
+      setChefSpecialsSlide(0);
+      chefSpecialsApi.scrollTo(0);
+    });
+
+    // eventually add proper cleanup functions here
+  }, [pressReviewsApi, chefSpecialsApi]);
 
   // TODO: for masonry images, might want to play around with slightly vertically
   // scrolling the images as the page is scrolled? The whole footprint would stay the same,
@@ -29,7 +75,7 @@ export default function Home() {
 
   return (
     <motion.div
-      key={"tracking"}
+      key={"home"}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -49,8 +95,8 @@ export default function Home() {
           this approach
         </div>
         <div className="baseVertFlex gap-1 p-8">
-          <h1 className="text-3xl font-bold">Welcome to Khue&apos;s</h1>
-          <h2 className="text-center text-xl">
+          <h1 className="text-2xl font-bold">Welcome to Khue&apos;s</h1>
+          <h2 className="text-center text-lg">
             A modern take on classic Vietnamese cuisine.
           </h2>
           <Button asChild className="mt-4">
@@ -83,98 +129,76 @@ export default function Home() {
       </div>
 
       {/* Press Reviews */}
-      {/* scroll-snap-x on overflow/mobile, otherwise just three down here w/ logo of company + a sentence */}
-      <div className="baseVertFlex w-full gap-2 border-y-2 pb-4 tablet:border-0">
-        <ScrollSnapContainer>
-          <div
-            id={"pressReview1"}
-            className="baseVertFlex gap-4 rounded-md p-4"
-          >
-            <Image
-              src="/press/StarTribune.png"
-              alt="Star Tribune"
-              width={200}
-              height={85}
-            />
-            <p className="text-sm italic tablet:text-base">
-              &ldquo;Khue&apos;s is a must-visit for anyone in the Twin
-              Cities.&rdquo;
-            </p>
-          </div>
-          <div
-            id={"pressReview2"}
-            className="baseVertFlex gap-4 rounded-md p-4"
-          >
-            <Image
-              src="/press/StarTribune.png"
-              alt="Star Tribune"
-              width={200}
-              height={85}
-            />
-            <p className="text-sm italic tablet:text-base">
-              &ldquo;Khue&apos;s is a must-visit for anyone in the Twin
-              Cities.&rdquo;
-            </p>
-          </div>
-          <div
-            id={"pressReview3"}
-            className="baseVertFlex gap-4 rounded-md p-4"
-          >
-            <Image
-              src="/press/StarTribune.png"
-              alt="Star Tribune"
-              width={200}
-              height={85}
-            />
-            <p className="text-sm italic tablet:text-base">
-              &ldquo;Khue&apos;s is a must-visit for anyone in the Twin
-              Cities.&rdquo;
-            </p>
-          </div>
-        </ScrollSnapContainer>
+      <div className="baseVertFlex w-full gap-2 border-y-2 pb-4 tablet:border-t-0">
+        <Carousel
+          setApi={setPressReviewsApi}
+          opts={{
+            breakpoints: {
+              "(min-width: 1000px and min-height:700px)": {
+                active: false,
+              },
+            },
+            // skipSnaps: true, play around with this
+          }}
+        >
+          <CarouselContent>
+            <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md p-4 tablet:basis-1/3">
+              <Image
+                src="/press/StarTribune.png"
+                alt="Star Tribune"
+                width={200}
+                height={85}
+              />
+              <p className="text-sm italic tablet:text-base">
+                &ldquo;Khue&apos;s is a must-visit for anyone in the Twin
+                Cities.&rdquo;
+              </p>
+            </CarouselItem>
+            <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md p-4 tablet:basis-1/3">
+              <Image
+                src="/press/StarTribune.png"
+                alt="Star Tribune"
+                width={200}
+                height={85}
+              />
+              <p className="text-sm italic tablet:text-base">
+                &ldquo;Khue&apos;s is a must-visit for anyone in the Twin
+                Cities.&rdquo;
+              </p>
+            </CarouselItem>
+            <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md p-4 tablet:basis-1/3">
+              <Image
+                src="/press/StarTribune.png"
+                alt="Star Tribune"
+                width={200}
+                height={85}
+              />
+              <p className="text-sm italic tablet:text-base">
+                &ldquo;Khue&apos;s is a must-visit for anyone in the Twin
+                Cities.&rdquo;
+              </p>
+            </CarouselItem>
+          </CarouselContent>
+        </Carousel>
 
         {/* (mobile-only) dots to show which review is being viewed at the moment */}
         <div className="baseFlex gap-2 tablet:hidden">
           <Button asChild>
             <div
-              className={`!size-2 rounded-full !p-0 ${reviewBeingViewed === 0 ? "!bg-primary" : "!bg-gray-300"}`}
-              onClick={() => {
-                setReviewBeingViewed(0);
-
-                const review1 = document.getElementById("pressReview1");
-                review1?.scrollIntoView({
-                  behavior: "smooth",
-                  inline: "start",
-                });
-              }}
+              className={`!size-2 rounded-full !p-0 ${pressReviewsSlide === 0 ? "!bg-primary" : "!bg-gray-300"}`}
+              onClick={() => pressReviewsApi?.scrollTo(0)}
             />
           </Button>
           <Button asChild>
             <div
-              className={`!size-2 rounded-full !p-0 ${reviewBeingViewed === 1 ? "!bg-primary" : "!bg-gray-300"}`}
-              onClick={() => {
-                setReviewBeingViewed(1);
-
-                const review2 = document.getElementById("pressReview2");
-                review2?.scrollIntoView({
-                  behavior: "smooth",
-                  inline: "start",
-                });
-              }}
+              className={`!size-2 rounded-full !p-0 ${pressReviewsSlide === 1 ? "!bg-primary" : "!bg-gray-300"}`}
+              onClick={() => pressReviewsApi?.scrollTo(1)}
             />
           </Button>
           <Button asChild>
             <div
-              className={`!size-2 rounded-full !p-0 ${reviewBeingViewed === 2 ? "!bg-primary" : "!bg-gray-300"}`}
-              onClick={() => {
-                setReviewBeingViewed(2);
-
-                const review3 = document.getElementById("pressReview3");
-                review3?.scrollIntoView({
-                  behavior: "smooth",
-                  inline: "start",
-                });
-              }}
+              className={`!size-2 rounded-full !p-0 ${pressReviewsSlide === 2 ? "!bg-primary" : "!bg-gray-300"}`}
+              onClick={() => pressReviewsApi?.scrollTo(2)}
             />
           </Button>
         </div>
@@ -264,11 +288,11 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Meet the chef promo section */}
+        {/* Meet the Chef promo section */}
         <div className="baseVertFlex w-full rounded-md shadow-md tablet:hidden">
           <div className="imageFiller h-60 w-full tablet:h-72 tablet:w-72"></div>
           <div className="baseVertFlex !items-start gap-4 p-4">
-            <p className="text-lg font-medium">Meet the chef</p>
+            <p className="text-lg font-medium">Meet the Chef</p>
 
             <p>
               Eric Pham is Lorem ipsum dolor sit amet, consectetur adipiscing
@@ -417,42 +441,118 @@ export default function Home() {
           </div>
         )}
 
-        {/* Explore Our Favorites section (hardcoded for seo) */}
-        {/* <div className="baseVertFlex gap-4 tablet:max-w-2xl">
+        {/* Explore Our Favorites section */}
+        <div className="baseVertFlex max-w-[350px] gap-4 sm:max-w-md xl:!max-w-5xl tablet:max-w-2xl">
           <p className="text-lg font-medium">Explore Our Favorites</p>
 
-          <div className="baseFlex max-w-md rounded-md border">
-            <ScrollSnapContainer>
-              <div className="baseVertFlex !items-start gap-4 rounded-md p-4">
-                <div className="imageFiller h-36 w-48"></div>
-                <p className="font-semibold">Appetizer One</p>
-                <p className="max-w-52 text-sm">
-                  Silky ricotta, signature red sauce, Italian sausage,
-                  mozzarella & parmesan cheeses.
-                </p>
-              </div>
+          <div className="baseVertFlex w-full gap-2">
+            <Carousel
+              setApi={setChefSpecialsApi}
+              opts={{
+                breakpoints: {
+                  "(min-width: 768px)": {
+                    slidesToScroll: 2,
+                  },
+                  "(min-width: 1280px)": {
+                    slidesToScroll: 4,
+                  },
+                },
+                // skipSnaps: true, play around with this
+              }}
+              className="baseFlex w-full rounded-md border"
+            >
+              <CarouselContent>
+                <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
+                  <div className="imageFiller h-36 w-full rounded-md shadow-md"></div>
+                  <p className="font-semibold">Appetizer One</p>
+                  <p className="text-sm">
+                    Silky ricotta, signature red sauce, Italian sausage,
+                    mozzarella & parmesan cheeses.
+                  </p>
+                </CarouselItem>
+                <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
+                  <div className="imageFiller h-36 w-full rounded-md shadow-md"></div>
+                  <p className="font-semibold">Appetizer Two</p>
+                  <p className="text-sm">
+                    Silky ricotta, signature red sauce, Italian sausage,
+                    mozzarella & parmesan cheeses.
+                  </p>
+                </CarouselItem>
+                <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
+                  <div className="imageFiller h-36 w-full rounded-md shadow-md"></div>
+                  <p className="font-semibold">Appetizer Three</p>
+                  <p className="text-sm">
+                    Silky ricotta, signature red sauce, Italian sausage,
+                    mozzarella & parmesan cheeses.
+                  </p>
+                </CarouselItem>
+                <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
+                  <div className="imageFiller h-36 w-full rounded-md shadow-md"></div>
+                  <p className="font-semibold">Appetizer Four</p>
+                  <p className="text-sm">
+                    Silky ricotta, signature red sauce, Italian sausage,
+                    mozzarella & parmesan cheeses.
+                  </p>
+                </CarouselItem>
+                <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
+                  <div className="imageFiller h-36 w-full rounded-md shadow-md"></div>
+                  <p className="font-semibold">Appetizer Five</p>
+                  <p className="text-sm">
+                    Silky ricotta, signature red sauce, Italian sausage,
+                    mozzarella & parmesan cheeses.
+                  </p>
+                </CarouselItem>
+                <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
+                  <div className="imageFiller h-36 w-full rounded-md shadow-md"></div>
+                  <p className="font-semibold">Appetizer Six</p>
+                  <p className="text-sm">
+                    Silky ricotta, signature red sauce, Italian sausage,
+                    mozzarella & parmesan cheeses.
+                  </p>
+                </CarouselItem>
+              </CarouselContent>
+            </Carousel>
 
-              <div className="baseVertFlex !items-start gap-4 rounded-md p-4">
-                <div className="imageFiller h-36 w-48"></div>
-
-                <p className="font-semibold">Appetizer One</p>
-                <p className="max-w-52 text-sm">
-                  Silky ricotta, signature red sauce, Italian sausage,
-                  mozzarella & parmesan cheeses.
-                </p>
-              </div>
-
-              <div className="baseVertFlex !items-start gap-4 rounded-md p-4">
-                <div className="imageFiller h-36 w-48"></div>
-                <p className="font-semibold">Appetizer One</p>
-                <p className="max-w-52 text-sm">
-                  Silky ricotta, signature red sauce, Italian sausage,
-                  mozzarella & parmesan cheeses.
-                </p>
-              </div>
-            </ScrollSnapContainer>
+            <div className="baseFlex gap-2">
+              <Button asChild>
+                <div
+                  className={`!size-2 rounded-full !p-0 ${chefSpecialsSlide === 0 ? "!bg-primary" : "!bg-gray-300"}`}
+                  onClick={() => chefSpecialsApi?.scrollTo(0)}
+                />
+              </Button>
+              <Button asChild>
+                <div
+                  className={`!size-2 rounded-full !p-0 ${chefSpecialsSlide === 1 ? "!bg-primary" : "!bg-gray-300"}`}
+                  onClick={() => chefSpecialsApi?.scrollTo(1)}
+                />
+              </Button>
+              <Button asChild>
+                <div
+                  className={`!size-2 rounded-full !p-0 xl:hidden ${chefSpecialsSlide === 2 ? "!bg-primary" : "!bg-gray-300"}`}
+                  onClick={() => chefSpecialsApi?.scrollTo(2)}
+                />
+              </Button>
+              <Button asChild>
+                <div
+                  className={`!size-2 rounded-full !p-0 md:hidden ${chefSpecialsSlide === 3 ? "!bg-primary" : "!bg-gray-300"}`}
+                  onClick={() => chefSpecialsApi?.scrollTo(3)}
+                />
+              </Button>
+              <Button asChild>
+                <div
+                  className={`!size-2 rounded-full !p-0 md:hidden ${chefSpecialsSlide === 4 ? "!bg-primary" : "!bg-gray-300"}`}
+                  onClick={() => chefSpecialsApi?.scrollTo(4)}
+                />
+              </Button>
+              <Button asChild>
+                <div
+                  className={`!size-2 rounded-full !p-0 md:hidden ${chefSpecialsSlide === 5 ? "!bg-primary" : "!bg-gray-300"}`}
+                  onClick={() => chefSpecialsApi?.scrollTo(5)}
+                />
+              </Button>
+            </div>
           </div>
-        </div> */}
+        </div>
 
         {/* maybe a gallary/slideshow section? Prob not though */}
       </div>

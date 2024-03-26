@@ -7,6 +7,7 @@ import {
   useState,
   type Dispatch,
   type SetStateAction,
+  Fragment,
 } from "react";
 import { LuPlus } from "react-icons/lu";
 import Sticky from "react-stickynode";
@@ -24,14 +25,26 @@ import { api } from "~/utils/api";
 import { formatPrice } from "~/utils/formatPrice";
 import { useToast } from "~/components/ui/use-toast";
 import { ToastAction } from "~/components/ui/toast";
+import {
+  Carousel,
+  CarouselContent,
+  type CarouselApi,
+  CarouselItem,
+} from "~/components/ui/carousel";
 import { DBOrderSummary } from "~/server/api/routers/order";
 import { format } from "date-fns";
+import { IoMdHeart } from "react-icons/io";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
 
 function OrderNow() {
   const { isLoaded, isSignedIn } = useAuth();
+
+  const { menuItems, userFavoriteItemIds } = useMainStore((state) => ({
+    menuItems: state.menuItems,
+    userFavoriteItemIds: state.userFavoriteItemIds,
+  }));
 
   const { data: menuCategories } = api.menuCategory.getAll.useQuery();
 
@@ -48,6 +61,69 @@ function OrderNow() {
   const [itemToCustomize, setItemToCustomize] = useState<FullMenuItem | null>(
     null,
   );
+
+  const [favoriteItemsApi, setFavoriteItemsApi] = useState<CarouselApi>();
+  const [favoriteItemsSlide, setFavoriteItemsSlide] = useState(0);
+
+  const [recentOrdersApi, setRecentOrdersApi] = useState<CarouselApi>();
+  const [recentOrdersSlide, setRecentOrdersSlide] = useState(0);
+
+  const [itemsPerSlide, setItemsPerSlide] = useState(1);
+
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth >= 1536) {
+        setItemsPerSlide(4);
+      } else if (window.innerWidth >= 1280) {
+        setItemsPerSlide(3);
+      } else if (window.innerWidth >= 640) {
+        setItemsPerSlide(2);
+      } else {
+        setItemsPerSlide(1);
+      }
+    }
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (
+      !favoriteItemsApi
+      // || !recentOrdersApi
+    ) {
+      return;
+    }
+
+    setFavoriteItemsSlide(favoriteItemsApi.selectedScrollSnap());
+
+    favoriteItemsApi.on("select", () => {
+      setFavoriteItemsSlide(favoriteItemsApi.selectedScrollSnap());
+    });
+
+    favoriteItemsApi.on("resize", () => {
+      setFavoriteItemsSlide(0);
+      favoriteItemsApi.scrollTo(0);
+    });
+
+    // setRecentOrdersSlide(recentOrdersApi.selectedScrollSnap());
+
+    // recentOrdersApi.on("select", () => {
+    //   setRecentOrdersSlide(recentOrdersApi.selectedScrollSnap());
+    // });
+
+    // recentOrdersApi.on("resize", () => {
+    //   setRecentOrdersSlide(0);
+    //   recentOrdersApi.scrollTo(0);
+    // });
+
+    // eventually add proper cleanup functions here
+  }, [favoriteItemsApi, recentOrdersApi]);
 
   const viewportLabel = useGetViewportLabel();
 
@@ -208,7 +284,87 @@ function OrderNow() {
               transition={{ duration: 0.5 }}
               className="baseVertFlex mt-8 h-full w-full gap-8 tablet:mt-0"
             >
-              {/* TODO: if applicable, user's recent orders (scroll-snap-x wrapper) */}
+              {/* TODO: add Favorites + Recent orders buttons to sticky list at top.
+                  should they just be the words or also have the heart/"redo" icon next to them? */}
+
+              {userFavoriteItemIds.length > 0 && (
+                <div className="baseVertFlex w-full !items-start gap-2">
+                  <div className="baseFlex gap-2 pl-4 text-xl underline underline-offset-2">
+                    <IoMdHeart />
+                    <p>Favorites</p>
+                  </div>
+
+                  <div className="baseVertFlex w-full gap-2">
+                    <Carousel
+                      setApi={setFavoriteItemsApi}
+                      opts={{
+                        breakpoints: {
+                          "(min-width: 640px)": {
+                            slidesToScroll: 2,
+                            active: userFavoriteItemIds.length > itemsPerSlide,
+                          },
+                          "(min-width: 1280px)": {
+                            slidesToScroll: 3,
+                            active: userFavoriteItemIds.length > itemsPerSlide,
+                          },
+                          "(min-width: 1536px)": {
+                            slidesToScroll: 4,
+                            active: userFavoriteItemIds.length > itemsPerSlide,
+                          },
+                        },
+                        // skipSnaps: true, play around with this
+                      }}
+                      className="baseFlex w-full"
+                    >
+                      <CarouselContent>
+                        {userFavoriteItemIds.map((itemId, index) => (
+                          <Fragment key={itemId}>
+                            {menuItems[itemId] && (
+                              <CarouselItem className="basis-full md:basis-1/2 xl:basis-1/3 2xl:basis-1/4">
+                                <MenuItemPreviewButton
+                                  menuItem={menuItems[itemId]!}
+                                  activeDiscount={
+                                    menuItems[itemId]?.activeDiscount ?? null
+                                  }
+                                  listOrder={index}
+                                  setIsDialogOpen={setIsDialogOpen}
+                                  setIsDrawerOpen={setIsDrawerOpen}
+                                  setItemToCustomize={setItemToCustomize}
+                                />
+                              </CarouselItem>
+                            )}
+                          </Fragment>
+                        ))}
+                      </CarouselContent>
+                    </Carousel>
+
+                    {userFavoriteItemIds.length > itemsPerSlide && (
+                      <div className="baseFlex gap-2">
+                        <>
+                          {Array.from({
+                            length: Math.ceil(
+                              userFavoriteItemIds.length / itemsPerSlide,
+                            ),
+                          }).map((_, index) => (
+                            <Button key={index} asChild>
+                              <div
+                                className={`!size-2 rounded-full !p-0 ${
+                                  favoriteItemsSlide === index
+                                    ? "!bg-primary"
+                                    : "!bg-gray-300"
+                                }`}
+                                onClick={() =>
+                                  favoriteItemsApi?.scrollTo(index)
+                                }
+                              />
+                            </Button>
+                          ))}
+                        </>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* TODO: if applicable user's favorited items (scroll-snap-x wrapper) */}
 
@@ -407,7 +563,7 @@ function MenuCategory({
           <MenuItemPreviewButton
             key={item.id}
             menuItem={item}
-            activeDiscount={activeDiscount}
+            activeDiscount={activeDiscount} // TODO: should prob also add ?? item.activeDiscount too right? was giving type error w/ createdAt but 99% sure this should be on there
             listOrder={item.listOrder}
             setIsDialogOpen={setIsDialogOpen}
             setIsDrawerOpen={setIsDrawerOpen}
@@ -482,7 +638,7 @@ function MenuItemPreviewButton({
           }
         }}
       >
-        <div className="imageFiller h-32 w-32 rounded-md"></div>
+        <div className="imageFiller size-24 rounded-md"></div>
 
         <div className="baseVertFlex h-full w-48 !items-start !justify-between">
           <div className="baseVertFlex !items-start gap-2">
@@ -490,7 +646,7 @@ function MenuItemPreviewButton({
               {menuItem.name}
             </p>
             <p className="max-w-48 text-wrap text-left text-gray-400">
-              {menuItem.description}
+              {menuItem.chefsChoice ? "Chef's Choice" : menuItem.description}
             </p>
           </div>
           <p

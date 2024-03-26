@@ -42,7 +42,7 @@ import CartButton from "~/components/cart/CartButton";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 
 function DesktopHeader() {
-  const { isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn } = useAuth();
   const { asPath } = useRouter();
   const userId = useGetUserId();
 
@@ -115,20 +115,22 @@ function DesktopHeader() {
           </a>
         </Button>
 
-        <Button
-          variant={"link"}
-          asChild
-          style={{
-            backgroundColor: asPath.includes("/explore")
-              ? "#be185d"
-              : undefined,
-            color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-          }}
-        >
-          <Link href={"/rewards"} className="!text-xl">
-            Rewards
-          </Link>
-        </Button>
+        {isLoaded && !isSignedIn && (
+          <Button
+            variant={"link"}
+            asChild
+            style={{
+              backgroundColor: asPath.includes("/explore")
+                ? "#be185d"
+                : undefined,
+              color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
+            }}
+          >
+            <Link href={"/rewards"} className="!text-xl">
+              Rewards
+            </Link>
+          </Button>
+        )}
 
         <Button
           variant={"link"}

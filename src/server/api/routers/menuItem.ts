@@ -1,9 +1,9 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const menuItemRouter = createTRPCRouter({
-  changeAvailability: publicProcedure
+  changeAvailability: protectedProcedure
     .input(z.object({ id: z.string(), available: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       const menuCategories = await ctx.prisma.menuItem.update({

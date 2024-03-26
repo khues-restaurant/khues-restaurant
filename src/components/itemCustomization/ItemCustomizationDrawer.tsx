@@ -2,7 +2,7 @@ import { type CustomizationChoice } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import isEqual from "lodash.isequal";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
-import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowBack, IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { LuMinus, LuPlus } from "react-icons/lu";
 import AnimatedPrice from "~/components/AnimatedPrice";
 import { Button } from "~/components/ui/button";
@@ -49,16 +49,30 @@ function ItemCustomizationDrawer({
   forCart,
 }: ItemCustomizationDrawer) {
   const userId = useGetUserId();
+  const ctx = api.useUtils();
 
   const { data: user } = api.user.get.useQuery(userId);
+  const { mutate: favoriteItem, isLoading: favoritingItem } =
+    api.favorite.addFavoriteItem.useMutation({
+      onSuccess: () => {
+        void ctx.favorite.getFavoriteItemIds.invalidate();
+      },
+    });
 
-  const { orderDetails, customizationChoices, discounts } = useMainStore(
-    (state) => ({
+  const { mutate: unfavoriteItem, isLoading: unfavoritingItem } =
+    api.favorite.removeFavoriteItem.useMutation({
+      onSuccess: () => {
+        void ctx.favorite.getFavoriteItemIds.invalidate();
+      },
+    });
+
+  const { orderDetails, customizationChoices, discounts, userFavoriteItemIds } =
+    useMainStore((state) => ({
       orderDetails: state.orderDetails,
       customizationChoices: state.customizationChoices,
       discounts: state.discounts,
-    }),
-  );
+      userFavoriteItemIds: state.userFavoriteItemIds,
+    }));
 
   const { updateOrder } = useUpdateOrder();
 
@@ -105,11 +119,68 @@ function ItemCustomizationDrawer({
       )}
 
       <div className="baseVertFlex mt-8 w-full gap-2">
-        <p className="text-xl font-semibold underline underline-offset-2">
-          {itemToCustomize.name}
-        </p>
+        <div className="baseFlex relative w-full !justify-between px-8">
+          <p className="text-xl font-semibold underline underline-offset-2">
+            {itemToCustomize.name}
+          </p>
 
-        <div className="baseVertFlex imageFiller h-48 w-full max-w-80 border-b-2" />
+          {/* TODO: wrap the like button in a Popover to show "Only rewards members can favorite items" */}
+
+          <AnimatePresence>
+            {userFavoriteItemIds.includes(itemToCustomize.id) ? (
+              <Button
+                variant={"outline"}
+                disabled={unfavoritingItem}
+                size={"sm"}
+                onClick={() => {
+                  unfavoriteItem({
+                    userId,
+                    menuItemId: itemToCustomize.id,
+                  });
+                }}
+              >
+                <motion.div
+                  key={`${itemToCustomize.id}DislikeButton`}
+                  layout
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="baseFlex gap-2 text-primary"
+                >
+                  <IoMdHeart />
+                  Favorited
+                </motion.div>
+              </Button>
+            ) : (
+              <Button
+                variant={"outline"}
+                disabled={favoritingItem}
+                size={"sm"}
+                onClick={() => {
+                  favoriteItem({
+                    userId,
+                    menuItemId: itemToCustomize.id,
+                  });
+                }}
+              >
+                <motion.div
+                  key={`${itemToCustomize.id}LikeButton`}
+                  layout
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="baseFlex gap-2 text-primary"
+                >
+                  <IoMdHeartEmpty />
+                  Favorite
+                </motion.div>
+              </Button>
+            )}
+          </AnimatePresence>
+        </div>
+        <div className="baseVertFlex imageFiller h-48 w-full max-w-80 rounded-md shadow-md" />
       </div>
 
       {/* TODO: really have no clue why pb-36 is necessary here, it's like the footer just still

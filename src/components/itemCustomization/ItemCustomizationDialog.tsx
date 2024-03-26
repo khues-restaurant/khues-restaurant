@@ -8,6 +8,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
+import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import {
@@ -90,16 +91,30 @@ function ItemCustomizerDialogContent({
   forCart,
 }: ItemCustomizerDialogContent) {
   const userId = useGetUserId();
+  const ctx = api.useUtils();
 
   const { data: user } = api.user.get.useQuery(userId);
+  const { mutate: favoriteItem, isLoading: favoritingItem } =
+    api.favorite.addFavoriteItem.useMutation({
+      onSuccess: () => {
+        void ctx.favorite.getFavoriteItemIds.invalidate();
+      },
+    });
 
-  const { orderDetails, customizationChoices, discounts } = useMainStore(
-    (state) => ({
+  const { mutate: unfavoriteItem, isLoading: unfavoritingItem } =
+    api.favorite.removeFavoriteItem.useMutation({
+      onSuccess: () => {
+        void ctx.favorite.getFavoriteItemIds.invalidate();
+      },
+    });
+
+  const { orderDetails, customizationChoices, discounts, userFavoriteItemIds } =
+    useMainStore((state) => ({
       orderDetails: state.orderDetails,
       customizationChoices: state.customizationChoices,
       discounts: state.discounts,
-    }),
-  );
+      userFavoriteItemIds: state.userFavoriteItemIds,
+    }));
 
   const { updateOrder } = useUpdateOrder();
 
@@ -127,9 +142,65 @@ function ItemCustomizerDialogContent({
                   a bit so you could read the name of the item without the need of the
                   bg-white stuff? Not sure how good it would look */}
 
-          <p className="absolute bottom-0 left-4 rounded-md bg-white p-1 text-xl font-semibold">
+          <div className="baseFlex absolute bottom-0 left-4 gap-4 rounded-md bg-white px-4 py-2 text-xl font-semibold">
             {itemToCustomize.name}
-          </p>
+
+            {/* TODO: wrap the like button in a Popover to show "Only rewards members can favorite items" */}
+
+            <AnimatePresence>
+              {userFavoriteItemIds.includes(itemToCustomize.id) ? (
+                <Button
+                  variant={"outline"}
+                  size={"sm"}
+                  disabled={unfavoritingItem}
+                  onClick={() => {
+                    unfavoriteItem({
+                      userId,
+                      menuItemId: itemToCustomize.id,
+                    });
+                  }}
+                >
+                  <motion.div
+                    key={`${itemToCustomize.id}DislikeButton`}
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="baseFlex gap-2 text-primary"
+                  >
+                    <IoMdHeart />
+                    Favorited
+                  </motion.div>
+                </Button>
+              ) : (
+                <Button
+                  variant={"outline"}
+                  size={"sm"}
+                  disabled={favoritingItem}
+                  onClick={() => {
+                    favoriteItem({
+                      userId,
+                      menuItemId: itemToCustomize.id,
+                    });
+                  }}
+                >
+                  <motion.div
+                    key={`${itemToCustomize.id}LikeButton`}
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="baseFlex gap-2 text-primary"
+                  >
+                    <IoMdHeartEmpty />
+                    Favorite
+                  </motion.div>
+                </Button>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         <div className="baseVertFlex w-full gap-12 p-8 pb-36 pt-4">

@@ -629,7 +629,7 @@ function CartSheet({
                       size={"underline"}
                       onClick={() => {
                         setIsEditingItem(true);
-                        setItemBeingModified(menuItems[item.name] ?? null);
+                        setItemBeingModified(menuItems[item.id] ?? null);
                         setInitialItemState(item);
                       }}
                     >

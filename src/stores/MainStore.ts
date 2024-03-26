@@ -113,6 +113,9 @@ interface StoreState {
   discounts: Record<string, Discount>;
   setDiscounts: (discounts: Record<string, Discount>) => void;
 
+  userFavoriteItemIds: string[];
+  setUserFavoriteItemIds: (userFavoriteItemIds: string[]) => void;
+
   itemNamesRemovedFromCart: string[];
   setItemNamesRemovedFromCart: (itemNamesRemovedFromCart: string[]) => void;
   cartInitiallyValidated: boolean;
@@ -160,6 +163,11 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
       discounts: {},
       setDiscounts: (discounts: Record<string, Discount>) => {
         set({ discounts });
+      },
+
+      userFavoriteItemIds: [],
+      setUserFavoriteItemIds: (userFavoriteItemIds: string[]) => {
+        set({ userFavoriteItemIds });
       },
 
       itemNamesRemovedFromCart: [],

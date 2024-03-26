@@ -626,7 +626,7 @@ function CartDrawer({
                       variant={"underline"}
                       size={"underline"}
                       onClick={() => {
-                        setItemBeingModified(menuItems[item.name] ?? null);
+                        setItemBeingModified(menuItems[item.id] ?? null);
                         setInitialItemState(item);
                       }}
                     >

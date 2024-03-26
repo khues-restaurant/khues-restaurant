@@ -34,7 +34,8 @@ model MinimumOrderPickupTime {
 }
 
 model FavoriteItem {
-    id String @id @default(uuid())
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
 
     menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
     menuItemId String

@@ -38,6 +38,7 @@ export interface FullMenuItem {
   ingredientsPrice: number;
   available: boolean;
   discontinued: boolean;
+  chefsChoice: boolean;
   listOrder: number;
   menuCategoryId: string;
   activeDiscount: Discount | null;

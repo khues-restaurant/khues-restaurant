@@ -1,21 +1,28 @@
+import { useAuth } from "@clerk/nextjs";
 import React, { useEffect } from "react";
+import useGetUserId from "~/hooks/useGetUserId";
 import { socket } from "~/pages/_app";
 import { type StoreMenuItems, useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 
 function useAttachSocketListeners() {
+  const { isSignedIn } = useAuth();
+  const userId = useGetUserId();
+
   const {
     setMenuItems,
     customizationChoices,
     setCustomizationChoices,
     discounts,
     setDiscounts,
+    setUserFavoriteItemIds,
   } = useMainStore((state) => ({
     setMenuItems: state.setMenuItems,
     customizationChoices: state.customizationChoices,
     setCustomizationChoices: state.setCustomizationChoices,
     discounts: state.discounts,
     setDiscounts: state.setDiscounts,
+    setUserFavoriteItemIds: state.setUserFavoriteItemIds,
   }));
 
   const { data: menuCategories, refetch: getUpdatedMenuCategories } =
@@ -25,6 +32,10 @@ function useAttachSocketListeners() {
   const { data: databaseCustomizationChoices } =
     api.customizationChoice.getAll.useQuery();
   const { data: databaseDiscounts } = api.discount.getAll.useQuery();
+  const { data: userFavoriteItemIds } =
+    api.favorite.getFavoriteItemIds.useQuery(userId, {
+      enabled: isSignedIn && !!userId,
+    });
 
   // socket listeners to fetch queries
   useEffect(() => {
@@ -51,12 +62,18 @@ function useAttachSocketListeners() {
     const menuItems = menuCategories.flatMap((category) => category.menuItems);
 
     const menuItemsObject = menuItems.reduce((acc, menuItem) => {
-      acc[menuItem.name] = menuItem;
+      acc[menuItem.id] = menuItem;
       return acc;
     }, {} as StoreMenuItems);
 
     setMenuItems(menuItemsObject);
   }, [menuCategories, setMenuItems]);
+
+  useEffect(() => {
+    if (!userFavoriteItemIds) return;
+
+    setUserFavoriteItemIds(userFavoriteItemIds);
+  }, [userFavoriteItemIds, setUserFavoriteItemIds]);
 
   useEffect(() => {
     if (

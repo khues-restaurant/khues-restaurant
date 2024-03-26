@@ -46,7 +46,7 @@ import { clearLocalStorage } from "~/utils/clearLocalStorage";
 function MobileHeader() {
   const [mobileHeaderIsOpen, setMobileHeaderIsOpen] = useState(false);
 
-  const { isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn } = useAuth();
   const userId = useGetUserId();
   const { asPath, events } = useRouter();
 
@@ -337,20 +337,22 @@ function MobileHeader() {
                 </a>
               </Button>
 
-              <Button
-                variant={"link"}
-                asChild
-                style={{
-                  backgroundColor: asPath.includes("/explore")
-                    ? "#be185d"
-                    : undefined,
-                  color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-                }}
-              >
-                <Link href={"/rewards"} className="!text-xl">
-                  Rewards
-                </Link>
-              </Button>
+              {isLoaded && !isSignedIn && (
+                <Button
+                  variant={"link"}
+                  asChild
+                  style={{
+                    backgroundColor: asPath.includes("/explore")
+                      ? "#be185d"
+                      : undefined,
+                    color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
+                  }}
+                >
+                  <Link href={"/rewards"} className="!text-xl">
+                    Rewards
+                  </Link>
+                </Button>
+              )}
 
               <Button
                 variant={"link"}
