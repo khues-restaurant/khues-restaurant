@@ -28,7 +28,7 @@ function useKeepOrderDetailsValidated() {
         });
       }
 
-      if (data.removedItemNames.length > 0) {
+      if (data.removedItemNames && data.removedItemNames.length > 0) {
         setItemNamesRemovedFromCart(data.removedItemNames);
       }
     },

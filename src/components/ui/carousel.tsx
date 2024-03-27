@@ -184,7 +184,9 @@ const CarouselItem = React.forwardRef<
       role="group"
       aria-roledescription="slide"
       className={cn(
-        "min-w-0 shrink-0 grow-0 basis-full",
+        // this had min-w-0, however it caused some layout issues when not all items were present
+        // to fit the basis amount
+        "shrink-0 grow-0 basis-full",
         // this was just pl-4, but caused some layout issues so trying px-2
         orientation === "horizontal" ? "px-2" : "pt-4",
         className,

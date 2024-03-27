@@ -24,17 +24,6 @@ function PaymentSuccess() {
     if (order && !orderHasBeenReset) {
       setOrderHasBeenReset(true);
 
-      console.log("rerendering");
-
-      // reset order since it's been paid for
-      updateOrder({
-        newOrderDetails: {
-          datetimeToPickUp: new Date(),
-          items: [],
-          includeNapkinsAndUtensils: false,
-        },
-      });
-
       setTimeout(() => {
         push(`/track?id=${order.id}`).catch(console.error);
       }, 3000);

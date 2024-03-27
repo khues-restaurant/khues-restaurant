@@ -22,6 +22,7 @@ import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { api } from "~/utils/api";
+import { FaRedo } from "react-icons/fa";
 import { formatPrice } from "~/utils/formatPrice";
 import { useToast } from "~/components/ui/use-toast";
 import { ToastAction } from "~/components/ui/toast";
@@ -32,14 +33,16 @@ import {
   CarouselItem,
 } from "~/components/ui/carousel";
 import { DBOrderSummary } from "~/server/api/routers/order";
-import { format } from "date-fns";
+import { add, format } from "date-fns";
 import { IoMdHeart } from "react-icons/io";
+import useGetUserId from "~/hooks/useGetUserId";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
 
 function OrderNow() {
   const { isLoaded, isSignedIn } = useAuth();
+  const userId = useGetUserId();
 
   const { menuItems, userFavoriteItemIds } = useMainStore((state) => ({
     menuItems: state.menuItems,
@@ -47,6 +50,9 @@ function OrderNow() {
   }));
 
   const { data: menuCategories } = api.menuCategory.getAll.useQuery();
+  const { data: userRecentOrders } = api.order.getUsersOrders.useQuery(userId, {
+    enabled: isSignedIn && !!userId,
+  });
 
   const [scrollProgress, setScrollProgress] = useState(0);
   const menuCategoriesContainerRef = useRef<HTMLDivElement | null>(null);
@@ -93,10 +99,7 @@ function OrderNow() {
   }, []);
 
   useEffect(() => {
-    if (
-      !favoriteItemsApi
-      // || !recentOrdersApi
-    ) {
+    if (!favoriteItemsApi) {
       return;
     }
 
@@ -111,19 +114,27 @@ function OrderNow() {
       favoriteItemsApi.scrollTo(0);
     });
 
-    // setRecentOrdersSlide(recentOrdersApi.selectedScrollSnap());
+    // eventually add proper cleanup functions here
+  }, [favoriteItemsApi]);
 
-    // recentOrdersApi.on("select", () => {
-    //   setRecentOrdersSlide(recentOrdersApi.selectedScrollSnap());
-    // });
+  useEffect(() => {
+    if (!userRecentOrders || userRecentOrders.length > 0 || !recentOrdersApi) {
+      return;
+    }
 
-    // recentOrdersApi.on("resize", () => {
-    //   setRecentOrdersSlide(0);
-    //   recentOrdersApi.scrollTo(0);
-    // });
+    setRecentOrdersSlide(recentOrdersApi.selectedScrollSnap());
+
+    recentOrdersApi.on("select", () => {
+      setRecentOrdersSlide(recentOrdersApi.selectedScrollSnap());
+    });
+
+    recentOrdersApi.on("resize", () => {
+      setRecentOrdersSlide(0);
+      recentOrdersApi.scrollTo(0);
+    });
 
     // eventually add proper cleanup functions here
-  }, [favoriteItemsApi, recentOrdersApi]);
+  }, [userRecentOrders, recentOrdersApi]);
 
   const viewportLabel = useGetViewportLabel();
 
@@ -288,7 +299,7 @@ function OrderNow() {
                   should they just be the words or also have the heart/"redo" icon next to them? */}
 
               {userFavoriteItemIds.length > 0 && (
-                <div className="baseVertFlex w-full !items-start gap-2">
+                <div className="baseVertFlex mt-4 w-full !items-start gap-2">
                   <div className="baseFlex gap-2 pl-4 text-xl underline underline-offset-2">
                     <IoMdHeart />
                     <p>Favorites</p>
@@ -314,7 +325,7 @@ function OrderNow() {
                         },
                         // skipSnaps: true, play around with this
                       }}
-                      className="baseFlex w-full"
+                      className="baseFlex w-full !justify-start"
                     >
                       <CarouselContent>
                         {userFavoriteItemIds.map((itemId, index) => (
@@ -348,7 +359,7 @@ function OrderNow() {
                           }).map((_, index) => (
                             <Button key={index} asChild>
                               <div
-                                className={`!size-2 rounded-full !p-0 ${
+                                className={`!size-2 cursor-pointer rounded-full !p-0 ${
                                   favoriteItemsSlide === index
                                     ? "!bg-primary"
                                     : "!bg-gray-300"
@@ -366,7 +377,72 @@ function OrderNow() {
                 </div>
               )}
 
-              {/* TODO: if applicable user's favorited items (scroll-snap-x wrapper) */}
+              {userRecentOrders && userRecentOrders.length > 0 && (
+                <div className="baseVertFlex mt-4 w-full !items-start gap-2">
+                  <div className="baseFlex gap-2 pl-4 text-xl underline underline-offset-2">
+                    <FaRedo />
+                    <p>Recent orders</p>
+                  </div>
+
+                  <div className="baseVertFlex w-full gap-2">
+                    <Carousel
+                      setApi={setRecentOrdersApi}
+                      opts={{
+                        breakpoints: {
+                          "(min-width: 640px)": {
+                            slidesToScroll: 2,
+                            active: userRecentOrders.length > itemsPerSlide,
+                          },
+                          "(min-width: 1280px)": {
+                            slidesToScroll: 3,
+                            active: userRecentOrders.length > itemsPerSlide,
+                          },
+                          "(min-width: 1536px)": {
+                            slidesToScroll: 4,
+                            active: userRecentOrders.length > itemsPerSlide,
+                          },
+                        },
+                        // skipSnaps: true, play around with this
+                      }}
+                      className="baseFlex w-full !justify-start"
+                    >
+                      <CarouselContent>
+                        {userRecentOrders.map((order) => (
+                          <CarouselItem
+                            key={order.id}
+                            className="basis-full md:basis-1/2 xl:basis-1/3 2xl:basis-1/4"
+                          >
+                            <PreviousOrder order={order} />
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+                    </Carousel>
+
+                    {userRecentOrders.length > itemsPerSlide && (
+                      <div className="baseFlex gap-2">
+                        <>
+                          {Array.from({
+                            length: Math.ceil(
+                              userRecentOrders.length / itemsPerSlide,
+                            ),
+                          }).map((_, index) => (
+                            <Button key={index} asChild>
+                              <div
+                                className={`!size-2 cursor-pointer rounded-full !p-0 ${
+                                  recentOrdersSlide === index
+                                    ? "!bg-primary"
+                                    : "!bg-gray-300"
+                                }`}
+                                onClick={() => recentOrdersApi?.scrollTo(index)}
+                              />
+                            </Button>
+                          ))}
+                        </>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {menuCategories?.map((category) => (
                 <MenuCategory
@@ -793,19 +869,87 @@ interface PreviousOrder {
 }
 
 function PreviousOrder({ order }: PreviousOrder) {
+  const userId = useGetUserId();
+
   const {
     orderDetails,
     getPrevOrderDetails,
     setPrevOrderDetails,
     customizationChoices,
     discounts,
+    setItemNamesRemovedFromCart,
   } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
     getPrevOrderDetails: state.getPrevOrderDetails,
     setPrevOrderDetails: state.setPrevOrderDetails,
     customizationChoices: state.customizationChoices,
     discounts: state.discounts,
+    setItemNamesRemovedFromCart: state.setItemNamesRemovedFromCart,
   }));
+
+  const { mutate: addItemsFromOrderToCart, isLoading: isValidatingOrder } =
+    api.validateOrder.validate.useMutation({
+      onSuccess: (data) => {
+        if (!data.validItems) return;
+
+        // set prev order details so we can revert if necessary
+        // with toast's undo button
+        setPrevOrderDetails(orderDetails);
+
+        const totalValidItems = data.validItems.reduce(
+          (acc, item) => acc + item.quantity,
+          0,
+        );
+
+        toast({
+          description: `${totalValidItems} item${totalValidItems > 1 ? "s" : ""} added to your order.`,
+          action: (
+            <ToastAction
+              altText={`Undo the addition of ${totalValidItems} item${totalValidItems > 1 ? "s" : ""} to your order.`}
+              onClick={() => {
+                updateOrder({ newOrderDetails: getPrevOrderDetails() });
+              }}
+            >
+              Undo
+            </ToastAction>
+          ),
+        });
+
+        // directly add to order w/ defaults + trigger toast notification
+        setShowCheckmark(true);
+
+        updateOrder({
+          newOrderDetails: {
+            ...orderDetails,
+            items: [
+              ...orderDetails.items,
+              ...data.validItems.map((item) => ({
+                id: crypto.randomUUID(),
+                itemId: item.itemId,
+                name: item.name,
+                customizations: item.customizations,
+                specialInstructions: item.specialInstructions,
+                includeDietaryRestrictions: item.includeDietaryRestrictions,
+                quantity: item.quantity,
+                price: item.price,
+                discountId: item.discountId,
+              })),
+            ],
+          },
+        });
+
+        setTimeout(() => {
+          setShowCheckmark(false);
+        }, 1000);
+
+        if (data.removedItemNames && data.removedItemNames.length > 0) {
+          setItemNamesRemovedFromCart(data.removedItemNames);
+        }
+      },
+      onError: (error) => {
+        console.error("Error adding items from previous order to cart", error);
+      },
+    });
 
   const viewportLabel = useGetViewportLabel();
 
@@ -813,41 +957,138 @@ function PreviousOrder({ order }: PreviousOrder) {
 
   const { updateOrder } = useUpdateOrder();
 
-  const { toast, dismiss: dismissToasts } = useToast();
-
-  // TODO: ^ yeah most likely have toast be "{order.items.length} item(s) added to your order. Undo"
+  const { toast } = useToast();
 
   return (
-    <div className="relative h-48 w-full max-w-96">
-      <div className="baseFlex h-full w-full gap-4 border-2 py-6">
-        <div className="grid grid-cols-2 grid-rows-2 gap-1">
-          {/* TODO: make this correct + conditional like my-orders */}
+    <div className="relative h-40 w-full max-w-96">
+      <div className="baseFlex h-full w-full gap-4 rounded-md border-2 px-4 py-6">
+        <div className="grid w-28 grid-cols-2 grid-rows-2 !place-items-center gap-1">
           <div className="imageFiller size-8 rounded-md"></div>
-          <div className="imageFiller size-8 rounded-md"></div>
-          <div className="imageFiller size-8 rounded-md"></div>
-          <div className="imageFiller size-8 rounded-md"></div>
+          {order.orderItems.length > 1 && (
+            <div className="imageFiller size-8 rounded-md"></div>
+          )}
+          {order.orderItems.length > 2 && (
+            <div className="imageFiller size-8 rounded-md"></div>
+          )}
+          {order.orderItems.length > 3 && (
+            <p className="text-center text-xs">
+              +{order.orderItems.length - 3} more
+            </p>
+          )}
         </div>
 
-        <div className="baseVertFlex h-full w-48 !items-start !justify-between">
-          <div className="baseVertFlex !items-start gap-2">
-            <p className="text-lg font-medium underline underline-offset-2">
-              {format(order.datetimeToPickup, "PPP")}
+        <div className="baseFlex relative h-full w-full !items-start gap-4">
+          <div className="baseVertFlex w-full !items-start gap-2">
+            <p className="w-full !text-nowrap font-medium underline underline-offset-2">
+              {format(order.datetimeToPickup, "EEEE, MMMM do")}
             </p>
-            <div className="baseVertFlex text-sm text-gray-400"></div>
-            {/* TODO: same thing here */}
-            <p>1 App Two</p>
-            <p>1 App Two</p>
-            <p>1 App Two</p>
-            <p>+3 more</p>
+
+            <div className="baseVertFlex w-full !items-start text-xs text-gray-400">
+              <p className="baseFlex gap-2">
+                {order.orderItems[0]?.quantity} {order.orderItems[0]?.name}
+              </p>
+
+              {order.orderItems.length > 1 && (
+                <p className="baseFlex gap-2">
+                  {order.orderItems[1]?.quantity} {order.orderItems[1]?.name}
+                </p>
+              )}
+
+              {order.orderItems.length > 2 && (
+                <p className="baseFlex gap-2">
+                  {order.orderItems[2]?.quantity} {order.orderItems[2]?.name}
+                </p>
+              )}
+
+              {order.orderItems.length > 3 && (
+                <p>+{order.orderItems.length - 3} more</p>
+              )}
+            </div>
           </div>
           <Button
-            className={`self-end text-base`}
+            size={"sm"}
+            disabled={showCheckmark || isValidatingOrder}
+            className={`absolute bottom-0 right-0 self-end`}
             onClick={() => {
-              // TODO: will most likely want to create dialog/modal for the summary of this order
-              // TODO: add the contents of this order to the current order
+              // TODO: maybe want to create dialog/modal for the summary of this order
+
+              addItemsFromOrderToCart({
+                userId,
+                orderDetails: {
+                  datetimeToPickUp: new Date(),
+                  includeNapkinsAndUtensils: false,
+                  items: order.orderItems.map((item) => ({
+                    id: crypto.randomUUID(),
+                    itemId: item.menuItemId,
+                    name: item.name,
+                    customizations: item.customizations,
+                    specialInstructions: item.specialInstructions,
+                    includeDietaryRestrictions: item.includeDietaryRestrictions,
+                    quantity: item.quantity,
+                    price: item.price,
+                    discountId: item.discountId,
+                  })),
+                },
+                onlyValidateItems: true,
+              });
             }}
           >
-            Reorder
+            <AnimatePresence mode="wait">
+              {showCheckmark ? (
+                <motion.svg
+                  key={`reorderCheckmark-${order.id}`}
+                  layout
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="size-6 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <motion.path
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{
+                      delay: 0.2,
+                      type: "tween",
+                      ease: "easeOut",
+                      duration: 0.3,
+                    }}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </motion.svg>
+              ) : isValidatingOrder ? (
+                <motion.div
+                  key={`reorderValidationSpinner-${order.id}`}
+                  layout
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                  role="status"
+                  aria-label="loading"
+                >
+                  <span className="sr-only">Loading...</span>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key={`reorder-${order.id}`}
+                  layout
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  Reorder
+                </motion.div>
+              )}
+            </AnimatePresence>
           </Button>
         </div>
       </div>

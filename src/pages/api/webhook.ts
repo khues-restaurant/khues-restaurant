@@ -219,7 +219,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         });
       }
 
-      // 4) update user rewards points/rank
+      // 4) update user rewards points/rank + reset their currentOrder
       if (user) {
         await prisma.user.update({
           where: {
@@ -228,6 +228,11 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
           data: {
             rewardsPoints: currPoints,
             showRewardsDiscountNotification,
+            currentOrder: {
+              datetimeToPickUp: new Date(),
+              items: [],
+              includeNapkinsAndUtensils: false,
+            },
           },
         });
 
@@ -243,12 +248,9 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       // socket.emit("newOrderCreated");
       emitNewOrderThroughSocket();
 
-      // TODO
+      // 6) TODO: send post request to w/e pos system we are using
 
-      // 6) send post request to w/e pos system we are using
-
-      // TODO
-
+      // 7) cleanup transient order, technically not necessary though right since we just upsert either way?
       await prisma.transientOrder.delete({
         where: {
           userId: payment.metadata.userId,

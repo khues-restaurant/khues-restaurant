@@ -45,9 +45,13 @@ import {
 import { Switch } from "~/components/ui/switch";
 import { TabsContent } from "~/components/ui/tabs";
 import { Textarea } from "~/components/ui/textarea";
+import { useToast } from "~/components/ui/use-toast";
 import useGetUserId from "~/hooks/useGetUserId";
 import useGetViewportLabel from "~/hooks/useGetViewportLabel";
+import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type DBOrderSummary } from "~/server/api/routers/order";
+import { ToastAction } from "~/components/ui/toast";
+import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 
 function RecentOrders() {
@@ -131,9 +135,9 @@ function RecentOrders() {
           ) : (
             <div>
               Probably want an image of like an angled down shot of a table with
-              three plates of food on there, and below a message like: "It looks
-              like you haven't placed an order yet. ButtonToOrderNowPage[Get
-              started] with your first order today!
+              three plates of food on there, and below a message like: /It looks
+              like you havent placed an order yet. ButtonToOrderNowPage[Get
+              started] with your first order today!/
             </div>
           )}
         </div>
@@ -152,10 +156,96 @@ interface OrderAccordion {
 }
 
 function OrderAccordion({ userId, order }: OrderAccordion) {
+  const {
+    orderDetails,
+    getPrevOrderDetails,
+    setPrevOrderDetails,
+    customizationChoices,
+    discounts,
+    setItemNamesRemovedFromCart,
+  } = useMainStore((state) => ({
+    orderDetails: state.orderDetails,
+    getPrevOrderDetails: state.getPrevOrderDetails,
+    setPrevOrderDetails: state.setPrevOrderDetails,
+    customizationChoices: state.customizationChoices,
+    discounts: state.discounts,
+    setItemNamesRemovedFromCart: state.setItemNamesRemovedFromCart,
+  }));
+
+  const { mutate: addItemsFromOrderToCart, isLoading: isValidatingOrder } =
+    api.validateOrder.validate.useMutation({
+      onSuccess: (data) => {
+        if (!data.validItems) return;
+
+        // set prev order details so we can revert if necessary
+        // with toast's undo button
+        setPrevOrderDetails(orderDetails);
+
+        const totalValidItems = data.validItems.reduce(
+          (acc, item) => acc + item.quantity,
+          0,
+        );
+
+        toast({
+          description: `${totalValidItems} item${totalValidItems > 1 ? "s" : ""} added to your order.`,
+          action: (
+            <ToastAction
+              altText={`Undo the addition of ${totalValidItems} item${totalValidItems > 1 ? "s" : ""} to your order.`}
+              onClick={() => {
+                updateOrder({ newOrderDetails: getPrevOrderDetails() });
+              }}
+            >
+              Undo
+            </ToastAction>
+          ),
+        });
+
+        // directly add to order w/ defaults + trigger toast notification
+        setShowCheckmark(true);
+
+        updateOrder({
+          newOrderDetails: {
+            ...orderDetails,
+            items: [
+              ...orderDetails.items,
+              ...data.validItems.map((item) => ({
+                id: crypto.randomUUID(),
+                itemId: item.itemId,
+                name: item.name,
+                customizations: item.customizations,
+                specialInstructions: item.specialInstructions,
+                includeDietaryRestrictions: item.includeDietaryRestrictions,
+                quantity: item.quantity,
+                price: item.price,
+                discountId: item.discountId,
+              })),
+            ],
+          },
+        });
+
+        setTimeout(() => {
+          setShowCheckmark(false);
+        }, 1000);
+
+        if (data.removedItemNames && data.removedItemNames.length > 0) {
+          setItemNamesRemovedFromCart(data.removedItemNames);
+        }
+      },
+      onError: (error) => {
+        console.error("Error adding items from previous order to cart", error);
+      },
+    });
+
   const [accordionOpen, setAccordionOpen] = useState<"open" | "closed">(
     "closed",
   );
   const viewportLabel = useGetViewportLabel();
+
+  const [showCheckmark, setShowCheckmark] = useState(false);
+
+  const { updateOrder } = useUpdateOrder();
+
+  const { toast } = useToast();
 
   return (
     <Accordion
@@ -206,11 +296,87 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                   {order.orderCompletedAt ? (
                     <>
                       <Button
+                        disabled={showCheckmark || isValidatingOrder}
                         onClick={() => {
-                          // TODO: add items to cart through updateOrder()
+                          console.log("hit");
+                          addItemsFromOrderToCart({
+                            userId,
+                            orderDetails: {
+                              datetimeToPickUp: new Date(),
+                              includeNapkinsAndUtensils: false,
+                              items: order.orderItems.map((item) => ({
+                                id: crypto.randomUUID(),
+                                itemId: item.menuItemId,
+                                name: item.name,
+                                customizations: item.customizations,
+                                specialInstructions: item.specialInstructions,
+                                includeDietaryRestrictions:
+                                  item.includeDietaryRestrictions,
+                                quantity: item.quantity,
+                                price: item.price,
+                                discountId: item.discountId,
+                              })),
+                            },
+                            onlyValidateItems: true,
+                          });
                         }}
                       >
-                        Reorder
+                        <AnimatePresence mode="wait">
+                          {showCheckmark ? (
+                            <motion.svg
+                              key={`reorderCheckmark-${order.id}`}
+                              layout
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              exit={{ scale: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="size-6 text-white"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <motion.path
+                                initial={{ pathLength: 0 }}
+                                animate={{ pathLength: 1 }}
+                                transition={{
+                                  delay: 0.2,
+                                  type: "tween",
+                                  ease: "easeOut",
+                                  duration: 0.3,
+                                }}
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M5 13l4 4L19 7"
+                              />
+                            </motion.svg>
+                          ) : isValidatingOrder ? (
+                            <motion.div
+                              key={`reorderValidationSpinner-${order.id}`}
+                              layout
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              exit={{ scale: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                              role="status"
+                              aria-label="loading"
+                            >
+                              <span className="sr-only">Loading...</span>
+                            </motion.div>
+                          ) : (
+                            <motion.div
+                              key={`reorder-${order.id}`}
+                              layout
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              exit={{ scale: 0 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              Reorder
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </Button>
 
                       {/* TODO: only show this if !order.userLeftFeedback once added to schema */}
@@ -270,8 +436,8 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                     {order.orderItems.length > 2 && (
                       <>
                         {order.orderItems.length > 3 ? (
-                          <div className="baseVertFlex gap-1 rounded-md bg-gray-200 p-1 text-sm">
-                            + {order.orderItems.length - 2}
+                          <div className="baseVertFlex size-12 rounded-md border p-1 text-sm">
+                            +{order.orderItems.length - 2}
                             <span>more</span>
                           </div>
                         ) : (
@@ -288,11 +454,87 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                   {order.orderCompletedAt ? (
                     <>
                       <Button
+                        disabled={showCheckmark || isValidatingOrder}
                         onClick={() => {
-                          // TODO: add items to cart through updateOrder()
+                          console.log("hit");
+                          addItemsFromOrderToCart({
+                            userId,
+                            orderDetails: {
+                              datetimeToPickUp: new Date(),
+                              includeNapkinsAndUtensils: false,
+                              items: order.orderItems.map((item) => ({
+                                id: crypto.randomUUID(),
+                                itemId: item.menuItemId,
+                                name: item.name,
+                                customizations: item.customizations,
+                                specialInstructions: item.specialInstructions,
+                                includeDietaryRestrictions:
+                                  item.includeDietaryRestrictions,
+                                quantity: item.quantity,
+                                price: item.price,
+                                discountId: item.discountId,
+                              })),
+                            },
+                            onlyValidateItems: true,
+                          });
                         }}
                       >
-                        Reorder
+                        <AnimatePresence mode="wait">
+                          {showCheckmark ? (
+                            <motion.svg
+                              key={`reorderCheckmark-${order.id}`}
+                              layout
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              exit={{ scale: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="size-6 text-white"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <motion.path
+                                initial={{ pathLength: 0 }}
+                                animate={{ pathLength: 1 }}
+                                transition={{
+                                  delay: 0.2,
+                                  type: "tween",
+                                  ease: "easeOut",
+                                  duration: 0.3,
+                                }}
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M5 13l4 4L19 7"
+                              />
+                            </motion.svg>
+                          ) : isValidatingOrder ? (
+                            <motion.div
+                              key={`reorderValidationSpinner-${order.id}`}
+                              layout
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              exit={{ scale: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                              role="status"
+                              aria-label="loading"
+                            >
+                              <span className="sr-only">Loading...</span>
+                            </motion.div>
+                          ) : (
+                            <motion.div
+                              key={`reorder-${order.id}`}
+                              layout
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              exit={{ scale: 0 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              Reorder
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </Button>
 
                       {/* TODO: only show this if !order.userLeftFeedback once added to schema */}

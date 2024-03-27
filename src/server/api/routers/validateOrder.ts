@@ -11,6 +11,7 @@ export const validateOrderRouter = createTRPCRouter({
         userId: z.string().min(1).max(100),
         orderDetails: orderDetailsSchema,
         forceReturnOrderDetails: z.boolean().optional(),
+        onlyValidateItems: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -49,6 +50,7 @@ export const validateOrderRouter = createTRPCRouter({
         userId,
         orderDetails: originalOrderDetails,
         forceReturnOrderDetails,
+        onlyValidateItems,
       } = input;
 
       const orderDetails = structuredClone(originalOrderDetails);
@@ -64,38 +66,42 @@ export const validateOrderRouter = createTRPCRouter({
         throw new Error("User not found");
       }
 
-      // Date validation
-      const datetimeToPickUp = orderDetails.datetimeToPickUp;
-      const now = new Date();
+      if (!onlyValidateItems) {
+        // Date validation
+        const datetimeToPickUp = orderDetails.datetimeToPickUp;
+        const now = new Date();
 
-      if (datetimeToPickUp <= now) {
-        orderDetails.datetimeToPickUp = getMidnightDate(now);
-      }
+        if (datetimeToPickUp <= now) {
+          orderDetails.datetimeToPickUp = getMidnightDate(now);
+        }
 
-      // Pickup time validation
-      const dbMinOrderPickupTime =
-        await ctx.prisma.minimumOrderPickupTime.findFirst({
-          where: {
-            id: 1,
-          },
-        });
+        // Pickup time validation
+        const dbMinOrderPickupTime =
+          await ctx.prisma.minimumOrderPickupTime.findFirst({
+            where: {
+              id: 1,
+            },
+          });
 
-      if (!dbMinOrderPickupTime) {
-        throw new Error("Minimum order pickup time not found");
-      }
+        if (!dbMinOrderPickupTime) {
+          throw new Error("Minimum order pickup time not found");
+        }
 
-      const minOrderPickupDatetime = dbMinOrderPickupTime.value;
+        const minOrderPickupDatetime = dbMinOrderPickupTime.value;
 
-      if (
-        datetimeToPickUp <= now ||
-        datetimeToPickUp < minOrderPickupDatetime
-      ) {
-        orderDetails.datetimeToPickUp = getMidnightDate(now);
+        if (
+          datetimeToPickUp <= now ||
+          datetimeToPickUp < minOrderPickupDatetime
+        ) {
+          orderDetails.datetimeToPickUp = getMidnightDate(now);
+        }
       }
 
       // Item validation
       const items = orderDetails.items;
       const removedItemNames = [];
+
+      console.log("starting items", items);
 
       for (const item of items) {
         const dbItem = await ctx.prisma.menuItem.findFirst({
@@ -110,6 +116,14 @@ export const validateOrderRouter = createTRPCRouter({
           dbItem.price !== item.price ||
           item.quantity <= 0
         ) {
+          console.log(
+            "removing item",
+            item.name,
+            item.itemId,
+            item.price,
+            item.quantity,
+          );
+
           // removing item from order
           items.splice(items.indexOf(item), 1);
 
@@ -176,6 +190,15 @@ export const validateOrderRouter = createTRPCRouter({
             }
           }
         }
+      }
+
+      if (onlyValidateItems) {
+        console.log("returning", items);
+
+        return {
+          validItems: items,
+          removedItemNames,
+        };
       }
 
       // don't want to constantly calling updateOrder() if the order is already
