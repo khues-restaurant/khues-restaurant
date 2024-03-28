@@ -46,6 +46,7 @@ export const orderDetailsSchema = z.object({
   datetimeToPickUp: z.date().or(z.string().transform((val) => new Date(val))),
   items: z.array(itemSchema),
   includeNapkinsAndUtensils: z.boolean(),
+  discountId: z.string().nullish(), // TODO: any problem with having it like this? supposed to be .nullable()
   rewardBeingRedeemed: z
     .object({
       reward: discountSchema,
@@ -74,6 +75,7 @@ export interface OrderDetails {
   datetimeToPickUp: Date;
   items: Item[];
   includeNapkinsAndUtensils: boolean;
+  discountId: string | null;
 
   rewardBeingRedeemed?: {
     reward: Discount;
@@ -129,6 +131,7 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
         datetimeToPickUp: getTodayAtMidnight(),
         items: [],
         includeNapkinsAndUtensils: false,
+        discountId: null,
       },
       setOrderDetails: (orderDetails: OrderDetails) => {
         set({ orderDetails });
@@ -138,6 +141,7 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
         datetimeToPickUp: getTodayAtMidnight(),
         items: [],
         includeNapkinsAndUtensils: false,
+        discountId: null,
       },
       setPrevOrderDetails: (prevOrderDetails: OrderDetails) => {
         set({ prevOrderDetails });

@@ -189,6 +189,26 @@ export const paymentRouter = createTRPCRouter({
         });
       }
 
+      let discountToApply = {};
+
+      if (input.orderDetails.discountId) {
+        if (
+          discounts[input.orderDetails.discountId]?.name ===
+          "Spend $35, Save $5"
+        ) {
+          discountToApply = {
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: "Spend $35, Save $5",
+              },
+              unit_amount: -500,
+            },
+            quantity: 1,
+          };
+        }
+      }
+
       console.dir(lineItems);
 
       const session = await stripe.checkout.sessions.create({
@@ -199,6 +219,8 @@ export const paymentRouter = createTRPCRouter({
         line_items: lineItems,
         // idempotencyKey how to do this?
         currency: "usd",
+
+        discounts: [discountToApply],
 
         metadata: {
           userId: input.userId,

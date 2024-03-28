@@ -166,6 +166,8 @@ model Order {
     dietaryRestrictions       String? // gets queried for and added on /websocket if user has dietary restrictions and has 1+ item in order that has dietary restrictions boolean as true
 
     orderItems OrderItem[]
+    discount   Discount?   @relation(fields: [discountId], references: [id])
+    discountId String?
 
     prevRewardsPoints Int
     rewardsPoints     Int
@@ -195,6 +197,8 @@ model Discount {
     menuCategory MenuCategory[]
     menuItem     MenuItem[]
     orderItem    OrderItem[]
+
+    Order Order[]
 
     user   User?   @relation(fields: [userId], references: [userId], onDelete: Cascade)
     userId String?

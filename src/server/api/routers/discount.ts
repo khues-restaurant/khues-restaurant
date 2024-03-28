@@ -16,6 +16,8 @@ export const discountRouter = createTRPCRouter({
           gte: new Date(),
         },
         userId: null,
+        menuItem: undefined, // assuming that we are most likely not doing the category/item %/bogo discounts
+        menuCategory: undefined, // assuming that we are most likely not doing the category/item %/bogo discounts
       },
     });
 

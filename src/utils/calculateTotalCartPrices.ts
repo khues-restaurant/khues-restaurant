@@ -16,16 +16,33 @@ export function calculateTotalCartPrices({
   customizationChoices,
   discounts,
 }: CalculateTotalCartPrices) {
-  const relativeTotal = calculateRelativeTotal({
-    items,
-    customizationChoices,
-    discounts,
-  });
-  const tax = new Decimal(relativeTotal).mul(0.07);
-  const total = new Decimal(relativeTotal).add(tax);
+  let relativeTotal = new Decimal(
+    calculateRelativeTotal({
+      items,
+      customizationChoices,
+      discounts,
+    }),
+  );
+
+  // if "Spend X, Save Y" exists, apply it here
+  if (
+    Object.values(discounts).some(
+      (discount) => discount.name === "Spend $35, Save $5",
+    )
+  ) {
+    const spendXSaveY = new Decimal(5);
+    const spendX = new Decimal(35);
+
+    if (relativeTotal.gte(spendX)) {
+      relativeTotal = relativeTotal.sub(spendXSaveY);
+    }
+  }
+
+  const tax = relativeTotal.mul(0.07);
+  const total = relativeTotal.add(tax);
 
   return {
-    subtotal: relativeTotal,
+    subtotal: relativeTotal.toNumber(),
     tax: tax.toNumber(),
     total: total.toNumber(),
   };

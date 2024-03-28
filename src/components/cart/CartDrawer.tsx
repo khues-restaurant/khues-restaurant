@@ -778,6 +778,18 @@ function CartDrawer({
             <AnimatedPrice price={formatPrice(orderCost.subtotal)} />
           </div>
 
+          {/* TODO: ask eric if this threshold should apply based on subtotal or total */}
+          {isSignedIn &&
+            orderDetails.discountId &&
+            orderCost.subtotal >= 35 &&
+            discounts[orderDetails.discountId]?.name ===
+              "Spend $35, Save $5" && (
+              <div className="baseFlex w-full !justify-between text-sm text-primary">
+                <p>Spend $35, Save $5</p>
+                <AnimatedPrice price={formatPrice(-5)} />
+              </div>
+            )}
+
           <div className="baseFlex w-full !justify-between text-sm">
             <p>Tax</p>
             <AnimatedPrice price={formatPrice(orderCost.tax)} />
