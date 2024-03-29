@@ -38,7 +38,7 @@ function RewardsDrawer({
   const { data: rewards } = api.menuCategory.getRewardsCategories.useQuery();
 
   const { data: activeDiscounts } = api.discount.getAll.useQuery();
-  const { data: activeRewards } = api.discount.getUserRewards.useQuery(userId);
+  // const { data: activeRewards } = api.discount.getUserRewards.useQuery(userId);
 
   const [rewardsPointsEarned, setRewardsPointsEarned] = useState(0);
 

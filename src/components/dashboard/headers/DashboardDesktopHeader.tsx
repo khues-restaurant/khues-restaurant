@@ -30,6 +30,7 @@ import classes from "./DashboardDesktopHeader.module.css";
 import DiscountManagement from "~/components/dashboard/DiscountManagement";
 import DelayNewOrders from "~/components/dashboard/DelayNewOrders";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
+import { clearLocalStorage } from "~/utils/clearLocalStorage";
 
 interface DashboardDesktopHeader {
   viewState: "orderManagement" | "customerChats" | "itemManagement" | "stats";
@@ -44,8 +45,8 @@ function DashboardDesktopHeader({
   viewState,
   setViewState,
 }: DashboardDesktopHeader) {
-  const { isSignedIn } = useAuth();
-  const { asPath } = useRouter();
+  const { isSignedIn, signOut } = useAuth();
+  const { asPath, push } = useRouter();
   const userId = useGetUserId();
 
   const { data: user } = api.user.get.useQuery(userId);
@@ -176,9 +177,17 @@ function DashboardDesktopHeader({
                   </Button>
                 )}
 
-                <SignOutButton>
-                  <Button variant={"link"}>Log out</Button>
-                </SignOutButton>
+                <Button
+                  variant={"link"}
+                  onClick={async () => {
+                    await signOut(async () => {
+                      clearLocalStorage();
+                      await push("/");
+                    });
+                  }}
+                >
+                  Log out
+                </Button>
               </div>
             </PopoverContent>
           </Popover>

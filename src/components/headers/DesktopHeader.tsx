@@ -4,6 +4,7 @@ import {
   SignUpButton,
   UserButton,
   useAuth,
+  useClerk,
   useUser,
 } from "@clerk/nextjs";
 // import { useLocalStorageValue } from "@react-hookz/web";
@@ -42,8 +43,8 @@ import CartButton from "~/components/cart/CartButton";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 
 function DesktopHeader() {
-  const { isLoaded, isSignedIn } = useAuth();
-  const { asPath } = useRouter();
+  const { isLoaded, isSignedIn, signOut } = useAuth();
+  const { asPath, push } = useRouter();
   const userId = useGetUserId();
 
   const { data: user } = api.user.get.useQuery(userId);
@@ -289,16 +290,17 @@ function DesktopHeader() {
                   </Link>
                 </Button>
 
-                <SignOutButton>
-                  <Button
-                    variant={"link"}
-                    onClick={() => {
+                <Button
+                  variant={"link"}
+                  onClick={async () => {
+                    await signOut(async () => {
                       clearLocalStorage();
-                    }}
-                  >
-                    Log out
-                  </Button>
-                </SignOutButton>
+                      await push("/");
+                    });
+                  }}
+                >
+                  Log out
+                </Button>
               </div>
             </PopoverContent>
           </Popover>

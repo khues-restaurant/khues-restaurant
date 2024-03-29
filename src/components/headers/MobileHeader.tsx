@@ -46,9 +46,9 @@ import { clearLocalStorage } from "~/utils/clearLocalStorage";
 function MobileHeader() {
   const [mobileHeaderIsOpen, setMobileHeaderIsOpen] = useState(false);
 
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn, signOut } = useAuth();
   const userId = useGetUserId();
-  const { asPath, events } = useRouter();
+  const { asPath, push, events } = useRouter();
 
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
 
@@ -269,16 +269,17 @@ function MobileHeader() {
                           </Link>
                         </Button>
 
-                        <SignOutButton>
-                          <Button
-                            variant={"link"}
-                            onClick={() => {
+                        <Button
+                          variant={"link"}
+                          onClick={async () => {
+                            await signOut(async () => {
                               clearLocalStorage();
-                            }}
-                          >
-                            Log out
-                          </Button>
-                        </SignOutButton>
+                              await push("/");
+                            });
+                          }}
+                        >
+                          Log out
+                        </Button>
                       </div>
                     </AccordionContent>
                   </AccordionItem>

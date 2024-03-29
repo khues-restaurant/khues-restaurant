@@ -60,9 +60,12 @@ function RecentOrders() {
     enabled: !!userId,
   });
 
-  const { data: orders } = api.order.getUsersOrders.useQuery(userId, {
-    enabled: !!userId,
-  });
+  const { data: orders } = api.order.getUsersOrders.useQuery(
+    { userId },
+    {
+      enabled: !!userId,
+    },
+  );
 
   const [sortedOrders, setSortedOrders] = useState<DBOrderSummary[]>([]);
   const [sortDirection, setSortDirection] = useState("desc");

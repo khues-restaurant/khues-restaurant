@@ -3,7 +3,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { api } from "~/utils/api";
 import { Button } from "~/components/ui/button";
-import ScrollSnapXContainer from "~/components/ui/ScrollSnapXContainer";
 import Image from "next/image";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { useEffect, useState } from "react";
@@ -134,7 +133,10 @@ export default function Home() {
           setApi={setPressReviewsApi}
           opts={{
             breakpoints: {
-              "(min-width: 1000px and min-height:700px)": {
+              "(min-width: 1000px)": {
+                active: false,
+              },
+              "(min-height:700px)": {
                 active: false,
               },
             },
@@ -284,7 +286,7 @@ export default function Home() {
 
           <div className="baseFlex relative size-72">
             <div className="imageFiller absolute left-0 top-0 h-full w-full rounded-md shadow-md"></div>
-            <div className="absolute left-4 top-4 z-[-1] h-full w-full rounded-md bg-primary"></div>
+            <div className="absolute right-4 top-4 z-[-1] h-full w-full rounded-md bg-primary"></div>
           </div>
         </div>
 
@@ -366,7 +368,7 @@ export default function Home() {
               image of an empty table w/ full silverware layed out, kind of
               angled down shot at the table
             </div>
-            <div className="absolute left-4 top-4 z-[-1] h-full w-full rounded-md bg-primary"></div>
+            <div className="absolute right-4 top-4 z-[-1] h-full w-full rounded-md bg-primary"></div>
           </div>
         </div>
 

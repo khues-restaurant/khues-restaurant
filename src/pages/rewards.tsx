@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { BiTimer } from "react-icons/bi";
+import { LuCalendarClock } from "react-icons/lu";
 import { CiGift } from "react-icons/ci";
 import { FaCakeCandles } from "react-icons/fa6";
 import { IoMdHeart } from "react-icons/io";
@@ -69,39 +69,38 @@ function Rewards() {
         </p>
 
         <div className="baseVertFlex gap-8 tablet:!flex-row">
-          <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[325px] tablet:w-full tablet:justify-start">
+          <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
             <div className="baseFlex h-24 w-full">
               <CiGift className="size-24 text-yellow-500" />
             </div>
             <div className="border-t border-yellow-500 p-4 text-center">
-              Earning rewards is as simple as savoring your favorite meals! For
-              every dollar spent, you earn points that accumulate towards
-              delicious rewards. Reach 1500 points, and enjoy a meal on us —
-              it&apos;s our way of saying &lsquo;Thank you&rsquo; for making us
-              a part of your dining journey.
+              Earning rewards is as simple as enjoying your favorite meals!
+              Every dollar spent earns you points, which open the door to a
+              diverse selection of enticing rewards. Get started earning points
+              today!
             </div>
           </div>
 
-          <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[325px] tablet:w-full tablet:justify-start">
+          <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
             <div className="baseFlex h-24 w-full">
               <FaCakeCandles className="size-16 text-yellow-500" />
             </div>
             <div className="border-t border-yellow-500 p-4 text-center">
-              Make your special day unforgettable with a complimentary birthday
-              treat from us. It&apos;s our way of wishing you joy and
-              deliciousness on your birthday. Just be sure to let us know when
-              your big day is when you sign up!
+              Celebrate your birthday with a complimentary treat from us, adding
+              a touch of sweetness to your special day. Make sure to share your
+              birthday with us when you sign up, so we can ensure your
+              celebration is memorable.
             </div>
           </div>
 
-          <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[325px] tablet:w-full tablet:justify-start">
-            <BiTimer className="size-24 text-yellow-500" />
+          <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
+            <LuCalendarClock className="size-16 h-24 text-yellow-500" />
             <div className="border-t border-yellow-500 p-4 text-center">
-              Access special deals that make every visit a little more special.
-              From 10% off your favorite appetizers to exclusive access to items
-              before they arrive on the menu, there&apos;s always something to
-              look forward to. Keep an eye out for our emails or check back here
-              for the latest deals!
+              As a member, you&apos;re first in line to experience our newest
+              menu items. Before these delicacies make their official debut,
+              you&apos;ll have the exclusive opportunity to taste what&apos;s
+              next on our culinary horizon. Stay connected for these exciting
+              previews!
             </div>
           </div>
         </div>

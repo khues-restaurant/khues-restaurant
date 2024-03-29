@@ -30,6 +30,7 @@ import { Separator } from "~/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import useGetUserId from "~/hooks/useGetUserId";
 import { api } from "~/utils/api";
+import { clearLocalStorage } from "~/utils/clearLocalStorage";
 
 interface DashboardMobileHeader {
   viewState: "orderManagement" | "customerChats" | "itemManagement" | "stats";
@@ -46,9 +47,9 @@ function DashboardMobileHeader({
 }: DashboardMobileHeader) {
   const [mobileHeaderIsOpen, setDashboardMobileHeaderIsOpen] = useState(false);
 
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, signOut } = useAuth();
   const userId = useGetUserId();
-  const { asPath, events } = useRouter();
+  const { asPath, events, push } = useRouter();
 
   const { data: user } = api.user.get.useQuery(userId);
 
@@ -162,9 +163,17 @@ function DashboardMobileHeader({
                           </Button>
                         )}
 
-                        <SignOutButton>
-                          <Button variant={"link"}>Log out</Button>
-                        </SignOutButton>
+                        <Button
+                          variant={"link"}
+                          onClick={async () => {
+                            await signOut(async () => {
+                              clearLocalStorage();
+                              await push("/");
+                            });
+                          }}
+                        >
+                          Log out
+                        </Button>
                       </div>
                     </AccordionContent>
                   </AccordionItem>

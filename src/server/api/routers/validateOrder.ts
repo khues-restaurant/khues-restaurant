@@ -53,17 +53,6 @@ export const validateOrderRouter = createTRPCRouter({
 
       const orderDetails = structuredClone(originalOrderDetails);
 
-      // Check if user exists
-      const user = await ctx.prisma.user.findFirst({
-        where: {
-          userId,
-        },
-      });
-
-      if (!user) {
-        throw new Error("User not found");
-      }
-
       if (!validatingAReorder) {
         // Date validation
         const datetimeToPickUp = orderDetails.datetimeToPickUp;

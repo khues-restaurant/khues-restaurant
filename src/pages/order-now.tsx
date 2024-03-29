@@ -50,9 +50,12 @@ function OrderNow() {
   }));
 
   const { data: menuCategories } = api.menuCategory.getAll.useQuery();
-  const { data: userRecentOrders } = api.order.getUsersOrders.useQuery(userId, {
-    enabled: isSignedIn && !!userId,
-  });
+  const { data: userRecentOrders } = api.order.getUsersOrders.useQuery(
+    { userId, limitToFirstSix: true },
+    {
+      enabled: isSignedIn && !!userId,
+    },
+  );
 
   const [scrollProgress, setScrollProgress] = useState(0);
   const menuCategoriesContainerRef = useRef<HTMLDivElement | null>(null);

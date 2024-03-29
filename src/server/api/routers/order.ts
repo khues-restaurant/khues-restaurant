@@ -125,11 +125,16 @@ export const orderRouter = createTRPCRouter({
 
   // TODO: technically want this to be infinite scroll
   getUsersOrders: protectedProcedure
-    .input(z.string())
-    .query(async ({ ctx, input: userId }) => {
+    .input(
+      z.object({
+        userId: z.string(),
+        limitToFirstSix: z.boolean().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
       const recentOrders = await ctx.prisma.order.findMany({
         where: {
-          userId,
+          userId: input.userId,
         },
         include: {
           orderItems: {
@@ -167,7 +172,10 @@ export const orderRouter = createTRPCRouter({
       });
 
       // @ts-expect-error asdf
-      return transformedOrders as DBOrderSummary[];
+      return transformedOrders.slice(
+        0,
+        input.limitToFirstSix ? 6 : transformedOrders.length,
+      ) as DBOrderSummary[];
     }),
 
   getByStripeSessionId: publicProcedure

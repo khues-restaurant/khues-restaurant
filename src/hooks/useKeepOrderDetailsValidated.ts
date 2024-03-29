@@ -60,7 +60,7 @@ function useKeepOrderDetailsValidated() {
           return;
         } catch {
           // falling back to localstorage if user.currentOrder is not in valid shape
-          const localStorageOrder = localStorage.getItem("khues-orderDetails");
+          const localStorageOrder = localStorage.getItem("khue's-orderDetails");
 
           if (!localStorageOrder) return;
 
@@ -74,12 +74,12 @@ function useKeepOrderDetailsValidated() {
         }
       }
 
-      let localStorageOrder = localStorage.getItem("khues-orderDetails");
+      let localStorageOrder = localStorage.getItem("khue's-orderDetails");
 
       if (!localStorageOrder) {
         // set local storage to default values (right?)
         localStorage.setItem(
-          "khues-orderDetails",
+          "khue's-orderDetails",
           JSON.stringify({
             datetimeToPickUp: new Date(),
             items: [],
