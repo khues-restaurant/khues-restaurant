@@ -334,6 +334,7 @@ function OrderNow() {
                               <CarouselItem className="basis-full md:basis-1/2 xl:basis-1/3 2xl:basis-1/4">
                                 <MenuItemPreviewButton
                                   menuItem={menuItems[itemId]!}
+                                  // TODO: going to prob remove this in big teardown of old system of discounts
                                   activeDiscount={
                                     menuItems[itemId]?.activeDiscount ?? null
                                   }
@@ -588,7 +589,6 @@ function MenuCategory({
     const categoryButton = document.getElementById(`${name}Button`);
 
     if (categoryButton) {
-      console.log("scrolling to category button", name);
       setTimeout(() => {
         categoryButton.scrollIntoView({ behavior: "smooth" });
       }, 500); // TODO: bandaid at best, we need to look at this section again big time
@@ -744,6 +744,8 @@ function MenuItemPreviewButton({
                     includeDietaryRestrictions: false,
                     name: menuItem.name,
                     specialInstructions: "",
+                    birthdayReward: false,
+                    pointReward: false,
                   },
                 ],
                 customizationChoices,
@@ -804,6 +806,8 @@ function MenuItemPreviewButton({
                     quantity: 1,
                     price: menuItem.price,
                     discountId: activeDiscount?.id ?? null,
+                    birthdayReward: false,
+                    pointReward: false,
                   },
                 ],
               },
@@ -896,7 +900,11 @@ function PreviousOrder({ order }: PreviousOrder) {
         // with toast's undo button
         setPrevOrderDetails(orderDetails);
 
-        const totalValidItems = data.validItems.reduce(
+        const itemsWithRewardsRemoved = data.validItems.filter(
+          (item) => !item.birthdayReward && !item.pointReward,
+        );
+
+        const totalValidItems = itemsWithRewardsRemoved.reduce(
           (acc, item) => acc + item.quantity,
           0,
         );
@@ -923,7 +931,7 @@ function PreviousOrder({ order }: PreviousOrder) {
             ...orderDetails,
             items: [
               ...orderDetails.items,
-              ...data.validItems.map((item) => ({
+              ...itemsWithRewardsRemoved.map((item) => ({
                 id: crypto.randomUUID(),
                 itemId: item.itemId,
                 name: item.name,
@@ -933,6 +941,8 @@ function PreviousOrder({ order }: PreviousOrder) {
                 quantity: item.quantity,
                 price: item.price,
                 discountId: item.discountId,
+                birthdayReward: item.birthdayReward,
+                pointReward: item.pointReward,
               })),
             ],
           },
@@ -1027,9 +1037,12 @@ function PreviousOrder({ order }: PreviousOrder) {
                     quantity: item.quantity,
                     price: item.price,
                     discountId: item.discountId,
+                    birthdayReward: item.birthdayReward,
+                    pointReward: item.pointReward,
                   })),
+                  discountId: null,
                 },
-                onlyValidateItems: true,
+                validatingAReorder: true,
               });
             }}
           >

@@ -76,7 +76,6 @@ export const paymentRouter = createTRPCRouter({
         items: z.infer<typeof orderDetailsSchema>["items"],
       ) {
         return items.map((item) => {
-          // manipulate here
           const price = calculateRelativeTotal({
             items: [
               {
@@ -102,6 +101,18 @@ export const paymentRouter = createTRPCRouter({
                 description += `${customizationCategory.name} - ${customizationChoice}`;
               }
             }
+          }
+
+          if (item.pointReward) {
+            description += `${Object.values(item.customizations).length > 0 ? " | " : ""}${new Decimal(
+              item.price,
+            )
+              .div(0.01)
+              .toNumber()} Point reward`;
+          }
+
+          if (item.birthdayReward) {
+            description += `${Object.values(item.customizations).length > 0 ? " | " : ""}Birthday reward`;
           }
 
           if (item.discountId) {

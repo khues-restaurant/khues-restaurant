@@ -53,7 +53,6 @@ function useInitializeCheckout() {
   }
 
   async function initializeCheckout() {
-    // console.log(values);
     await createTransientOrder({
       userId,
       details: orderDetails,

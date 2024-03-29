@@ -49,13 +49,11 @@ function useHandleLocalStorage() {
   useEffect(() => {
     if (user === undefined || userId === "" || orderDetailsRetrieved) return;
 
+    console.log("validating from local storage");
+
     if (user) {
       try {
-        console.log("preparse", user.currentOrder);
-
         orderDetailsSchema.parse(user.currentOrder);
-
-        console.log("post parse", user.currentOrder);
 
         const parsedOrder = user.currentOrder as unknown as OrderDetails;
 
@@ -65,11 +63,31 @@ function useHandleLocalStorage() {
           forceReturnOrderDetails: true,
         });
         setOrderDetailsRetrieved(true);
+
+        return;
       } catch {
         // falling back to localstorage if user.currentOrder is not in valid shape
-        const localStorageOrder = localStorage.getItem("khues-orderDetails");
+        let localStorageOrder = localStorage.getItem("khues-orderDetails");
 
-        if (!localStorageOrder) return;
+        if (!localStorageOrder) {
+          // set local storage to default values (right?)
+          localStorage.setItem(
+            "khues-orderDetails",
+            JSON.stringify({
+              datetimeToPickUp: new Date(),
+              items: [],
+              includeNapkinsAndUtensils: false,
+              discountId: null,
+            }),
+          );
+
+          localStorageOrder = JSON.stringify({
+            datetimeToPickUp: new Date(),
+            items: [],
+            includeNapkinsAndUtensils: false,
+            discountId: null,
+          });
+        }
 
         const parsedOrder = JSON.parse(localStorageOrder) as OrderDetails;
 
@@ -81,13 +99,34 @@ function useHandleLocalStorage() {
           forceReturnOrderDetails: true,
         });
         setOrderDetailsRetrieved(true);
+
+        // TODO: just check logic of this, do we want to clearLocalStorage() here if user is
+        // logged in? I can't see a reason to keep it w/ it's potentially stale data.
         return;
       }
     }
 
-    const localStorageOrder = localStorage.getItem("khues-orderDetails");
+    let localStorageOrder = localStorage.getItem("khues-orderDetails");
 
-    if (!localStorageOrder) return;
+    if (!localStorageOrder) {
+      // set local storage to default values (right?)
+      localStorage.setItem(
+        "khues-orderDetails",
+        JSON.stringify({
+          datetimeToPickUp: new Date(),
+          items: [],
+          includeNapkinsAndUtensils: false,
+          discountId: null,
+        }),
+      );
+
+      localStorageOrder = JSON.stringify({
+        datetimeToPickUp: new Date(),
+        items: [],
+        includeNapkinsAndUtensils: false,
+        discountId: null,
+      });
+    }
 
     const parsedOrder = JSON.parse(localStorageOrder) as OrderDetails;
 

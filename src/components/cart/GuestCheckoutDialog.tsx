@@ -127,7 +127,6 @@ function GuestCheckoutDialog({
 
   async function onMainFormSubmit(values: z.infer<typeof mainFormSchema>) {
     // call stripe POST url here w/ mainForm values & orderDetails
-    console.log(values);
 
     setCheckoutButtonText("Loading");
 

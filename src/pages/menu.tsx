@@ -349,7 +349,6 @@ function MenuCategory({
     const categoryButton = document.getElementById(`${name}Button`);
 
     if (categoryButton) {
-      console.log("scrolling to category button", name);
       setTimeout(() => {
         categoryButton.scrollIntoView({ behavior: "smooth" });
       }, 500); // TODO: bandaid at best, we need to look at this section again big time

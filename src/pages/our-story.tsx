@@ -37,12 +37,6 @@ function OurStory() {
 
   const viewportLabel = useGetViewportLabel();
 
-  console.log(
-    restaurantNamesAndBackstories.find(
-      (restaurant) => restaurant.name === selectedImageIndex,
-    )?.backstory,
-  );
-
   return (
     <motion.div
       key={"our-story"}

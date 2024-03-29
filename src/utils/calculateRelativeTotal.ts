@@ -18,7 +18,9 @@ export function calculateRelativeTotal({
   let total = new Decimal(0);
 
   for (const item of items) {
-    let price = new Decimal(item.price);
+    let price = new Decimal(
+      item.pointReward || item.birthdayReward ? 0 : item.price,
+    );
 
     const customizationChoiceIds = Object.values(item.customizations);
 
@@ -26,6 +28,14 @@ export function calculateRelativeTotal({
       for (const choiceId of customizationChoiceIds) {
         const priceAdjustment = customizationChoices[choiceId]?.priceAdjustment;
         if (priceAdjustment) {
+          // only want to add the price adjustment if it's greater than 0 for rewards
+          if (
+            (item.pointReward || item.birthdayReward) &&
+            priceAdjustment <= 0
+          ) {
+            continue;
+          }
+
           price = price.add(new Decimal(priceAdjustment));
         }
       }

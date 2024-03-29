@@ -218,6 +218,8 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                 quantity: item.quantity,
                 price: item.price,
                 discountId: item.discountId,
+                pointReward: item.pointReward,
+                birthdayReward: item.birthdayReward,
               })),
             ],
           },
@@ -298,7 +300,6 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                       <Button
                         disabled={showCheckmark || isValidatingOrder}
                         onClick={() => {
-                          console.log("hit");
                           addItemsFromOrderToCart({
                             userId,
                             orderDetails: {
@@ -315,9 +316,12 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                                 quantity: item.quantity,
                                 price: item.price,
                                 discountId: item.discountId,
+                                pointReward: item.pointReward,
+                                birthdayReward: item.birthdayReward,
                               })),
+                              discountId: null,
                             },
-                            onlyValidateItems: true,
+                            validatingAReorder: true,
                           });
                         }}
                       >
@@ -456,7 +460,6 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                       <Button
                         disabled={showCheckmark || isValidatingOrder}
                         onClick={() => {
-                          console.log("hit");
                           addItemsFromOrderToCart({
                             userId,
                             orderDetails: {
@@ -473,9 +476,12 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                                 quantity: item.quantity,
                                 price: item.price,
                                 discountId: item.discountId,
+                                pointReward: item.pointReward,
+                                birthdayReward: item.birthdayReward,
                               })),
+                              discountId: null,
                             },
-                            onlyValidateItems: true,
+                            validatingAReorder: true,
                           });
                         }}
                       >

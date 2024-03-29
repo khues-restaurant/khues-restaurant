@@ -59,6 +59,9 @@ export interface FullMenuItem {
 export const menuCategoryRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const menuCategories = await ctx.prisma.menuCategory.findMany({
+      where: {
+        active: true,
+      },
       include: {
         activeDiscount: true,
         menuItems: {
@@ -75,5 +78,61 @@ export const menuCategoryRouter = createTRPCRouter({
     });
 
     return menuCategories;
+  }),
+
+  getRewardsCategories: publicProcedure.query(async ({ ctx }) => {
+    const menuCategories = await ctx.prisma.menuCategory.findMany({
+      where: {
+        active: true,
+      },
+      include: {
+        activeDiscount: true,
+        menuItems: {
+          include: {
+            activeDiscount: true,
+            customizationCategory: {
+              include: {
+                customizationChoice: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    let rewardMenuCategories = menuCategories.filter((category) => {
+      return category.menuItems.some(
+        (item) => item.isRewardItem && category.name !== "Desserts",
+      );
+    });
+
+    // filter further to only include the relevant reward items from each category
+    rewardMenuCategories = rewardMenuCategories.map((category) => {
+      return {
+        ...category,
+        menuItems: category.menuItems.filter((item) => item.isRewardItem),
+      };
+    });
+
+    let birthdayMenuCategories = menuCategories.filter((category) => {
+      return category.menuItems.some(
+        (item) => item.isRewardItem && category.name === "Desserts",
+      );
+    });
+
+    // filter further to only include the relevant reward items from each category
+    birthdayMenuCategories = birthdayMenuCategories.map((category) => {
+      return {
+        ...category,
+        menuItems: category.menuItems.filter(
+          (item) => item.isRewardItem && category.name === "Desserts",
+        ),
+      };
+    });
+
+    return {
+      rewardMenuCategories,
+      birthdayMenuCategories,
+    };
   }),
 });

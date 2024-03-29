@@ -80,8 +80,6 @@ function useUpdateOrder() {
       const sanitizedNewOrderDetails =
         attemptToMergeDuplicateItems(newOrderDetails);
 
-      console.log("setting store state", sanitizedNewOrderDetails);
-
       // check if there is a "Spend X, Save Y" discount able to be applied to orderDetails
       const totalCartPrices = calculateTotalCartPrices({
         items: sanitizedNewOrderDetails.items,

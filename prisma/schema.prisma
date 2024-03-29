@@ -65,7 +65,8 @@ model MenuItem {
     description      String
     imageUrl         String
     price            Float
-    ingredientsPrice Float // never expose to the frontend, could even just have it only on w/e backend stats calculation function(s)
+    ingredientsPrice Float // never expose to the frontend, maybe have it only on w/e backend stats calculation function(s)
+    // or in it's own model in here, tied to MenuItem by id
     available        Boolean @default(true) // whether item is able to be ordered (86'd or not)
     discontinued     Boolean @default(false) // whether item is no longer on the menu
     listOrder        Int     @default(autoincrement())
@@ -75,7 +76,9 @@ model MenuItem {
     activeDiscount   Discount?    @relation(fields: [activeDiscountId], references: [id])
     activeDiscountId String?
 
-    chefsChoice Boolean @default(false)
+    isRewardItem Boolean @default(false)
+    chefsChoice  Boolean @default(false)
+    reviews      String? // max three hand-picked reviews, separated/delimited by " | "
 
     favoriteItem          FavoriteItem[]
     customizationCategory CustomizationCategory[]
@@ -134,6 +137,9 @@ model OrderItem {
     discount   Discount? @relation(fields: [discountId], references: [id])
     discountId String?
 
+    pointReward    Boolean @default(false)
+    birthdayReward Boolean @default(false)
+
     customizations OrderItemCustomization[]
 }
 
@@ -173,6 +179,8 @@ model Order {
     rewardsPoints     Int
 
     stripeSessionId String @unique // used for tracking the order in Stripe
+
+    userLeftFeedback Boolean @default(false)
 
     // could have the userDescription field on here to be populated by chatGPT response to if
     // the user is noteworthy. Prob want to delay this until order is first created though, just a setTimeout()
@@ -222,14 +230,13 @@ model User {
     allowsOrderCompleteEmails Boolean @default(true)
     allowsPromotionalEmails   Boolean @default(true)
 
-    rewardsPoints Int @default(50) // TODO: most likely change this later
+    rewardsPoints        Int @default(50) // TODO: most likely change this later
+    lifetimeRewardPoints Int @default(0)
 
-    showRewardsNotification         Boolean @default(false) // from racking up points/birthday reward
-    showRewardsDiscountNotification Boolean @default(false) // just from any active discounts for members
+    birthdayRewardRedeemed           Boolean @default(false)
+    lastBirthdayRewardRedemptionYear Int     @default(0)
 
-    currentOrder Json? // this still has to be json because we aren't doing the whole "transient"-esque normalizaton of this,
-    // it has to work for unregistered users anyway so this is fine. Just need to validate heavily on initialization
-    // on the client side
+    currentOrder Json?
 
     recentOrders  Order[]
     favoriteItems FavoriteItem[]

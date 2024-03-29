@@ -9,8 +9,6 @@ function useGetUserId() {
   useEffect(() => {
     if (!isLoaded) return;
 
-    console.log(isLoaded, isSignedIn, clerkUserId);
-
     if (isSignedIn) {
       // just in case this is still in localStorage
       localStorage.removeItem("khue's-userId");

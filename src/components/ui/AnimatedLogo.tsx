@@ -6,10 +6,7 @@ function AnimatedLogo() {
   const [pathLength, setPathLength] = useState<number | null>(null);
 
   useEffect(() => {
-    console.log("here", pathLength, pathRef.current);
-
     if (pathLength === null && pathRef.current) {
-      console.log("here2");
       const length = pathRef.current.getTotalLength();
       setPathLength(length);
     }

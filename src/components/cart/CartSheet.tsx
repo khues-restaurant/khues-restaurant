@@ -1,7 +1,9 @@
 import { useAuth } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
+import Decimal from "decimal.js";
 import { AnimatePresence, motion } from "framer-motion";
+import isEqual from "lodash.isequal";
 import { X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
@@ -121,6 +123,32 @@ function CartSheet({
 
   const { initializeCheckout } = useInitializeCheckout();
 
+  const [regularItems, setRegularItems] = useState<Item[]>([]);
+  const [rewardItems, setRewardItems] = useState<Item[]>([]);
+
+  useEffect(() => {
+    const filteredRegularItems = [];
+    const filteredRewardItems = [];
+
+    for (const item of orderDetails.items) {
+      if (item.pointReward || item.birthdayReward) {
+        filteredRewardItems.push(item);
+      } else {
+        filteredRegularItems.push(item);
+      }
+    }
+
+    if (!isEqual(filteredRewardItems, rewardItems)) {
+      setRewardItems(filteredRewardItems);
+    }
+
+    if (!isEqual(filteredRegularItems, regularItems)) {
+      setRegularItems(filteredRegularItems);
+    }
+
+    setRegularItems(filteredRegularItems);
+  }, [orderDetails, regularItems, rewardItems]);
+
   const mainFormSchema = z.object({
     dateToPickUp: z
       .date({
@@ -221,8 +249,6 @@ function CartSheet({
 
     setNumberOfItems(sum);
   }, [orderDetails.items, orderDetails.rewardBeingRedeemed]);
-
-  console.log(minPickupTime?.value);
 
   useEffect(() => {
     const items = [...orderDetails.items];
@@ -488,7 +514,7 @@ function CartSheet({
       >
         <div className="baseVertFlex w-full">
           <AnimatePresence>
-            {orderDetails.items.map((item, idx) => (
+            {regularItems.map((item, idx) => (
               <motion.div
                 key={item.id}
                 initial={{
@@ -518,7 +544,7 @@ function CartSheet({
                 <div className="baseFlex w-full !items-start !justify-between">
                   <div className="baseVertFlex !items-start">
                     {/* item name, dietary restrictions, and edit button */}
-                    <div className="baseFlex !items-start gap-2">
+                    <div className="baseFlex gap-2">
                       <p className="text-lg">{item.name}</p>
 
                       {item.includeDietaryRestrictions && (
@@ -629,7 +655,7 @@ function CartSheet({
                       size={"underline"}
                       onClick={() => {
                         setIsEditingItem(true);
-                        setItemBeingModified(menuItems[item.id] ?? null);
+                        setItemBeingModified(menuItems[item.itemId] ?? null);
                         setInitialItemState(item);
                       }}
                     >
@@ -644,76 +670,136 @@ function CartSheet({
 
         {/* rewards item (if present) */}
         <AnimatePresence mode="wait">
-          {orderDetails.rewardBeingRedeemed && (
-            <motion.div
-              key={orderDetails.rewardBeingRedeemed.item.id}
-              initial={{
-                opacity: 0,
-              }}
-              animate={{
-                opacity: 1,
-              }}
-              exit={{
-                opacity: 0,
-              }}
-              transition={{
-                duration: 0.2,
-              }}
-              className="baseFlex w-full !items-start gap-4"
-            >
-              {/* preview image of item */}
-              <div className="imageFiller size-16 rounded-md" />
+          {rewardItems.length > 0 && (
+            <>
+              {rewardItems.map((item, idx) => (
+                <motion.div
+                  key={item.id}
+                  initial={{
+                    opacity: 0,
+                  }}
+                  animate={{
+                    opacity: 1,
+                  }}
+                  exit={{
+                    opacity: 0,
+                  }}
+                  transition={{
+                    duration: 0.2,
+                  }}
+                  className="baseFlex w-full !items-start gap-4"
+                >
+                  {/* preview image of item */}
+                  <div className="imageFiller size-16 rounded-md" />
 
-              <div className="baseFlex w-full !items-start !justify-between">
-                <div className="baseVertFlex !items-start">
-                  {/* item name, dietary restrictions, and edit button */}
-                  <div className="baseFlex !items-start gap-2">
-                    <p className="text-lg">
-                      {orderDetails.rewardBeingRedeemed.item.name}
-                    </p>
+                  <div className="baseFlex w-full !items-start !justify-between">
+                    <div className="baseVertFlex !items-start">
+                      {/* item name, dietary restrictions, and edit button */}
+                      <div className="baseFlex gap-2">
+                        <p className="text-lg">{item.name}</p>
 
-                    {orderDetails.rewardBeingRedeemed.item
-                      .includeDietaryRestrictions && (
-                      <div className="size-2 rounded-full bg-primary/25" />
-                    )}
+                        {item.includeDietaryRestrictions && (
+                          <div className="size-2 rounded-full bg-primary/25" />
+                        )}
+
+                        {/* reward name + icon */}
+                        <div className="baseFlex !items-start gap-2 rounded-md bg-primary px-1 py-0.5 text-sm font-semibold text-white">
+                          {item.pointReward ? (
+                            <CiGift className="size-5" />
+                          ) : (
+                            <FaCakeCandles className="size-5" />
+                          )}
+                          <p>
+                            {item.pointReward ? (
+                              <>
+                                {new Decimal(item.price).div(0.01).toNumber()}{" "}
+                                point reward
+                              </>
+                            ) : (
+                              "Birthday reward"
+                            )}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="baseVertFlex w-full !items-start text-sm">
+                        {Object.values(item.customizations).map(
+                          (choiceId, idx) => (
+                            <p key={idx}>
+                              -{" "}
+                              {
+                                customizationChoices[choiceId]
+                                  ?.customizationCategory.name
+                              }
+                              : {customizationChoices[choiceId]?.name}
+                            </p>
+                          ),
+                        )}
+                        {item.specialInstructions && (
+                          <p>- {item.specialInstructions}</p>
+                        )}
+
+                        <Button
+                          variant={"underline"}
+                          size={"underline"}
+                          onClick={() => {
+                            const { items } = orderDetails;
+
+                            const updatedItems = [];
+
+                            for (const orderItem of items) {
+                              // Check if this item should be excluded
+                              if (
+                                item.id === orderItem.id &&
+                                (orderItem.birthdayReward ||
+                                  orderItem.pointReward)
+                              ) {
+                                continue;
+                              }
+
+                              // If the item doesn't match our criteria for removal, add it to the updatedItems array
+                              updatedItems.push(orderItem);
+                            }
+
+                            updateOrder({
+                              newOrderDetails: {
+                                ...orderDetails,
+                                items: updatedItems,
+                              },
+                            });
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="baseVertFlex !items-end">
+                      <AnimatedPrice
+                        price={formatPrice(
+                          calculateRelativeTotal({
+                            items: [item],
+                            customizationChoices,
+                            discounts,
+                          }),
+                        )}
+                      />
+                      <Button
+                        variant={"underline"}
+                        size={"underline"}
+                        onClick={() => {
+                          setIsEditingItem(true);
+                          setItemBeingModified(menuItems[item.itemId] ?? null);
+                          setInitialItemState(item);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                    </div>
                   </div>
-
-                  {/* reward name + icon */}
-                  <div className="baseFlex !items-start gap-2 rounded-md bg-primary p-1 text-sm font-semibold text-white">
-                    {orderDetails.rewardBeingRedeemed.reward.name.includes(
-                      "Points",
-                    ) ? (
-                      <CiGift className="size-5" />
-                    ) : (
-                      <FaCakeCandles className="size-8" />
-                    )}
-                    <p>{orderDetails.rewardBeingRedeemed.reward.name}</p>
-                  </div>
-                </div>
-
-                <div className="baseVertFlex !items-end">
-                  <AnimatedPrice
-                    price={formatPrice(
-                      calculateRelativeTotal({
-                        items: [orderDetails.rewardBeingRedeemed.item],
-                        customizationChoices,
-                        discounts,
-                      }),
-                    )}
-                  />
-                  <Button
-                    variant={"underline"}
-                    size={"underline"}
-                    onClick={() => {
-                      setShowRewardsDialog(true);
-                      // TODO: also need to set maybe zustand state to directly show the item picker view
-                    }}
-                  >
-                    Edit
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
+                </motion.div>
+              ))}
+            </>
           )}
         </AnimatePresence>
 
@@ -733,14 +819,11 @@ function CartSheet({
 
           <div
             style={{
-              justifyContent:
-                userRewards && userRewards.length > 0
-                  ? "space-between"
-                  : "flex-start",
+              justifyContent: isSignedIn ? "space-between" : "flex-start",
             }}
             className="baseFlex w-full"
           >
-            <div className="baseFlex  gap-2">
+            <div className="baseFlex gap-2">
               <Switch
                 id="prefersNapkinsAndUtensilsSwitch"
                 checked={orderDetails.includeNapkinsAndUtensils}
@@ -757,7 +840,8 @@ function CartSheet({
                 Include napkins and utensils
               </Label>
             </div>
-            {userRewards && userRewards.length > 0 && (
+
+            {isSignedIn && (
               <Button
                 // variant="underline"
                 className="baseFlex gap-2 font-semibold"
@@ -766,7 +850,7 @@ function CartSheet({
                 }}
               >
                 <CiGift className="size-6" />
-                Redeem a reward
+                My rewards
               </Button>
             )}
           </div>

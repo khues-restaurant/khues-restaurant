@@ -12,7 +12,15 @@ import { Button } from "~/components/ui/button";
 import { TabsContent } from "~/components/ui/tabs";
 import WideFancySwirls from "~/components/ui/wideFancySwirls";
 import useGetUserId from "~/hooks/useGetUserId";
+import { StoreCustomizations, useMainStore } from "~/stores/MainStore";
+import { isEligibleForBirthdayReward } from "~/utils/isEligibleForBirthdayReward";
 import { api } from "~/utils/api";
+import { FullMenuItem } from "~/server/api/routers/menuCategory";
+import { getRewardsPointCost } from "~/utils/getRewardsPointCost";
+import useUpdateOrder from "~/hooks/useUpdateOrder";
+import { useToast } from "~/components/ui/use-toast";
+import Decimal from "decimal.js";
+import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 
 function Rewards() {
   const userId = useGetUserId();
@@ -20,33 +28,29 @@ function Rewards() {
     enabled: !!userId,
   });
 
+  const { menuItems, orderDetails } = useMainStore((state) => ({
+    menuItems: state.menuItems,
+    orderDetails: state.orderDetails,
+  }));
+
+  const { data: rewards } = api.menuCategory.getRewardsCategories.useQuery();
+
   const { data: activeDiscounts } = api.discount.getAll.useQuery();
   const { data: activeRewards } = api.discount.getUserRewards.useQuery(userId);
 
-  const [isMobileViewport, setIsMobileViewport] = useState(true);
-
-  // TODO: was there an issue with useGetViewportLabel()?
-  useEffect(() => {
-    function handleResize() {
-      setIsMobileViewport(window.innerWidth < 1000 || window.innerHeight < 700);
-    }
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  });
-
-  const radius = isMobileViewport ? 20 : 25;
-  const strokeWidth = 6;
-  const circumference = 2 * Math.PI * radius;
-  const gapLength = 30;
-
   const [rewardsPointsEarned, setRewardsPointsEarned] = useState(0);
-  const [offset, setOffset] = useState(0);
 
   const [rewardsPointsTimerSet, setRewardsPointsTimerSet] = useState(false);
+
+  const [regularSelectedRewardId, setRegularSelectedRewardId] = useState<
+    string | null
+  >(null);
+  const [birthdaySelectedRewardId, setBirthdaySelectedRewardId] = useState<
+    string | null
+  >(null);
+  const [toBeDeductedRewardsPoints, setToBeDeductedRewardsPoints] = useState(0);
+
+  const viewportLabel = useGetViewportLabel();
 
   useEffect(() => {
     if (!user || rewardsPointsTimerSet) return;
@@ -54,12 +58,64 @@ function Rewards() {
     setTimeout(() => {
       if (user) {
         setRewardsPointsEarned(user.rewardsPoints);
-        setOffset(circumference - circumference * (user.rewardsPoints / 1500));
       }
     }, 1500);
 
     setRewardsPointsTimerSet(true);
-  }, [user, rewardsPointsTimerSet, circumference]);
+  }, [user, rewardsPointsTimerSet]);
+
+  useEffect(() => {
+    let newRegularSelectedRewardId = null;
+
+    for (const item of orderDetails.items) {
+      if (item.pointReward) {
+        newRegularSelectedRewardId = item.itemId;
+        break;
+      }
+    }
+
+    if (newRegularSelectedRewardId !== regularSelectedRewardId) {
+      setRegularSelectedRewardId(newRegularSelectedRewardId);
+    }
+  }, [orderDetails, regularSelectedRewardId]);
+
+  useEffect(() => {
+    let newBirthdaySelectedRewardId = null;
+
+    for (const item of orderDetails.items) {
+      if (item.birthdayReward) {
+        newBirthdaySelectedRewardId = item.itemId;
+        break;
+      }
+    }
+
+    if (newBirthdaySelectedRewardId !== birthdaySelectedRewardId) {
+      setBirthdaySelectedRewardId(newBirthdaySelectedRewardId);
+    }
+  }, [orderDetails, birthdaySelectedRewardId]);
+
+  useEffect(() => {
+    const newToBeDeductedRewardsPoints = getRewardsPointCost({
+      items: orderDetails.items,
+    });
+
+    if (newToBeDeductedRewardsPoints !== toBeDeductedRewardsPoints) {
+      setToBeDeductedRewardsPoints(newToBeDeductedRewardsPoints);
+    }
+  }, [orderDetails.items, toBeDeductedRewardsPoints]);
+
+  // need to extract the categories/items from menuItems,
+  // and make a separate component below for rendering each menu item w/ it's "Select/Unselect" button + content
+
+  // TODO: when changing to mobile-friendly bottom navigation for /profile links,
+  // need the <Sticky> container for the header. Probably just avoid on tablet+ though since you would
+  // have to make the actual content container scrollable, not the page as it is now.
+  // - will first try to just use style prop to conditionally have flex direction be column or row
+  // - then use layout prop from framer motion to animate the transition
+
+  if (!rewards) return null;
+  // ^ should be fine since we are eventually going to get all
+  // reward data passed in as props from getServerSideProps
 
   return (
     <motion.div
@@ -72,109 +128,101 @@ function Rewards() {
     >
       <TabsContent value="rewards">
         <div className="baseVertFlex relative mt-4 w-full p-4 transition-all tablet:my-8 tablet:p-8">
-          <div className="rewardsGoldBorder baseVertFlex relative w-full rounded-md shadow-md tablet:max-w-2xl">
-            <svg
-              viewBox={isMobileViewport ? "-7 0 50 1" : "-12 -5 60 1"}
-              className="size-40 tablet:size-64"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <defs>
-                <linearGradient
-                  id="myGradient"
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="100%"
-                >
-                  <stop
-                    offset="0%"
-                    style={{
-                      stopColor: "rgb(255 217 114)",
-                      stopOpacity: "1",
-                    }}
-                  />
-                  <stop
-                    offset="100%"
-                    style={{
-                      stopColor: "rgb(212, 175, 55)",
-                      stopOpacity: "1",
-                    }}
-                  />
-                </linearGradient>
-              </defs>
+          <div className="baseVertFlex rewardsGoldBorder relative w-full gap-4 rounded-md text-yellow-500 shadow-md tablet:max-w-2xl">
+            <p className="text-xl font-bold">K Reward Points</p>
 
-              <path
-                className="circle-bg"
-                d={`M ${(36 - gapLength) / 2},18 a ${radius},${radius} 0 1,1 ${gapLength},0`}
-                fill="none"
-                stroke="url(#myGradient)"
-                strokeWidth={9}
-                strokeDasharray={`${circumference} ${circumference}`}
-                strokeLinecap="round"
-              />
-
-              <path
-                className="circle-bg"
-                d={`M ${(36 - gapLength) / 2},18 a ${radius},${radius} 0 1,1 ${gapLength},0`}
-                fill="none"
-                stroke="#fff"
-                strokeWidth={strokeWidth}
-                strokeDasharray={`${circumference} ${circumference}`}
-                strokeLinecap="round"
-              />
-
-              <motion.path
-                className="size-40 tablet:size-64"
-                d={`M ${(36 - gapLength) / 2},18 a ${radius},${radius} 0 1,1 ${gapLength},0`}
-                fill="none"
-                stroke="url(#myGradient)" // Reference to our gradient
-                strokeWidth={strokeWidth}
-                strokeLinecap="round"
-                initial={{ strokeDashoffset: circumference }}
-                animate={{
-                  strokeDashoffset: offset,
-                  // Add any conditional animation logic here
-                }}
-                transition={{ duration: 2, ease: "easeInOut" }}
-                strokeDasharray={`${circumference} ${circumference}`}
-              />
-            </svg>
-
-            <div className="baseVertFlex absolute left-1/2 top-[35%] -translate-x-1/2 -translate-y-1/2 font-bold text-yellow-500 tablet:top-[38%]">
+            <div className="baseVertFlex text-xl font-bold tracking-wider">
               <AnimatedNumbers
-                value={rewardsPointsEarned}
-                fontSize={isMobileViewport ? 25 : 48}
+                value={rewardsPointsEarned - toBeDeductedRewardsPoints}
+                fontSize={viewportLabel.includes("mobile") ? 25 : 48}
                 padding={0}
               />
-              points
+              <p className="!text-base font-semibold tracking-normal tablet:text-lg">
+                points
+              </p>
             </div>
 
-            <WideFancySwirls />
-
-            <RevealFromTop
-              initialDelay={6}
-              className={`baseVertFlex w-full text-yellow-500 ${isMobileViewport ? "text-sm" : ""} `}
-            >
-              {/* TODO: fix this css */}
-              <div className="w-64 text-center">
-                <span className="text-center">You are</span>{" "}
-                <div className="inline-block text-center font-bold">
-                  <AnimatedNumbers
-                    value={1500 - rewardsPointsEarned}
-                    fontSize={isMobileViewport ? 14 : 16}
-                    padding={0}
-                  />
-                </div>{" "}
-                <span className="text-center">
-                  points away from your next free meal!
-                </span>
-              </div>
-            </RevealFromTop>
+            {/* maybe just want the left/right flanking fancy swirls here? */}
           </div>
 
-          {/* TODO: keep this part below? */}
+          {/* .map() of Your rewards */}
           <div className="baseVertFlex mt-8 max-w-7xl gap-8 text-yellow-500">
-            <p className="text-2xl font-medium underline underline-offset-2">
+            {/* Birthday reward options */}
+            {true && (
+              <div className="baseVertFlex w-full gap-8">
+                <p className="text-xl font-medium underline underline-offset-2 tablet:text-2xl">
+                  -.- Choose a special birthday treat -.-
+                </p>
+                <div className="grid w-full grid-cols-1 !place-items-start gap-4 lg:grid-cols-2 2xl:grid-cols-3">
+                  {/* Categories */}
+                  {rewards.birthdayMenuCategories.map((category) => (
+                    <div
+                      key={category.id}
+                      className="baseVertFlex w-full !items-start gap-4"
+                    >
+                      {/* Items */}
+                      <div className="baseVertFlex gap-4 tablet:!flex-row">
+                        {category.menuItems
+                          .sort((a, b) => a.price - b.price)
+                          .map((item) => (
+                            <RewardMenuItem
+                              key={item.id}
+                              menuItem={item}
+                              currentlySelectedRewardId={
+                                regularSelectedRewardId
+                              }
+                              userAvailablePoints={
+                                rewardsPointsEarned - toBeDeductedRewardsPoints
+                              }
+                              forBirthdayReward={true}
+                            />
+                          ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <p className="text-xl font-medium underline underline-offset-2 tablet:text-2xl">
+              -.- Choose your reward -.-
+            </p>
+
+            {/* Regular reward options */}
+            <div className="grid w-full grid-cols-1 !place-items-start gap-4 lg:grid-cols-2 2xl:grid-cols-3">
+              {/* Categories */}
+              {rewards.rewardMenuCategories.map((category) => (
+                <div
+                  key={category.id}
+                  className="baseVertFlex !items-start gap-4"
+                >
+                  <p className="text-lg font-semibold underline underline-offset-2">
+                    {category.name}
+                  </p>
+
+                  {/* Items */}
+                  <div className="baseVertFlex gap-4">
+                    {category.menuItems
+                      .sort((a, b) => a.price - b.price)
+                      .map((item) => (
+                        <RewardMenuItem
+                          key={item.id}
+                          menuItem={item}
+                          currentlySelectedRewardId={regularSelectedRewardId}
+                          userAvailablePoints={
+                            rewardsPointsEarned - toBeDeductedRewardsPoints
+                          }
+                          forBirthdayReward={false}
+                        />
+                      ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="baseVertFlex mt-8 max-w-7xl gap-8 text-yellow-500">
+            <p className="text-xl font-medium underline underline-offset-2 tablet:text-2xl">
               -.- Member benefits -.-
             </p>
 
@@ -216,94 +264,6 @@ function Rewards() {
               </div>
             </div>
           </div>
-
-          {/* .map() of Member discount(s) */}
-          {/* the exact image shown might need to be hardcoded... just because like
-              if it's 10% off appetizers then yeah you could show a specific appetizer, but idk seems flaky */}
-          {/* then just name of discount with expiration date next to it, and description below it */}
-          {activeDiscounts && Object.values(activeDiscounts).length > 0 ? (
-            <div className="baseVertFlex mt-8 max-w-7xl gap-8 text-yellow-500">
-              <p className="text-2xl font-medium underline underline-offset-2">
-                -.- Member discounts -.-
-              </p>
-              {Object.values(activeDiscounts).map((discount) => (
-                <div
-                  key={discount.id}
-                  className="rewardsGoldBorder baseFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:w-full tablet:justify-start"
-                >
-                  <div className="baseVertFlex w-full gap-4 tablet:!flex-row">
-                    <div className="imageFiller size-24 rounded-md shadow-md"></div>
-                    <div className="baseVertFlex !items-start border-t border-yellow-500 p-4 text-center tablet:border-l tablet:border-t-0">
-                      <p className="font-bold">{discount.name}</p>
-
-                      <p className="text-start">{discount.description}</p>
-                      {/* TODO: have this be a countdown maybe? */}
-                      <p className="mt-2 text-sm">
-                        Expires on {format(discount.expirationDate, "PPP")}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="baseVertFlex gap-4">
-              <p>No active discounts at the moment.</p>
-            </div>
-          )}
-
-          {/* .map() of Your rewards */}
-          <div className="baseVertFlex mt-8 max-w-7xl gap-8 text-yellow-500">
-            <p className="text-2xl font-medium underline underline-offset-2">
-              -.- Your rewards -.-
-            </p>
-            {activeRewards && Object.values(activeRewards).length > 1 ? (
-              <>
-                {Object.values(activeRewards).map((reward) => (
-                  <div
-                    key={reward.id}
-                    className="rewardsGoldBorder baseFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:w-full tablet:justify-start"
-                  >
-                    <div className="baseVertFlex w-full tablet:!flex-row">
-                      {reward.name.includes("Points") ? (
-                        <CiGift className="size-24 text-yellow-500" />
-                      ) : (
-                        <FaCakeCandles className="size-16 text-yellow-500" />
-                      )}
-                      <div className="baseVertFlex !items-start border-t border-yellow-500 p-4 text-center tablet:border-l tablet:border-t-0">
-                        <p className="font-bold">{reward.name}</p>
-
-                        <p className="text-start">{reward.description}</p>
-                        {/* TODO: have this be a countdown maybe? */}
-                        <p className="mt-2 text-sm">
-                          Expires on {format(reward.expirationDate, "PPP")}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-                <div className="baseFlex gap-2">
-                  <Button asChild>
-                    <Link href="/order-now">Order now</Link>
-                  </Button>
-                  to redeem your reward!
-                </div>
-              </>
-            ) : (
-              <p className="baseFlex gap-1">
-                You are{" "}
-                {
-                  <AnimatedNumbers
-                    value={1500 - rewardsPointsEarned}
-                    fontSize={16}
-                    padding={0}
-                  />
-                }{" "}
-                points away from your next reward.
-              </p>
-            )}
-          </div>
         </div>
       </TabsContent>
     </motion.div>
@@ -313,3 +273,175 @@ function Rewards() {
 Rewards.PageLayout = TopProfileNavigationLayout;
 
 export default Rewards;
+
+// TODO: eventually add this below, can also combine with getting the reward items too so you don't
+// have to worry about loading skeletons if you want
+
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   // Extract user information (e.g., from session, cookie, or context params)
+//   const userId = /* Your mechanism to get userId from the context */;
+//      ^^ this will be through clerk, then use id to query for user row in db
+//   const user = await getUserDetails(userId);
+
+//   // Check if the user is eligible for the birthday reward
+//   const isEligible = isEligibleForBirthdayReward(
+//     new Date(user.birthdate),
+//     user.birthdayRewardRedeemed,
+//     user.lastRewardRedemptionYear
+//   );
+
+//   // Pass eligibility status to the page as props
+//   return {
+//     props: {
+//       isEligible,
+//       // any other props you need
+//     },
+//   };
+// };
+
+interface RewardMenuItem {
+  menuItem: FullMenuItem;
+  currentlySelectedRewardId: string | null;
+  userAvailablePoints: number;
+  forBirthdayReward: boolean;
+}
+
+function RewardMenuItem({
+  menuItem,
+  currentlySelectedRewardId,
+  userAvailablePoints,
+  forBirthdayReward,
+}: RewardMenuItem) {
+  // actually calls updateOrder() and shows toast(), but prob don't bother with the "undo" logic for this
+  // right now
+
+  const { orderDetails } = useMainStore((state) => ({
+    orderDetails: state.orderDetails,
+  }));
+
+  const { updateOrder } = useUpdateOrder();
+
+  const { toast } = useToast();
+
+  function isDisabled() {
+    if (currentlySelectedRewardId === menuItem.id) return false;
+
+    if (
+      userAvailablePoints < new Decimal(menuItem.price).div(0.01).toNumber() ||
+      !menuItem.available
+    ) {
+      return true;
+    }
+  }
+
+  return (
+    <div className="relative w-full max-w-80 sm:max-w-96">
+      <div className="baseFlex h-full w-full !items-start gap-4 rounded-md border-2 p-4">
+        <div className="imageFiller mt-2 size-16 rounded-md tablet:size-24"></div>
+
+        <div className="baseVertFlex h-full w-48 !items-start !justify-between">
+          <div className="baseVertFlex !items-start gap-2">
+            <p className="text-lg font-medium underline underline-offset-2">
+              {menuItem.name}
+            </p>
+
+            {/* Point cost for item */}
+            {forBirthdayReward ? (
+              <p className="max-w-48 text-wrap text-left text-gray-400">Free</p>
+            ) : (
+              <p className="max-w-48 text-wrap text-left text-gray-400">
+                {new Decimal(menuItem.price).div(0.01).toNumber()} points
+              </p>
+            )}
+
+            {!menuItem.available && (
+              <div className="rounded-md bg-gray-100 px-2 py-0.5 text-gray-400">
+                <p className="text-xs italic">Currently unavailable</p>
+              </div>
+            )}
+          </div>
+        </div>
+        <Button
+          disabled={isDisabled()}
+          className={`self-end`}
+          onClick={() => {
+            if (currentlySelectedRewardId === menuItem.id) {
+              const { items } = orderDetails;
+
+              const updatedItems = [];
+
+              for (const item of items) {
+                // Check if this item should be excluded
+                if (
+                  item.itemId === menuItem.id &&
+                  (item.birthdayReward || item.pointReward)
+                ) {
+                  continue;
+                }
+
+                // If the item doesn't match our criteria for removal, add it to the updatedItems array
+                updatedItems.push(item);
+              }
+
+              updateOrder({
+                newOrderDetails: {
+                  ...orderDetails,
+                  items: updatedItems,
+                },
+              });
+
+              return;
+            }
+
+            if (
+              userAvailablePoints <
+              new Decimal(menuItem.price).div(0.01).toNumber()
+            ) {
+              toast({
+                variant: "default",
+                description: `You don't have enough points to redeem this item.`,
+              });
+
+              return;
+            }
+
+            function getDefaultCustomizationChoices(item: FullMenuItem) {
+              return item.customizationCategory.reduce((acc, category) => {
+                acc[category.id] = category.defaultChoiceId;
+                return acc;
+              }, {} as StoreCustomizations);
+            }
+
+            updateOrder({
+              newOrderDetails: {
+                ...orderDetails,
+                items: [
+                  ...orderDetails.items,
+                  {
+                    id: crypto.randomUUID(),
+                    itemId: menuItem.id,
+                    name: menuItem.name,
+                    customizations: getDefaultCustomizationChoices(menuItem),
+                    specialInstructions: "",
+                    includeDietaryRestrictions: false,
+                    quantity: 1,
+                    price: menuItem.price,
+                    discountId: null,
+                    birthdayReward: forBirthdayReward,
+                    pointReward: !forBirthdayReward,
+                  },
+                ],
+              },
+            });
+
+            toast({
+              description: `${menuItem.name} added to your order.`,
+            });
+          }}
+        >
+          {currentlySelectedRewardId === menuItem.id ? "Unselect" : "Select"}
+        </Button>
+      </div>
+    </div>
+  );
+}

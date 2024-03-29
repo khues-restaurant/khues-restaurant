@@ -24,6 +24,7 @@ import { useAuth } from "@clerk/nextjs";
 import { SignInButton } from "@clerk/nextjs";
 import WideFancySwirls from "~/components/ui/wideFancySwirls";
 import RevealFromTop from "~/components/ui/RevealFromTop";
+import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 
 // stretch, but if you really wanted to have the order "number" but just numbers,
 // you could just have a function that takes in whole id and returns first 6 numbers,
@@ -53,31 +54,9 @@ function Track() {
     },
   );
 
-  // const [status, setStatus] = useState(
-  //   // order.orderCompletedAt
-  //   //   ? "completed"
-  //   //   : order.orderStartedAt
-  //   //     ? "started"
-  //   //     : "received",
-  //   "",
-  // );
-
-  // useEffect(() => {
-  //   if (!order) return;
-
-  //   if (order.orderCompletedAt) {
-  //     setStatus("completed");
-  //   } else if (order.orderStartedAt) {
-  //     setStatus("started");
-  //   } else {
-  //     setStatus("received");
-  //   }
-  // }, [order]);
-
   useEffect(() => {
     function refetchOrderStatus(orderIdToRefetch: string) {
       if (orderId === orderIdToRefetch) {
-        console.log("refetching new order status");
         void refetch();
       }
     }
@@ -89,28 +68,9 @@ function Track() {
     };
   }, [orderId, refetch]);
 
-  const [isMobileViewport, setIsMobileViewport] = useState(true);
-
-  // TODO: was there an issue with useGetViewportLabel()?
-  useEffect(() => {
-    function handleResize() {
-      setIsMobileViewport(window.innerWidth < 1000 || window.innerHeight < 700);
-    }
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  });
-
-  const radius = isMobileViewport ? 20 : 25;
-  const strokeWidth = 6;
-  const circumference = 2 * Math.PI * radius;
-  const gapLength = 30;
+  const viewportLabel = useGetViewportLabel();
 
   const [rewardsPointsEarned, setRewardsPointsEarned] = useState(0);
-  const [offset, setOffset] = useState(0);
 
   const [rewardsPointsTimerSet, setRewardsPointsTimerSet] = useState(false);
 
@@ -118,7 +78,6 @@ function Track() {
     if (!order || rewardsPointsTimerSet) return;
 
     setRewardsPointsEarned(order.prevRewardsPoints);
-    setOffset(circumference - circumference * (order.prevRewardsPoints / 1500));
 
     setTimeout(() => {
       if (order) {
@@ -133,12 +92,11 @@ function Track() {
         // as the points are set back to what they actually are
 
         setRewardsPointsEarned(order.rewardsPoints);
-        setOffset(circumference - circumference * (order.rewardsPoints / 1500));
       }
     }, 5000);
 
     setRewardsPointsTimerSet(true);
-  }, [order, rewardsPointsTimerSet, circumference]);
+  }, [order, rewardsPointsTimerSet]);
 
   if (typeof orderId !== "string") return null;
 
@@ -313,79 +271,14 @@ function Track() {
                   </div>
                   <RevealFromTop
                     initialDelay={2}
-                    className="rewardsGoldBorder baseVertFlex relative w-full rounded-md shadow-md tablet:max-w-2xl"
+                    className="rewardsGoldBorder baseVertFlex relative w-full rounded-md text-yellow-500 shadow-md tablet:max-w-2xl"
                   >
-                    <svg
-                      viewBox={isMobileViewport ? "-7 0 50 1" : "-12 -5 60 1"}
-                      className="size-40 tablet:size-64"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <defs>
-                        <linearGradient
-                          id="myGradient"
-                          x1="0%"
-                          y1="0%"
-                          x2="100%"
-                          y2="100%"
-                        >
-                          <stop
-                            offset="0%"
-                            style={{
-                              stopColor: "rgb(255 217 114)",
-                              stopOpacity: "1",
-                            }}
-                          />
-                          <stop
-                            offset="100%"
-                            style={{
-                              stopColor: "rgb(212, 175, 55)",
-                              stopOpacity: "1",
-                            }}
-                          />
-                        </linearGradient>
-                      </defs>
+                    <p className="text-xl font-bold">K Reward Points</p>
 
-                      <path
-                        className="circle-bg"
-                        d={`M ${(36 - gapLength) / 2},18 a ${radius},${radius} 0 1,1 ${gapLength},0`}
-                        fill="none"
-                        stroke="url(#myGradient)"
-                        strokeWidth={9}
-                        strokeDasharray={`${circumference} ${circumference}`}
-                        strokeLinecap="round"
-                      />
-
-                      <path
-                        className="circle-bg"
-                        d={`M ${(36 - gapLength) / 2},18 a ${radius},${radius} 0 1,1 ${gapLength},0`}
-                        fill="none"
-                        stroke="#fff"
-                        strokeWidth={strokeWidth}
-                        strokeDasharray={`${circumference} ${circumference}`}
-                        strokeLinecap="round"
-                      />
-
-                      <motion.path
-                        className="size-40 tablet:size-64"
-                        d={`M ${(36 - gapLength) / 2},18 a ${radius},${radius} 0 1,1 ${gapLength},0`}
-                        fill="none"
-                        stroke="url(#myGradient)" // Reference to our gradient
-                        strokeWidth={strokeWidth}
-                        strokeLinecap="round"
-                        initial={{ strokeDashoffset: circumference }}
-                        animate={{
-                          strokeDashoffset: offset,
-                          // Add any conditional animation logic here
-                        }}
-                        transition={{ duration: 2, ease: "easeInOut" }}
-                        strokeDasharray={`${circumference} ${circumference}`}
-                      />
-                    </svg>
-
-                    <div className="baseVertFlex absolute left-1/2 top-[35%] -translate-x-1/2 -translate-y-1/2 font-bold text-yellow-500 tablet:top-[38%]">
+                    <div className="baseVertFlex mt-2 font-bold text-yellow-500">
                       <AnimatedNumbers
                         value={rewardsPointsEarned}
-                        fontSize={isMobileViewport ? 25 : 48}
+                        fontSize={viewportLabel.includes("mobile") ? 25 : 38}
                         padding={0}
                       />
                       points
@@ -394,8 +287,8 @@ function Track() {
                     <WideFancySwirls />
 
                     <RevealFromTop
-                      initialDelay={6}
-                      className={`baseVertFlex w-full text-yellow-500 ${isMobileViewport ? "text-sm" : ""} `}
+                      initialDelay={4}
+                      className={`baseVertFlex w-full text-sm text-yellow-500`}
                     >
                       {isSignedIn ? (
                         <>
@@ -407,25 +300,13 @@ function Track() {
                                 value={
                                   rewardsPointsEarned - order.prevRewardsPoints
                                 }
-                                fontSize={isMobileViewport ? 14 : 16}
+                                fontSize={
+                                  viewportLabel.includes("mobile") ? 14 : 16
+                                }
                                 padding={0}
                               />
                             </div>
                             points for this order.
-                          </div>
-                          {/* TODO: fix this css */}
-                          <div className="w-64 text-center">
-                            <span className="text-center">You are</span>{" "}
-                            <div className="inline-block text-center font-bold">
-                              <AnimatedNumbers
-                                value={1500 - rewardsPointsEarned}
-                                fontSize={isMobileViewport ? 14 : 16}
-                                padding={0}
-                              />
-                            </div>{" "}
-                            <span className="text-center">
-                              points away from your next free meal!
-                            </span>
                           </div>
                         </>
                       ) : (

@@ -1,10 +1,29 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   type MotionValue,
   useSpring,
   useTransform,
   motion,
 } from "framer-motion";
+
+function calculateDelay(place: number) {
+  const baseDelay = 0.2; // Base delay in seconds
+  const delayIncrement = 0.05; // Increment delay in seconds
+
+  switch (place) {
+    case 10000:
+      return baseDelay;
+    case 1000:
+      return baseDelay + delayIncrement;
+    case 100:
+      return baseDelay + delayIncrement * 2;
+    case 10:
+      return baseDelay + delayIncrement * 3;
+    case 1:
+    default:
+      return baseDelay + delayIncrement * 4;
+  }
+}
 
 interface AnimatedNumbers {
   value: number;
@@ -24,6 +43,7 @@ function AnimatedNumbers({
       style={{ fontSize }}
       className="flex space-x-0 overflow-hidden rounded"
     >
+      {value > 9999 && <Digit place={10000} value={value} height={height} />}
       {value > 999 && <Digit place={1000} value={value} height={height} />}
       {value > 99 && <Digit place={100} value={value} height={height} />}
       {value > 9 && <Digit place={10} value={value} height={height} />}
@@ -45,6 +65,24 @@ function Digit({
 }) {
   const valueRoundedToPlace = Math.floor(value / place);
   const animatedValue = useSpring(valueRoundedToPlace);
+
+  const [startAnimation, setStartAnimation] = useState(false);
+
+  useEffect(() => {
+    // Delay initiation based on place value
+    const delay = calculateDelay(place);
+    const timeoutId = setTimeout(() => {
+      setStartAnimation(true);
+    }, delay);
+
+    return () => clearTimeout(timeoutId);
+  }, [place]);
+
+  useEffect(() => {
+    if (startAnimation) {
+      animatedValue.set(Math.floor(value / place));
+    }
+  }, [startAnimation, value, place, animatedValue]);
 
   useEffect(() => {
     animatedValue.set(valueRoundedToPlace);

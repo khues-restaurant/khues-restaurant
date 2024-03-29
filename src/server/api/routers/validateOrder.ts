@@ -11,12 +11,10 @@ export const validateOrderRouter = createTRPCRouter({
         userId: z.string().min(1).max(100),
         orderDetails: orderDetailsSchema,
         forceReturnOrderDetails: z.boolean().optional(),
-        onlyValidateItems: z.boolean().optional(),
+        validatingAReorder: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      console.log("have been hit, validation");
-
       // Date validation
       //  rules:
       //  - datetimeToPickUp must be in the future
@@ -50,7 +48,7 @@ export const validateOrderRouter = createTRPCRouter({
         userId,
         orderDetails: originalOrderDetails,
         forceReturnOrderDetails,
-        onlyValidateItems,
+        validatingAReorder,
       } = input;
 
       const orderDetails = structuredClone(originalOrderDetails);
@@ -66,7 +64,7 @@ export const validateOrderRouter = createTRPCRouter({
         throw new Error("User not found");
       }
 
-      if (!onlyValidateItems) {
+      if (!validatingAReorder) {
         // Date validation
         const datetimeToPickUp = orderDetails.datetimeToPickUp;
         const now = new Date();
@@ -101,8 +99,6 @@ export const validateOrderRouter = createTRPCRouter({
       const items = orderDetails.items;
       const removedItemNames = [];
 
-      console.log("starting items", items);
-
       for (const item of items) {
         const dbItem = await ctx.prisma.menuItem.findFirst({
           where: {
@@ -116,14 +112,6 @@ export const validateOrderRouter = createTRPCRouter({
           dbItem.price !== item.price ||
           item.quantity <= 0
         ) {
-          console.log(
-            "removing item",
-            item.name,
-            item.itemId,
-            item.price,
-            item.quantity,
-          );
-
           // removing item from order
           items.splice(items.indexOf(item), 1);
 
@@ -190,11 +178,17 @@ export const validateOrderRouter = createTRPCRouter({
             }
           }
         }
+
+        // If an item was a point reward or birthday reward, we (tentatively) are going to
+        // still keep it in the order, but set it's values of pointReward and birthdayReward to false
+
+        if (validatingAReorder && (item.pointReward || item.birthdayReward)) {
+          item.pointReward = false;
+          item.birthdayReward = false;
+        }
       }
 
-      if (onlyValidateItems) {
-        console.log("returning", items);
-
+      if (validatingAReorder) {
         return {
           validItems: items,
           removedItemNames,

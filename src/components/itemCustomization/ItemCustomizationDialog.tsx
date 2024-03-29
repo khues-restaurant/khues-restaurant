@@ -129,6 +129,8 @@ function ItemCustomizerDialogContent({
       price: itemToCustomize.price,
       itemId: itemToCustomize.id,
       discountId: itemToCustomize.activeDiscountId,
+      pointReward: false,
+      birthdayReward: false,
     },
   );
 
@@ -226,6 +228,11 @@ function ItemCustomizerDialogContent({
                     category={category}
                     localItemOrderDetails={localItemOrderDetails}
                     setLocalItemOrderDetails={setLocalItemOrderDetails}
+                    forReward={
+                      itemOrderDetails?.pointReward ??
+                      itemOrderDetails?.birthdayReward ??
+                      false
+                    }
                   />
                 ))}
               </div>
@@ -290,61 +297,51 @@ function ItemCustomizerDialogContent({
         </div>
         <DialogFooter>
           <div className="baseFlex bottom-0 left-0 w-full !justify-end border-t-2 bg-gray-200 px-4 py-2 tablet:rounded-b-md">
-            <div className="baseFlex w-75 gap-2 tablet:w-96 tablet:gap-6">
-              <div className="baseFlex gap-2">
-                Quantity
-                <div className="baseFlex h-8">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    disabled={localItemOrderDetails.quantity <= 1}
-                    className="size-8 rounded-r-none border-2 border-r-0 border-gray-500 p-0"
-                    onClick={() => {
-                      if (localItemOrderDetails.quantity <= 1) return;
+            <div className="baseFlex w-75 !justify-end gap-2 tablet:w-96 tablet:gap-6">
+              {!itemOrderDetails?.birthdayReward &&
+                !itemOrderDetails?.pointReward && (
+                  <div className="baseFlex gap-2">
+                    Quantity
+                    <div className="baseFlex h-8">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        disabled={localItemOrderDetails.quantity <= 1}
+                        className="size-8 rounded-r-none border-2 border-r-0 border-gray-500 p-0"
+                        onClick={() => {
+                          if (localItemOrderDetails.quantity <= 1) return;
 
-                      setLocalItemOrderDetails((prev) => ({
-                        ...prev,
-                        quantity: prev.quantity - 1,
-                      }));
-                    }}
-                  >
-                    <LuMinus className="size-4" />
-                  </Button>
-                  {/* I think in an ideal world you do the input, but has some definite ux edgecases tied to it */}
-                  {/* <Input
-                    value={localItemOrderDetails.quantity}
-                    // look at autostrum for handling where you will allow whole input to be deleted,
-                    // but placeholder will show "1", and price will still show the price of 1 item, so still
-                    // able to be clicked
+                          setLocalItemOrderDetails((prev) => ({
+                            ...prev,
+                            quantity: prev.quantity - 1,
+                          }));
+                        }}
+                      >
+                        <LuMinus className="size-4" />
+                      </Button>
 
-                    onChange={(e) =>
-                      setLocalItemOrderDetails((prev) => ({
-                        ...prev,
-                        quantity: Number(e.target.value),
-                      }))
-                    }
-                    className="w-10 text-center font-semibold"
-                  /> */}
-                  <div className="baseFlex h-full w-8 border-y-2 border-gray-500 bg-white font-semibold">
-                    {localItemOrderDetails.quantity}
+                      <div className="baseFlex h-full w-8 border-y-2 border-gray-500 bg-white font-semibold">
+                        {localItemOrderDetails.quantity}
+                      </div>
+
+                      <Button
+                        variant="outline"
+                        disabled={localItemOrderDetails.quantity > 99}
+                        className="size-8 rounded-l-none border-2 border-l-0 border-gray-500 p-0"
+                        onClick={() => {
+                          if (localItemOrderDetails.quantity > 99) return;
+
+                          setLocalItemOrderDetails((prev) => ({
+                            ...prev,
+                            quantity: prev.quantity + 1,
+                          }));
+                        }}
+                      >
+                        <LuPlus className="size-4" />
+                      </Button>
+                    </div>
                   </div>
-                  <Button
-                    variant="outline"
-                    disabled={localItemOrderDetails.quantity > 99}
-                    className="size-8 rounded-l-none border-2 border-l-0 border-gray-500 p-0"
-                    onClick={() => {
-                      if (localItemOrderDetails.quantity > 99) return;
-
-                      setLocalItemOrderDetails((prev) => ({
-                        ...prev,
-                        quantity: prev.quantity + 1,
-                      }));
-                    }}
-                  >
-                    <LuPlus className="size-4" />
-                  </Button>
-                </div>
-              </div>
+                )}
 
               <Button
                 variant="default"
@@ -360,8 +357,12 @@ function ItemCustomizerDialogContent({
                     );
 
                     if (existingItemIndex !== -1) {
-                      newOrderDetails.items[existingItemIndex] =
-                        localItemOrderDetails;
+                      newOrderDetails.items[existingItemIndex] = {
+                        ...localItemOrderDetails,
+                        pointReward: itemOrderDetails?.pointReward ?? false,
+                        birthdayReward:
+                          itemOrderDetails?.birthdayReward ?? false,
+                      };
                     }
                   } else {
                     newOrderDetails.items.push(localItemOrderDetails);
@@ -400,12 +401,14 @@ interface CustomizationGroup {
   category: StoreCustomizationCategory;
   localItemOrderDetails: Item;
   setLocalItemOrderDetails: Dispatch<SetStateAction<Item>>;
+  forReward: boolean;
 }
 
 function CustomizationGroup({
   category,
   localItemOrderDetails,
   setLocalItemOrderDetails,
+  forReward,
 }: CustomizationGroup) {
   const [priceOfSelectedChoiceId, setPriceOfSelectedChoiceId] = useState(0);
 
@@ -428,17 +431,44 @@ function CustomizationGroup({
       <p className="text-gray-400">{category.description}</p>
       <div className="baseFlex mt-2 gap-2">
         <RadioGroup value={localItemOrderDetails.customizations[category.id]}>
-          {category.customizationChoice.map((choice) => (
-            <CustomizationOption
-              key={choice.id}
-              choice={choice}
-              isSelected={
-                localItemOrderDetails.customizations[category.id] === choice.id
+          {category.customizationChoice.map((choice) => {
+            // Determine if the current choice is the default choice.
+            const isDefaultChoice = choice.id === category.defaultChoiceId;
+            // Define a variable to hold the calculated relative price or the direct price adjustment.
+            let displayPrice;
+
+            if (forReward) {
+              if (choice.priceAdjustment > 0) {
+                // For positively priced customizations when forReward is true, show its regular price.
+                displayPrice = choice.priceAdjustment;
+              } else if (isDefaultChoice) {
+                // If it's the default choice and forReward is true, set displayPrice to 0.
+                displayPrice = 0;
+              } else {
+                // Otherwise, for non-positive adjustments or non-default choices, calculate relative price.
+                displayPrice = Math.max(
+                  0,
+                  choice.priceAdjustment - priceOfSelectedChoiceId,
+                );
               }
-              relativePrice={choice.priceAdjustment - priceOfSelectedChoiceId}
-              setLocalItemOrderDetails={setLocalItemOrderDetails}
-            />
-          ))}
+            } else {
+              // When forReward is false, use the existing relative price calculation.
+              displayPrice = choice.priceAdjustment - priceOfSelectedChoiceId;
+            }
+
+            return (
+              <CustomizationOption
+                key={choice.id}
+                choice={choice}
+                isSelected={
+                  localItemOrderDetails.customizations[category.id] ===
+                  choice.id
+                }
+                relativePrice={displayPrice}
+                setLocalItemOrderDetails={setLocalItemOrderDetails}
+              />
+            );
+          })}
         </RadioGroup>
       </div>
     </div>
@@ -460,8 +490,6 @@ function CustomizationOption({
 }: CustomizationOption) {
   // const [choiceIsSelected, setChoiceIsSelected] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-
-  console.log("isSelected", isSelected);
 
   return (
     <div

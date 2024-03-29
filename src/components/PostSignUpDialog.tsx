@@ -91,7 +91,6 @@ function PostSignUpDialog() {
   const { mutate: createUser, isLoading: isSaving } =
     api.user.create.useMutation({
       onSuccess: () => {
-        console.log("User created successfully");
         setShowSuccessCheckmark(true);
         setTimeout(() => {
           setIsOpen(false);

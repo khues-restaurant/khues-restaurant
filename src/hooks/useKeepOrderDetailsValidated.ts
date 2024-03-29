@@ -7,12 +7,15 @@ import { api } from "~/utils/api";
 
 function useKeepOrderDetailsValidated() {
   const userId = useGetUserId();
-  const { setOrderDetails, setItemNamesRemovedFromCart } = useMainStore(
-    (state) => ({
-      setOrderDetails: state.setOrderDetails,
-      setItemNamesRemovedFromCart: state.setItemNamesRemovedFromCart,
-    }),
-  );
+  const {
+    cartInitiallyValidated,
+    setOrderDetails,
+    setItemNamesRemovedFromCart,
+  } = useMainStore((state) => ({
+    cartInitiallyValidated: state.cartInitiallyValidated,
+    setOrderDetails: state.setOrderDetails,
+    setItemNamesRemovedFromCart: state.setItemNamesRemovedFromCart,
+  }));
 
   const { updateOrder } = useUpdateOrder();
 
@@ -41,7 +44,10 @@ function useKeepOrderDetailsValidated() {
   // revalidates order details on window refocus
   useEffect(() => {
     function validateOrderOnWindowRefocus() {
-      if (user === undefined || userId === "") return;
+      if (user === undefined || userId === "" || !cartInitiallyValidated)
+        return;
+
+      console.log("validating from keep order deailts");
 
       if (user) {
         try {
@@ -50,6 +56,8 @@ function useKeepOrderDetailsValidated() {
           const parsedOrder = user.currentOrder as unknown as OrderDetails;
 
           validateOrder({ userId: user.userId, orderDetails: parsedOrder });
+
+          return;
         } catch {
           // falling back to localstorage if user.currentOrder is not in valid shape
           const localStorageOrder = localStorage.getItem("khues-orderDetails");
@@ -66,10 +74,27 @@ function useKeepOrderDetailsValidated() {
         }
       }
 
-      const localStorageOrder = localStorage.getItem("khues-orderDetails");
+      let localStorageOrder = localStorage.getItem("khues-orderDetails");
 
-      if (!localStorageOrder) return;
+      if (!localStorageOrder) {
+        // set local storage to default values (right?)
+        localStorage.setItem(
+          "khues-orderDetails",
+          JSON.stringify({
+            datetimeToPickUp: new Date(),
+            items: [],
+            includeNapkinsAndUtensils: false,
+            discountId: null,
+          }),
+        );
 
+        localStorageOrder = JSON.stringify({
+          datetimeToPickUp: new Date(),
+          items: [],
+          includeNapkinsAndUtensils: false,
+          discountId: null,
+        });
+      }
       const parsedOrder = JSON.parse(localStorageOrder) as OrderDetails;
 
       parsedOrder.datetimeToPickUp = new Date(parsedOrder.datetimeToPickUp);
@@ -82,7 +107,7 @@ function useKeepOrderDetailsValidated() {
     return () => {
       window.removeEventListener("focus", validateOrderOnWindowRefocus);
     };
-  }, [setOrderDetails, userId, user, validateOrder]);
+  }, [setOrderDetails, userId, user, validateOrder, cartInitiallyValidated]);
 }
 
 export default useKeepOrderDetailsValidated;

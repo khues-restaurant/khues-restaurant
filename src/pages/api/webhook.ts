@@ -7,6 +7,7 @@ import { z } from "zod";
 import { emitNewOrderThroughSocket } from "~/utils/emitNewOrderThroughSocket";
 import { type OrderDetails } from "~/stores/MainStore";
 import { orderDetailsSchema } from "~/stores/MainStore";
+import Decimal from "decimal.js";
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16",
@@ -69,7 +70,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       console.dir(payment);
 
       if (payment.metadata === null || payment.amount_total === null) {
-        console.log("returning early");
+        console.log("returning early 1");
         res.json({ received: true });
         return;
       }
@@ -84,7 +85,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       if (paymentMetadata === undefined) {
-        console.log("returning early");
+        console.log("returning early 2");
         res.json({ received: true });
         return;
       }
@@ -121,46 +122,56 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       if (orderDetails === undefined) {
-        console.log("returning early");
+        console.log("returning early 3");
         res.json({ received: true });
         return;
       }
 
       const prevPoints = user?.rewardsPoints ?? 0;
       let currPoints = 0;
+      let lifetimeRewardPoints = user?.lifetimeRewardPoints ?? 0;
 
       // calculate new rewards points from order
       const totalPrice = payment.amount_total;
       const pointsEarned = Math.floor(totalPrice / 10);
-      let showRewardsDiscountNotification = false;
 
-      currPoints = prevPoints + pointsEarned;
+      let pointsUsedFromRewards = 0;
 
-      if (user) {
-        // create new reward discount if threshold is met
-        if (currPoints > 1500) {
-          const now = new Date();
-          const twoMonthsFromNow = new Date(
-            now.getFullYear(),
-            now.getMonth() + 2,
-            now.getDate(),
-          );
-
-          // needs to be awaited or no?
-          await prisma.discount.create({
-            data: {
-              name: "Points",
-              description: "1500 point free meal reward",
-              expirationDate: twoMonthsFromNow,
-              active: true,
-              userId: user.userId,
-            },
-          });
-
-          showRewardsDiscountNotification = true;
-          currPoints = currPoints - 1500;
+      for (const item of orderDetails.items) {
+        if (item.pointReward) {
+          const points = new Decimal(item.price).div(0.01).toNumber();
+          pointsUsedFromRewards = points;
         }
       }
+
+      currPoints = prevPoints + pointsEarned - pointsUsedFromRewards;
+      lifetimeRewardPoints += pointsEarned;
+
+      // if (user) {
+      //   // create new reward discount if threshold is met
+      //   if (currPoints > 1500) {
+      //     const now = new Date();
+      //     const twoMonthsFromNow = new Date(
+      //       now.getFullYear(),
+      //       now.getMonth() + 2,
+      //       now.getDate(),
+      //     );
+
+      //     // needs to be awaited or no?
+      //     await prisma.discount.create({
+      //       data: {
+      //         name: "Points",
+      //         description: "1500 point free meal reward",
+      //         expirationDate: twoMonthsFromNow,
+      //         active: true,
+      //         userId: user.userId,
+      //       },
+      //     });
+
+      //     showRewardsDiscountNotification = true;
+      //     currPoints = currPoints - 1500;
+      //   }
+      // }
 
       // 3) create order row
 
@@ -182,6 +193,8 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
           ),
         },
         discountId: item.discountId,
+        pointReward: item.pointReward,
+        birthdayReward: item.birthdayReward,
       }));
 
       const orderData = {
@@ -227,7 +240,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
           },
           data: {
             rewardsPoints: currPoints,
-            showRewardsDiscountNotification,
+            lifetimeRewardPoints,
             currentOrder: {
               datetimeToPickUp: new Date(),
               items: [],

@@ -7,6 +7,7 @@ import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { CiGift } from "react-icons/ci";
 import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
 import { formatPrice } from "~/utils/formatPrice";
+import Decimal from "decimal.js";
 
 interface OrderCost {
   subtotal: number;
@@ -39,6 +40,11 @@ function OrderSummary({ order }: OrderSummary) {
     );
   }, [order, customizationChoices, discounts]);
 
+  const numberOfItems = order.orderItems.reduce(
+    (acc, item) => acc + item.quantity,
+    0,
+  );
+
   return (
     <motion.div
       key={`${order.id}-summary`}
@@ -50,7 +56,7 @@ function OrderSummary({ order }: OrderSummary) {
     >
       <div className="baseFlex gap-2 text-lg">
         <span className="underline underline-offset-2">Items</span>
-        <span>({order.orderItems.length})</span>
+        <span>({numberOfItems})</span>
       </div>
 
       <div className="baseVertFlex h-full w-full !items-start !justify-start gap-2 rounded-md">
@@ -98,6 +104,27 @@ function OrderSummary({ order }: OrderSummary) {
                     ))}
                     {item.specialInstructions && (
                       <p>- {item.specialInstructions}</p>
+                    )}
+
+                    {/* reward name + icon */}
+                    {(item.pointReward || item.birthdayReward) && (
+                      <div className="baseFlex gap-2 rounded-md bg-primary px-1 py-0.5 text-xs font-semibold text-white">
+                        {item.pointReward ? (
+                          <CiGift className="size-5" />
+                        ) : (
+                          <FaCakeCandles className="size-5" />
+                        )}
+                        <p>
+                          {item.pointReward ? (
+                            <>
+                              {new Decimal(item.price).div(0.01).toNumber()}{" "}
+                              point reward
+                            </>
+                          ) : (
+                            "Birthday reward"
+                          )}
+                        </p>
+                      </div>
                     )}
                   </div>
                 </div>

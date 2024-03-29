@@ -40,13 +40,15 @@ const itemSchema = z.object({
   includeDietaryRestrictions: z.boolean(),
   quantity: z.number(),
   price: z.number(),
+  pointReward: z.boolean(),
+  birthdayReward: z.boolean(),
 });
 
 export const orderDetailsSchema = z.object({
   datetimeToPickUp: z.date().or(z.string().transform((val) => new Date(val))),
   items: z.array(itemSchema),
   includeNapkinsAndUtensils: z.boolean(),
-  discountId: z.string().nullish(), // TODO: any problem with having it like this? supposed to be .nullable()
+  discountId: z.string().nullable(),
   rewardBeingRedeemed: z
     .object({
       reward: discountSchema,
@@ -69,6 +71,8 @@ export interface Item {
   includeDietaryRestrictions: boolean;
   quantity: number;
   price: number;
+  pointReward: boolean;
+  birthdayReward: boolean;
 }
 
 export interface OrderDetails {
