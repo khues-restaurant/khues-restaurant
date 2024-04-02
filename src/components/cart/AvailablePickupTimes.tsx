@@ -139,7 +139,7 @@ function AvailablePickupTimes({
             className="baseFlex"
           >
             <div
-              className="inline-block size-8 animate-spin rounded-full border-[4px] border-primary border-t-transparent text-primary"
+              className="my-8 inline-block size-6 animate-spin rounded-full border-[2px] border-primary border-t-transparent text-primary"
               role="status"
               aria-label="loading"
             >

@@ -36,10 +36,6 @@ function CartDrawerWrapper({
       return "535px";
     } else if (guestCheckoutView === "mainView") {
       return "500px";
-    } else if (showRewardsDrawer) {
-      return "550px";
-    } else if (orderDetails.items.length === 0) {
-      return "350px";
     }
 
     return "85dvh";

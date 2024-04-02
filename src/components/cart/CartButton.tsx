@@ -50,10 +50,10 @@ function CartButton() {
           {cartInitiallyValidated ? (
             <motion.div
               key={"cart-item-validated"}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0 }}
-              transition={{ duration: 0.35 }}
+              initial={{ scale: 0.75, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.75, opacity: 0 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
               className="baseFlex"
             >
               <LiaShoppingBagSolid className="h-6 w-6" />
@@ -62,10 +62,14 @@ function CartButton() {
                 {totalItems > 0 && (
                   <motion.div
                     key={"cart-item-count"}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0 }}
-                    transition={{ duration: 0.35, delay: 0.35 }}
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0, opacity: 0 }}
+                    transition={{
+                      duration: 0.25,
+                      delay: 0.35,
+                      ease: "easeOut",
+                    }}
                     className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-white"
                   >
                     <AnimatedNumbers

@@ -120,7 +120,7 @@ function RewardsDrawer({
       className="baseVertFlex relative h-full w-full !justify-start"
     >
       <div className="baseVertFlex relative mt-8 w-full !justify-start gap-2">
-        <div className="baseVertFlex w-full gap-2 p-4">
+        <div className="baseVertFlex w-full max-w-md gap-2 p-4">
           <div className="baseVertFlex rewardsGoldBorder relative z-50 w-full gap-4 rounded-md text-yellow-500 shadow-md tablet:max-w-md">
             <p className="text-lg font-bold">K Reward Points</p>
 
@@ -138,7 +138,9 @@ function RewardsDrawer({
           </p>
         </div>
 
-        <div className="baseVertFlex relative h-[325px] !justify-start overflow-y-auto px-4 pb-4 text-yellow-500">
+        {/* TODO: come back to this.. I feel like a higher dvh value should work but on shorter height viewports
+    content is being cut off... just a css understanding gap */}
+        <div className="baseVertFlex relative h-[50dvh] !justify-start overflow-y-auto px-4 pb-4 text-yellow-500">
           {/* .map() of Your rewards */}
           <div className="baseVertFlex w-full gap-8 ">
             {/* Birthday reward options */}
@@ -236,7 +238,7 @@ function RewardMenuItem({
   return (
     <div className="relative w-full max-w-80 sm:max-w-96">
       <div className="baseFlex h-full w-full !items-start gap-4 rounded-md border-2 p-4">
-        <div className="imageFiller mt-2 size-16 rounded-md tablet:size-24"></div>
+        <div className="imageFiller mt-2 size-16 rounded-md"></div>
 
         <div className="baseVertFlex h-full w-48 !items-start !justify-between">
           <div className="baseVertFlex !items-start gap-2">
@@ -303,7 +305,7 @@ function RewardMenuItem({
             }
 
             function getDefaultCustomizationChoices(item: FullMenuItem) {
-              return item.customizationCategory.reduce((acc, category) => {
+              return item.customizationCategories.reduce((acc, category) => {
                 acc[category.id] = category.defaultChoiceId;
                 return acc;
               }, {} as StoreCustomizations);

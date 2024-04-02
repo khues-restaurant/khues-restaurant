@@ -1,8 +1,51 @@
 import { z } from "zod";
-import { orderDetailsSchema } from "~/stores/MainStore";
+import { type OrderDetails, orderDetailsSchema } from "~/stores/MainStore";
 import isEqual from "lodash.isequal";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { getMidnightDate } from "~/utils/getMidnightDate";
+
+const holidays = [
+  new Date("2024-12-25"),
+  new Date("2024-12-26"),
+  new Date("2025-01-01"),
+];
+
+// Helper function to check if the date is a Sunday or Monday
+const isSundayOrMonday = (date: Date) => {
+  const dayOfWeek = date.getDay();
+  return dayOfWeek === 0 || dayOfWeek === 1;
+};
+
+// Helper function to check if the date is a holiday
+const isHoliday = (date: Date, holidays: Date[]) => {
+  const dateString = date.toISOString().split("T")[0]; // Converts date to YYYY-MM-DD format
+  return holidays.some(
+    (holiday) => holiday.toISOString().split("T")[0] === dateString,
+  );
+};
+
+// Main validation function
+const validateDateToPickUp = (orderDetails: OrderDetails, holidays: Date[]) => {
+  let datetimeToPickUp = new Date(orderDetails.datetimeToPickUp);
+  const now = new Date();
+  now.setHours(0, 0, 0, 0); // Normalize now to midnight for consistent comparison
+
+  // If datetimeToPickUp is in the past, adjust it to midnight today
+  if (datetimeToPickUp <= now) {
+    datetimeToPickUp = now;
+  }
+
+  // Check and adjust for Sundays, Mondays, and Holidays
+  while (
+    isSundayOrMonday(datetimeToPickUp) ||
+    isHoliday(datetimeToPickUp, holidays)
+  ) {
+    datetimeToPickUp.setDate(datetimeToPickUp.getDate() + 1); // Move to the next day
+  }
+
+  // Update the orderDetails with the validated or adjusted date
+  orderDetails.datetimeToPickUp = datetimeToPickUp;
+};
 
 export const validateOrderRouter = createTRPCRouter({
   validate: publicProcedure
@@ -55,12 +98,7 @@ export const validateOrderRouter = createTRPCRouter({
 
       if (!validatingAReorder) {
         // Date validation
-        const datetimeToPickUp = orderDetails.datetimeToPickUp;
-        const now = new Date();
-
-        if (datetimeToPickUp <= now) {
-          orderDetails.datetimeToPickUp = getMidnightDate(now);
-        }
+        validateDateToPickUp(orderDetails, holidays);
 
         // Pickup time validation
         const dbMinOrderPickupTime =
@@ -75,6 +113,8 @@ export const validateOrderRouter = createTRPCRouter({
         }
 
         const minOrderPickupDatetime = dbMinOrderPickupTime.value;
+        const datetimeToPickUp = orderDetails.datetimeToPickUp;
+        const now = new Date();
 
         if (
           datetimeToPickUp <= now ||

@@ -72,14 +72,8 @@ function DesktopHeader() {
 
       <div className={`${classes.mainLinks} baseFlex gap-2`}>
         <Button
-          variant={"link"}
+          variant={asPath.includes("/menu") ? "activeLink" : "link"}
           asChild
-          style={{
-            backgroundColor: asPath.includes("/explore")
-              ? "#be185d"
-              : undefined,
-            color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-          }}
         >
           <Link href={"/menu"} className="!text-xl">
             Menu
@@ -87,30 +81,15 @@ function DesktopHeader() {
         </Button>
 
         <Button
-          variant={"link"}
+          variant={asPath.includes("/order-now") ? "activeLink" : "link"}
           asChild
-          style={{
-            backgroundColor: asPath.includes("/explore")
-              ? "#be185d"
-              : undefined,
-            color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-          }}
         >
           <Link href={"/order-now"} className="!text-xl">
             Order now
           </Link>
         </Button>
 
-        <Button
-          variant={"link"}
-          asChild
-          style={{
-            backgroundColor: asPath.includes("/explore")
-              ? "#be185d"
-              : undefined,
-            color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-          }}
-        >
+        <Button variant={"link"} asChild>
           <a href={"/resylink"} className="!text-xl">
             Reservations
           </a>
@@ -118,14 +97,8 @@ function DesktopHeader() {
 
         {isLoaded && !isSignedIn && (
           <Button
-            variant={"link"}
+            variant={asPath.includes("/rewards") ? "activeLink" : "link"}
             asChild
-            style={{
-              backgroundColor: asPath.includes("/explore")
-                ? "#be185d"
-                : undefined,
-              color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-            }}
           >
             <Link href={"/rewards"} className="!text-xl">
               Rewards
@@ -134,14 +107,8 @@ function DesktopHeader() {
         )}
 
         <Button
-          variant={"link"}
+          variant={asPath.includes("/our-story") ? "activeLink" : "link"}
           asChild
-          style={{
-            backgroundColor: asPath.includes("/explore")
-              ? "#be185d"
-              : undefined,
-            color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-          }}
         >
           <Link href={"/our-story"} className="!text-xl">
             Our story
@@ -149,14 +116,8 @@ function DesktopHeader() {
         </Button>
 
         <Button
-          variant={"link"}
+          variant={asPath.includes("/media") ? "activeLink" : "link"}
           asChild
-          style={{
-            backgroundColor: asPath.includes("/explore")
-              ? "#be185d"
-              : undefined,
-            color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-          }}
         >
           <Link href={"/media"} className="!text-xl">
             Media
@@ -236,14 +197,12 @@ function DesktopHeader() {
             <PopoverContent side="bottom" align="end">
               <div className="baseVertFlex gap-2">
                 <Button
-                  variant={"link"}
+                  variant={
+                    asPath.includes("/profile/preferences")
+                      ? "activeLink"
+                      : "link"
+                  }
                   asChild
-                  style={{
-                    backgroundColor: asPath.includes("/explore")
-                      ? "#be185d"
-                      : undefined,
-                    color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-                  }}
                 >
                   <Link
                     href={"/profile/preferences"}
@@ -254,14 +213,10 @@ function DesktopHeader() {
                   </Link>
                 </Button>
                 <Button
-                  variant={"link"}
+                  variant={
+                    asPath.includes("/profile/rewards") ? "activeLink" : "link"
+                  }
                   asChild
-                  style={{
-                    backgroundColor: asPath.includes("/explore")
-                      ? "#be185d"
-                      : undefined,
-                    color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-                  }}
                 >
                   <Link
                     href={"/profile/rewards"}
@@ -272,14 +227,12 @@ function DesktopHeader() {
                   </Link>
                 </Button>
                 <Button
-                  variant={"link"}
+                  variant={
+                    asPath.includes("/profile/my-orders")
+                      ? "activeLink"
+                      : "link"
+                  }
                   asChild
-                  style={{
-                    backgroundColor: asPath.includes("/explore")
-                      ? "#be185d"
-                      : undefined,
-                    color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-                  }}
                 >
                   <Link
                     href={"/profile/my-orders"}

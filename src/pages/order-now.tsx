@@ -36,6 +36,7 @@ import { DBOrderSummary } from "~/server/api/routers/order";
 import { add, format } from "date-fns";
 import { IoMdHeart } from "react-icons/io";
 import useGetUserId from "~/hooks/useGetUserId";
+import { Separator } from "~/components/ui/separator";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
@@ -202,10 +203,13 @@ function OrderNow() {
               transition={{ duration: 0.5 }}
               className="baseFlex w-full gap-4 border-b-2 p-2"
             >
-              <Skeleton className="h-10 w-full" index={0} />
-              <Skeleton className="h-10 w-full" index={1} />
-              <Skeleton className="h-10 w-full" index={2} />
-              <Skeleton className="h-10 w-full" index={3} />
+              {/* TODO: can certainly get these lined up to be pixel perfect (minus of course the favorites and recent orders ones
+                since we want to show skeleton as soon as humanly possible) */}
+              <Skeleton className="h-10 w-24" index={0} />
+              <Skeleton className="h-10 w-20" index={1} />
+              <Skeleton className="h-10 w-28" index={2} />
+              <Skeleton className="h-10 w-24" index={3} />
+              <Skeleton className="h-10 w-24" index={4} />
             </motion.div>
           ) : (
             <motion.div
@@ -230,17 +234,110 @@ function OrderNow() {
                     "no-scrollbar flex w-full snap-x snap-mandatory gap-4 overflow-x-scroll scroll-smooth"
                   }
                 >
-                  {menuCategories?.map((category) => (
-                    <MenuCategoryButton
-                      key={category.id}
-                      name={category.name}
-                      listOrder={category.listOrder}
-                      currentlyInViewCategory={currentlyInViewCategory}
-                      setProgrammaticallyScrolling={
-                        setProgrammaticallyScrolling
-                      }
-                    />
-                  ))}
+                  {userFavoriteItemIds.length > 0 && (
+                    <div className="flex-none shrink-0 snap-center text-center">
+                      <Button
+                        variant={
+                          currentlyInViewCategory === "Favorites"
+                            ? "default"
+                            : "outline"
+                        }
+                        size="sm"
+                        className="border"
+                        onClick={() => {
+                          const favoritesContainer =
+                            document.getElementById("FavoritesContainer");
+
+                          if (favoritesContainer) {
+                            setProgrammaticallyScrolling(true);
+
+                            favoritesContainer.scrollIntoView({
+                              behavior: "smooth",
+                            });
+
+                            setTimeout(() => {
+                              setProgrammaticallyScrolling(false);
+                            }, 500);
+                          }
+                        }}
+                      >
+                        Favorites
+                      </Button>
+                    </div>
+                  )}
+
+                  {userRecentOrders && userRecentOrders.length > 0 && (
+                    <div className="flex-none shrink-0 snap-center text-center">
+                      <Button
+                        variant={
+                          currentlyInViewCategory === "Recent orders"
+                            ? "default"
+                            : "outline"
+                        }
+                        size="sm"
+                        className="border"
+                        onClick={() => {
+                          const recentOrdersContainer = document.getElementById(
+                            "Recent ordersContainer",
+                          );
+
+                          if (recentOrdersContainer) {
+                            setProgrammaticallyScrolling(true);
+
+                            recentOrdersContainer.scrollIntoView({
+                              behavior: "smooth",
+                            });
+
+                            setTimeout(() => {
+                              setProgrammaticallyScrolling(false);
+                            }, 500);
+                          }
+                        }}
+                      >
+                        Recent orders
+                      </Button>
+                    </div>
+                  )}
+
+                  {menuCategories?.map((category) => {
+                    if (category.name === "Beer") {
+                      return (
+                        <div
+                          key={category.id}
+                          style={{
+                            order: category.listOrder,
+                          }}
+                          className="baseFlex gap-2"
+                        >
+                          <Separator
+                            orientation="vertical"
+                            className="h-full w-[1px]"
+                          />
+                          <MenuCategoryButton
+                            key={category.id}
+                            name={category.name}
+                            listOrder={category.listOrder}
+                            currentlyInViewCategory={currentlyInViewCategory}
+                            setProgrammaticallyScrolling={
+                              setProgrammaticallyScrolling
+                            }
+                          />
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <MenuCategoryButton
+                        key={category.id}
+                        name={category.name}
+                        listOrder={category.listOrder}
+                        currentlyInViewCategory={currentlyInViewCategory}
+                        setProgrammaticallyScrolling={
+                          setProgrammaticallyScrolling
+                        }
+                      />
+                    );
+                  })}
                 </div>
 
                 {/* Custom scrollbar indicating scroll progress */}
@@ -303,7 +400,7 @@ function OrderNow() {
 
               {userFavoriteItemIds.length > 0 && (
                 <div className="baseVertFlex mt-4 w-full !items-start gap-2">
-                  <div className="baseFlex gap-2 pl-4 text-xl underline underline-offset-2">
+                  <div className="baseFlex gap-3 pl-4 text-xl underline underline-offset-2">
                     <IoMdHeart />
                     <p>Favorites</p>
                   </div>
@@ -383,8 +480,8 @@ function OrderNow() {
 
               {userRecentOrders && userRecentOrders.length > 0 && (
                 <div className="baseVertFlex mt-4 w-full !items-start gap-2">
-                  <div className="baseFlex gap-2 pl-4 text-xl underline underline-offset-2">
-                    <FaRedo />
+                  <div className="baseFlex gap-3 pl-4 text-xl underline underline-offset-2">
+                    <FaRedo className="size-4" />
                     <p>Recent orders</p>
                   </div>
 
@@ -788,7 +885,7 @@ function MenuItemPreviewButton({
             setShowCheckmark(true);
 
             function getDefaultCustomizationChoices(item: FullMenuItem) {
-              return item.customizationCategory.reduce((acc, category) => {
+              return item.customizationCategories.reduce((acc, category) => {
                 acc[category.id] = category.defaultChoiceId;
                 return acc;
               }, {} as StoreCustomizations);

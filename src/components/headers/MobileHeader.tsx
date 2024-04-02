@@ -44,29 +44,11 @@ import CartButton from "~/components/cart/CartButton";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 
 function MobileHeader() {
-  const [mobileHeaderIsOpen, setMobileHeaderIsOpen] = useState(false);
-
   const { isLoaded, isSignedIn, signOut } = useAuth();
   const userId = useGetUserId();
   const { asPath, push, events } = useRouter();
 
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
-
-  // const localStorageTabData = useLocalStorageValue("tabData");
-  // const localStorageRedirectRoute = useLocalStorageValue("redirectRoute");
-
-  // const { getStringifiedTabData, mobileHeaderModal, setMobileHeaderModal } =
-  //   useTabStore((state) => ({
-  //     getStringifiedTabData: state.getStringifiedTabData,
-  //     mobileHeaderModal: state.mobileHeaderModal,
-  //     setMobileHeaderModal: state.setMobileHeaderModal,
-  //   }));
-
-  // useEffect(() => {
-  //   if (!mobileHeaderModal.showing) {
-  //     setMobileHeaderIsOpen(false);
-  //   }
-  // }, [mobileHeaderModal]);
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -108,35 +90,14 @@ function MobileHeader() {
             <Button variant="ghost" className="relative mr-2">
               <span
                 aria-hidden="true"
-                style={
-                  {
-                    // rotate: sheetIsOpen ? "45deg" : "0",
-                    // transform: sheetIsOpen
-                    //   ? "translateY(-1.5px)"
-                    //   : "translateY(0)",
-                  }
-                }
                 className="absolute top-[12px] block h-0.5 w-6 bg-current transition duration-500 ease-in-out"
               ></span>
               <span
                 aria-hidden="true"
-                style={
-                  {
-                    // opacity: sheetIsOpen ? "0" : "1",
-                  }
-                }
                 className="absolute block h-0.5 w-6 bg-current transition duration-500 ease-in-out"
               ></span>
               <span
                 aria-hidden="true"
-                style={
-                  {
-                    // rotate: sheetIsOpen ? "-45deg" : "0",
-                    // transform: sheetIsOpen
-                    //   ? "translateY(1.5px)"
-                    //   : "translateY(0)",
-                  }
-                }
                 className="absolute top-[26px] block h-0.5 w-6 bg-current transition duration-500 ease-in-out"
               ></span>
             </Button>
@@ -209,16 +170,12 @@ function MobileHeader() {
                     <AccordionContent className="pt-2">
                       <div className="baseVertFlex gap-2">
                         <Button
-                          variant={"link"}
+                          variant={
+                            asPath.includes("/profile/preferences")
+                              ? "activeLink"
+                              : "link"
+                          }
                           asChild
-                          style={{
-                            backgroundColor: asPath.includes("/explore")
-                              ? "#be185d"
-                              : undefined,
-                            color: asPath.includes("/explore")
-                              ? "#fbcfe8"
-                              : undefined,
-                          }}
                         >
                           <Link
                             href={"/profile/preferences"}
@@ -229,16 +186,12 @@ function MobileHeader() {
                           </Link>
                         </Button>
                         <Button
-                          variant={"link"}
+                          variant={
+                            asPath.includes("/profile/rewards")
+                              ? "activeLink"
+                              : "link"
+                          }
                           asChild
-                          style={{
-                            backgroundColor: asPath.includes("/explore")
-                              ? "#be185d"
-                              : undefined,
-                            color: asPath.includes("/explore")
-                              ? "#fbcfe8"
-                              : undefined,
-                          }}
                         >
                           <Link
                             href={"/profile/rewards"}
@@ -249,16 +202,12 @@ function MobileHeader() {
                           </Link>
                         </Button>
                         <Button
-                          variant={"link"}
+                          variant={
+                            asPath.includes("/profile/my-orders")
+                              ? "activeLink"
+                              : "link"
+                          }
                           asChild
-                          style={{
-                            backgroundColor: asPath.includes("/explore")
-                              ? "#be185d"
-                              : undefined,
-                            color: asPath.includes("/explore")
-                              ? "#fbcfe8"
-                              : undefined,
-                          }}
                         >
                           <Link
                             href={"/profile/my-orders"}
@@ -289,14 +238,8 @@ function MobileHeader() {
               <Separator className="mt-2 w-4/5 self-center" />
 
               <Button
-                variant={"link"}
+                variant={asPath.includes("/menu") ? "activeLink" : "link"}
                 asChild
-                style={{
-                  backgroundColor: asPath.includes("/explore")
-                    ? "#be185d"
-                    : undefined,
-                  color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-                }}
               >
                 <Link href={"/menu"} className="!text-xl">
                   Menu
@@ -304,30 +247,15 @@ function MobileHeader() {
               </Button>
 
               <Button
-                variant={"link"}
+                variant={asPath.includes("/order-now") ? "activeLink" : "link"}
                 asChild
-                style={{
-                  backgroundColor: asPath.includes("/explore")
-                    ? "#be185d"
-                    : undefined,
-                  color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-                }}
               >
                 <Link href={"/order-now"} className="!text-xl">
                   Order now
                 </Link>
               </Button>
 
-              <Button
-                variant={"link"}
-                asChild
-                style={{
-                  backgroundColor: asPath.includes("/explore")
-                    ? "#be185d"
-                    : undefined,
-                  color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-                }}
-              >
+              <Button variant={"link"} asChild>
                 <a
                   href={"/resylink"}
                   target="_blank"
@@ -340,14 +268,8 @@ function MobileHeader() {
 
               {isLoaded && !isSignedIn && (
                 <Button
-                  variant={"link"}
+                  variant={asPath.includes("/rewards") ? "activeLink" : "link"}
                   asChild
-                  style={{
-                    backgroundColor: asPath.includes("/explore")
-                      ? "#be185d"
-                      : undefined,
-                    color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-                  }}
                 >
                   <Link href={"/rewards"} className="!text-xl">
                     Rewards
@@ -356,14 +278,8 @@ function MobileHeader() {
               )}
 
               <Button
-                variant={"link"}
+                variant={asPath.includes("/our-story") ? "activeLink" : "link"}
                 asChild
-                style={{
-                  backgroundColor: asPath.includes("/explore")
-                    ? "#be185d"
-                    : undefined,
-                  color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-                }}
               >
                 <Link href={"/our-story"} className="!text-xl">
                   Our story
@@ -371,14 +287,8 @@ function MobileHeader() {
               </Button>
 
               <Button
-                variant={"link"}
+                variant={asPath.includes("/media") ? "activeLink" : "link"}
                 asChild
-                style={{
-                  backgroundColor: asPath.includes("/explore")
-                    ? "#be185d"
-                    : undefined,
-                  color: asPath.includes("/explore") ? "#fbcfe8" : undefined,
-                }}
               >
                 <Link href={"/media"} className="!text-xl">
                   Media
@@ -457,11 +367,6 @@ function MobileHeader() {
                 </AccordionItem>
               </Accordion>
             </div>
-            {/* <SheetFooter>
-          <SheetClose asChild>
-            <Button type="submit">Save changes</Button>
-          </SheetClose>
-        </SheetFooter> */}
           </SheetContent>
         </Sheet>
       </div>

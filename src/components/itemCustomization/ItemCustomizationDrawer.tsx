@@ -1,4 +1,4 @@
-import { type CustomizationChoice } from "@prisma/client";
+import { MenuItem, type CustomizationChoice, Discount } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import isEqual from "lodash.isequal";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
@@ -14,6 +14,13 @@ import { Textarea } from "~/components/ui/textarea";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import {
+  Carousel,
+  CarouselContent,
+  type CarouselApi,
+  CarouselItem,
+} from "~/components/ui/carousel";
+import { CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
+import {
   type FullMenuItem,
   type StoreCustomizationCategory,
 } from "~/server/api/routers/menuCategory";
@@ -27,7 +34,7 @@ import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { formatPrice } from "~/utils/formatPrice";
 
 function getDefaultCustomizationChoices(item: FullMenuItem) {
-  return item.customizationCategory.reduce((acc, category) => {
+  return item.customizationCategories.reduce((acc, category) => {
     acc[category.id] = category.defaultChoiceId;
     return acc;
   }, {} as StoreCustomizations);
@@ -93,6 +100,29 @@ function ItemCustomizationDrawer({
   );
 
   const initialItemState = itemOrderDetails;
+
+  const [suggestedPairingsApi, setSuggestedPairingsApi] =
+    useState<CarouselApi>();
+  const [suggestedPairingsSlide, setSuggestedPairingsSlide] = useState(0);
+
+  useEffect(() => {
+    if (!suggestedPairingsApi) {
+      return;
+    }
+
+    setSuggestedPairingsSlide(suggestedPairingsApi.selectedScrollSnap());
+
+    suggestedPairingsApi.on("select", () => {
+      setSuggestedPairingsSlide(suggestedPairingsApi.selectedScrollSnap());
+    });
+
+    suggestedPairingsApi.on("resize", () => {
+      setSuggestedPairingsSlide(0);
+      suggestedPairingsApi.scrollTo(0);
+    });
+
+    // eventually add proper cleanup functions here
+  }, [suggestedPairingsApi]);
 
   return (
     <motion.div
@@ -197,14 +227,14 @@ function ItemCustomizationDrawer({
         </div>
 
         {/* Customizations */}
-        {itemToCustomize.customizationCategory.length > 0 && (
+        {itemToCustomize.customizationCategories.length > 0 && (
           <div className="baseVertFlex w-full !items-start gap-2">
             <p className="text-lg underline underline-offset-2">
               Customizations
             </p>
 
             <div className="baseVertFlex w-full gap-2">
-              {itemToCustomize.customizationCategory.map((category) => (
+              {itemToCustomize.customizationCategories.map((category) => (
                 <CustomizationGroup
                   key={category.id}
                   category={category}
@@ -221,14 +251,92 @@ function ItemCustomizationDrawer({
           </div>
         )}
 
+        {itemToCustomize.suggestedPairings.length > 0 && (
+          <div className="baseVertFlex w-full !items-start gap-2">
+            <p className="text-lg underline underline-offset-2">
+              Suggested Pairings
+            </p>
+            <Carousel
+              setApi={setSuggestedPairingsApi}
+              opts={{
+                skipSnaps: true,
+              }}
+              className="baseFlex w-full !justify-start"
+            >
+              <CarouselContent>
+                {itemToCustomize.suggestedPairings.map((pairing) => (
+                  <CarouselItem
+                    key={pairing.drinkMenuItem.id}
+                    className="basis-1/3"
+                  >
+                    <SuggestedPairing
+                      item={pairing.drinkMenuItem}
+                      customizationChoices={customizationChoices}
+                      discounts={discounts}
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+          </div>
+        )}
+
+        {itemToCustomize.suggestedWith.length > 0 && (
+          <div className="baseVertFlex w-full !items-start gap-2">
+            <p className="text-lg underline underline-offset-2">
+              Suggested Pairings
+            </p>
+            <Carousel
+              setApi={setSuggestedPairingsApi}
+              opts={{
+                skipSnaps: true,
+              }}
+              className="baseFlex w-full !justify-start"
+            >
+              <CarouselContent>
+                {itemToCustomize.suggestedWith.map((pairing) => (
+                  <CarouselItem
+                    key={pairing.foodMenuItem.id}
+                    className="basis-1/3"
+                  >
+                    <SuggestedPairing
+                      item={pairing.foodMenuItem}
+                      customizationChoices={customizationChoices}
+                      discounts={discounts}
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
+          </div>
+        )}
+
         {/* Special instructions */}
-        <div className="baseVertFlex w-full !items-start gap-2">
+        <div className="baseVertFlex w-full !items-start gap-4">
           <div className="baseFlex gap-2">
             <p className="text-lg underline underline-offset-2">
               Special instructions
             </p>
             <span className="text-sm italic text-gray-400">- Optional</span>
           </div>
+
+          {user && user.dietaryRestrictions.length > 0 && (
+            <div className="baseFlex relative left-0 top-0 gap-2">
+              <Switch
+                id="allergySwitch"
+                checked={localItemOrderDetails.includeDietaryRestrictions}
+                onCheckedChange={(checked) =>
+                  setLocalItemOrderDetails((prev) => ({
+                    ...prev,
+                    includeDietaryRestrictions: checked,
+                  }))
+                }
+              />
+              <Label htmlFor="allergySwitch">
+                Include dietary preferences associated with your account.
+              </Label>
+            </div>
+          )}
 
           <div className="relative h-32 w-full">
             <Textarea
@@ -249,25 +357,7 @@ function ItemCustomizationDrawer({
               characters remaining
             </p>
 
-            {user && user.dietaryRestrictions.length > 0 && (
-              <div className="baseFlex relative left-0 top-0 gap-2">
-                <Switch
-                  id="allergySwitch"
-                  checked={localItemOrderDetails.includeDietaryRestrictions}
-                  onCheckedChange={(checked) =>
-                    setLocalItemOrderDetails((prev) => ({
-                      ...prev,
-                      includeDietaryRestrictions: checked,
-                    }))
-                  }
-                />
-                <Label htmlFor="allergySwitch">
-                  Include dietary preferences associated with your account.
-                </Label>
-              </div>
-            )}
-
-            <p className="relative left-0 top-0 gap-2 text-sm italic text-gray-400 tablet:text-base">
+            <p className="relative left-0 top-2 gap-2 text-sm italic text-gray-400 tablet:text-base">
               *No price altering substitutions/additions allowed.
             </p>
           </div>
@@ -398,13 +488,13 @@ function CustomizationGroup({
 
   useEffect(() => {
     setPriceOfSelectedChoiceId(
-      category.customizationChoice.find(
+      category.customizationChoices.find(
         (c) => c.id === localItemOrderDetails.customizations[category.id],
       )?.priceAdjustment ?? 0,
     );
   }, [
     localItemOrderDetails.customizations,
-    category.customizationChoice,
+    category.customizationChoices,
     category.defaultChoiceId,
     category.id,
   ]);
@@ -415,7 +505,7 @@ function CustomizationGroup({
       <p className="text-gray-400">{category.description}</p>
       <div className="baseFlex mt-2 w-full !justify-start gap-2">
         <RadioGroup value={localItemOrderDetails.customizations[category.id]}>
-          {category.customizationChoice.map((choice) => {
+          {category.customizationChoices.map((choice) => {
             // Determine if the current choice is the default choice.
             const isDefaultChoice = choice.id === category.defaultChoiceId;
             // Define a variable to hold the calculated relative price or the direct price adjustment.
@@ -521,6 +611,129 @@ function CustomizationOption({
             </motion.p>
           )}
         </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
+interface SuggestedPairing {
+  item: MenuItem;
+  customizationChoices: Record<string, CustomizationChoiceAndCategory>;
+  discounts: Record<string, Discount>;
+}
+
+function SuggestedPairing({
+  item,
+  customizationChoices,
+  discounts,
+}: SuggestedPairing) {
+  const { orderDetails } = useMainStore((state) => ({
+    orderDetails: state.orderDetails,
+  }));
+
+  const [showCheckmark, setShowCheckmark] = useState(false);
+
+  // TODO: ah idk maybe need to also include the default itemization choice(s) in prisma query
+  // since fetching them here feels a bit weird.
+
+  const defaultItemConfig = {
+    id: crypto.randomUUID(),
+    name: item.name,
+    customizations: {}, // getDefaultCustomizationChoices(item),
+    specialInstructions: "",
+    includeDietaryRestrictions: false,
+    quantity: 1,
+    price: item.price,
+    itemId: item.id,
+    discountId: item.activeDiscountId,
+    pointReward: false,
+    birthdayReward: false,
+  };
+
+  const { updateOrder } = useUpdateOrder();
+
+  return (
+    <div className="baseVertFlex min-w-56 gap-2 rounded-md border p-2">
+      <div className="imageFiller size-24 rounded-md shadow-md"></div>
+
+      <p className="text-lg font-medium">{item.name}</p>
+
+      <div className="baseFlex mt-2 gap-4 !self-center">
+        {item.available ? (
+          <Button
+            disabled={showCheckmark}
+            size="sm"
+            onClick={() => {
+              setShowCheckmark(true);
+
+              updateOrder({
+                newOrderDetails: {
+                  ...orderDetails,
+                  items: [...orderDetails.items, defaultItemConfig],
+                },
+              });
+
+              setTimeout(() => {
+                setShowCheckmark(false);
+              }, 1000);
+            }}
+          >
+            <AnimatePresence mode="wait">
+              {showCheckmark ? (
+                <motion.svg
+                  key={`addPairingToOrderCheckmark-${item.id}`}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="size-4 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <motion.path
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{
+                      delay: 0.2,
+                      type: "tween",
+                      ease: "easeOut",
+                      duration: 0.3,
+                    }}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </motion.svg>
+              ) : (
+                <motion.p
+                  key={`addPairingToOrder-${item.id}`}
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: "auto" }}
+                  exit={{ opacity: 0, width: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="baseFlex gap-2"
+                >
+                  Add to order -
+                  <p>
+                    {formatPrice(
+                      calculateRelativeTotal({
+                        items: [defaultItemConfig],
+                        customizationChoices,
+                        discounts,
+                      }),
+                    )}
+                  </p>
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </Button>
+        ) : (
+          <div className="rounded-md bg-gray-100 px-2 py-0.5 text-gray-400">
+            <p className="text-xs italic">Currently unavailable</p>
+          </div>
+        )}
       </div>
     </div>
   );

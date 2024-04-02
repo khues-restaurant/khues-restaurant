@@ -1,60 +1,27 @@
-import { MenuCategory, MenuItem } from "@prisma/client";
+import {
+  type CustomizationCategory,
+  type CustomizationChoice,
+  type Discount,
+  type MenuItem,
+  type SuggestedPairing,
+} from "@prisma/client";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
-interface Discount {
-  // Assuming a structure for Discount, add properties as needed
-  id: string;
-  name: string;
-  description: string;
-  expirationDate: Date;
-  active: boolean;
-  userId: string | null;
-}
+type StoreSuggestedPairing = SuggestedPairing & {
+  foodMenuItem: MenuItem;
+  drinkMenuItem: MenuItem;
+};
 
-interface CustomizationChoice {
-  id: string;
-  name: string;
-  description: string;
-  priceAdjustment: number;
-  // Assuming the existence of a field to link back to CustomizationCategory if necessary
-  customizationCategoryId: string;
-}
+export type StoreCustomizationCategory = CustomizationCategory & {
+  customizationChoices: CustomizationChoice[];
+};
 
-export interface StoreCustomizationCategory {
-  id: string;
-  name: string;
-  description: string;
-  defaultChoiceId: string;
-  customizationChoice: CustomizationChoice[];
-}
-
-export interface FullMenuItem {
-  id: string;
-  createdAt: Date;
-  name: string;
-  description: string;
-  imageUrl: string;
-  price: number;
-  ingredientsPrice: number;
-  available: boolean;
-  discontinued: boolean;
-  chefsChoice: boolean;
-  listOrder: number;
-  menuCategoryId: string;
+export type FullMenuItem = MenuItem & {
   activeDiscount: Discount | null;
-  activeDiscountId: string | null;
-  customizationCategory: StoreCustomizationCategory[];
-}
-
-// interface MenuCategory {
-//   id: string;
-//   createdAt: Date;
-//   name: string;
-//   active: boolean;
-//   listOrder: number;
-//   menuItems: MenuItem[];
-//   activeDiscount?: Discount;
-// }
+  customizationCategories: StoreCustomizationCategory[];
+  suggestedPairings: StoreSuggestedPairing[];
+  suggestedWith: StoreSuggestedPairing[];
+};
 
 export const menuCategoryRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -67,14 +34,28 @@ export const menuCategoryRouter = createTRPCRouter({
         menuItems: {
           include: {
             activeDiscount: true,
-            customizationCategory: {
+            customizationCategories: {
               include: {
-                customizationChoice: true,
+                customizationChoices: true,
+              },
+            },
+            suggestedPairings: {
+              include: {
+                drinkMenuItem: true,
+              },
+            },
+            suggestedWith: {
+              include: {
+                foodMenuItem: true,
               },
             },
           },
         },
       },
+      // Is there any use case for ordering the menu categories?
+      // orderBy: {
+      //   listOrder: "asc",
+      // },
     });
 
     return menuCategories;
@@ -90,9 +71,19 @@ export const menuCategoryRouter = createTRPCRouter({
         menuItems: {
           include: {
             activeDiscount: true,
-            customizationCategory: {
+            customizationCategories: {
               include: {
-                customizationChoice: true,
+                customizationChoices: true,
+              },
+            },
+            suggestedPairings: {
+              include: {
+                drinkMenuItem: true,
+              },
+            },
+            suggestedWith: {
+              include: {
+                foodMenuItem: true,
               },
             },
           },

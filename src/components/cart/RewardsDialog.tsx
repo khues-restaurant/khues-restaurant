@@ -240,7 +240,7 @@ function RewardMenuItem({
   return (
     <div className="relative w-full max-w-96">
       <div className="baseFlex h-full w-full !items-start gap-4 rounded-md border-2 p-4">
-        <div className="imageFiller mt-2 size-24 rounded-md"></div>
+        <div className="imageFiller mt-2 size-16 rounded-md"></div>
 
         <div className="baseVertFlex h-full w-48 !items-start !justify-between">
           <div className="baseVertFlex !items-start gap-2">
@@ -307,7 +307,7 @@ function RewardMenuItem({
             }
 
             function getDefaultCustomizationChoices(item: FullMenuItem) {
-              return item.customizationCategory.reduce((acc, category) => {
+              return item.customizationCategories.reduce((acc, category) => {
                 acc[category.id] = category.defaultChoiceId;
                 return acc;
               }, {} as StoreCustomizations);

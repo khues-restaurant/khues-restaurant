@@ -44,6 +44,15 @@ model FavoriteItem {
     userId     String
 }
 
+model SuggestedPairing {
+    id String @id @default(uuid())
+
+    foodMenuItem    MenuItem @relation("FoodMenuItem", fields: [foodMenuItemId], references: [id])
+    foodMenuItemId  String
+    drinkMenuItem   MenuItem @relation("DrinkMenuItem", fields: [drinkMenuItemId], references: [id])
+    drinkMenuItemId String
+}
+
 model MenuCategory {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
@@ -65,10 +74,12 @@ model MenuItem {
     description      String
     imageUrl         String
     price            Float
+    altPrice         Float? // used for singular glass pricing of wine/beer
     ingredientsPrice Float // never expose to the frontend, maybe have it only on w/e backend stats calculation function(s)
     // or in it's own model in here, tied to MenuItem by id
     available        Boolean @default(true) // whether item is able to be ordered (86'd or not)
     discontinued     Boolean @default(false) // whether item is no longer on the menu
+    orderableOnline  Boolean @default(true) // whether item can be ordered online
     listOrder        Int     @default(autoincrement())
 
     menuCategory     MenuCategory @relation(fields: [menuCategoryId], references: [id])
@@ -80,9 +91,12 @@ model MenuItem {
     chefsChoice  Boolean @default(false)
     reviews      String? // max three hand-picked reviews, separated/delimited by " | "
 
-    favoriteItem          FavoriteItem[]
-    customizationCategory CustomizationCategory[]
-    orderItem             OrderItem[]
+    favoriteItem            FavoriteItem[]
+    customizationCategories CustomizationCategory[]
+    orderItem               OrderItem[]
+
+    suggestedPairings SuggestedPairing[] @relation("FoodMenuItem")
+    suggestedWith     SuggestedPairing[] @relation("DrinkMenuItem")
 }
 
 model CustomizationCategory {
@@ -93,7 +107,7 @@ model CustomizationCategory {
     defaultChoiceId String
 
     menuItem               MenuItem[]
-    customizationChoice    CustomizationChoice[]
+    customizationChoices   CustomizationChoice[]
     orderItemCustomization OrderItemCustomization[]
 }
 

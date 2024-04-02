@@ -6,7 +6,7 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
-  reactStrictMode: false, // TODO: be willing to change this to `false` if it's too much of a pain
+  reactStrictMode: false,
 
   // not sure if these are really necessary since we will just be using generic user icons right?
   images: {
@@ -25,6 +25,13 @@ const config = {
       },
     ],
   },
+
+  // eslint: {
+  //   ignoreDuringBuilds: true,
+  // },
+  // typescript: {
+  //   ignoreBuildErrors: true,
+  // },
 
   /**
    * If you are using `appDir` then you must comment the below `i18n` config out.

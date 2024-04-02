@@ -15,9 +15,9 @@ const buttonVariants = cva(
         outline: "border border-input bg-background",
         secondary: "bg-secondary text-secondary-foreground",
         ghost: "",
-        link: "underlineAnimation text-primary", // TODO: should have an option for the offset animation
-        // to not be so far from text. mainly would be used for smaller text situations
+        link: "underlineAnimation text-primary",
         // TODO: should also have an "activeLink" variant for header links when user is on that page
+        activeLink: "activeUnderline text-primary",
         underline: "text-primary underline underline-offset-2",
         text: "text-neutral-400",
         rewards: "text-white",
@@ -62,7 +62,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         return `${brightness !== 1 ? "bg-secondary/80" : ""}`;
       } else if (variant === "ghost") {
         return `${brightness !== 1 ? "bg-accent text-accent-foreground" : ""}`;
-      } else if (variant === "link") {
+      } else if (variant === "link" || variant === "activeLink") {
         return `${brightness !== 1 ? "!text-activeLink" : ""}`; // saturate-200 least sure about this one, kind of just want to make them darker
       }
       // else if (variant === "underline") {

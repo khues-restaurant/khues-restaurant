@@ -23,6 +23,39 @@ import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { api } from "~/utils/api";
 import { formatPrice } from "~/utils/formatPrice";
 import { Separator } from "~/components/ui/separator";
+import { format } from "date-fns";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
+
+const mixedDrinkItems = [
+  "Sunset Mojito - $8.50",
+  "Velvet Martini - $9.00",
+  "Sapphire Gin Fizz - $7.50",
+  "Tropical Rum Punch - $8.00",
+  "Midnight Espresso Martini - $10.00",
+  "Citrus Whiskey Sour - $7.00",
+  "Cherry Blossom Cocktail - $9.50",
+  "Frosty Mint Julep - $8.00",
+  "Cucumber Vodka Spritz - $7.50",
+  "Caribbean Blue Margarita - $8.50",
+  "Spiced Apple Cider Rum - $9.00",
+  "Lavender Lemonade Vodka - $7.50",
+  "Smoked Maple Bourbon - $10.00",
+  "Ginger Peach Sangria - $8.00",
+  "Blackberry Bramble - $9.00",
+  "Fiery Tequila Sunrise - $8.00",
+  "Pineapple Coconut Daiquiri - $7.50",
+  "Golden Rush - $9.50",
+  "Berry Blast Mimosa - $8.00",
+  "Almond Joy Martini - $10.00",
+];
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
@@ -220,6 +253,81 @@ function Menu() {
                   setItemToCustomize={setItemToCustomize}
                 />
               ))}
+
+              <motion.div
+                // ref={menuCategoryRef}
+                key={`mixedDrinksContainer`}
+                id={`mixedDrinksContainer`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                style={{
+                  order: 1000,
+                }}
+                className="baseVertFlex w-full scroll-m-44 !items-start gap-4 p-2"
+              >
+                <div className="baseFlex relative w-full rounded-md">
+                  {/* TODO: one image w/ 3 dishes from category on mobile, three separate images on desktop
+            so image isn't distorted */}
+                  <div className="imageFiller h-48 w-full rounded-md"></div>
+                  <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md border-2 border-primary bg-white px-4 py-2 shadow-md tablet:!flex-row tablet:!items-center tablet:gap-4">
+                    <p className="ml-1 text-xl font-semibold underline underline-offset-2">
+                      Mixed Drinks
+                    </p>
+
+                    {/* {activeDiscount && (
+                      <div className="rewardsGoldBorder baseFlex gap-1 rounded-md bg-primary px-4 py-0.5 text-sm font-medium text-yellow-500">
+                        <span>{activeDiscount.name}</span>
+                        <span>
+                          until {format(activeDiscount.expirationDate, "MM/dd")}
+                        </span>
+                      </div>
+                    )} */}
+                  </div>
+                </div>
+
+                {/* wrapping container for each food item in the category */}
+                <div className="grid w-full grid-cols-2 gap-8 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                  {mixedDrinkItems.slice(0, 10).map((item) => (
+                    <p key={item}>{item}</p>
+                  ))}
+                </div>
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="link">View all mixed drinks</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <div className="baseVertFlex !items-start gap-8">
+                      <div className="baseFlex relative w-full rounded-md">
+                        {/* TODO: one image w/ 3 dishes from category on mobile, three separate images on desktop
+            so image isn't distorted */}
+                        <div className="imageFiller h-48 w-full rounded-md"></div>
+                        <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md border-2 border-primary bg-white px-4 py-2 shadow-md tablet:!flex-row tablet:!items-center tablet:gap-4">
+                          <p className="ml-1 text-xl font-semibold underline underline-offset-2">
+                            Mixed Drinks
+                          </p>
+
+                          {/* {activeDiscount && (
+                      <div className="rewardsGoldBorder baseFlex gap-1 rounded-md bg-primary px-4 py-0.5 text-sm font-medium text-yellow-500">
+                        <span>{activeDiscount.name}</span>
+                        <span>
+                          until {format(activeDiscount.expirationDate, "MM/dd")}
+                        </span>
+                      </div>
+                    )} */}
+                        </div>
+                      </div>
+
+                      {/* wrapping container for each food item in the category */}
+                      <ul className="baseVertFlex max-h-[300px] w-full gap-2 overflow-y-auto tablet:max-h-[500px]">
+                        {mixedDrinkItems.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -364,7 +472,7 @@ function MenuCategory({
   return (
     <motion.div
       ref={menuCategoryRef}
-      key={`${name}Category`}
+      key={`${name}MenuCategory`}
       id={`${name}Container`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -373,25 +481,33 @@ function MenuCategory({
       }}
       className="baseVertFlex w-full scroll-m-44 !items-start gap-4 p-2"
     >
-      <div className="baseFlex gap-4">
-        <p className="ml-1 text-xl font-semibold underline underline-offset-2">
-          {name}
-        </p>
+      <div className="baseFlex relative w-full rounded-md">
+        {/* TODO: one image w/ 3 dishes from category on mobile, three separate images on desktop
+            so image isn't distorted */}
+        <div className="imageFiller h-48 w-full rounded-md"></div>
+        <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md border-2 border-primary bg-white px-4 py-2 shadow-md tablet:!flex-row tablet:!items-center tablet:gap-4">
+          <p className="ml-1 text-xl font-semibold underline underline-offset-2">
+            {name}
+          </p>
 
-        {/* {activeDiscount && (
-          <div className="baseFlex rounded-md bg-primary px-4 py-0.5 text-white">
-            <p>{activeDiscount.name}</p>
-          </div>
-        )} */}
+          {activeDiscount && (
+            <div className="rewardsGoldBorder baseFlex gap-1 rounded-md bg-primary px-4 py-0.5 text-sm font-medium text-yellow-500">
+              <span>{activeDiscount.name}</span>
+              <span>
+                until {format(activeDiscount.expirationDate, "MM/dd")}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* wrapping container for each food item in the category */}
-      <div className="baseFlex w-full flex-wrap !justify-start p-1 tablet:gap-16">
-        {menuItems.map((item, idx) => (
+      <div className="grid w-full grid-cols-1 sm:grid-cols-2 sm:gap-8 xl:grid-cols-3 2xl:grid-cols-4">
+        {menuItems.map((item) => (
           <MenuItemPreviewButton
             key={item.id}
             menuItem={item}
-            activeDiscount={activeDiscount}
+            activeDiscount={activeDiscount} // TODO: should prob also add ?? item.activeDiscount too right? was giving type error w/ createdAt but 99% sure this should be on there
             listOrder={item.listOrder}
             setIsDialogOpen={setIsDialogOpen}
             setIsDrawerOpen={setIsDrawerOpen}
@@ -469,6 +585,8 @@ function MenuItemPreviewButton({
                       includeDietaryRestrictions: false,
                       name: menuItem.name,
                       specialInstructions: "",
+                      birthdayReward: false,
+                      pointReward: false,
                     },
                   ],
                   customizationChoices,

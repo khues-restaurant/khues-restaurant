@@ -410,7 +410,7 @@ function RewardMenuItem({
             }
 
             function getDefaultCustomizationChoices(item: FullMenuItem) {
-              return item.customizationCategory.reduce((acc, category) => {
+              return item.customizationCategories.reduce((acc, category) => {
                 acc[category.id] = category.defaultChoiceId;
                 return acc;
               }, {} as StoreCustomizations);
