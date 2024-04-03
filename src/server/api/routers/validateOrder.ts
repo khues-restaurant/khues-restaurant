@@ -3,6 +3,8 @@ import { type OrderDetails, orderDetailsSchema } from "~/stores/MainStore";
 import isEqual from "lodash.isequal";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { getMidnightDate } from "~/utils/getMidnightDate";
+import { isAbleToRenderASAPTimeSlot } from "~/utils/isAbleToRenderASAPTimeSlot";
+import { is30MinsFromDatetime } from "~/utils/is30MinsFromDatetime";
 
 const holidays = [
   new Date("2024-12-25"),
@@ -10,22 +12,19 @@ const holidays = [
   new Date("2025-01-01"),
 ];
 
-// Helper function to check if the date is a Sunday or Monday
-const isSundayOrMonday = (date: Date) => {
+function isSundayOrMonday(date: Date) {
   const dayOfWeek = date.getDay();
   return dayOfWeek === 0 || dayOfWeek === 1;
-};
+}
 
-// Helper function to check if the date is a holiday
-const isHoliday = (date: Date, holidays: Date[]) => {
+function isHoliday(date: Date, holidays: Date[]) {
   const dateString = date.toISOString().split("T")[0]; // Converts date to YYYY-MM-DD format
   return holidays.some(
     (holiday) => holiday.toISOString().split("T")[0] === dateString,
   );
-};
+}
 
-// Main validation function
-const validateDateToPickUp = (orderDetails: OrderDetails, holidays: Date[]) => {
+function validateDateToPickUp(orderDetails: OrderDetails, holidays: Date[]) {
   let datetimeToPickUp = new Date(orderDetails.datetimeToPickUp);
   const now = new Date();
   now.setHours(0, 0, 0, 0); // Normalize now to midnight for consistent comparison
@@ -45,7 +44,35 @@ const validateDateToPickUp = (orderDetails: OrderDetails, holidays: Date[]) => {
 
   // Update the orderDetails with the validated or adjusted date
   orderDetails.datetimeToPickUp = datetimeToPickUp;
-};
+}
+
+function validateTimeToPickup(
+  orderDetails: OrderDetails,
+  minOrderPickupDatetime: Date,
+) {
+  const now = new Date();
+  const datetimeToPickUp = orderDetails.datetimeToPickUp;
+
+  // ASAP time slot validation
+  if (
+    orderDetails.isASAP &&
+    isAbleToRenderASAPTimeSlot(new Date()) &&
+    now >= minOrderPickupDatetime
+  ) {
+    return;
+  }
+
+  // Regular pickup time validation
+  if (
+    datetimeToPickUp > now &&
+    datetimeToPickUp > minOrderPickupDatetime &&
+    is30MinsFromDatetime(datetimeToPickUp, new Date())
+  ) {
+    return;
+  }
+
+  orderDetails.datetimeToPickUp = getMidnightDate(now);
+}
 
 export const validateOrderRouter = createTRPCRouter({
   validate: publicProcedure
@@ -113,15 +140,7 @@ export const validateOrderRouter = createTRPCRouter({
         }
 
         const minOrderPickupDatetime = dbMinOrderPickupTime.value;
-        const datetimeToPickUp = orderDetails.datetimeToPickUp;
-        const now = new Date();
-
-        if (
-          datetimeToPickUp <= now ||
-          datetimeToPickUp < minOrderPickupDatetime
-        ) {
-          orderDetails.datetimeToPickUp = getMidnightDate(now);
-        }
+        validateTimeToPickup(orderDetails, minOrderPickupDatetime);
       }
 
       // Item validation

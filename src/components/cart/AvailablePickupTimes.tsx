@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { SelectGroup, SelectItem, SelectLabel } from "~/components/ui/select";
 import { formatTimeString } from "~/utils/formatTimeString";
 import { is30MinsFromDatetime } from "~/utils/is30MinsFromDatetime";
@@ -33,7 +33,8 @@ function AvailablePickupTimes({
     // intentially excluding last 30 mins slot to not stress kitchen at end of night.
   ]);
 
-  useEffect(() => {
+  // avoiding brief flash of ASAP time slot if it's not able to be rendered
+  useLayoutEffect(() => {
     if (!minPickupTime) return;
 
     let basePickupTimes = [
@@ -62,16 +63,21 @@ function AvailablePickupTimes({
     // is past the minimum pickup time
     if (selectedDate.getTime() === today.getTime() && minPickupTime) {
       basePickupTimes = basePickupTimes.filter((time, index) => {
+        if (
+          time === "ASAP (~20 mins)" &&
+          isAbleToRenderASAPTimeSlot(new Date()) &&
+          new Date() >= minPickupTime
+        ) {
+          return true;
+        }
+
         const datetime = mergeDateAndTime(selectedDate, time);
 
         if (!datetime) return false;
 
-        // ASAP time slot validation,
         // Time is 30+ mins from now to allow kitchen to prepare on time, and
         // also after the minPickupTime.
         if (
-          (index !== 0 ||
-            (index === 0 && isAbleToRenderASAPTimeSlot(new Date()))) &&
           is30MinsFromDatetime(datetime, new Date()) &&
           datetime >= minPickupTime
         ) {

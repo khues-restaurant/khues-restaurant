@@ -44,7 +44,6 @@ function OrderSummary({ order }: OrderSummary) {
     (acc, item) => acc + item.quantity,
     0,
   );
-
   return (
     <motion.div
       key={`${order.id}-summary`}
@@ -52,11 +51,12 @@ function OrderSummary({ order }: OrderSummary) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex w-full !items-start gap-4 rounded-md border-2 bg-gray-100 p-4"
+      className="baseVertFlex w-full !items-start gap-4 rounded-md border-2 bg-gradient-to-br from-gray-100  
+    to-gray-200/80 p-4"
     >
-      <div className="baseFlex gap-2 text-lg">
-        <span className="underline underline-offset-2">Items</span>
-        <span>({numberOfItems})</span>
+      <div className="baseFlex gap-1 text-lg">
+        <span>{numberOfItems}</span>
+        <span className="">Items</span>
       </div>
 
       <div className="baseVertFlex h-full w-full !items-start !justify-start gap-2 rounded-md">
@@ -83,8 +83,8 @@ function OrderSummary({ order }: OrderSummary) {
                 <div className="baseVertFlex !items-start">
                   {/* item quantity, name, dietary restrictions */}
                   <div className="baseFlex !items-start gap-2">
-                    <p className="text-lg ">{item.quantity}</p>
-                    <p className="text-lg">{item.name}</p>
+                    <p>{item.quantity}</p>
+                    <p>{item.name}</p>
 
                     {item.includeDietaryRestrictions && (
                       <div className="size-2 rounded-full bg-primary/25" />
@@ -183,7 +183,7 @@ function OrderSummary({ order }: OrderSummary) {
           </div>
         </div>
 
-        <div className="baseVertFlex w-full rounded-md border-t bg-gray-200 p-4 shadow-inner">
+        <div className="baseVertFlex w-full border-t border-gray-300 p-4">
           <div className="baseFlex w-full !justify-between gap-2 text-sm">
             <p>Subtotal</p>
             <p>{formatPrice(orderCost.subtotal)}</p>

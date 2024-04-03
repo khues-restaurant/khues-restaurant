@@ -205,7 +205,9 @@ function CartSheet({
     resolver: zodResolver(mainFormSchema),
     values: {
       dateToPickUp: getMidnightDate(orderDetails.datetimeToPickUp),
-      timeToPickUp: getHoursAndMinutesFromDate(orderDetails.datetimeToPickUp),
+      timeToPickUp: orderDetails.isASAP
+        ? "ASAP (~20 mins)"
+        : getHoursAndMinutesFromDate(orderDetails.datetimeToPickUp),
     },
   });
 
@@ -214,7 +216,10 @@ function CartSheet({
       if (value.dateToPickUp === undefined || value.timeToPickUp === undefined)
         return;
 
-      const newDate = mergeDateAndTime(value.dateToPickUp, value.timeToPickUp);
+      const newDate =
+        value.timeToPickUp === "ASAP (~20 mins)"
+          ? value.dateToPickUp
+          : mergeDateAndTime(value.dateToPickUp, value.timeToPickUp);
 
       if (newDate === undefined) return;
 
@@ -228,6 +233,18 @@ function CartSheet({
           orderDetails.datetimeToPickUp.getFullYear()
       ) {
         newDate.setHours(0, 0, 0, 0);
+      } else if (value.timeToPickUp === "ASAP (~20 mins)") {
+        const newOrderDetails = structuredClone(orderDetails);
+        newOrderDetails.datetimeToPickUp = newDate;
+        newOrderDetails.isASAP = true;
+
+        console.log("updating");
+
+        updateOrder({
+          newOrderDetails,
+        });
+
+        return;
       }
 
       // make sure that the new date isn't the same as the current orderDetails.datetimeToPickUp
@@ -235,6 +252,7 @@ function CartSheet({
 
       const newOrderDetails = structuredClone(orderDetails);
       newOrderDetails.datetimeToPickUp = newDate;
+      newOrderDetails.isASAP = false;
 
       console.log("updating");
 

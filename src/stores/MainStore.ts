@@ -46,6 +46,7 @@ const itemSchema = z.object({
 
 export const orderDetailsSchema = z.object({
   datetimeToPickUp: z.date().or(z.string().transform((val) => new Date(val))),
+  isASAP: z.boolean(),
   items: z.array(itemSchema),
   includeNapkinsAndUtensils: z.boolean(),
   discountId: z.string().nullable(),
@@ -77,6 +78,7 @@ export interface Item {
 
 export interface OrderDetails {
   datetimeToPickUp: Date;
+  isASAP: boolean;
   items: Item[];
   includeNapkinsAndUtensils: boolean;
   discountId: string | null;
@@ -133,6 +135,7 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
     (set, get) => ({
       orderDetails: {
         datetimeToPickUp: getTodayAtMidnight(),
+        isASAP: false,
         items: [],
         includeNapkinsAndUtensils: false,
         discountId: null,
@@ -143,6 +146,7 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
 
       prevOrderDetails: {
         datetimeToPickUp: getTodayAtMidnight(),
+        isASAP: false,
         items: [],
         includeNapkinsAndUtensils: false,
         discountId: null,

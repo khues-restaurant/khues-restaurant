@@ -52,7 +52,7 @@ function Media() {
             </p>
           </div>
 
-          <div className="baseVertFlex w-full !items-start gap-2 p-4">
+          <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
             &quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
             do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
             enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
@@ -82,7 +82,7 @@ function Media() {
             </p>
           </div>
 
-          <div className="baseVertFlex w-full !items-start gap-2 p-4">
+          <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
             &quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
             do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
             enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
@@ -112,7 +112,7 @@ function Media() {
             </p>
           </div>
 
-          <div className="baseVertFlex w-full !items-start gap-2 p-4">
+          <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
             &quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
             do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
             enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi

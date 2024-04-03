@@ -299,6 +299,14 @@ function OrderNow() {
                     </div>
                   )}
 
+                  {(userFavoriteItemIds.length > 0 ||
+                    (userRecentOrders && userRecentOrders.length > 0)) && (
+                    <Separator
+                      orientation="vertical"
+                      className="h-[35px] w-[1px]" // why did h-full not work here?
+                    />
+                  )}
+
                   {menuCategories?.map((category) => {
                     if (category.name === "Beer") {
                       return (
@@ -311,7 +319,7 @@ function OrderNow() {
                         >
                           <Separator
                             orientation="vertical"
-                            className="h-full w-[1px]"
+                            className="mr-2 h-full w-[1px]"
                           />
                           <MenuCategoryButton
                             key={category.id}
@@ -1126,6 +1134,7 @@ function PreviousOrder({ order }: PreviousOrder) {
                 userId,
                 orderDetails: {
                   datetimeToPickUp: new Date(),
+                  isASAP: orderDetails.isASAP,
                   includeNapkinsAndUtensils: false,
                   items: order.orderItems.map((item) => ({
                     id: crypto.randomUUID(),

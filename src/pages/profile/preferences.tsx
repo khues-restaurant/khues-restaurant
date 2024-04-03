@@ -45,6 +45,7 @@ import isEqual from "lodash.isequal";
 import { Button } from "~/components/ui/button";
 import { FaUserAlt } from "react-icons/fa";
 import { useRouter } from "next/router";
+import { Separator } from "~/components/ui/separator";
 
 function Preferences() {
   const userId = useGetUserId();
@@ -531,11 +532,13 @@ function Preferences() {
                 but prob just open up an alert dialog to do this in? seems most reasonable/safe */}
               </Button>
 
+              <Separator className="h-[1px] w-full tablet:h-[25px] tablet:w-[1px]" />
+
               <AlertDialog open={showDeleteUserDialog}>
                 <AlertDialogTrigger asChild>
                   <Button
-                    variant={"destructive"}
-                    className="baseFlex gap-2"
+                    variant={"ghost"}
+                    className="baseFlex gap-2 border-destructive text-destructive"
                     onClick={() => setShowDeleteUserDialog(true)}
                   >
                     <FaTrashAlt />

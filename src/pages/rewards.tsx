@@ -9,6 +9,7 @@ import { IoToggle } from "react-icons/io5";
 import { Button } from "~/components/ui/button";
 import { SignUpButton } from "@clerk/nextjs";
 import WideFancySwirls from "~/components/ui/wideFancySwirls";
+import { Separator } from "~/components/ui/separator";
 
 function Rewards() {
   return (
@@ -50,7 +51,7 @@ function Rewards() {
       </div>
 
       {/* Intro */}
-      <p className="max-w-72 text-yellow-500 tablet:max-w-3xl tablet:font-medium">
+      <p className="max-w-72 leading-7 text-yellow-500 tablet:max-w-2xl tablet:font-medium tablet:leading-8">
         Welcome to Khue&apos;s Rewards — where every bite takes you closer to
         delightful rewards! As a token of our appreciation, we&apos;ve crafted
         an exclusive program designed to celebrate our loyal customers. Indulge
@@ -69,11 +70,10 @@ function Rewards() {
         </p>
 
         <div className="baseVertFlex gap-8 tablet:!flex-row">
-          <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
-            <div className="baseFlex h-24 w-full">
-              <CiGift className="size-24 text-yellow-500" />
-            </div>
-            <div className="border-t border-yellow-500 p-4 text-center">
+          <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
+            <CiGift className="size-20 h-24 text-yellow-500" />
+            <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
+            <div className="hyphens-auto p-4 text-left">
               Earning rewards is as simple as enjoying your favorite meals!
               Every dollar spent earns you points, which open the door to a
               diverse selection of enticing rewards. Get started earning points
@@ -81,11 +81,10 @@ function Rewards() {
             </div>
           </div>
 
-          <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
-            <div className="baseFlex h-24 w-full">
-              <FaCakeCandles className="size-16 text-yellow-500" />
-            </div>
-            <div className="border-t border-yellow-500 p-4 text-center">
+          <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
+            <FaCakeCandles className="ml-4 size-12 h-24 text-yellow-500" />
+            <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
+            <div className="hyphens-auto p-4 text-left">
               Celebrate your birthday with a complimentary treat from us, adding
               a touch of sweetness to your special day. Make sure to share your
               birthday with us when you sign up, so we can ensure your
@@ -93,9 +92,10 @@ function Rewards() {
             </div>
           </div>
 
-          <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
-            <LuCalendarClock className="size-16 h-24 text-yellow-500" />
-            <div className="border-t border-yellow-500 p-4 text-center">
+          <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
+            <LuCalendarClock className="ml-2 size-14 h-24 text-yellow-500" />
+            <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
+            <div className="hyphens-auto p-4 text-left">
               As a member, you&apos;re first in line to experience our newest
               menu items. Before these delicacies make their official debut,
               you&apos;ll have the exclusive opportunity to taste what&apos;s

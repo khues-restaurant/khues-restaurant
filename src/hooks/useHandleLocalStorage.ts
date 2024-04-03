@@ -75,6 +75,7 @@ function useHandleLocalStorage() {
             "khue's-orderDetails",
             JSON.stringify({
               datetimeToPickUp: new Date(),
+              isASAP: false,
               items: [],
               includeNapkinsAndUtensils: false,
               discountId: null,
@@ -114,6 +115,7 @@ function useHandleLocalStorage() {
         "khue's-orderDetails",
         JSON.stringify({
           datetimeToPickUp: new Date(),
+          isASAP: false,
           items: [],
           includeNapkinsAndUtensils: false,
           discountId: null,
