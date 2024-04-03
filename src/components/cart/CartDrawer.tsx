@@ -103,15 +103,16 @@ function CartDrawer({
   }));
 
   const [numberOfItems, setNumberOfItems] = useState(0);
-  const [checkoutButtonText, setCheckoutButtonText] = useState(
-    "Proceed to checkout",
-  );
 
   const [orderCost, setOrderCost] = useState<OrderCost>({
     subtotal: 0,
     tax: 0,
     total: 0,
   });
+
+  const [checkoutButtonText, setCheckoutButtonText] = useState(
+    "Proceed to checkout",
+  );
 
   const { updateOrder } = useUpdateOrder();
 
@@ -204,7 +205,9 @@ function CartDrawer({
     resolver: zodResolver(mainFormSchema),
     values: {
       dateToPickUp: getMidnightDate(orderDetails.datetimeToPickUp),
-      timeToPickUp: getHoursAndMinutesFromDate(orderDetails.datetimeToPickUp),
+      timeToPickUp: orderDetails.isASAP
+        ? "ASAP (~20 mins)"
+        : getHoursAndMinutesFromDate(orderDetails.datetimeToPickUp),
     },
   });
 
@@ -213,7 +216,10 @@ function CartDrawer({
       if (value.dateToPickUp === undefined || value.timeToPickUp === undefined)
         return;
 
-      const newDate = mergeDateAndTime(value.dateToPickUp, value.timeToPickUp);
+      const newDate =
+        value.timeToPickUp === "ASAP (~20 mins)"
+          ? value.dateToPickUp
+          : mergeDateAndTime(value.dateToPickUp, value.timeToPickUp);
 
       if (newDate === undefined) return;
 
@@ -227,6 +233,18 @@ function CartDrawer({
           orderDetails.datetimeToPickUp.getFullYear()
       ) {
         newDate.setHours(0, 0, 0, 0);
+      } else if (value.timeToPickUp === "ASAP (~20 mins)") {
+        const newOrderDetails = structuredClone(orderDetails);
+        newOrderDetails.datetimeToPickUp = newDate;
+        newOrderDetails.isASAP = true;
+
+        console.log("updating");
+
+        updateOrder({
+          newOrderDetails,
+        });
+
+        return;
       }
 
       // make sure that the new date isn't the same as the current orderDetails.datetimeToPickUp
@@ -234,6 +252,7 @@ function CartDrawer({
 
       const newOrderDetails = structuredClone(orderDetails);
       newOrderDetails.datetimeToPickUp = newDate;
+      newOrderDetails.isASAP = false;
 
       console.log("updating");
 
