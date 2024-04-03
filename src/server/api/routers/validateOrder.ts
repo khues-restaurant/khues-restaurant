@@ -82,6 +82,7 @@ export const validateOrderRouter = createTRPCRouter({
         orderDetails: orderDetailsSchema,
         forceReturnOrderDetails: z.boolean().optional(),
         validatingAReorder: z.boolean().optional(),
+        resetOrderDetails: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -119,6 +120,7 @@ export const validateOrderRouter = createTRPCRouter({
         orderDetails: originalOrderDetails,
         forceReturnOrderDetails,
         validatingAReorder,
+        resetOrderDetails,
       } = input;
 
       const orderDetails = structuredClone(originalOrderDetails);
@@ -144,7 +146,7 @@ export const validateOrderRouter = createTRPCRouter({
       }
 
       // Item validation
-      const items = orderDetails.items;
+      const items = resetOrderDetails ? [] : orderDetails.items;
       const removedItemNames = [];
 
       for (const item of items) {

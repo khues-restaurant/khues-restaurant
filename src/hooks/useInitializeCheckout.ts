@@ -58,6 +58,8 @@ function useInitializeCheckout() {
       details: orderDetails,
     });
 
+    localStorage.setItem("khue's-resetOrderDetails", "true");
+
     checkout().catch(console.error);
   }
 

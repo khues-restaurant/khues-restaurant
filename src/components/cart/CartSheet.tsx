@@ -54,6 +54,7 @@ import { getDisabledDates } from "~/utils/getDisabledPickupDates";
 import { getHoursAndMinutesFromDate } from "~/utils/getHoursAndMinutesFromDate";
 import { getMidnightDate } from "~/utils/getMidnightDate";
 import { is30MinsFromDatetime } from "~/utils/is30MinsFromDatetime";
+import { isAbleToRenderASAPTimeSlot } from "~/utils/isAbleToRenderASAPTimeSlot";
 import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
 import { selectedDateIsToday } from "~/utils/selectedDateIsToday";
 import { cn } from "~/utils/shadcnuiUtils";
@@ -178,20 +179,29 @@ function CartSheet({
             return false;
           }
 
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
+          const minOrderPickupDatetime = minPickupTime.value;
+          const now = new Date();
 
-          const datetime = mergeDateAndTime(
+          // ASAP time slot validation
+          if (orderDetails.isASAP) {
+            return (
+              isAbleToRenderASAPTimeSlot(new Date()) &&
+              now >= minOrderPickupDatetime
+            );
+          }
+
+          const datetimeToPickUp = mergeDateAndTime(
             mainForm.getValues().dateToPickUp,
             time,
           );
 
-          if (!datetime) return false;
+          if (!datetimeToPickUp) return false;
 
-          // fyi: returns message if expression is false
+          // Regular pickup time validation
           return (
-            is30MinsFromDatetime(datetime, today) &&
-            datetime >= minPickupTime.value
+            datetimeToPickUp > now &&
+            datetimeToPickUp > minOrderPickupDatetime &&
+            is30MinsFromDatetime(datetimeToPickUp, new Date())
           );
         },
         {

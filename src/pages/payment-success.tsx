@@ -18,11 +18,27 @@ function PaymentSuccess() {
 
   const { updateOrder } = useUpdateOrder();
 
+  // why did we name this orderHasBeenReset?
   const [orderHasBeenReset, setOrderHasBeenReset] = useState(false);
 
   useEffect(() => {
     if (order && !orderHasBeenReset) {
       setOrderHasBeenReset(true);
+
+      if (localStorage.getItem("khue's-resetOrderDetails") === "true") {
+        localStorage.setItem(
+          "khue's-orderDetails",
+          JSON.stringify({
+            datetimeToPickUp: new Date(),
+            isASAP: false,
+            items: [],
+            includeNapkinsAndUtensils: false,
+            discountId: null,
+          }),
+        );
+
+        localStorage.removeItem("khue's-resetOrderDetails");
+      }
 
       setTimeout(() => {
         push(`/track?id=${order.id}`).catch(console.error);

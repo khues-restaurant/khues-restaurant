@@ -51,6 +51,11 @@ function useHandleLocalStorage() {
 
     console.log("validating from local storage");
 
+    const resetOrderDetails =
+      localStorage.getItem("khue's-resetOrderDetails") === "true"
+        ? true
+        : false;
+
     if (user) {
       try {
         orderDetailsSchema.parse(user.currentOrder);
@@ -98,6 +103,7 @@ function useHandleLocalStorage() {
           userId,
           orderDetails: parsedOrder,
           forceReturnOrderDetails: true,
+          resetOrderDetails,
         });
         setOrderDetailsRetrieved(true);
 
@@ -138,6 +144,7 @@ function useHandleLocalStorage() {
       userId,
       orderDetails: parsedOrder,
       forceReturnOrderDetails: true,
+      resetOrderDetails,
     });
     setOrderDetailsRetrieved(true);
   }, [setOrderDetails, userId, orderDetailsRetrieved, user, validateOrder]);

@@ -197,9 +197,19 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         birthdayReward: item.birthdayReward,
       }));
 
+      let adjustedDatetimeToPickup = new Date(orderDetails.datetimeToPickUp);
+
+      // add 20 minutes to current time if order is ASAP
+      if (orderDetails.isASAP) {
+        adjustedDatetimeToPickup = new Date();
+        adjustedDatetimeToPickup.setMinutes(
+          adjustedDatetimeToPickup.getMinutes() + 20,
+        );
+      }
+
       const orderData = {
         stripeSessionId: payment.id,
-        datetimeToPickup: new Date(orderDetails.datetimeToPickUp),
+        datetimeToPickup: adjustedDatetimeToPickup,
         firstName: paymentMetadata.firstName,
         lastName: paymentMetadata.lastName,
         email: paymentMetadata.email,
@@ -214,9 +224,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       };
 
-      console.log("userId is", user?.userId);
-
-      const order = await prisma.order.create({
+      await prisma.order.create({
         data: orderData,
       });
 
@@ -234,6 +242,12 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       // 4) update user rewards points/rank + reset their currentOrder
       if (user) {
+        function getTodayAtMidnight() {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          return today;
+        }
+
         await prisma.user.update({
           where: {
             userId: payment.metadata.userId,
@@ -242,16 +256,14 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
             rewardsPoints: currPoints,
             lifetimeRewardPoints,
             currentOrder: {
-              datetimeToPickUp: new Date(),
+              datetimeToPickUp: getTodayAtMidnight(),
+              isASAP: false,
               items: [],
               includeNapkinsAndUtensils: false,
+              discountId: null,
             },
           },
         });
-
-        // TODO: probably want to set showRewardsDiscountNotification to be false
-        // if you are redeeming a reward discount on this order. Only exception would be
-        // if this order brought the user back over the threshold for a new reward discount.
       }
 
       // 5) send websocket emit to dashboard
