@@ -61,7 +61,7 @@ function OrderNow() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const menuCategoriesContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const [currentlyInViewCategory, setCurrentlyInViewCategory] = useState("");
+  const [currentlyInViewCategory, setCurrentlyInViewCategory] = useState(""); //TODO: dynamically have this be set to either Favorites or Recent orders if applicable or w/e the first category is otherwise
   const [programmaticallyScrolling, setProgrammaticallyScrolling] =
     useState(false);
 
@@ -71,6 +71,28 @@ function OrderNow() {
   const [itemToCustomize, setItemToCustomize] = useState<FullMenuItem | null>(
     null,
   );
+
+  const [stickyCategoriesApi, setStickyCategoriesApi] = useState<CarouselApi>();
+  const [stickyCategoriesSlide, setStickyCategoriesSlide] = useState(0);
+  // ^ might not actually need this or even the effect below
+
+  useEffect(() => {
+    if (!stickyCategoriesApi) {
+      return;
+    }
+
+    setStickyCategoriesSlide(stickyCategoriesApi.selectedScrollSnap());
+
+    stickyCategoriesApi.on("select", () => {
+      setStickyCategoriesSlide(stickyCategoriesApi.selectedScrollSnap());
+    });
+
+    // setTimeout(() => {
+    //   stickyCategoriesApi.scrollTo(2);
+    // }, 1000);
+
+    // eventually add proper cleanup functions here
+  }, [stickyCategoriesApi]);
 
   const [favoriteItemsApi, setFavoriteItemsApi] = useState<CarouselApi>();
   const [favoriteItemsSlide, setFavoriteItemsSlide] = useState(0);
@@ -160,6 +182,9 @@ function OrderNow() {
     };
   }, []);
 
+  // TODO: copy over <Sticky> scroll container logic whenever you actually get it to a point where
+  // you like it.
+
   return (
     <motion.div
       key={"order-now"}
@@ -221,6 +246,7 @@ function OrderNow() {
               className="baseFlex z-10 h-full w-full bg-white shadow-lg tablet:shadow-none"
             >
               {/* unsure of why container increases in size a bit on desktop when sticky becomes active..  */}
+
               <Sticky
                 top={"#header"}
                 activeClass="bg-white h-16"
@@ -228,135 +254,148 @@ function OrderNow() {
                 innerClass="bg-white w-full h-12"
                 className="baseFlex w-full p-2"
               >
-                <div
-                  ref={menuCategoriesContainerRef}
-                  className={
-                    "no-scrollbar flex w-full snap-x snap-mandatory gap-4 overflow-x-scroll scroll-smooth"
-                  }
+                <Carousel
+                  setApi={setStickyCategoriesApi}
+                  opts={{
+                    breakpoints: {
+                      "(min-width: 1000px)": {
+                        active: false,
+                      },
+                    },
+                    dragFree: true,
+                    // inViewThreshold: 0.5,
+                    // align: "start",
+                    // skipSnaps: true, // play around with this
+                  }}
+                  className="baseFlex w-full !justify-start"
                 >
-                  {userFavoriteItemIds.length > 0 && (
-                    <div className="flex-none shrink-0 snap-center text-center">
-                      <Button
-                        variant={
-                          currentlyInViewCategory === "Favorites"
-                            ? "default"
-                            : "outline"
-                        }
-                        size="sm"
-                        className="border"
-                        onClick={() => {
-                          const favoritesContainer =
-                            document.getElementById("FavoritesContainer");
-
-                          if (favoritesContainer) {
-                            setProgrammaticallyScrolling(true);
-
-                            favoritesContainer.scrollIntoView({
-                              behavior: "smooth",
-                            });
-
-                            setTimeout(() => {
-                              setProgrammaticallyScrolling(false);
-                            }, 500);
+                  <CarouselContent>
+                    {userFavoriteItemIds.length > 0 && (
+                      <CarouselItem order={0}>
+                        <MenuCategoryButton
+                          name={"Favorites"}
+                          listOrder={0}
+                          currentlyInViewCategory={currentlyInViewCategory}
+                          setProgrammaticallyScrolling={
+                            setProgrammaticallyScrolling
                           }
-                        }}
-                      >
-                        Favorites
-                      </Button>
-                    </div>
-                  )}
+                          stickyCategoriesApi={stickyCategoriesApi}
+                        />
+                      </CarouselItem>
+                    )}
 
-                  {userRecentOrders && userRecentOrders.length > 0 && (
-                    <div className="flex-none shrink-0 snap-center text-center">
-                      <Button
-                        variant={
-                          currentlyInViewCategory === "Recent orders"
-                            ? "default"
-                            : "outline"
-                        }
-                        size="sm"
-                        className="border"
-                        onClick={() => {
-                          const recentOrdersContainer = document.getElementById(
-                            "Recent ordersContainer",
-                          );
-
-                          if (recentOrdersContainer) {
-                            setProgrammaticallyScrolling(true);
-
-                            recentOrdersContainer.scrollIntoView({
-                              behavior: "smooth",
-                            });
-
-                            setTimeout(() => {
-                              setProgrammaticallyScrolling(false);
-                            }, 500);
+                    {userRecentOrders && userRecentOrders.length > 0 && (
+                      <CarouselItem order={1}>
+                        <MenuCategoryButton
+                          name={"Recent orders"}
+                          listOrder={0}
+                          currentlyInViewCategory={currentlyInViewCategory}
+                          setProgrammaticallyScrolling={
+                            setProgrammaticallyScrolling
                           }
+                          stickyCategoriesApi={stickyCategoriesApi}
+                        />
+                      </CarouselItem>
+                    )}
+
+                    {(userFavoriteItemIds.length > 0 ||
+                      (userRecentOrders && userRecentOrders.length > 0)) && (
+                      <Separator
+                        style={{
+                          order: 2,
                         }}
-                      >
-                        Recent orders
-                      </Button>
-                    </div>
-                  )}
+                        orientation="vertical"
+                        className="h-[35px] w-[1px]" // why did h-full not work here?
+                      />
+                    )}
 
-                  {(userFavoriteItemIds.length > 0 ||
-                    (userRecentOrders && userRecentOrders.length > 0)) && (
-                    <Separator
-                      orientation="vertical"
-                      className="h-[35px] w-[1px]" // why did h-full not work here?
-                    />
-                  )}
-
-                  {menuCategories?.map((category) => {
-                    if (category.name === "Beer") {
-                      return (
-                        <div
-                          key={category.id}
-                          style={{
-                            order: category.listOrder,
-                          }}
-                          className="baseFlex gap-2"
-                        >
-                          <Separator
-                            orientation="vertical"
-                            className="mr-2 h-full w-[1px]"
-                          />
-                          <MenuCategoryButton
+                    {menuCategories?.map((category) => {
+                      if (category.name === "Beer") {
+                        return (
+                          <div
                             key={category.id}
+                            style={{
+                              order:
+                                category.listOrder +
+                                (userFavoriteItemIds.length > 0 ||
+                                (userRecentOrders &&
+                                  userRecentOrders.length > 0)
+                                  ? 3
+                                  : 0),
+                            }}
+                            className="baseFlex gap-2"
+                          >
+                            <Separator
+                              orientation="vertical"
+                              className="ml-2 h-full w-[1px]"
+                            />
+                            <CarouselItem
+                              order={
+                                category.listOrder +
+                                (userFavoriteItemIds.length > 0 ||
+                                (userRecentOrders &&
+                                  userRecentOrders.length > 0)
+                                  ? 3
+                                  : 0)
+                              }
+                              basisLength={category.name.length * 12}
+                            >
+                              <MenuCategoryButton
+                                key={category.id}
+                                name={category.name}
+                                listOrder={category.listOrder}
+                                currentlyInViewCategory={
+                                  currentlyInViewCategory
+                                }
+                                setProgrammaticallyScrolling={
+                                  setProgrammaticallyScrolling
+                                }
+                                stickyCategoriesApi={stickyCategoriesApi}
+                              />
+                            </CarouselItem>
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <CarouselItem
+                          key={category.id}
+                          order={
+                            category.listOrder +
+                            (userFavoriteItemIds.length > 0 ||
+                            (userRecentOrders && userRecentOrders.length > 0)
+                              ? 3
+                              : 0)
+                          }
+                          basisLength={category.name.length * 12}
+                        >
+                          <MenuCategoryButton
                             name={category.name}
-                            listOrder={category.listOrder}
+                            listOrder={
+                              category.listOrder +
+                              (userFavoriteItemIds.length > 0 ||
+                              (userRecentOrders && userRecentOrders.length > 0)
+                                ? 3
+                                : 0)
+                            }
                             currentlyInViewCategory={currentlyInViewCategory}
                             setProgrammaticallyScrolling={
                               setProgrammaticallyScrolling
                             }
+                            stickyCategoriesApi={stickyCategoriesApi}
                           />
-                        </div>
+                        </CarouselItem>
                       );
-                    }
-
-                    return (
-                      <MenuCategoryButton
-                        key={category.id}
-                        name={category.name}
-                        listOrder={category.listOrder}
-                        currentlyInViewCategory={currentlyInViewCategory}
-                        setProgrammaticallyScrolling={
-                          setProgrammaticallyScrolling
-                        }
-                      />
-                    );
-                  })}
-                </div>
+                    })}
+                  </CarouselContent>
+                </Carousel>
 
                 {/* Custom scrollbar indicating scroll progress */}
 
                 {/* ah we want relative + -b-4 when not sticky
                     and then absolute -b-0 or w/e when sticky */}
 
-                {/* also maybe want to just hide this part on tablet+, since it would look distracting
-                    at best at that size */}
-
-                <div className="absolute -bottom-0 left-0 h-1 w-full bg-gray-200">
+                <div className="absolute bottom-0 left-0 h-1 w-full bg-gray-200">
                   <div
                     style={{ width: `${scrollProgress}%` }}
                     className="h-1 bg-primary"
@@ -404,10 +443,16 @@ function OrderNow() {
               className="baseVertFlex mt-8 h-full w-full gap-8 tablet:mt-0"
             >
               {/* TODO: add Favorites + Recent orders buttons to sticky list at top.
-                  should they just be the words or also have the heart/"redo" icon next to them? */}
+                  should they just be the words or also have the heart/"redo" icon next to them?
+                  ^^
+                  also decide whether you want to make their own component similar to <MenuCategory />
+                  to get the useInView() logic in there or try and adjust <MenuCategory /> to accomodate */}
 
               {userFavoriteItemIds.length > 0 && (
-                <div className="baseVertFlex mt-4 w-full !items-start gap-2">
+                <div
+                  id={"FavoritesContainer"}
+                  className="baseVertFlex mt-4 w-full scroll-m-48 !items-start gap-2"
+                >
                   <div className="baseFlex gap-3 pl-4 text-xl underline underline-offset-2">
                     <IoMdHeart />
                     <p>Favorites</p>
@@ -487,7 +532,10 @@ function OrderNow() {
               )}
 
               {userRecentOrders && userRecentOrders.length > 0 && (
-                <div className="baseVertFlex mt-4 w-full !items-start gap-2">
+                <div
+                  id={"Recent ordersContainer"}
+                  className="baseVertFlex mt-4 w-full scroll-m-48 !items-start gap-2"
+                >
                   <div className="baseFlex gap-3 pl-4 text-xl underline underline-offset-2">
                     <FaRedo className="size-4" />
                     <p>Recent orders</p>
@@ -566,6 +614,7 @@ function OrderNow() {
                   setIsDrawerOpen={setIsDrawerOpen}
                   setIsDialogOpen={setIsDialogOpen}
                   setItemToCustomize={setItemToCustomize}
+                  stickyCategoriesApi={stickyCategoriesApi}
                 />
               ))}
             </motion.div>
@@ -615,6 +664,7 @@ interface MenuCategoryButton {
   name: string;
   listOrder: number;
   setProgrammaticallyScrolling: Dispatch<SetStateAction<boolean>>;
+  stickyCategoriesApi: CarouselApi;
 }
 
 function MenuCategoryButton({
@@ -622,39 +672,33 @@ function MenuCategoryButton({
   name,
   listOrder,
   setProgrammaticallyScrolling,
+  stickyCategoriesApi,
 }: MenuCategoryButton) {
   return (
-    <motion.div
-      key={`${name}CategoryButton`}
+    <Button
+      // key={`${name}CategoryButton`}
       id={`${name}Button`}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      style={{
-        order: listOrder,
-      }}
-      className="flex-none shrink-0 snap-center text-center"
+      variant={currentlyInViewCategory === name ? "default" : "outline"}
+      size="sm"
+      className="border" // not ideal, but keeps same height for all buttons
       onClick={() => {
         const categoryContainer = document.getElementById(`${name}Container`);
 
         if (categoryContainer) {
           setProgrammaticallyScrolling(true);
 
+          // console.log("scrolling to", listOrder, name, categoryContainer);
+          stickyCategoriesApi?.scrollTo(listOrder - 1); // off by one?
           categoryContainer.scrollIntoView({ behavior: "smooth" });
 
           setTimeout(() => {
             setProgrammaticallyScrolling(false);
-          }, 500);
+          }, 600);
         }
       }}
     >
-      <Button
-        variant={currentlyInViewCategory === name ? "default" : "outline"}
-        size="sm"
-        className="border" // not ideal, but keeps same height for all buttons
-      >
-        {name}
-      </Button>
-    </motion.div>
+      {name}
+    </Button>
   );
 }
 
@@ -669,6 +713,7 @@ interface MenuCategory {
   setIsDrawerOpen: Dispatch<SetStateAction<boolean>>;
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
   setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
+  stickyCategoriesApi: CarouselApi;
 }
 
 function MenuCategory({
@@ -682,31 +727,40 @@ function MenuCategory({
   setIsDrawerOpen,
   setIsDialogOpen,
   setItemToCustomize,
+  stickyCategoriesApi,
 }: MenuCategory) {
   const menuCategoryRef = useRef(null);
-  const isInView = useInView(menuCategoryRef);
+  const isInView = useInView(menuCategoryRef, {
+    amount: 0.5,
+    // margin: "192px 0px 0px 0px"
+  });
+
+  // if (isInView) {
+  //   console.log(name, isInView);
+  // }
 
   useEffect(() => {
-    if (!isInView || programmaticallyScrolling) return;
+    if (!isInView || programmaticallyScrolling || !stickyCategoriesApi) return;
 
     setCurrentlyInViewCategory(name);
 
-    // TODO: certainly need to gate the scrolling if we don't have the scroll container
-    // yet right? Aka on desktop don't do this part
+    setTimeout(() => {
+      // console.log("scrolling to", listOrder - 1);
+      stickyCategoriesApi.scrollTo(listOrder - 1); // off by one?
+      // categoryButton.scrollIntoView({ behavior: "smooth" });
+    }, 0); // TODO: bandaid at best, we need to look at this section again big time
+    // const categoryButton = document.getElementById(`${name}Button`);
 
-    const categoryButton = document.getElementById(`${name}Button`);
-
-    if (categoryButton) {
-      setTimeout(() => {
-        categoryButton.scrollIntoView({ behavior: "smooth" });
-      }, 500); // TODO: bandaid at best, we need to look at this section again big time
-    }
+    // if (categoryButton) {
+    // }
   }, [
     isInView,
     name,
     setCurrentlyInViewCategory,
     currentlyInViewCategory,
     programmaticallyScrolling,
+    stickyCategoriesApi,
+    listOrder,
   ]);
 
   return (
@@ -719,7 +773,7 @@ function MenuCategory({
       style={{
         order: listOrder,
       }}
-      className="baseVertFlex w-full scroll-m-44 !items-start gap-4 p-2"
+      className="baseVertFlex w-full scroll-m-48 !items-start gap-4 p-2"
     >
       <div className="baseFlex relative w-full rounded-md">
         {/* TODO: one image w/ 3 dishes from category on mobile, three separate images on desktop

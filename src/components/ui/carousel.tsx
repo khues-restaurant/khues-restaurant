@@ -177,8 +177,11 @@ CarouselContent.displayName = "CarouselContent";
 
 const CarouselItem = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & {
+    order?: number;
+    basisLength?: number;
+  }
+>(({ className, order, basisLength, ...props }, ref) => {
   const { orientation } = useCarousel();
 
   return (
@@ -186,10 +189,14 @@ const CarouselItem = React.forwardRef<
       ref={ref}
       role="group"
       aria-roledescription="slide"
+      style={{
+        order,
+        // ...(basisLength !== undefined ? { flexBasis: `${basisLength}px` } : {}),
+      }}
       className={cn(
         // this had min-w-0, however it caused some layout issues when not all items were present
         // to fit the basis amount
-        "shrink-0 grow-0 basis-full",
+        order === undefined ? "shrink-0 grow-0 basis-full" : "shrink-0 grow-0",
         // this was just pl-4, but caused some layout issues so trying px-2
         orientation === "horizontal" ? "px-2" : "pt-4",
         className,
