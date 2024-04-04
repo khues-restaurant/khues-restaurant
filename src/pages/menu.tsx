@@ -1,5 +1,6 @@
 import { useAuth } from "@clerk/nextjs";
 import { type Discount } from "@prisma/client";
+import { format } from "date-fns";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import {
   useEffect,
@@ -8,31 +9,23 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { LuPlus } from "react-icons/lu";
 import Sticky from "react-stickynode";
-import ItemCustomizationDialog from "~/components/itemCustomization/ItemCustomizationDialog";
-import ItemCustomizationDrawer from "~/components/itemCustomization/ItemCustomizationDrawer";
 import { Button } from "~/components/ui/button";
-import { Drawer, DrawerContent } from "~/components/ui/drawer";
-import { Skeleton } from "~/components/ui/skeleton";
-import useGetViewportLabel from "~/hooks/useGetViewportLabel";
-import useUpdateOrder from "~/hooks/useUpdateOrder";
-import { type FullMenuItem } from "~/server/api/routers/menuCategory";
-import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
-import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
-import { api } from "~/utils/api";
-import { formatPrice } from "~/utils/formatPrice";
-import { Separator } from "~/components/ui/separator";
-import { format } from "date-fns";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "~/components/ui/carousel";
+import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
+import { Separator } from "~/components/ui/separator";
+import { Skeleton } from "~/components/ui/skeleton";
+import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
+import { type FullMenuItem } from "~/server/api/routers/menuCategory";
+import { useMainStore } from "~/stores/MainStore";
+import { api } from "~/utils/api";
+import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
+import { formatPrice } from "~/utils/formatPrice";
 
 const mixedDrinkItems = [
   "Sunset Mojito - $8.50",
@@ -72,14 +65,28 @@ function Menu() {
   const [programmaticallyScrolling, setProgrammaticallyScrolling] =
     useState(false);
 
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [menuCategoryIndicies, setMenuCategoryIndicies] = useState<
+    Record<string, number> | undefined
+  >();
 
-  const [itemToCustomize, setItemToCustomize] = useState<FullMenuItem | null>(
-    null,
-  );
+  useEffect(() => {
+    if (menuCategories === undefined) return;
 
-  const viewportLabel = useGetViewportLabel();
+    const categoryIndicies: Record<string, number> = {};
+    let currentIndex = 0;
+
+    menuCategories.forEach((category) => {
+      categoryIndicies[category.name] = currentIndex;
+      currentIndex++;
+    });
+
+    // add mixed drinks category/any other similar ones here
+    categoryIndicies["Mixed Drinks"] = currentIndex;
+
+    setMenuCategoryIndicies(categoryIndicies);
+  }, [menuCategories]);
+
+  const [stickyCategoriesApi, setStickyCategoriesApi] = useState<CarouselApi>();
 
   useEffect(() => {
     const updateScrollProgress = () => {
@@ -132,7 +139,7 @@ function Menu() {
 
       <div className="baseVertFlex relative w-full pb-8 tablet:w-3/4">
         <AnimatePresence mode="popLayout">
-          {!menuCategories && !isLoaded && isSignedIn === undefined ? (
+          {!menuCategories || menuCategoryIndicies === undefined ? (
             // idk if we need to make the skeleton sticky as well?
             <motion.div
               key={"loadingMenuCategoriesPicker"}
@@ -164,34 +171,84 @@ function Menu() {
                 innerClass="bg-white w-full h-12"
                 className="baseFlex w-full p-2"
               >
-                <div
-                  ref={menuCategoriesContainerRef}
-                  className={
-                    "no-scrollbar flex w-full snap-x snap-mandatory gap-4 overflow-x-scroll scroll-smooth"
-                  }
+                <Carousel
+                  setApi={setStickyCategoriesApi}
+                  opts={{
+                    breakpoints: {
+                      "(min-width: 1000px)": {
+                        active: false,
+                      },
+                    },
+                    dragFree: true,
+                    align: "start",
+                  }}
+                  className="baseFlex w-full"
                 >
-                  {menuCategories?.map((category) => (
-                    <MenuCategoryButton
-                      key={category.id}
-                      name={category.name}
-                      listOrder={category.listOrder}
-                      currentlyInViewCategory={currentlyInViewCategory}
-                      setProgrammaticallyScrolling={
-                        setProgrammaticallyScrolling
+                  <CarouselContent>
+                    {menuCategories?.map((category) => {
+                      if (category.name === "Beer") {
+                        return (
+                          <div key={category.id} className="baseFlex gap-2">
+                            <Separator
+                              orientation="vertical"
+                              className="ml-4 mr-2 h-full w-[2px]"
+                            />
+                            <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
+                              <MenuCategoryButton
+                                key={category.id}
+                                name={category.name}
+                                listOrder={menuCategoryIndicies.Beer!}
+                                currentlyInViewCategory={
+                                  currentlyInViewCategory
+                                }
+                                setProgrammaticallyScrolling={
+                                  setProgrammaticallyScrolling
+                                }
+                                stickyCategoriesApi={stickyCategoriesApi}
+                              />
+                            </CarouselItem>
+                          </div>
+                        );
                       }
-                    />
-                  ))}
-                </div>
+
+                      return (
+                        <CarouselItem
+                          className="baseFlex basis-1/5 tablet:basis-auto"
+                          key={category.id}
+                        >
+                          <MenuCategoryButton
+                            name={category.name}
+                            listOrder={menuCategoryIndicies[category.name] ?? 0}
+                            currentlyInViewCategory={currentlyInViewCategory}
+                            setProgrammaticallyScrolling={
+                              setProgrammaticallyScrolling
+                            }
+                            stickyCategoriesApi={stickyCategoriesApi}
+                          />
+                        </CarouselItem>
+                      );
+                    })}
+
+                    <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
+                      <MenuCategoryButton
+                        name={"Mixed Drinks"}
+                        listOrder={menuCategoryIndicies["Mixed Drinks"]!}
+                        currentlyInViewCategory={currentlyInViewCategory}
+                        setProgrammaticallyScrolling={
+                          setProgrammaticallyScrolling
+                        }
+                        stickyCategoriesApi={stickyCategoriesApi}
+                      />
+                    </CarouselItem>
+                  </CarouselContent>
+                </Carousel>
 
                 {/* Custom scrollbar indicating scroll progress */}
 
                 {/* ah we want relative + -b-4 when not sticky
                     and then absolute -b-0 or w/e when sticky */}
 
-                {/* also maybe want to just hide this part on tablet+, since it would look distracting
-                    at best at that size */}
-
-                <div className="absolute -bottom-0 left-0 h-1 w-full bg-gray-200">
+                <div className="absolute bottom-0 left-0 h-1 w-full bg-gray-200">
                   <div
                     style={{ width: `${scrollProgress}%` }}
                     className="h-1 bg-primary"
@@ -203,7 +260,7 @@ function Menu() {
         </AnimatePresence>
 
         <AnimatePresence mode="popLayout">
-          {!menuCategories && !isLoaded && isSignedIn === undefined ? (
+          {!menuCategories || menuCategoryIndicies === undefined ? (
             <motion.div
               key={"loadingMenuContent"}
               initial={{ opacity: 0 }}
@@ -236,7 +293,7 @@ function Menu() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="baseVertFlex mt-8 h-full w-full gap-8 tablet:mt-0"
+              className="baseVertFlex mb-8 mt-8 h-full w-full gap-8 tablet:mt-0"
             >
               {menuCategories?.map((category) => (
                 <MenuCategory
@@ -244,126 +301,27 @@ function Menu() {
                   name={category.name}
                   activeDiscount={category.activeDiscount}
                   menuItems={category.menuItems as FullMenuItem[]}
-                  listOrder={category.listOrder}
+                  listOrder={menuCategoryIndicies[category.name]!}
                   currentlyInViewCategory={currentlyInViewCategory}
                   setCurrentlyInViewCategory={setCurrentlyInViewCategory}
                   programmaticallyScrolling={programmaticallyScrolling}
-                  setIsDrawerOpen={setIsDrawerOpen}
-                  setIsDialogOpen={setIsDialogOpen}
-                  setItemToCustomize={setItemToCustomize}
+                  stickyCategoriesApi={stickyCategoriesApi}
                 />
               ))}
 
-              <motion.div
-                // ref={menuCategoryRef}
-                key={`mixedDrinksContainer`}
-                id={`mixedDrinksContainer`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                style={{
-                  order: 1000,
-                }}
-                className="baseVertFlex w-full scroll-m-44 !items-start gap-4 p-2"
-              >
-                <div className="baseFlex relative w-full rounded-md">
-                  {/* TODO: one image w/ 3 dishes from category on mobile, three separate images on desktop
-            so image isn't distorted */}
-                  <div className="imageFiller h-48 w-full rounded-md"></div>
-                  <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md border-2 border-primary bg-white px-4 py-2 shadow-md tablet:!flex-row tablet:!items-center tablet:gap-4">
-                    <p className="ml-1 text-xl font-semibold underline underline-offset-2">
-                      Mixed Drinks
-                    </p>
-
-                    {/* {activeDiscount && (
-                      <div className="rewardsGoldBorder baseFlex gap-1 rounded-md bg-primary px-4 py-0.5 text-sm font-medium text-yellow-500">
-                        <span>{activeDiscount.name}</span>
-                        <span>
-                          until {format(activeDiscount.expirationDate, "MM/dd")}
-                        </span>
-                      </div>
-                    )} */}
-                  </div>
-                </div>
-
-                {/* wrapping container for each food item in the category */}
-                <div className="grid w-full grid-cols-2 gap-8 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                  {mixedDrinkItems.slice(0, 10).map((item) => (
-                    <p key={item}>{item}</p>
-                  ))}
-                </div>
-
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="link">View all mixed drinks</Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <div className="baseVertFlex !items-start gap-8">
-                      <div className="baseFlex relative w-full rounded-md">
-                        {/* TODO: one image w/ 3 dishes from category on mobile, three separate images on desktop
-            so image isn't distorted */}
-                        <div className="imageFiller h-48 w-full rounded-md"></div>
-                        <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md border-2 border-primary bg-white px-4 py-2 shadow-md tablet:!flex-row tablet:!items-center tablet:gap-4">
-                          <p className="ml-1 text-xl font-semibold underline underline-offset-2">
-                            Mixed Drinks
-                          </p>
-
-                          {/* {activeDiscount && (
-                      <div className="rewardsGoldBorder baseFlex gap-1 rounded-md bg-primary px-4 py-0.5 text-sm font-medium text-yellow-500">
-                        <span>{activeDiscount.name}</span>
-                        <span>
-                          until {format(activeDiscount.expirationDate, "MM/dd")}
-                        </span>
-                      </div>
-                    )} */}
-                        </div>
-                      </div>
-
-                      {/* wrapping container for each food item in the category */}
-                      <ul className="baseVertFlex max-h-[300px] w-full gap-2 overflow-y-auto tablet:max-h-[500px]">
-                        {mixedDrinkItems.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </motion.div>
+              <NotInDatabaseCategory
+                name={"Mixed Drinks"}
+                menuItems={mixedDrinkItems}
+                listOrder={menuCategoryIndicies["Mixed Drinks"]!}
+                currentlyInViewCategory={currentlyInViewCategory}
+                setCurrentlyInViewCategory={setCurrentlyInViewCategory}
+                programmaticallyScrolling={programmaticallyScrolling}
+                stickyCategoriesApi={stickyCategoriesApi}
+              />
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-
-      {viewportLabel.includes("mobile") ? (
-        <Drawer
-          open={Boolean(isDrawerOpen && itemToCustomize)}
-          onOpenChange={(open) => {
-            if (!open) {
-              setIsDrawerOpen(false);
-              setTimeout(() => {
-                setItemToCustomize(null);
-              }, 300);
-            }
-          }}
-        >
-          <DrawerContent>
-            <AnimatePresence>
-              {itemToCustomize && (
-                <ItemCustomizationDrawer
-                  setIsDrawerOpen={setIsDrawerOpen}
-                  itemToCustomize={itemToCustomize}
-                />
-              )}
-            </AnimatePresence>
-          </DrawerContent>
-        </Drawer>
-      ) : (
-        <ItemCustomizationDialog
-          isDialogOpen={isDialogOpen}
-          setIsDialogOpen={setIsDialogOpen}
-          itemToCustomize={itemToCustomize}
-          setItemToCustomize={setItemToCustomize}
-        />
-      )}
     </motion.div>
   );
 }
@@ -375,6 +333,7 @@ interface MenuCategoryButton {
   name: string;
   listOrder: number;
   setProgrammaticallyScrolling: Dispatch<SetStateAction<boolean>>;
+  stickyCategoriesApi: CarouselApi;
 }
 
 function MenuCategoryButton({
@@ -382,6 +341,7 @@ function MenuCategoryButton({
   name,
   listOrder,
   setProgrammaticallyScrolling,
+  stickyCategoriesApi,
 }: MenuCategoryButton) {
   return (
     <motion.div
@@ -399,11 +359,12 @@ function MenuCategoryButton({
         if (categoryContainer) {
           setProgrammaticallyScrolling(true);
 
+          stickyCategoriesApi?.scrollTo(listOrder);
           categoryContainer.scrollIntoView({ behavior: "smooth" });
 
           setTimeout(() => {
             setProgrammaticallyScrolling(false);
-          }, 500);
+          }, 600);
         }
       }}
     >
@@ -426,9 +387,7 @@ interface MenuCategory {
   currentlyInViewCategory: string;
   setCurrentlyInViewCategory: Dispatch<SetStateAction<string>>;
   programmaticallyScrolling: boolean;
-  setIsDrawerOpen: Dispatch<SetStateAction<boolean>>;
-  setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
-  setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
+  stickyCategoriesApi: CarouselApi;
 }
 
 function MenuCategory({
@@ -439,34 +398,30 @@ function MenuCategory({
   currentlyInViewCategory,
   setCurrentlyInViewCategory,
   programmaticallyScrolling,
-  setIsDrawerOpen,
-  setIsDialogOpen,
-  setItemToCustomize,
+  stickyCategoriesApi,
 }: MenuCategory) {
   const menuCategoryRef = useRef(null);
-  const isInView = useInView(menuCategoryRef);
+  const isInView = useInView(menuCategoryRef, {
+    amount: 0.5,
+    // margin: "192px 0px 0px 0px"
+  });
 
   useEffect(() => {
     if (!isInView || programmaticallyScrolling) return;
 
     setCurrentlyInViewCategory(name);
 
-    // TODO: certainly need to gate the scrolling if we don't have the scroll container
-    // yet right? Aka on desktop don't do this part
-
-    const categoryButton = document.getElementById(`${name}Button`);
-
-    if (categoryButton) {
-      setTimeout(() => {
-        categoryButton.scrollIntoView({ behavior: "smooth" });
-      }, 500); // TODO: bandaid at best, we need to look at this section again big time
-    }
+    setTimeout(() => {
+      stickyCategoriesApi?.scrollTo(listOrder);
+    }, 0);
   }, [
     isInView,
     name,
     setCurrentlyInViewCategory,
     currentlyInViewCategory,
     programmaticallyScrolling,
+    stickyCategoriesApi,
+    listOrder,
   ]);
 
   return (
@@ -479,7 +434,7 @@ function MenuCategory({
       style={{
         order: listOrder,
       }}
-      className="baseVertFlex w-full scroll-m-44 !items-start gap-4 p-2"
+      className="baseVertFlex w-full scroll-m-48 !items-start gap-4 p-2"
     >
       <div className="baseFlex relative w-full rounded-md">
         {/* TODO: one image w/ 3 dishes from category on mobile, three separate images on desktop
@@ -502,16 +457,14 @@ function MenuCategory({
       </div>
 
       {/* wrapping container for each food item in the category */}
-      <div className="grid w-full grid-cols-1 sm:grid-cols-2 sm:gap-8 xl:grid-cols-3 2xl:grid-cols-4">
+      <div className="grid w-full grid-cols-1 p-1 sm:grid-cols-2 sm:gap-8 xl:grid-cols-3 2xl:grid-cols-4">
         {menuItems.map((item) => (
           <MenuItemPreviewButton
             key={item.id}
+            categoryName={name}
             menuItem={item}
             activeDiscount={activeDiscount} // TODO: should prob also add ?? item.activeDiscount too right? was giving type error w/ createdAt but 99% sure this should be on there
             listOrder={item.listOrder}
-            setIsDialogOpen={setIsDialogOpen}
-            setIsDrawerOpen={setIsDrawerOpen}
-            setItemToCustomize={setItemToCustomize}
           />
         ))}
       </div>
@@ -519,22 +472,236 @@ function MenuCategory({
   );
 }
 
+interface NotInDatabaseCategory {
+  name: string;
+  menuItems: string[];
+  listOrder: number;
+  currentlyInViewCategory: string;
+  setCurrentlyInViewCategory: Dispatch<SetStateAction<string>>;
+  programmaticallyScrolling: boolean;
+  stickyCategoriesApi: CarouselApi;
+}
+
+function NotInDatabaseCategory({
+  name,
+  menuItems,
+  listOrder,
+  currentlyInViewCategory,
+  setCurrentlyInViewCategory,
+  programmaticallyScrolling,
+  stickyCategoriesApi,
+}: NotInDatabaseCategory) {
+  const menuCategoryRef = useRef(null);
+  const isInView = useInView(menuCategoryRef, {
+    amount: 0.5,
+    // margin: "192px 0px 0px 0px"
+  });
+
+  useEffect(() => {
+    if (!isInView || programmaticallyScrolling) return;
+
+    setCurrentlyInViewCategory(name);
+
+    setTimeout(() => {
+      stickyCategoriesApi?.scrollTo(listOrder);
+    }, 0);
+  }, [
+    isInView,
+    name,
+    setCurrentlyInViewCategory,
+    currentlyInViewCategory,
+    programmaticallyScrolling,
+    stickyCategoriesApi,
+    listOrder,
+  ]);
+
+  return (
+    <motion.div
+      ref={menuCategoryRef}
+      key={`${name}MenuCategory`}
+      id={`${name}Container`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      style={{
+        order: listOrder,
+      }}
+      className="baseVertFlex w-full scroll-m-48 !items-start gap-4 p-2"
+    >
+      <div className="baseFlex relative w-full rounded-md">
+        {/* TODO: one image w/ 3 dishes from category on mobile, three separate images on desktop
+            so image isn't distorted */}
+        <div className="imageFiller h-48 w-full rounded-md"></div>
+        <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md border-2 border-primary bg-white px-4 py-2 shadow-md tablet:!flex-row tablet:!items-center tablet:gap-4">
+          <p className="ml-1 text-xl font-semibold underline underline-offset-2">
+            {name}
+          </p>
+
+          {/* {activeDiscount && (
+                      <div className="rewardsGoldBorder baseFlex gap-1 rounded-md bg-primary px-4 py-0.5 text-sm font-medium text-yellow-500">
+                        <span>{activeDiscount.name}</span>
+                        <span>
+                          until {format(activeDiscount.expirationDate, "MM/dd")}
+                        </span>
+                      </div>
+                    )} */}
+        </div>
+      </div>
+
+      {/* wrapping container for each food item in the category */}
+      <div className="grid w-full grid-cols-2 gap-8 p-1 text-sm sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+        {menuItems.slice(0, 10).map((item) => (
+          <p key={item}>{item}</p>
+        ))}
+      </div>
+
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            variant="link"
+            className="h-8 self-center !p-0 tablet:self-start"
+          >{`View all ${name}`}</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <div className="baseVertFlex !items-start gap-8">
+            <div className="baseFlex relative w-full rounded-md">
+              {/* TODO: one image w/ 3 dishes from category on mobile, three separate images on desktop
+            so image isn't distorted */}
+              <div className="imageFiller h-48 w-full rounded-md"></div>
+              <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md border-2 border-primary bg-white px-4 py-2 shadow-md tablet:!flex-row tablet:!items-center tablet:gap-4">
+                <p className="ml-1 text-xl font-semibold underline underline-offset-2">
+                  {name}
+                </p>
+
+                {/* {activeDiscount && (
+                      <div className="rewardsGoldBorder baseFlex gap-1 rounded-md bg-primary px-4 py-0.5 text-sm font-medium text-yellow-500">
+                        <span>{activeDiscount.name}</span>
+                        <span>
+                          until {format(activeDiscount.expirationDate, "MM/dd")}
+                        </span>
+                      </div>
+                    )} */}
+              </div>
+            </div>
+
+            {/* wrapping container for each food item in the category */}
+            <ul className="baseVertFlex max-h-[300px] w-full gap-2 overflow-y-auto tablet:max-h-[500px]">
+              {menuItems.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </motion.div>
+  );
+}
+
+function formatMenuItemPrice(
+  categoryName: string,
+  menuItem: FullMenuItem,
+  activeDiscount: Discount | null,
+  customizationChoices: Record<string, CustomizationChoiceAndCategory>,
+) {
+  if (categoryName === "Wine") {
+    return (
+      // format: Glass - $8.00 | Bottle - $30.00
+      <p className="text-sm">
+        Glass -{" "}
+        {formatPrice(
+          calculateRelativeTotal({
+            items: [
+              {
+                price: menuItem.altPrice ?? menuItem.price,
+                quantity: 1,
+                discountId: null, //activeDiscount?.id ?? null,
+
+                // only necessary to fit Item shape
+                id: menuItem.id,
+                itemId: menuItem.id,
+                customizations: {}, // not necessary since all default choices are already included in price
+                includeDietaryRestrictions: false,
+                name: menuItem.name,
+                specialInstructions: "",
+                birthdayReward: false,
+                pointReward: false,
+              },
+            ],
+            customizationChoices,
+            discounts: {}, // TODO: do we want to show discount prices on menu? I feel like we should keep it
+            // to just the regular prices..
+          }),
+        )}{" "}
+        | Bottle -{" "}
+        {formatPrice(
+          calculateRelativeTotal({
+            items: [
+              {
+                price: menuItem.price,
+                quantity: 1,
+                discountId: null, //activeDiscount?.id ?? null,
+
+                // only necessary to fit Item shape
+                id: menuItem.id,
+                itemId: menuItem.id,
+                customizations: {}, // not necessary since all default choices are already included in price
+                includeDietaryRestrictions: false,
+                name: menuItem.name,
+                specialInstructions: "",
+                birthdayReward: false,
+                pointReward: false,
+              },
+            ],
+            customizationChoices,
+            discounts: {}, // TODO: do we want to show discount prices on menu? I feel like we should keep it
+            // to just the regular prices..
+          }),
+        )}
+      </p>
+    );
+  }
+
+  return (
+    <p className="self-end text-base">
+      {formatPrice(
+        calculateRelativeTotal({
+          items: [
+            {
+              price: menuItem.price,
+              quantity: 1,
+              discountId: null, //activeDiscount?.id ?? null,
+
+              // only necessary to fit Item shape
+              id: menuItem.id,
+              itemId: menuItem.id,
+              customizations: {}, // not necessary since all default choices are already included in price
+              includeDietaryRestrictions: false,
+              name: menuItem.name,
+              specialInstructions: "",
+              birthdayReward: false,
+              pointReward: false,
+            },
+          ],
+          customizationChoices,
+          discounts: {}, // TODO: do we want to show discount prices on menu? I feel like we should keep it
+          // to just the regular prices..
+        }),
+      )}
+    </p>
+  );
+}
+
 interface MenuItemPreviewButton {
+  categoryName: string;
   menuItem: FullMenuItem;
   activeDiscount: Discount | null;
   listOrder: number;
-  setIsDrawerOpen: Dispatch<SetStateAction<boolean>>;
-  setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
-  setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
 }
 
 function MenuItemPreviewButton({
+  categoryName,
   menuItem,
   activeDiscount,
   listOrder,
-  setIsDialogOpen,
-  setIsDrawerOpen,
-  setItemToCustomize,
 }: MenuItemPreviewButton) {
   const { orderDetails, customizationChoices, discounts } = useMainStore(
     (state) => ({
@@ -564,38 +731,13 @@ function MenuItemPreviewButton({
                 {menuItem.description}
               </p>
             </div>
-            <p
-              //  ${activeDiscount ? "rounded-md bg-primary px-4 py-0.5 text-white" : ""}
-
-              className={`self-end text-base 
-              `}
-            >
-              {formatPrice(
-                calculateRelativeTotal({
-                  items: [
-                    {
-                      price: menuItem.price,
-                      quantity: 1,
-                      discountId: null, //activeDiscount?.id ?? null,
-
-                      // only necessary to fit Item shape
-                      id: menuItem.id,
-                      itemId: menuItem.id,
-                      customizations: {}, // not necessary since all default choices are already included in price
-                      includeDietaryRestrictions: false,
-                      name: menuItem.name,
-                      specialInstructions: "",
-                      birthdayReward: false,
-                      pointReward: false,
-                    },
-                  ],
-                  customizationChoices,
-                  discounts: {}, // TODO: do we want to show discount prices on menu? I feel like we should keep it
-                  // to just the regular prices..
-                }),
-              )}
-            </p>
           </div>
+          {formatMenuItemPrice(
+            categoryName,
+            menuItem,
+            activeDiscount,
+            customizationChoices,
+          )}
         </div>
       </div>
     </div>

@@ -57,9 +57,10 @@ model MenuCategory {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
 
-    name      String
-    active    Boolean @default(true)
-    listOrder Int     @default(autoincrement())
+    name            String
+    active          Boolean @default(true) // probably useful for seasonal categories
+    orderableOnline Boolean @default(true) // whether category can be ordered online
+    listOrder       Int     @default(autoincrement())
 
     menuItems        MenuItem[]
     activeDiscount   Discount?  @relation(fields: [activeDiscountId], references: [id])
@@ -79,7 +80,6 @@ model MenuItem {
     // or in it's own model in here, tied to MenuItem by id
     available        Boolean @default(true) // whether item is able to be ordered (86'd or not)
     discontinued     Boolean @default(false) // whether item is no longer on the menu
-    orderableOnline  Boolean @default(true) // whether item can be ordered online
     listOrder        Int     @default(autoincrement())
 
     menuCategory     MenuCategory @relation(fields: [menuCategoryId], references: [id])

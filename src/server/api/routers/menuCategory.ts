@@ -5,6 +5,7 @@ import {
   type MenuItem,
   type SuggestedPairing,
 } from "@prisma/client";
+import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 type StoreSuggestedPairing = SuggestedPairing & {
@@ -24,42 +25,44 @@ export type FullMenuItem = MenuItem & {
 };
 
 export const menuCategoryRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    const menuCategories = await ctx.prisma.menuCategory.findMany({
-      where: {
-        active: true,
-      },
-      include: {
-        activeDiscount: true,
-        menuItems: {
-          include: {
-            activeDiscount: true,
-            customizationCategories: {
-              include: {
-                customizationChoices: true,
+  getAll: publicProcedure
+    .input(z.object({ onlyOnlineOrderable: z.boolean() }).optional())
+    .query(async ({ ctx, input }) => {
+      const menuCategories = await ctx.prisma.menuCategory.findMany({
+        where: {
+          active: true,
+          ...(input?.onlyOnlineOrderable ? { orderableOnline: true } : {}),
+        },
+        include: {
+          activeDiscount: true,
+          menuItems: {
+            include: {
+              activeDiscount: true,
+              customizationCategories: {
+                include: {
+                  customizationChoices: true,
+                },
               },
-            },
-            suggestedPairings: {
-              include: {
-                drinkMenuItem: true,
+              suggestedPairings: {
+                include: {
+                  drinkMenuItem: true,
+                },
               },
-            },
-            suggestedWith: {
-              include: {
-                foodMenuItem: true,
+              suggestedWith: {
+                include: {
+                  foodMenuItem: true,
+                },
               },
             },
           },
         },
-      },
-      // Is there any use case for ordering the menu categories?
-      // orderBy: {
-      //   listOrder: "asc",
-      // },
-    });
+        orderBy: {
+          listOrder: "asc",
+        },
+      });
 
-    return menuCategories;
-  }),
+      return menuCategories;
+    }),
 
   getRewardsCategories: publicProcedure.query(async ({ ctx }) => {
     const menuCategories = await ctx.prisma.menuCategory.findMany({
