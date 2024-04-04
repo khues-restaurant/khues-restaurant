@@ -41,11 +41,16 @@ import classes from "./DesktopHeader.module.css";
 import useGetUserId from "~/hooks/useGetUserId";
 import CartButton from "~/components/cart/CartButton";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
+import { useMainStore } from "~/stores/MainStore";
 
 function DesktopHeader() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
   const { asPath, push } = useRouter();
   const userId = useGetUserId();
+
+  const { resetStore } = useMainStore((state) => ({
+    resetStore: state.resetStore,
+  }));
 
   const { data: user } = api.user.get.useQuery(userId);
 
@@ -248,6 +253,7 @@ function DesktopHeader() {
                   onClick={async () => {
                     await signOut(async () => {
                       clearLocalStorage();
+                      resetStore();
                       await push("/");
                     });
                   }}

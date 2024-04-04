@@ -42,11 +42,16 @@ import { TfiReceipt } from "react-icons/tfi";
 import useGetUserId from "~/hooks/useGetUserId";
 import CartButton from "~/components/cart/CartButton";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
+import { useMainStore } from "~/stores/MainStore";
 
 function MobileHeader() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
   const userId = useGetUserId();
   const { asPath, push, events } = useRouter();
+
+  const { resetStore } = useMainStore((state) => ({
+    resetStore: state.resetStore,
+  }));
 
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
 
@@ -117,16 +122,16 @@ function MobileHeader() {
                     }${asPath}`}
                   >
                     <Button
-                    // size={"lg"}
-                    // onClick={() => {
-                    //   if (asPath.includes("/create")) {
-                    //     localStorageTabData.set(getStringifiedTabData());
-                    //   }
+                      className="px-8"
+                      // onClick={() => {
+                      //   if (asPath.includes("/create")) {
+                      //     localStorageTabData.set(getStringifiedTabData());
+                      //   }
 
-                    //   // technically can sign in from signup page and vice versa
-                    //   if (!userId) localStorageRedirectRoute.set(asPath);
-                    //   // ^^ but technically could just append it onto the postSignupRegistration route right?
-                    // }}
+                      //   // technically can sign in from signup page and vice versa
+                      //   if (!userId) localStorageRedirectRoute.set(asPath);
+                      //   // ^^ but technically could just append it onto the postSignupRegistration route right?
+                      // }}
                     >
                       Sign up
                     </Button>
@@ -223,6 +228,7 @@ function MobileHeader() {
                           onClick={async () => {
                             await signOut(async () => {
                               clearLocalStorage();
+                              resetStore();
                               await push("/");
                             });
                           }}

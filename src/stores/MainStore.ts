@@ -100,6 +100,31 @@ function getTodayAtMidnight() {
   return today;
 }
 
+function resetStore() {
+  return {
+    orderDetails: {
+      datetimeToPickUp: getTodayAtMidnight(),
+      isASAP: false,
+      items: [],
+      includeNapkinsAndUtensils: false,
+      discountId: null,
+    },
+    prevOrderDetails: {
+      datetimeToPickUp: getTodayAtMidnight(),
+      isASAP: false,
+      items: [],
+      includeNapkinsAndUtensils: false,
+      discountId: null,
+    },
+    menuItems: {},
+    customizationChoices: {},
+    discounts: {},
+    userFavoriteItemIds: [],
+    itemNamesRemovedFromCart: [],
+    cartInitiallyValidated: false,
+  };
+}
+
 interface StoreState {
   orderDetails: OrderDetails;
   setOrderDetails: (orderDetails: OrderDetails) => void;
@@ -128,6 +153,8 @@ interface StoreState {
   setItemNamesRemovedFromCart: (itemNamesRemovedFromCart: string[]) => void;
   cartInitiallyValidated: boolean;
   setCartInitiallyValidated: (cartInitiallyValidated: boolean) => void;
+
+  resetStore: () => void;
 }
 
 export const useMainStore = createWithEqualityFn<StoreState>()(
@@ -189,6 +216,10 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
       cartInitiallyValidated: false,
       setCartInitiallyValidated: (cartInitiallyValidated: boolean) => {
         set({ cartInitiallyValidated });
+      },
+
+      resetStore: () => {
+        set(resetStore());
       },
     }),
     shallow,
