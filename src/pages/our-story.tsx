@@ -47,7 +47,7 @@ function OurStory() {
       className="baseVertFlex mt-[6.05rem] min-h-dvh w-full !justify-start tablet:mt-32"
     >
       {/* Hero */}
-      <div className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72">
+      <div className="baseFlex relative h-56 w-full overflow-hidden border-b-2 tablet:h-72">
         <div className="baseFlex absolute left-0 top-0 w-full border-b-2">
           {/* wide-ish angle shot of the dining room maybe? technically could also
               do outside shot of restaurant as well! */}

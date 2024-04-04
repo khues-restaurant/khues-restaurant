@@ -128,7 +128,7 @@ export default function Home() {
       </div>
 
       {/* Press Reviews */}
-      <div className="baseVertFlex w-full gap-2 border-y-2 pb-4 tablet:border-t-0">
+      <div className="baseVertFlex w-full gap-2 border-y-[1px] pb-4 tablet:border-t-0">
         <Carousel
           setApi={setPressReviewsApi}
           opts={{
@@ -237,13 +237,15 @@ export default function Home() {
               </div>
               <div className="baseFlex gap-4">
                 <BsSpeedometer2 className="size-6" />
-                <p>Get your order made with priority</p>
+                <p>
+                  Priority service: Your orders jump to the front of the line
+                </p>
               </div>
               <div className="baseFlex gap-4">
                 <TfiReceipt className="size-6" />
                 <p className="max-w-52">
-                  Rewards members earn points for their orders, which build up
-                  to free meals
+                  Rewards members earn points towards free meals with every
+                  order
                 </p>
               </div>
             </div>
@@ -254,7 +256,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="baseFlex !hidden w-full gap-8 py-8 tablet:!flex">
+        <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
           <div className="baseVertFlex !items-start gap-4 p-4">
             <p className="text-lg font-medium">
               Order directly through us to receive mouthwatering benefits
@@ -266,13 +268,15 @@ export default function Home() {
               </div>
               <div className="baseFlex gap-4">
                 <BsSpeedometer2 className="size-6" />
-                <p>Get your order made with priority</p>
+                <p>
+                  Priority service: Your orders jump to the front of the line
+                </p>
               </div>
               <div className="baseFlex gap-4">
                 <TfiReceipt className="size-6" />
                 <p className="max-w-lg">
-                  Rewards members earn points for their orders, which build up
-                  to free meals
+                  Rewards members earn points towards free meals with every
+                  order
                 </p>
               </div>
             </div>
@@ -285,8 +289,30 @@ export default function Home() {
           </div>
 
           <div className="baseFlex relative size-72">
-            <div className="imageFiller absolute left-0 top-0 h-full w-full rounded-md shadow-md"></div>
-            <div className="absolute right-4 top-4 z-[-1] h-full w-full rounded-md bg-primary"></div>
+            <motion.div
+              initial={{ opacity: 0, y: -100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                opacity: { duration: 0.2 },
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+              }}
+              viewport={{ once: true, amount: 0.75 }}
+              className="imageFiller absolute left-0 top-0 h-full w-full rounded-md shadow-md"
+            ></motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{
+                opacity: { duration: 0.2 },
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+              }}
+              viewport={{ once: true, amount: 0.75 }}
+              className="absolute right-4 top-4 z-[-1] h-full w-full rounded-md bg-primary"
+            ></motion.div>
           </div>
         </div>
 
@@ -309,10 +335,32 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="baseFlex !hidden w-full gap-8 py-8  tablet:!flex">
+        <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
           <div className="baseFlex relative size-72">
-            <div className="imageFiller absolute left-0 top-0 h-full w-full rounded-md shadow-md"></div>
-            <div className="absolute left-4 top-4 z-[-1] h-full w-full rounded-md bg-primary"></div>
+            <motion.div
+              initial={{ opacity: 0, y: -100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                opacity: { duration: 0.2 },
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+              }}
+              viewport={{ once: true, amount: 0.75 }}
+              className="imageFiller absolute left-0 top-0 h-full w-full rounded-md shadow-md"
+            ></motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{
+                opacity: { duration: 0.2 },
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+              }}
+              viewport={{ once: true, amount: 0.75 }}
+              className="absolute left-4 top-4 z-[-1] h-full w-full rounded-md bg-primary"
+            ></motion.div>
           </div>
 
           <div className="baseVertFlex max-w-3xl !items-start gap-4 p-4">
@@ -350,7 +398,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="baseFlex !hidden w-full gap-8 py-8  tablet:!flex">
+        <div className="baseFlex !hidden w-full gap-16 py-8  tablet:!flex">
           <div className="baseVertFlex max-w-3xl gap-4 p-4">
             <p className="text-lg font-medium">
               Planning a birthday dinner or get together with your friends?
@@ -364,11 +412,34 @@ export default function Home() {
           </div>
 
           <div className="baseFlex relative size-72">
-            <div className="imageFiller absolute left-0 top-0 h-full w-full rounded-md shadow-md">
+            <motion.div
+              initial={{ opacity: 0, y: -100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                opacity: { duration: 0.2 },
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+              }}
+              viewport={{ once: true, amount: 0.75 }}
+              className="imageFiller absolute left-0 top-0 h-full w-full rounded-md shadow-md"
+            >
+              {" "}
               image of an empty table w/ full silverware layed out, kind of
               angled down shot at the table
-            </div>
-            <div className="absolute right-4 top-4 z-[-1] h-full w-full rounded-md bg-primary"></div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{
+                opacity: { duration: 0.2 },
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+              }}
+              viewport={{ once: true, amount: 0.75 }}
+              className="absolute right-4 top-4 z-[-1] h-full w-full rounded-md bg-primary"
+            ></motion.div>
           </div>
         </div>
 
@@ -459,6 +530,7 @@ export default function Home() {
                     slidesToScroll: 4,
                   },
                 },
+                dragFree: true,
                 // skipSnaps: true, play around with this
               }}
               className="baseFlex w-full rounded-md border"

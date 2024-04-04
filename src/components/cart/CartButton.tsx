@@ -46,7 +46,7 @@ function CartButton() {
           }
         }}
       >
-        <AnimatePresence>
+        <AnimatePresence mode="popLayout">
           {cartInitiallyValidated ? (
             <motion.div
               key={"cart-item-validated"}

@@ -3,6 +3,9 @@ import Image from "next/image";
 import { Button } from "~/components/ui/button";
 
 function Media() {
+  // don't see why you wouldn't want to have the title of the publication be a link
+  // to their website
+
   return (
     <motion.div
       key={"media"}
@@ -59,11 +62,11 @@ function Media() {
             ut aliquip ex ea commodo consequat. Duis aute irure dolor in
             reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
             pariatur.&quot;
-            <div className="baseFlex w-full !justify-between">
-              <Button variant={"link"} asChild>
+            <div className="baseFlex mt-2 w-full !justify-between">
+              <Button variant={"link"} className="h-8 !p-0" asChild>
                 <a href="https://www.startribune.com/">Read more</a>
               </Button>
-              <p className="text-sm text-gray-400">12/12/2024</p>
+              <p className="text-sm italic text-gray-400">12/12/2024</p>
             </div>
           </div>
         </div>
@@ -89,11 +92,11 @@ function Media() {
             ut aliquip ex ea commodo consequat. Duis aute irure dolor in
             reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
             pariatur.&quot;
-            <div className="baseFlex w-full !justify-between">
-              <Button variant={"link"} asChild>
+            <div className="baseFlex mt-2 w-full !justify-between">
+              <Button variant={"link"} className="h-8 !p-0" asChild>
                 <a href="https://www.startribune.com/">Read more</a>
               </Button>
-              <p className="text-sm text-gray-400">12/12/2024</p>
+              <p className="text-sm italic text-gray-400">12/12/2024</p>
             </div>
           </div>
         </div>
@@ -119,11 +122,11 @@ function Media() {
             ut aliquip ex ea commodo consequat. Duis aute irure dolor in
             reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
             pariatur.&quot;
-            <div className="baseFlex w-full !justify-between">
-              <Button variant={"link"} asChild>
+            <div className="baseFlex mt-2 w-full !justify-between">
+              <Button variant={"link"} className="h-8 !p-0" asChild>
                 <a href="https://www.startribune.com/">Read more</a>
               </Button>
-              <p className="text-sm text-gray-400">12/12/2024</p>
+              <p className="text-sm italic text-gray-400">12/12/2024</p>
             </div>
           </div>
         </div>
