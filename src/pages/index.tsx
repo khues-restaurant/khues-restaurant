@@ -397,7 +397,7 @@ export default function Home() {
                 //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%) 1 stretch",
               }
             }
-            className="baseVertFlex rewardsGoldBorder w-full max-w-3xl gap-4 rounded-md p-4 !pb-8 text-yellow-500 shadow-md tablet:p-8"
+            className="baseVertFlex rewardsGoldBorder w-full max-w-2xl gap-4 rounded-md p-4 !pb-8 text-yellow-500 shadow-md tablet:p-8"
           >
             <div className="baseFlex gap-4">
               <LeftAccentSwirls />
