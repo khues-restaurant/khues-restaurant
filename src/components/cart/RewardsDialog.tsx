@@ -1,4 +1,5 @@
 import Decimal from "decimal.js";
+import Image from "next/image";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import { Button } from "~/components/ui/button";
@@ -240,7 +241,13 @@ function RewardMenuItem({
   return (
     <div className="relative w-full max-w-96">
       <div className="baseFlex h-full w-full !items-start gap-4 rounded-md border-2 p-4">
-        <div className="imageFiller mt-2 size-16 rounded-md"></div>
+        <Image
+          src={"/menuItems/sampleImage.webp"}
+          alt={menuItem.name}
+          width={64}
+          height={64}
+          className="rounded-md"
+        />
 
         <div className="baseVertFlex h-full w-48 !items-start !justify-between">
           <div className="baseVertFlex !items-start gap-2">

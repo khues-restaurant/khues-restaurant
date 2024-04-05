@@ -86,7 +86,8 @@ function CartButton() {
               key={"cartButtonBeingValidatedSpinner"}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.35 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
               className="inline-block size-4 animate-spin rounded-full border-[2px] border-current border-t-transparent text-primary"
               role="status"
               aria-label="loading"

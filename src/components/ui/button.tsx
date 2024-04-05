@@ -15,8 +15,10 @@ const buttonVariants = cva(
         outline: "border border-input bg-background",
         secondary: "bg-secondary text-secondary-foreground",
         ghost: "",
+        // TODO: idk probably want/need to make a separate variant for the quantity buttons
+        // becaus although outline looks great, the disabled:opacity-50 above really does not look
+        // good with the borders also receiving the opacity shift
         link: "underlineAnimation text-primary",
-        // TODO: should also have an "activeLink" variant for header links when user is on that page
         activeLink: "activeUnderline text-primary",
         underline: "text-primary underline underline-offset-2",
         text: "text-neutral-400",

@@ -37,6 +37,7 @@ import { format } from "date-fns";
 import { IoMdHeart } from "react-icons/io";
 import useGetUserId from "~/hooks/useGetUserId";
 import { Separator } from "~/components/ui/separator";
+import Image from "next/image";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
@@ -205,21 +206,62 @@ function OrderNow() {
     >
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72">
-        <div className="tablet:baseFlex absolute left-0 top-0 grid h-full w-full grid-cols-2 grid-rows-2 border-b-2 tablet:gap-4">
+        <div className="baseFlex absolute left-0 top-0 h-full w-full border-b-2 bg-primary tablet:gap-8 desktop:gap-16">
           {/* desktop fading gradients */}
-          <div className="absolute left-0 top-0 h-full w-screen">
+          {/* <div className="absolute left-0 top-0 h-full w-screen">
             <div className="absolute left-0 top-0 hidden h-full w-1/6 bg-gradient-to-l from-transparent to-black/50 tablet:block"></div>
             <div className="absolute right-0 top-0 hidden h-full w-1/6 bg-gradient-to-r from-transparent to-black/50 tablet:block"></div>
-          </div>
+          </div> */}
 
-          <div className="imageFiller h-full w-full tablet:w-1/4"></div>
-          <div className="imageFiller h-full w-full tablet:w-1/4"></div>
-          <div className="imageFiller h-full w-full tablet:w-1/4"></div>
-          <div className="imageFiller h-full w-full tablet:w-1/4"></div>
+          {/* assuming you can get the bowls/plates to line up perfectly w/ the actual images,
+              I think having a combo of pretty varied items would look great for the mobile hero.
+              ^ implied, but this means you need to edit the images to line up into one cohesive image
+              with some software
+              
+              also obv have different dishes displayed between /menu and /order-now
+              */}
+
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: fill in w/ appropriate alt text"}
+            width={204}
+            height={204}
+            className="!relative rounded-md tablet:!hidden"
+          />
+
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: fill in w/ appropriate alt text"}
+            fill
+            className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
+          />
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: fill in w/ appropriate alt text"}
+            fill
+            className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
+          />
+          <div className="baseFlex z-10 !hidden rounded-md bg-white p-2 shadow-lg tablet:!flex">
+            <div className="experimentalBorder baseFlex font-semibold tablet:px-6 tablet:py-3 tablet:text-xl desktop:px-8 desktop:py-4 desktop:text-2xl">
+              Order
+            </div>
+          </div>
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: fill in w/ appropriate alt text"}
+            fill
+            className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
+          />
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: fill in w/ appropriate alt text"}
+            fill
+            className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
+          />
         </div>
 
-        <div className="baseFlex z-10 rounded-md bg-white p-2 shadow-lg">
-          <div className="experimentalBorder baseFlex px-8 py-4 text-xl font-semibold tablet:text-2xl">
+        <div className="baseFlex z-10 rounded-md bg-white p-2 shadow-lg tablet:hidden">
+          <div className="experimentalBorder baseFlex px-6 py-3 text-xl font-semibold tablet:px-8 tablet:py-4 tablet:text-2xl">
             Order
           </div>
         </div>
@@ -738,10 +780,17 @@ function MenuCategory({
       className="baseVertFlex w-full scroll-m-48 !items-start gap-4 p-2"
     >
       <div className="baseFlex relative w-full rounded-md">
-        {/* TODO: one image w/ 3 dishes from category on mobile, three separate images on desktop
-            so image isn't distorted */}
-        <div className="imageFiller h-48 w-full rounded-md"></div>
-        <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md border-2 border-primary bg-white px-4 py-2 shadow-md tablet:!flex-row tablet:!items-center tablet:gap-4">
+        <Image
+          src={"/menuItems/wideAngleFoodShot.webp"}
+          alt={name}
+          fill
+          style={{
+            objectFit: "cover",
+          }}
+          className="!relative !h-48 rounded-md"
+        />
+
+        <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md bg-white px-4 py-2 shadow-heavyInner tablet:!flex-row tablet:!items-center tablet:gap-4">
           <p className="ml-1 text-xl font-semibold underline underline-offset-2">
             {name}
           </p>
@@ -758,7 +807,7 @@ function MenuCategory({
       </div>
 
       {/* wrapping container for each food item in the category */}
-      <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+      <div className="grid w-full grid-cols-1 place-items-center gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {menuItems.map((item) => (
           <MenuItemPreviewButton
             key={item.id}
@@ -838,7 +887,13 @@ function MenuItemPreviewButton({
           }
         }}
       >
-        <div className="imageFiller size-24 rounded-md"></div>
+        <Image
+          src={"/menuItems/sampleImage.webp"}
+          alt={menuItem.name}
+          width={96}
+          height={96}
+          className="rounded-md"
+        />
 
         <div className="baseVertFlex h-full w-48 !items-start !justify-between">
           <div className="baseVertFlex !items-start gap-2">
@@ -1097,12 +1152,31 @@ function PreviousOrder({ order }: PreviousOrder) {
     <div className="relative h-40 w-full max-w-96">
       <div className="baseFlex h-full w-full gap-4 rounded-md border-2 px-4 py-6">
         <div className="grid w-28 grid-cols-2 grid-rows-2 !place-items-center gap-1">
-          <div className="imageFiller size-8 rounded-md"></div>
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={order.orderItems[0]?.name ?? "First item image"}
+            width={32}
+            height={32}
+            className="rounded-md"
+          />
+
           {order.orderItems.length > 1 && (
-            <div className="imageFiller size-8 rounded-md"></div>
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={order.orderItems[0]?.name ?? "Second item image"}
+              width={32}
+              height={32}
+              className="rounded-md"
+            />
           )}
           {order.orderItems.length > 2 && (
-            <div className="imageFiller size-8 rounded-md"></div>
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={order.orderItems[0]?.name ?? "Third item image"}
+              width={32}
+              height={32}
+              className="rounded-md"
+            />
           )}
           {order.orderItems.length > 3 && (
             <p className="text-center text-xs">

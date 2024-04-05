@@ -225,6 +225,8 @@ export default function Home() {
 
         {/* "Order directly through us" promo section */}
         <div className="baseVertFlex w-full rounded-md shadow-md tablet:hidden">
+          {/* maybe have stock image of person holding a phone and you would have a proportionally
+                tilted screenshot of the order page showing on their phone? think about it */}
           <div className="imageFiller h-60 w-full tablet:h-72 tablet:w-72"></div>
           <div className="baseVertFlex gap-4 p-4">
             <p className="text-lg font-medium">
@@ -289,6 +291,8 @@ export default function Home() {
           </div>
 
           <div className="baseFlex relative size-72">
+            {/* maybe have stock image of person holding a phone and you would have a proportionally
+                tilted screenshot of the order page showing on their phone? think about it */}
             <motion.div
               initial={{ opacity: 0, y: -100 }}
               whileInView={{ opacity: 1, y: 0 }}

@@ -8,6 +8,7 @@ import { CiGift } from "react-icons/ci";
 import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
 import { formatPrice } from "~/utils/formatPrice";
 import Decimal from "decimal.js";
+import Image from "next/image";
 
 interface OrderCost {
   subtotal: number;
@@ -78,6 +79,13 @@ function OrderSummary({ order }: OrderSummary) {
             >
               {/* preview image of item */}
               <div className="imageFiller size-12 rounded-md" />
+              <Image
+                src={"/menuItems/sampleImage.webp"}
+                alt={item.name}
+                width={48}
+                height={48}
+                className="rounded-md"
+              />
 
               <div className="baseFlex w-full !items-start !justify-between">
                 <div className="baseVertFlex !items-start">

@@ -10,6 +10,7 @@ import { Button } from "~/components/ui/button";
 import { SignUpButton } from "@clerk/nextjs";
 import WideFancySwirls from "~/components/ui/wideFancySwirls";
 import { Separator } from "~/components/ui/separator";
+import Image from "next/image";
 
 function Rewards() {
   return (
@@ -29,10 +30,46 @@ function Rewards() {
         }}
         className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72 tablet:overflow-x-hidden"
       >
+        {/* TODO not sure at all what is going on here and why the <img>s behave so fundamentally
+        different from the filler divs */}
+
         <div className="baseFlex mr-12 hidden w-full gap-8 tablet:flex">
-          <div className="imageFiller rounded-md shadow-md tablet:h-48 tablet:w-64"></div>
-          <div className="imageFiller rounded-md shadow-md tablet:h-48 tablet:w-64"></div>
-          <div className="imageFiller rounded-md shadow-md tablet:h-48 tablet:w-64"></div>
+          <Image
+            src={"/interior/one.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            // width={256}
+            // height={192}
+            fill
+            style={{
+              objectFit: "cover",
+            }}
+            // sizes="(min-width: 1000px) 256px, 192px"
+            className="!relative !h-[192px] !w-[256px] shrink-0 rounded-md"
+          />
+          <Image
+            src={"/interior/two.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            // width={256}
+            // height={192}
+            fill
+            style={{
+              objectFit: "cover",
+            }}
+            // sizes="(min-width: 1000px) 256px, 192px"
+            className="!relative !h-[192px] !w-[256px] shrink-0 rounded-md"
+          />
+          <Image
+            src={"/interior/three.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            // width={256}
+            // height={192}
+            fill
+            style={{
+              objectFit: "cover",
+            }}
+            // sizes="(min-width: 1000px) 256px, 192px"
+            className="!relative !h-[192px] !w-[256px] shrink-0 rounded-md"
+          />
         </div>
         <div className="baseFlex z-10 rounded-md bg-white p-2 text-yellow-500 shadow-lg">
           <div className="baseVertFlex text-xl font-semibold tablet:text-2xl">
@@ -44,14 +81,49 @@ function Rewards() {
           </div>
         </div>
         <div className="baseFlex ml-12 hidden w-full gap-8 tablet:flex">
-          <div className="imageFiller rounded-md shadow-md tablet:h-48 tablet:w-64"></div>
-          <div className="imageFiller rounded-md shadow-md tablet:h-48 tablet:w-64"></div>
-          <div className="imageFiller rounded-md shadow-md tablet:h-48 tablet:w-64"></div>
+          <Image
+            src={"/interior/four.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            // width={256}
+            // height={192}
+            fill
+            style={{
+              objectFit: "cover",
+            }}
+            // sizes="(min-width: 1000px) 256px, 192px"
+            className="!relative !h-[192px] !w-[256px] shrink-0 rounded-md"
+          />
+          <Image
+            src={"/interior/five.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            // width={256}
+            // height={192}
+            fill
+            style={{
+              objectFit: "cover",
+            }}
+            // sizes="(min-width: 1000px) 256px, 192px"
+            className="!relative !h-[192px] !w-[256px] shrink-0 rounded-md"
+          />
+          <Image
+            src={"/interior/six.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            // width={256}
+            // height={192}
+            fill
+            style={{
+              objectFit: "cover",
+            }}
+            // sizes="(min-width: 1000px) 256px, 192px"
+            className="!relative !h-[192px] !w-[256px] shrink-0 rounded-md"
+          />
         </div>
       </div>
 
       {/* Intro */}
-      <p className="max-w-72 leading-7 text-yellow-500 tablet:max-w-2xl tablet:font-medium tablet:leading-8">
+      {/* may need an xs viewport as well at like ~400 or 425px width so it doesn't stay scrunched
+      for so long. Also would be used on the member benefit cards too */}
+      <p className="max-w-72 leading-7 text-yellow-500 sm:max-w-xl md:max-w-2xl tablet:font-medium tablet:leading-8">
         Welcome to Khue&apos;s Rewards — where every bite takes you closer to
         delightful rewards! As a token of our appreciation, we&apos;ve crafted
         an exclusive program designed to celebrate our loyal customers. Indulge
@@ -70,7 +142,7 @@ function Rewards() {
         </p>
 
         <div className="baseVertFlex gap-8 tablet:!flex-row">
-          <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
+          <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md sm:w-96 tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
             <CiGift className="size-20 h-24 text-yellow-500" />
             <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
             <div className="hyphens-auto p-4 text-left">
@@ -81,7 +153,7 @@ function Rewards() {
             </div>
           </div>
 
-          <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
+          <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md sm:w-96 tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
             <FaCakeCandles className="ml-4 size-12 h-24 text-yellow-500" />
             <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
             <div className="hyphens-auto p-4 text-left">
@@ -92,7 +164,7 @@ function Rewards() {
             </div>
           </div>
 
-          <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
+          <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md sm:w-96 tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
             <LuCalendarClock className="ml-2 size-14 h-24 text-yellow-500" />
             <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
             <div className="hyphens-auto p-4 text-left">
@@ -107,11 +179,51 @@ function Rewards() {
       </div>
 
       {/* filler images to break up the monotony */}
-      <div className="baseVertFlex gap-4 tablet:!flex-row tablet:gap-16">
-        {/* could have these be smaller + in a row on mobile too */}
-        <div className="imageFiller size-64 rounded-md shadow-md tablet:h-48 tablet:w-64"></div>
-        <div className="imageFiller size-64 rounded-md shadow-md tablet:h-48 tablet:w-64"></div>
-        <div className="imageFiller size-64 rounded-md shadow-md tablet:h-48 tablet:w-64"></div>
+      <div className="baseVertFlex relative my-8 gap-8 text-yellow-500 tablet:my-28 tablet:!flex-row tablet:gap-28">
+        <div className="baseVertFlex gap-4">
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            fill
+            sizes="(min-width: 1000px) 256px, 192px"
+            className="!relative rounded-md"
+          />
+
+          <div className="baseVertFlex">
+            <p className="text-lg font-semibold">Appetizer One</p>
+            <p>950 points</p>
+          </div>
+        </div>
+
+        <div className="baseVertFlex gap-4">
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            fill
+            sizes="(min-width: 1000px) 256px, 192px"
+            className="!relative rounded-md"
+          />
+
+          <div className="baseVertFlex">
+            <p className="text-lg font-semibold">Entree One</p>
+            <p>1250 points</p>
+          </div>
+        </div>
+
+        <div className="baseVertFlex gap-4">
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            fill
+            sizes="(min-width: 1000px) 256px, 192px"
+            className="!relative rounded-md"
+          />
+
+          <div className="baseVertFlex">
+            <p className="text-lg font-semibold">Entree Two</p>
+            <p>1600 points</p>
+          </div>
+        </div>
       </div>
 
       {/* side benefits (Quicker ordering/Easy ordering/tailored ordering) */}
@@ -147,7 +259,7 @@ function Rewards() {
       {/* Join */}
       {/* TODO: figure out why rewardsGoldBorder doesn't apply at tablet viewport. maybe some kind of
         inherent tailwind restriction? */}
-      <div className="baseVertFlex tablet:rewardsGoldBorder mb-16 mt-8 max-w-xl gap-8 border-y-4 border-b-yellow-600 border-t-yellow-500 !p-8 text-yellow-500 shadow-md">
+      <div className="baseVertFlex tablet:rewardsGoldBorder mb-16 mt-8 max-w-xl gap-8 border-y-4 border-b-yellow-600 border-t-yellow-500 !p-6 text-yellow-500 shadow-md sm:!p-8">
         <p className="text-center">
           Joining Khue&apos;s Rewards is easy! Simply create an account with us
           and start earning points with every order. Plus, you&apos;ll receive

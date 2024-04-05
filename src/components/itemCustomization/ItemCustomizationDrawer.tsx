@@ -1,4 +1,8 @@
-import { MenuItem, type CustomizationChoice, Discount } from "@prisma/client";
+import {
+  type MenuItem,
+  type CustomizationChoice,
+  Discount,
+} from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import isEqual from "lodash.isequal";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
@@ -19,7 +23,7 @@ import {
   type CarouselApi,
   CarouselItem,
 } from "~/components/ui/carousel";
-import { CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
+import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import {
   type FullMenuItem,
   type StoreCustomizationCategory,
@@ -32,6 +36,7 @@ import {
 import { api } from "~/utils/api";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { formatPrice } from "~/utils/formatPrice";
+import Image from "next/image";
 
 function getDefaultCustomizationChoices(item: FullMenuItem) {
   return item.customizationCategories.reduce((acc, category) => {
@@ -133,239 +138,258 @@ function ItemCustomizationDrawer({
       transition={{
         duration: 0.35,
       }}
-      className="baseVertFlex max-h-[85dvh] w-full !justify-start overflow-y-auto"
+      className="baseVertFlex max-h-[85dvh] w-full !justify-start"
     >
-      {/* again probably make a separate "forCart" prop */}
-      {forCart && (
-        <Button
-          variant="underline"
-          size="sm"
-          className="baseFlex absolute left-0 top-1 gap-2"
-          onClick={() => {
-            setItemToCustomize?.(null);
-          }}
+      <div className="baseVertFlex relative w-full max-w-xl !justify-start overflow-y-auto">
+        {forCart && (
+          <Button
+            variant="underline"
+            size="sm"
+            className="baseFlex absolute left-0 top-1 gap-2"
+            onClick={() => {
+              setItemToCustomize?.(null);
+            }}
+          >
+            <IoIosArrowBack />
+            Back
+          </Button>
+        )}
+        <div
+          className={`baseVertFlex relative w-full gap-2 ${forCart ? "mt-12" : "mt-8"}`}
         >
-          <IoIosArrowBack />
-          Back
-        </Button>
-      )}
+          <div className="baseFlex relative w-full !justify-between px-8">
+            <p className="text-xl font-semibold underline underline-offset-2">
+              {itemToCustomize.name}
+            </p>
 
-      <div className="baseVertFlex mt-8 w-full gap-2">
-        <div className="baseFlex relative w-full !justify-between px-8">
-          <p className="text-xl font-semibold underline underline-offset-2">
-            {itemToCustomize.name}
-          </p>
+            {/* TODO: wrap the like button in a Popover to show "Only rewards members can favorite items" */}
 
-          {/* TODO: wrap the like button in a Popover to show "Only rewards members can favorite items" */}
-
-          <AnimatePresence>
-            {userFavoriteItemIds.includes(itemToCustomize.id) ? (
-              <Button
-                variant={"outline"}
-                disabled={unfavoritingItem}
-                size={"sm"}
-                onClick={() => {
-                  unfavoriteItem({
-                    userId,
-                    menuItemId: itemToCustomize.id,
-                  });
-                }}
-              >
-                <motion.div
-                  key={`${itemToCustomize.id}DislikeButton`}
-                  layout
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="baseFlex gap-2 text-primary"
+            <AnimatePresence>
+              {userFavoriteItemIds.includes(itemToCustomize.id) ? (
+                <Button
+                  variant={"outline"}
+                  disabled={unfavoritingItem}
+                  size={"sm"}
+                  onClick={() => {
+                    unfavoriteItem({
+                      userId,
+                      menuItemId: itemToCustomize.id,
+                    });
+                  }}
                 >
-                  <IoMdHeart />
-                  Favorited
-                </motion.div>
-              </Button>
-            ) : (
-              <Button
-                variant={"outline"}
-                disabled={favoritingItem}
-                size={"sm"}
-                onClick={() => {
-                  favoriteItem({
-                    userId,
-                    menuItemId: itemToCustomize.id,
-                  });
-                }}
-              >
-                <motion.div
-                  key={`${itemToCustomize.id}LikeButton`}
-                  layout
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="baseFlex gap-2 text-primary"
+                  <motion.div
+                    key={`${itemToCustomize.id}DislikeButton`}
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="baseFlex gap-2 text-primary"
+                  >
+                    <IoMdHeart />
+                    Favorited
+                  </motion.div>
+                </Button>
+              ) : (
+                <Button
+                  variant={"outline"}
+                  disabled={favoritingItem}
+                  size={"sm"}
+                  onClick={() => {
+                    favoriteItem({
+                      userId,
+                      menuItemId: itemToCustomize.id,
+                    });
+                  }}
                 >
-                  <IoMdHeartEmpty />
-                  Favorite
-                </motion.div>
-              </Button>
-            )}
-          </AnimatePresence>
+                  <motion.div
+                    key={`${itemToCustomize.id}LikeButton`}
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="baseFlex gap-2 text-primary"
+                  >
+                    <IoMdHeartEmpty />
+                    Favorite
+                  </motion.div>
+                </Button>
+              )}
+            </AnimatePresence>
+          </div>
+          {/* <div className="baseVertFlex imageFiller h-48 w-full max-w-80 rounded-md shadow-md" /> */}
+
+          {/* <Image
+          src={"/menuItems/sampleImage.webp"}
+          alt={itemToCustomize.name}
+          fill
+          // style={{
+          //   objectFit: "cover",
+          // }}
+          className="!relative !h-48 rounded-md"
+        /> */}
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={itemToCustomize.name}
+            width={240}
+            height={240}
+            className="rounded-md"
+          />
         </div>
-        <div className="baseVertFlex imageFiller h-48 w-full max-w-80 rounded-md shadow-md" />
-      </div>
 
-      {/* TODO: really have no clue why pb-36 is necessary here, it's like the footer just still
+        {/* TODO: really have no clue why pb-36 is necessary here, it's like the footer just still
           doesn't take up any space in dom? Making it relative helps, but it still is so damn weird */}
-      <div className="baseVertFlex w-full gap-12 p-8 pb-36 pt-4">
-        {/* Description */}
-        <div className="baseVertFlex w-full !items-start gap-2">
-          <p className="text-lg underline underline-offset-2">Description</p>
-          <p className="max-w-96 text-wrap text-left text-gray-400 tablet:max-w-2xl">
-            {itemToCustomize.description}
-          </p>
-        </div>
-
-        {/* Customizations */}
-        {itemToCustomize.customizationCategories.length > 0 && (
+        <div className="baseVertFlex w-full gap-12 p-8 pb-36 pt-4">
+          {/* Description */}
           <div className="baseVertFlex w-full !items-start gap-2">
-            <p className="text-lg underline underline-offset-2">
-              Customizations
+            <p className="text-lg underline underline-offset-2">Description</p>
+            <p className="max-w-96 text-wrap text-left text-gray-400 tablet:max-w-2xl">
+              {itemToCustomize.description}
             </p>
-
-            <div className="baseVertFlex w-full gap-2">
-              {itemToCustomize.customizationCategories.map((category) => (
-                <CustomizationGroup
-                  key={category.id}
-                  category={category}
-                  localItemOrderDetails={localItemOrderDetails}
-                  setLocalItemOrderDetails={setLocalItemOrderDetails}
-                  forReward={
-                    itemOrderDetails?.pointReward ??
-                    itemOrderDetails?.birthdayReward ??
-                    false
-                  }
-                />
-              ))}
-            </div>
           </div>
-        )}
 
-        {itemToCustomize.suggestedPairings.length > 0 && (
-          <div className="baseVertFlex w-full !items-start gap-2">
-            <p className="text-lg underline underline-offset-2">
-              Suggested Pairings
-            </p>
-            <Carousel
-              setApi={setSuggestedPairingsApi}
-              opts={{
-                skipSnaps: true,
-              }}
-              className="baseFlex w-full !justify-start"
-            >
-              <CarouselContent>
-                {itemToCustomize.suggestedPairings.map((pairing) => (
-                  <CarouselItem
-                    key={pairing.drinkMenuItem.id}
-                    className="basis-1/3"
-                  >
-                    <SuggestedPairing
-                      item={pairing.drinkMenuItem}
-                      customizationChoices={customizationChoices}
-                      discounts={discounts}
-                    />
-                  </CarouselItem>
+          {/* Customizations */}
+          {itemToCustomize.customizationCategories.length > 0 && (
+            <div className="baseVertFlex w-full !items-start gap-2">
+              <p className="text-lg underline underline-offset-2">
+                Customizations
+              </p>
+
+              <div className="baseVertFlex w-full gap-2">
+                {itemToCustomize.customizationCategories.map((category) => (
+                  <CustomizationGroup
+                    key={category.id}
+                    category={category}
+                    localItemOrderDetails={localItemOrderDetails}
+                    setLocalItemOrderDetails={setLocalItemOrderDetails}
+                    forReward={
+                      itemOrderDetails?.pointReward ??
+                      itemOrderDetails?.birthdayReward ??
+                      false
+                    }
+                  />
                 ))}
-              </CarouselContent>
-            </Carousel>
-          </div>
-        )}
-
-        {itemToCustomize.suggestedWith.length > 0 && (
-          <div className="baseVertFlex w-full !items-start gap-2">
-            <p className="text-lg underline underline-offset-2">
-              Suggested Pairings
-            </p>
-            <Carousel
-              setApi={setSuggestedPairingsApi}
-              opts={{
-                skipSnaps: true,
-              }}
-              className="baseFlex w-full !justify-start"
-            >
-              <CarouselContent>
-                {itemToCustomize.suggestedWith.map((pairing) => (
-                  <CarouselItem
-                    key={pairing.foodMenuItem.id}
-                    className="basis-1/3"
-                  >
-                    <SuggestedPairing
-                      item={pairing.foodMenuItem}
-                      customizationChoices={customizationChoices}
-                      discounts={discounts}
-                    />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
-          </div>
-        )}
-
-        {/* Special instructions */}
-        <div className="baseVertFlex w-full !items-start gap-4">
-          <div className="baseFlex gap-2">
-            <p className="text-lg underline underline-offset-2">
-              Special instructions
-            </p>
-            <span className="text-sm italic text-gray-400">- Optional</span>
-          </div>
-
-          {user && user.dietaryRestrictions.length > 0 && (
-            <div className="baseFlex relative left-0 top-0 gap-2">
-              <Switch
-                id="allergySwitch"
-                checked={localItemOrderDetails.includeDietaryRestrictions}
-                onCheckedChange={(checked) =>
-                  setLocalItemOrderDetails((prev) => ({
-                    ...prev,
-                    includeDietaryRestrictions: checked,
-                  }))
-                }
-              />
-              <Label htmlFor="allergySwitch">
-                Include dietary preferences associated with your account.
-              </Label>
+              </div>
             </div>
           )}
 
-          <div className="relative h-32 w-full">
-            <Textarea
-              className="h-full w-full resize-none rounded-md border-2 p-4"
-              placeholder="Detail out any special instructions for this item."
-              value={localItemOrderDetails.specialInstructions}
-              onChange={(e) => {
-                if (e.target.value.length > 100) return;
+          {itemToCustomize.suggestedPairings.length > 0 && (
+            <div className="baseVertFlex w-full !items-start gap-2">
+              <p className="text-lg underline underline-offset-2">
+                Suggested Pairings
+              </p>
+              <Carousel
+                setApi={setSuggestedPairingsApi}
+                opts={{
+                  skipSnaps: true,
+                }}
+                className="baseFlex w-full !justify-start"
+              >
+                <CarouselContent>
+                  {itemToCustomize.suggestedPairings.map((pairing) => (
+                    <CarouselItem
+                      key={pairing.drinkMenuItem.id}
+                      className="basis-1/3"
+                    >
+                      <SuggestedPairing
+                        item={pairing.drinkMenuItem}
+                        customizationChoices={customizationChoices}
+                        discounts={discounts}
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+            </div>
+          )}
 
-                setLocalItemOrderDetails({
-                  ...localItemOrderDetails,
-                  specialInstructions: e.target.value,
-                });
-              }}
-            />
-            <p className="pointer-events-none absolute bottom-2 right-4 text-xs text-gray-400 tablet:bottom-1">
-              {100 - localItemOrderDetails.specialInstructions.length}{" "}
-              characters remaining
-            </p>
+          {itemToCustomize.suggestedWith.length > 0 && (
+            <div className="baseVertFlex w-full !items-start gap-2">
+              <p className="text-lg underline underline-offset-2">
+                Suggested Pairings
+              </p>
+              <Carousel
+                setApi={setSuggestedPairingsApi}
+                opts={{
+                  skipSnaps: true,
+                }}
+                className="baseFlex w-full !justify-start"
+              >
+                <CarouselContent>
+                  {itemToCustomize.suggestedWith.map((pairing) => (
+                    <CarouselItem
+                      key={pairing.foodMenuItem.id}
+                      className="basis-1/3"
+                    >
+                      <SuggestedPairing
+                        item={pairing.foodMenuItem}
+                        customizationChoices={customizationChoices}
+                        discounts={discounts}
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+            </div>
+          )}
 
-            <p className="relative left-0 top-2 gap-2 text-sm italic text-gray-400 tablet:text-base">
-              *No price altering substitutions/additions allowed.
-            </p>
+          {/* Special instructions */}
+          <div className="baseVertFlex w-full !items-start gap-4">
+            <div className="baseFlex gap-2">
+              <p className="text-lg underline underline-offset-2">
+                Special instructions
+              </p>
+              <span className="text-sm italic text-gray-400">- Optional</span>
+            </div>
+
+            {user && user.dietaryRestrictions.length > 0 && (
+              <div className="baseFlex relative left-0 top-0 gap-2">
+                <Switch
+                  id="allergySwitch"
+                  checked={localItemOrderDetails.includeDietaryRestrictions}
+                  onCheckedChange={(checked) =>
+                    setLocalItemOrderDetails((prev) => ({
+                      ...prev,
+                      includeDietaryRestrictions: checked,
+                    }))
+                  }
+                />
+                <Label htmlFor="allergySwitch">
+                  Include dietary preferences associated with your account.
+                </Label>
+              </div>
+            )}
+
+            <div className="relative h-32 w-full">
+              <Textarea
+                className="h-full w-full resize-none rounded-md border-2 p-4"
+                placeholder="Detail out any special instructions for this item."
+                value={localItemOrderDetails.specialInstructions}
+                onChange={(e) => {
+                  if (e.target.value.length > 100) return;
+
+                  setLocalItemOrderDetails({
+                    ...localItemOrderDetails,
+                    specialInstructions: e.target.value,
+                  });
+                }}
+              />
+              <p className="pointer-events-none absolute bottom-2 right-4 text-xs text-gray-400 tablet:bottom-1">
+                {100 - localItemOrderDetails.specialInstructions.length}{" "}
+                characters remaining
+              </p>
+
+              <p className="relative left-0 top-2 gap-2 text-sm italic text-gray-400 tablet:text-base">
+                *No price altering substitutions/additions allowed.
+              </p>
+            </div>
           </div>
-        </div>
 
-        {/* Reviews */}
-        {/* <div className="baseVertFlex w-full gap-2">
+          {/* Reviews */}
+          {/* <div className="baseVertFlex w-full gap-2">
           </div> */}
+        </div>
       </div>
       <DrawerFooter>
         <div className="baseFlex w-full !justify-end bg-gray-200 px-4 py-2">
@@ -373,7 +397,7 @@ function ItemCustomizationDrawer({
             {!itemOrderDetails?.birthdayReward &&
               !itemOrderDetails?.pointReward && (
                 <div className="baseFlex gap-2">
-                  Quantity
+                  <span className="font-medium">Quantity</span>
                   <div className="baseFlex h-8">
                     <Button
                       variant="outline"
@@ -654,7 +678,13 @@ function SuggestedPairing({
 
   return (
     <div className="baseVertFlex min-w-56 gap-2 rounded-md border p-2">
-      <div className="imageFiller size-24 rounded-md shadow-md"></div>
+      <Image
+        src={"/menuItems/sampleImage.webp"}
+        alt={item.name}
+        width={96}
+        height={96}
+        className="rounded-md"
+      />
 
       <p className="text-lg font-medium">{item.name}</p>
 

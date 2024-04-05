@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import {
   Accordion,
@@ -8,6 +8,13 @@ import {
   AccordionTrigger,
 } from "~/components/ui/accordion";
 import Image from "next/image";
+import {
+  Carousel,
+  CarouselContent,
+  type CarouselApi,
+  CarouselItem,
+} from "~/components/ui/carousel";
+import { Button } from "~/components/ui/button";
 
 const restaurantNamesAndBackstories = [
   {
@@ -33,9 +40,24 @@ const restaurantNamesAndBackstories = [
 ];
 
 function OurStory() {
-  const [selectedImageIndex, setSelectedImageIndex] = useState("item-4");
-
   const viewportLabel = useGetViewportLabel();
+
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [carouselSlide, setCarouselSlide] = useState(0);
+
+  useEffect(() => {
+    if (!carouselApi) return;
+
+    setCarouselSlide(carouselApi.selectedScrollSnap());
+
+    carouselApi.on("select", () => {
+      setCarouselSlide(carouselApi.selectedScrollSnap());
+    });
+
+    // eventually add proper cleanup functions here
+  }, [carouselApi]);
+
+  console.log("carousel", carouselApi?.scrollSnapList());
 
   return (
     <motion.div
@@ -50,8 +72,20 @@ function OurStory() {
       <div className="baseFlex relative h-56 w-full overflow-hidden border-b-2 tablet:h-72">
         <div className="baseFlex absolute left-0 top-0 w-full border-b-2">
           {/* wide-ish angle shot of the dining room maybe? technically could also
-              do outside shot of restaurant as well! */}
-          <div className="imageFiller h-56 w-full tablet:h-72"></div>
+              do outside shot of restaurant as well! also obv just a collage of images of eric could work well
+              too, but maybe save those for below in the actual content of this page? */}
+          <Image
+            src={"/interior/seven.webp"}
+            alt={"TODO: Alt text"}
+            fill
+            style={{
+              objectFit: "cover",
+            }}
+            // don't think this is as flexible as you want, unless you maybe do some calc() related
+            // magic w/ chatgpt (if it's even necessary with the actual image that's used)
+            //   ->   tablet:object-[bottom_-268px_right_0px]
+            className={`!relative !h-56 tablet:!h-72`}
+          />
         </div>
 
         <div className="baseFlex z-10 rounded-md bg-white p-2 shadow-lg">
@@ -62,234 +96,125 @@ function OurStory() {
       </div>
 
       <div className="baseVertFlex relative w-full pb-8 tablet:w-3/4">
-        {/* "Accordion" on mobile / static "slideshow" on tablet+ of images + backstory of
-            Quang's, Khue's (Ghost) Kitchen, Khue's Kitchen @ Bar Brava, and Khue's */}
-        {/* for "Accordion", technically can try and finagle a system where you use the same
-            wide rectangle images as the desktop version, and just offset the little trigger previews
-            to show eric's head/face in them, so that when opened you can do the same 50% black gradient
-            with white text and have image be full trigger, but not trying that for now */}
-        {/* triggers will be p-0 (image-cover?) if not selected then opacity-50? that way you can leave
-            the "v/u" icon to be black? */}
-        {/* TODO: probably want to end up refactoring to have "useCustomTrigger" prop on accorion to
-            just take in raw string to add into className instead of just the boolean that it is now, that way
-            you can have it to be right-4 top-1/2. Side note, as long as the accessibilty isn't terrible, might
-            just be able to fade opacity of chevron when accordion item is active, since we are keeping min
-            one accordion item open at all times.  */}
-        {/* also haven't played with it but prob scroll to item on click? currently seems like it only does
-            it halfway or it's janky */}
-        {viewportLabel.includes("mobile") && (
-          <Accordion
-            type="single"
-            value={selectedImageIndex}
-            onValueChange={(value) => setSelectedImageIndex(value)}
-            collapsible={false}
-            className="mt-16 h-full w-full max-w-2xl space-y-2 px-8"
+        <div className="baseVertFlex mt-12 gap-4 tablet:!flex-row-reverse">
+          <Carousel
+            setApi={setCarouselApi}
+            // this was just not working at all for us on the first attempt, seems to be fine as is
+            // orientation={
+            //   viewportLabel.includes("mobile") ? "horizontal" : "vertical"
+            // }
+            opts={{
+              align: "start",
+              breakpoints: {
+                "(min-width: 0px)": {
+                  axis: "x",
+                },
+                "(min-width: 1000px)": {
+                  axis: "y",
+                },
+              },
+              loop: true,
+              // skipSnaps: true, play around with this
+            }}
+            className="baseFlex rounded-md tablet:!flex-col tablet:p-0"
           >
-            <AccordionItem value="item-1" className="border-none">
-              <AccordionTrigger
-                style={{
-                  height: selectedImageIndex === "item-1" ? "350px" : "100px",
-                }}
-                className="relative w-full overflow-hidden !p-0 !no-underline"
-              >
-                <Image
-                  src="/test.webp"
-                  alt="Khue's"
-                  fill
-                  style={{
-                    opacity: selectedImageIndex === "item-1" ? 1 : 0.5,
-                    borderRadius:
-                      selectedImageIndex === "item-1"
-                        ? "0.375rem 0.375rem 0 0"
-                        : "0.375rem",
-                  }}
-                  className="rounded-md object-cover object-center"
-                />
-              </AccordionTrigger>
+            {/* touch-pan-x tablet:touch-pan-y*/}
 
-              <AccordionContent className="rounded-md rounded-t-none border-4 border-t-0 border-primary pt-2">
-                <div className="baseVertFlex !items-start gap-2 px-4 py-2">
-                  <p className="font-semibold underline underline-offset-2">
-                    {restaurantNamesAndBackstories[0]!.name}
-                  </p>
-                  <p className="text-sm">
-                    {restaurantNamesAndBackstories[0]!.backstory}
-                  </p>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-2" className="border-none">
-              <AccordionTrigger
-                style={{
-                  height: selectedImageIndex === "item-2" ? "350px" : "100px",
-                }}
-                className="relative w-full overflow-hidden !p-0 !no-underline"
-              >
-                <Image
-                  src="/test.webp"
-                  alt="Khue's"
-                  fill
-                  style={{
-                    opacity: selectedImageIndex === "item-2" ? 1 : 0.5,
-                    borderRadius:
-                      selectedImageIndex === "item-2"
-                        ? "0.375rem 0.375rem 0 0"
-                        : "0.375rem",
-                  }}
-                  className="rounded-md object-cover object-center"
-                />
-              </AccordionTrigger>
-
-              <AccordionContent className="rounded-md rounded-t-none border-4 border-t-0 border-primary pt-2">
-                <div className="baseVertFlex !items-start gap-2 px-4 py-2">
-                  <p className="font-semibold underline underline-offset-2">
-                    {restaurantNamesAndBackstories[1]!.name}
-                  </p>
-                  <p className="text-sm">
-                    {restaurantNamesAndBackstories[1]!.backstory}
-                  </p>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-3" className="border-none">
-              <AccordionTrigger
-                style={{
-                  height: selectedImageIndex === "item-3" ? "350px" : "100px",
-                }}
-                className="relative w-full overflow-hidden !p-0 !no-underline"
-              >
-                <Image
-                  src="/test.webp"
-                  alt="Khue's"
-                  fill
-                  style={{
-                    opacity: selectedImageIndex === "item-3" ? 1 : 0.5,
-                    borderRadius:
-                      selectedImageIndex === "item-3"
-                        ? "0.375rem 0.375rem 0 0"
-                        : "0.375rem",
-                  }}
-                  className="rounded-md object-cover object-center"
-                />
-              </AccordionTrigger>
-
-              <AccordionContent className="rounded-md rounded-t-none border-4 border-t-0 border-primary pt-2">
-                <div className="baseVertFlex !items-start gap-2 px-4 py-2">
-                  <p className="font-semibold underline underline-offset-2">
-                    {restaurantNamesAndBackstories[2]!.name}
-                  </p>
-                  <p className="text-sm">
-                    {restaurantNamesAndBackstories[2]!.backstory}
-                  </p>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-4" className="border-none">
-              <AccordionTrigger
-                style={{
-                  height: selectedImageIndex === "item-4" ? "350px" : "100px",
-                }}
-                className="relative w-full overflow-hidden !p-0 !no-underline"
-              >
-                <Image
-                  src="/test.webp"
-                  alt="Khue's"
-                  fill
-                  style={{
-                    opacity: selectedImageIndex === "item-4" ? 1 : 0.5,
-                    borderRadius:
-                      selectedImageIndex === "item-4"
-                        ? "0.375rem 0.375rem 0 0"
-                        : "0.375rem",
-                  }}
-                  className="rounded-md object-cover object-center"
-                />
-              </AccordionTrigger>
-
-              <AccordionContent className="rounded-md rounded-t-none border-4 border-t-0 border-primary pt-2">
-                <div className="baseVertFlex !items-start gap-2 px-4 py-2">
-                  <p className="font-semibold underline underline-offset-2">
-                    {restaurantNamesAndBackstories[3]!.name}
-                  </p>
-                  <p className="text-sm">
-                    {restaurantNamesAndBackstories[3]!.backstory}
-                  </p>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        )}
-        {/* TODO: will need extra state but on hover have opacity go to 1 as well  */}
-        {!viewportLabel.includes("mobile") && (
-          <div className="baseFlex mt-16 w-full max-w-3xl gap-4">
-            {/* preview images which are really just "buttons", fine to keep as images w/ onClick? */}
-            <div className="baseVertFlex gap-2">
-              <Image
-                src="/test.webp"
-                alt="Khue's"
-                width={150}
-                height={100}
-                style={{
-                  opacity: selectedImageIndex === "item-1" ? 1 : 0.5,
-                }}
-                className="cursor-pointer rounded-md transition-opacity duration-500"
-                onClick={() => setSelectedImageIndex("item-1")}
-              />
-              <Image
-                src="/test.webp"
-                alt="Khue's"
-                width={150}
-                height={100}
-                style={{
-                  opacity: selectedImageIndex === "item-2" ? 1 : 0.5,
-                }}
-                className="cursor-pointer rounded-md transition-opacity duration-500"
-                onClick={() => setSelectedImageIndex("item-2")}
-              />
-              <Image
-                src="/test.webp"
-                alt="Khue's"
-                width={150}
-                height={100}
-                style={{
-                  opacity: selectedImageIndex === "item-3" ? 1 : 0.5,
-                }}
-                className="cursor-pointer rounded-md transition-opacity duration-500"
-                onClick={() => setSelectedImageIndex("item-3")}
-              />
-              <Image
-                src="/test.webp"
-                alt="Khue's"
-                width={150}
-                height={100}
-                style={{
-                  opacity: selectedImageIndex === "item-4" ? 1 : 0.5,
-                }}
-                className="cursor-pointer rounded-md transition-opacity duration-500"
-                onClick={() => setSelectedImageIndex("item-4")}
-              />
-            </div>
-
-            {/* main image + backstory */}
-            <div className="baseFlex w-full">
-              <AnimatePresence>
+            {/* recently added !items-start and max-w-80 and tried to add bandaid fixes at higher viewport
+              but there are a few hiccups. Test and fix */}
+            <CarouselContent className="baseFlex max-w-80 !items-start !justify-start sm:max-w-full tablet:h-[500px] tablet:w-[600px] tablet:!flex-col  tablet:!items-center tablet:!justify-start">
+              <CarouselItem className="flex justify-center px-0 tablet:!items-start tablet:pt-2">
                 <RestaurantAndBackstory
-                  name={
-                    restaurantNamesAndBackstories.find(
-                      (_, index) => `item-${index + 1}` === selectedImageIndex,
-                    )?.name ?? "Khue's"
-                  }
-                  backstory={
-                    restaurantNamesAndBackstories.find(
-                      (_, index) => `item-${index + 1}` === selectedImageIndex,
-                    )?.backstory ?? ""
-                  }
+                  name={restaurantNamesAndBackstories[0]!.name}
+                  backstory={restaurantNamesAndBackstories[0]!.backstory}
                 />
-              </AnimatePresence>
-            </div>
+              </CarouselItem>
+              <CarouselItem className="flex justify-center px-0 tablet:!items-start tablet:pt-2">
+                <RestaurantAndBackstory
+                  name={restaurantNamesAndBackstories[1]!.name}
+                  backstory={restaurantNamesAndBackstories[1]!.backstory}
+                />
+              </CarouselItem>
+              <CarouselItem className="flex justify-center px-0 tablet:!items-start tablet:pt-2">
+                <RestaurantAndBackstory
+                  name={restaurantNamesAndBackstories[2]!.name}
+                  backstory={restaurantNamesAndBackstories[2]!.backstory}
+                />
+              </CarouselItem>
+              <CarouselItem className="flex justify-center px-0 tablet:!items-start tablet:pt-2">
+                <RestaurantAndBackstory
+                  name={restaurantNamesAndBackstories[3]!.name}
+                  backstory={restaurantNamesAndBackstories[3]!.backstory}
+                />
+              </CarouselItem>
+            </CarouselContent>
+          </Carousel>
+
+          {/* max-w-80 necessary? */}
+          <div className="baseFlex relative h-full w-full max-w-80 gap-2 sm:max-w-full tablet:!flex-col">
+            <Button
+              variant={"ghost"}
+              className={`!size-20 rounded-md opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 0 ? "!opacity-100" : ""}`}
+            >
+              <Image
+                src={"/test.webp"}
+                alt={"Quang's"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="rounded-md"
+                onClick={() => carouselApi?.scrollTo(0)}
+              />
+            </Button>
+            <Button
+              variant={"ghost"}
+              className={`!size-20 rounded-md opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 1 ? "!opacity-100" : ""}`}
+            >
+              <Image
+                src={"/test.webp"}
+                alt={"Quang's"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="rounded-md"
+                onClick={() => carouselApi?.scrollTo(1)}
+              />
+            </Button>
+            <Button
+              variant={"ghost"}
+              className={`!size-20 rounded-md opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 2 ? "!opacity-100" : ""}`}
+            >
+              <Image
+                src={"/test.webp"}
+                alt={"Quang's"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="rounded-md"
+                onClick={() => carouselApi?.scrollTo(2)}
+              />
+            </Button>
+            <Button
+              variant={"ghost"}
+              className={`!size-20 rounded-md opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 3 ? "!opacity-100" : ""}`}
+            >
+              <Image
+                src={"/test.webp"}
+                alt={"Quang's"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="rounded-md"
+                onClick={() => carouselApi?.scrollTo(3)}
+              />
+            </Button>
           </div>
-        )}
+        </div>
+
         {/* Small opening statement */}
         <div className="mt-16 h-[1px] w-48 rounded-md bg-primary tablet:w-72"></div>
         <p className="mt-16 max-w-72 text-sm tracking-wide tablet:max-w-xl tablet:text-base">
@@ -306,13 +231,41 @@ function OurStory() {
         <div className="mt-16 h-[1px] w-48 rounded-md bg-primary tablet:w-72"></div>
         <div className="baseVertFlex w-full gap-2 pt-16">
           <p className="text-2xl font-semibold text-primary">Meet the Chef</p>
+          {/* toy around with ideas of some kind of animated underline here. Either a real simple
+              left to right one, or some kind of animated svg path for a stylized underline. Look
+              for examples online of what could be considered a "fancy" underline */}
           <p className="text-xl">Eric Pham</p>
         </div>
         <div className="baseFlex relative w-full px-4 pb-8 pt-16 tablet:max-w-4xl">
-          <div className="absolute bottom-0 left-0 h-3/4 w-full bg-primary tablet:rounded-md"></div>
-          <div className="relative h-[425px] w-[300px] rounded-md tablet:h-[525px] tablet:w-[350px]">
+          <motion.div
+            initial={{ opacity: 0, y: -100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              mass: 0.75,
+            }}
+            viewport={{ once: true, amount: 0.75 }}
+            className="relative h-[425px] w-[300px] rounded-md tablet:h-[525px] tablet:w-[350px]"
+          >
             <Image src="/eric.webp" alt="Eric" fill className="rounded-md" />
-          </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              mass: 0.75,
+            }}
+            viewport={{ once: true, amount: 0.35 }}
+            className="absolute bottom-0 left-0 z-[-1] h-3/4 w-full bg-primary tablet:rounded-md"
+          ></motion.div>
         </div>
         {/* Q&A w/ Eric */}
         <div className="mt-16 text-lg italic">
@@ -382,19 +335,22 @@ interface RestaurantAndBackstory {
 
 function RestaurantAndBackstory({ name, backstory }: RestaurantAndBackstory) {
   return (
-    <motion.div
-      key={`restaurant-${name}-backstory`}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="baseVertFlex relative h-[450px] w-[600px] gap-2"
-    >
-      <Image src="/test.webp" alt="Khue's" fill className="rounded-md" />
-      <div className="baseVertFlex absolute bottom-0 left-0 !items-start gap-2 rounded-b-md bg-gradient-to-tr from-black to-black/50 p-4 text-white">
+    <div className="baseVertFlex relative rounded-b-md border tablet:rounded-none tablet:border-none">
+      <Image
+        src="/test.webp"
+        alt="Khue's"
+        fill
+        className="!relative !w-80 rounded-t-md sm:!w-96 tablet:!h-[450px] tablet:!w-[600px] tablet:rounded-md"
+      />
+
+      {/* was by accident, but consider leaving th esm:max-w-md instead of having
+    the black gradient text container be full width, with a rounded-md it might look
+    pretty good!  */}
+
+      <div className="baseVertFlex w-full max-w-80 gap-2 rounded-b-md p-4 sm:max-w-md tablet:absolute tablet:bottom-0 tablet:left-0 tablet:!items-start tablet:bg-gradient-to-tr tablet:from-black tablet:to-black/50 tablet:text-white">
         <p className="font-semibold underline underline-offset-2">{name}</p>
         <p className="text-sm">{backstory}</p>
       </div>
-    </motion.div>
+    </div>
   );
 }

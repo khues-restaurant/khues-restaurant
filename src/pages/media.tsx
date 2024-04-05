@@ -24,10 +24,18 @@ function Media() {
             <div className="absolute right-0 top-0 hidden h-full w-1/6 bg-gradient-to-r from-transparent to-black/50 tablet:block"></div>
           </div>
 
-          <div className="imageFiller h-full w-full tablet:w-1/4"></div>
-          <div className="imageFiller h-full w-full tablet:w-1/4"></div>
-          <div className="imageFiller h-full w-full tablet:w-1/4"></div>
-          <div className="imageFiller h-full w-full tablet:w-1/4"></div>
+          <div className="imageFiller h-full w-full tablet:w-1/4">
+            maybe a combination of interior/exterior shots?
+          </div>
+          <div className="imageFiller h-full w-full tablet:w-1/4">
+            maybe a combination of interior/exterior shots?
+          </div>
+          <div className="imageFiller h-full w-full tablet:w-1/4">
+            maybe a combination of interior/exterior shots?
+          </div>
+          <div className="imageFiller h-full w-full tablet:w-1/4">
+            maybe a combination of interior/exterior shots?
+          </div>
         </div>
 
         {/* prob just want to have interior/exterior images or technically also there are images with

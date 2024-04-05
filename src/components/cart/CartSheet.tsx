@@ -5,6 +5,7 @@ import Decimal from "decimal.js";
 import { AnimatePresence, motion } from "framer-motion";
 import isEqual from "lodash.isequal";
 import { X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { useForm } from "react-hook-form";
@@ -580,7 +581,13 @@ function CartSheet({
                     className="baseFlex w-full !items-start gap-4"
                   >
                     {/* preview image of item */}
-                    <div className="imageFiller size-16 rounded-md" />
+                    <Image
+                      src={"/menuItems/sampleImage.webp"}
+                      alt={item.name}
+                      width={64}
+                      height={64}
+                      className="rounded-md"
+                    />
 
                     <div className="baseFlex w-full !items-start !justify-between">
                       <div className="baseVertFlex !items-start">
@@ -735,7 +742,13 @@ function CartSheet({
                       className="baseFlex w-full !items-start gap-4"
                     >
                       {/* preview image of item */}
-                      <div className="imageFiller size-16 rounded-md" />
+                      <Image
+                        src={"/menuItems/sampleImage.webp"}
+                        alt={item.name}
+                        width={64}
+                        height={64}
+                        className="rounded-md"
+                      />
 
                       <div className="baseFlex w-full !items-start !justify-between">
                         <div className="baseVertFlex !items-start">

@@ -26,20 +26,29 @@ function GeneralLayout({ children }: GeneralLayout) {
   useAttachSocketListeners();
 
   return (
-    <main
-      className={`${notoSerif.className} baseVertFlex relative min-h-[100dvh] !justify-between`}
-    >
-      <HeaderShell />
+    <>
+      {/* idk if this is the best way to do this, but seems to work fine */}
+      <style jsx global>{`
+        html {
+          font-family: ${notoSerif.style.fontFamily};
+        }
+      `}</style>
 
-      {/* still use mode="wait"? */}
-      <AnimatePresence>{children}</AnimatePresence>
+      <main
+        className={`${notoSerif.className} baseVertFlex relative min-h-[100dvh] !justify-between`}
+      >
+        <HeaderShell />
 
-      <Footer />
+        {/* still use mode="wait"? */}
+        <AnimatePresence>{children}</AnimatePresence>
 
-      <PostSignUpDialog />
+        <Footer />
 
-      <Toaster />
-    </main>
+        <PostSignUpDialog />
+
+        <Toaster />
+      </main>
+    </>
   );
 }
 

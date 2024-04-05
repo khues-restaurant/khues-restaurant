@@ -1,10 +1,13 @@
-import { MenuItem, type CustomizationChoice, Discount } from "@prisma/client";
+import {
+  type MenuItem,
+  type CustomizationChoice,
+  type Discount,
+} from "@prisma/client";
 import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
 import { LuMinus, LuPlus } from "react-icons/lu";
 import AnimatedPrice from "~/components/AnimatedPrice";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogFooter } from "~/components/ui/dialog";
-import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
@@ -32,7 +35,8 @@ import {
   type FullMenuItem,
 } from "~/server/api/routers/menuCategory";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
-import { CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
+import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
+import Image from "next/image";
 
 interface ItemCustomizationDialog {
   isDialogOpen: boolean;
@@ -168,13 +172,26 @@ function ItemCustomizerDialogContent({
 
   return (
     <DialogContent className="max-w-4xl">
-      <div className="baseVertFlex relative w-full !justify-start overflow-y-auto tablet:h-[600px] desktop:h-[700px]">
-        <div className="baseVertFlex imageFiller relative min-h-72 w-full rounded-md shadow-md">
-          {/* veryyy out there but maybe could maybe have the left side of the image blurred
-                  a bit so you could read the name of the item without the need of the
-                  bg-white stuff? Not sure how good it would look */}
+      <div className="baseVertFlex relative w-full !justify-start overflow-y-auto pr-4 pt-4 tablet:h-[600px] desktop:h-[700px]">
+        <div className="baseFlex relative h-72 w-full !justify-end rounded-md shadow-md">
+          {/* red diagonal bg */}
+          <div
+            className="absolute left-0 top-0 h-full w-full rounded-md bg-primary"
+            style={{
+              maskImage:
+                "linear-gradient(to bottom right, black 60%, transparent 50%)",
+            }}
+          ></div>
 
-          <div className="baseFlex absolute bottom-0 left-4 gap-4 rounded-md bg-white px-4 py-2 text-xl font-semibold">
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={itemToCustomize.name}
+            width={240}
+            height={240}
+            className="z-10 my-4 mr-16 rounded-md"
+          />
+
+          <div className="baseFlex absolute bottom-0 left-4 gap-4 rounded-t-md bg-white px-4 py-2 text-xl font-semibold">
             {itemToCustomize.name}
 
             {/* TODO: wrap the like button in a Popover to show "Only rewards members can favorite items" */}
@@ -375,7 +392,7 @@ function ItemCustomizerDialogContent({
                 characters remaining
               </p>
 
-              <p className="relative left-0 top-0 gap-2 text-sm italic text-gray-400 tablet:text-base">
+              <p className="relative left-0 top-0 gap-2 text-sm italic text-gray-400">
                 *No price altering substitutions/additions allowed.
               </p>
             </div>
@@ -391,7 +408,7 @@ function ItemCustomizerDialogContent({
               {!itemOrderDetails?.birthdayReward &&
                 !itemOrderDetails?.pointReward && (
                   <div className="baseFlex gap-2">
-                    Quantity
+                    <span className="font-medium">Quantity</span>
                     <div className="baseFlex h-8">
                       <Button
                         variant="outline"
@@ -670,7 +687,13 @@ function SuggestedPairing({
 
   return (
     <div className="baseVertFlex min-w-56 gap-2 rounded-md border p-2">
-      <div className="imageFiller size-24 rounded-md shadow-md"></div>
+      <Image
+        src={"/menuItems/sampleImage.webp"}
+        alt={item.name}
+        width={96}
+        height={96}
+        className="rounded-md"
+      />
 
       <p className="text-lg font-medium">{item.name}</p>
 

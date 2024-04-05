@@ -58,6 +58,7 @@ import { X } from "lucide-react";
 import isEqual from "lodash.isequal";
 import Decimal from "decimal.js";
 import { isAbleToRenderASAPTimeSlot } from "~/utils/isAbleToRenderASAPTimeSlot";
+import Image from "next/image";
 
 interface OrderCost {
   subtotal: number;
@@ -594,7 +595,13 @@ function CartDrawer({
                       className="baseFlex w-full !items-start gap-4"
                     >
                       {/* preview image of item */}
-                      <div className="imageFiller size-16 rounded-md" />
+                      <Image
+                        src={"/menuItems/sampleImage.webp"}
+                        alt={item.name}
+                        width={64}
+                        height={64}
+                        className="rounded-md"
+                      />
 
                       <div className="baseFlex w-full !items-start !justify-between">
                         <div className="baseVertFlex !items-start">
@@ -748,7 +755,13 @@ function CartDrawer({
                         className="baseFlex w-full !items-start gap-4"
                       >
                         {/* preview image of item */}
-                        <div className="imageFiller size-16 rounded-md" />
+                        <Image
+                          src={"/menuItems/sampleImage.webp"}
+                          alt={item.name}
+                          width={64}
+                          height={64}
+                          className="rounded-md"
+                        />
 
                         <div className="baseFlex w-full !items-start !justify-between">
                           <div className="baseVertFlex !items-start">
