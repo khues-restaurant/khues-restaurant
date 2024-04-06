@@ -49,7 +49,9 @@ function DashboardDesktopHeader({
   const { asPath, push } = useRouter();
   const userId = useGetUserId();
 
-  const { data: user } = api.user.get.useQuery(userId);
+  const { data: user } = api.user.get.useQuery(userId, {
+    enabled: Boolean(userId && isSignedIn),
+  });
 
   const { data: todaysOrders } = api.order.getTodaysOrders.useQuery();
 

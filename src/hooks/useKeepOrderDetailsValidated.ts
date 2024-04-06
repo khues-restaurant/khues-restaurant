@@ -1,3 +1,4 @@
+import { useAuth } from "@clerk/nextjs";
 import { useEffect } from "react";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
@@ -7,6 +8,8 @@ import { api } from "~/utils/api";
 
 function useKeepOrderDetailsValidated() {
   const userId = useGetUserId();
+  const { isSignedIn } = useAuth();
+
   const {
     cartInitiallyValidated,
     setOrderDetails,
@@ -20,7 +23,7 @@ function useKeepOrderDetailsValidated() {
   const { updateOrder } = useUpdateOrder();
 
   const { data: user } = api.user.get.useQuery(userId, {
-    enabled: userId.length > 0,
+    enabled: Boolean(userId && isSignedIn),
   });
 
   const { mutate: validateOrder } = api.validateOrder.validate.useMutation({

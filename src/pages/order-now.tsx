@@ -57,7 +57,7 @@ function OrderNow() {
   const { data: userRecentOrders } = api.order.getUsersOrders.useQuery(
     { userId, limitToFirstSix: true },
     {
-      enabled: isSignedIn && !!userId,
+      enabled: Boolean(userId && isSignedIn),
     },
   );
 

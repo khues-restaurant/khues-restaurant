@@ -37,6 +37,7 @@ import {
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import Image from "next/image";
+import { useAuth } from "@clerk/nextjs";
 
 interface ItemCustomizationDialog {
   isDialogOpen: boolean;
@@ -102,9 +103,12 @@ function ItemCustomizerDialogContent({
   forCart,
 }: ItemCustomizerDialogContent) {
   const userId = useGetUserId();
+  const { isSignedIn } = useAuth();
   const ctx = api.useUtils();
 
-  const { data: user } = api.user.get.useQuery(userId);
+  const { data: user } = api.user.get.useQuery(userId, {
+    enabled: Boolean(userId && isSignedIn),
+  });
   const { mutate: favoriteItem, isLoading: favoritingItem } =
     api.favorite.addFavoriteItem.useMutation({
       onSuccess: () => {

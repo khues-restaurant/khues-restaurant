@@ -27,14 +27,18 @@ function useAttachSocketListeners() {
 
   const { data: menuCategories, refetch: getUpdatedMenuCategories } =
     api.menuCategory.getAll.useQuery();
+
   const { refetch: getUpdatedMinOrderPickupTime } =
     api.minimumOrderPickupTime.get.useQuery();
+
   const { data: databaseCustomizationChoices } =
     api.customizationChoice.getAll.useQuery();
+
   const { data: databaseDiscounts } = api.discount.getAll.useQuery();
+
   const { data: userFavoriteItemIds } =
     api.favorite.getFavoriteItemIds.useQuery(userId, {
-      enabled: isSignedIn && !!userId,
+      enabled: Boolean(userId && isSignedIn),
     });
 
   // socket listeners to fetch queries

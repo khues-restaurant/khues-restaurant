@@ -1,3 +1,4 @@
+import { useAuth } from "@clerk/nextjs";
 import Decimal from "decimal.js";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -27,8 +28,10 @@ function RewardsDrawer({
   setShowRewardsDrawer,
 }: RewardsDrawer) {
   const userId = useGetUserId();
+  const { isSignedIn } = useAuth();
+
   const { data: user } = api.user.get.useQuery(userId, {
-    enabled: !!userId,
+    enabled: Boolean(userId && isSignedIn),
   });
 
   const { menuItems, orderDetails } = useMainStore((state) => ({

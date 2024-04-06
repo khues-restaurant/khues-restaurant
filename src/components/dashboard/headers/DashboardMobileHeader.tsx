@@ -51,7 +51,9 @@ function DashboardMobileHeader({
   const userId = useGetUserId();
   const { asPath, events, push } = useRouter();
 
-  const { data: user } = api.user.get.useQuery(userId);
+  const { data: user } = api.user.get.useQuery(userId, {
+    enabled: Boolean(userId && isSignedIn),
+  });
 
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
 

@@ -34,7 +34,9 @@ function useUpdateOrder() {
     }),
   );
 
-  const { data: user } = api.user.get.useQuery(userId);
+  const { data: user } = api.user.get.useQuery(userId, {
+    enabled: Boolean(userId && isSignedIn),
+  });
   const { mutate: updateUser } = api.user.update.useMutation();
 
   const debouncedUpdateUser = useRef(

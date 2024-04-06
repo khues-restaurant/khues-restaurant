@@ -22,11 +22,14 @@ import { useToast } from "~/components/ui/use-toast";
 import Decimal from "decimal.js";
 import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import { LuCalendarClock } from "react-icons/lu";
+import { useAuth } from "@clerk/nextjs";
 
 function Rewards() {
   const userId = useGetUserId();
+  const { isSignedIn } = useAuth();
+
   const { data: user } = api.user.get.useQuery(userId, {
-    enabled: !!userId,
+    enabled: Boolean(userId && isSignedIn),
   });
 
   const { menuItems, orderDetails } = useMainStore((state) => ({

@@ -53,17 +53,20 @@ import { type DBOrderSummary } from "~/server/api/routers/order";
 import { ToastAction } from "~/components/ui/toast";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
+import { useAuth } from "@clerk/nextjs";
 
 function RecentOrders() {
   const userId = useGetUserId();
+  const { isSignedIn } = useAuth();
+
   const { data: user } = api.user.get.useQuery(userId, {
-    enabled: !!userId,
+    enabled: Boolean(userId && isSignedIn),
   });
 
   const { data: orders } = api.order.getUsersOrders.useQuery(
     { userId },
     {
-      enabled: !!userId,
+      enabled: Boolean(userId && isSignedIn),
     },
   );
 

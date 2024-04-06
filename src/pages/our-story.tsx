@@ -1,20 +1,13 @@
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import useGetViewportLabel from "~/hooks/useGetViewportLabel";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "~/components/ui/accordion";
+import { motion } from "framer-motion";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { Button } from "~/components/ui/button";
 import {
   Carousel,
   CarouselContent,
-  type CarouselApi,
   CarouselItem,
+  type CarouselApi,
 } from "~/components/ui/carousel";
-import { Button } from "~/components/ui/button";
 
 const restaurantNamesAndBackstories = [
   {
@@ -40,8 +33,6 @@ const restaurantNamesAndBackstories = [
 ];
 
 function OurStory() {
-  const viewportLabel = useGetViewportLabel();
-
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [carouselSlide, setCarouselSlide] = useState(0);
 
@@ -217,7 +208,7 @@ function OurStory() {
 
         {/* Small opening statement */}
         <div className="mt-16 h-[1px] w-48 rounded-md bg-primary tablet:w-72"></div>
-        <p className="mt-16 max-w-72 text-sm tracking-wide tablet:max-w-xl tablet:text-base">
+        <p className="mt-16 max-w-72 text-sm tracking-wide sm:max-w-lg tablet:max-w-xl tablet:text-base">
           Khue&apos;s Kitchen is a lifelong project dedicated to and inspired by
           Khue Pham&apos;s legacy. For the last 30 years, Khue&apos;s devotion
           to flavor, creativity and tradition has touched the lives of friends,
@@ -335,7 +326,7 @@ interface RestaurantAndBackstory {
 
 function RestaurantAndBackstory({ name, backstory }: RestaurantAndBackstory) {
   return (
-    <div className="baseVertFlex relative rounded-b-md border tablet:rounded-none tablet:border-none">
+    <div className="baseVertFlex relative rounded-md border sm:pt-4 tablet:rounded-none tablet:border-none  tablet:pt-0 ">
       <Image
         src="/test.webp"
         alt="Khue's"
@@ -343,11 +334,7 @@ function RestaurantAndBackstory({ name, backstory }: RestaurantAndBackstory) {
         className="!relative !w-80 rounded-t-md sm:!w-96 tablet:!h-[450px] tablet:!w-[600px] tablet:rounded-md"
       />
 
-      {/* was by accident, but consider leaving th esm:max-w-md instead of having
-    the black gradient text container be full width, with a rounded-md it might look
-    pretty good!  */}
-
-      <div className="baseVertFlex w-full max-w-80 gap-2 rounded-b-md p-4 sm:max-w-md tablet:absolute tablet:bottom-0 tablet:left-0 tablet:!items-start tablet:bg-gradient-to-tr tablet:from-black tablet:to-black/50 tablet:text-white">
+      <div className="baseVertFlex w-full max-w-80 gap-2 rounded-b-md p-4 sm:max-w-md tablet:absolute tablet:bottom-0 tablet:left-0 tablet:!items-start tablet:rounded-br-none tablet:rounded-tr-md tablet:bg-gradient-to-tr tablet:from-black tablet:to-black/50 tablet:text-white">
         <p className="font-semibold underline underline-offset-2">{name}</p>
         <p className="text-sm">{backstory}</p>
       </div>

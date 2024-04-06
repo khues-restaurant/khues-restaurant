@@ -52,7 +52,9 @@ function DesktopHeader() {
     resetStore: state.resetStore,
   }));
 
-  const { data: user } = api.user.get.useQuery(userId);
+  const { data: user } = api.user.get.useQuery(userId, {
+    enabled: Boolean(userId && isSignedIn),
+  });
 
   // okay I want to not show rewards/auth buttons until user auth status is known,
   // however I *really* want to show the page as soon as possible, what options do I have here?

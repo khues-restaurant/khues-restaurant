@@ -120,7 +120,7 @@ function CartDrawer({
 
   const { data: minPickupTime } = api.minimumOrderPickupTime.get.useQuery();
   const { data: userRewards } = api.user.getRewards.useQuery(userId, {
-    enabled: isSignedIn,
+    enabled: Boolean(userId && isSignedIn),
   });
 
   const { initializeCheckout } = useInitializeCheckout();

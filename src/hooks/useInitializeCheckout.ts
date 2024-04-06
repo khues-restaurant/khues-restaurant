@@ -1,3 +1,4 @@
+import { useAuth } from "@clerk/nextjs";
 import { loadStripe, type Stripe } from "@stripe/stripe-js";
 import { useMemo } from "react";
 import useGetUserId from "~/hooks/useGetUserId";
@@ -18,7 +19,11 @@ const useStripe = () => {
 
 function useInitializeCheckout() {
   const userId = useGetUserId();
-  const { data: user } = api.user.get.useQuery(userId);
+  const { isSignedIn } = useAuth();
+
+  const { data: user } = api.user.get.useQuery(userId, {
+    enabled: Boolean(userId && isSignedIn),
+  });
 
   const { orderDetails } = useMainStore((state) => ({
     orderDetails: state.orderDetails,

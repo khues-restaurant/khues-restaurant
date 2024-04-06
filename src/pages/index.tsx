@@ -245,7 +245,7 @@ export default function Home() {
               </div>
               <div className="baseFlex gap-4">
                 <TfiReceipt className="size-6" />
-                <p className="max-w-52">
+                <p>
                   Rewards members earn points towards free meals with every
                   order
                 </p>
@@ -259,11 +259,11 @@ export default function Home() {
         </div>
 
         <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
-          <div className="baseVertFlex !items-start gap-4 p-4">
+          <div className="baseVertFlex gap-4 p-4">
             <p className="text-lg font-medium">
               Order directly through us to receive mouthwatering benefits
             </p>
-            <div className="baseVertFlex !items-start gap-2 pl-8">
+            <div className="baseVertFlex !items-start gap-2 pl-6">
               <div className="baseFlex gap-4">
                 <MdOutlineMoneyOff className="size-6" />
                 <p>Shop our lowest prices</p>
@@ -333,7 +333,7 @@ export default function Home() {
               laboris nisi ut aliquip ex ea commodo consequat.
             </p>
 
-            <Button variant={"link"} asChild>
+            <Button variant={"link"} className="h-8 !p-0" asChild>
               <Link href="/about-us">Read more</Link>
             </Button>
           </div>
@@ -370,14 +370,14 @@ export default function Home() {
           <div className="baseVertFlex max-w-3xl !items-start gap-4 p-4">
             <p className="text-lg font-medium">Meet the chef</p>
 
-            <p>
+            <p className="max-w-lg xl:max-w-full">
               Eric Pham is Lorem ipsum dolor sit amet, consectetur adipiscing
               elit, sed do eiusmod tempor incididunt ut labore et dolore magna
               aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
               laboris nisi ut aliquip ex ea commodo consequat.
             </p>
 
-            <Button variant={"link"} asChild>
+            <Button variant={"link"} className="h-8 !p-0" asChild>
               <Link href="/about-us">Read more</Link>
             </Button>
           </div>
@@ -389,28 +389,28 @@ export default function Home() {
             image of an empty table w/ full silverware layed out, kind of angled
             down shot at the table
           </div>
-          <div className="baseVertFlex !items-start gap-4 p-4">
+          <div className="baseVertFlex !items-start gap-2 p-4">
             <p className="text-lg font-medium">
               Planning a birthday dinner or get together with your friends?
             </p>
 
             <p>Secure your seats ahead of time by placing a reservation.</p>
 
-            <Button asChild>
+            <Button className="mt-4" asChild>
               <a href="/resyLink">Place a reservation</a>
             </Button>
           </div>
         </div>
 
         <div className="baseFlex !hidden w-full gap-16 py-8  tablet:!flex">
-          <div className="baseVertFlex max-w-3xl gap-4 p-4">
+          <div className="baseVertFlex max-w-3xl gap-2 p-4">
             <p className="text-lg font-medium">
               Planning a birthday dinner or get together with your friends?
             </p>
 
             <p>Secure your seats ahead of time by placing a reservation.</p>
 
-            <Button asChild>
+            <Button className="mt-4" asChild>
               <a href="/resyLink">Place a reservation</a>
             </Button>
           </div>

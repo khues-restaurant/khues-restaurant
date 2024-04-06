@@ -37,6 +37,7 @@ import { api } from "~/utils/api";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { formatPrice } from "~/utils/formatPrice";
 import Image from "next/image";
+import { useAuth } from "@clerk/nextjs";
 
 function getDefaultCustomizationChoices(item: FullMenuItem) {
   return item.customizationCategories.reduce((acc, category) => {
@@ -61,9 +62,12 @@ function ItemCustomizationDrawer({
   forCart,
 }: ItemCustomizationDrawer) {
   const userId = useGetUserId();
+  const { isSignedIn } = useAuth();
   const ctx = api.useUtils();
 
-  const { data: user } = api.user.get.useQuery(userId);
+  const { data: user } = api.user.get.useQuery(userId, {
+    enabled: Boolean(userId && isSignedIn),
+  });
   const { mutate: favoriteItem, isLoading: favoritingItem } =
     api.favorite.addFavoriteItem.useMutation({
       onSuccess: () => {

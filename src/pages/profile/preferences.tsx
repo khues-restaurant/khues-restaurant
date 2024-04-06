@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { TabsContent } from "~/components/ui/tabs";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { FaTrashAlt } from "react-icons/fa";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useGetUserId from "~/hooks/useGetUserId";
@@ -49,11 +49,12 @@ import { Separator } from "~/components/ui/separator";
 
 function Preferences() {
   const userId = useGetUserId();
+  const { isSignedIn } = useAuth();
   const ctx = api.useUtils();
   const { push } = useRouter();
 
   const { data: user } = api.user.get.useQuery(userId, {
-    enabled: !!userId,
+    enabled: Boolean(userId && isSignedIn),
   });
 
   const { mutate: updateUser } = api.user.updatePreferences.useMutation({
