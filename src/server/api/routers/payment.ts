@@ -6,6 +6,7 @@ import { type CustomizationChoiceAndCategory } from "~/server/api/routers/custom
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { orderDetailsSchema } from "~/stores/MainStore";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
+import { env } from "~/env";
 
 export const config = {
   api: {
@@ -13,7 +14,7 @@ export const config = {
   },
 };
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16",
 });
 
@@ -22,10 +23,7 @@ export const paymentRouter = createTRPCRouter({
     .input(
       z.object({
         userId: z.string().min(1).max(100),
-        email: z.string().email(),
-        firstName: z.string().min(1).max(100),
-        lastName: z.string().min(1).max(100),
-        phoneNumber: z.string().regex(/^\(\d{3}\) \d{3}-\d{4}$/),
+        stripeUserId: z.string().min(1).max(100).optional(),
         orderDetails: orderDetailsSchema,
       }),
     )
@@ -222,23 +220,33 @@ export const paymentRouter = createTRPCRouter({
 
       console.dir(lineItems);
 
+      let customer = undefined;
+
+      if (input.stripeUserId) {
+        try {
+          customer = await stripe.customers.retrieve(input.stripeUserId);
+        } catch {
+          //
+        }
+      }
+
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
         payment_method_types: ["card"],
-        customer_email: input.email,
-        // client_reference_id: input.userId,
-        line_items: lineItems,
-        // idempotencyKey how to do this?
         currency: "usd",
+        customer: customer?.id,
 
+        // idempotencyKey how to do this?
+
+        line_items: lineItems,
         discounts: [discountToApply],
+
+        phone_number_collection: {
+          enabled: true,
+        },
 
         metadata: {
           userId: input.userId,
-          firstName: input.firstName,
-          lastName: input.lastName,
-          phoneNumber: input.phoneNumber,
-          email: input.email,
         },
 
         // success_url: `${process.env.NEXT_PUBLIC_DOMAIN_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,

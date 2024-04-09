@@ -181,7 +181,7 @@ model Order {
     firstName                 String
     lastName                  String
     email                     String
-    phoneNumber               String
+    phoneNumber               String?
     includeNapkinsAndUtensils Boolean @default(false)
     dietaryRestrictions       String? // gets queried for and added on /websocket if user has dietary restrictions and has 1+ item in order that has dietary restrictions boolean as true
 
@@ -189,8 +189,9 @@ model Order {
     discount   Discount?   @relation(fields: [discountId], references: [id])
     discountId String?
 
-    prevRewardsPoints Int
-    rewardsPoints     Int
+    prevRewardsPoints   Int
+    earnedRewardsPoints Int
+    spentRewardsPoints  Int
 
     stripeSessionId String @unique // used for tracking the order in Stripe
 
@@ -232,7 +233,9 @@ model User {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
 
-    userId              String   @unique // retrieved from Clerk
+    userId       String @unique // retrieved from Clerk
+    stripeUserId String @unique
+
     firstName           String
     lastName            String
     email               String   @unique
@@ -244,7 +247,7 @@ model User {
     allowsOrderCompleteEmails Boolean @default(true)
     allowsPromotionalEmails   Boolean @default(true)
 
-    rewardsPoints        Int @default(50) // TODO: most likely change this later
+    rewardsPoints        Int @default(500) // TODO: most likely change this later
     lifetimeRewardPoints Int @default(0)
 
     birthdayRewardRedeemed           Boolean @default(false)

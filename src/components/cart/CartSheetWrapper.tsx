@@ -1,7 +1,5 @@
-import { type MenuItem } from "@prisma/client";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import CartSheet from "~/components/cart/CartSheet";
-import GuestCheckoutDialog from "~/components/cart/GuestCheckoutDialog";
 import RewardsDialog from "~/components/cart/RewardsDialog";
 import ItemCustomizationDialog from "~/components/itemCustomization/ItemCustomizationDialog";
 import { Sheet, SheetContent } from "~/components/ui/sheet";
@@ -24,10 +22,6 @@ function CartSheetWrapper({
 
   const [showRewardsDialog, setShowRewardsDialog] = useState(false);
 
-  const [guestCheckoutView, setGuestCheckoutView] = useState<
-    "credentialsForm" | "mainView" | "notShowing"
-  >("notShowing");
-
   const [itemBeingModified, setItemBeingModified] =
     useState<FullMenuItem | null>(null);
   const [initialItemState, setInitialItemState] = useState<Item>();
@@ -48,7 +42,6 @@ function CartSheetWrapper({
           if (!open) {
             setItemBeingModified(null);
             setInitialItemState(undefined);
-            setGuestCheckoutView("notShowing");
           }
         }}
       >
@@ -66,7 +59,6 @@ function CartSheetWrapper({
               setShowCartSheet={setShowCartSheet}
               setItemBeingModified={setItemBeingModified}
               setInitialItemState={setInitialItemState}
-              setGuestCheckoutView={setGuestCheckoutView}
               setIsEditingItem={setIsEditingItem}
               setShowRewardsDialog={setShowRewardsDialog}
             />
@@ -86,11 +78,6 @@ function CartSheetWrapper({
         setItemToCustomize={setItemBeingModified}
         itemOrderDetails={initialItemState}
         forCart
-      />
-
-      <GuestCheckoutDialog
-        guestCheckoutView={guestCheckoutView}
-        setGuestCheckoutView={setGuestCheckoutView}
       />
     </>
   );

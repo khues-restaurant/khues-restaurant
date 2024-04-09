@@ -1,6 +1,7 @@
 import { useAuth, useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useState, type ComponentProps } from "react";
 import { useForm } from "react-hook-form";
 import { CiGift } from "react-icons/ci";
@@ -20,22 +21,28 @@ import {
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import useGetUserId from "~/hooks/useGetUserId";
+import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { formatPhoneNumber } from "~/utils/formatPhoneNumber";
 
 const mainFormSchema = z.object({
   firstName: z
-    .string()
+    .string({
+      required_error: "First name cannot be empty",
+    })
     .min(1, { message: "Must be at least 1 character" })
     .max(30, { message: "Must be at most 30 characters" }),
   lastName: z
-    .string()
+    .string({
+      required_error: "Last name cannot be empty",
+    })
     .min(1, { message: "Must be at least 1 character" })
     .max(30, { message: "Must be at most 30 characters" }),
-
   phoneNumber: z
-    .string()
+    .string({
+      required_error: "Phone number cannot be empty",
+    })
     .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Invalid phone number format")
     .refine(
       async (phoneNumber) => {
@@ -48,13 +55,22 @@ const mainFormSchema = z.object({
         message: "Phone number must be unique",
       },
     ),
-  birthday: z.string().refine(
-    (birthday) => {
-      const date = new Date(birthday);
-      return !isNaN(date.getTime());
-    },
-    { message: "Invalid date" },
-  ),
+  birthday: z
+    .string()
+    .refine(
+      (birthday) => {
+        const date = new Date(birthday);
+        return !isNaN(date.getTime());
+      },
+      { message: "Invalid date" },
+    )
+    .refine(
+      (birthday) => {
+        const year = new Date(birthday).getFullYear();
+        return year <= 3000;
+      },
+      { message: "Year must be 3000 or earlier" },
+    ),
 });
 
 const dietaryRestrictionsSchema = z.object({
@@ -91,6 +107,8 @@ function PostSignUpDialog() {
   const { mutate: createUser, isLoading: isSaving } =
     api.user.create.useMutation({
       onSuccess: () => {
+        setTimeout(() => setSaveButtonText("Saved"), 2000);
+
         setShowSuccessCheckmark(true);
         setTimeout(() => {
           setIsOpen(false);
@@ -105,6 +123,7 @@ function PostSignUpDialog() {
   const [step, setStep] = useState(1);
   const [initialRewardsPoints, setInitialRewardsPoints] = useState(0);
   const [showSuccessCheckmark, setShowSuccessCheckmark] = useState(false);
+  const [saveButtonText, setSaveButtonText] = useState("Save");
 
   const [mainFormValues, setMainFormValues] = useState<z.infer<
     typeof mainFormSchema
@@ -149,33 +168,35 @@ function PostSignUpDialog() {
     setStep(3);
   }
 
-  // TODO: could initialize first and last name from clerk if present
+  const viewportLabel = useGetViewportLabel();
 
-  // TODO: figure out how to get natural left/right sliding animation between steps
-  // currently they animate smoothly, however when going forward and back, they don't slide
-  // in from where you would expect them to
+  // TODO: technically need to have left/right sliding content transitions respect which
+  // direction the user is going in, but this is a low priority atm
 
   useEffect(() => {
     if (step === 3) {
       setTimeout(() => {
-        setInitialRewardsPoints(150);
-      }, 150);
+        setInitialRewardsPoints(500);
+      }, 500);
     }
+
+    setInitialRewardsPoints(0);
   }, [step]);
 
   function getDynamicWidth() {
     if (step === 3) {
-      if (isSaving || showSuccessCheckmark) return "50px";
+      if (saveButtonText !== "Save") return "75px";
       return "100px";
     } else if (step === 2) {
       if (dietaryRestrictionsForm.formState.isDirty) return "175px";
       return "100px";
     }
 
-    return "175px";
+    return "150px";
   }
 
   const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -191,10 +212,17 @@ function PostSignUpDialog() {
           }}
           className="baseVertFlex relative overflow-hidden"
         >
-          <div className="baseFlex w-full !justify-between p-0 pb-8 pt-2 tablet:p-8">
-            <div className="baseVertFlex gap-4 text-sm tablet:text-base">
+          <p className="text-center font-semibold">
+            Finish setting up your account
+          </p>
+          <div className="baseFlex mt-4 w-full !justify-between p-0 pb-8 pt-2 tablet:mt-0 tablet:p-8">
+            <div className="baseVertFlex relative gap-2 pl-4 pr-4 tablet:pl-8">
               <Step step={1} currentStep={step} />
-              Personal info
+              <p
+                className={`absolute left-[0px] top-10 text-center text-xs transition-all tablet:left-[9px] tablet:top-12 tablet:text-nowrap tablet:text-sm ${step === 1 ? "font-semibold" : "text-gray-400"}`}
+              >
+                Personal info
+              </p>
             </div>
 
             <div
@@ -202,9 +230,9 @@ function PostSignUpDialog() {
                 position: "relative",
                 flex: 1,
                 height: "2px",
-                backgroundColor: "gray",
-                marginBottom: "2.45rem",
+                backgroundColor: "#6b7280",
               }}
+              className="rounded-md"
             >
               <AnimatePresence>
                 {step > 1 && (
@@ -213,22 +241,28 @@ function PostSignUpDialog() {
                     initial={{ width: 0 }}
                     animate={{ width: "100%" }}
                     exit={{ width: 0 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.25 }}
                     style={{
                       position: "absolute",
                       height: "2px",
-                      backgroundColor: "red",
+                      backgroundColor: "hsl(5.3deg, 72.11%, 50.78%)",
                       top: 0,
                       left: 0,
                     }}
+                    className="rounded-md"
                   />
                 )}
               </AnimatePresence>
             </div>
 
-            <div className="baseVertFlex gap-4 text-sm tablet:text-base">
+            <div className="baseVertFlex relative gap-2 px-4 text-sm">
               <Step step={2} currentStep={step} />
-              Dietary preferences
+
+              <p
+                className={`absolute left-[-3px] top-10 text-center text-xs transition-all tablet:left-[-29px] tablet:top-12 tablet:text-nowrap tablet:text-sm ${step === 2 ? "font-semibold" : "text-gray-400"}`}
+              >
+                Dietary preferences
+              </p>
             </div>
 
             <div
@@ -236,10 +270,8 @@ function PostSignUpDialog() {
                 position: "relative",
                 flex: 1,
                 height: "2px",
-                backgroundColor: "gray",
-                marginBottom: "2.45rem",
+                backgroundColor: "#6b7280",
               }}
-              className="baseFlex"
             >
               <AnimatePresence>
                 {step === 3 && (
@@ -248,11 +280,11 @@ function PostSignUpDialog() {
                     initial={{ width: 0 }}
                     animate={{ width: "100%" }}
                     exit={{ width: 0 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.25 }}
                     style={{
                       position: "absolute",
                       height: "2px",
-                      backgroundColor: "red",
+                      backgroundColor: "hsl(5.3deg, 72.11%, 50.78%)",
                       top: 0,
                       left: 0,
                     }}
@@ -261,9 +293,12 @@ function PostSignUpDialog() {
               </AnimatePresence>
             </div>
 
-            <div className="baseVertFlex gap-4 text-sm tablet:text-base">
+            <div className="baseVertFlex relative gap-2 pl-4 pr-4 text-sm tablet:pr-8">
               <Step step={3} currentStep={step} />
-              Finish
+              {/* <p className="absolute left-[16px] top-12">Finish</p> */}
+              <CiGift
+                className={`absolute top-10 size-6 tablet:top-11 ${step === 3 ? "" : "text-gray-400"}`}
+              />
             </div>
           </div>
 
@@ -271,16 +306,16 @@ function PostSignUpDialog() {
             {step === 1 && (
               <motion.div
                 key={"personalInfo"}
-                initial={{ opacity: 0, translateX: "100%" }}
+                initial={{ opacity: 0, translateX: "-100%" }}
                 animate={{ opacity: 1, translateX: 0 }}
                 exit={{ opacity: 0, translateX: "-100%" }}
                 transition={{ duration: 0.35 }}
                 className="baseVertFlex min-h-48 w-full"
               >
                 <Form {...mainForm}>
-                  <form className="baseVertFlex w-full">
-                    <div className="baseVertFlex w-full gap-8 tablet:gap-16">
-                      <div className="baseVertFlex !items-start gap-8 tablet:!grid tablet:grid-cols-2">
+                  <form className="baseVertFlex mt-8 w-full p-1">
+                    <div className="baseVertFlex w-full gap-4 tablet:gap-16">
+                      <div className="grid grid-cols-2 !items-start gap-4 tablet:gap-8">
                         <FormField
                           control={mainForm.control}
                           name="firstName"
@@ -301,11 +336,10 @@ function PostSignUpDialog() {
                                 {invalid && (
                                   <motion.div
                                     key={"firstNameError"}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: "auto" }}
+                                    exit={{ opacity: 0, height: 0 }}
                                     transition={{ duration: 0.2 }}
-                                    className="absolute -bottom-6 left-0 right-0"
                                   >
                                     <FormMessage />
                                   </motion.div>
@@ -335,11 +369,10 @@ function PostSignUpDialog() {
                                 {invalid && (
                                   <motion.div
                                     key={"lastNameError"}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: "auto" }}
+                                    exit={{ opacity: 0, height: 0 }}
                                     transition={{ duration: 0.2 }}
-                                    className="absolute -bottom-6 left-0 right-0"
                                   >
                                     <FormMessage />
                                   </motion.div>
@@ -350,7 +383,7 @@ function PostSignUpDialog() {
                         />
                       </div>
 
-                      <div className="baseVertFlex !items-start gap-8 tablet:!grid tablet:grid-cols-2">
+                      <div className="grid grid-cols-2 !items-start gap-4 tablet:gap-8">
                         <FormField
                           control={mainForm.control}
                           name="phoneNumber"
@@ -379,13 +412,12 @@ function PostSignUpDialog() {
                                 {invalid && (
                                   <motion.div
                                     key={"phoneNumberError"}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: "auto" }}
+                                    exit={{ opacity: 0, height: 0 }}
                                     transition={{ duration: 0.2 }}
-                                    className="absolute -bottom-6 left-0 right-0"
                                   >
-                                    <FormMessage className="w-max" />
+                                    <FormMessage />
                                   </motion.div>
                                 )}
                               </AnimatePresence>
@@ -413,11 +445,10 @@ function PostSignUpDialog() {
                                 {invalid && (
                                   <motion.div
                                     key={"birthdayError"}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: "auto" }}
+                                    exit={{ opacity: 0, height: 0 }}
                                     transition={{ duration: 0.2 }}
-                                    className="absolute -bottom-6 left-0 right-0"
                                   >
                                     <FormMessage />
                                   </motion.div>
@@ -440,7 +471,7 @@ function PostSignUpDialog() {
                 animate={{ opacity: 1, translateX: 0 }}
                 exit={{ opacity: 0, translateX: "-100%" }}
                 transition={{ duration: 0.35 }}
-                className="baseVertFlex min-h-48 w-full"
+                className="baseVertFlex mt-8 min-h-48 w-full"
               >
                 <Form {...dietaryRestrictionsForm}>
                   <form className="baseVertFlex w-full gap-16">
@@ -480,66 +511,88 @@ function PostSignUpDialog() {
                 key={"finish"}
                 initial={{ opacity: 0, translateX: "100%" }}
                 animate={{ opacity: 1, translateX: 0 }}
-                exit={{ opacity: 0, translateX: "-100%" }}
+                exit={{ opacity: 0, translateX: "100%" }}
                 transition={{ duration: 0.2 }}
-                className="baseVertFlex min-h-48 w-full"
+                className="baseVertFlex mt-8 min-h-48 w-full"
               >
-                <motion.div
-                  key={"rankIconAndProgressBar"}
-                  initial={{ opacity: 0, translateY: "100%" }}
-                  animate={{ opacity: 1, translateY: 0 }}
-                  transition={{ duration: 0.2, delay: 0.2 }}
-                  className="baseVertFlex gap-4"
-                >
-                  {/* TODO: come back and bring this styling to current rewards styling +
-                  figure out what exactly makes sense to dislay for text */}
-                  <p className="font-semibold">Rank One: Lorem Ipsum</p>
-
-                  <div className="imageFiller baseFlex h-16 w-16">
-                    <p className="p-1">level 1 rewards icon</p>
-                  </div>
-
-                  <div className="baseFlex relative h-8 w-80 !justify-start rounded-full bg-slate-500 shadow-md">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${(150 / 1000) * 100}%` }}
-                      transition={{
-                        delay: 0.5,
-                        ...spring,
-                      }}
-                      className="absolute left-0 top-0 h-8 rounded-full bg-green-600"
-                    ></motion.div>
-                  </div>
-
-                  <div className="baseFlex">
-                    <AnimatedNumbers
-                      value={initialRewardsPoints}
-                      fontSize={16}
-                      padding={0}
+                <div className="baseFlex relative w-full overflow-hidden rounded-md p-4">
+                  <div className="tablet: absolute -left-4 -top-4 size-16 tablet:-top-8 tablet:size-24">
+                    <Image
+                      src={"/menuItems/sampleImage.webp"}
+                      alt={"TODO: replace with proper alt tag text"}
+                      fill
+                      className="!relative !size-full"
                     />
-                    /<span>1000</span>
                   </div>
-                </motion.div>
 
-                <span className="baseFlex mt-4 gap-2">
-                  Thanks for completing the form, here&apos;s a head start on
-                  your rewards <CiGift size="1.25rem" />
-                </span>
+                  <div className="tablet: absolute -bottom-4 -left-4 size-16 tablet:-bottom-8 tablet:size-24">
+                    <Image
+                      src={"/menuItems/sampleImage.webp"}
+                      alt={"TODO: replace with proper alt tag text"}
+                      fill
+                      className="!relative !size-full"
+                    />
+                  </div>
 
-                <p className="mt-8 max-w-96 text-neutral-500">
-                  Reminder: Ordering though our website will grant you points,
-                  which grant discounts and special meals!
+                  <div className="baseVertFlex rewardsGoldBorder gap-4 rounded-md !px-4 text-yellow-500 shadow-md sm:!px-16 tablet:max-w-2xl tablet:!px-24">
+                    <p className="text-nowrap text-xl font-semibold">
+                      K Reward Points
+                    </p>
+
+                    <div className="baseVertFlex text-xl font-bold tracking-wider">
+                      <AnimatedNumbers
+                        value={initialRewardsPoints}
+                        fontSize={viewportLabel.includes("mobile") ? 25 : 32}
+                        padding={0}
+                      />
+                      <p className="!text-base font-semibold tracking-normal tablet:text-lg">
+                        points
+                      </p>
+                    </div>
+
+                    {/* maybe just want the left/right flanking fancy swirls here? */}
+                  </div>
+
+                  <div className="absolute -right-4 -top-4 size-16 tablet:-right-8 tablet:-top-8 tablet:size-24">
+                    <Image
+                      src={"/menuItems/sampleImage.webp"}
+                      alt={"TODO: replace with proper alt tag text"}
+                      fill
+                      className="!relative !size-full"
+                    />
+                  </div>
+
+                  <div className="absolute -bottom-4 -right-4 size-16 tablet:-bottom-8 tablet:-right-8 tablet:size-24">
+                    <Image
+                      src={"/menuItems/sampleImage.webp"}
+                      alt={"TODO: replace with proper alt tag text"}
+                      fill
+                      className="!relative !size-full"
+                    />
+                  </div>
+                </div>
+
+                <p className="mt-8 text-center">
+                  Congratulations! You have successfully created your account.
+                </p>
+
+                <p className="mt-8 max-w-96 text-sm text-neutral-500">
+                  As a token of our appreciation, enjoy a head start of 500 free
+                  rewards points. Visit your rewards page in your profile to
+                  browse meals you can redeem your points for.
                 </p>
               </motion.div>
             )}
           </AnimatePresence>
 
-          <div className="baseFlex mt-10 w-full !justify-between">
+          <div className="baseFlex mt-4 w-full !justify-between p-1 tablet:mt-16">
             <Button
               variant={"text"}
               onClick={() => setStep(step - 1)}
               className={`${
-                step === 1 || isSaving ? "pointer-events-none opacity-50" : ""
+                step === 1 || isSaving
+                  ? "pointer-events-none opacity-50"
+                  : "text-gray-500"
               }`}
             >
               Back
@@ -548,7 +601,7 @@ function PostSignUpDialog() {
               style={{
                 width: getDynamicWidth(),
               }}
-              className="font-medium transition-[width]"
+              className="font-medium transition-all"
               onClick={() => {
                 if (step === 1) {
                   void mainForm.handleSubmit(onMainFormSubmit)();
@@ -558,6 +611,8 @@ function PostSignUpDialog() {
                   )();
                 } else {
                   if (!user) return;
+
+                  setSaveButtonText("Saving");
 
                   createUser({
                     userId,
@@ -574,16 +629,30 @@ function PostSignUpDialog() {
                 {step !== 2 ||
                 (step === 2 && dietaryRestrictionsForm.formState.isDirty) ? (
                   step === 3 ? (
-                    <motion.div
-                      key="save"
-                      layout
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <AnimatePresence mode={"popLayout"}>
-                        {showSuccessCheckmark ? (
+                    <AnimatePresence mode={"popLayout"}>
+                      <motion.div
+                        key={saveButtonText}
+                        layout
+                        // whileTap={{ scale: 0.95 }}
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        transition={{
+                          duration: 0.25,
+                        }}
+                        className="baseFlex gap-2"
+                      >
+                        {saveButtonText}
+                        {saveButtonText === "Saving" && (
+                          <div
+                            className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                            role="status"
+                            aria-label="loading"
+                          >
+                            <span className="sr-only">Loading...</span>
+                          </div>
+                        )}
+                        {saveButtonText === "Saved" && (
                           <svg
                             fill="none"
                             viewBox="0 0 24 24"
@@ -605,48 +674,9 @@ function PostSignUpDialog() {
                               d="M5 13l4 4L19 7"
                             />
                           </svg>
-                        ) : isSaving ? (
-                          <motion.div
-                            key="saveSpinner"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            <svg
-                              className="size-4 animate-spin"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                              ></circle>
-                              <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                              ></path>
-                            </svg>
-                          </motion.div>
-                        ) : (
-                          <motion.div
-                            key="saveText"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            Save
-                          </motion.div>
                         )}
-                      </AnimatePresence>
-                    </motion.div>
+                      </motion.div>
+                    </AnimatePresence>
                   ) : (
                     <motion.span
                       key="continue"
@@ -735,13 +765,13 @@ function Step({ step, currentStep }: { step: number; currentStep: number }) {
           },
         }}
         transition={{ duration: 0.2 }}
-        className="relative flex h-10 w-10 items-center justify-center rounded-full border-2 font-semibold"
+        className="relative flex size-8 items-center justify-center rounded-full border-2 font-semibold tablet:size-10"
       >
         <div className="flex items-center justify-center">
           {status === "complete" ? (
-            <CheckIcon className="h-6 w-6 text-white" />
+            <CheckIcon className="size-4 text-white tablet:size-6" />
           ) : (
-            <span>{step}</span>
+            <span className="text-sm tablet:text-lg">{step}</span>
           )}
         </div>
       </motion.div>

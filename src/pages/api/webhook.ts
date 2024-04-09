@@ -8,6 +8,7 @@ import { emitNewOrderThroughSocket } from "~/utils/emitNewOrderThroughSocket";
 import { type OrderDetails } from "~/stores/MainStore";
 import { orderDetailsSchema } from "~/stores/MainStore";
 import Decimal from "decimal.js";
+import { splitFullName } from "~/utils/splitFullName";
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16",
@@ -23,8 +24,8 @@ const PaymentMetadataSchema = z.object({
   userId: z.string(),
   firstName: z.string(),
   lastName: z.string(),
-  email: z.string().email(), // This validates that the email field contains a valid email address
-  phoneNumber: z.string(), // Additional validation can be added if there's a specific format for phone numbers
+  email: z.string().email(),
+  phoneNumber: z.string().nullable(), // Additional validation can be added if there's a specific format for phone numbers
 });
 
 interface PaymentMetadata {
@@ -32,7 +33,7 @@ interface PaymentMetadata {
   firstName: string;
   lastName: string;
   email: string;
-  phoneNumber: string;
+  phoneNumber: string | null | undefined;
 }
 
 // TODO: clean up all of the early returns and try to maybe consolidate them a bit?
@@ -75,16 +76,30 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         return;
       }
 
-      let paymentMetadata: PaymentMetadata | undefined = undefined;
+      console.log("details are: ", payment.customer_details);
+
+      let customerMetadata: PaymentMetadata | undefined = undefined;
 
       try {
+        const { firstName, lastName } = splitFullName(
+          payment.customer_details?.name ?? "",
+        );
+
+        const customerDetails = {
+          userId: payment.metadata.userId ?? "",
+          firstName,
+          lastName,
+          email: payment.customer_details?.email,
+          phoneNumber: payment.customer_details?.phone,
+        };
+
         // This will throw an error if the object does not match the schema
-        paymentMetadata = PaymentMetadataSchema.parse(payment.metadata);
+        customerMetadata = PaymentMetadataSchema.parse(customerDetails);
       } catch (error) {
         console.error("Validation failed:", error);
       }
 
-      if (paymentMetadata === undefined) {
+      if (customerMetadata === undefined) {
         console.log("returning early 2");
         res.json({ received: true });
         return;
@@ -98,6 +113,11 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
           userId: payment.metadata.userId,
         },
       });
+
+      if (user) {
+        customerMetadata.firstName = user.firstName;
+        customerMetadata.lastName = user.lastName;
+      }
 
       // 2) get transient order details
       const transientOrder = await prisma.transientOrder.findFirst({
@@ -128,24 +148,22 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       const prevPoints = user?.rewardsPoints ?? 0;
-      let currPoints = 0;
-      let lifetimeRewardPoints = user?.lifetimeRewardPoints ?? 0;
+      let spentPoints = 0;
 
       // calculate new rewards points from order
       const totalPrice = payment.amount_total;
-      const pointsEarned = Math.floor(totalPrice / 10);
-
-      let pointsUsedFromRewards = 0;
 
       for (const item of orderDetails.items) {
         if (item.pointReward) {
           const points = new Decimal(item.price).div(0.01).toNumber();
-          pointsUsedFromRewards = points;
+          spentPoints = points;
         }
       }
 
-      currPoints = prevPoints + pointsEarned - pointsUsedFromRewards;
-      lifetimeRewardPoints += pointsEarned;
+      const earnedPoints = Math.floor(totalPrice / 10);
+
+      const lifetimeRewardPoints =
+        (user?.lifetimeRewardPoints ?? 0) + earnedPoints;
 
       // if (user) {
       //   // create new reward discount if threshold is met
@@ -210,14 +228,15 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       const orderData = {
         stripeSessionId: payment.id,
         datetimeToPickup: adjustedDatetimeToPickup,
-        firstName: paymentMetadata.firstName,
-        lastName: paymentMetadata.lastName,
-        email: paymentMetadata.email,
-        phoneNumber: paymentMetadata.phoneNumber,
+        firstName: customerMetadata.firstName,
+        lastName: customerMetadata.lastName,
+        email: customerMetadata.email,
+        phoneNumber: customerMetadata.phoneNumber ?? null,
         dietaryRestrictions: user?.dietaryRestrictions ?? null,
         includeNapkinsAndUtensils: orderDetails.includeNapkinsAndUtensils,
         prevRewardsPoints: prevPoints,
-        rewardsPoints: currPoints,
+        earnedRewardsPoints: earnedPoints,
+        spentRewardsPoints: spentPoints,
         userId: user ? user.userId : null,
         orderItems: {
           create: orderItemsData, // Nested array for order items and their customizations
@@ -253,7 +272,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
             userId: payment.metadata.userId,
           },
           data: {
-            rewardsPoints: currPoints,
+            rewardsPoints: prevPoints + earnedPoints - spentPoints,
             lifetimeRewardPoints,
             currentOrder: {
               datetimeToPickUp: getTodayAtMidnight(),

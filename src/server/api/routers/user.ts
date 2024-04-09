@@ -7,6 +7,12 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
+import Stripe from "stripe";
+import { env } from "~/env";
+
+export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
+  apiVersion: "2023-10-16",
+});
 
 export const userRouter = createTRPCRouter({
   isUserRegistered: publicProcedure
@@ -42,8 +48,15 @@ export const userRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const customer = await stripe.customers.create({
+        email: input.email,
+        name: `${input.firstName} ${input.lastName}`,
+        phone: input.phoneNumber,
+      });
+
       return ctx.prisma.user.create({
         data: {
+          stripeUserId: customer.id,
           ...input,
         },
       });

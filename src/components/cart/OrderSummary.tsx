@@ -78,7 +78,6 @@ function OrderSummary({ order }: OrderSummary) {
               className="baseFlex w-full !items-start gap-4"
             >
               {/* preview image of item */}
-              <div className="imageFiller size-12 rounded-md" />
               <Image
                 src={"/menuItems/sampleImage.webp"}
                 alt={item.name}

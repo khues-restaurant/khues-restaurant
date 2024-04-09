@@ -8,7 +8,7 @@ import { api } from "~/utils/api";
 
 function useHandleLocalStorage() {
   const userId = useGetUserId();
-  const { isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn } = useAuth();
 
   const {
     setOrderDetails,
@@ -50,7 +50,14 @@ function useHandleLocalStorage() {
   const [orderDetailsRetrieved, setOrderDetailsRetrieved] = useState(false);
 
   useEffect(() => {
-    if (user === undefined || userId === "" || orderDetailsRetrieved) return;
+    console.log(user, userId, orderDetailsRetrieved);
+    if (
+      !isLoaded ??
+      (isSignedIn && user === undefined) ??
+      userId === "" ??
+      orderDetailsRetrieved
+    )
+      return;
 
     console.log("validating from local storage");
 
@@ -60,6 +67,7 @@ function useHandleLocalStorage() {
         : false;
 
     if (user) {
+      console.log("hopefully not here");
       try {
         orderDetailsSchema.parse(user.currentOrder);
 
@@ -142,6 +150,8 @@ function useHandleLocalStorage() {
     const parsedOrder = JSON.parse(localStorageOrder) as OrderDetails;
 
     parsedOrder.datetimeToPickUp = new Date(parsedOrder.datetimeToPickUp);
+
+    console.log("about to validtae");
 
     validateOrder({
       userId,

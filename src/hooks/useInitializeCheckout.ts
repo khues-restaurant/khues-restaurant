@@ -4,10 +4,11 @@ import { useMemo } from "react";
 import useGetUserId from "~/hooks/useGetUserId";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
+import { env } from "~/env";
 
 const useStripe = () => {
   const stripe = useMemo<Promise<Stripe | null>>(
-    () => loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY),
+    () => loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY),
     [],
   );
 
@@ -36,17 +37,10 @@ function useInitializeCheckout() {
   const stripePromise = useStripe();
 
   async function checkout() {
-    const userContactDetails = {
-      firstName: user?.firstName ?? "",
-      lastName: user?.lastName ?? "",
-      email: user?.email ?? "",
-      phoneNumber: user?.phoneNumber ?? "",
-    };
-
     const response = await createCheckout.mutateAsync({
       userId,
+      stripeUserId: user?.stripeUserId,
       orderDetails,
-      ...userContactDetails,
     });
     const stripe = await stripePromise;
 
