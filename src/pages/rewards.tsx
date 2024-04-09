@@ -11,6 +11,7 @@ import { SignUpButton } from "@clerk/nextjs";
 import WideFancySwirls from "~/components/ui/wideFancySwirls";
 import { Separator } from "~/components/ui/separator";
 import Image from "next/image";
+import { Parallax } from "react-scroll-parallax";
 
 function Rewards() {
   return (
@@ -30,47 +31,51 @@ function Rewards() {
         }}
         className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72 tablet:overflow-x-hidden"
       >
-        {/* TODO not sure at all what is going on here and why the <img>s behave so fundamentally
-        different from the filler divs */}
-
-        <div className="baseFlex mr-12 hidden w-full gap-8 tablet:flex">
-          <Image
-            src={"/interior/one.webp"}
-            alt={"TODO: replace with proper alt tag text"}
-            // width={256}
-            // height={192}
-            fill
-            style={{
-              objectFit: "cover",
-            }}
-            // sizes="(min-width: 1000px) 256px, 192px"
-            className="!relative !h-[192px] !w-[256px] shrink-0 rounded-md"
-          />
-          <Image
-            src={"/interior/two.webp"}
-            alt={"TODO: replace with proper alt tag text"}
-            // width={256}
-            // height={192}
-            fill
-            style={{
-              objectFit: "cover",
-            }}
-            // sizes="(min-width: 1000px) 256px, 192px"
-            className="!relative !h-[192px] !w-[256px] shrink-0 rounded-md"
-          />
-          <Image
-            src={"/interior/three.webp"}
-            alt={"TODO: replace with proper alt tag text"}
-            // width={256}
-            // height={192}
-            fill
-            style={{
-              objectFit: "cover",
-            }}
-            // sizes="(min-width: 1000px) 256px, 192px"
-            className="!relative !h-[192px] !w-[256px] shrink-0 rounded-md"
-          />
+        <div className="absolute left-24 top-8 hidden size-36 tablet:flex">
+          <Parallax speed={8}>
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              fill
+              className="!relative !size-full"
+            />
+          </Parallax>
         </div>
+
+        <div className="absolute -left-16 bottom-8 hidden size-36 tablet:flex">
+          <Parallax speed={8}>
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              fill
+              className="!relative !size-full"
+            />
+          </Parallax>
+        </div>
+
+        <div className="absolute -bottom-16 left-36 hidden size-36 tablet:flex">
+          <Parallax speed={8}>
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              fill
+              className="!relative !size-full"
+            />
+          </Parallax>
+        </div>
+
+        {/* unsure about this last one */}
+        <div className="absolute left-72 top-20 hidden size-36 xl:flex">
+          <Parallax speed={8}>
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              fill
+              className="!relative !size-full"
+            />
+          </Parallax>
+        </div>
+
         <div className="baseFlex z-10 rounded-md bg-white p-2 text-yellow-500 shadow-lg">
           <div className="baseVertFlex text-xl font-semibold tablet:text-2xl">
             <div className="rotate-180">
@@ -80,43 +85,50 @@ function Rewards() {
             <WideFancySwirls />
           </div>
         </div>
-        <div className="baseFlex ml-12 hidden w-full gap-8 tablet:flex">
-          <Image
-            src={"/interior/four.webp"}
-            alt={"TODO: replace with proper alt tag text"}
-            // width={256}
-            // height={192}
-            fill
-            style={{
-              objectFit: "cover",
-            }}
-            // sizes="(min-width: 1000px) 256px, 192px"
-            className="!relative !h-[192px] !w-[256px] shrink-0 rounded-md"
-          />
-          <Image
-            src={"/interior/five.webp"}
-            alt={"TODO: replace with proper alt tag text"}
-            // width={256}
-            // height={192}
-            fill
-            style={{
-              objectFit: "cover",
-            }}
-            // sizes="(min-width: 1000px) 256px, 192px"
-            className="!relative !h-[192px] !w-[256px] shrink-0 rounded-md"
-          />
-          <Image
-            src={"/interior/six.webp"}
-            alt={"TODO: replace with proper alt tag text"}
-            // width={256}
-            // height={192}
-            fill
-            style={{
-              objectFit: "cover",
-            }}
-            // sizes="(min-width: 1000px) 256px, 192px"
-            className="!relative !h-[192px] !w-[256px] shrink-0 rounded-md"
-          />
+
+        <div className="absolute right-24 top-8 hidden size-36 tablet:flex">
+          <Parallax speed={8}>
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              fill
+              className="!relative !size-full"
+            />
+          </Parallax>
+        </div>
+
+        <div className="absolute -right-16 bottom-8 hidden size-36 tablet:flex">
+          <Parallax speed={8}>
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              fill
+              className="!relative !size-full"
+            />
+          </Parallax>
+        </div>
+
+        <div className="absolute -bottom-16 right-36 hidden size-36 tablet:flex">
+          <Parallax speed={8}>
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              fill
+              className="!relative !size-full"
+            />
+          </Parallax>
+        </div>
+
+        {/* unsure about this last one */}
+        <div className="absolute right-72 top-20 hidden size-36 xl:flex">
+          <Parallax speed={8}>
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              fill
+              className="!relative !size-full"
+            />
+          </Parallax>
         </div>
       </div>
 
@@ -127,7 +139,7 @@ function Rewards() {
         Welcome to Khue&apos;s Rewards — where every bite takes you closer to
         delightful rewards! As a token of our appreciation, we&apos;ve crafted
         an exclusive program designed to celebrate our loyal customers. Indulge
-        in your favorite dishes, and watch the points pile up towards
+        in your favorite dishes, and watch your points pile up towards
         mouth-watering free meals, special treats, and unforgettable dining
         experiences. Because with us, your loyalty is rewarded with more than
         just a thank you.
@@ -257,9 +269,7 @@ function Rewards() {
       </div>
 
       {/* Join */}
-      {/* TODO: figure out why rewardsGoldBorder doesn't apply at tablet viewport. maybe some kind of
-        inherent tailwind restriction? */}
-      <div className="baseVertFlex tablet:rewardsGoldBorder mb-16 mt-8 max-w-xl gap-8 border-y-4 border-b-yellow-600 border-t-yellow-500 !p-6 text-yellow-500 shadow-md sm:!p-8">
+      <div className="baseVertFlex mb-16 mt-8 max-w-xl gap-8 border-y-4 border-b-yellow-600 border-t-yellow-500 !p-6 text-yellow-500 shadow-md sm:!p-8">
         <p className="text-center">
           Joining Khue&apos;s Rewards is easy! Simply create an account with us
           and start earning points with every order. Plus, you&apos;ll receive
@@ -268,6 +278,7 @@ function Rewards() {
 
         <SignUpButton
           mode="modal"
+          // TODO: make sure that this redirects to homepage instead of back to /rewards
           afterSignUpUrl={`${
             process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
           }/postSignUpRegistration`}

@@ -38,8 +38,6 @@ function CartSheetWrapper({
     return "100dvh";
   }
 
-  console.log(itemBeingModified, isEditingItem);
-
   return (
     <>
       <Sheet

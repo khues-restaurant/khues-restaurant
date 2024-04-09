@@ -10,6 +10,7 @@ import { MdOutlineMoneyOff } from "react-icons/md";
 import { BsSpeedometer2 } from "react-icons/bs";
 import { TfiReceipt } from "react-icons/tfi";
 import { SignUpButton, useAuth } from "@clerk/nextjs";
+import { Parallax } from "react-scroll-parallax";
 import { useRouter } from "next/router";
 import WideFancySwirls from "~/components/ui/wideFancySwirls";
 import LeftAccentSwirls from "~/components/ui/LeftAccentSwirls";
@@ -21,6 +22,7 @@ import {
   CarouselItem,
 } from "~/components/ui/carousel";
 import { useMainStore } from "~/stores/MainStore";
+import ParallaxWrapper from "~/components/ui/ParallaxWrapper";
 
 export default function Home() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -86,13 +88,26 @@ export default function Home() {
       h-full */}
 
       <div className="baseVertFlex w-full tablet:!hidden">
-        <div className="imageFiller baseFlex size-full h-[65dvh]">
+        {/* <div className="imageFiller baseFlex size-full h-[65dvh]">
           Image of probably three plates of food here arranged in a triangle
           (one on top, two on bottom) on a table, probably with some fancy
           lighting going on too. alternatively we could do one dish in main area
           here, and have an image selector below, but not as big of a fan of
           this approach
+        </div> */}
+
+        <div className="baseFlex relative size-full h-[65dvh] p-4">
+          <Image
+            src={"/homepage/mobileHero.webp"}
+            alt={"TODO: fill in w/ appropriate alt text"}
+            fill
+            style={{
+              objectFit: "cover",
+            }}
+            className="!relative !size-full rounded-md "
+          />
         </div>
+
         <div className="baseVertFlex gap-1 p-8">
           <h1 className="text-2xl font-bold">Welcome to Khue&apos;s</h1>
           <h2 className="text-center text-lg">
@@ -104,14 +119,79 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="baseFlex relative !hidden w-full tablet:!flex tablet:h-[calc(100dvh-8rem)]">
+      <div className="baseFlex relative !hidden w-full p-2 tablet:!flex tablet:h-[calc(100dvh-8rem)]">
+        {/* maybe there is still a place for this gradient, currently is below everything but
+            don't totally abandon this yet*/}
         <div className="absolute left-0 top-0 h-full w-1/2 bg-gradient-to-r from-black/50 to-transparent"></div>
 
-        <div className="grid h-full w-full grid-cols-2 grid-rows-2 gap-2">
-          <div className="imageFiller size-full" />
-          <div className="imageFiller size-full" />
-          <div className="imageFiller size-full" />
-          <div className="imageFiller size-full" />
+        <div className="relative grid h-full w-full grid-cols-3 grid-rows-3 gap-2">
+          {/* top left */}
+          <div className="relative col-span-1 row-span-2 size-full overflow-hidden rounded-md">
+            <Parallax speed={-10} className="!absolute !top-0 !size-full">
+              <Image
+                src={"/homepage/heroTwo.jpg"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="!relative !size-full rounded-md"
+              />
+            </Parallax>
+          </div>
+
+          {/* top right */}
+          <div className="relative col-span-2 row-span-2 size-full overflow-hidden rounded-md">
+            <Parallax speed={-10} className="!absolute !top-0 !size-full">
+              <Image
+                src={"/homepage/heroOne.jpeg"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="!relative !size-full rounded-md"
+              />
+            </Parallax>
+          </div>
+
+          {/* bottom left */}
+          <div className="relative !top-0 col-span-1 row-span-1 size-full overflow-hidden rounded-md">
+            <Parallax
+              speed={-10}
+              className="!absolute !top-0 !h-[150%] !w-full"
+              // TODO: this one is off by a bit
+            >
+              <Image
+                src={"/homepage/heroThree.webp"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="!relative !size-full rounded-md !pb-16"
+              />
+            </Parallax>
+          </div>
+
+          {/* bottom right */}
+          <div className="relative !top-0 col-span-2 row-span-1 size-full overflow-hidden rounded-md">
+            <Parallax
+              speed={-10}
+              className="!absolute !top-0 !h-[150%] !w-full"
+              // TODO: this one is off by a bit in the other direction
+            >
+              <Image
+                src={"/homepage/heroFour.jpg"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="!relative !size-full rounded-md"
+              />
+            </Parallax>
+          </div>
         </div>
 
         <div className="baseVertFlex absolute top-0 h-full tablet:left-24">
@@ -128,7 +208,7 @@ export default function Home() {
       </div>
 
       {/* Press Reviews */}
-      <div className="baseVertFlex w-full gap-2 border-y-[1px] pb-4 tablet:border-t-0">
+      <div className="baseVertFlex w-full gap-2 border-y-[1px] pb-4">
         <Carousel
           setApi={setPressReviewsApi}
           opts={{
@@ -151,7 +231,7 @@ export default function Home() {
                 width={200}
                 height={85}
               />
-              <p className="text-sm italic tablet:text-base">
+              <p className="text-center text-sm italic tablet:text-base">
                 &ldquo;Khue&apos;s is a must-visit for anyone in the Twin
                 Cities.&rdquo;
               </p>
@@ -163,7 +243,7 @@ export default function Home() {
                 width={200}
                 height={85}
               />
-              <p className="text-sm italic tablet:text-base">
+              <p className="text-center text-sm italic tablet:text-base">
                 &ldquo;Khue&apos;s is a must-visit for anyone in the Twin
                 Cities.&rdquo;
               </p>
@@ -175,7 +255,7 @@ export default function Home() {
                 width={200}
                 height={85}
               />
-              <p className="text-sm italic tablet:text-base">
+              <p className="text-center text-sm italic tablet:text-base">
                 &ldquo;Khue&apos;s is a must-visit for anyone in the Twin
                 Cities.&rdquo;
               </p>
@@ -207,7 +287,7 @@ export default function Home() {
       </div>
 
       {/* wrapping (prob just for padding?) container of promo sections below */}
-      <div className="baseVertFlex w-full gap-8 p-8">
+      <div className="baseVertFlex w-full gap-16 p-8">
         {/* masonry (w/ slight gap + rounded images) of food items + inside the restaurant. Don't be afraid to
           crop images how you feel suits them if need be */}
 
@@ -224,10 +304,22 @@ export default function Home() {
         {/* </ResponsiveMasonry> */}
 
         {/* "Order directly through us" promo section */}
-        <div className="baseVertFlex w-full rounded-md shadow-md tablet:hidden">
+        <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md tablet:hidden">
           {/* maybe have stock image of person holding a phone and you would have a proportionally
                 tilted screenshot of the order page showing on their phone? think about it */}
-          <div className="imageFiller h-60 w-full tablet:h-72 tablet:w-72"></div>
+          <div className="relative h-60 w-full overflow-hidden rounded-t-md">
+            <Parallax speed={-7} className="!absolute !top-0 !h-96 !w-full">
+              <Image
+                src={"/rewardsPromo.jpg"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="!relative !size-full rounded-md !pb-16"
+              />
+            </Parallax>
+          </div>
           <div className="baseVertFlex gap-4 p-4">
             <p className="text-lg font-medium">
               Order directly through us to receive mouthwatering benefits
@@ -303,8 +395,20 @@ export default function Home() {
                 damping: 20,
               }}
               viewport={{ once: true, amount: 0.75 }}
-              className="imageFiller absolute left-0 top-0 h-full w-full rounded-md shadow-md"
-            ></motion.div>
+              className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
+            >
+              <Parallax speed={-2} className="!absolute !top-0 !h-96">
+                <Image
+                  src={"/rewardsPromo.jpg"}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  fill
+                  style={{
+                    objectFit: "cover",
+                  }}
+                  className="!relative !size-full rounded-md !pb-8"
+                />
+              </Parallax>
+            </motion.div>
             <motion.div
               initial={{ opacity: 0, x: 100 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -314,15 +418,28 @@ export default function Home() {
                 stiffness: 200,
                 damping: 20,
               }}
-              viewport={{ once: true, amount: 0.75 }}
+              viewport={{ once: true, amount: 0.5 }}
               className="absolute right-4 top-4 z-[-1] h-full w-full rounded-md bg-primary"
             ></motion.div>
           </div>
         </div>
 
         {/* Meet the Chef promo section */}
-        <div className="baseVertFlex w-full rounded-md shadow-md tablet:hidden">
-          <div className="imageFiller h-60 w-full tablet:h-72 tablet:w-72"></div>
+        <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md  tablet:hidden">
+          <div className="relative h-60 w-full overflow-hidden rounded-t-md">
+            <Parallax speed={-7} className="!absolute !top-0 !h-96 !w-full">
+              <Image
+                src={"/eric.webp"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                  objectPosition: "top",
+                }}
+                className="!relative !size-full rounded-md"
+              />
+            </Parallax>
+          </div>
           <div className="baseVertFlex !items-start gap-4 p-4">
             <p className="text-lg font-medium">Meet the Chef</p>
 
@@ -352,7 +469,18 @@ export default function Home() {
               }}
               viewport={{ once: true, amount: 0.75 }}
               className="imageFiller absolute left-0 top-0 h-full w-full rounded-md shadow-md"
-            ></motion.div>
+            >
+              <Image
+                src="/eric.webp"
+                alt="Eric"
+                fill
+                style={{
+                  objectFit: "cover",
+                  objectPosition: "top",
+                }}
+                className="!relative !size-full rounded-md"
+              />
+            </motion.div>
             <motion.div
               initial={{ opacity: 0, x: -100 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -362,7 +490,7 @@ export default function Home() {
                 stiffness: 200,
                 damping: 20,
               }}
-              viewport={{ once: true, amount: 0.75 }}
+              viewport={{ once: true, amount: 0.5 }}
               className="absolute left-4 top-4 z-[-1] h-full w-full rounded-md bg-primary"
             ></motion.div>
           </div>
@@ -384,10 +512,19 @@ export default function Home() {
         </div>
 
         {/* Reservation promo section */}
-        <div className="baseVertFlex w-full rounded-md shadow-md tablet:hidden">
-          <div className="imageFiller h-60 w-full tablet:h-72 tablet:w-72">
-            image of an empty table w/ full silverware layed out, kind of angled
-            down shot at the table
+        <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md  tablet:hidden">
+          <div className="relative h-60 w-full overflow-hidden rounded-t-md">
+            <Parallax speed={-7} className="!absolute !top-0 !h-96 !w-full">
+              <Image
+                src={"/reservations.webp"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="!relative !size-full rounded-md !pb-24"
+              />
+            </Parallax>
           </div>
           <div className="baseVertFlex !items-start gap-2 p-4">
             <p className="text-lg font-medium">
@@ -428,9 +565,15 @@ export default function Home() {
               viewport={{ once: true, amount: 0.75 }}
               className="imageFiller absolute left-0 top-0 h-full w-full rounded-md shadow-md"
             >
-              {" "}
-              image of an empty table w/ full silverware layed out, kind of
-              angled down shot at the table
+              <Image
+                src="/reservations.webp"
+                alt="Eric"
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="!relative !size-full rounded-md"
+              />
             </motion.div>
             <motion.div
               initial={{ opacity: 0, x: 100 }}
@@ -441,7 +584,7 @@ export default function Home() {
                 stiffness: 200,
                 damping: 20,
               }}
-              viewport={{ once: true, amount: 0.75 }}
+              viewport={{ once: true, amount: 0.5 }}
               className="absolute right-4 top-4 z-[-1] h-full w-full rounded-md bg-primary"
             ></motion.div>
           </div>
@@ -472,19 +615,22 @@ export default function Home() {
                 //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%) 1 stretch",
               }
             }
-            className="baseVertFlex rewardsGoldBorder w-full max-w-2xl gap-4 rounded-md p-4 !pb-8 text-yellow-500 shadow-md tablet:p-8"
+            className="baseVertFlex rewardsGoldBorder w-full max-w-sm gap-4 rounded-md p-4 !pb-8 text-yellow-500 shadow-md tablet:max-w-2xl tablet:p-8"
           >
             <div className="baseFlex gap-4">
               <LeftAccentSwirls />
-              <p className="text-center text-xl font-medium">
+              <p className="text-center font-semibold tablet:text-lg">
                 Join our rewards program today!
               </p>
               <RightAccentSwirls />
             </div>
-            <p>
-              As valued customers, members gain access to exclusive, limited
-              time discounts, can build up to earn free meals, and get a free
-              birthday dessert of their choice!
+
+            {/* idk both left/justified and text-center look off here */}
+            <p className="text-center">
+              Valued customers enjoy exclusive rewards: earn points with every
+              order to redeem for complimentary meals, gain early access to new
+              dishes, and celebrate your birthday with a free dessert of your
+              choice!
             </p>
 
             <WideFancySwirls />
@@ -534,14 +680,19 @@ export default function Home() {
                     slidesToScroll: 4,
                   },
                 },
-                dragFree: true,
+                // dragFree: true,
                 // skipSnaps: true, play around with this
               }}
               className="baseFlex w-full rounded-md border"
             >
               <CarouselContent>
                 <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
-                  <div className="imageFiller h-36 w-full rounded-md shadow-md"></div>
+                  <Image
+                    src={"/menuItems/sampleImage.webp"}
+                    alt={"TODO: Fix later"}
+                    fill
+                    className="!relative !h-36 !w-auto self-center rounded-md"
+                  />
                   <p className="font-semibold">Appetizer One</p>
                   <p className="text-sm">
                     Silky ricotta, signature red sauce, Italian sausage,
@@ -549,7 +700,12 @@ export default function Home() {
                   </p>
                 </CarouselItem>
                 <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
-                  <div className="imageFiller h-36 w-full rounded-md shadow-md"></div>
+                  <Image
+                    src={"/menuItems/sampleImage.webp"}
+                    alt={"TODO: Fix later"}
+                    fill
+                    className="!relative !h-36 !w-auto self-center rounded-md"
+                  />
                   <p className="font-semibold">Appetizer Two</p>
                   <p className="text-sm">
                     Silky ricotta, signature red sauce, Italian sausage,
@@ -557,7 +713,12 @@ export default function Home() {
                   </p>
                 </CarouselItem>
                 <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
-                  <div className="imageFiller h-36 w-full rounded-md shadow-md"></div>
+                  <Image
+                    src={"/menuItems/sampleImage.webp"}
+                    alt={"TODO: Fix later"}
+                    fill
+                    className="!relative !h-36 !w-auto self-center rounded-md"
+                  />
                   <p className="font-semibold">Appetizer Three</p>
                   <p className="text-sm">
                     Silky ricotta, signature red sauce, Italian sausage,
@@ -565,7 +726,12 @@ export default function Home() {
                   </p>
                 </CarouselItem>
                 <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
-                  <div className="imageFiller h-36 w-full rounded-md shadow-md"></div>
+                  <Image
+                    src={"/menuItems/sampleImage.webp"}
+                    alt={"TODO: Fix later"}
+                    fill
+                    className="!relative !h-36 !w-auto self-center rounded-md"
+                  />
                   <p className="font-semibold">Appetizer Four</p>
                   <p className="text-sm">
                     Silky ricotta, signature red sauce, Italian sausage,
@@ -573,7 +739,12 @@ export default function Home() {
                   </p>
                 </CarouselItem>
                 <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
-                  <div className="imageFiller h-36 w-full rounded-md shadow-md"></div>
+                  <Image
+                    src={"/menuItems/sampleImage.webp"}
+                    alt={"TODO: Fix later"}
+                    fill
+                    className="!relative !h-36 !w-auto self-center rounded-md"
+                  />
                   <p className="font-semibold">Appetizer Five</p>
                   <p className="text-sm">
                     Silky ricotta, signature red sauce, Italian sausage,
@@ -581,7 +752,12 @@ export default function Home() {
                   </p>
                 </CarouselItem>
                 <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
-                  <div className="imageFiller h-36 w-full rounded-md shadow-md"></div>
+                  <Image
+                    src={"/menuItems/sampleImage.webp"}
+                    alt={"TODO: Fix later"}
+                    fill
+                    className="!relative !h-36 !w-auto self-center rounded-md"
+                  />
                   <p className="font-semibold">Appetizer Six</p>
                   <p className="text-sm">
                     Silky ricotta, signature red sauce, Italian sausage,

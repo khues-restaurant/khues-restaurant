@@ -7,6 +7,7 @@ import "~/styles/globals.css";
 import GeneralLayout from "~/components/layouts/GeneralLayout";
 import { useRouter } from "next/router";
 import DashboardLayout from "~/components/dashboard/DashboardLayout";
+import { ParallaxProvider } from "react-scroll-parallax";
 
 export const socket = io({
   path: "/api/socket",
@@ -41,22 +42,24 @@ function MyApp({ Component, pageProps }: ComponentWithPageLayout) {
       }}
       {...pageProps}
     >
-      {asPath.includes("/dashboard") ? (
-        <DashboardLayout>
-          <Component {...pageProps} />
-        </DashboardLayout>
-      ) : (
-        <GeneralLayout>
-          {Component.PageLayout ? (
-            // @ts-expect-error TODO: fix this type error later
-            <Component.PageLayout>
-              <Component {...pageProps} />
-            </Component.PageLayout>
-          ) : (
+      <ParallaxProvider scrollAxis="vertical">
+        {asPath.includes("/dashboard") ? (
+          <DashboardLayout>
             <Component {...pageProps} />
-          )}
-        </GeneralLayout>
-      )}
+          </DashboardLayout>
+        ) : (
+          <GeneralLayout>
+            {Component.PageLayout ? (
+              // @ts-expect-error TODO: fix this type error later
+              <Component.PageLayout>
+                <Component {...pageProps} />
+              </Component.PageLayout>
+            ) : (
+              <Component {...pageProps} />
+            )}
+          </GeneralLayout>
+        )}
+      </ParallaxProvider>
     </ClerkProvider>
   );
 }

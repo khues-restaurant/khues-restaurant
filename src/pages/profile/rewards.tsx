@@ -1,28 +1,24 @@
-import { format } from "date-fns";
+import { useAuth } from "@clerk/nextjs";
+import Decimal from "decimal.js";
 import { motion } from "framer-motion";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { BiTimer } from "react-icons/bi";
+import Image from "next/image";
+import { Fragment, useEffect, useState } from "react";
 import { CiGift } from "react-icons/ci";
 import { FaCakeCandles } from "react-icons/fa6";
+import { LuCalendarClock } from "react-icons/lu";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import TopProfileNavigationLayout from "~/components/layouts/TopProfileNavigationLayout";
-import RevealFromTop from "~/components/ui/RevealFromTop";
 import { Button } from "~/components/ui/button";
+import { Separator } from "~/components/ui/separator";
 import { TabsContent } from "~/components/ui/tabs";
-import WideFancySwirls from "~/components/ui/wideFancySwirls";
-import useGetUserId from "~/hooks/useGetUserId";
-import { StoreCustomizations, useMainStore } from "~/stores/MainStore";
-import { isEligibleForBirthdayReward } from "~/utils/isEligibleForBirthdayReward";
-import { api } from "~/utils/api";
-import { FullMenuItem } from "~/server/api/routers/menuCategory";
-import { getRewardsPointCost } from "~/utils/getRewardsPointCost";
-import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { useToast } from "~/components/ui/use-toast";
-import Decimal from "decimal.js";
+import useGetUserId from "~/hooks/useGetUserId";
 import useGetViewportLabel from "~/hooks/useGetViewportLabel";
-import { LuCalendarClock } from "react-icons/lu";
-import { useAuth } from "@clerk/nextjs";
+import useUpdateOrder from "~/hooks/useUpdateOrder";
+import { FullMenuItem } from "~/server/api/routers/menuCategory";
+import { StoreCustomizations, useMainStore } from "~/stores/MainStore";
+import { api } from "~/utils/api";
+import { getRewardsPointCost } from "~/utils/getRewardsPointCost";
 
 function Rewards() {
   const userId = useGetUserId();
@@ -131,14 +127,14 @@ function Rewards() {
       className="baseVertFlex relative w-full"
     >
       <TabsContent value="rewards">
-        <div className="baseVertFlex relative mt-4 w-full p-4 transition-all tablet:my-8 tablet:p-8">
+        <div className="baseVertFlex relative mt-4 w-full gap-8 p-4 transition-all tablet:my-8 tablet:p-8">
           <div className="baseVertFlex rewardsGoldBorder relative w-full gap-4 rounded-md text-yellow-500 shadow-md tablet:max-w-2xl">
             <p className="text-xl font-bold">K Reward Points</p>
 
             <div className="baseVertFlex text-xl font-bold tracking-wider">
               <AnimatedNumbers
                 value={rewardsPointsEarned - toBeDeductedRewardsPoints}
-                fontSize={viewportLabel.includes("mobile") ? 25 : 48}
+                fontSize={viewportLabel.includes("mobile") ? 25 : 38}
                 padding={0}
               />
               <p className="!text-base font-semibold tracking-normal tablet:text-lg">
@@ -150,12 +146,12 @@ function Rewards() {
           </div>
 
           {/* .map() of Your rewards */}
-          <div className="baseVertFlex mt-8 max-w-7xl gap-8 text-yellow-500">
+          <div className="baseVertFlex mt-8 max-w-7xl gap-8 text-yellow-500 tablet:gap-16">
             {/* Birthday reward options */}
             {true && (
               <div className="baseVertFlex w-full gap-8">
                 <p className="text-xl font-medium underline underline-offset-2 tablet:text-2xl">
-                  -.- Choose a special birthday treat -.-
+                  -.- Choose your birthday dessert -.-
                 </p>
                 <div className="grid w-full grid-cols-1 !place-items-start gap-4 lg:grid-cols-2 2xl:grid-cols-3">
                   {/* Categories */}
@@ -168,18 +164,23 @@ function Rewards() {
                       <div className="baseVertFlex gap-4 tablet:!flex-row">
                         {category.menuItems
                           .sort((a, b) => a.price - b.price)
-                          .map((item) => (
-                            <RewardMenuItem
-                              key={item.id}
-                              menuItem={item}
-                              currentlySelectedRewardId={
-                                regularSelectedRewardId
-                              }
-                              userAvailablePoints={
-                                rewardsPointsEarned - toBeDeductedRewardsPoints
-                              }
-                              forBirthdayReward={true}
-                            />
+                          .map((item, index) => (
+                            <Fragment key={item.id}>
+                              <RewardMenuItem
+                                menuItem={item}
+                                currentlySelectedRewardId={
+                                  regularSelectedRewardId
+                                }
+                                userAvailablePoints={
+                                  rewardsPointsEarned -
+                                  toBeDeductedRewardsPoints
+                                }
+                                forBirthdayReward={true}
+                              />
+                              {index !== category.menuItems.length - 1 && (
+                                <Separator className="h-[1px] w-11/12 tablet:h-28 tablet:w-[1px]" />
+                              )}
+                            </Fragment>
                           ))}
                       </div>
                     </div>
@@ -205,19 +206,23 @@ function Rewards() {
                   </p>
 
                   {/* Items */}
-                  <div className="baseVertFlex gap-4">
+                  <div className="baseVertFlex">
                     {category.menuItems
                       .sort((a, b) => a.price - b.price)
-                      .map((item) => (
-                        <RewardMenuItem
-                          key={item.id}
-                          menuItem={item}
-                          currentlySelectedRewardId={regularSelectedRewardId}
-                          userAvailablePoints={
-                            rewardsPointsEarned - toBeDeductedRewardsPoints
-                          }
-                          forBirthdayReward={false}
-                        />
+                      .map((item, index) => (
+                        <Fragment key={item.id}>
+                          <RewardMenuItem
+                            menuItem={item}
+                            currentlySelectedRewardId={regularSelectedRewardId}
+                            userAvailablePoints={
+                              rewardsPointsEarned - toBeDeductedRewardsPoints
+                            }
+                            forBirthdayReward={false}
+                          />
+                          {index !== category.menuItems.length - 1 && (
+                            <Separator className="h-[1px] w-11/12" />
+                          )}
+                        </Fragment>
                       ))}
                   </div>
                 </div>
@@ -235,11 +240,10 @@ function Rewards() {
             </p>
 
             <div className="baseVertFlex gap-8 tablet:!flex-row">
-              <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
-                <div className="baseFlex h-24 w-full">
-                  <CiGift className="size-24 text-yellow-500" />
-                </div>
-                <div className="border-t border-yellow-500 p-4 text-center">
+              <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md sm:w-96 tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
+                <CiGift className="size-20 h-24 text-yellow-500" />
+                <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
+                <div className="hyphens-auto p-4 text-left">
                   Earning rewards is as simple as enjoying your favorite meals!
                   Every dollar spent earns you points, which open the door to a
                   diverse selection of enticing rewards. Get started earning
@@ -247,11 +251,10 @@ function Rewards() {
                 </div>
               </div>
 
-              <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
-                <div className="baseFlex h-24 w-full">
-                  <FaCakeCandles className="size-16 text-yellow-500" />
-                </div>
-                <div className="border-t border-yellow-500 p-4 text-center">
+              <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md sm:w-96 tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
+                <FaCakeCandles className="ml-4 size-12 h-24 text-yellow-500" />
+                <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
+                <div className="hyphens-auto p-4 text-left">
                   Celebrate your birthday with a complimentary treat from us,
                   adding a touch of sweetness to your special day. Make sure to
                   share your birthday with us when you sign up, so we can ensure
@@ -259,9 +262,10 @@ function Rewards() {
                 </div>
               </div>
 
-              <div className="rewardsGoldBorder baseVertFlex m-4 gap-2 rounded-md shadow-md tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
-                <LuCalendarClock className="size-16 h-24 text-yellow-500" />
-                <div className="border-t border-yellow-500 p-4 text-center">
+              <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md sm:w-96 tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
+                <LuCalendarClock className="ml-2 size-14 h-24 text-yellow-500" />
+                <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
+                <div className="hyphens-auto p-4 text-left">
                   As a member, you&apos;re first in line to experience our
                   newest menu items. Before these delicacies make their official
                   debut, you&apos;ll have the exclusive opportunity to taste
@@ -343,8 +347,14 @@ function RewardMenuItem({
 
   return (
     <div className="relative w-full max-w-80 sm:max-w-96">
-      <div className="baseFlex h-full w-full !items-start gap-4 rounded-md border-2 p-4">
-        <div className="imageFiller mt-2 size-16 rounded-md tablet:size-24"></div>
+      <div className="baseFlex relative h-full w-full !items-start gap-4 rounded-md p-4">
+        {/* <div className="imageFiller mt-2 size-16 rounded-md tablet:size-24"></div> */}
+        <Image
+          src={"/menuItems/sampleImage.webp"}
+          alt={menuItem.name}
+          fill
+          className="!relative !size-16 rounded-md tablet:!size-24"
+        />
 
         <div className="baseVertFlex h-full w-48 !items-start !justify-between">
           <div className="baseVertFlex !items-start gap-2">

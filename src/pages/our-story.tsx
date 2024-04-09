@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { Parallax } from "react-scroll-parallax";
 import { Button } from "~/components/ui/button";
 import {
   Carousel,
@@ -61,10 +62,13 @@ function OurStory() {
     >
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden border-b-2 tablet:h-72">
-        <div className="baseFlex absolute left-0 top-0 w-full border-b-2">
-          {/* wide-ish angle shot of the dining room maybe? technically could also
+        {/* wide-ish angle shot of the dining room maybe? technically could also
               do outside shot of restaurant as well! also obv just a collage of images of eric could work well
               too, but maybe save those for below in the actual content of this page? */}
+        <Parallax
+          speed={-10}
+          className="!absolute !-top-10 !left-0 !h-56 !w-full tablet:!h-72"
+        >
           <Image
             src={"/interior/seven.webp"}
             alt={"TODO: Alt text"}
@@ -72,12 +76,9 @@ function OurStory() {
             style={{
               objectFit: "cover",
             }}
-            // don't think this is as flexible as you want, unless you maybe do some calc() related
-            // magic w/ chatgpt (if it's even necessary with the actual image that's used)
-            //   ->   tablet:object-[bottom_-268px_right_0px]
-            className={`!relative !h-56 tablet:!h-72`}
+            className={`!relative !h-56 !w-full tablet:!h-72`}
           />
-        </div>
+        </Parallax>
 
         <div className="baseFlex z-10 rounded-md bg-white p-2 shadow-lg">
           <div className="experimentalBorder baseFlex px-8 py-4 text-xl font-semibold tablet:text-2xl">
