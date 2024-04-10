@@ -1,34 +1,21 @@
-import React, { useRef, useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import classes from "./AnimatedLogo.module.css";
 
-function AnimatedLogo() {
-  // // State to store path lengths keyed by their id
-  // const [pathLengths, setPathLengths] = useState({});
+interface AnimatedLogo {
+  className?: string;
+}
 
-  // useEffect(() => {
-  //   const lengths = {};
-  //   // Query all path elements in the SVG
-  //   document.querySelectorAll("svg path").forEach((path) => {
-  //     const id = path.getAttribute("id");
-  //     const length = path.getTotalLength();
-  //     lengths[id] = length;
-  //   });
-  //   // Update state with the calculated lengths
-  //   setPathLengths(lengths);
-  // }, []); // Empty dependency array means this effect runs once on mount
-
-  // console.log(pathLengths);
+function AnimatedLogo({ className }: AnimatedLogo) {
+  // seems like a pipedream without wrapping all of these in their own motion components
+  // to get the path animation added in here, but honestly I don't think it's as clean of a look
 
   return (
     <svg
       version="1.0"
-      width="466.29999pt"
-      height="492.19199pt"
       viewBox="0 0 466.29999 492.19199"
       preserveAspectRatio="xMidYMid"
       id="svg672"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       <defs id="defs676" />
       <g
@@ -38,10 +25,6 @@ function AnimatedLogo() {
         id="g670"
       >
         <path
-          pathLength="1"
-          fill={"red"}
-          stroke={"blue"}
-          strokeWidth={50}
           d="m 4394,4514 c 3,-9 6,-407 6,-885 v -869 h -195 -195 l 2,802 3,801 95,32 c 103,35 201,81 240,114 30,25 36,26 44,5 z"
           id="path994"
           className={classes.path994}
@@ -122,13 +105,3 @@ function AnimatedLogo() {
 }
 
 export default AnimatedLogo;
-
-// const pathRef = useRef(null);
-// const [pathLength, setPathLength] = useState<number | null>(null);
-
-// useEffect(() => {
-//   if (pathLength === null && pathRef.current) {
-//     const length = pathRef.current.getTotalLength();
-//     setPathLength(length);
-//   }
-// }, [pathLength]);

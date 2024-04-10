@@ -1,11 +1,11 @@
-import { Order, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { motion } from "framer-motion";
 import { type GetServerSideProps } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { MdOutlineMail } from "react-icons/md";
-import { TextGenerateEffect } from "~/components/ui/TextGenerateEffect";
+import AnimatedLogo from "~/components/ui/AnimatedLogo";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { api } from "~/utils/api";
 
@@ -69,7 +69,7 @@ function PaymentSuccess({
       className="baseVertFlex mt-[6.05rem] min-h-dvh w-full tablet:mt-32"
     >
       <div className="baseVertFlex max-w-80 gap-6 p-4 tablet:max-w-2xl tablet:gap-8 tablet:p-8">
-        <Image
+        {/* <Image
           src="/logo.webp"
           alt="Khue's header logo"
           style={{
@@ -78,17 +78,20 @@ function PaymentSuccess({
           width={200}
           height={185}
           priority
-        />
+        /> */}
 
-        <p className="text-center text-lg font-semibold">
+        {/* Testing just this instead of the loading spinner below */}
+        <AnimatedLogo className="-ml-8 size-36" />
+
+        <p className="mt-8 text-center text-lg font-semibold">
           Thank you! Your order has been successfully placed.
         </p>
 
-        <div className="baseVertFlex mt-4 gap-6 tablet:gap-8">
+        <div className="baseVertFlex gap-6 tablet:gap-8">
           {emailReceiptsAllowed && (
-            <div className="baseFlex gap-4 rounded-md border p-4 text-sm">
+            <div className="baseFlex mt-4 gap-4 rounded-md border p-4 text-sm">
               <MdOutlineMail className="size-6" />
-              An email receipt will be sent to you shortly.
+              Your email receipt has been sent and should arrive shortly.
             </div>
           )}
 
@@ -96,7 +99,7 @@ function PaymentSuccess({
             Please wait while your order is sent to our kitchen.
           </p>
 
-          <motion.div
+          {/* <motion.div
             key={"paymentSuccessSpinner"}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -106,7 +109,7 @@ function PaymentSuccess({
             aria-label="loading"
           >
             <span className="sr-only">Loading...</span>
-          </motion.div>
+          </motion.div> */}
         </div>
       </div>
     </motion.div>
