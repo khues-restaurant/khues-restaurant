@@ -1,6 +1,7 @@
 import { SignInButton, useAuth } from "@clerk/nextjs";
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState, type ComponentProps } from "react";
 import { LiaShoppingBagSolid } from "react-icons/lia";
@@ -476,73 +477,171 @@ function Track() {
                       </Button>
                     </p>
                   </div>
-                  <div className="rewardsGoldBorder baseVertFlex relative mt-4 w-full rounded-md text-yellow-500 shadow-md tablet:max-w-2xl">
-                    <p className="text-xl font-bold">K Reward Points</p>
 
-                    <div className="baseVertFlex mt-2 font-bold text-yellow-500">
-                      <AnimatedNumbers
-                        value={rewardsPointsEarned}
-                        fontSize={viewportLabel.includes("mobile") ? 25 : 35}
-                        padding={0}
-                      />
-                      points
-                    </div>
-
-                    <WideFancySwirls />
-
-                    <div
-                      className={`baseVertFlex w-full text-sm text-yellow-500`}
+                  <div
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+                    }}
+                    className="baseFlex relative h-48 w-full overflow-hidden rounded-md"
+                  >
+                    <motion.div
+                      key={"rewardsHeroMobileImageOne"}
+                      initial={{ opacity: 0, y: -125, x: -125 }}
+                      animate={{ opacity: 1, y: 0, x: 0 }}
+                      transition={{
+                        opacity: { duration: 0.2 },
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 20,
+                        delay: 0.5,
+                      }}
+                      className="absolute -left-10 -top-10"
                     >
-                      {isSignedIn ? (
-                        <>
-                          {/* maybe drop this first part? seems a bit redundant but idk */}
-                          <div className="baseFlex gap-1">
-                            You earned
-                            <div className="font-bold">
-                              <AnimatedNumbers
-                                value={
-                                  rewardsPointsEarned - order.prevRewardsPoints
-                                }
-                                fontSize={
-                                  viewportLabel.includes("mobile") ? 14 : 16
-                                }
-                                padding={0}
-                              />
-                            </div>
-                            points for this order.
-                          </div>
-                        </>
-                      ) : (
-                        <div className="baseVertFlex mt-2 gap-4">
-                          <SignInButton
-                            mode="modal"
-                            afterSignUpUrl={`${
-                              process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                            }/postSignUpRegistration`}
-                            afterSignInUrl={`${
-                              process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                            }${asPath}`}
-                          >
-                            <Button
-                              variant={"rewards"}
-                              // className="h-11"
-                              // onClick={() => {
-                              //   if (asPath.includes("/create")) {
-                              //     localStorageTabData.set(getStringifiedTabData());
-                              //   }
+                      <Image
+                        src={"/menuItems/sampleImage.webp"}
+                        alt={"TODO: replace with proper alt tag text"}
+                        width={96}
+                        height={96}
+                        className="!relative"
+                      />
+                    </motion.div>
 
-                              //   // technically can sign in from signup page and vice versa
-                              //   if (!userId) localStorageRedirectRoute.set(asPath);
-                              //   // ^^ but technically could just append it onto the postSignupRegistration route right?
-                              // }}
+                    <motion.div
+                      key={"rewardsHeroMobileImageTwo"}
+                      initial={{ opacity: 0, y: 125, x: -125 }}
+                      animate={{ opacity: 1, y: 0, x: 0 }}
+                      transition={{
+                        opacity: { duration: 0.2 },
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 20,
+                        delay: 0.75,
+                      }}
+                      className="absolute -bottom-10 -left-10"
+                    >
+                      <Image
+                        src={"/menuItems/sampleImage.webp"}
+                        alt={"TODO: replace with proper alt tag text"}
+                        width={96}
+                        height={96}
+                        className="!relative"
+                      />
+                    </motion.div>
+
+                    <div className="baseVertFlex z-10 gap-4 rounded-md bg-white px-8 py-4 text-yellow-500 shadow-lg">
+                      <div className="text-center text-lg font-semibold">
+                        Khue&apos;s Rewards
+                      </div>
+
+                      <div className="baseVertFlex font-bold tracking-wider">
+                        <AnimatedNumbers
+                          value={rewardsPointsEarned}
+                          fontSize={viewportLabel.includes("mobile") ? 22 : 28}
+                          padding={0}
+                        />
+                        <p className="font-semibold tracking-normal">points</p>
+                      </div>
+
+                      <div
+                        className={`baseVertFlex w-full text-sm text-yellow-500`}
+                      >
+                        {isSignedIn ? (
+                          <>
+                            {/* maybe drop this first part? seems a bit redundant but idk */}
+                            <div className="baseFlex gap-1">
+                              You earned
+                              <div className="font-bold">
+                                <AnimatedNumbers
+                                  value={
+                                    rewardsPointsEarned -
+                                    order.prevRewardsPoints
+                                  }
+                                  fontSize={
+                                    viewportLabel.includes("mobile") ? 14 : 16
+                                  }
+                                  padding={0}
+                                />
+                              </div>
+                              points for this order.
+                            </div>
+                          </>
+                        ) : (
+                          <div className="baseVertFlex mt-2 gap-4">
+                            <SignInButton
+                              mode="modal"
+                              afterSignUpUrl={`${
+                                process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
+                              }/postSignUpRegistration`}
+                              afterSignInUrl={`${
+                                process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
+                              }${asPath}`}
                             >
-                              Sign in
-                            </Button>
-                          </SignInButton>
-                          to redeem your points for this order.
-                        </div>
-                      )}
+                              <Button
+                                variant={"rewards"}
+                                // className="h-11"
+                                // onClick={() => {
+                                //   if (asPath.includes("/create")) {
+                                //     localStorageTabData.set(getStringifiedTabData());
+                                //   }
+
+                                //   // technically can sign in from signup page and vice versa
+                                //   if (!userId) localStorageRedirectRoute.set(asPath);
+                                //   // ^^ but technically could just append it onto the postSignupRegistration route right?
+                                // }}
+                              >
+                                Sign in
+                              </Button>
+                            </SignInButton>
+                            to redeem your points for this order.
+                          </div>
+                        )}
+                      </div>
                     </div>
+
+                    <motion.div
+                      key={"rewardsHeroMobileImageThree"}
+                      initial={{ opacity: 0, y: -125, x: 125 }}
+                      animate={{ opacity: 1, y: 0, x: 0 }}
+                      transition={{
+                        opacity: { duration: 0.2 },
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 20,
+                        delay: 0.95,
+                      }}
+                      className="absolute -right-10 -top-10"
+                    >
+                      <Image
+                        src={"/menuItems/sampleImage.webp"}
+                        alt={"TODO: replace with proper alt tag text"}
+                        width={96}
+                        height={96}
+                        className="!relative"
+                      />
+                    </motion.div>
+
+                    <motion.div
+                      key={"rewardsHeroMobileImageFour"}
+                      initial={{ opacity: 0, y: 125, x: 125 }}
+                      animate={{ opacity: 1, y: 0, x: 0 }}
+                      transition={{
+                        opacity: { duration: 0.2 },
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 20,
+                        delay: 0.6,
+                      }}
+                      className="absolute -bottom-10 -right-10"
+                    >
+                      <Image
+                        src={"/menuItems/sampleImage.webp"}
+                        alt={"TODO: replace with proper alt tag text"}
+                        width={96}
+                        height={96}
+                        className="!relative"
+                      />
+                    </motion.div>
                   </div>
                 </div>
 

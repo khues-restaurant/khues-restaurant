@@ -1,14 +1,21 @@
+import { Order, PrismaClient } from "@prisma/client";
 import { motion } from "framer-motion";
+import { type GetServerSideProps } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { MdOutlineMail } from "react-icons/md";
 import { TextGenerateEffect } from "~/components/ui/TextGenerateEffect";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { api } from "~/utils/api";
 
-function PaymentSuccess() {
-  const { push, isReady } = useRouter();
-  const sessionId = useRouter().query.session_id as string;
+function PaymentSuccess({
+  emailReceiptsAllowed,
+}: {
+  emailReceiptsAllowed: boolean;
+}) {
+  const { push, isReady, query } = useRouter();
+  const sessionId = query.session_id as string;
 
   const { data: order } = api.order.getByStripeSessionId.useQuery(sessionId, {
     enabled: isReady,
@@ -46,6 +53,10 @@ function PaymentSuccess() {
     }
   }, [order, updateOrder, push, orderHasBeenReset]);
 
+  // TODO: I have to imagine that the "missing" piece of this design is to add some images (probably of food items
+  // right?), but idk the best way to incorporate them tbh.. you do have to remember that this page should ideally
+  // be visible for no longer than like 5 seconds.. so parsing of the text should remain the main focus
+
   return (
     <motion.div
       key={"payment-success"}
@@ -53,43 +64,37 @@ function PaymentSuccess() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
+      // TODO: find a way css wise so that you don't have any scrollbar on tablet+ since this is guarenteed
+      // to be a tiny tiny element on this page
       className="baseVertFlex mt-[6.05rem] min-h-dvh w-full tablet:mt-32"
     >
-      <div className="baseVertFlex max-w-80 gap-6 rounded-md border-2 border-primary p-4 shadow-lg tablet:max-w-2xl tablet:gap-8 tablet:p-8">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="baseVertFlex"
-        >
-          <Image
-            src="/logo.webp"
-            alt="Khue's header logo"
-            style={{
-              filter: "drop-shadow(0px 1px 0.5px hsla(336, 84%, 17%, 0.25))", // keep this?
-            }}
-            width={200}
-            height={185}
-            priority
-          />
-        </motion.div>
-
-        {/* maybe include the animated checkmark? */}
-
-        {/* <h1 className="text-3xl font-semibold">Thank you!</h1> */}
-        <TextGenerateEffect
-          words={"Thank you! Your order has been successfully placed."}
-          startDelay={0.85}
-          className="text-center text-lg font-semibold"
+      <div className="baseVertFlex max-w-80 gap-6 p-4 tablet:max-w-2xl tablet:gap-8 tablet:p-8">
+        <Image
+          src="/logo.webp"
+          alt="Khue's header logo"
+          style={{
+            filter: "drop-shadow(0px 1px 0.5px hsla(336, 84%, 17%, 0.25))",
+          }}
+          width={200}
+          height={185}
+          priority
         />
 
-        <div className="baseVertFlex gap-6 tablet:gap-8">
-          {/* <p>Your order has been processed and is being sent to our kitchen.</p> */}
-          <TextGenerateEffect
-            words={"Sending your order to our kitchen."}
-            startDelay={1.75}
-            className="text-center"
-          />
+        <p className="text-center text-lg font-semibold">
+          Thank you! Your order has been successfully placed.
+        </p>
+
+        <div className="baseVertFlex mt-4 gap-6 tablet:gap-8">
+          {emailReceiptsAllowed && (
+            <div className="baseFlex gap-4 rounded-md border p-4 text-sm">
+              <MdOutlineMail className="size-6" />
+              An email receipt will be sent to you shortly.
+            </div>
+          )}
+
+          <p className="text-center">
+            Please wait while your order is sent to our kitchen.
+          </p>
 
           <motion.div
             key={"paymentSuccessSpinner"}
@@ -109,3 +114,23 @@ function PaymentSuccess() {
 }
 
 export default PaymentSuccess;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const prisma = new PrismaClient();
+
+  // maybe could have gotten this through clerk but w/e
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: ctx.query.userId as string,
+    },
+  });
+
+  const emailReceiptsAllowed = user?.allowsEmailReceipts ?? false;
+
+  return {
+    props: {
+      emailReceiptsAllowed,
+    },
+  };
+};

@@ -251,8 +251,7 @@ export const paymentRouter = createTRPCRouter({
 
         // success_url: `${process.env.NEXT_PUBLIC_DOMAIN_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
         // cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN_URL}/`,
-        success_url:
-          "http://localhost:3000/payment-success?session_id={CHECKOUT_SESSION_ID}",
+        success_url: `http://localhost:3000/payment-success?session_id={CHECKOUT_SESSION_ID}&userId=${input.userId}`,
         cancel_url: "http://localhost:3000/",
       });
 

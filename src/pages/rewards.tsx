@@ -31,105 +31,281 @@ function Rewards() {
         }}
         className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72 tablet:overflow-x-hidden"
       >
-        <div className="absolute left-24 top-8 hidden size-36 tablet:flex">
-          <Parallax speed={8}>
-            <Image
-              src={"/menuItems/sampleImage.webp"}
-              alt={"TODO: replace with proper alt tag text"}
-              fill
-              className="!relative !size-full"
-            />
-          </Parallax>
-        </div>
+        {/* mobile images */}
+        <motion.div
+          key={"rewardsHeroMobileImageOne"}
+          initial={{ opacity: 0, y: -125, x: -125 }}
+          animate={{ opacity: 1, y: 0, x: 0 }}
+          transition={{
+            opacity: { duration: 0.2 },
+            type: "spring",
+            stiffness: 200,
+            damping: 20,
+            delay: 0.5,
+          }}
+          className="absolute -left-10 -top-10 tablet:hidden"
+        >
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            width={96}
+            height={96}
+            className="!relative"
+          />
+        </motion.div>
 
-        <div className="absolute -left-16 bottom-8 hidden size-36 tablet:flex">
-          <Parallax speed={8}>
-            <Image
-              src={"/menuItems/sampleImage.webp"}
-              alt={"TODO: replace with proper alt tag text"}
-              fill
-              className="!relative !size-full"
-            />
-          </Parallax>
-        </div>
+        <motion.div
+          key={"rewardsHeroMobileImageTwo"}
+          initial={{ opacity: 0, y: 125, x: -125 }}
+          animate={{ opacity: 1, y: 0, x: 0 }}
+          transition={{
+            opacity: { duration: 0.2 },
+            type: "spring",
+            stiffness: 200,
+            damping: 20,
+            delay: 0.75,
+          }}
+          className="absolute -bottom-10 -left-10 tablet:hidden"
+        >
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            width={96}
+            height={96}
+            className="!relative"
+          />
+        </motion.div>
 
-        <div className="absolute -bottom-16 left-36 hidden size-36 tablet:flex">
-          <Parallax speed={8}>
-            <Image
-              src={"/menuItems/sampleImage.webp"}
-              alt={"TODO: replace with proper alt tag text"}
-              fill
-              className="!relative !size-full"
-            />
-          </Parallax>
-        </div>
+        {/* tablet+ images */}
+        <motion.div
+          key={"rewardsHeroImageOne"}
+          initial={{ opacity: 0, y: -150 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            opacity: { duration: 0.2 },
+            type: "spring",
+            stiffness: 200,
+            damping: 20,
+            delay: 0.5,
+          }}
+          className="absolute -top-1 left-24 hidden tablet:flex"
+        >
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            width={144}
+            height={144}
+            className="!relative"
+          />
+        </motion.div>
 
-        {/* unsure about this last one */}
-        <div className="absolute left-72 top-20 hidden size-36 xl:flex">
-          <Parallax speed={8}>
-            <Image
-              src={"/menuItems/sampleImage.webp"}
-              alt={"TODO: replace with proper alt tag text"}
-              fill
-              className="!relative !size-full"
-            />
-          </Parallax>
-        </div>
+        <motion.div
+          key={"rewardsHeroImageTwo"}
+          initial={{ opacity: 0, x: -125 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{
+            opacity: { duration: 0.2 },
+            type: "spring",
+            stiffness: 200,
+            damping: 20,
+            delay: 0.15,
+          }}
+          className="absolute -left-16 bottom-10 hidden tablet:flex"
+        >
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            width={144}
+            height={144}
+            className="!relative"
+          />
+        </motion.div>
 
-        <div className="baseFlex z-10 rounded-md bg-white p-2 text-yellow-500 shadow-lg">
+        <motion.div
+          key={"rewardsHeroImageThree"}
+          initial={{ opacity: 0, y: 125 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            opacity: { duration: 0.2 },
+            type: "spring",
+            stiffness: 200,
+            damping: 20,
+            delay: 0.6,
+          }}
+          className="absolute -bottom-14 left-36 hidden tablet:flex"
+        >
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            width={144}
+            height={144}
+            className="!relative"
+          />
+        </motion.div>
+
+        <motion.div
+          key={"rewardsHeroImageFour"}
+          initial={{ opacity: 0, y: -200 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            opacity: { duration: 0.2 },
+            type: "spring",
+            stiffness: 200,
+            damping: 20,
+            delay: 0.75,
+          }}
+          className="absolute left-72 top-14 hidden xl:flex"
+        >
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            width={144}
+            height={144}
+            className="!relative"
+          />
+        </motion.div>
+
+        <div className="baseFlex z-10 rounded-md bg-white text-yellow-500 shadow-lg tablet:p-2">
           <div className="baseVertFlex text-xl font-semibold tablet:text-2xl">
-            <div className="rotate-180">
-              <WideFancySwirls />
-            </div>
+            <WideFancySwirls className="h-12 rotate-180 tablet:h-16" />
             Khue&apos;s Rewards
-            <WideFancySwirls />
+            <WideFancySwirls className="h-12 tablet:h-16" />
           </div>
         </div>
 
-        <div className="absolute right-24 top-8 hidden size-36 tablet:flex">
-          <Parallax speed={8}>
-            <Image
-              src={"/menuItems/sampleImage.webp"}
-              alt={"TODO: replace with proper alt tag text"}
-              fill
-              className="!relative !size-full"
-            />
-          </Parallax>
-        </div>
+        {/* mobile images */}
+        <motion.div
+          key={"rewardsHeroMobileImageThree"}
+          initial={{ opacity: 0, y: -125, x: 125 }}
+          animate={{ opacity: 1, y: 0, x: 0 }}
+          transition={{
+            opacity: { duration: 0.2 },
+            type: "spring",
+            stiffness: 200,
+            damping: 20,
+            delay: 0.95,
+          }}
+          className="absolute -right-10 -top-10 tablet:hidden"
+        >
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            width={96}
+            height={96}
+            className="!relative"
+          />
+        </motion.div>
 
-        <div className="absolute -right-16 bottom-8 hidden size-36 tablet:flex">
-          <Parallax speed={8}>
-            <Image
-              src={"/menuItems/sampleImage.webp"}
-              alt={"TODO: replace with proper alt tag text"}
-              fill
-              className="!relative !size-full"
-            />
-          </Parallax>
-        </div>
+        <motion.div
+          key={"rewardsHeroMobileImageFour"}
+          initial={{ opacity: 0, y: 125, x: 125 }}
+          animate={{ opacity: 1, y: 0, x: 0 }}
+          transition={{
+            opacity: { duration: 0.2 },
+            type: "spring",
+            stiffness: 200,
+            damping: 20,
+            delay: 0.6,
+          }}
+          className="absolute -bottom-10 -right-10 tablet:hidden"
+        >
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            width={96}
+            height={96}
+            className="!relative"
+          />
+        </motion.div>
 
-        <div className="absolute -bottom-16 right-36 hidden size-36 tablet:flex">
-          <Parallax speed={8}>
-            <Image
-              src={"/menuItems/sampleImage.webp"}
-              alt={"TODO: replace with proper alt tag text"}
-              fill
-              className="!relative !size-full"
-            />
-          </Parallax>
-        </div>
+        {/* tablet+ images */}
+        <motion.div
+          key={"rewardsHeroImageOne"}
+          initial={{ opacity: 0, y: -150 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            opacity: { duration: 0.2 },
+            type: "spring",
+            stiffness: 200,
+            damping: 20,
+            delay: 0.5,
+          }}
+          className="absolute -top-1 right-24 hidden tablet:flex"
+        >
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            width={144}
+            height={144}
+            className="!relative "
+          />
+        </motion.div>
 
-        {/* unsure about this last one */}
-        <div className="absolute right-72 top-20 hidden size-36 xl:flex">
-          <Parallax speed={8}>
-            <Image
-              src={"/menuItems/sampleImage.webp"}
-              alt={"TODO: replace with proper alt tag text"}
-              fill
-              className="!relative !size-full"
-            />
-          </Parallax>
-        </div>
+        <motion.div
+          key={"rewardsHeroImageTwo"}
+          initial={{ opacity: 0, x: 125 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{
+            opacity: { duration: 0.2 },
+            type: "spring",
+            stiffness: 200,
+            damping: 20,
+            delay: 0.15,
+          }}
+          className="absolute -right-16 bottom-10 hidden tablet:flex"
+        >
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            width={144}
+            height={144}
+            className="!relative"
+          />
+        </motion.div>
+
+        <motion.div
+          key={"rewardsHeroImageThree"}
+          initial={{ opacity: 0, y: 125 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            opacity: { duration: 0.2 },
+            type: "spring",
+            stiffness: 200,
+            damping: 20,
+            delay: 0.6,
+          }}
+          className="absolute -bottom-14 right-36 hidden tablet:flex"
+        >
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            width={144}
+            height={144}
+            className="!relative"
+          />
+        </motion.div>
+
+        <motion.div
+          key={"rewardsHeroImageFour"}
+          initial={{ opacity: 0, y: -200 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            opacity: { duration: 0.2 },
+            type: "spring",
+            stiffness: 200,
+            damping: 20,
+            delay: 0.75,
+          }}
+          className="absolute right-72 top-14 hidden xl:flex"
+        >
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={"TODO: replace with proper alt tag text"}
+            width={144}
+            height={144}
+            className="!relative"
+          />
+        </motion.div>
       </div>
 
       {/* Intro */}

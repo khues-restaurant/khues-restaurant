@@ -79,13 +79,6 @@ const dietaryRestrictionsSchema = z.object({
     .max(100, { message: "Must be at most 100 characters" }),
 });
 
-const spring = {
-  type: "spring",
-  stiffness: 150, // Control the speed of the spring
-  damping: 10, // Control the oscillation
-  mass: 1, // Control the "weight" of the animation
-};
-
 function PostSignUpDialog() {
   const { isSignedIn } = useAuth();
   const { user } = useUser();
@@ -109,7 +102,6 @@ function PostSignUpDialog() {
       onSuccess: () => {
         setTimeout(() => setSaveButtonText("Saved"), 2000);
 
-        setShowSuccessCheckmark(true);
         setTimeout(() => {
           setIsOpen(false);
         }, 750);
@@ -122,7 +114,6 @@ function PostSignUpDialog() {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [initialRewardsPoints, setInitialRewardsPoints] = useState(0);
-  const [showSuccessCheckmark, setShowSuccessCheckmark] = useState(false);
   const [saveButtonText, setSaveButtonText] = useState("Save");
 
   const [mainFormValues, setMainFormValues] = useState<z.infer<
@@ -202,6 +193,12 @@ function PostSignUpDialog() {
   }, []);
 
   if (!mounted) return <></>;
+
+  // TODO: can't think of a good reason why you would need to keep the <input> type of "calendar" for birthday
+  // since I think every rational person would just be typing in the numbers rather than using w/e ui is provided.
+  // therefore I think just doing the same realtime sanitization of the input as the phone number would be best.
+  // ^ then you can also add a phone/calendar icon inside on left side of the input to make it look nicer
+  // ^ FaPhone and CiCalendarDate
 
   return (
     <AlertDialog open={isOpen}>
@@ -515,61 +512,115 @@ function PostSignUpDialog() {
                 transition={{ duration: 0.2 }}
                 className="baseVertFlex mt-8 min-h-48 w-full"
               >
-                <div className="baseFlex relative w-full overflow-hidden rounded-md p-4">
-                  <div className="tablet: absolute -left-4 -top-4 size-16 tablet:-top-8 tablet:size-24">
+                <div
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+                  }}
+                  className="baseFlex relative h-48 w-full overflow-hidden rounded-md"
+                >
+                  <motion.div
+                    key={"rewardsHeroMobileImageOne"}
+                    initial={{ opacity: 0, y: -125, x: -125 }}
+                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    transition={{
+                      opacity: { duration: 0.2 },
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 20,
+                      delay: 0.5,
+                    }}
+                    className="absolute -left-10 -top-10"
+                  >
                     <Image
                       src={"/menuItems/sampleImage.webp"}
                       alt={"TODO: replace with proper alt tag text"}
-                      fill
-                      className="!relative !size-full"
+                      width={96}
+                      height={96}
+                      className="!relative"
                     />
-                  </div>
+                  </motion.div>
 
-                  <div className="tablet: absolute -bottom-4 -left-4 size-16 tablet:-bottom-8 tablet:size-24">
+                  <motion.div
+                    key={"rewardsHeroMobileImageTwo"}
+                    initial={{ opacity: 0, y: 125, x: -125 }}
+                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    transition={{
+                      opacity: { duration: 0.2 },
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 20,
+                      delay: 0.75,
+                    }}
+                    className="absolute -bottom-10 -left-10"
+                  >
                     <Image
                       src={"/menuItems/sampleImage.webp"}
                       alt={"TODO: replace with proper alt tag text"}
-                      fill
-                      className="!relative !size-full"
+                      width={96}
+                      height={96}
+                      className="!relative"
                     />
-                  </div>
+                  </motion.div>
 
-                  <div className="baseVertFlex rewardsGoldBorder gap-4 rounded-md !px-4 text-yellow-500 shadow-md sm:!px-16 tablet:max-w-2xl tablet:!px-24">
-                    <p className="text-nowrap text-xl font-semibold">
-                      K Reward Points
-                    </p>
-
-                    <div className="baseVertFlex text-xl font-bold tracking-wider">
-                      <AnimatedNumbers
-                        value={initialRewardsPoints}
-                        fontSize={viewportLabel.includes("mobile") ? 25 : 32}
-                        padding={0}
-                      />
-                      <p className="!text-base font-semibold tracking-normal tablet:text-lg">
-                        points
-                      </p>
+                  <div className="baseVertFlex z-10 gap-4 rounded-md bg-white px-8 py-4 text-yellow-500 shadow-lg">
+                    <div className="text-center text-lg font-semibold">
+                      Khue&apos;s Rewards
                     </div>
 
-                    {/* maybe just want the left/right flanking fancy swirls here? */}
+                    <div className="baseVertFlex font-bold tracking-wider">
+                      <AnimatedNumbers
+                        value={initialRewardsPoints}
+                        fontSize={viewportLabel.includes("mobile") ? 18 : 24}
+                        padding={0}
+                      />
+                      <p className="font-semibold tracking-normal">points</p>
+                    </div>
                   </div>
 
-                  <div className="absolute -right-4 -top-4 size-16 tablet:-right-8 tablet:-top-8 tablet:size-24">
+                  <motion.div
+                    key={"rewardsHeroMobileImageThree"}
+                    initial={{ opacity: 0, y: -125, x: 125 }}
+                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    transition={{
+                      opacity: { duration: 0.2 },
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 20,
+                      delay: 0.95,
+                    }}
+                    className="absolute -right-10 -top-10"
+                  >
                     <Image
                       src={"/menuItems/sampleImage.webp"}
                       alt={"TODO: replace with proper alt tag text"}
-                      fill
-                      className="!relative !size-full"
+                      width={96}
+                      height={96}
+                      className="!relative"
                     />
-                  </div>
+                  </motion.div>
 
-                  <div className="absolute -bottom-4 -right-4 size-16 tablet:-bottom-8 tablet:-right-8 tablet:size-24">
+                  <motion.div
+                    key={"rewardsHeroMobileImageFour"}
+                    initial={{ opacity: 0, y: 125, x: 125 }}
+                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    transition={{
+                      opacity: { duration: 0.2 },
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 20,
+                      delay: 0.6,
+                    }}
+                    className="absolute -bottom-10 -right-10"
+                  >
                     <Image
                       src={"/menuItems/sampleImage.webp"}
                       alt={"TODO: replace with proper alt tag text"}
-                      fill
-                      className="!relative !size-full"
+                      width={96}
+                      height={96}
+                      className="!relative"
                     />
-                  </div>
+                  </motion.div>
                 </div>
 
                 <p className="mt-8 text-center">

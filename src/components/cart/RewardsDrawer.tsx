@@ -2,10 +2,17 @@ import { useAuth } from "@clerk/nextjs";
 import Decimal from "decimal.js";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  Fragment,
+  useEffect,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import { Button } from "~/components/ui/button";
+import { Separator } from "~/components/ui/separator";
 import { useToast } from "~/components/ui/use-toast";
 import useGetUserId from "~/hooks/useGetUserId";
 import useGetViewportLabel from "~/hooks/useGetViewportLabel";
@@ -124,9 +131,61 @@ function RewardsDrawer({
       className="baseVertFlex relative h-full w-full !justify-start"
     >
       <div className="baseVertFlex relative mt-8 w-full !justify-start gap-2">
-        <div className="baseVertFlex w-full max-w-md gap-2 p-4">
-          <div className="baseVertFlex rewardsGoldBorder relative z-50 w-full gap-4 rounded-md text-yellow-500 shadow-md tablet:max-w-md">
-            <p className="text-lg font-bold">K Reward Points</p>
+        <div
+          style={{
+            backgroundImage:
+              "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+          }}
+          className="baseFlex relative mt-2 h-40 w-full overflow-hidden"
+        >
+          <motion.div
+            key={"rewardsHeroMobileImageOne"}
+            initial={{ opacity: 0, y: -125, x: -125 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.5,
+            }}
+            className="absolute -left-10 -top-10"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={96}
+              height={96}
+              className="!relative"
+            />
+          </motion.div>
+
+          <motion.div
+            key={"rewardsHeroMobileImageTwo"}
+            initial={{ opacity: 0, y: 125, x: -125 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.75,
+            }}
+            className="absolute -bottom-10 -left-10"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={96}
+              height={96}
+              className="!relative"
+            />
+          </motion.div>
+
+          <div className="baseVertFlex z-10 gap-4 rounded-md bg-white px-8 py-4 text-yellow-500 shadow-lg">
+            <div className="text-center text-lg font-semibold">
+              Khue&apos;s Rewards
+            </div>
 
             <div className="baseVertFlex font-bold tracking-wider">
               <AnimatedNumbers
@@ -137,14 +196,59 @@ function RewardsDrawer({
               <p className="font-semibold tracking-normal">points</p>
             </div>
           </div>
-          <p className="text-lg font-medium text-yellow-500 underline underline-offset-2">
-            -.- Choose your reward -.-
-          </p>
+
+          <motion.div
+            key={"rewardsHeroMobileImageThree"}
+            initial={{ opacity: 0, y: -125, x: 125 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.95,
+            }}
+            className="absolute -right-10 -top-10"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={96}
+              height={96}
+              className="!relative"
+            />
+          </motion.div>
+
+          <motion.div
+            key={"rewardsHeroMobileImageFour"}
+            initial={{ opacity: 0, y: 125, x: 125 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.6,
+            }}
+            className="absolute -bottom-10 -right-10"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={96}
+              height={96}
+              className="!relative"
+            />
+          </motion.div>
         </div>
 
+        <p className="text-lg font-medium text-yellow-500 underline underline-offset-2">
+          -.- Choose your reward -.-
+        </p>
+
         {/* TODO: come back to this.. I feel like a higher dvh value should work but on shorter height viewports
-    content is being cut off... just a css understanding gap */}
-        <div className="baseVertFlex relative h-[50dvh] !justify-start overflow-y-auto px-4 pb-4 text-yellow-500">
+    content is being cut off... just a css understanding gap, maybe you need some kind of calc trickery here? */}
+        <div className="baseVertFlex relative mt-2 h-[55dvh] !justify-start overflow-y-auto px-4 pb-24 text-yellow-500">
           {/* .map() of Your rewards */}
           <div className="baseVertFlex w-full gap-8 ">
             {/* Birthday reward options */}
@@ -168,16 +272,21 @@ function RewardsDrawer({
                   <div className="baseVertFlex gap-4">
                     {category.menuItems
                       .sort((a, b) => a.price - b.price)
-                      .map((item) => (
-                        <RewardMenuItem
-                          key={item.id}
-                          menuItem={item}
-                          currentlySelectedRewardId={regularSelectedRewardId}
-                          userAvailablePoints={
-                            rewardsPointsEarned - toBeDeductedRewardsPoints
-                          }
-                          forBirthdayReward={false}
-                        />
+                      .map((item, index) => (
+                        <Fragment key={item.id}>
+                          <RewardMenuItem
+                            menuItem={item}
+                            currentlySelectedRewardId={regularSelectedRewardId}
+                            userAvailablePoints={
+                              rewardsPointsEarned - toBeDeductedRewardsPoints
+                            }
+                            forBirthdayReward={false}
+                          />
+
+                          {index !== category.menuItems.length - 1 && (
+                            <Separator className="h-[1px] w-11/12" />
+                          )}
+                        </Fragment>
                       ))}
                   </div>
                 </div>
@@ -229,19 +338,22 @@ function RewardMenuItem({
   const { toast } = useToast();
 
   function isDisabled() {
-    if (currentlySelectedRewardId === menuItem.id) return false;
+    if (currentlySelectedRewardId === null) return false;
 
     if (
       userAvailablePoints < new Decimal(menuItem.price).div(0.01).toNumber() ||
-      !menuItem.available
+      !menuItem.available ||
+      currentlySelectedRewardId !== menuItem.id
     ) {
       return true;
     }
+
+    return false;
   }
 
   return (
-    <div className="relative w-full max-w-80 sm:max-w-96">
-      <div className="baseFlex h-full w-full !items-start gap-4 rounded-md border-2 p-4">
+    <div className="relative w-full max-w-96">
+      <div className="baseFlex h-full w-full !items-start gap-4 rounded-md p-4">
         <Image
           src={"/menuItems/sampleImage.webp"}
           alt={menuItem.name}

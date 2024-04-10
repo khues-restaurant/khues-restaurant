@@ -766,25 +766,15 @@ function CartDrawer({
                               )}
                             </div>
 
-                            {/* reward name + icon */}
-                            <div className="baseFlex !items-start gap-2 rounded-md bg-primary px-1 py-0.5 text-sm font-semibold text-white">
+                            <div className="rewardsGoldBorder my-1 !px-2 !py-1 text-xs text-yellow-500">
                               {item.pointReward ? (
-                                <CiGift className="size-5" />
+                                <>
+                                  {new Decimal(item.price).div(0.01).toNumber()}{" "}
+                                  points
+                                </>
                               ) : (
-                                <FaCakeCandles className="size-5" />
+                                "Birthday reward"
                               )}
-                              <p>
-                                {item.pointReward ? (
-                                  <>
-                                    {new Decimal(item.price)
-                                      .div(0.01)
-                                      .toNumber()}{" "}
-                                    point reward
-                                  </>
-                                ) : (
-                                  "Birthday reward"
-                                )}
-                              </p>
                             </div>
 
                             <div className="baseVertFlex w-full !items-start text-sm">
@@ -912,6 +902,7 @@ function CartDrawer({
                   </div>
                   {isSignedIn && (
                     <Button
+                      variant={"rewards"}
                       className="baseFlex gap-2 text-xs font-semibold"
                       onClick={() => {
                         setShowRewardsDrawer(true);
@@ -930,7 +921,7 @@ function CartDrawer({
 
       {/* TODO: why does this scroll a bit along with body when drawer is scrolled? I believe it is
       a <Drawer> specific thing */}
-      <DrawerFooter>
+      <DrawerFooter className="z-10">
         <div
           className="baseVertFlex w-full border-t bg-gradient-to-br from-gray-200 to-gray-300
         p-4 shadow-inner"

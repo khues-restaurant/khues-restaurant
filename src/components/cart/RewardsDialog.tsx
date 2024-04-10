@@ -1,7 +1,13 @@
 import { useAuth } from "@clerk/nextjs";
 import Decimal from "decimal.js";
 import Image from "next/image";
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  Fragment,
+  useEffect,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent } from "~/components/ui/dialog";
@@ -13,6 +19,8 @@ import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getRewardsPointCost } from "~/utils/getRewardsPointCost";
+import { motion } from "framer-motion";
+import { Separator } from "~/components/ui/separator";
 
 interface RewardsDialog {
   showRewardsDialog: boolean;
@@ -142,9 +150,61 @@ function RewardsDialogContent({
       className="w-[800px] max-w-[800px]"
     >
       <div className="baseVertFlex relative w-full !justify-start gap-2">
-        <div className="baseVertFlex w-full gap-2">
-          <div className="baseVertFlex rewardsGoldBorder relative z-50 w-full gap-4 rounded-md text-yellow-500 shadow-md tablet:max-w-md">
-            <p className="text-lg font-bold">K Reward Points</p>
+        <div
+          style={{
+            backgroundImage:
+              "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+          }}
+          className="baseFlex relative h-48 w-full overflow-hidden rounded-md"
+        >
+          <motion.div
+            key={"rewardsHeroMobileImageOne"}
+            initial={{ opacity: 0, y: -125, x: -125 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.5,
+            }}
+            className="absolute -left-10 -top-10"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={96}
+              height={96}
+              className="!relative"
+            />
+          </motion.div>
+
+          <motion.div
+            key={"rewardsHeroMobileImageTwo"}
+            initial={{ opacity: 0, y: 125, x: -125 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.75,
+            }}
+            className="absolute -bottom-10 -left-10"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={96}
+              height={96}
+              className="!relative"
+            />
+          </motion.div>
+
+          <div className="baseVertFlex z-10 gap-4 rounded-md bg-white px-8 py-4 text-yellow-500 shadow-lg">
+            <div className="text-center text-lg font-semibold">
+              Khue&apos;s Rewards
+            </div>
 
             <div className="baseVertFlex font-bold tracking-wider">
               <AnimatedNumbers
@@ -155,10 +215,55 @@ function RewardsDialogContent({
               <p className="font-semibold tracking-normal">points</p>
             </div>
           </div>
-          <p className="text-lg font-medium text-yellow-500 underline underline-offset-2">
-            -.- Choose your reward -.-
-          </p>
+
+          <motion.div
+            key={"rewardsHeroMobileImageThree"}
+            initial={{ opacity: 0, y: -125, x: 125 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.95,
+            }}
+            className="absolute -right-10 -top-10"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={96}
+              height={96}
+              className="!relative"
+            />
+          </motion.div>
+
+          <motion.div
+            key={"rewardsHeroMobileImageFour"}
+            initial={{ opacity: 0, y: 125, x: 125 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.6,
+            }}
+            className="absolute -bottom-10 -right-10"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={96}
+              height={96}
+              className="!relative"
+            />
+          </motion.div>
         </div>
+
+        <p className="text-lg font-medium text-yellow-500 underline underline-offset-2">
+          -.- Choose your reward -.-
+        </p>
 
         <div className="baseVertFlex relative !justify-start overflow-y-auto pr-4 text-yellow-500 tablet:h-[500px]">
           {/* .map() of Your rewards */}
@@ -184,16 +289,22 @@ function RewardsDialogContent({
                   <div className="baseVertFlex gap-4">
                     {category.menuItems
                       .sort((a, b) => a.price - b.price)
-                      .map((item) => (
-                        <RewardMenuItem
-                          key={item.id}
-                          menuItem={item}
-                          currentlySelectedRewardId={regularSelectedRewardId}
-                          userAvailablePoints={
-                            rewardsPointsEarned - toBeDeductedRewardsPoints
-                          }
-                          forBirthdayReward={false}
-                        />
+                      .map((item, index) => (
+                        <Fragment key={item.id}>
+                          <RewardMenuItem
+                            key={item.id}
+                            menuItem={item}
+                            currentlySelectedRewardId={regularSelectedRewardId}
+                            userAvailablePoints={
+                              rewardsPointsEarned - toBeDeductedRewardsPoints
+                            }
+                            forBirthdayReward={false}
+                          />
+
+                          {index !== category.menuItems.length - 1 && (
+                            <Separator className="h-[1px] w-11/12" />
+                          )}
+                        </Fragment>
                       ))}
                   </div>
                 </div>
@@ -231,19 +342,22 @@ function RewardMenuItem({
   const { toast } = useToast();
 
   function isDisabled() {
-    if (currentlySelectedRewardId === menuItem.id) return false;
+    if (currentlySelectedRewardId === null) return false;
 
     if (
       userAvailablePoints < new Decimal(menuItem.price).div(0.01).toNumber() ||
-      !menuItem.available
+      !menuItem.available ||
+      currentlySelectedRewardId !== menuItem.id
     ) {
       return true;
     }
+
+    return false;
   }
 
   return (
     <div className="relative w-full max-w-96">
-      <div className="baseFlex h-full w-full !items-start gap-4 rounded-md border-2 p-4">
+      <div className="baseFlex h-full w-full !items-start gap-4 rounded-md p-4">
         <Image
           src={"/menuItems/sampleImage.webp"}
           alt={menuItem.name}

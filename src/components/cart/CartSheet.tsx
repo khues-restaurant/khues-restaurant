@@ -751,27 +751,17 @@ function CartSheet({
                             {item.includeDietaryRestrictions && (
                               <div className="size-2 rounded-full bg-primary/25" />
                             )}
+                          </div>
 
-                            {/* reward name + icon */}
-                            <div className="baseFlex !items-start gap-2 rounded-md bg-primary px-1 py-0.5 text-sm font-semibold text-white">
-                              {item.pointReward ? (
-                                <CiGift className="size-5" />
-                              ) : (
-                                <FaCakeCandles className="size-5" />
-                              )}
-                              <p>
-                                {item.pointReward ? (
-                                  <>
-                                    {new Decimal(item.price)
-                                      .div(0.01)
-                                      .toNumber()}{" "}
-                                    point reward
-                                  </>
-                                ) : (
-                                  "Birthday reward"
-                                )}
-                              </p>
-                            </div>
+                          <div className="rewardsGoldBorder my-1 !px-2 !py-1 text-xs text-yellow-500">
+                            {item.pointReward ? (
+                              <>
+                                {new Decimal(item.price).div(0.01).toNumber()}{" "}
+                                points
+                              </>
+                            ) : (
+                              "Birthday reward"
+                            )}
                           </div>
 
                           <div className="baseVertFlex w-full !items-start text-sm">
@@ -897,7 +887,7 @@ function CartSheet({
 
                 {isSignedIn && (
                   <Button
-                    // variant="underline"
+                    variant="rewards"
                     className="baseFlex gap-2 font-semibold"
                     onClick={() => {
                       setShowRewardsDialog(true);

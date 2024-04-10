@@ -38,8 +38,7 @@ const sheetVariants = cva(
           "inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
         left: "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
         right:
-          // TODO: make sure rounded-md is actually wanted design wise here
-          "inset-y-0 right-0 h-full w-3/4 border-l rounded-md data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-lg",
+          "inset-y-0 right-0 h-full w-3/4 border-l rounded-l-md data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-lg",
       },
     },
     defaultVariants: {

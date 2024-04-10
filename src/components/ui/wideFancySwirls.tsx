@@ -1,4 +1,10 @@
-export default function WideFancySwirls() {
+interface WideFancySwirls {
+  className?: string;
+}
+
+export default function WideFancySwirls({
+  className = "h-16",
+}: WideFancySwirls) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,7 +14,7 @@ export default function WideFancySwirls() {
       y="0px"
       viewBox="0 0 500 100"
       xmlSpace="preserve"
-      className="h-16"
+      className={className}
     >
       <g xmlns="http://www.w3.org/2000/svg">
         <g>

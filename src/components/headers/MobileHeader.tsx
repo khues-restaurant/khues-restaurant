@@ -43,11 +43,16 @@ import useGetUserId from "~/hooks/useGetUserId";
 import CartButton from "~/components/cart/CartButton";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { useMainStore } from "~/stores/MainStore";
+import { api } from "~/utils/api";
 
 function MobileHeader() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
   const userId = useGetUserId();
   const { asPath, push, events } = useRouter();
+
+  const { data: user } = api.user.get.useQuery(userId, {
+    enabled: Boolean(userId && isSignedIn),
+  });
 
   const { resetStore } = useMainStore((state) => ({
     resetStore: state.resetStore,
@@ -66,6 +71,7 @@ function MobileHeader() {
       events.off("routeChangeStart", handleRouteChange);
     };
   }, [events]);
+
   return (
     <nav
       id="header"
@@ -168,9 +174,9 @@ function MobileHeader() {
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="item-1" className="border-none">
                     {/* maybe need specific variant or just some custom code here to  */}
-                    <AccordionTrigger className="baseFlex gap-2 py-2 text-xl text-primary !no-underline">
+                    <AccordionTrigger className="baseFlex gap-4 py-2 text-xl text-primary !no-underline">
                       <FaUserAlt className="!rotate-0" />
-                      Firstname
+                      {user?.firstName}
                     </AccordionTrigger>
                     <AccordionContent className="pt-2">
                       <div className="baseVertFlex gap-2">

@@ -44,6 +44,8 @@ function GeneralLayout({ children }: GeneralLayout) {
 
         <Footer />
 
+        {/* if you want, extract a bit of the logic within here to this component so you can just wholly
+            conditionally render this component */}
         <PostSignUpDialog />
 
         <Toaster />

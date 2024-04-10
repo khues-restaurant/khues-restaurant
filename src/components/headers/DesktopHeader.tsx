@@ -42,10 +42,11 @@ import useGetUserId from "~/hooks/useGetUserId";
 import CartButton from "~/components/cart/CartButton";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { useMainStore } from "~/stores/MainStore";
+import { useEffect, useState } from "react";
 
 function DesktopHeader() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
-  const { asPath, push } = useRouter();
+  const { asPath, push, events } = useRouter();
   const userId = useGetUserId();
 
   const { resetStore } = useMainStore((state) => ({
@@ -55,6 +56,20 @@ function DesktopHeader() {
   const { data: user } = api.user.get.useQuery(userId, {
     enabled: Boolean(userId && isSignedIn),
   });
+
+  const [showUserPopoverLinks, setShowUserPopoverLinks] = useState(false);
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setShowUserPopoverLinks(false);
+    };
+
+    events.on("routeChangeStart", handleRouteChange);
+
+    return () => {
+      events.off("routeChangeStart", handleRouteChange);
+    };
+  }, [events]);
 
   // okay I want to not show rewards/auth buttons until user auth status is known,
   // however I *really* want to show the page as soon as possible, what options do I have here?
@@ -194,9 +209,18 @@ function DesktopHeader() {
         )}
 
         {isSignedIn && user && (
-          <Popover>
+          <Popover
+            open={showUserPopoverLinks}
+            onOpenChange={(open) => {
+              if (!open) setShowUserPopoverLinks(false);
+            }}
+          >
             <PopoverTrigger asChild>
-              <Button variant="outline" className="baseFlex gap-2">
+              <Button
+                variant="outline"
+                className="baseFlex gap-2"
+                onClick={() => setShowUserPopoverLinks(true)}
+              >
                 <FaUserAlt />
                 {user.firstName}
               </Button>
