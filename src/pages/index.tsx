@@ -122,7 +122,7 @@ export default function Home() {
       <div className="baseFlex relative !hidden w-full p-2 tablet:!flex tablet:h-[calc(100dvh-8rem)]">
         {/* maybe there is still a place for this gradient, currently is below everything but
             don't totally abandon this yet*/}
-        <div className="absolute left-0 top-0 h-full w-1/2 bg-gradient-to-r from-black/50 to-transparent"></div>
+        <div className="absolute left-0 top-0 h-full w-1/2 bg-gradient-to-r from-black/25 to-transparent"></div>
 
         <div className="relative grid h-full w-full grid-cols-3 grid-rows-3 gap-2">
           {/* top left */}
@@ -194,7 +194,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="baseVertFlex absolute top-0 h-full tablet:left-24">
+        <div className="baseVertFlex absolute top-0 h-full xl:!left-24 tablet:left-8">
           <div className="baseVertFlex !items-start gap-1 rounded-md bg-white p-8 shadow-md">
             <h1 className="text-4xl font-bold">Welcome to Khue&apos;s</h1>
             <h2 className="text-2xl">
@@ -288,20 +288,79 @@ export default function Home() {
 
       {/* wrapping (prob just for padding?) container of promo sections below */}
       <div className="baseVertFlex w-full gap-16 p-8">
-        {/* masonry (w/ slight gap + rounded images) of food items + inside the restaurant. Don't be afraid to
-          crop images how you feel suits them if need be */}
+        {/* masonry of featured food items */}
 
-        {/* <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}> */}
-        {/* <Masonry columnsCount={3} gutter="10px" className="max-w-[550px]">
-          <div className="imageFiller h-64 w-32" />
-          <div className="imageFiller h-32 w-64" />
-          <div className="imageFiller h-32 w-48" />
-          <div className="imageFiller h-48 w-96" />
-          <div className="imageFiller h-24 w-48" />
-          <div className="imageFiller h-32 w-32" />
-          <div className="imageFiller h-32 w-32" />
-        </Masonry> */}
-        {/* </ResponsiveMasonry> */}
+        <div className="homepageFoodMasonry h-[500px] w-full max-w-sm tablet:h-[300px] tablet:max-w-2xl">
+          <div className="firstMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+            <Parallax speed={-5} className="!absolute !top-0 !size-[150%]">
+              <Image
+                src={"/masonryFood/one.jpg"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="!relative !size-full rounded-md"
+              />
+            </Parallax>
+          </div>
+
+          <div className="secondMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+            <Parallax speed={-5} className="!absolute !top-0 !size-[150%]">
+              <Image
+                src={"/masonryFood/two.webp"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="!relative !size-full rounded-md"
+              />
+            </Parallax>
+          </div>
+
+          <div className="thirdMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+            <Parallax speed={-5} className="!absolute !top-0 !size-[150%]">
+              <Image
+                src={"/masonryFood/three.jpg"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="!relative !size-full rounded-md"
+              />
+            </Parallax>
+          </div>
+
+          <div className="fourthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+            <Parallax speed={-5} className="!absolute !top-0 !size-[150%]">
+              <Image
+                src={"/masonryFood/four.jpg"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="!relative !size-full rounded-md"
+              />
+            </Parallax>
+          </div>
+
+          <div className="fifthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+            <Parallax speed={-5} className="!absolute !top-0 !size-[150%]">
+              <Image
+                src={"/masonryFood/five.jpg"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="!relative !size-full rounded-md"
+              />
+            </Parallax>
+          </div>
+        </div>
 
         {/* "Order directly through us" promo section */}
         <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md tablet:hidden">
@@ -468,18 +527,20 @@ export default function Home() {
                 damping: 20,
               }}
               viewport={{ once: true, amount: 0.75 }}
-              className="imageFiller absolute left-0 top-0 h-full w-full rounded-md shadow-md"
+              className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
             >
-              <Image
-                src="/eric.webp"
-                alt="Eric"
-                fill
-                style={{
-                  objectFit: "cover",
-                  objectPosition: "top",
-                }}
-                className="!relative !size-full rounded-md"
-              />
+              <Parallax speed={-2} className="!absolute !top-0 !h-96 !w-full">
+                <Image
+                  src={"/eric.webp"}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  fill
+                  style={{
+                    objectFit: "cover",
+                    objectPosition: "top",
+                  }}
+                  className="!relative !size-full rounded-md"
+                />
+              </Parallax>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, x: -100 }}
@@ -563,17 +624,19 @@ export default function Home() {
                 damping: 20,
               }}
               viewport={{ once: true, amount: 0.75 }}
-              className="imageFiller absolute left-0 top-0 h-full w-full rounded-md shadow-md"
+              className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
             >
-              <Image
-                src="/reservations.webp"
-                alt="Eric"
-                fill
-                style={{
-                  objectFit: "cover",
-                }}
-                className="!relative !size-full rounded-md"
-              />
+              <Parallax speed={-2} className="!absolute !top-0 !h-96">
+                <Image
+                  src={"/reservations.webp"}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  fill
+                  style={{
+                    objectFit: "cover",
+                  }}
+                  className="!relative !size-full rounded-md !pb-16"
+                />
+              </Parallax>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, x: 100 }}
@@ -591,17 +654,82 @@ export default function Home() {
         </div>
 
         {/* masonry but prob more of just inside/outside the restaurant */}
-        {/* <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}> */}
-        {/* <Masonry columnsCount={3} gutter="10px" className="max-w-[550px]">
-          <div className="imageFiller h-64 w-32" />
-          <div className="imageFiller h-32 w-64" />
-          <div className="imageFiller h-32 w-48" />
-          <div className="imageFiller h-48 w-96" />
-          <div className="imageFiller h-24 w-48" />
-          <div className="imageFiller h-32 w-32" />
-          <div className="imageFiller h-32 w-32" />
-        </Masonry> */}
-        {/* </ResponsiveMasonry> */}
+        <div className="homepageInteriorMasonry h-[500px] w-full max-w-sm tablet:h-[300px] tablet:max-w-2xl">
+          <div className="firstMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+            <Parallax speed={-5} className="!absolute !top-0 !size-[115%]">
+              <Image
+                src={"/interior/one.webp"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                  objectPosition: "bottom",
+                }}
+                className="!relative !size-full rounded-md"
+              />
+            </Parallax>
+          </div>
+
+          <div className="secondMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+            <Parallax speed={-5} className="!absolute !top-0 !size-[115%]">
+              <Image
+                src={"/interior/two.webp"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                  objectPosition: "bottom",
+                }}
+                className="!relative !size-full rounded-md"
+              />
+            </Parallax>
+          </div>
+
+          <div className="thirdMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+            <Parallax speed={-5} className="!absolute !top-0 !size-[115%]">
+              <Image
+                src={"/interior/three.webp"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                  objectPosition: "bottom",
+                }}
+                className="!relative !size-full rounded-md"
+              />
+            </Parallax>
+          </div>
+
+          <div className="fourthMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+            <Parallax speed={-5} className="!absolute !top-0 !size-[115%]">
+              <Image
+                src={"/interior/four.webp"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                  objectPosition: "bottom",
+                }}
+                className="!relative !size-full rounded-md"
+              />
+            </Parallax>
+          </div>
+
+          <div className="fifthMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+            <Parallax speed={-5} className="!absolute !top-0 !size-[125%]">
+              <Image
+                src={"/interior/five.webp"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                  objectPosition: "bottom",
+                }}
+                className="!relative !size-full rounded-md"
+              />
+            </Parallax>
+          </div>
+        </div>
 
         {/* Rewards program promo section */}
         {isLoaded && !isSignedIn && (
