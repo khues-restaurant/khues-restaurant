@@ -1,13 +1,11 @@
-import { type MenuItem } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useState, type Dispatch, type SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import CartDrawer from "~/components/cart/CartDrawer";
-import GuestCheckoutDrawer from "~/components/cart/GuestCheckoutDrawer";
 import RewardsDrawer from "~/components/cart/RewardsDrawer";
 import ItemCustomizationDrawer from "~/components/itemCustomization/ItemCustomizationDrawer";
 import { Drawer, DrawerContent } from "~/components/ui/drawer";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
-import { useMainStore, type Item } from "~/stores/MainStore";
+import { type Item } from "~/stores/MainStore";
 
 interface CartDrawerWrapper {
   showCartDrawer: boolean;
@@ -17,27 +15,14 @@ function CartDrawerWrapper({
   showCartDrawer,
   setShowCartDrawer,
 }: CartDrawerWrapper) {
-  const { orderDetails } = useMainStore((state) => ({
-    orderDetails: state.orderDetails,
-  }));
-
   const [itemBeingModified, setItemBeingModified] =
     useState<FullMenuItem | null>(null);
 
   const [showRewardsDrawer, setShowRewardsDrawer] = useState(false);
 
-  const [guestCheckoutView, setGuestCheckoutView] = useState<
-    "credentialsForm" | "mainView" | "notShowing"
-  >("notShowing");
   const [initialItemState, setInitialItemState] = useState<Item>();
 
   function getDrawerHeight() {
-    if (guestCheckoutView === "credentialsForm") {
-      return "535px";
-    } else if (guestCheckoutView === "mainView") {
-      return "500px";
-    }
-
     return "85dvh";
   }
 
@@ -50,7 +35,6 @@ function CartDrawerWrapper({
         if (!open) {
           setItemBeingModified(null);
           setInitialItemState(undefined);
-          setGuestCheckoutView("notShowing");
         }
       }}
     >
@@ -68,19 +52,16 @@ function CartDrawerWrapper({
           {/* idk about height yet, could be flat 85dvh but might look weird on certain viewports */}
 
           <AnimatePresence mode="popLayout" initial={false}>
-            {guestCheckoutView === "notShowing" &&
-              !itemBeingModified &&
-              !showRewardsDrawer && (
-                <motion.div key="cart" className="baseVertFlex h-full w-full">
-                  <CartDrawer
-                    setShowCartDrawer={setShowCartDrawer}
-                    setItemBeingModified={setItemBeingModified}
-                    setInitialItemState={setInitialItemState}
-                    setGuestCheckoutView={setGuestCheckoutView}
-                    setShowRewardsDrawer={setShowRewardsDrawer}
-                  />
-                </motion.div>
-              )}
+            {!itemBeingModified && !showRewardsDrawer && (
+              <motion.div key="cart" className="baseVertFlex h-full w-full">
+                <CartDrawer
+                  setShowCartDrawer={setShowCartDrawer}
+                  setItemBeingModified={setItemBeingModified}
+                  setInitialItemState={setInitialItemState}
+                  setShowRewardsDrawer={setShowRewardsDrawer}
+                />
+              </motion.div>
+            )}
 
             {itemBeingModified && (
               <motion.div
@@ -101,15 +82,6 @@ function CartDrawerWrapper({
                 <RewardsDrawer
                   showRewardsDrawer={showRewardsDrawer}
                   setShowRewardsDrawer={setShowRewardsDrawer}
-                />
-              </motion.div>
-            )}
-
-            {guestCheckoutView !== "notShowing" && (
-              <motion.div key="guest" className="baseVertFlex h-full w-full">
-                <GuestCheckoutDrawer
-                  guestCheckoutView={guestCheckoutView}
-                  setGuestCheckoutView={setGuestCheckoutView}
                 />
               </motion.div>
             )}

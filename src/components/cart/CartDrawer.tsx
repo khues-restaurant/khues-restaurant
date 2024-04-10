@@ -70,9 +70,6 @@ interface CartDrawer {
   setShowCartDrawer: Dispatch<SetStateAction<boolean>>;
   setItemBeingModified: Dispatch<SetStateAction<FullMenuItem | null>>;
   setInitialItemState: Dispatch<SetStateAction<Item | undefined>>;
-  setGuestCheckoutView: Dispatch<
-    SetStateAction<"credentialsForm" | "mainView" | "notShowing">
-  >;
   setShowRewardsDrawer: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -82,7 +79,6 @@ function CartDrawer({
   // (as a general drawer thing though, so maybe directly on <Drawer>?)
   setItemBeingModified,
   setInitialItemState,
-  setGuestCheckoutView,
   setShowRewardsDrawer,
 }: CartDrawer) {
   const { isSignedIn } = useAuth();
@@ -314,13 +310,9 @@ function CartDrawer({
   ]);
 
   async function onMainFormSubmit(values: z.infer<typeof mainFormSchema>) {
-    if (isSignedIn) {
-      setCheckoutButtonText("Loading");
+    setCheckoutButtonText("Loading");
 
-      await initializeCheckout(); // TODO: await or void or what here
-    } else {
-      setGuestCheckoutView("mainView");
-    }
+    await initializeCheckout(); // TODO: await or void or what here
   }
 
   return (

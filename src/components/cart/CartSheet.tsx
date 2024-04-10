@@ -70,9 +70,6 @@ interface CartSheet {
   setShowCartSheet: Dispatch<SetStateAction<boolean>>;
   setItemBeingModified: Dispatch<SetStateAction<FullMenuItem | null>>;
   setInitialItemState: Dispatch<SetStateAction<Item | undefined>>;
-  setGuestCheckoutView: Dispatch<
-    SetStateAction<"credentialsForm" | "mainView" | "notShowing">
-  >;
   setIsEditingItem: Dispatch<SetStateAction<boolean>>;
   setShowRewardsDialog: Dispatch<SetStateAction<boolean>>;
 }
@@ -81,7 +78,6 @@ function CartSheet({
   setShowCartSheet,
   setItemBeingModified,
   setInitialItemState,
-  setGuestCheckoutView,
   setIsEditingItem,
   setShowRewardsDialog,
 }: CartSheet) {
@@ -314,13 +310,9 @@ function CartSheet({
   ]);
 
   async function onMainFormSubmit(values: z.infer<typeof mainFormSchema>) {
-    if (isSignedIn) {
-      setCheckoutButtonText("Loading");
+    setCheckoutButtonText("Loading");
 
-      await initializeCheckout(); // TODO: await or void or what here
-    } else {
-      setGuestCheckoutView("mainView");
-    }
+    await initializeCheckout(); // TODO: await or void or what here
   }
 
   return (

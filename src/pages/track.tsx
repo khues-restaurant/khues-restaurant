@@ -132,7 +132,11 @@ function Track() {
 
     setTimeout(() => {
       if (order) {
-        setRewardsPointsEarned(order.rewardsPoints);
+        setRewardsPointsEarned(
+          order.prevRewardsPoints +
+            order.earnedRewardsPoints -
+            order.spentRewardsPoints,
+        );
       }
     }, 5000);
 
@@ -509,7 +513,7 @@ function Track() {
                           </div>
                         </>
                       ) : (
-                        <div className="baseVertFlex gap-2">
+                        <div className="baseVertFlex mt-2 gap-4">
                           <SignInButton
                             mode="modal"
                             afterSignUpUrl={`${
@@ -520,16 +524,17 @@ function Track() {
                             }${asPath}`}
                           >
                             <Button
-                            // className="h-11"
-                            // onClick={() => {
-                            //   if (asPath.includes("/create")) {
-                            //     localStorageTabData.set(getStringifiedTabData());
-                            //   }
+                              variant={"rewards"}
+                              // className="h-11"
+                              // onClick={() => {
+                              //   if (asPath.includes("/create")) {
+                              //     localStorageTabData.set(getStringifiedTabData());
+                              //   }
 
-                            //   // technically can sign in from signup page and vice versa
-                            //   if (!userId) localStorageRedirectRoute.set(asPath);
-                            //   // ^^ but technically could just append it onto the postSignupRegistration route right?
-                            // }}
+                              //   // technically can sign in from signup page and vice versa
+                              //   if (!userId) localStorageRedirectRoute.set(asPath);
+                              //   // ^^ but technically could just append it onto the postSignupRegistration route right?
+                              // }}
                             >
                               Sign in
                             </Button>
