@@ -45,6 +45,9 @@ import { Button } from "~/components/ui/button";
 import { FaUserAlt } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { Separator } from "~/components/ui/separator";
+import { buildClerkProps } from "@clerk/nextjs/server";
+import { type GetServerSideProps } from "next";
+import UserIsNotAuthenticated from "~/components/UserIsNotAuthenticated";
 
 function Preferences() {
   const userId = useGetUserId();
@@ -71,6 +74,7 @@ function Preferences() {
       // TODO show error toast
     },
   });
+
   const { mutate: deleteUser } = api.user.delete.useMutation({
     onSuccess: async () => {
       await ctx.user.invalidate();
@@ -133,6 +137,7 @@ function Preferences() {
     allowsEmailReceipts: z.boolean(),
     allowsOrderCompleteEmails: z.boolean(),
     allowsPromotionalEmails: z.boolean(),
+    allowsRewardExpiryReminderEmails: z.boolean(),
 
     // these fields will be disabled but just to be safe
     email: z.string().email(),
@@ -151,8 +156,13 @@ function Preferences() {
       allowsEmailReceipts: user?.allowsEmailReceipts ?? false,
       allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails ?? false,
       allowsPromotionalEmails: user?.allowsPromotionalEmails ?? false,
+      allowsRewardExpiryReminderEmails:
+        user?.allowsRewardExpiryReminderEmails ?? false,
     },
   });
+
+  // do we need a useEffect w/ mainForm.watch() to update the form values when the user changes?
+  // on god it looks like we do. Weird that we either didn't notice this before or it came up randomly
 
   async function onFormSubmit(values: z.infer<typeof formSchema>) {
     if (!user) return;
@@ -163,6 +173,10 @@ function Preferences() {
       ...user,
       ...values,
     });
+  }
+
+  if (!isSignedIn) {
+    return <UserIsNotAuthenticated />;
   }
 
   return (
@@ -184,13 +198,13 @@ function Preferences() {
 
         <Form {...form}>
           <form className="baseVertFlex mt-8 w-full !items-start gap-2">
-            <div className="baseVertFlex w-full !items-start gap-8 tablet:!grid tablet:grid-cols-2">
+            <div className="baseVertFlex w-full !items-start gap-8 tablet:!grid tablet:grid-cols-2 tablet:gap-x-16">
               <FormField
                 control={form.control}
                 name="firstName"
                 render={({ field, fieldState: { invalid } }) => (
-                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                    <div className="baseVertFlex !items-start gap-2">
+                  <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
+                    <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
                       <FormLabel className="font-semibold">
                         First name
                       </FormLabel>
@@ -217,8 +231,8 @@ function Preferences() {
                 control={form.control}
                 name="lastName"
                 render={({ field, fieldState: { invalid } }) => (
-                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                    <div className="baseVertFlex !items-start gap-2">
+                  <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
+                    <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
                       <FormLabel className="font-semibold">Last name</FormLabel>
                       <Input placeholder="Last name" {...field} />
                     </div>
@@ -243,8 +257,8 @@ function Preferences() {
                 control={form.control}
                 name="phoneNumber"
                 render={({ field, fieldState: { invalid } }) => (
-                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                    <div className="baseVertFlex !items-start gap-2">
+                  <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
+                    <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
                       <FormLabel className="font-semibold">
                         Phone number
                       </FormLabel>
@@ -271,8 +285,8 @@ function Preferences() {
                 control={form.control}
                 name="email"
                 render={({ field, fieldState: { invalid } }) => (
-                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                    <div className="baseVertFlex relative !items-start gap-2">
+                  <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
+                    <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
                       <FormLabel className="font-semibold">Email</FormLabel>
                       <Input placeholder="Email" {...field} disabled />
                       <FaLock className="absolute bottom-3 right-2 size-3.5 text-gray-300" />
@@ -298,8 +312,8 @@ function Preferences() {
                 control={form.control}
                 name="birthday"
                 render={({ field, fieldState: { invalid } }) => (
-                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                    <div className="baseVertFlex relative !items-start gap-2">
+                  <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
+                    <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
                       <FormLabel className="font-semibold">Birthday</FormLabel>
                       <Input
                         {...field}
@@ -331,8 +345,8 @@ function Preferences() {
               control={form.control}
               name="dietaryRestrictions"
               render={({ field, fieldState: { invalid } }) => (
-                <FormItem className="baseVertFlex relative mt-8 !items-start gap-2 space-y-0">
-                  <div className="baseVertFlex !items-start gap-2">
+                <FormItem className="baseVertFlex relative mt-8 w-full max-w-lg !items-start gap-2 space-y-0">
+                  <div className="baseVertFlex w-full !items-start gap-2">
                     <FormLabel className="font-semibold">
                       Dietary preferences
                     </FormLabel>
@@ -377,7 +391,7 @@ function Preferences() {
 
             <div className="baseVertFlex mt-4 w-full !items-start gap-6 tablet:gap-4">
               <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                <div className="baseFlex !items-start gap-2">
+                <div className="baseFlex !items-start gap-4">
                   <FormControl>
                     <Checkbox
                       id="allowsEmailReceipts"
@@ -391,7 +405,7 @@ function Preferences() {
               </FormItem>
 
               <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                <div className="baseFlex !items-start gap-2">
+                <div className="baseFlex !items-start gap-4">
                   <FormControl>
                     <Checkbox
                       id="allowsOrderCompleteEmails"
@@ -408,7 +422,7 @@ function Preferences() {
               </FormItem>
 
               <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                <div className="baseFlex !items-start gap-2">
+                <div className="baseFlex !items-start gap-4">
                   <FormControl>
                     <Checkbox
                       id="allowsPromotionalEmails"
@@ -420,6 +434,23 @@ function Preferences() {
                     className="leading-4"
                   >
                     Receive promotional content and special menu offers.
+                  </Label>
+                </div>
+              </FormItem>
+
+              <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+                <div className="baseFlex !items-start gap-4">
+                  <FormControl>
+                    <Checkbox
+                      id="allowsRewardExpiryReminderEmails"
+                      {...form.register("allowsRewardExpiryReminderEmails")}
+                    />
+                  </FormControl>
+                  <Label
+                    htmlFor="allowsRewardExpiryReminderEmails"
+                    className="leading-4"
+                  >
+                    Receive a reminder when your rewards are about to expire.
                   </Label>
                 </div>
               </FormItem>
@@ -708,3 +739,7 @@ function Preferences() {
 Preferences.PageLayout = TopProfileNavigationLayout;
 
 export default Preferences;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return { props: { ...buildClerkProps(ctx.req) } };
+};

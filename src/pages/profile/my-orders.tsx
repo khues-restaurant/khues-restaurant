@@ -43,7 +43,6 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Switch } from "~/components/ui/switch";
-import { TabsContent } from "~/components/ui/tabs";
 import { Textarea } from "~/components/ui/textarea";
 import { useToast } from "~/components/ui/use-toast";
 import useGetUserId from "~/hooks/useGetUserId";
@@ -55,6 +54,9 @@ import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { useAuth } from "@clerk/nextjs";
 import Image from "next/image";
+import { buildClerkProps } from "@clerk/nextjs/server";
+import { type GetServerSideProps } from "next";
+import UserIsNotAuthenticated from "~/components/UserIsNotAuthenticated";
 
 function RecentOrders() {
   const userId = useGetUserId();
@@ -89,6 +91,10 @@ function RecentOrders() {
 
   // TODO: ah prob can't do the nested route level animated logo based on if user
   // api has been fetched, since this needs the orders.. not the end of the world to define it here
+
+  if (!isSignedIn) {
+    return <UserIsNotAuthenticated />;
+  }
 
   return (
     <motion.div
@@ -171,6 +177,10 @@ function RecentOrders() {
 RecentOrders.PageLayout = TopProfileNavigationLayout;
 
 export default RecentOrders;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return { props: { ...buildClerkProps(ctx.req) } };
+};
 
 interface OrderAccordion {
   userId: string;

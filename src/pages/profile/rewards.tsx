@@ -19,6 +19,9 @@ import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getRewardsPointCost } from "~/utils/getRewardsPointCost";
+import { buildClerkProps } from "@clerk/nextjs/server";
+import { type GetServerSideProps } from "next";
+import UserIsNotAuthenticated from "~/components/UserIsNotAuthenticated";
 
 function Rewards() {
   const userId = useGetUserId();
@@ -116,6 +119,10 @@ function Rewards() {
   if (!rewards) return null;
   // ^ should be fine since we are eventually going to get all
   // reward data passed in as props from getServerSideProps
+
+  if (!isSignedIn) {
+    return <UserIsNotAuthenticated />;
+  }
 
   return (
     <motion.div
@@ -598,6 +605,10 @@ export default Rewards;
 //     },
 //   };
 // };
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return { props: { ...buildClerkProps(ctx.req) } };
+};
 
 interface RewardMenuItem {
   menuItem: FullMenuItem;

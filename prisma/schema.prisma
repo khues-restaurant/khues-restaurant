@@ -243,9 +243,10 @@ model User {
     birthday            DateTime
     dietaryRestrictions String
 
-    allowsEmailReceipts       Boolean @default(true)
-    allowsOrderCompleteEmails Boolean @default(true)
-    allowsPromotionalEmails   Boolean @default(true)
+    allowsEmailReceipts              Boolean @default(true)
+    allowsOrderCompleteEmails        Boolean @default(true)
+    allowsPromotionalEmails          Boolean @default(true)
+    allowsRewardExpiryReminderEmails Boolean @default(true)
 
     rewardsPoints        Int @default(500) // TODO: most likely change this later
     lifetimeRewardPoints Int @default(0)

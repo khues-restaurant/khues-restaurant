@@ -43,6 +43,14 @@ function Track() {
     },
   );
 
+  const [minTimeoutElapsed, setMinTimeoutElapsed] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setMinTimeoutElapsed(true);
+    }, 2000);
+  }, []);
+
   const targetRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
   const floatingRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
   const [positions, setPositions] = useState([
@@ -53,7 +61,7 @@ function Track() {
 
   useEffect(() => {
     function updatePositions() {
-      if (!order) return;
+      if (!order || !minTimeoutElapsed) return;
 
       const newPositions = targetRefs.current.map((targetRef, index) => {
         if (targetRef && floatingRefs.current[index]) {
@@ -82,7 +90,7 @@ function Track() {
     window.addEventListener("resize", updatePositions);
 
     return () => window.removeEventListener("resize", updatePositions);
-  }, [order]);
+  }, [order, minTimeoutElapsed]);
 
   useEffect(() => {
     function refetchOrderStatus(orderIdToRefetch: string) {
@@ -99,14 +107,6 @@ function Track() {
   }, [orderId, refetch]);
 
   const viewportLabel = useGetViewportLabel();
-
-  const [minTimeoutElapsed, setMinTimeoutElapsed] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setMinTimeoutElapsed(true);
-    }, 2000);
-  }, []);
 
   // need the undefined state here so that we can transition the orderPlaced checkpoint.
   // Otherwise it would immediately show the completed state w/o any animation.
@@ -151,8 +151,6 @@ function Track() {
     setRewardsPointsTimerSet(true);
   }, [order, rewardsPointsTimerSet]);
 
-  if (typeof orderId !== "string") return null;
-
   // need maybe a decent bit of extra logic if you want to have each icon shake as the progress bar
   // reaches their respective checkpoints rather than how it is now, which is just the current icon
   // shakes since it's the current state.
@@ -181,7 +179,10 @@ function Track() {
               className="baseVertFlex h-full w-full !justify-start gap-8 p-4"
             >
               <p className="text-xl font-semibold underline underline-offset-4">
-                Order {orderId.toUpperCase().substring(0, 6)}
+                Order{" "}
+                {typeof orderId === "string"
+                  ? orderId.toUpperCase().substring(0, 6)
+                  : ""}
               </p>
 
               <div className="baseVertFlex w-full gap-2">
