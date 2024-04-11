@@ -330,13 +330,15 @@ function CartSheet({
       </div>
 
       {/* location + date & time picker  (TODO: why doesn't horizontal margin work here with w-full..) */}
-      <div className="baseFlex my-4 w-[80%] flex-wrap gap-2 rounded-md border-b bg-gradient-to-br from-gray-200 to-gray-300/70 p-4 px-8 shadow-sm">
-        <span>Your order will be available for pickup at</span>
+      <div className="baseFlex my-4 w-[80%] flex-wrap gap-2 rounded-md border border-gray-400 bg-gradient-to-br from-gray-200 to-gray-300/70 p-4 px-8 shadow-sm">
+        <span className="text-sm">
+          Your order will be available for pickup at
+        </span>
 
-        <div className="baseFlex gap-2">
+        <div className="baseFlex gap-1">
           <CiLocationOn className="size-6" />
           <Button variant={"link"} className="h-6" asChild>
-            <Link href="/googleMapsLink" className="!p-0">
+            <Link href="/googleMapsLink" className="!p-0 !text-sm">
               2100 Snelling Ave Roseville, MN 55113
             </Link>
           </Button>
