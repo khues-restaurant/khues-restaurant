@@ -12,6 +12,7 @@ import WideFancySwirls from "~/components/ui/wideFancySwirls";
 import { Separator } from "~/components/ui/separator";
 import Image from "next/image";
 import { Parallax } from "react-scroll-parallax";
+import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 
 function Rewards() {
   return (
@@ -21,7 +22,7 @@ function Rewards() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex mt-[6.05rem] min-h-dvh w-full !justify-start gap-8 tablet:mt-32"
+      className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start gap-8 tablet:mt-32 tablet:min-h-[calc(100dvh-8rem)]"
     >
       {/* Hero */}
       <div
@@ -325,9 +326,13 @@ function Rewards() {
 
       {/* Benefits (main) */}
       <div className="baseVertFlex mt-8 max-w-7xl gap-8 text-yellow-500">
-        <p className="text-2xl font-medium underline underline-offset-2">
-          -.- Member benefits -.-
-        </p>
+        <div className="baseFlex gap-2">
+          <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+          <span className="text-2xl font-medium underline underline-offset-2">
+            Member benefits
+          </span>
+          <SideAccentSwirls className="h-5 fill-yellow-500" />
+        </div>
 
         <div className="baseVertFlex gap-8 tablet:!flex-row">
           <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md sm:w-96 tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
@@ -416,9 +421,13 @@ function Rewards() {
 
       {/* side benefits (Quicker ordering/Easy ordering/tailored ordering) */}
       <div className="baseVertFlex gap-8 text-yellow-500">
-        <p className="text-2xl font-medium underline underline-offset-2">
-          -.- Personalized ordering -.-
-        </p>
+        <div className="baseFlex gap-2">
+          <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+          <span className="text-2xl font-medium underline underline-offset-2">
+            Personalized ordering
+          </span>
+          <SideAccentSwirls className="h-5 fill-yellow-500" />
+        </div>
 
         <div className="baseVertFlex gap-8 tablet:!flex-row">
           <div className="rewardsGoldBorder baseVertFlex max-w-72 gap-4 rounded-md !p-4 shadow-md tablet:h-36 tablet:w-96">
@@ -445,7 +454,7 @@ function Rewards() {
       </div>
 
       {/* Join */}
-      <div className="baseVertFlex mb-16 mt-8 max-w-xl gap-8 border-y-4 border-b-yellow-600 border-t-yellow-500 !p-6 text-yellow-500 shadow-md sm:!p-8">
+      <div className="baseVertFlex mb-16 mt-8 max-w-xl gap-8 border-y-4 border-b-yellow-600 border-t-yellow-500 !p-6 text-yellow-500 shadow-md sm:!p-8 tablet:rounded-sm">
         <p className="text-center">
           Joining Khue&apos;s Rewards is easy! Simply create an account with us
           and start earning points with every order. Plus, you&apos;ll receive
@@ -473,9 +482,9 @@ function Rewards() {
             //   if (!userId) localStorageRedirectRoute.set(asPath);
             //   // ^^ but technically could just append it onto the postSignupRegistration route right?
             // }}
-            className="text-lg shadow-md"
+            className="text-base shadow-md"
           >
-            Join Now
+            Join now
           </Button>
         </SignUpButton>
 

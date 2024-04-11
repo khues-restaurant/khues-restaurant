@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { CiGift } from "react-icons/ci";
 import { z } from "zod";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
+import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { AlertDialog, AlertDialogContent } from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
 import {
@@ -568,13 +569,19 @@ function PostSignUpDialog() {
                       Khue&apos;s Rewards
                     </div>
 
-                    <div className="baseVertFlex font-bold tracking-wider">
-                      <AnimatedNumbers
-                        value={initialRewardsPoints}
-                        fontSize={viewportLabel.includes("mobile") ? 18 : 24}
-                        padding={0}
-                      />
-                      <p className="font-semibold tracking-normal">points</p>
+                    <div className="baseFlex gap-4 font-bold tracking-wider">
+                      <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+
+                      <div className="baseVertFlex">
+                        <AnimatedNumbers
+                          value={initialRewardsPoints}
+                          fontSize={viewportLabel.includes("mobile") ? 18 : 24}
+                          padding={0}
+                        />
+                        <p className="font-semibold tracking-normal">points</p>
+                      </div>
+
+                      <SideAccentSwirls className="h-5 fill-yellow-500" />
                     </div>
                   </div>
 

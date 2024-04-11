@@ -55,13 +55,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // on touch devices as well.
     function getDynamicStyles() {
       if (variant === "default" || variant === undefined) {
-        return `${brightness !== 1 ? "bg-primary/90" : ""}`;
+        return `${brightness !== 1 ? "" : ""}`; // had /90
       } else if (variant === "destructive") {
-        return `${brightness !== 1 ? "bg-destructive/90" : ""}`;
+        return `${brightness !== 1 ? "" : ""}`; // had /90
       } else if (variant === "outline") {
         return `${brightness !== 1 ? "bg-accent text-accent-foreground" : ""}`;
       } else if (variant === "secondary") {
-        return `${brightness !== 1 ? "bg-secondary/80" : ""}`;
+        return `${brightness !== 1 ? "" : ""}`; // had /80
       } else if (variant === "ghost") {
         return `${brightness !== 1 ? "bg-accent text-accent-foreground" : ""}`;
       } else if (variant === "link" || variant === "activeLink") {

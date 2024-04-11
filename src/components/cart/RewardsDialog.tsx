@@ -21,6 +21,7 @@ import { api } from "~/utils/api";
 import { getRewardsPointCost } from "~/utils/getRewardsPointCost";
 import { motion } from "framer-motion";
 import { Separator } from "~/components/ui/separator";
+import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 
 interface RewardsDialog {
   showRewardsDialog: boolean;
@@ -206,13 +207,18 @@ function RewardsDialogContent({
               Khue&apos;s Rewards
             </div>
 
-            <div className="baseVertFlex font-bold tracking-wider">
-              <AnimatedNumbers
-                value={rewardsPointsEarned - toBeDeductedRewardsPoints}
-                fontSize={viewportLabel.includes("mobile") ? 18 : 24}
-                padding={0}
-              />
-              <p className="font-semibold tracking-normal">points</p>
+            <div className="baseFlex gap-4 font-bold tracking-wider">
+              <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+
+              <div className="baseVertFlex">
+                <AnimatedNumbers
+                  value={rewardsPointsEarned - toBeDeductedRewardsPoints}
+                  fontSize={viewportLabel.includes("mobile") ? 18 : 24}
+                  padding={0}
+                />
+                <p className="font-semibold tracking-normal">points</p>
+              </div>
+              <SideAccentSwirls className="h-5 fill-yellow-500" />
             </div>
           </div>
 
@@ -261,11 +267,15 @@ function RewardsDialogContent({
           </motion.div>
         </div>
 
-        <p className="text-lg font-medium text-yellow-500 underline underline-offset-2">
-          -.- Choose your reward -.-
-        </p>
+        <div className="baseFlex gap-4">
+          <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+          <p className="text-center font-semibold text-yellow-500 tablet:text-lg">
+            Choose your reward
+          </p>
+          <SideAccentSwirls className="h-5 fill-yellow-500" />
+        </div>
 
-        <div className="baseVertFlex relative !justify-start overflow-y-auto pr-4 text-yellow-500 tablet:h-[500px]">
+        <div className="baseVertFlex relative mt-2 !justify-start overflow-y-auto pr-4 text-yellow-500 tablet:h-[500px]">
           {/* .map() of Your rewards */}
           <div className="baseVertFlex w-full gap-8 ">
             {/* Birthday reward options */}

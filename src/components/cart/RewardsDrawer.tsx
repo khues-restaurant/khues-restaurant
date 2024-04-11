@@ -11,6 +11,7 @@ import {
 } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
+import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { useToast } from "~/components/ui/use-toast";
@@ -187,13 +188,19 @@ function RewardsDrawer({
               Khue&apos;s Rewards
             </div>
 
-            <div className="baseVertFlex font-bold tracking-wider">
-              <AnimatedNumbers
-                value={rewardsPointsEarned - toBeDeductedRewardsPoints}
-                fontSize={viewportLabel.includes("mobile") ? 18 : 24}
-                padding={0}
-              />
-              <p className="font-semibold tracking-normal">points</p>
+            <div className="baseFlex gap-4 font-bold tracking-wider">
+              <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+
+              <div className="baseVertFlex">
+                <AnimatedNumbers
+                  value={rewardsPointsEarned - toBeDeductedRewardsPoints}
+                  fontSize={viewportLabel.includes("mobile") ? 18 : 24}
+                  padding={0}
+                />
+                <p className="font-semibold tracking-normal">points</p>
+              </div>
+
+              <SideAccentSwirls className="h-5 fill-yellow-500" />
             </div>
           </div>
 
@@ -242,9 +249,13 @@ function RewardsDrawer({
           </motion.div>
         </div>
 
-        <p className="text-lg font-medium text-yellow-500 underline underline-offset-2">
-          -.- Choose your reward -.-
-        </p>
+        <div className="baseFlex gap-4">
+          <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+          <p className="text-center font-semibold text-yellow-500">
+            Choose your reward
+          </p>
+          <SideAccentSwirls className="h-5 fill-yellow-500" />
+        </div>
 
         {/* TODO: come back to this.. I feel like a higher dvh value should work but on shorter height viewports
     content is being cut off... just a css understanding gap, maybe you need some kind of calc trickery here? */}

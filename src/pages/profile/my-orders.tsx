@@ -54,6 +54,7 @@ import { ToastAction } from "~/components/ui/toast";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { useAuth } from "@clerk/nextjs";
+import Image from "next/image";
 
 function RecentOrders() {
   const userId = useGetUserId();
@@ -96,58 +97,73 @@ function RecentOrders() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex relative w-full"
+      className="baseVertFlex relative mb-16 min-h-[calc(100dvh-6rem-73px)] w-full !justify-start tablet:min-h-0"
     >
-      <TabsContent value="my-orders">
-        <div className="baseVertFlex relative mt-4 w-full p-0 transition-all tablet:my-8 tablet:p-8">
-          {sortedOrders && sortedOrders.length > 0 ? (
-            <div className="baseVertFlex gap-2">
-              <div className="baseFlex w-full !justify-end font-medium">
-                {/* <p>
-                  {sortedOrders.length} total{" "}
-                  {sortedOrders.length > 1 ? "sortedOrders" : "order"}
-                </p> */}
+      <div className="baseVertFlex relative mt-4 w-full p-0 transition-all tablet:my-8 tablet:p-8">
+        {sortedOrders && sortedOrders.length > 0 ? (
+          <div className="baseVertFlex gap-2">
+            <div className="baseFlex w-full !justify-end font-medium">
+              <div className="baseFlex gap-2">
+                <Label htmlFor="sortDirection" className="text-nowrap">
+                  Sort by
+                </Label>
+                <Select
+                  value={sortDirection}
+                  onValueChange={(direction) => setSortDirection(direction)}
+                >
+                  <SelectTrigger id={"sortDirection"}>
+                    <SelectValue placeholder="Sort direction" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Sort direction</SelectLabel>
 
-                <div className="baseFlex gap-2">
-                  <Label htmlFor="sortDirection" className="text-nowrap">
-                    Sort by
-                  </Label>
-                  <Select
-                    value={sortDirection}
-                    onValueChange={(direction) => setSortDirection(direction)}
-                  >
-                    <SelectTrigger id={"sortDirection"}>
-                      <SelectValue placeholder="Sort direction" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Sort direction</SelectLabel>
-
-                        <SelectItem value={"desc"}>
-                          <div className="baseFlex gap-1">Newest</div>
-                        </SelectItem>
-                        <SelectItem value={"asc"}>
-                          <div className="baseFlex gap-1">Oldest</div>
-                        </SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
+                      <SelectItem value={"desc"}>
+                        <div className="baseFlex gap-1">Newest</div>
+                      </SelectItem>
+                      <SelectItem value={"asc"}>
+                        <div className="baseFlex gap-1">Oldest</div>
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
+            </div>
+
+            <div className="baseVertFlex gap-4">
               {sortedOrders.map((order) => (
                 <OrderAccordion key={order.id} userId={userId} order={order} />
               ))}
             </div>
-          ) : (
-            <div>
-              Probably want an image of like an angled down shot of a table with
-              three plates of food on there, and below a message like: /It looks
-              like you havent placed an order yet. ButtonToOrderNowPage[Get
-              started] with your first order today!/
+          </div>
+        ) : (
+          <div className="baseVertFlex relative gap-4">
+            <Image
+              src={"/menuItems/myOrders.jpg"}
+              alt={"TODO: fill in w/ appropriate alt text"}
+              fill
+              className="!relative  rounded-md "
+            />
+
+            <div className="baseVertFlex gap-2">
+              <p className="text-center tablet:text-lg">
+                It looks like you haven&apos;t placed an order yet.
+              </p>
+
+              {/* TODO: probably have different text here so you don't need
+                  to have the button side by side with text, ideally have the
+                  button just be alone by itself in bottom middle */}
+
+              <div className="baseFlex gap-2">
+                <Button asChild>
+                  <Link href="/order-now">Get started</Link>
+                </Button>
+                with your first order today!
+              </div>
             </div>
-          )}
-        </div>
-      </TabsContent>
+          </div>
+        )}
+      </div>
     </motion.div>
   );
 }
@@ -280,20 +296,41 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                   <div>{format(new Date(order.createdAt), "PPP")}</div>
                   {/* preview images */}
                   <div className="baseFlex gap-2">
-                    <div className="imageFiller size-12 rounded-md"></div>
+                    <Image
+                      src={"/menuItems/sampleImage.webp"}
+                      alt={order.orderItems[0]?.name ?? "First item image"}
+                      width={48}
+                      height={48}
+                      className="rounded-md"
+                    />
+
                     {order.orderItems.length > 1 && (
-                      <div className="imageFiller size-12 rounded-md"></div>
+                      <Image
+                        src={"/menuItems/sampleImage.webp"}
+                        alt={order.orderItems[0]?.name ?? "Second item image"}
+                        width={48}
+                        height={48}
+                        className="rounded-md"
+                      />
                     )}
 
                     {order.orderItems.length > 2 && (
                       <>
                         {order.orderItems.length > 3 ? (
-                          <div className="baseVertFlex gap-1 rounded-md bg-gray-200 p-1 text-sm">
-                            + {order.orderItems.length - 2}
+                          <div className="baseVertFlex size-12 rounded-md border p-1 text-sm">
+                            +{order.orderItems.length - 2}
                             <span>more</span>
                           </div>
                         ) : (
-                          <div className="imageFiller size-12 rounded-md"></div>
+                          <Image
+                            src={"/menuItems/sampleImage.webp"}
+                            alt={
+                              order.orderItems[0]?.name ?? "Second item image"
+                            }
+                            width={48}
+                            height={48}
+                            className="rounded-md"
+                          />
                         )}
                       </>
                     )}
@@ -435,27 +472,43 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                   {format(new Date(order.createdAt), "PPP")}
                 </div>
                 {/* item image previews + (date + item names) */}
-                <div className="baseFlex w-full !justify-start gap-2">
-                  {/* preview images */}
-                  <div className="baseFlex gap-2">
-                    <div className="imageFiller size-16 rounded-md"></div>
-                    {order.orderItems.length > 1 && (
-                      <div className="imageFiller size-16 rounded-md"></div>
-                    )}
+                <div className="baseFlex relative w-full !justify-start gap-2">
+                  <Image
+                    src={"/menuItems/sampleImage.webp"}
+                    alt={order.orderItems[0]?.name ?? "First item image"}
+                    width={64}
+                    height={64}
+                    className="rounded-md"
+                  />
 
-                    {order.orderItems.length > 2 && (
-                      <>
-                        {order.orderItems.length > 3 ? (
-                          <div className="baseVertFlex size-12 rounded-md border p-1 text-sm">
-                            +{order.orderItems.length - 2}
-                            <span>more</span>
-                          </div>
-                        ) : (
-                          <div className="imageFiller size-16 rounded-md"></div>
-                        )}
-                      </>
-                    )}
-                  </div>
+                  {order.orderItems.length > 1 && (
+                    <Image
+                      src={"/menuItems/sampleImage.webp"}
+                      alt={order.orderItems[0]?.name ?? "Second item image"}
+                      width={64}
+                      height={64}
+                      className="rounded-md"
+                    />
+                  )}
+
+                  {order.orderItems.length > 2 && (
+                    <>
+                      {order.orderItems.length > 3 ? (
+                        <div className="baseVertFlex size-12 rounded-md border p-1 text-sm">
+                          +{order.orderItems.length - 2}
+                          <span>more</span>
+                        </div>
+                      ) : (
+                        <Image
+                          src={"/menuItems/sampleImage.webp"}
+                          alt={order.orderItems[0]?.name ?? "Second item image"}
+                          width={64}
+                          height={64}
+                          className="rounded-md"
+                        />
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
 

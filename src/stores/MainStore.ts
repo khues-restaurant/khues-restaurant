@@ -122,6 +122,7 @@ function resetStore() {
     userFavoriteItemIds: [],
     itemNamesRemovedFromCart: [],
     cartInitiallyValidated: false,
+    footerIsInView: false,
   };
 }
 
@@ -153,6 +154,9 @@ interface StoreState {
   setItemNamesRemovedFromCart: (itemNamesRemovedFromCart: string[]) => void;
   cartInitiallyValidated: boolean;
   setCartInitiallyValidated: (cartInitiallyValidated: boolean) => void;
+
+  footerIsInView: boolean;
+  setFooterIsInView: (footerIsInView: boolean) => void;
 
   resetStore: () => void;
 }
@@ -216,6 +220,11 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
       cartInitiallyValidated: false,
       setCartInitiallyValidated: (cartInitiallyValidated: boolean) => {
         set({ cartInitiallyValidated });
+      },
+
+      footerIsInView: false,
+      setFooterIsInView: (footerIsInView: boolean) => {
+        set({ footerIsInView });
       },
 
       resetStore: () => {

@@ -12,8 +12,6 @@ import { SignUpButton, useAuth } from "@clerk/nextjs";
 import { Parallax } from "react-scroll-parallax";
 import { useRouter } from "next/router";
 import WideFancySwirls from "~/components/ui/wideFancySwirls";
-import LeftAccentSwirls from "~/components/ui/LeftAccentSwirls";
-import RightAccentSwirls from "~/components/ui/RightAccentSwirls";
 import {
   Carousel,
   CarouselContent,
@@ -21,6 +19,7 @@ import {
   CarouselItem,
 } from "~/components/ui/carousel";
 import { useMainStore } from "~/stores/MainStore";
+import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 
 export default function Home() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -79,7 +78,7 @@ export default function Home() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex mt-[6.05rem] min-h-dvh w-full !justify-start tablet:mt-32"
+      className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-32 tablet:min-h-[calc(100dvh-8rem)]"
     >
       {/* Hero */}
       {/*  hmm what does the calc trick look like here? might be what you want sometimes instead of
@@ -731,35 +730,53 @@ export default function Home() {
 
         {/* Rewards program promo section */}
         {isLoaded && !isSignedIn && (
-          <div
-            style={
-              {
-                // background:
-                //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
-                // border: "4px solid transparent" /* Set the border width */,
-                // borderImage:
-                //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%) 1 stretch",
-              }
-            }
-            className="baseVertFlex rewardsGoldBorder w-full max-w-sm gap-4 rounded-md p-4 !pb-8 text-yellow-500 shadow-md tablet:max-w-2xl tablet:p-8"
-          >
+          // <div
+          //   style={
+          //     {
+          //       // background:
+          //       //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+          //       // border: "4px solid transparent" /* Set the border width */,
+          //       // borderImage:
+          //       //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%) 1 stretch",
+          //     }
+          //   }
+          //   className="baseVertFlex rewardsGoldBorder w-full max-w-sm gap-4 rounded-md p-4 !pb-8 text-yellow-500 shadow-md tablet:max-w-2xl tablet:p-8"
+          // >
+          //   <div className="baseFlex gap-4">
+          //     <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+
+          //     <p className="text-center font-semibold tablet:text-lg">
+          //       Join our rewards program today!
+          //     </p>
+          //     <SideAccentSwirls className="h-5 fill-yellow-500" />
+          //   </div>
+
+          //   {/* idk both left/justified and text-center look off here */}
+          //   <p className="text-center">
+          //     Valued customers enjoy exclusive rewards: earn points with every
+          //     order to redeem for complimentary meals, gain early access to new
+          //     dishes, and celebrate your birthday with a free dessert of your
+          //     choice!
+          //   </p>
+
+          //   <WideFancySwirls />
+
+          // </div>
+          <div className="baseVertFlex mb-16 mt-8 max-w-xl gap-8 border-y-4 border-b-yellow-600 border-t-yellow-500 !p-6 text-yellow-500 shadow-md sm:!p-8 tablet:rounded-sm">
             <div className="baseFlex gap-4">
-              <LeftAccentSwirls />
+              <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
               <p className="text-center font-semibold tablet:text-lg">
                 Join our rewards program today!
               </p>
-              <RightAccentSwirls />
+              <SideAccentSwirls className="h-5 fill-yellow-500" />
             </div>
 
-            {/* idk both left/justified and text-center look off here */}
             <p className="text-center">
               Valued customers enjoy exclusive rewards: earn points with every
               order to redeem for complimentary meals, gain early access to new
               dishes, and celebrate your birthday with a free dessert of your
               choice!
             </p>
-
-            <WideFancySwirls />
 
             <SignUpButton
               mode="modal"
@@ -782,11 +799,13 @@ export default function Home() {
                 //   if (!userId) localStorageRedirectRoute.set(asPath);
                 //   // ^^ but technically could just append it onto the postSignupRegistration route right?
                 // }}
-                className="px-8"
+                className="px-8 text-base"
               >
                 Sign up
               </Button>
             </SignUpButton>
+
+            <WideFancySwirls />
           </div>
         )}
 

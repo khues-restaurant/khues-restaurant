@@ -9,9 +9,9 @@ import { PiCookingPotBold } from "react-icons/pi";
 import { TfiReceipt } from "react-icons/tfi";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import OrderSummary from "~/components/cart/OrderSummary";
+import AnimatedLogo from "~/components/ui/AnimatedLogo";
+import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
-import { Skeleton } from "~/components/ui/skeleton";
-import WideFancySwirls from "~/components/ui/wideFancySwirls";
 import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import { socket } from "~/pages/_app";
 import { api } from "~/utils/api";
@@ -20,11 +20,10 @@ import { api } from "~/utils/api";
 // you could just have a function that takes in whole id and returns first 6 numbers,
 // I don't think it would have drastic effects elsewhere
 
-// { order }: { order: Order }
 function Track() {
   const { isSignedIn } = useAuth();
-  const { asPath, isReady } = useRouter();
-  const orderId = useRouter().query.id;
+  const { asPath, isReady, query } = useRouter();
+  const orderId = query.id;
 
   // doing trpc fetch here instead of in getServerSideProps so that when order
   // is started/completed from the dashboard, the dashboard can send out a socket emit
@@ -101,6 +100,14 @@ function Track() {
 
   const viewportLabel = useGetViewportLabel();
 
+  const [minTimeoutElapsed, setMinTimeoutElapsed] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setMinTimeoutElapsed(true);
+    }, 2000);
+  }, []);
+
   // need the undefined state here so that we can transition the orderPlaced checkpoint.
   // Otherwise it would immediately show the completed state w/o any animation.
   const [orderStatus, setOrderStatus] = useState<
@@ -108,7 +115,7 @@ function Track() {
   >();
 
   useEffect(() => {
-    if (!order) return;
+    if (!order || !minTimeoutElapsed) return;
 
     if (order.orderCompletedAt) {
       setOrderStatus("readyForPickup");
@@ -121,7 +128,7 @@ function Track() {
     setTimeout(() => {
       setOrderStatus("orderPlaced");
     }, 50); // allowing for undefined state/ui to render first, then quickly aligning w/ proper state
-  }, [order]);
+  }, [order, minTimeoutElapsed]);
 
   const [rewardsPointsEarned, setRewardsPointsEarned] = useState(0);
   const [rewardsPointsTimerSet, setRewardsPointsTimerSet] = useState(false);
@@ -160,381 +167,380 @@ function Track() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex mt-[6.05rem] min-h-dvh w-full !justify-start p-4 tablet:mt-36"
+      className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full p-4 tablet:mt-32 tablet:min-h-[calc(100dvh-8rem)]"
     >
       <div className="baseVertFlex w-full gap-4 px-0 py-4 tablet:max-w-2xl tablet:p-8">
-        <AnimatePresence>
-          {
-            order ? (
-              <motion.div
-                key={"trackingContent"}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className="baseVertFlex h-full w-full !justify-start gap-8 p-4"
-              >
-                <p className="text-xl font-semibold underline underline-offset-4">
-                  Order {orderId.toUpperCase().substring(0, 6)}
-                </p>
+        <AnimatePresence mode="popLayout">
+          {order && minTimeoutElapsed ? (
+            <motion.div
+              key={"trackingContent"}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="baseVertFlex h-full w-full !justify-start gap-8 p-4"
+            >
+              <p className="text-xl font-semibold underline underline-offset-4">
+                Order {orderId.toUpperCase().substring(0, 6)}
+              </p>
 
-                <div className="baseVertFlex w-full gap-2">
-                  {/* animated progress bar */}
-                  <div className="relative h-10 w-full overflow-hidden rounded-full border-2 border-primary shadow-md ">
-                    <div className="baseFlex absolute left-0 top-0 h-full w-full">
-                      {/* pre-first checkpoint */}
-                      <div className="relative h-full w-[21%]">
+              <div className="baseVertFlex w-full gap-2">
+                {/* animated progress bar */}
+                <div className="relative h-10 w-full overflow-hidden rounded-full border-2 border-primary shadow-md ">
+                  <div className="baseFlex absolute left-0 top-0 h-full w-full">
+                    {/* pre-first checkpoint */}
+                    <div className="relative h-full w-[21%]">
+                      <motion.div
+                        initial={{ scaleX: "0%" }}
+                        animate={{ scaleX: "100%" }}
+                        transition={{
+                          duration: 1,
+                          ease:
+                            orderStatus === "orderPlaced"
+                              ? "easeOut"
+                              : "linear",
+                          delay: 1,
+                        }}
+                        className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
+                      ></motion.div>
+                    </div>
+
+                    {/* first checkpoint w/ animated checkmark */}
+                    <div
+                      ref={(el) => (targetRefs.current[0] = el)}
+                      className="absolute left-[14.25%] top-1 z-10"
+                    >
+                      <Step
+                        status={
+                          orderStatus === undefined ? "notStarted" : "completed"
+                        }
+                        delay={1.75}
+                      />
+                    </div>
+
+                    {/* pre-second checkpoint */}
+                    <div className="relative h-full w-[35%]">
+                      {(orderStatus === "inProgress" ||
+                        orderStatus === "readyForPickup") && (
                         <motion.div
                           initial={{ scaleX: "0%" }}
                           animate={{ scaleX: "100%" }}
                           transition={{
                             duration: 1,
                             ease:
-                              orderStatus === "orderPlaced"
+                              orderStatus === "inProgress"
                                 ? "easeOut"
                                 : "linear",
-                            delay: 1,
+                            delay: 2,
                           }}
                           className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
                         ></motion.div>
-                      </div>
-
-                      {/* first checkpoint w/ animated checkmark */}
-                      <div
-                        ref={(el) => (targetRefs.current[0] = el)}
-                        className="absolute left-[14.25%] top-1 z-10"
-                      >
-                        <Step
-                          status={
-                            orderStatus === undefined
-                              ? "notStarted"
-                              : "completed"
-                          }
-                          delay={1.75}
-                        />
-                      </div>
-
-                      {/* pre-second checkpoint */}
-                      <div className="relative h-full w-[35%]">
-                        {(orderStatus === "inProgress" ||
-                          orderStatus === "readyForPickup") && (
-                          <motion.div
-                            initial={{ scaleX: "0%" }}
-                            animate={{ scaleX: "100%" }}
-                            transition={{
-                              duration: 1,
-                              ease:
-                                orderStatus === "inProgress"
-                                  ? "easeOut"
-                                  : "linear",
-                              delay: 2,
-                            }}
-                            className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
-                          ></motion.div>
-                        )}
-                      </div>
-
-                      {/* second checkpoint w/ animated checkmark */}
-                      <div
-                        ref={(el) => (targetRefs.current[1] = el)}
-                        className="absolute left-[47.15%] top-1 z-10"
-                      >
-                        <Step
-                          status={
-                            orderStatus === "readyForPickup"
-                              ? "completed"
-                              : orderStatus === "inProgress"
-                                ? "inProgress"
-                                : "notStarted"
-                          }
-                          delay={2.75}
-                          forInProgressCheckpoint
-                        />
-                      </div>
-
-                      {/* pre-third checkpoint */}
-                      <div className="relative h-full w-[35%]">
-                        {orderStatus === "readyForPickup" && (
-                          <motion.div
-                            initial={{ scaleX: "0%" }}
-                            animate={{ scaleX: "100%" }}
-                            transition={{
-                              duration: 1,
-                              ease: "easeOut", // TODO: probably need another state to check and see if the time elapsed
-                              // on this component is greater than a few seconds, and only if so do you want this to be easeOut,
-                              // since if you view tracking page when order is ready for pickup, you want this pre-third
-                              // part to be linear
-                              delay: 3,
-                            }}
-                            className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
-                          ></motion.div>
-                        )}
-                      </div>
-
-                      {/* third checkpoint w/ animated checkmark */}
-                      <div
-                        ref={(el) => (targetRefs.current[2] = el)}
-                        className="absolute left-[80%] top-1 z-10"
-                      >
-                        <Step
-                          status={
-                            orderStatus === "readyForPickup"
-                              ? "completed"
-                              : "notStarted"
-                          }
-                          delay={3.75}
-                        />
-                      </div>
-
-                      {/* post-third checkpoint */}
-                      <div className="relative h-full w-[15%]">
-                        {orderStatus === "readyForPickup" && (
-                          <motion.div
-                            initial={{ scaleX: "0%" }}
-                            animate={{ scaleX: "100%" }}
-                            transition={{
-                              duration: 1,
-                              ease: "easeOut",
-                              delay: 4,
-                            }}
-                            className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
-                          ></motion.div>
-                        )}
-                      </div>
+                      )}
                     </div>
-                  </div>
-                  <div className="h-11 w-full text-xs">
-                    <motion.div
-                      ref={(el) => (floatingRefs.current[0] = el)}
-                      key={"orderPlacedCheckpointContainer"}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.5 }}
-                      style={{
-                        position: "absolute",
-                        top: `${positions[0]!.top + 14}px`,
-                        left: `${positions[0]!.left}px`,
-                      }}
-                    >
-                      <div
-                        style={{
-                          opacity: orderStatus === undefined ? 0.5 : 1,
-                          transition: "opacity 0.2s ease-out",
-                          transitionDelay: "1s",
-                        }}
-                        className="baseVertFlex gap-1"
-                      >
-                        <TfiReceipt
-                          style={{
-                            animationDelay: "1.75s",
-                          }}
-                          className={`h-6 w-6 text-primary ${
-                            orderStatus === "orderPlaced" ? "shake" : ""
-                          }`}
-                        />
-                        <p className="text-nowrap text-primary">Order placed</p>
-                      </div>
-                    </motion.div>
 
-                    <motion.div
-                      ref={(el) => (floatingRefs.current[1] = el)}
-                      key={"inProgressCheckpointContainer"}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.5, delay: 0.5 }}
-                      style={{
-                        position: "absolute",
-                        top: `${positions[1]!.top + 14}px`,
-                        left: `${positions[1]!.left}px`,
-                      }}
+                    {/* second checkpoint w/ animated checkmark */}
+                    <div
+                      ref={(el) => (targetRefs.current[1] = el)}
+                      className="absolute left-[47.15%] top-1 z-10"
                     >
-                      <div
-                        style={{
-                          opacity:
-                            orderStatus === "inProgress" ||
-                            orderStatus === "readyForPickup"
-                              ? 1
-                              : 0.5,
-                          transition: "opacity 0.2s ease-out",
-                          transitionDelay: "2.75s",
-                        }}
-                        className="baseVertFlex gap-1"
-                      >
-                        <PiCookingPotBold
-                          style={{
-                            animationDelay: "2s",
-                          }}
-                          className={`h-6 w-6 text-primary  ${
-                            orderStatus === "inProgress" ? "shake" : ""
-                          }`}
-                        />
-                        <p className="text-primary">In progress</p>
-                      </div>
-                    </motion.div>
+                      <Step
+                        status={
+                          orderStatus === "readyForPickup"
+                            ? "completed"
+                            : orderStatus === "inProgress"
+                              ? "inProgress"
+                              : "notStarted"
+                        }
+                        delay={2.75}
+                        forInProgressCheckpoint
+                      />
+                    </div>
 
-                    <motion.div
-                      ref={(el) => (floatingRefs.current[2] = el)}
-                      key={"orderReadyForPickupCheckpointContainer"}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.5, delay: 1 }}
-                      style={{
-                        position: "absolute",
-                        top: `${positions[2]!.top + 14}px`,
-                        left: `${positions[2]!.left}px`,
-                      }}
-                    >
-                      <div
-                        style={{
-                          opacity: orderStatus === "readyForPickup" ? 1 : 0.5,
-                          transition: "opacity 0.2s ease-out",
-                          transitionDelay: "3s",
-                        }}
-                        className="baseVertFlex gap-1"
-                      >
-                        <LiaShoppingBagSolid
-                          style={{
-                            animationDelay: "3.75s",
+                    {/* pre-third checkpoint */}
+                    <div className="relative h-full w-[35%]">
+                      {orderStatus === "readyForPickup" && (
+                        <motion.div
+                          initial={{ scaleX: "0%" }}
+                          animate={{ scaleX: "100%" }}
+                          transition={{
+                            duration: 1,
+                            ease: "easeOut", // TODO: probably need another state to check and see if the time elapsed
+                            // on this component is greater than a few seconds, and only if so do you want this to be easeOut,
+                            // since if you view tracking page when order is ready for pickup, you want this pre-third
+                            // part to be linear
+                            delay: 3,
                           }}
-                          className={`h-6 w-6 text-primary ${
-                            orderStatus === "readyForPickup" ? "shake" : ""
-                          }`}
-                        />
-                        <p className="text-nowrap text-primary">
-                          Ready for pickup
-                        </p>
-                      </div>
-                    </motion.div>
+                          className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
+                        ></motion.div>
+                      )}
+                    </div>
+
+                    {/* third checkpoint w/ animated checkmark */}
+                    <div
+                      ref={(el) => (targetRefs.current[2] = el)}
+                      className="absolute left-[80%] top-1 z-10"
+                    >
+                      <Step
+                        status={
+                          orderStatus === "readyForPickup"
+                            ? "completed"
+                            : "notStarted"
+                        }
+                        delay={3.75}
+                      />
+                    </div>
+
+                    {/* post-third checkpoint */}
+                    <div className="relative h-full w-[15%]">
+                      {orderStatus === "readyForPickup" && (
+                        <motion.div
+                          initial={{ scaleX: "0%" }}
+                          animate={{ scaleX: "100%" }}
+                          transition={{
+                            duration: 1,
+                            ease: "easeOut",
+                            delay: 4,
+                          }}
+                          className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
+                        ></motion.div>
+                      )}
+                    </div>
                   </div>
                 </div>
+                <div className="h-11 w-full text-xs">
+                  <motion.div
+                    ref={(el) => (floatingRefs.current[0] = el)}
+                    key={"orderPlacedCheckpointContainer"}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    style={{
+                      position: "absolute",
+                      top: `${positions[0]!.top + 14}px`,
+                      left: `${positions[0]!.left}px`,
+                    }}
+                  >
+                    <div
+                      style={{
+                        opacity: orderStatus === undefined ? 0.5 : 1,
+                        transition: "opacity 0.2s ease-out",
+                        transitionDelay: "1s",
+                      }}
+                      className="baseVertFlex gap-1"
+                    >
+                      <TfiReceipt
+                        style={{
+                          animationDelay: "1.75s",
+                        }}
+                        className={`h-6 w-6 text-primary ${
+                          orderStatus === "orderPlaced" ? "shake" : ""
+                        }`}
+                      />
+                      <p className="text-nowrap text-primary">Order placed</p>
+                    </div>
+                  </motion.div>
 
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 1, delay: 1.5 }}
-                  className="baseFlex w-full gap-4"
-                >
-                  <AnimatePresence mode="popLayout">
-                    {orderStatus === "orderPlaced" && (
-                      <motion.p
-                        key={"orderPlacedText"}
-                        initial={{ x: "100%", opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: "-100%", opacity: 0 }}
-                        transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="text-lg font-medium"
-                      >
-                        Your order has been received
-                      </motion.p>
-                    )}
+                  <motion.div
+                    ref={(el) => (floatingRefs.current[1] = el)}
+                    key={"inProgressCheckpointContainer"}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.5 }}
+                    style={{
+                      position: "absolute",
+                      top: `${positions[1]!.top + 14}px`,
+                      left: `${positions[1]!.left}px`,
+                    }}
+                  >
+                    <div
+                      style={{
+                        opacity:
+                          orderStatus === "inProgress" ||
+                          orderStatus === "readyForPickup"
+                            ? 1
+                            : 0.5,
+                        transition: "opacity 0.2s ease-out",
+                        transitionDelay: "2.75s",
+                      }}
+                      className="baseVertFlex gap-1"
+                    >
+                      <PiCookingPotBold
+                        style={{
+                          animationDelay: "2s",
+                        }}
+                        className={`h-6 w-6 text-primary  ${
+                          orderStatus === "inProgress" ? "shake" : ""
+                        }`}
+                      />
+                      <p className="text-primary">In progress</p>
+                    </div>
+                  </motion.div>
 
-                    {orderStatus === "inProgress" && (
-                      <motion.p
-                        key={"inProgressText"}
-                        initial={{ x: "100%", opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: "-100%", opacity: 0 }}
-                        transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="text-lg font-medium"
-                      >
-                        Your order is being prepared
-                      </motion.p>
-                    )}
-
-                    {orderStatus === "readyForPickup" && (
-                      <motion.p
-                        key={"readyForPickupText"}
-                        initial={{ x: "100%", opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: "-100%", opacity: 0 }}
-                        transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="text-lg font-medium"
-                      >
-                        Your order is ready to be picked up!
-                      </motion.p>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-
-                {/* rewards + pickup time + address */}
-                <div className="baseVertFlex w-full gap-2">
-                  <div className="baseVertFlex w-full !items-start gap-2 tablet:!flex-row tablet:!justify-between tablet:gap-0">
-                    <div className="baseVertFlex !items-start gap-2 text-sm">
-                      <p className="font-semibold underline underline-offset-2">
-                        Pickup time
-                      </p>
-                      <p className="text-sm">
-                        {format(order.datetimeToPickup, "PPPp")}
+                  <motion.div
+                    ref={(el) => (floatingRefs.current[2] = el)}
+                    key={"orderReadyForPickupCheckpointContainer"}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 1 }}
+                    style={{
+                      position: "absolute",
+                      top: `${positions[2]!.top + 14}px`,
+                      left: `${positions[2]!.left}px`,
+                    }}
+                  >
+                    <div
+                      style={{
+                        opacity: orderStatus === "readyForPickup" ? 1 : 0.5,
+                        transition: "opacity 0.2s ease-out",
+                        transitionDelay: "3s",
+                      }}
+                      className="baseVertFlex gap-1"
+                    >
+                      <LiaShoppingBagSolid
+                        style={{
+                          animationDelay: "3.75s",
+                        }}
+                        className={`h-6 w-6 text-primary ${
+                          orderStatus === "readyForPickup" ? "shake" : ""
+                        }`}
+                      />
+                      <p className="text-nowrap text-primary">
+                        Ready for pickup
                       </p>
                     </div>
+                  </motion.div>
+                </div>
+              </div>
 
-                    <p className="baseVertFlex !items-start gap-2 text-sm tablet:!items-end">
-                      <p className="font-semibold underline underline-offset-2">
-                        Address
-                      </p>
-                      <Button variant={"link"} className="h-4 !p-0">
-                        1234 Lorem Ipsum Dr. Roseville, MN 12345
-                      </Button>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 1.5 }}
+                className="baseFlex w-full gap-4"
+              >
+                <AnimatePresence mode="popLayout">
+                  {orderStatus === "orderPlaced" && (
+                    <motion.p
+                      key={"orderPlacedText"}
+                      initial={{ x: "100%", opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ x: "-100%", opacity: 0 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                      className="text-lg font-medium"
+                    >
+                      Your order has been received
+                    </motion.p>
+                  )}
+
+                  {orderStatus === "inProgress" && (
+                    <motion.p
+                      key={"inProgressText"}
+                      initial={{ x: "100%", opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ x: "-100%", opacity: 0 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                      className="text-lg font-medium"
+                    >
+                      Your order is being prepared
+                    </motion.p>
+                  )}
+
+                  {orderStatus === "readyForPickup" && (
+                    <motion.p
+                      key={"readyForPickupText"}
+                      initial={{ x: "100%", opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ x: "-100%", opacity: 0 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                      className="text-lg font-medium"
+                    >
+                      Your order is ready to be picked up!
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+
+              {/* rewards + pickup time + address */}
+              <div className="baseVertFlex w-full gap-2">
+                <div className="baseVertFlex w-full !items-start gap-2 tablet:!flex-row tablet:!justify-between tablet:gap-0">
+                  <div className="baseVertFlex !items-start gap-2 text-sm">
+                    <p className="font-semibold underline underline-offset-2">
+                      Pickup time
+                    </p>
+                    <p className="text-sm">
+                      {format(order.datetimeToPickup, "PPPp")}
                     </p>
                   </div>
 
-                  <div
-                    style={{
-                      backgroundImage:
-                        "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+                  <p className="baseVertFlex !items-start gap-2 text-sm tablet:!items-end">
+                    <p className="font-semibold underline underline-offset-2">
+                      Address
+                    </p>
+                    <Button variant={"link"} className="h-4 !p-0">
+                      1234 Lorem Ipsum Dr. Roseville, MN 12345
+                    </Button>
+                  </p>
+                </div>
+
+                <div
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+                  }}
+                  className="baseFlex relative h-48 w-full overflow-hidden rounded-md"
+                >
+                  <motion.div
+                    key={"rewardsHeroMobileImageOne"}
+                    initial={{ opacity: 0, y: -125, x: -125 }}
+                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    transition={{
+                      opacity: { duration: 0.2 },
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 20,
+                      delay: 0.5,
                     }}
-                    className="baseFlex relative h-48 w-full overflow-hidden rounded-md"
+                    className="absolute -left-10 -top-10"
                   >
-                    <motion.div
-                      key={"rewardsHeroMobileImageOne"}
-                      initial={{ opacity: 0, y: -125, x: -125 }}
-                      animate={{ opacity: 1, y: 0, x: 0 }}
-                      transition={{
-                        opacity: { duration: 0.2 },
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 20,
-                        delay: 0.5,
-                      }}
-                      className="absolute -left-10 -top-10"
-                    >
-                      <Image
-                        src={"/menuItems/sampleImage.webp"}
-                        alt={"TODO: replace with proper alt tag text"}
-                        width={96}
-                        height={96}
-                        className="!relative"
-                      />
-                    </motion.div>
+                    <Image
+                      src={"/menuItems/sampleImage.webp"}
+                      alt={"TODO: replace with proper alt tag text"}
+                      width={96}
+                      height={96}
+                      className="!relative"
+                    />
+                  </motion.div>
 
-                    <motion.div
-                      key={"rewardsHeroMobileImageTwo"}
-                      initial={{ opacity: 0, y: 125, x: -125 }}
-                      animate={{ opacity: 1, y: 0, x: 0 }}
-                      transition={{
-                        opacity: { duration: 0.2 },
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 20,
-                        delay: 0.75,
-                      }}
-                      className="absolute -bottom-10 -left-10"
-                    >
-                      <Image
-                        src={"/menuItems/sampleImage.webp"}
-                        alt={"TODO: replace with proper alt tag text"}
-                        width={96}
-                        height={96}
-                        className="!relative"
-                      />
-                    </motion.div>
+                  <motion.div
+                    key={"rewardsHeroMobileImageTwo"}
+                    initial={{ opacity: 0, y: 125, x: -125 }}
+                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    transition={{
+                      opacity: { duration: 0.2 },
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 20,
+                      delay: 0.75,
+                    }}
+                    className="absolute -bottom-10 -left-10"
+                  >
+                    <Image
+                      src={"/menuItems/sampleImage.webp"}
+                      alt={"TODO: replace with proper alt tag text"}
+                      width={96}
+                      height={96}
+                      className="!relative"
+                    />
+                  </motion.div>
 
-                    <div className="baseVertFlex z-10 gap-4 rounded-md bg-white px-8 py-4 text-yellow-500 shadow-lg">
-                      <div className="text-center text-lg font-semibold">
-                        Khue&apos;s Rewards
-                      </div>
+                  <div className="baseVertFlex z-10 gap-4 rounded-md bg-white px-8 py-4 text-yellow-500 shadow-lg">
+                    <div className="text-center text-lg font-semibold">
+                      Khue&apos;s Rewards
+                    </div>
 
-                      <div className="baseVertFlex font-bold tracking-wider">
+                    <div className="baseFlex gap-4 font-bold tracking-wider">
+                      <SideAccentSwirls className="h-6 scale-x-[-1] fill-yellow-500" />
+                      <div className="baseVertFlex">
                         <AnimatedNumbers
                           value={rewardsPointsEarned}
                           fontSize={viewportLabel.includes("mobile") ? 22 : 28}
@@ -542,121 +548,129 @@ function Track() {
                         />
                         <p className="font-semibold tracking-normal">points</p>
                       </div>
-
-                      <div
-                        className={`baseVertFlex w-full text-sm text-yellow-500`}
-                      >
-                        {isSignedIn ? (
-                          <>
-                            {/* maybe drop this first part? seems a bit redundant but idk */}
-                            <div className="baseFlex gap-1">
-                              You earned
-                              <div className="font-bold">
-                                <AnimatedNumbers
-                                  value={
-                                    rewardsPointsEarned -
-                                    order.prevRewardsPoints
-                                  }
-                                  fontSize={
-                                    viewportLabel.includes("mobile") ? 14 : 16
-                                  }
-                                  padding={0}
-                                />
-                              </div>
-                              points for this order.
-                            </div>
-                          </>
-                        ) : (
-                          <div className="baseVertFlex mt-2 gap-4">
-                            <SignInButton
-                              mode="modal"
-                              afterSignUpUrl={`${
-                                process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                              }/postSignUpRegistration`}
-                              afterSignInUrl={`${
-                                process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                              }${asPath}`}
-                            >
-                              <Button
-                                variant={"rewards"}
-                                // className="h-11"
-                                // onClick={() => {
-                                //   if (asPath.includes("/create")) {
-                                //     localStorageTabData.set(getStringifiedTabData());
-                                //   }
-
-                                //   // technically can sign in from signup page and vice versa
-                                //   if (!userId) localStorageRedirectRoute.set(asPath);
-                                //   // ^^ but technically could just append it onto the postSignupRegistration route right?
-                                // }}
-                              >
-                                Sign in
-                              </Button>
-                            </SignInButton>
-                            to redeem your points for this order.
-                          </div>
-                        )}
-                      </div>
+                      <SideAccentSwirls className="h-6 fill-yellow-500" />
                     </div>
 
-                    <motion.div
-                      key={"rewardsHeroMobileImageThree"}
-                      initial={{ opacity: 0, y: -125, x: 125 }}
-                      animate={{ opacity: 1, y: 0, x: 0 }}
-                      transition={{
-                        opacity: { duration: 0.2 },
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 20,
-                        delay: 0.95,
-                      }}
-                      className="absolute -right-10 -top-10"
+                    <div
+                      className={`baseVertFlex w-full text-sm text-yellow-500`}
                     >
-                      <Image
-                        src={"/menuItems/sampleImage.webp"}
-                        alt={"TODO: replace with proper alt tag text"}
-                        width={96}
-                        height={96}
-                        className="!relative"
-                      />
-                    </motion.div>
+                      {isSignedIn ? (
+                        <>
+                          {/* maybe drop this first part? seems a bit redundant but idk */}
+                          <div className="baseFlex gap-1">
+                            You earned
+                            <div className="font-bold">
+                              <AnimatedNumbers
+                                value={
+                                  rewardsPointsEarned - order.prevRewardsPoints
+                                }
+                                fontSize={
+                                  viewportLabel.includes("mobile") ? 14 : 16
+                                }
+                                padding={0}
+                              />
+                            </div>
+                            points for this order.
+                          </div>
+                        </>
+                      ) : (
+                        <div className="baseVertFlex mt-2 gap-4">
+                          <SignInButton
+                            mode="modal"
+                            afterSignUpUrl={`${
+                              process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
+                            }/postSignUpRegistration`}
+                            afterSignInUrl={`${
+                              process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
+                            }${asPath}`}
+                          >
+                            <Button
+                              variant={"rewards"}
+                              // className="h-11"
+                              // onClick={() => {
+                              //   if (asPath.includes("/create")) {
+                              //     localStorageTabData.set(getStringifiedTabData());
+                              //   }
 
-                    <motion.div
-                      key={"rewardsHeroMobileImageFour"}
-                      initial={{ opacity: 0, y: 125, x: 125 }}
-                      animate={{ opacity: 1, y: 0, x: 0 }}
-                      transition={{
-                        opacity: { duration: 0.2 },
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 20,
-                        delay: 0.6,
-                      }}
-                      className="absolute -bottom-10 -right-10"
-                    >
-                      <Image
-                        src={"/menuItems/sampleImage.webp"}
-                        alt={"TODO: replace with proper alt tag text"}
-                        width={96}
-                        height={96}
-                        className="!relative"
-                      />
-                    </motion.div>
+                              //   // technically can sign in from signup page and vice versa
+                              //   if (!userId) localStorageRedirectRoute.set(asPath);
+                              //   // ^^ but technically could just append it onto the postSignupRegistration route right?
+                              // }}
+                            >
+                              Sign in
+                            </Button>
+                          </SignInButton>
+                          to redeem your points for this order.
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
 
-                <div className="baseFlex tablet:w-[500px]">
-                  <OrderSummary order={order} />
-                </div>
+                  <motion.div
+                    key={"rewardsHeroMobileImageThree"}
+                    initial={{ opacity: 0, y: -125, x: 125 }}
+                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    transition={{
+                      opacity: { duration: 0.2 },
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 20,
+                      delay: 0.95,
+                    }}
+                    className="absolute -right-10 -top-10"
+                  >
+                    <Image
+                      src={"/menuItems/sampleImage.webp"}
+                      alt={"TODO: replace with proper alt tag text"}
+                      width={96}
+                      height={96}
+                      className="!relative"
+                    />
+                  </motion.div>
 
-                <Button variant={"underline"} className="text-primary">
-                  Need assistance with your order?
-                </Button>
-              </motion.div>
-            ) : null
-            // TODO: replace this with the animated logo dashoffsetarray
-            // <OrderSkeleton />
-          }
+                  <motion.div
+                    key={"rewardsHeroMobileImageFour"}
+                    initial={{ opacity: 0, y: 125, x: 125 }}
+                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    transition={{
+                      opacity: { duration: 0.2 },
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 20,
+                      delay: 0.6,
+                    }}
+                    className="absolute -bottom-10 -right-10"
+                  >
+                    <Image
+                      src={"/menuItems/sampleImage.webp"}
+                      alt={"TODO: replace with proper alt tag text"}
+                      width={96}
+                      height={96}
+                      className="!relative"
+                    />
+                  </motion.div>
+                </div>
+              </div>
+
+              <div className="baseFlex tablet:w-[500px]">
+                <OrderSummary order={order} />
+              </div>
+
+              <Button variant={"underline"} className="text-primary">
+                Need assistance with your order?
+              </Button>
+            </motion.div>
+          ) : (
+            <motion.div
+              key={"trackingLoading"}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <AnimatedLogo className="size-24" />
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
     </motion.div>
@@ -664,52 +678,6 @@ function Track() {
 }
 
 export default Track;
-
-function OrderSkeleton() {
-  return (
-    <motion.div
-      key={"orderSkeleton"}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="baseVertFlex h-full w-full !justify-start gap-4"
-    >
-      <Skeleton className="h-12 w-full" index={0} />
-
-      <Skeleton className="h-12 w-96" index={0} />
-
-      <div className="baseVertFlex w-full gap-4">
-        <div className="baseFlex w-full !justify-between">
-          <Skeleton className="h-8 w-24" index={2} />
-          <Skeleton className="h-8 w-48" index={2} />
-        </div>
-        <Skeleton className="h-64 w-full" index={3} />
-      </div>
-
-      <div className="baseVertFlex w-full !items-start gap-4">
-        <Skeleton className="h-10 w-24 " index={4} />
-        <Skeleton className="h-80 w-full" index={4} />
-      </div>
-    </motion.div>
-  );
-}
-
-// export const getServerSideProps: GetServerSideProps = async (ctx) => {
-//   const prisma = new PrismaClient();
-//   const order = await prisma.order.findUnique({
-//     where: {
-//       id: ctx.query.id as string, // TODO: test w/ bogus id or just on /track to see what this does
-//     },
-//   });
-
-//   return {
-//     props: {
-//       order,
-//       // ...buildClerkProps(ctx.req),
-//     },
-//   };
-// };
 
 function Step({
   status,

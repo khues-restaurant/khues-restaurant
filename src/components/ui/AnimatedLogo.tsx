@@ -11,7 +11,7 @@ function AnimatedLogo({ className }: AnimatedLogo) {
   return (
     <svg
       version="1.0"
-      viewBox="0 0 466.29999 492.19199"
+      viewBox="15 0 466.29999 492.19199"
       preserveAspectRatio="xMidYMid"
       id="svg672"
       xmlns="http://www.w3.org/2000/svg"

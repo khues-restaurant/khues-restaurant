@@ -114,7 +114,7 @@ function Menu() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex mt-[6.05rem] min-h-dvh w-full !justify-start tablet:mt-32"
+      className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-32 tablet:min-h-[calc(100dvh-8rem)]"
     >
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72">

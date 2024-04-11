@@ -8,15 +8,15 @@ import { FaCakeCandles } from "react-icons/fa6";
 import { LuCalendarClock } from "react-icons/lu";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import TopProfileNavigationLayout from "~/components/layouts/TopProfileNavigationLayout";
+import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
-import { TabsContent } from "~/components/ui/tabs";
 import { useToast } from "~/components/ui/use-toast";
 import useGetUserId from "~/hooks/useGetUserId";
 import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
-import { FullMenuItem } from "~/server/api/routers/menuCategory";
-import { StoreCustomizations, useMainStore } from "~/stores/MainStore";
+import { type FullMenuItem } from "~/server/api/routers/menuCategory";
+import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getRewardsPointCost } from "~/utils/getRewardsPointCost";
 
@@ -124,159 +124,448 @@ function Rewards() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex relative w-full"
+      className="baseVertFlex relative mb-16 w-full"
     >
-      <TabsContent value="rewards">
-        <div className="baseVertFlex relative mt-4 w-full gap-8 p-4 transition-all tablet:my-8 tablet:p-8">
-          <div className="baseVertFlex rewardsGoldBorder relative w-full gap-4 rounded-md text-yellow-500 shadow-md tablet:max-w-2xl">
-            <p className="text-xl font-bold">K Reward Points</p>
+      <div className="baseVertFlex relative w-full gap-8 transition-all">
+        <div
+          style={{
+            backgroundImage:
+              "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+          }}
+          className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72 tablet:overflow-x-hidden tablet:rounded-t-lg"
+        >
+          {/* mobile images */}
+          <motion.div
+            key={"rewardsHeroMobileImageOne"}
+            initial={{ opacity: 0, y: -125, x: -125 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.5,
+            }}
+            className="absolute -left-10 -top-10 tablet:hidden"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={96}
+              height={96}
+              className="!relative"
+            />
+          </motion.div>
 
-            <div className="baseVertFlex text-xl font-bold tracking-wider">
-              <AnimatedNumbers
-                value={rewardsPointsEarned - toBeDeductedRewardsPoints}
-                fontSize={viewportLabel.includes("mobile") ? 25 : 38}
-                padding={0}
-              />
-              <p className="!text-base font-semibold tracking-normal tablet:text-lg">
-                points
-              </p>
+          <motion.div
+            key={"rewardsHeroMobileImageTwo"}
+            initial={{ opacity: 0, y: 125, x: -125 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.75,
+            }}
+            className="absolute -bottom-10 -left-10 tablet:hidden"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={96}
+              height={96}
+              className="!relative"
+            />
+          </motion.div>
+
+          {/* tablet+ images */}
+          <motion.div
+            key={"rewardsHeroImageOne"}
+            initial={{ opacity: 0, y: -150 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.5,
+            }}
+            className="absolute -top-1 left-24 hidden tablet:flex"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={144}
+              height={144}
+              className="!relative"
+            />
+          </motion.div>
+
+          <motion.div
+            key={"rewardsHeroImageTwo"}
+            initial={{ opacity: 0, x: -125 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.15,
+            }}
+            className="absolute -left-16 bottom-10 hidden tablet:flex"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={144}
+              height={144}
+              className="!relative"
+            />
+          </motion.div>
+
+          <motion.div
+            key={"rewardsHeroImageThree"}
+            initial={{ opacity: 0, y: 125 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.6,
+            }}
+            className="absolute -bottom-14 left-36 hidden tablet:flex"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={144}
+              height={144}
+              className="!relative"
+            />
+          </motion.div>
+
+          <motion.div
+            key={"rewardsHeroImageFour"}
+            initial={{ opacity: 0, y: -200 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.75,
+            }}
+            className="absolute left-72 top-14 hidden xl:flex"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={144}
+              height={144}
+              className="!relative"
+            />
+          </motion.div>
+
+          <div className="baseVertFlex z-10 gap-4 rounded-md bg-white px-8 py-4 text-yellow-500 shadow-lg">
+            <div className="text-center text-lg font-semibold tablet:text-xl">
+              Khue&apos;s Rewards
             </div>
 
-            {/* maybe just want the left/right flanking fancy swirls here? */}
+            <div className="baseFlex gap-4 font-bold tracking-wider">
+              <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+
+              <div className="baseVertFlex">
+                <AnimatedNumbers
+                  value={rewardsPointsEarned - toBeDeductedRewardsPoints}
+                  fontSize={viewportLabel.includes("mobile") ? 18 : 24}
+                  padding={0}
+                />
+                <p className="font-semibold tracking-normal">points</p>
+              </div>
+              <SideAccentSwirls className="h-5 fill-yellow-500" />
+            </div>
           </div>
 
-          {/* .map() of Your rewards */}
-          <div className="baseVertFlex mt-8 max-w-7xl gap-8 text-yellow-500 tablet:gap-16">
-            {/* Birthday reward options */}
-            {true && (
-              <div className="baseVertFlex w-full gap-8">
-                <p className="text-xl font-medium underline underline-offset-2 tablet:text-2xl">
-                  -.- Choose your birthday dessert -.-
-                </p>
-                <div className="grid w-full grid-cols-1 !place-items-start gap-4 lg:grid-cols-2 2xl:grid-cols-3">
-                  {/* Categories */}
-                  {rewards.birthdayMenuCategories.map((category) => (
-                    <div
-                      key={category.id}
-                      className="baseVertFlex w-full !items-start gap-4"
-                    >
-                      {/* Items */}
-                      <div className="baseVertFlex gap-4 tablet:!flex-row">
-                        {category.menuItems
-                          .sort((a, b) => a.price - b.price)
-                          .map((item, index) => (
-                            <Fragment key={item.id}>
-                              <RewardMenuItem
-                                menuItem={item}
-                                currentlySelectedRewardId={
-                                  regularSelectedRewardId
-                                }
-                                userAvailablePoints={
-                                  rewardsPointsEarned -
-                                  toBeDeductedRewardsPoints
-                                }
-                                forBirthdayReward={true}
-                              />
-                              {index !== category.menuItems.length - 1 && (
-                                <Separator className="h-[1px] w-11/12 tablet:h-28 tablet:w-[1px]" />
-                              )}
-                            </Fragment>
-                          ))}
-                      </div>
+          {/* mobile images */}
+          <motion.div
+            key={"rewardsHeroMobileImageThree"}
+            initial={{ opacity: 0, y: -125, x: 125 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.95,
+            }}
+            className="absolute -right-10 -top-10 tablet:hidden"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={96}
+              height={96}
+              className="!relative"
+            />
+          </motion.div>
+
+          <motion.div
+            key={"rewardsHeroMobileImageFour"}
+            initial={{ opacity: 0, y: 125, x: 125 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.6,
+            }}
+            className="absolute -bottom-10 -right-10 tablet:hidden"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={96}
+              height={96}
+              className="!relative"
+            />
+          </motion.div>
+
+          {/* tablet+ images */}
+          <motion.div
+            key={"rewardsHeroImageOne"}
+            initial={{ opacity: 0, y: -150 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.5,
+            }}
+            className="absolute -top-1 right-24 hidden tablet:flex"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={144}
+              height={144}
+              className="!relative "
+            />
+          </motion.div>
+
+          <motion.div
+            key={"rewardsHeroImageTwo"}
+            initial={{ opacity: 0, x: 125 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.15,
+            }}
+            className="absolute -right-16 bottom-10 hidden tablet:flex"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={144}
+              height={144}
+              className="!relative"
+            />
+          </motion.div>
+
+          <motion.div
+            key={"rewardsHeroImageThree"}
+            initial={{ opacity: 0, y: 125 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.6,
+            }}
+            className="absolute -bottom-14 right-36 hidden tablet:flex"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={144}
+              height={144}
+              className="!relative"
+            />
+          </motion.div>
+
+          <motion.div
+            key={"rewardsHeroImageFour"}
+            initial={{ opacity: 0, y: -200 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.75,
+            }}
+            className="absolute right-72 top-14 hidden xl:flex"
+          >
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={"TODO: replace with proper alt tag text"}
+              width={144}
+              height={144}
+              className="!relative"
+            />
+          </motion.div>
+        </div>
+
+        {/* .map() of Your rewards */}
+        <div className="baseVertFlex mt-8 max-w-7xl gap-8 px-4 text-yellow-500 tablet:gap-16">
+          {/* Birthday reward options */}
+          {true && (
+            <div className="baseVertFlex w-full gap-8">
+              <div className="baseFlex gap-2">
+                <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+                <span className="text-center text-2xl font-medium underline underline-offset-2">
+                  Choose your birthday dessert
+                </span>
+                <SideAccentSwirls className="h-5 fill-yellow-500" />
+              </div>
+
+              <div className="grid w-full grid-cols-1 !place-items-start gap-4 lg:grid-cols-2 2xl:grid-cols-3">
+                {/* Categories */}
+                {rewards.birthdayMenuCategories.map((category) => (
+                  <div
+                    key={category.id}
+                    className="baseVertFlex w-full !items-start gap-4"
+                  >
+                    {/* Items */}
+                    <div className="baseVertFlex gap-4 tablet:!flex-row">
+                      {category.menuItems
+                        .sort((a, b) => a.price - b.price)
+                        .map((item, index) => (
+                          <Fragment key={item.id}>
+                            <RewardMenuItem
+                              menuItem={item}
+                              currentlySelectedRewardId={
+                                regularSelectedRewardId
+                              }
+                              userAvailablePoints={
+                                rewardsPointsEarned - toBeDeductedRewardsPoints
+                              }
+                              forBirthdayReward={true}
+                            />
+                            {index !== category.menuItems.length - 1 && (
+                              <Separator className="h-[1px] w-11/12 tablet:h-28 tablet:w-[1px]" />
+                            )}
+                          </Fragment>
+                        ))}
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <p className="text-xl font-medium underline underline-offset-2 tablet:text-2xl">
-              -.- Choose your reward -.-
-            </p>
-
-            {/* Regular reward options */}
-            <div className="grid w-full grid-cols-1 !place-items-start gap-4 lg:grid-cols-2 2xl:grid-cols-3">
-              {/* Categories */}
-              {rewards.rewardMenuCategories.map((category) => (
-                <div
-                  key={category.id}
-                  className="baseVertFlex !items-start gap-4"
-                >
-                  <p className="text-lg font-semibold underline underline-offset-2">
-                    {category.name}
-                  </p>
-
-                  {/* Items */}
-                  <div className="baseVertFlex">
-                    {category.menuItems
-                      .sort((a, b) => a.price - b.price)
-                      .map((item, index) => (
-                        <Fragment key={item.id}>
-                          <RewardMenuItem
-                            menuItem={item}
-                            currentlySelectedRewardId={regularSelectedRewardId}
-                            userAvailablePoints={
-                              rewardsPointsEarned - toBeDeductedRewardsPoints
-                            }
-                            forBirthdayReward={false}
-                          />
-                          {index !== category.menuItems.length - 1 && (
-                            <Separator className="h-[1px] w-11/12" />
-                          )}
-                        </Fragment>
-                      ))}
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
+          )}
 
-            <p className="text-sm italic text-gray-400">
-              Only one reward is able to be redeemed per order.*
-            </p>
+          <div className="baseFlex gap-2">
+            <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+            <span className="text-center text-2xl font-medium underline underline-offset-2">
+              Choose your reward
+            </span>
+            <SideAccentSwirls className="h-5 fill-yellow-500" />
           </div>
 
-          <div className="baseVertFlex mt-8 max-w-7xl gap-8 text-yellow-500">
-            <p className="text-xl font-medium underline underline-offset-2 tablet:text-2xl">
-              -.- Member benefits -.-
-            </p>
+          {/* Regular reward options */}
+          <div className="grid w-full grid-cols-1 !place-items-start gap-4 lg:grid-cols-2 2xl:grid-cols-3">
+            {/* Categories */}
+            {rewards.rewardMenuCategories.map((category) => (
+              <div
+                key={category.id}
+                className="baseVertFlex !items-start gap-4"
+              >
+                <p className="text-lg font-semibold underline underline-offset-2">
+                  {category.name}
+                </p>
 
-            <div className="baseVertFlex gap-8 tablet:!flex-row">
-              <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md sm:w-96 tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
-                <CiGift className="size-20 h-24 text-yellow-500" />
-                <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
-                <div className="hyphens-auto p-4 text-left">
-                  Earning rewards is as simple as enjoying your favorite meals!
-                  Every dollar spent earns you points, which open the door to a
-                  diverse selection of enticing rewards. Get started earning
-                  points today!
+                {/* Items */}
+                <div className="baseVertFlex">
+                  {category.menuItems
+                    .sort((a, b) => a.price - b.price)
+                    .map((item, index) => (
+                      <Fragment key={item.id}>
+                        <RewardMenuItem
+                          menuItem={item}
+                          currentlySelectedRewardId={regularSelectedRewardId}
+                          userAvailablePoints={
+                            rewardsPointsEarned - toBeDeductedRewardsPoints
+                          }
+                          forBirthdayReward={false}
+                        />
+                        {index !== category.menuItems.length - 1 && (
+                          <Separator className="h-[1px] w-11/12" />
+                        )}
+                      </Fragment>
+                    ))}
                 </div>
               </div>
+            ))}
+          </div>
 
-              <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md sm:w-96 tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
-                <FaCakeCandles className="ml-4 size-12 h-24 text-yellow-500" />
-                <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
-                <div className="hyphens-auto p-4 text-left">
-                  Celebrate your birthday with a complimentary treat from us,
-                  adding a touch of sweetness to your special day. Make sure to
-                  share your birthday with us when you sign up, so we can ensure
-                  your celebration is memorable.
-                </div>
+          <p className="text-sm italic text-gray-400">
+            Only one reward is able to be redeemed per order.*
+          </p>
+        </div>
+
+        <div className="baseVertFlex mt-8 max-w-7xl gap-8 px-4 text-yellow-500">
+          <div className="baseFlex gap-2">
+            <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+            <span className="text-2xl font-medium underline underline-offset-2">
+              Member benefits
+            </span>
+            <SideAccentSwirls className="h-5 fill-yellow-500" />
+          </div>
+
+          <div className="baseVertFlex gap-8 tablet:!flex-row">
+            <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md sm:w-96 tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
+              <CiGift className="size-20 h-24 text-yellow-500" />
+              <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
+              <div className="hyphens-auto p-4 text-left">
+                Earning rewards is as simple as enjoying your favorite meals!
+                Every dollar spent earns you points, which open the door to a
+                diverse selection of enticing rewards. Get started earning
+                points today!
               </div>
+            </div>
 
-              <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md sm:w-96 tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
-                <LuCalendarClock className="ml-2 size-14 h-24 text-yellow-500" />
-                <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
-                <div className="hyphens-auto p-4 text-left">
-                  As a member, you&apos;re first in line to experience our
-                  newest menu items. Before these delicacies make their official
-                  debut, you&apos;ll have the exclusive opportunity to taste
-                  what&apos;s next on our culinary horizon. Stay connected for
-                  these exciting previews!
-                </div>
+            <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md sm:w-96 tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
+              <FaCakeCandles className="ml-4 size-12 h-24 text-yellow-500" />
+              <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
+              <div className="hyphens-auto p-4 text-left">
+                Celebrate your birthday with a complimentary treat from us,
+                adding a touch of sweetness to your special day. Make sure to
+                share your birthday with us when you sign up, so we can ensure
+                your celebration is memorable.
+              </div>
+            </div>
+
+            <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md sm:w-96 tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
+              <LuCalendarClock className="ml-2 size-14 h-24 text-yellow-500" />
+              <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
+              <div className="hyphens-auto p-4 text-left">
+                As a member, you&apos;re first in line to experience our newest
+                menu items. Before these delicacies make their official debut,
+                you&apos;ll have the exclusive opportunity to taste what&apos;s
+                next on our culinary horizon. Stay connected for these exciting
+                previews!
               </div>
             </div>
           </div>
         </div>
-      </TabsContent>
+      </div>
     </motion.div>
   );
 }
