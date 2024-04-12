@@ -59,6 +59,7 @@ import isEqual from "lodash.isequal";
 import Decimal from "decimal.js";
 import { isAbleToRenderASAPTimeSlot } from "~/utils/isAbleToRenderASAPTimeSlot";
 import Image from "next/image";
+import { TbLocation } from "react-icons/tb";
 
 interface OrderCost {
   subtotal: number;
@@ -324,7 +325,7 @@ function CartDrawer({
       transition={{
         duration: 0.35,
       }}
-      className="baseVertFlex relative w-full !justify-start overflow-y-auto"
+      className="baseVertFlex relative h-full w-full !justify-start overflow-y-auto"
     >
       <div className="baseVertFlex w-full !items-start gap-1 border-b-2 p-4">
         <div className="baseFlex !items-start gap-1">
@@ -340,14 +341,15 @@ function CartDrawer({
 
       {/* location + date & time picker  (TODO: why doesn't horizontal margin work here with w-full..) */}
       <div
-        className="baseFlex my-4 w-[95%] flex-wrap !justify-start gap-1 rounded-md border border-gray-400 bg-gradient-to-br 
+        className="baseFlex my-4 w-[95%] flex-wrap !justify-start gap-1 rounded-md border border-gray-300 bg-gradient-to-br 
         from-gray-200 to-gray-300/80 p-4 shadow-sm"
       >
         <span className="text-sm">
           Your order will be available for pickup at
         </span>
-        <div className="baseFlex gap-1">
-          <CiLocationOn className="size-6" />
+        <div className="baseFlex gap-2">
+          <TbLocation className="text-primary" />
+
           <Button variant={"link"} className="h-6" asChild>
             <Link href="/googleMapsLink" className="!p-0 !text-sm">
               2100 Snelling Ave Roseville, MN 55113
@@ -362,7 +364,7 @@ function CartDrawer({
               name="dateToPickUp"
               render={({ field, fieldState: { invalid } }) => (
                 <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                  <div className="baseFlex gap-2">
+                  <div className="baseFlex gap-4">
                     <FormLabel className="font-semibold">Pickup date</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
@@ -421,7 +423,7 @@ function CartDrawer({
               name="timeToPickUp"
               render={({ field, fieldState: { invalid } }) => (
                 <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                  <div className="baseFlex gap-2">
+                  <div className="baseFlex gap-4">
                     <FormLabel className="font-semibold">Pickup time</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
@@ -473,7 +475,7 @@ function CartDrawer({
       </div>
 
       {/* summary of items in cart */}
-      <div className="baseVertFlex w-full !items-start gap-2 p-4">
+      <div className="baseVertFlex h-full w-full !items-start gap-2 p-4">
         <p className="text-lg font-semibold underline underline-offset-2">
           Items
         </p>
@@ -555,9 +557,9 @@ function CartDrawer({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="baseVertFlex w-full !items-start !justify-start gap-2"
+              className="baseVertFlex size-full !items-start !justify-start gap-2"
             >
-              <div className="baseVertFlex w-full">
+              <div className="baseVertFlex size-full !justify-start">
                 <AnimatePresence>
                   {regularItems.map((item, idx) => (
                     <motion.div
@@ -604,16 +606,16 @@ function CartDrawer({
                             <p className="text-lg">{item.name}</p>
 
                             {item.includeDietaryRestrictions && (
-                              <div className="size-2 rounded-full bg-primary/25" />
+                              <div className="size-2 rounded-full bg-primary/75" />
                             )}
                           </div>
 
                           {/* quantity adjustment */}
-                          <div className="baseFlex h-8">
+                          <div className="baseFlex h-8 rounded-md border-2 border-gray-500">
                             <Button
                               variant="outline"
                               size="icon"
-                              className="size-8 rounded-r-none border-2 border-r-0 border-gray-500 p-0"
+                              className="size-7 rounded-r-none border-none p-0"
                               onClick={() => {
                                 const newOrderDetails =
                                   structuredClone(orderDetails);
@@ -643,13 +645,13 @@ function CartDrawer({
                                 <LuMinus className="size-4" />
                               )}
                             </Button>
-                            <div className="baseFlex h-full w-8 border-y-2 border-gray-500 bg-white font-semibold">
+                            <div className="baseFlex h-full w-8 bg-white font-semibold">
                               {item.quantity}
                             </div>
                             <Button
                               variant="outline"
                               disabled={item.quantity > 99}
-                              className="size-8 rounded-l-none border-2 border-l-0 border-gray-500 p-0"
+                              className="size-7 rounded-l-none border-none p-0"
                               onClick={() => {
                                 if (item.quantity > 99) return;
                                 const newOrderDetails =
@@ -724,158 +726,146 @@ function CartDrawer({
                       </div>
                     </motion.div>
                   ))}
+
+                  {/* rewards item (if present) */}
+                  <AnimatePresence mode="wait">
+                    {rewardItems.length > 0 && (
+                      <>
+                        {rewardItems.map((item, idx) => (
+                          <motion.div
+                            key={item.id}
+                            initial={{
+                              opacity: 0,
+                            }}
+                            animate={{
+                              opacity: 1,
+                            }}
+                            exit={{
+                              opacity: 0,
+                            }}
+                            transition={{
+                              duration: 0.2,
+                            }}
+                            className="baseFlex w-full !items-start gap-4"
+                          >
+                            {/* preview image of item */}
+                            <Image
+                              src={"/menuItems/sampleImage.webp"}
+                              alt={item.name}
+                              width={64}
+                              height={64}
+                              className="rounded-md"
+                            />
+
+                            <div className="baseFlex w-full !items-start !justify-between">
+                              <div className="baseVertFlex !items-start">
+                                {/* item name, dietary restrictions, and edit button */}
+                                <div className="baseFlex !items-start gap-2">
+                                  <p className="text-lg">{item.name}</p>
+
+                                  {item.includeDietaryRestrictions && (
+                                    <div className="size-2 rounded-full bg-primary/75" />
+                                  )}
+                                </div>
+
+                                <div className="rewardsGoldBorder my-1 !px-2 !py-1 text-xs text-yellow-500">
+                                  {item.pointReward ? (
+                                    <>
+                                      {new Decimal(item.price)
+                                        .div(0.01)
+                                        .toNumber()}{" "}
+                                      points
+                                    </>
+                                  ) : (
+                                    "Birthday reward"
+                                  )}
+                                </div>
+
+                                <div className="baseVertFlex w-full !items-start text-sm">
+                                  {Object.values(item.customizations).map(
+                                    (choiceId, idx) => (
+                                      <p key={idx}>
+                                        -{" "}
+                                        {
+                                          customizationChoices[choiceId]
+                                            ?.customizationCategory.name
+                                        }
+                                        : {customizationChoices[choiceId]?.name}
+                                      </p>
+                                    ),
+                                  )}
+                                  {item.specialInstructions && (
+                                    <p>- {item.specialInstructions}</p>
+                                  )}
+
+                                  <Button
+                                    variant={"underline"}
+                                    size={"underline"}
+                                    onClick={() => {
+                                      const { items } = orderDetails;
+
+                                      const updatedItems = [];
+
+                                      for (const orderItem of items) {
+                                        // Check if this item should be excluded
+                                        if (
+                                          item.id === orderItem.id &&
+                                          (orderItem.birthdayReward ||
+                                            orderItem.pointReward)
+                                        ) {
+                                          continue;
+                                        }
+
+                                        // If the item doesn't match our criteria for removal, add it to the updatedItems array
+                                        updatedItems.push(orderItem);
+                                      }
+
+                                      updateOrder({
+                                        newOrderDetails: {
+                                          ...orderDetails,
+                                          items: updatedItems,
+                                        },
+                                      });
+                                    }}
+                                  >
+                                    Remove
+                                  </Button>
+                                </div>
+                              </div>
+
+                              <div className="baseVertFlex !items-end">
+                                <AnimatedPrice
+                                  price={formatPrice(
+                                    calculateRelativeTotal({
+                                      items: [item],
+                                      customizationChoices,
+                                      discounts,
+                                    }),
+                                  )}
+                                />
+                                <Button
+                                  variant={"underline"}
+                                  size={"underline"}
+                                  onClick={() => {
+                                    setItemBeingModified(
+                                      menuItems[item.itemId] ?? null,
+                                    );
+                                    setInitialItemState(item);
+                                  }}
+                                >
+                                  Edit
+                                </Button>
+                              </div>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </>
+                    )}
+                  </AnimatePresence>
                 </AnimatePresence>
               </div>
 
-              {/* rewards item (if present) */}
-              <AnimatePresence mode="wait">
-                {rewardItems.length > 0 && (
-                  <>
-                    {rewardItems.map((item, idx) => (
-                      <motion.div
-                        key={item.id}
-                        initial={{
-                          opacity: 0,
-                        }}
-                        animate={{
-                          opacity: 1,
-                        }}
-                        exit={{
-                          opacity: 0,
-                        }}
-                        transition={{
-                          duration: 0.2,
-                        }}
-                        className="baseFlex w-full !items-start gap-4"
-                      >
-                        {/* preview image of item */}
-                        <Image
-                          src={"/menuItems/sampleImage.webp"}
-                          alt={item.name}
-                          width={64}
-                          height={64}
-                          className="rounded-md"
-                        />
-
-                        <div className="baseFlex w-full !items-start !justify-between">
-                          <div className="baseVertFlex !items-start">
-                            {/* item name, dietary restrictions, and edit button */}
-                            <div className="baseFlex !items-start gap-2">
-                              <p className="text-lg">{item.name}</p>
-
-                              {item.includeDietaryRestrictions && (
-                                <div className="size-2 rounded-full bg-primary/25" />
-                              )}
-                            </div>
-
-                            <div className="rewardsGoldBorder my-1 !px-2 !py-1 text-xs text-yellow-500">
-                              {item.pointReward ? (
-                                <>
-                                  {new Decimal(item.price).div(0.01).toNumber()}{" "}
-                                  points
-                                </>
-                              ) : (
-                                "Birthday reward"
-                              )}
-                            </div>
-
-                            <div className="baseVertFlex w-full !items-start text-sm">
-                              {Object.values(item.customizations).map(
-                                (choiceId, idx) => (
-                                  <p key={idx}>
-                                    -{" "}
-                                    {
-                                      customizationChoices[choiceId]
-                                        ?.customizationCategory.name
-                                    }
-                                    : {customizationChoices[choiceId]?.name}
-                                  </p>
-                                ),
-                              )}
-                              {item.specialInstructions && (
-                                <p>- {item.specialInstructions}</p>
-                              )}
-
-                              <Button
-                                variant={"underline"}
-                                size={"underline"}
-                                onClick={() => {
-                                  const { items } = orderDetails;
-
-                                  const updatedItems = [];
-
-                                  for (const orderItem of items) {
-                                    // Check if this item should be excluded
-                                    if (
-                                      item.id === orderItem.id &&
-                                      (orderItem.birthdayReward ||
-                                        orderItem.pointReward)
-                                    ) {
-                                      continue;
-                                    }
-
-                                    // If the item doesn't match our criteria for removal, add it to the updatedItems array
-                                    updatedItems.push(orderItem);
-                                  }
-
-                                  updateOrder({
-                                    newOrderDetails: {
-                                      ...orderDetails,
-                                      items: updatedItems,
-                                    },
-                                  });
-                                }}
-                              >
-                                Remove
-                              </Button>
-                            </div>
-                          </div>
-
-                          <div className="baseVertFlex !items-end">
-                            <AnimatedPrice
-                              price={formatPrice(
-                                calculateRelativeTotal({
-                                  items: [item],
-                                  customizationChoices,
-                                  discounts,
-                                }),
-                              )}
-                            />
-                            <Button
-                              variant={"underline"}
-                              size={"underline"}
-                              onClick={() => {
-                                setItemBeingModified(
-                                  menuItems[item.itemId] ?? null,
-                                );
-                                setInitialItemState(item);
-                              }}
-                            >
-                              Edit
-                            </Button>
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </>
-                )}
-              </AnimatePresence>
-
-              <div className="baseVertFlex w-full !items-start gap-4">
-                {/* dietary restrictions legend */}
-                {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
-                {orderDetails.items.some(
-                  (item) => item.includeDietaryRestrictions,
-                ) && (
-                  <div className="baseFlex gap-2">
-                    <div className="size-2 rounded-full bg-primary/25" />
-                    <p className="text-sm">
-                      Item will be prepared according to your dietary
-                      restrictions
-                    </p>
-                  </div>
-                )}
-
+              <div className="baseVertFlex mt-4 w-full gap-4 pb-28">
                 <div
                   style={{
                     justifyContent: isSignedIn ? "space-between" : "flex-start",
@@ -915,6 +905,19 @@ function CartDrawer({
                     </Button>
                   )}
                 </div>
+
+                {/* dietary restrictions legend */}
+                {orderDetails.items.some(
+                  (item) => item.includeDietaryRestrictions,
+                ) && (
+                  <div className="baseFlex gap-2">
+                    <div className="size-2 rounded-full bg-primary/75" />
+                    <p className="text-nowrap text-xs">
+                      Item will be prepared according to your dietary
+                      restrictions
+                    </p>
+                  </div>
+                )}
               </div>
             </motion.div>
           )}

@@ -1,28 +1,21 @@
-@media (min-width: 1024px) {
+@media (min-width: 1000px) {
   .desktopHeader {
     padding: 0.5rem 2.5rem;
     display: grid;
     gap: 1rem;
     place-items: center;
     grid-template-rows: 1fr;
-    /* grid-template-columns: repeat(14, 1fr); */
-    grid-template-columns: 2fr 1fr 7fr 1fr 2fr;
+    grid-template-columns: 2fr 1fr 5fr 0fr 2fr;
     grid-template-areas:
       "logo . mainLinks . authentication";
-    /* grid-template-areas:
-      "logo logo logo . explore explore explore create create create authentication authentication authentication authentication"; */
   }
 }
 
 @media (min-width: 1536px) {
   .desktopHeader {
-    grid-template-columns: 3fr 2fr 7fr 1fr 2fr;
-    /* grid-template-areas:
-      "logo . mainLinks . authentication"; */
+    grid-template-columns: 3fr 4fr 7fr 120px 2fr;
   }
 }
-
-/* maybe need to combine orderIcon and authentication into one class */
 
 .logo {
   grid-area: logo;
@@ -37,42 +30,14 @@
   filter: brightness(0.95);
 }
 
-
 .mainLinks {
   grid-area: mainLinks;
 }
-
-/* ----------------- */
 
 .menu {
   grid-area: menu;
 }
 
-.orderNow {
-  grid-area: orderNow;
-}
-
-.rewards {
-  grid-area: rewards;
-}
-
-.ourStory {
-  grid-area: ourStory;
-}
-
-.media {
-  grid-area: media;
-}
-
-/* ------------------ */
 .authentication {
   grid-area: authentication;
-}
-
-.orderIcon {
-  grid-area: orderIcon;
-}
-
-.profileIcon {
-  grid-area: profileIcon;
 }

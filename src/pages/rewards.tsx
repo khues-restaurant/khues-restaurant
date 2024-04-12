@@ -11,7 +11,6 @@ import { SignUpButton } from "@clerk/nextjs";
 import WideFancySwirls from "~/components/ui/wideFancySwirls";
 import { Separator } from "~/components/ui/separator";
 import Image from "next/image";
-import { Parallax } from "react-scroll-parallax";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 
 function Rewards() {
@@ -463,25 +462,12 @@ function Rewards() {
 
         <SignUpButton
           mode="modal"
-          // TODO: make sure that this redirects to homepage instead of back to /rewards
-          afterSignUpUrl={`${
-            process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-          }/postSignUpRegistration`}
+          afterSignUpUrl={`${process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""}`}
           afterSignInUrl={`${process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""}`}
         >
           <Button
             variant={"rewards"}
             size={"lg"}
-            // size={"lg"}
-            // onClick={() => {
-            //   if (asPath.includes("/create")) {
-            //     localStorageTabData.set(getStringifiedTabData());
-            //   }
-
-            //   // technically can sign in from signup page and vice versa
-            //   if (!userId) localStorageRedirectRoute.set(asPath);
-            //   // ^^ but technically could just append it onto the postSignupRegistration route right?
-            // }}
             className="text-base shadow-md"
           >
             Join now

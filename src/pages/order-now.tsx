@@ -155,7 +155,11 @@ function OrderNow() {
   }, [favoriteItemsApi]);
 
   useEffect(() => {
-    if (!userRecentOrders || userRecentOrders.length > 0 || !recentOrdersApi) {
+    if (
+      !userRecentOrders ||
+      userRecentOrders.length === 0 ||
+      !recentOrdersApi
+    ) {
       return;
     }
 

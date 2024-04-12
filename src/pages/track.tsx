@@ -557,7 +557,6 @@ function Track() {
                     >
                       {isSignedIn ? (
                         <>
-                          {/* maybe drop this first part? seems a bit redundant but idk */}
                           <div className="baseFlex gap-1">
                             You earned
                             <div className="font-bold">
@@ -580,26 +579,12 @@ function Track() {
                             mode="modal"
                             afterSignUpUrl={`${
                               process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                            }/postSignUpRegistration`}
+                            }`}
                             afterSignInUrl={`${
                               process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
                             }${asPath}`}
                           >
-                            <Button
-                              variant={"rewards"}
-                              // className="h-11"
-                              // onClick={() => {
-                              //   if (asPath.includes("/create")) {
-                              //     localStorageTabData.set(getStringifiedTabData());
-                              //   }
-
-                              //   // technically can sign in from signup page and vice versa
-                              //   if (!userId) localStorageRedirectRoute.set(asPath);
-                              //   // ^^ but technically could just append it onto the postSignupRegistration route right?
-                              // }}
-                            >
-                              Sign in
-                            </Button>
+                            <Button variant={"rewards"}>Sign in</Button>
                           </SignInButton>
                           to redeem your points for this order.
                         </div>

@@ -20,6 +20,7 @@ import AnimatedPrice from "~/components/AnimatedPrice";
 import AvailablePickupTimes from "~/components/cart/AvailablePickupTimes";
 import { Button } from "~/components/ui/button";
 import { Calendar } from "~/components/ui/calendar";
+import { TbLocation } from "react-icons/tb";
 import {
   Form,
   FormControl,
@@ -330,13 +331,13 @@ function CartSheet({
       </div>
 
       {/* location + date & time picker  (TODO: why doesn't horizontal margin work here with w-full..) */}
-      <div className="baseFlex my-4 w-[80%] flex-wrap gap-2 rounded-md border border-gray-400 bg-gradient-to-br from-gray-200 to-gray-300/70 p-4 px-8 shadow-sm">
+      <div className="baseFlex my-4 w-[80%] flex-wrap gap-2 rounded-md border border-gray-300 bg-gradient-to-br from-gray-200 to-gray-300/70 p-4 px-8 shadow-sm">
         <span className="text-sm">
           Your order will be available for pickup at
         </span>
 
-        <div className="baseFlex gap-1">
-          <CiLocationOn className="size-6" />
+        <div className="baseFlex gap-2">
+          <TbLocation className="text-primary" />
           <Button variant={"link"} className="h-6" asChild>
             <Link href="/googleMapsLink" className="!p-0 !text-sm">
               2100 Snelling Ave Roseville, MN 55113
@@ -541,9 +542,9 @@ function CartSheet({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="baseVertFlex h-full w-full !items-start !justify-start gap-2 overflow-y-auto border-b p-4 pb-36"
+            className="baseVertFlex size-full !items-start !justify-start gap-2 overflow-y-auto border-b p-4"
           >
-            <div className="baseVertFlex w-full">
+            <div className="baseVertFlex size-full !justify-start">
               <AnimatePresence>
                 {regularItems.map((item, idx) => (
                   <motion.div
@@ -590,16 +591,16 @@ function CartSheet({
                           <p className="text-lg">{item.name}</p>
 
                           {item.includeDietaryRestrictions && (
-                            <div className="size-2 rounded-full bg-primary/25" />
+                            <div className="size-2 rounded-full bg-primary/75" />
                           )}
                         </div>
 
                         {/* quantity adjustment */}
-                        <div className="baseFlex h-8">
+                        <div className="baseFlex h-8 rounded-md border-2 border-gray-500">
                           <Button
                             variant="outline"
                             size="icon"
-                            className="size-8 rounded-r-none border-2 border-r-0 border-gray-500 p-0"
+                            className="size-7 rounded-r-none border-none p-0"
                             onClick={() => {
                               const newOrderDetails =
                                 structuredClone(orderDetails);
@@ -629,13 +630,13 @@ function CartSheet({
                               <LuMinus className="size-4" />
                             )}
                           </Button>
-                          <div className="baseFlex h-full w-8 border-y-2 border-gray-500 bg-white font-semibold">
+                          <div className="baseFlex h-full w-8 bg-white font-semibold">
                             {item.quantity}
                           </div>
                           <Button
                             variant="outline"
                             disabled={item.quantity > 99}
-                            className="size-8 rounded-l-none border-2 border-l-0 border-gray-500 p-0"
+                            className="size-7 rounded-l-none border-none p-0"
                             onClick={() => {
                               if (item.quantity > 99) return;
                               const newOrderDetails =
@@ -711,158 +712,147 @@ function CartSheet({
                     </div>
                   </motion.div>
                 ))}
+
+                {/* rewards item (if present) */}
+                <AnimatePresence mode="wait">
+                  {rewardItems.length > 0 && (
+                    <>
+                      {rewardItems.map((item, idx) => (
+                        <motion.div
+                          key={item.id}
+                          initial={{
+                            opacity: 0,
+                          }}
+                          animate={{
+                            opacity: 1,
+                          }}
+                          exit={{
+                            opacity: 0,
+                          }}
+                          transition={{
+                            duration: 0.2,
+                          }}
+                          className="baseFlex w-full !items-start gap-4"
+                        >
+                          {/* preview image of item */}
+                          <Image
+                            src={"/menuItems/sampleImage.webp"}
+                            alt={item.name}
+                            width={64}
+                            height={64}
+                            className="rounded-md"
+                          />
+
+                          <div className="baseFlex w-full !items-start !justify-between">
+                            <div className="baseVertFlex !items-start">
+                              {/* item name, dietary restrictions, and edit button */}
+                              <div className="baseFlex gap-2">
+                                <p className="text-lg">{item.name}</p>
+
+                                {item.includeDietaryRestrictions && (
+                                  <div className="size-2 rounded-full bg-primary/75" />
+                                )}
+                              </div>
+
+                              <div className="rewardsGoldBorder my-1 !px-2 !py-1 text-xs text-yellow-500">
+                                {item.pointReward ? (
+                                  <>
+                                    {new Decimal(item.price)
+                                      .div(0.01)
+                                      .toNumber()}{" "}
+                                    points
+                                  </>
+                                ) : (
+                                  "Birthday reward"
+                                )}
+                              </div>
+
+                              <div className="baseVertFlex w-full !items-start text-sm">
+                                {Object.values(item.customizations).map(
+                                  (choiceId, idx) => (
+                                    <p key={idx}>
+                                      -{" "}
+                                      {
+                                        customizationChoices[choiceId]
+                                          ?.customizationCategory.name
+                                      }
+                                      : {customizationChoices[choiceId]?.name}
+                                    </p>
+                                  ),
+                                )}
+                                {item.specialInstructions && (
+                                  <p>- {item.specialInstructions}</p>
+                                )}
+
+                                <Button
+                                  variant={"underline"}
+                                  size={"underline"}
+                                  onClick={() => {
+                                    const { items } = orderDetails;
+
+                                    const updatedItems = [];
+
+                                    for (const orderItem of items) {
+                                      // Check if this item should be excluded
+                                      if (
+                                        item.id === orderItem.id &&
+                                        (orderItem.birthdayReward ||
+                                          orderItem.pointReward)
+                                      ) {
+                                        continue;
+                                      }
+
+                                      // If the item doesn't match our criteria for removal, add it to the updatedItems array
+                                      updatedItems.push(orderItem);
+                                    }
+
+                                    updateOrder({
+                                      newOrderDetails: {
+                                        ...orderDetails,
+                                        items: updatedItems,
+                                      },
+                                    });
+                                  }}
+                                >
+                                  Remove
+                                </Button>
+                              </div>
+                            </div>
+
+                            <div className="baseVertFlex !items-end">
+                              <AnimatedPrice
+                                price={formatPrice(
+                                  calculateRelativeTotal({
+                                    items: [item],
+                                    customizationChoices,
+                                    discounts,
+                                  }),
+                                )}
+                              />
+                              <Button
+                                variant={"underline"}
+                                size={"underline"}
+                                onClick={() => {
+                                  setIsEditingItem(true);
+                                  setItemBeingModified(
+                                    menuItems[item.itemId] ?? null,
+                                  );
+                                  setInitialItemState(item);
+                                }}
+                              >
+                                Edit
+                              </Button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </>
+                  )}
+                </AnimatePresence>
               </AnimatePresence>
             </div>
 
-            {/* rewards item (if present) */}
-            <AnimatePresence mode="wait">
-              {rewardItems.length > 0 && (
-                <>
-                  {rewardItems.map((item, idx) => (
-                    <motion.div
-                      key={item.id}
-                      initial={{
-                        opacity: 0,
-                      }}
-                      animate={{
-                        opacity: 1,
-                      }}
-                      exit={{
-                        opacity: 0,
-                      }}
-                      transition={{
-                        duration: 0.2,
-                      }}
-                      className="baseFlex w-full !items-start gap-4"
-                    >
-                      {/* preview image of item */}
-                      <Image
-                        src={"/menuItems/sampleImage.webp"}
-                        alt={item.name}
-                        width={64}
-                        height={64}
-                        className="rounded-md"
-                      />
-
-                      <div className="baseFlex w-full !items-start !justify-between">
-                        <div className="baseVertFlex !items-start">
-                          {/* item name, dietary restrictions, and edit button */}
-                          <div className="baseFlex gap-2">
-                            <p className="text-lg">{item.name}</p>
-
-                            {item.includeDietaryRestrictions && (
-                              <div className="size-2 rounded-full bg-primary/25" />
-                            )}
-                          </div>
-
-                          <div className="rewardsGoldBorder my-1 !px-2 !py-1 text-xs text-yellow-500">
-                            {item.pointReward ? (
-                              <>
-                                {new Decimal(item.price).div(0.01).toNumber()}{" "}
-                                points
-                              </>
-                            ) : (
-                              "Birthday reward"
-                            )}
-                          </div>
-
-                          <div className="baseVertFlex w-full !items-start text-sm">
-                            {Object.values(item.customizations).map(
-                              (choiceId, idx) => (
-                                <p key={idx}>
-                                  -{" "}
-                                  {
-                                    customizationChoices[choiceId]
-                                      ?.customizationCategory.name
-                                  }
-                                  : {customizationChoices[choiceId]?.name}
-                                </p>
-                              ),
-                            )}
-                            {item.specialInstructions && (
-                              <p>- {item.specialInstructions}</p>
-                            )}
-
-                            <Button
-                              variant={"underline"}
-                              size={"underline"}
-                              onClick={() => {
-                                const { items } = orderDetails;
-
-                                const updatedItems = [];
-
-                                for (const orderItem of items) {
-                                  // Check if this item should be excluded
-                                  if (
-                                    item.id === orderItem.id &&
-                                    (orderItem.birthdayReward ||
-                                      orderItem.pointReward)
-                                  ) {
-                                    continue;
-                                  }
-
-                                  // If the item doesn't match our criteria for removal, add it to the updatedItems array
-                                  updatedItems.push(orderItem);
-                                }
-
-                                updateOrder({
-                                  newOrderDetails: {
-                                    ...orderDetails,
-                                    items: updatedItems,
-                                  },
-                                });
-                              }}
-                            >
-                              Remove
-                            </Button>
-                          </div>
-                        </div>
-
-                        <div className="baseVertFlex !items-end">
-                          <AnimatedPrice
-                            price={formatPrice(
-                              calculateRelativeTotal({
-                                items: [item],
-                                customizationChoices,
-                                discounts,
-                              }),
-                            )}
-                          />
-                          <Button
-                            variant={"underline"}
-                            size={"underline"}
-                            onClick={() => {
-                              setIsEditingItem(true);
-                              setItemBeingModified(
-                                menuItems[item.itemId] ?? null,
-                              );
-                              setInitialItemState(item);
-                            }}
-                          >
-                            Edit
-                          </Button>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </>
-              )}
-            </AnimatePresence>
-
-            <div className="baseVertFlex w-full !items-start gap-4">
-              {/* dietary restrictions legend */}
-              {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
-              {orderDetails.items.some(
-                (item) => item.includeDietaryRestrictions,
-              ) && (
-                <div className="baseFlex gap-2">
-                  <div className="size-2 rounded-full bg-primary/25" />
-                  <p className="text-sm">
-                    Item will be prepared according to your dietary restrictions
-                  </p>
-                </div>
-              )}
-
+            <div className="baseVertFlex mt-4 w-full gap-4 pb-28">
               <div
                 style={{
                   justifyContent: isSignedIn ? "space-between" : "flex-start",
@@ -900,6 +890,19 @@ function CartSheet({
                   </Button>
                 )}
               </div>
+
+              {/* dietary restrictions legend */}
+              {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
+              {orderDetails.items.some(
+                (item) => item.includeDietaryRestrictions,
+              ) && (
+                <div className="baseFlex gap-2">
+                  <div className="size-2 rounded-full bg-primary/75" />
+                  <p className="text-sm">
+                    Item will be prepared according to your dietary restrictions
+                  </p>
+                </div>
+              )}
             </div>
           </motion.div>
         )}
@@ -907,7 +910,7 @@ function CartSheet({
 
       {/* TODO: why does this scroll a bit along with body when drawer is scrolled? */}
       <SheetFooter>
-        <div className="baseVertFlex w-full border-t bg-gradient-to-br from-gray-200 to-gray-300 p-4 shadow-inner">
+        <div className="baseVertFlex w-full rounded-bl-md border-t bg-gradient-to-br from-gray-200 to-gray-300 p-4 shadow-inner">
           <div className="baseFlex w-full !justify-between text-sm">
             <p>Subtotal</p>
             <AnimatedPrice price={formatPrice(orderCost.subtotal)} />

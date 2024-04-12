@@ -1,10 +1,16 @@
 import {
   type MenuItem,
   type CustomizationChoice,
-  Discount,
+  type Discount,
 } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import isEqual from "lodash.isequal";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { IoIosArrowBack, IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { LuMinus, LuPlus } from "react-icons/lu";
@@ -136,9 +142,9 @@ function ItemCustomizationDrawer({
   return (
     <motion.div
       key={itemToCustomize.name}
-      initial={{ opacity: 0, translateX: "100%" }}
+      initial={{ opacity: 0, translateX: forCart ? "100%" : "0%" }}
       animate={{ opacity: 1, translateX: "0%" }}
-      exit={{ opacity: 0, translateX: "100%" }}
+      exit={{ opacity: 0, translateX: forCart ? "100%" : "0%" }}
       transition={{
         duration: 0.35,
       }}
@@ -222,22 +228,12 @@ function ItemCustomizationDrawer({
               )}
             </AnimatePresence>
           </div>
-          {/* <div className="baseVertFlex imageFiller h-48 w-full max-w-80 rounded-md shadow-md" /> */}
 
-          {/* <Image
-          src={"/menuItems/sampleImage.webp"}
-          alt={itemToCustomize.name}
-          fill
-          // style={{
-          //   objectFit: "cover",
-          // }}
-          className="!relative !h-48 rounded-md"
-        /> */}
           <Image
             src={"/menuItems/sampleImage.webp"}
             alt={itemToCustomize.name}
-            width={240}
-            height={240}
+            width={180}
+            height={180}
             className="rounded-md"
           />
         </div>
@@ -339,56 +335,77 @@ function ItemCustomizationDrawer({
           )}
 
           {/* Special instructions */}
-          <div className="baseVertFlex w-full !items-start gap-4">
-            <div className="baseFlex gap-2">
-              <p className="text-lg underline underline-offset-2">
-                Special instructions
-              </p>
-              <span className="text-sm italic text-gray-400">- Optional</span>
-            </div>
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full"
+            defaultValue={
+              itemOrderDetails?.specialInstructions ? "open" : "closed"
+            }
+          >
+            <AccordionItem
+              value={"open"}
+              className="w-full max-w-[550px] rounded-md border px-4 py-1"
+            >
+              <AccordionTrigger className="baseFlex !justify-start gap-2 py-2 text-lg text-primary !no-underline">
+                <div className="baseFlex gap-2 font-normal">
+                  <p className="text-lg text-black underline underline-offset-2">
+                    Special instructions
+                  </p>
+                  <span className="text-sm italic text-gray-400">
+                    - Optional
+                  </span>
+                </div>
+              </AccordionTrigger>
 
-            {user && user.dietaryRestrictions.length > 0 && (
-              <div className="baseFlex relative left-0 top-0 gap-2">
-                <Switch
-                  id="allergySwitch"
-                  checked={localItemOrderDetails.includeDietaryRestrictions}
-                  onCheckedChange={(checked) =>
-                    setLocalItemOrderDetails((prev) => ({
-                      ...prev,
-                      includeDietaryRestrictions: checked,
-                    }))
-                  }
-                />
-                <Label htmlFor="allergySwitch">
-                  Include dietary preferences associated with your account.
-                </Label>
-              </div>
-            )}
+              <AccordionContent>
+                <div className="baseVertFlex relative mt-4 w-full !items-start gap-2 p-1">
+                  {user && user.dietaryRestrictions.length > 0 && (
+                    <div className="baseFlex gap-2 !self-start">
+                      <Switch
+                        id="allergySwitch"
+                        checked={
+                          localItemOrderDetails.includeDietaryRestrictions
+                        }
+                        onCheckedChange={(checked) =>
+                          setLocalItemOrderDetails((prev) => ({
+                            ...prev,
+                            includeDietaryRestrictions: checked,
+                          }))
+                        }
+                      />
+                      <Label htmlFor="allergySwitch" className="text-xs">
+                        Include dietary preferences associated with your
+                        account.
+                      </Label>
+                    </div>
+                  )}
 
-            <div className="relative h-32 w-full">
-              <Textarea
-                className="h-full w-full resize-none rounded-md border-2 p-4"
-                placeholder="Detail out any special instructions for this item."
-                value={localItemOrderDetails.specialInstructions}
-                onChange={(e) => {
-                  if (e.target.value.length > 100) return;
+                  <Textarea
+                    className="mt-4 h-full min-h-40 w-full resize-none rounded-md border-2 p-4"
+                    placeholder="Detail out any special instructions for this item."
+                    value={localItemOrderDetails.specialInstructions}
+                    onChange={(e) => {
+                      if (e.target.value.length > 100) return;
 
-                  setLocalItemOrderDetails({
-                    ...localItemOrderDetails,
-                    specialInstructions: e.target.value,
-                  });
-                }}
-              />
-              <p className="pointer-events-none absolute bottom-2 right-4 text-xs text-gray-400 tablet:bottom-1">
-                {100 - localItemOrderDetails.specialInstructions.length}{" "}
-                characters remaining
-              </p>
+                      setLocalItemOrderDetails({
+                        ...localItemOrderDetails,
+                        specialInstructions: e.target.value,
+                      });
+                    }}
+                  />
+                  <p className="pointer-events-none absolute bottom-14 right-4 text-xs text-gray-400">
+                    {100 - localItemOrderDetails.specialInstructions.length}{" "}
+                    characters remaining
+                  </p>
 
-              <p className="relative left-0 top-2 gap-2 text-sm italic text-gray-400 tablet:text-base">
-                *No price altering substitutions/additions allowed.
-              </p>
-            </div>
-          </div>
+                  <p className="pl-1 text-xs italic text-gray-400">
+                    *No price altering substitutions/additions allowed.
+                  </p>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
 
           {/* Reviews */}
           {/* <div className="baseVertFlex w-full gap-2">
@@ -401,13 +418,13 @@ function ItemCustomizationDrawer({
             {!itemOrderDetails?.birthdayReward &&
               !itemOrderDetails?.pointReward && (
                 <div className="baseFlex gap-2">
-                  <span className="font-medium">Quantity</span>
-                  <div className="baseFlex h-8">
+                  <span className="text-sm font-medium">Quantity</span>
+                  <div className="baseFlex h-8 rounded-md border-2 border-gray-500">
                     <Button
                       variant="outline"
                       size="icon"
                       disabled={localItemOrderDetails.quantity <= 1}
-                      className="size-8 rounded-r-none border-2 border-r-0 border-gray-500 p-0"
+                      className="size-7 rounded-r-none border-none p-0"
                       onClick={() => {
                         if (localItemOrderDetails.quantity <= 1) return;
 
@@ -420,14 +437,14 @@ function ItemCustomizationDrawer({
                       <LuMinus className="size-4" />
                     </Button>
 
-                    <div className="baseFlex h-full w-8 border-y-2 border-gray-500 bg-white text-sm font-semibold">
+                    <div className="baseFlex h-full w-8 bg-white text-sm font-semibold">
                       {localItemOrderDetails.quantity}
                     </div>
 
                     <Button
                       variant="outline"
                       disabled={localItemOrderDetails.quantity > 99}
-                      className="size-8 rounded-l-none border-2 border-l-0 border-gray-500 p-0"
+                      className="size-7 rounded-l-none border-none p-0"
                       onClick={() => {
                         if (localItemOrderDetails.quantity > 99) return;
 
@@ -532,7 +549,10 @@ function CustomizationGroup({
       <p className="text-lg font-semibold">{category.name}</p>
       <p className="text-gray-400">{category.description}</p>
       <div className="baseFlex mt-2 w-full !justify-start gap-2">
-        <RadioGroup value={localItemOrderDetails.customizations[category.id]}>
+        <RadioGroup
+          value={localItemOrderDetails.customizations[category.id]}
+          className="w-full"
+        >
           {category.customizationChoices.map((choice) => {
             // Determine if the current choice is the default choice.
             const isDefaultChoice = choice.id === category.defaultChoiceId;

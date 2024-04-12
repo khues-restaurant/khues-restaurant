@@ -126,7 +126,7 @@ export default function Home() {
           <div className="relative col-span-1 row-span-2 size-full overflow-hidden rounded-md">
             <Parallax speed={-10} className="!absolute !top-0 !size-full">
               <Image
-                src={"/homepage/heroTwo.jpg"}
+                src={"/homepage/heroTwo.webp"}
                 alt={"TODO: fill in w/ appropriate alt text"}
                 fill
                 style={{
@@ -592,7 +592,9 @@ export default function Home() {
             <p>Secure your seats ahead of time by placing a reservation.</p>
 
             <Button className="mt-4" asChild>
-              <a href="/resyLink">Place a reservation</a>
+              <a href="/resyLink" target="_blank" rel="noreferrer">
+                Place a reservation
+              </a>
             </Button>
           </div>
         </div>
@@ -606,7 +608,9 @@ export default function Home() {
             <p>Secure your seats ahead of time by placing a reservation.</p>
 
             <Button className="mt-4" asChild>
-              <a href="/resyLink">Place a reservation</a>
+              <a href="/resyLink" target="_blank" rel="noreferrer">
+                Place a reservation
+              </a>
             </Button>
           </div>
 
@@ -782,25 +786,12 @@ export default function Home() {
               mode="modal"
               afterSignUpUrl={`${
                 process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-              }/postSignUpRegistration`}
+              }${asPath}`}
               afterSignInUrl={`${
                 process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
               }${asPath}`}
             >
-              <Button
-                variant={"rewards"}
-                // size={"lg"}
-                // onClick={() => {
-                //   if (asPath.includes("/create")) {
-                //     localStorageTabData.set(getStringifiedTabData());
-                //   }
-
-                //   // technically can sign in from signup page and vice versa
-                //   if (!userId) localStorageRedirectRoute.set(asPath);
-                //   // ^^ but technically could just append it onto the postSignupRegistration route right?
-                // }}
-                className="px-8 text-base"
-              >
+              <Button variant={"rewards"} className="px-8 text-base">
                 Sign up
               </Button>
             </SignUpButton>

@@ -1,49 +1,28 @@
-import {
-  SignInButton,
-  SignUpButton,
-  UserButton,
-  useAuth,
-  SignOutButton,
-  useUser,
-} from "@clerk/nextjs";
-// import { useLocalStorageValue } from "@react-hookz/web";
-import { AnimatePresence, motion } from "framer-motion";
+import { SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { FaGuitar, FaMapSigns } from "react-icons/fa";
-import { IoSettingsOutline, IoTelescopeOutline } from "react-icons/io5";
-// import { useTabStore } from "~/stores/TabStore";
-import { Button } from "~/components/ui/button";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "~/components/ui/sheet";
+import { IoSettingsOutline } from "react-icons/io5";
+import { FaUserAlt } from "react-icons/fa";
+import { MdAccessTime } from "react-icons/md";
+import { SlPresent } from "react-icons/sl";
+import { TfiReceipt } from "react-icons/tfi";
+import CartButton from "~/components/cart/CartButton";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
+import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
-import { MdAccessTime } from "react-icons/md";
-import { CiLocationOn } from "react-icons/ci";
-import { LiaShoppingBagSolid } from "react-icons/lia";
-import { FaUserAlt } from "react-icons/fa";
-import { SlPresent } from "react-icons/sl";
-import { TfiReceipt } from "react-icons/tfi";
+import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import useGetUserId from "~/hooks/useGetUserId";
-import CartButton from "~/components/cart/CartButton";
-import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
+import { clearLocalStorage } from "~/utils/clearLocalStorage";
+import { TbLocation } from "react-icons/tb";
 
 function MobileHeader() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
@@ -122,50 +101,23 @@ function MobileHeader() {
                     mode="modal"
                     afterSignUpUrl={`${
                       process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                    }/postSignUpRegistration`}
+                    }${asPath}`}
                     afterSignInUrl={`${
                       process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
                     }${asPath}`}
                   >
-                    <Button
-                      className="px-8"
-                      // onClick={() => {
-                      //   if (asPath.includes("/create")) {
-                      //     localStorageTabData.set(getStringifiedTabData());
-                      //   }
-
-                      //   // technically can sign in from signup page and vice versa
-                      //   if (!userId) localStorageRedirectRoute.set(asPath);
-                      //   // ^^ but technically could just append it onto the postSignupRegistration route right?
-                      // }}
-                    >
-                      Sign up
-                    </Button>
+                    <Button className="px-8">Sign up</Button>
                   </SignUpButton>
                   <SignInButton
                     mode="modal"
                     afterSignUpUrl={`${
                       process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                    }/postSignUpRegistration`}
+                    }${asPath}`}
                     afterSignInUrl={`${
                       process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
                     }${asPath}`}
                   >
-                    <Button
-                      variant={"secondary"}
-                      // className="h-11"
-                      // onClick={() => {
-                      //   if (asPath.includes("/create")) {
-                      //     localStorageTabData.set(getStringifiedTabData());
-                      //   }
-
-                      //   // technically can sign in from signup page and vice versa
-                      //   if (!userId) localStorageRedirectRoute.set(asPath);
-                      //   // ^^ but technically could just append it onto the postSignupRegistration route right?
-                      // }}
-                    >
-                      Sign in
-                    </Button>
+                    <Button variant={"secondary"}>Sign in</Button>
                   </SignInButton>
                 </div>
               )}
@@ -344,10 +296,10 @@ function MobileHeader() {
 
                       <Separator className="w-4/5 self-center" />
 
-                      <div className="baseVertFlex !items-start">
-                        <div className="baseVertFlex w-full !items-start gap-2">
+                      <div className="baseVertFlex relative !items-start gap-4">
+                        <div className="baseVertFlex !items-start gap-2">
                           <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
-                            <CiLocationOn />
+                            <TbLocation />
                             Location
                           </div>
                           <p>
@@ -355,8 +307,9 @@ function MobileHeader() {
                             Roseville, Minnesota.
                           </p>
 
-                          <div className="baseFlex gap-2">
-                            <FaMapSigns className="size-6" />
+                          <div className="baseFlex gap-3">
+                            <TbLocation className="size-6 text-primary" />
+
                             <a
                               href="https://facebook.com"
                               target="_blank"
@@ -368,11 +321,15 @@ function MobileHeader() {
                           </div>
                         </div>
 
-                        <div className="baseFlex imageFiller mt-4 h-48 w-full">
-                          <div className="bg-white p-1">
-                            image of outside of restaurant here
-                          </div>
-                        </div>
+                        <Image
+                          src={"/homepage/heroTwo.webp"}
+                          alt={"TODO: fill in w/ appropriate alt text"}
+                          fill
+                          style={{
+                            objectFit: "cover",
+                          }}
+                          className="!relative !h-48 !w-full rounded-md"
+                        />
                       </div>
                     </div>
                   </AccordionContent>

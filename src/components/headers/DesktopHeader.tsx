@@ -1,48 +1,32 @@
-import {
-  SignInButton,
-  SignOutButton,
-  SignUpButton,
-  UserButton,
-  useAuth,
-  useClerk,
-  useUser,
-} from "@clerk/nextjs";
-// import { useLocalStorageValue } from "@react-hookz/web";
+import { SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FaUserAlt } from "react-icons/fa";
-import { IoSettingsOutline, IoTelescopeOutline } from "react-icons/io5";
-import { LiaShoppingBagSolid } from "react-icons/lia";
-import { Button } from "../ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
+import { useEffect, useState } from "react";
+import { CiLocationOn } from "react-icons/ci";
+import { FaMapSigns, FaUserAlt } from "react-icons/fa";
+import { IoSettingsOutline } from "react-icons/io5";
+import { MdAccessTime } from "react-icons/md";
+import { SlPresent } from "react-icons/sl";
+import { TfiReceipt } from "react-icons/tfi";
+import CartButton from "~/components/cart/CartButton";
+import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-import { CiLocationOn } from "react-icons/ci";
-import { MdAccessTime } from "react-icons/md";
-import { FaMapSigns } from "react-icons/fa";
+import { IoMdMore } from "react-icons/io";
 import { Separator } from "~/components/ui/separator";
-import { SlPresent } from "react-icons/sl";
-import { TfiReceipt } from "react-icons/tfi";
-import { api } from "~/utils/api";
-
-import classes from "./DesktopHeader.module.css";
 import useGetUserId from "~/hooks/useGetUserId";
-import CartButton from "~/components/cart/CartButton";
-import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { useMainStore } from "~/stores/MainStore";
-import { useEffect, useState } from "react";
+import { api } from "~/utils/api";
+import { clearLocalStorage } from "~/utils/clearLocalStorage";
+import { Button } from "../ui/button";
+import { FaMapPin } from "react-icons/fa";
+import { SiGooglemaps } from "react-icons/si";
+import { TbLocation } from "react-icons/tb";
+import classes from "./DesktopHeader.module.css";
 
 function DesktopHeader() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
@@ -77,22 +61,20 @@ function DesktopHeader() {
   return (
     <nav
       id="header"
-      className={`${classes.desktopHeader} fixed left-0 top-0 z-50 grid h-32 w-full grid-cols-1 grid-rows-1 bg-white shadow-md`}
+      className={`${classes.desktopHeader} fixed left-0 top-0 z-50 grid h-28 w-full grid-cols-1 grid-rows-1 bg-white shadow-md`}
     >
       <Link href={"/"} className={`${classes.logo ?? ""}`}>
         <Image
-          src="/logo.webp"
+          src="/logo.svg"
           alt="Khue's header logo"
-          style={{
-            filter: "drop-shadow(0px 1px 0.5px hsla(336, 84%, 17%, 0.25))", // keep this?
-          }}
-          width={200}
-          height={185}
+          width={65}
+          height={65}
           priority
+          className="!size-[65px]"
         />
       </Link>
 
-      <div className={`${classes.mainLinks} baseFlex gap-2`}>
+      <div className={`${classes.mainLinks} baseFlex 2xl:gap-2`}>
         <Button
           variant={asPath.includes("/menu") ? "activeLink" : "link"}
           asChild
@@ -122,7 +104,7 @@ function DesktopHeader() {
             variant={asPath.includes("/rewards") ? "activeLink" : "link"}
             asChild
           >
-            <Link href={"/rewards"} className="!text-xl">
+            <Link href={"/rewards"} className="hidden !text-xl 2xl:flex">
               Rewards
             </Link>
           </Button>
@@ -141,14 +123,206 @@ function DesktopHeader() {
           variant={asPath.includes("/media") ? "activeLink" : "link"}
           asChild
         >
-          <Link href={"/media"} className="!text-xl">
+          <Link href={"/media"} className="hidden !text-xl 2xl:flex">
             Media
           </Link>
         </Button>
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size={"icon"} className="baseFlex gap-2">
+              <IoMdMore className="size-8 text-primary 2xl:hidden" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent side="bottom" className="w-auto">
+            <div className="baseVertFlex !items-start gap-2">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant={"link"} className="text-xl">
+                    Hours & Location
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-[900px]">
+                  <div className="baseFlex w-[850px] !items-start gap-8">
+                    <div className="baseVertFlex w-64 !items-start gap-2">
+                      <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
+                        <MdAccessTime />
+                        Hours
+                      </div>
+                      <div className="mt-1 grid w-full grid-cols-2">
+                        <div className="baseVertFlex w-full !items-start gap-2">
+                          <p>Monday</p>
+                          <p>Tuesday</p>
+                          <p>Wednesday</p>
+                          <p>Thursday</p>
+                          <p>Friday</p>
+                          <p>Saturday</p>
+                          <p>Sunday</p>
+                        </div>
+                        <div className="baseVertFlex w-full !items-start gap-2">
+                          <p>Closed</p>
+                          <p>3pm-10pm</p>
+                          <p>3pm-10pm</p>
+                          <p>3pm-10pm</p>
+                          <p>3pm-10pm</p>
+                          <p>3pm-10pm</p>
+                          <p>Closed</p>
+                        </div>
+                      </div>
+                      {/* any special hours for holidays would go here */}
+                    </div>
+
+                    <Separator
+                      orientation="vertical"
+                      className="h-4/5 self-center"
+                    />
+
+                    <div className="baseVertFlex relative !items-start gap-4">
+                      <div className="baseVertFlex !items-start gap-2">
+                        <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
+                          <TbLocation />
+                          Location
+                        </div>
+                        <p>
+                          We are located just outside of the HarMar Mall in
+                          Roseville, Minnesota.
+                        </p>
+
+                        <div className="baseFlex gap-2">
+                          <TbLocation className="text-primary" />
+
+                          <a
+                            href="https://facebook.com"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-primary"
+                          >
+                            1234 Lorem Ipsum Dr. Roseville, MN 12345
+                          </a>
+                        </div>
+                      </div>
+
+                      <Image
+                        src={"/homepage/heroTwo.webp"}
+                        alt={"TODO: fill in w/ appropriate alt text"}
+                        fill
+                        style={{
+                          objectFit: "cover",
+                        }}
+                        className="!relative !h-48 !w-full rounded-md"
+                      />
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              {isLoaded && !isSignedIn && (
+                <Button
+                  variant={asPath.includes("/rewards") ? "activeLink" : "link"}
+                  asChild
+                >
+                  <Link href={"/rewards"} className="!text-xl">
+                    Rewards
+                  </Link>
+                </Button>
+              )}
+
+              <Button
+                variant={asPath.includes("/media") ? "activeLink" : "link"}
+                asChild
+              >
+                <Link href={"/media"} className="!text-xl">
+                  Media
+                </Link>
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
 
       {/* order icon and auth buttons/user icon */}
-      <div className={`${classes.authentication} baseFlex gap-4`}>
+      <div className={`${classes.authentication} baseFlex relative gap-4`}>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant="outline"
+              size={"sm"}
+              className="absolute -top-[36px] left-[-174px] hidden rounded-t-none text-primary 2xl:block"
+            >
+              Hours & Location
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-[900px]">
+            <div className="baseFlex w-[850px] !items-start gap-8">
+              <div className="baseVertFlex w-64 !items-start gap-2">
+                <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
+                  <MdAccessTime />
+                  Hours
+                </div>
+                <div className="mt-1 grid w-full grid-cols-2">
+                  <div className="baseVertFlex w-full !items-start gap-2">
+                    <p>Monday</p>
+                    <p>Tuesday</p>
+                    <p>Wednesday</p>
+                    <p>Thursday</p>
+                    <p>Friday</p>
+                    <p>Saturday</p>
+                    <p>Sunday</p>
+                  </div>
+                  <div className="baseVertFlex w-full !items-start gap-2">
+                    <p>Closed</p>
+                    <p>3pm-10pm</p>
+                    <p>3pm-10pm</p>
+                    <p>3pm-10pm</p>
+                    <p>3pm-10pm</p>
+                    <p>3pm-10pm</p>
+                    <p>Closed</p>
+                  </div>
+                </div>
+                {/* any special hours for holidays would go here */}
+              </div>
+
+              <Separator orientation="vertical" className="h-4/5 self-center" />
+
+              <div className="baseVertFlex relative !items-start gap-4">
+                <div className="baseVertFlex !items-start gap-2">
+                  <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
+                    <TbLocation />
+                    Location
+                  </div>
+                  <p>
+                    We are located just outside of the HarMar Mall in Roseville,
+                    Minnesota.
+                  </p>
+
+                  <div className="baseFlex gap-2">
+                    <TbLocation className="text-primary" />
+
+                    <a
+                      href="https://facebook.com"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-primary"
+                    >
+                      1234 Lorem Ipsum Dr. Roseville, MN 12345
+                    </a>
+                  </div>
+                </div>
+
+                <Image
+                  src={"/homepage/heroTwo.webp"}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  fill
+                  style={{
+                    objectFit: "cover",
+                  }}
+                  className="!relative !h-48 !w-full rounded-md"
+                />
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
         <CartButton />
 
         {/* opting for double "&&" instead of ternary for better readability */}
@@ -159,51 +333,23 @@ function DesktopHeader() {
               mode="modal"
               afterSignUpUrl={`${
                 process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-              }/postSignUpRegistration`}
+              }${asPath}`}
               afterSignInUrl={`${
                 process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
               }${asPath}`}
             >
-              <Button
-                // size={"lg"}
-                // onClick={() => {
-                //   if (asPath.includes("/create")) {
-                //     localStorageTabData.set(getStringifiedTabData());
-                //   }
-
-                //   // technically can sign in from signup page and vice versa
-                //   if (!userId) localStorageRedirectRoute.set(asPath);
-                //   // ^^ but technically could just append it onto the postSignupRegistration route right?
-                // }}
-                className="px-8"
-              >
-                Sign up
-              </Button>
+              <Button className="px-8">Sign up</Button>
             </SignUpButton>
             <SignInButton
               mode="modal"
               afterSignUpUrl={`${
                 process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-              }/postSignUpRegistration`}
+              }${asPath}`}
               afterSignInUrl={`${
                 process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
               }${asPath}`}
             >
-              <Button
-                variant={"secondary"}
-                // className="h-11"
-                // onClick={() => {
-                //   if (asPath.includes("/create")) {
-                //     localStorageTabData.set(getStringifiedTabData());
-                //   }
-
-                //   // technically can sign in from signup page and vice versa
-                //   if (!userId) localStorageRedirectRoute.set(asPath);
-                //   // ^^ but technically could just append it onto the postSignupRegistration route right?
-                // }}
-              >
-                Sign in
-              </Button>
+              <Button variant={"secondary"}>Sign in</Button>
             </SignInButton>
           </div>
         )}
@@ -291,82 +437,6 @@ function DesktopHeader() {
           </Popover>
         )}
       </div>
-
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button
-            variant="outline"
-            size={"sm"}
-            className="absolute right-[15%] top-0 rounded-t-none text-primary"
-          >
-            Hours & Location
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="max-w-[900px]">
-          <div className="baseFlex w-[850px] !items-start gap-8">
-            <div className="baseVertFlex w-64 !items-start gap-2">
-              <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
-                <MdAccessTime />
-                Hours
-              </div>
-              <div className="mt-1 grid w-full grid-cols-2">
-                <div className="baseVertFlex w-full !items-start gap-2">
-                  <p>Monday</p>
-                  <p>Tuesday</p>
-                  <p>Wednesday</p>
-                  <p>Thursday</p>
-                  <p>Friday</p>
-                  <p>Saturday</p>
-                  <p>Sunday</p>
-                </div>
-                <div className="baseVertFlex w-full !items-start gap-2">
-                  <p>Closed</p>
-                  <p>3pm-10pm</p>
-                  <p>3pm-10pm</p>
-                  <p>3pm-10pm</p>
-                  <p>3pm-10pm</p>
-                  <p>3pm-10pm</p>
-                  <p>Closed</p>
-                </div>
-              </div>
-              {/* any special hours for holidays would go here */}
-            </div>
-
-            <Separator orientation="vertical" className="h-4/5 self-center" />
-
-            <div className="baseVertFlex !items-start">
-              <div className="baseVertFlex !items-start gap-2">
-                <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
-                  <CiLocationOn />
-                  Location
-                </div>
-                <p>
-                  We are located just outside of the HarMar Mall in Roseville,
-                  Minnesota.
-                </p>
-
-                <div className="baseFlex gap-2">
-                  <FaMapSigns />
-                  <a
-                    href="https://facebook.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-primary"
-                  >
-                    1234 Lorem Ipsum Dr. Roseville, MN 12345
-                  </a>
-                </div>
-              </div>
-
-              <div className="baseFlex imageFiller mt-4 h-48 w-full">
-                <p className="bg-white p-1">
-                  image of outside of restaurant here
-                </p>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </nav>
   );
 }
