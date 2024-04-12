@@ -422,6 +422,7 @@ function DesktopHeader() {
 
                 <Button
                   variant={"link"}
+                  className="mt-2 h-8"
                   onClick={async () => {
                     await signOut(async () => {
                       clearLocalStorage();

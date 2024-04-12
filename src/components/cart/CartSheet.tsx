@@ -735,13 +735,15 @@ function CartSheet({
                           className="baseFlex w-full !items-start gap-4"
                         >
                           {/* preview image of item */}
-                          <Image
-                            src={"/menuItems/sampleImage.webp"}
-                            alt={item.name}
-                            width={64}
-                            height={64}
-                            className="rounded-md"
-                          />
+                          <div className="goldBorder rounded-md p-1">
+                            <Image
+                              src={"/menuItems/sampleImage.webp"}
+                              alt={item.name}
+                              width={64}
+                              height={64}
+                              className="rounded-md"
+                            />
+                          </div>
 
                           <div className="baseFlex w-full !items-start !justify-between">
                             <div className="baseVertFlex !items-start">

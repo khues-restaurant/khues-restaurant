@@ -58,7 +58,7 @@ function OurStory() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-32 tablet:min-h-[calc(100dvh-8rem)]"
+      className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden border-b-2 tablet:h-72">

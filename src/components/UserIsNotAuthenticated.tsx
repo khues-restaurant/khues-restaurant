@@ -4,7 +4,7 @@ function UserIsNotAuthenticated() {
   return (
     <div
       className="baseVertFlex min-h-[calc(100dvh-6rem-73px)] w-full gap-4
-tablet:min-h-[calc(100dvh-16rem-50px)]"
+tablet:min-h-[calc(100dvh-15rem-50px)]"
     >
       <div className="baseFlex gap-2">
         <BiErrorCircle className="size-8" />

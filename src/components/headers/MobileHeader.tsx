@@ -61,14 +61,12 @@ function MobileHeader() {
         className="baseFlex h-12 pl-2 transition-[filter] hover:brightness-[1.05] active:brightness-[0.95]"
       >
         <Image
-          src="/logo.webp"
+          src="/logo.svg"
           alt="Khue's header logo"
-          style={{
-            filter: "drop-shadow(0px 1px 0.5px hsla(336, 84%, 17%, 0.25))", // keep this?
-          }}
-          width={100}
+          width={50}
           height={50}
           priority
+          className="!size-[50px]"
         />
       </Link>
 
@@ -77,7 +75,7 @@ function MobileHeader() {
 
         <Sheet open={sheetIsOpen} onOpenChange={(open) => setSheetIsOpen(open)}>
           <SheetTrigger asChild>
-            <Button variant="ghost" className="relative mr-2">
+            <Button variant="ghost" size={"icon"} className="relative">
               <span
                 aria-hidden="true"
                 className="absolute top-[12px] block h-0.5 w-6 bg-current transition duration-500 ease-in-out"
@@ -126,7 +124,7 @@ function MobileHeader() {
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="item-1" className="border-none">
                     {/* maybe need specific variant or just some custom code here to  */}
-                    <AccordionTrigger className="baseFlex gap-4 py-2 text-xl text-primary !no-underline">
+                    <AccordionTrigger className="baseFlex gap-4 py-2 text-xl font-medium text-primary !no-underline">
                       <FaUserAlt className="!rotate-0" />
                       {user?.firstName}
                     </AccordionTrigger>
@@ -183,6 +181,7 @@ function MobileHeader() {
 
                         <Button
                           variant={"link"}
+                          className="mt-2 h-8"
                           onClick={async () => {
                             await signOut(async () => {
                               clearLocalStorage();

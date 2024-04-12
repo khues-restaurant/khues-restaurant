@@ -66,7 +66,7 @@ function PaymentSuccess({
       transition={{ duration: 0.5 }}
       // TODO: find a way css wise so that you don't have any scrollbar on tablet+ since this is guarenteed
       // to be a tiny tiny element on this page
-      className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full tablet:mt-32 tablet:min-h-[calc(100dvh-8rem)]"
+      className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
       <div className="baseVertFlex max-w-80 gap-6 p-4 tablet:max-w-2xl tablet:gap-8 tablet:p-8">
         {/* <Image

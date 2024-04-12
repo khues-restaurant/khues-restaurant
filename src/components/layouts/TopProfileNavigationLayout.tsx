@@ -47,7 +47,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
       // 73 for bottom navbar, 50 for top navbar
-      className="baseVertFlex relative mt-24 min-h-[calc(100dvh-6rem-73px)] w-full !justify-start tablet:mt-32 tablet:min-h-[calc(100dvh-8rem-50px)]"
+      className="baseVertFlex relative mt-24 min-h-[calc(100dvh-6rem-73px)] w-full !justify-start tablet:mt-32 tablet:min-h-[calc(100dvh-7rem-50px)]"
     >
       <div className="baseFlex my-8 !hidden gap-4 rounded-lg border border-gray-400 bg-white p-1 tablet:!flex">
         <Button
