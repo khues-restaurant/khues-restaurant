@@ -5,6 +5,7 @@ import useGetUserId from "~/hooks/useGetUserId";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { env } from "~/env";
+import useUpdateOrder from "~/hooks/useUpdateOrder";
 
 const useStripe = () => {
   const stripe = useMemo<Promise<Stripe | null>>(
@@ -26,13 +27,50 @@ function useInitializeCheckout() {
     enabled: Boolean(userId && isSignedIn),
   });
 
-  const { orderDetails } = useMainStore((state) => ({
-    orderDetails: state.orderDetails,
-  }));
+  const { orderDetails, setValidatingCart, setItemNamesRemovedFromCart } =
+    useMainStore((state) => ({
+      orderDetails: state.orderDetails,
+      setValidatingCart: state.setValidatingCart,
+      setItemNamesRemovedFromCart: state.setItemNamesRemovedFromCart,
+    }));
+
+  const { updateOrder } = useUpdateOrder();
 
   const createCheckout = api.payment.createCheckout.useMutation();
+
   const { mutateAsync: createTransientOrder, isLoading } =
     api.transientOrder.create.useMutation();
+
+  const { mutate: validateOrder } = api.validateOrder.validate.useMutation({
+    onSuccess: async (data) => {
+      if (data.changedOrderDetails) {
+        updateOrder({
+          newOrderDetails: data.changedOrderDetails,
+        });
+      }
+
+      if (data.removedItemNames && data.removedItemNames.length > 0) {
+        setItemNamesRemovedFromCart(data.removedItemNames);
+      }
+
+      await createTransientOrder({
+        userId,
+        details: orderDetails, // TODO: hmm technically shouldn't we have a return variable for the valid order details
+        // that is always returned rather than these conditional returns. Ah I remember but maybe it's still doable
+      });
+
+      localStorage.setItem("khue's-resetOrderDetails", "true");
+
+      checkout().catch(console.error);
+    },
+    onError: (error) => {
+      console.error(error);
+      // idk.. toast here? or just internal log of error;
+    },
+    onSettled: (data) => {
+      setValidatingCart(false);
+    },
+  });
 
   const stripePromise = useStripe();
 
@@ -44,6 +82,8 @@ function useInitializeCheckout() {
     });
     const stripe = await stripePromise;
 
+    setValidatingCart(false);
+
     if (stripe !== null) {
       await stripe.redirectToCheckout({
         sessionId: response.id,
@@ -52,14 +92,8 @@ function useInitializeCheckout() {
   }
 
   async function initializeCheckout() {
-    await createTransientOrder({
-      userId,
-      details: orderDetails,
-    });
-
-    localStorage.setItem("khue's-resetOrderDetails", "true");
-
-    checkout().catch(console.error);
+    setValidatingCart(true);
+    validateOrder({ userId, orderDetails });
   }
 
   return {

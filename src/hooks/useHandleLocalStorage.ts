@@ -11,13 +11,17 @@ function useHandleLocalStorage() {
   const { isLoaded, isSignedIn } = useAuth();
 
   const {
+    cartInitiallyValidated,
     setOrderDetails,
     setItemNamesRemovedFromCart,
     setCartInitiallyValidated,
+    setValidatingCart,
   } = useMainStore((state) => ({
+    cartInitiallyValidated: state.cartInitiallyValidated,
     setOrderDetails: state.setOrderDetails,
     setItemNamesRemovedFromCart: state.setItemNamesRemovedFromCart,
     setCartInitiallyValidated: state.setCartInitiallyValidated,
+    setValidatingCart: state.setValidatingCart,
   }));
 
   const { updateOrder } = useUpdateOrder();
@@ -44,22 +48,29 @@ function useHandleLocalStorage() {
       console.error(error);
       // idk.. toast here? or just internal log of error;
     },
+    onSettled: (data) => {
+      setValidatingCart(false);
+    },
   });
 
   // maybe find better name for this
   const [orderDetailsRetrieved, setOrderDetailsRetrieved] = useState(false);
 
   useEffect(() => {
-    console.log(user, userId, orderDetailsRetrieved);
     if (
-      !isLoaded ??
-      (isSignedIn && user === undefined) ??
-      userId === "" ??
-      orderDetailsRetrieved
+      !isLoaded ||
+      (isSignedIn && user === undefined) ||
+      userId === "" ||
+      orderDetailsRetrieved ||
+      cartInitiallyValidated
     )
       return;
 
-    console.log("validating from local storage");
+    console.log(
+      "validating from local storage",
+      "initially valid? ",
+      cartInitiallyValidated,
+    );
 
     const resetOrderDetails =
       localStorage.getItem("khue's-resetOrderDetails") === "true"
@@ -67,11 +78,12 @@ function useHandleLocalStorage() {
         : false;
 
     if (user) {
-      console.log("hopefully not here");
       try {
         orderDetailsSchema.parse(user.currentOrder);
 
         const parsedOrder = user.currentOrder as unknown as OrderDetails;
+
+        setValidatingCart(true);
 
         validateOrder({
           userId: user.userId,
@@ -110,6 +122,7 @@ function useHandleLocalStorage() {
 
         parsedOrder.datetimeToPickUp = new Date(parsedOrder.datetimeToPickUp);
 
+        setValidatingCart(true);
         validateOrder({
           userId,
           orderDetails: parsedOrder,
@@ -151,8 +164,7 @@ function useHandleLocalStorage() {
 
     parsedOrder.datetimeToPickUp = new Date(parsedOrder.datetimeToPickUp);
 
-    console.log("about to validtae");
-
+    setValidatingCart(true);
     validateOrder({
       userId,
       orderDetails: parsedOrder,
@@ -160,7 +172,17 @@ function useHandleLocalStorage() {
       resetOrderDetails,
     });
     setOrderDetailsRetrieved(true);
-  }, [setOrderDetails, userId, orderDetailsRetrieved, user, validateOrder]);
+  }, [
+    cartInitiallyValidated,
+    setOrderDetails,
+    userId,
+    orderDetailsRetrieved,
+    user,
+    isLoaded,
+    isSignedIn,
+    setValidatingCart,
+    validateOrder,
+  ]);
 }
 
 export default useHandleLocalStorage;

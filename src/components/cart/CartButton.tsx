@@ -11,8 +11,6 @@ import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import { useMainStore } from "~/stores/MainStore";
 
 function CartButton() {
-  const { asPath } = useRouter();
-
   const { orderDetails, cartInitiallyValidated } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
     cartInitiallyValidated: state.cartInitiallyValidated,

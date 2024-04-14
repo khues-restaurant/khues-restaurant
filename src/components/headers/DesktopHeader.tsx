@@ -3,11 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { CiLocationOn } from "react-icons/ci";
-import { FaMapSigns, FaUserAlt } from "react-icons/fa";
+import { FaUserAlt } from "react-icons/fa";
+import { IoMdMore } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdAccessTime } from "react-icons/md";
 import { SlPresent } from "react-icons/sl";
+import { TbLocation } from "react-icons/tb";
 import { TfiReceipt } from "react-icons/tfi";
 import CartButton from "~/components/cart/CartButton";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
@@ -16,16 +17,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-import { IoMdMore } from "react-icons/io";
 import { Separator } from "~/components/ui/separator";
 import useGetUserId from "~/hooks/useGetUserId";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { Button } from "../ui/button";
-import { FaMapPin } from "react-icons/fa";
-import { SiGooglemaps } from "react-icons/si";
-import { TbLocation } from "react-icons/tb";
 import classes from "./DesktopHeader.module.css";
 
 function DesktopHeader() {
@@ -130,7 +127,11 @@ function DesktopHeader() {
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="ghost" size={"icon"} className="baseFlex gap-2">
+            <Button
+              variant="ghost"
+              size={"icon"}
+              className="baseFlex gap-2 2xl:hidden"
+            >
               <IoMdMore className="size-8 text-primary 2xl:hidden" />
             </Button>
           </PopoverTrigger>

@@ -14,10 +14,12 @@ function useKeepOrderDetailsValidated() {
     cartInitiallyValidated,
     setOrderDetails,
     setItemNamesRemovedFromCart,
+    setValidatingCart,
   } = useMainStore((state) => ({
     cartInitiallyValidated: state.cartInitiallyValidated,
     setOrderDetails: state.setOrderDetails,
     setItemNamesRemovedFromCart: state.setItemNamesRemovedFromCart,
+    setValidatingCart: state.setValidatingCart,
   }));
 
   const { updateOrder } = useUpdateOrder();
@@ -42,6 +44,9 @@ function useKeepOrderDetailsValidated() {
       console.error(error);
       // idk.. toast here? or just internal log of error;
     },
+    onSettled: (data) => {
+      setValidatingCart(false);
+    },
   });
 
   // revalidates order details on window refocus
@@ -50,14 +55,13 @@ function useKeepOrderDetailsValidated() {
       if (user === undefined || userId === "" || !cartInitiallyValidated)
         return;
 
-      console.log("validating from keep order deailts");
-
       if (user) {
         try {
           orderDetailsSchema.parse(user.currentOrder);
 
           const parsedOrder = user.currentOrder as unknown as OrderDetails;
 
+          setValidatingCart(true);
           validateOrder({ userId: user.userId, orderDetails: parsedOrder });
 
           return;
@@ -71,6 +75,7 @@ function useKeepOrderDetailsValidated() {
 
           parsedOrder.datetimeToPickUp = new Date(parsedOrder.datetimeToPickUp);
 
+          setValidatingCart(true);
           validateOrder({ userId, orderDetails: parsedOrder });
 
           return;
@@ -103,6 +108,7 @@ function useKeepOrderDetailsValidated() {
 
       parsedOrder.datetimeToPickUp = new Date(parsedOrder.datetimeToPickUp);
 
+      setValidatingCart(true);
       validateOrder({ userId, orderDetails: parsedOrder });
     }
 
@@ -111,7 +117,14 @@ function useKeepOrderDetailsValidated() {
     return () => {
       window.removeEventListener("focus", validateOrderOnWindowRefocus);
     };
-  }, [setOrderDetails, userId, user, validateOrder, cartInitiallyValidated]);
+  }, [
+    setOrderDetails,
+    userId,
+    user,
+    validateOrder,
+    setValidatingCart,
+    cartInitiallyValidated,
+  ]);
 }
 
 export default useKeepOrderDetailsValidated;

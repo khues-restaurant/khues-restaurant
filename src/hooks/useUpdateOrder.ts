@@ -4,7 +4,7 @@ import { useMainStore, type OrderDetails, type Item } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import isEqual from "lodash.isequal";
 import debounce from "lodash.debounce";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
 
 interface UpdateOrder {
@@ -26,24 +26,45 @@ function useUpdateOrder() {
   const { isSignedIn } = useAuth();
   const userId = useGetUserId();
 
-  const { setOrderDetails, customizationChoices, discounts } = useMainStore(
-    (state) => ({
+  const { setOrderDetails, customizationChoices, discounts, validatingCart } =
+    useMainStore((state) => ({
       setOrderDetails: state.setOrderDetails,
       customizationChoices: state.customizationChoices,
       discounts: state.discounts,
-    }),
-  );
+      validatingCart: state.validatingCart,
+    }));
 
   const { data: user } = api.user.get.useQuery(userId, {
     enabled: Boolean(userId && isSignedIn),
   });
   const { mutate: updateUser } = api.user.update.useMutation();
 
+  const updateQueue = useRef<OrderDetails[]>([]);
+
   const debouncedUpdateUser = useRef(
     debounce((updatedUserData: UpdateUserData) => {
       updateUser(updatedUserData);
-    }, 1000),
+    }, 3000),
   ).current;
+
+  const processQueue = useCallback(() => {
+    while (updateQueue.current.length > 0) {
+      const orderDetails = updateQueue.current.shift(); // Get the first item in the queue
+
+      if (user && orderDetails) {
+        debouncedUpdateUser({
+          ...user,
+          currentOrder: orderDetails,
+        });
+      }
+    }
+  }, [debouncedUpdateUser, user]);
+
+  useEffect(() => {
+    if (!validatingCart && updateQueue.current.length > 0) {
+      processQueue();
+    }
+  }, [validatingCart, processQueue]);
 
   function attemptToMergeDuplicateItems(newOrderDetails: OrderDetails) {
     const newItems = newOrderDetails.items;
@@ -111,10 +132,14 @@ function useUpdateOrder() {
 
       // update user's order details in database
       if (isSignedIn && user) {
-        debouncedUpdateUser({
-          ...user,
-          currentOrder: sanitizedNewOrderDetails,
-        });
+        if (validatingCart) {
+          updateQueue.current.push(sanitizedNewOrderDetails);
+        } else {
+          debouncedUpdateUser({
+            ...user,
+            currentOrder: sanitizedNewOrderDetails,
+          });
+        }
       }
 
       // setting local storage state
@@ -132,6 +157,7 @@ function useUpdateOrder() {
       setOrderDetails,
       customizationChoices,
       discounts,
+      validatingCart,
     ],
   );
 
