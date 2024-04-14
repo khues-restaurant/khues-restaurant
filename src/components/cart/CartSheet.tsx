@@ -542,7 +542,7 @@ function CartSheet({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="baseVertFlex size-full !items-start !justify-start gap-2 overflow-y-auto border-b p-4"
+            className="baseVertFlex size-full !items-start !justify-start gap-2 overflow-y-auto rounded-xl border-b p-4"
           >
             <div className="baseVertFlex size-full !justify-start">
               <AnimatePresence>
@@ -912,7 +912,7 @@ function CartSheet({
 
       {/* TODO: why does this scroll a bit along with body when drawer is scrolled? */}
       <SheetFooter>
-        <div className="baseVertFlex w-full rounded-bl-md border-t bg-gradient-to-br from-gray-200 to-gray-300 p-4 shadow-inner">
+        <div className="baseVertFlex w-full rounded-bl-xl border-t bg-gradient-to-br from-gray-200 to-gray-300 p-4 shadow-inner">
           <div className="baseFlex w-full !justify-between text-sm">
             <p>Subtotal</p>
             <AnimatedPrice price={formatPrice(orderCost.subtotal)} />
