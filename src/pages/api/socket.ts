@@ -24,20 +24,43 @@ export default function SocketHandler(
       console.log("user disconnected");
     });
 
+    // client -> server
     socket.on("newOrderCreated", () => {
       console.log("new order created");
     });
 
-    socket.on("orderStatusUpdate", (orderId) => {
-      socket.emit("orderStatusUpdated", orderId);
-    });
+    socket.on(
+      "sendNewMessage",
+      ({
+        senderUserId,
+        recipientUserId,
+        message,
+      }: {
+        senderUserId: string;
+        recipientUserId: string;
+        message: string;
+      }) => {
+        console.log("got new message");
 
+        socket.emit("newMessageSent", {
+          senderUserId,
+          recipientUserId,
+          message,
+        });
+      },
+    );
+
+    // server -> client
     socket.on("menuItemAvailabilityChanged", () => {
       socket.emit("refetchMenuCategories");
     });
 
     socket.on("minOrderPickupTimeChanged", () => {
       socket.emit("refetchMinOrderPickupTime");
+    });
+
+    socket.on("orderStatusUpdate", (orderId) => {
+      socket.emit("orderStatusUpdated", orderId);
     });
   };
 

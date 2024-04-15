@@ -10,9 +10,16 @@ datasource db {
 // TODO: very very carefully prune through which models/relations need onDelete: Cascade or some
 // variation
 
-// TODO: create ChatMessage and Chat models, maybe also a global restaurantConfig or something
-// singleton model which could have a field for delayNewOrdersUntil which would be the final 
-// DateTime to resume accepting new orders
+// I really don't think there's a need to have relation back to User model, since
+// guests will be able to send chat messages too. Currently just going to do more general
+// search/filtering just based on senderId/recipientId
+model ChatMessage {
+    id          String   @id @default(uuid())
+    createdAt   DateTime @default(now())
+    senderId    String
+    recipientId String
+    content     String
+}
 
 model Review {
     id        String   @id @default(uuid())

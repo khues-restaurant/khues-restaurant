@@ -1,27 +1,11 @@
 import { AnimatePresence } from "framer-motion";
-import { useEffect, type ReactNode, useState } from "react";
-import { socket } from "~/pages/_app";
-import { Noto_Serif } from "next/font/google";
-import HeaderShell from "~/components/headers/HeaderShell";
-import Footer from "~/components/Footer";
-import { api } from "~/utils/api";
-import {
-  useMainStore,
-  type OrderDetails,
-  type StoreMenuItems,
-} from "~/stores/MainStore";
-import PostSignUpDialog from "~/components/PostSignUpDialog";
-import DashboardHeaderShell from "~/components/dashboard/headers/DashboardHeaderShell";
-import OrderManagement from "~/components/dashboard/OrderManagement";
+import { useEffect, useState, type ReactNode } from "react";
 import CustomerChats from "~/components/dashboard/CustomerChats";
 import ItemManagement from "~/components/dashboard/ItemManagement";
-
-const notoSerif = Noto_Serif({
-  weight: ["400", "500", "600", "700"], // TODO: probably want to relook at these and only import ones we are using
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-  display: "swap",
-});
+import OrderManagement from "~/components/dashboard/OrderManagement";
+import DashboardHeaderShell from "~/components/dashboard/headers/DashboardHeaderShell";
+import { useMainStore, type StoreMenuItems } from "~/stores/MainStore";
+import { api } from "~/utils/api";
 
 interface DashboardLayout {
   children: ReactNode;
@@ -113,9 +97,7 @@ function DashboardLayout({ children }: DashboardLayout) {
   // }, []);
 
   return (
-    <main
-      className={`${notoSerif.className} baseVertFlex relative min-h-[100dvh] w-full !justify-between`}
-    >
+    <main className="baseVertFlex relative min-h-[100dvh] w-full !justify-between">
       <DashboardHeaderShell viewState={viewState} setViewState={setViewState} />
 
       <AnimatePresence>

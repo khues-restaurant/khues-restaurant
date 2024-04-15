@@ -7,6 +7,7 @@ import useHandleLocalStorage from "~/hooks/useHandleLocalStorage";
 import useKeepOrderDetailsValidated from "~/hooks/useKeepOrderDetailsValidated";
 import useAttachSocketListeners from "~/hooks/useAttachSocketListeners";
 import { Toaster } from "~/components/ui/toaster";
+import Chat from "~/components/Chat";
 
 interface GeneralLayout {
   children: ReactNode;
@@ -26,6 +27,8 @@ function GeneralLayout({ children }: GeneralLayout) {
         <AnimatePresence>{children}</AnimatePresence>
 
         <Footer />
+
+        <Chat />
 
         {/* if you want, extract a bit of the logic within here to this component so you can just wholly
             conditionally render this component */}
