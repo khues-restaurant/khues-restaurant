@@ -52,11 +52,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      buf,
-      sig,
-      "whsec_6efd9dc6493e04a4078e8e004d174c4a15e6aa678ba464b60fb257eb710a0925", // TODO: replace with process.env.STRIPE_WEBHOOK_SECRET
-    );
+    event = stripe.webhooks.constructEvent(buf, sig, env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
     let message = "Unknown Error";
     if (err instanceof Error) message = err.message;

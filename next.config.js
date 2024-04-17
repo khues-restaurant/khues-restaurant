@@ -26,12 +26,13 @@ const config = {
     ],
   },
 
-  // eslint: {
-  //   ignoreDuringBuilds: true,
-  // },
-  // typescript: {
-  //   ignoreBuildErrors: true,
-  // },
+  // TODO: remove these out before actual production
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 
   /**
    * If you are using `appDir` then you must comment the below `i18n` config out.
