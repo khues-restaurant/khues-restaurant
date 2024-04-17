@@ -11,7 +11,7 @@ import { discountRouter } from "~/server/api/routers/discount";
 import { validateOrderRouter } from "~/server/api/routers/validateOrder";
 import { reviewRouter } from "~/server/api/routers/review";
 import { favoriteRouter } from "~/server/api/routers/favorite";
-import { chatMessageRouter } from "~/server/api/routers/chatMessage";
+import { chatRouter } from "~/server/api/routers/chat";
 
 export const appRouter = createTRPCRouter({
   user: userRouter,
@@ -26,7 +26,7 @@ export const appRouter = createTRPCRouter({
   validateOrder: validateOrderRouter,
   review: reviewRouter,
   favorite: favoriteRouter,
-  chatMessage: chatMessageRouter,
+  chat: chatRouter,
 });
 
 // export type definition of API

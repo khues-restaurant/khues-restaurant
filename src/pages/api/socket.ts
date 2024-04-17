@@ -40,8 +40,6 @@ export default function SocketHandler(
         recipientUserId: string;
         message: string;
       }) => {
-        console.log("got new message");
-
         socket.emit("newMessageSent", {
           senderUserId,
           recipientUserId,

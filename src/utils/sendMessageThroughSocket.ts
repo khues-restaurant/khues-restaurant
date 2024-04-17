@@ -35,9 +35,9 @@ export function sendMessageThroughSocket({
     socket.disconnect();
   });
 
-  socket.on("disconnect", () => {
-    console.log("Disconnected from socket.io server");
-  });
+  // socket.on("disconnect", () => {
+  //   console.log("Disconnected from socket.io server");
+  // });
 
   // Handle connection errors (e.g., server not available)
   socket.on("connect_error", (error) => {

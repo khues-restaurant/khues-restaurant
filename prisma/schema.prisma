@@ -10,15 +10,29 @@ datasource db {
 // TODO: very very carefully prune through which models/relations need onDelete: Cascade or some
 // variation
 
-// I really don't think there's a need to have relation back to User model, since
-// guests will be able to send chat messages too. Currently just going to do more general
-// search/filtering just based on senderId/recipientId
+model Chat {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    userHasUnreadMessages      Boolean @default(false)
+    dashboardHasUnreadMessages Boolean @default(false)
+
+    messages ChatMessage[]
+
+    user   User?  @relation(fields: [userId], references: [userId])
+    userId String @unique
+}
+
 model ChatMessage {
     id          String   @id @default(uuid())
     createdAt   DateTime @default(now())
     senderId    String
     recipientId String
     content     String
+
+    Chat   Chat   @relation(fields: [chatId], references: [id])
+    chatId String
 }
 
 model Review {
@@ -267,6 +281,7 @@ model User {
     favoriteItems FavoriteItem[]
     discounts     Discount[]
     reviews       Review[]
+    chat          Chat?
 
     @@index([userId])
 }

@@ -8,6 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
+
 import { Button } from "~/components/ui/button";
 import { AnimatePresence, motion } from "framer-motion";
 import { socket } from "~/pages/_app";
@@ -15,17 +16,21 @@ import useGetUserId from "~/hooks/useGetUserId";
 import { Textarea } from "~/components/ui/textarea";
 import Image from "next/image";
 import { format } from "date-fns";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
 
 function Chat() {
   const userId = useGetUserId();
   const ctx = api.useUtils();
 
-  const { data: messages, refetch } =
-    api.chatMessage.getMessagesPerUser.useQuery(userId, {
-      enabled: userId.length > 0,
-    });
+  const { data: chat, refetch } = api.chat.getMessagesPerUser.useQuery(userId, {
+    enabled: userId.length > 0,
+  });
 
-  const { mutate: sendMessage } = api.chatMessage.sendMessage.useMutation({
+  const { mutate: sendMessage } = api.chat.sendMessage.useMutation({
     // When mutation is initiated, perform an optimistic update
     onMutate: async (newMessage) => {
       // Cancel outgoing fetches (so they don't overwrite our optimistic update)
@@ -67,11 +72,19 @@ function Chat() {
       setNewMessageContent("");
 
       // Sync with server once mutation has settled
-      void ctx.chatMessage.getMessagesPerUser.invalidate();
+      void ctx.chat.getMessagesPerUser.invalidate();
     },
   });
 
-  const [showingChat, setShowingChat] = useState(false);
+  const { mutate: updateChatReadStatus } =
+    api.chat.updateChatReadStatus.useMutation({
+      onSettled: () => {
+        void refetch();
+      },
+    });
+
+  const [showingAlertDialogChat, setShowingAlertDialogChat] = useState(false);
+  const [showingPopoverChat, setShowingPopoverChat] = useState(false);
   const [newMessageContent, setNewMessageContent] = useState("");
 
   useEffect(() => {
@@ -93,123 +106,263 @@ function Chat() {
     return () => {
       socket.off("newMessageSent", refetchMessages);
     };
-  }, [messages, refetch, userId]);
+  }, [chat, refetch, userId]);
 
-  console.log("messages", messages);
+  useEffect(() => {
+    if (
+      (showingAlertDialogChat || showingPopoverChat) &&
+      chat?.userHasUnreadMessages
+    ) {
+      void updateChatReadStatus({ chatId: chat.id, forUser: true });
+    }
+  }, [showingAlertDialogChat, showingPopoverChat, chat, updateChatReadStatus]);
+
+  // maybe hide button until scrolled down a bit on mobile?
 
   return (
-    <Popover
-      open={showingChat}
-      onOpenChange={(open) => {
-        setShowingChat(open);
-      }}
-    >
-      <PopoverTrigger asChild>
-        <Button className="fixed bottom-8 right-8 size-14 rounded-full shadow-md">
-          <AnimatePresence mode="popLayout">
-            {showingChat ? (
-              <motion.div
-                key="openChat"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.1 }}
-              >
-                <X className="size-6" />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="closeChat"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.1 }}
-              >
-                <IoChatbox className="size-6" />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent
-        side={"top"}
-        sideOffset={16}
-        className="baseVertFlex w-full rounded-lg border-none !p-0 shadow-xl sm:mr-4 sm:max-w-sm"
-      >
-        {/* header */}
-        <div className="baseVertFlex !items-start gap-2 rounded-t-lg bg-primary p-4">
-          <p className="text-lg font-medium text-white">Have a question?</p>
-          <p className="text-sm text-gray-200">
-            Send a message directly to our team and we will respond as soon as
-            possible.
-          </p>
-        </div>
+    <>
+      <AlertDialog open={showingAlertDialogChat}>
+        {/* figure out why the AnimatePresence isn't working really here */}
+        <AnimatePresence mode="popLayout">
+          {!showingAlertDialogChat && (
+            <motion.div
+              key="openChat"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.1 }}
+              className="size-10"
+            >
+              <AlertDialogTrigger asChild>
+                <Button
+                  className="fixed bottom-3 right-3 size-12 rounded-full shadow-md tablet:hidden"
+                  onClick={() => {
+                    setShowingAlertDialogChat((prev) => !prev);
+                  }}
+                >
+                  <div
+                    style={{
+                      animationDuration: "2s",
+                    }}
+                    className={`absolute left-1 top-1 z-[-1] size-8 rounded-full bg-primary ${
+                      chat?.userHasUnreadMessages ? "animate-ping" : ""
+                    }`}
+                  ></div>
 
-        {/* scroll-y-auto messages container */}
-        <div className="baseVertFlex relative h-full w-full !justify-between gap-2 overflow-y-auto bg-background p-2 sm:h-96 ">
-          <Image
-            src="/logo.svg"
-            alt="Khue's header logo"
-            width={85}
-            height={85}
-            priority
-            className="fixed left-1/2 top-1/2 !size-[85px] -translate-x-1/2 -translate-y-1/2 transform opacity-15 "
-          />
+                  <IoChatbox className="size-5" />
+                </Button>
+              </AlertDialogTrigger>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-          {messages?.map((message) => (
-            <div
-              key={message.id}
-              className={`baseVertFlex w-full
+        <AlertDialogContent className="baseVertFlex h-[70dvh] w-[90vw] rounded-lg border-none !p-0 shadow-xl sm:mr-4">
+          {/* header */}
+          <div className="baseVertFlex relative !items-start gap-2 rounded-t-lg bg-primary p-4">
+            <p className="text-lg font-medium text-white">Have a question?</p>
+            <p className="text-sm text-gray-200">
+              Send a message directly to our team and we will respond as soon as
+              possible.
+            </p>
+
+            <Button
+              variant={"text"}
+              onClick={() => setShowingAlertDialogChat(false)}
+              className="!absolute right-0 top-0"
+            >
+              <X className="size-4 text-white" />
+            </Button>
+          </div>
+
+          {/* scroll-y-auto messages container */}
+          <div className="baseVertFlex relative !h-[500px] w-full !justify-start gap-2 overflow-y-auto bg-background p-2 sm:h-96 ">
+            <Image
+              src="/logo.svg"
+              alt="Khue's header logo"
+              width={85}
+              height={85}
+              priority
+              // idk why the 47.5% was necessary to center the image... investigate later
+              className="fixed left-[47.5%] top-1/2 !size-[85px] -translate-x-1/2 -translate-y-1/2 transform opacity-15 "
+            />
+
+            {chat?.messages?.map((message) => (
+              <div
+                key={message.id}
+                className={`baseVertFlex w-full
               ${message.senderId === userId ? "!items-end" : "!items-start"}
               `}
-            >
-              <p
-                className={`text-xs text-gray-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
               >
-                {format(message.createdAt, "h:mm a")}
-              </p>
-              <div
-                className={`rounded-full px-4 py-2 ${message.senderId === userId ? "bg-primary text-white" : "bg-secondary"}`}
-              >
-                <p className="text-sm">{message.content}</p>
+                <p
+                  className={`text-xs text-gray-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
+                >
+                  {format(message.createdAt, "h:mm a")}
+                </p>
+                <div
+                  className={`z-10 rounded-full px-4 py-2 ${message.senderId === userId ? "bg-primary text-white" : "bg-secondary"}`}
+                >
+                  <p className="text-sm">{message.content}</p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        {/* input */}
-        <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-gray-200 to-gray-300 p-2 px-4">
-          <Textarea
-            placeholder="Enter your message here"
-            value={newMessageContent}
-            onChange={(e) => setNewMessageContent(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
+          {/* input */}
+          <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-gray-200 to-gray-300 p-2 px-4">
+            <Textarea
+              placeholder="Enter your message here"
+              value={newMessageContent}
+              onChange={(e) => setNewMessageContent(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  sendMessage({
+                    senderUserId: userId,
+                    recipientUserId: "dashboard",
+                    message: newMessageContent,
+                  });
+                }
+              }}
+              className="max-h-12 flex-grow border-2 border-gray-500 bg-transparent placeholder-gray-400"
+            />
+            <Button
+              className="!p-2"
+              onClick={() => {
                 sendMessage({
                   senderUserId: userId,
                   recipientUserId: "dashboard",
                   message: newMessageContent,
                 });
-              }
-            }}
-            className="max-h-12 flex-grow border-2 border-gray-500 bg-transparent placeholder-gray-400"
-          />
-          <Button
-            className="!p-2"
-            onClick={() => {
-              sendMessage({
-                senderUserId: userId,
-                recipientUserId: "dashboard",
-                message: newMessageContent,
-              });
-            }}
-          >
-            <IoIosSend className="size-6 text-white" />
+              }}
+            >
+              <IoIosSend className="size-6 text-white" />
+            </Button>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <Popover
+        open={showingPopoverChat}
+        onOpenChange={(open) => {
+          setShowingPopoverChat(open);
+        }}
+      >
+        <PopoverTrigger asChild>
+          <Button className="fixed bottom-8 right-8 hidden size-14 rounded-full shadow-md tablet:block">
+            <div
+              style={{
+                animationDuration: "2s",
+              }}
+              className={`absolute left-1 top-1 z-[-1] size-12 rounded-full bg-primary ${
+                chat?.userHasUnreadMessages ? "animate-ping" : ""
+              }`}
+            ></div>
+            <AnimatePresence mode="popLayout">
+              {showingPopoverChat ? (
+                <motion.div
+                  key="openChat"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.1 }}
+                >
+                  <X className="size-6" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="closeChat"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.1 }}
+                >
+                  <IoChatbox className="size-6" />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </Button>
-        </div>
-      </PopoverContent>
-    </Popover>
+        </PopoverTrigger>
+        <PopoverContent
+          side={"top"}
+          sideOffset={16}
+          className="baseVertFlex w-full rounded-lg border-none !p-0 shadow-xl sm:mr-4 sm:max-w-sm"
+        >
+          {/* header */}
+          <div className="baseVertFlex !items-start gap-2 rounded-t-lg bg-primary p-4">
+            <p className="text-lg font-medium text-white">Have a question?</p>
+            <p className="text-sm text-gray-200">
+              Send a message directly to our team and we will respond as soon as
+              possible.
+            </p>
+          </div>
+
+          {/* scroll-y-auto messages container */}
+          <div className="baseVertFlex relative h-full w-full !flex-col-reverse !justify-start gap-2 overflow-y-auto bg-background p-2 sm:h-96 ">
+            <Image
+              src="/logo.svg"
+              alt="Khue's header logo"
+              width={85}
+              height={85}
+              priority
+              // idk why the 47.5% was necessary to center the image... investigate later
+              className="fixed left-[47.5%] top-1/2 !size-[85px] -translate-x-1/2 -translate-y-1/2 transform opacity-15 "
+            />
+
+            {chat?.messages?.map((message) => (
+              <div
+                key={message.id}
+                className={`baseVertFlex w-full
+              ${message.senderId === userId ? "!items-end" : "!items-start"}
+              `}
+              >
+                <p
+                  className={`text-xs text-gray-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
+                >
+                  {format(message.createdAt, "h:mm a")}
+                </p>
+                <div
+                  className={`rounded-full px-4 py-2 ${message.senderId === userId ? "bg-primary text-white" : "bg-secondary"}`}
+                >
+                  <p className="text-sm">{message.content}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* input */}
+          <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-gray-200 to-gray-300 p-2 px-4">
+            <Textarea
+              placeholder="Enter your message here"
+              value={newMessageContent}
+              onChange={(e) => setNewMessageContent(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  sendMessage({
+                    senderUserId: userId,
+                    recipientUserId: "dashboard",
+                    message: newMessageContent,
+                  });
+                }
+              }}
+              className="max-h-12 flex-grow border-2 border-gray-500 bg-transparent placeholder-gray-400"
+            />
+            <Button
+              className="!p-2"
+              onClick={() => {
+                sendMessage({
+                  senderUserId: userId,
+                  recipientUserId: "dashboard",
+                  message: newMessageContent,
+                });
+              }}
+            >
+              <IoIosSend className="size-6 text-white" />
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </>
   );
 }
 
