@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { api } from "~/utils/api";
 import { Button } from "~/components/ui/button";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MdOutlineMoneyOff } from "react-icons/md";
 import { BsSpeedometer2 } from "react-icons/bs";
 import { TfiReceipt } from "react-icons/tfi";
@@ -20,6 +20,11 @@ import {
 } from "~/components/ui/carousel";
 import { useMainStore } from "~/stores/MainStore";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
+
+// Linear interpolation function
+function lerp(start: number, end: number, ratio: number) {
+  return start + (end - start) * ratio;
+}
 
 export default function Home() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -65,11 +70,59 @@ export default function Home() {
     // eventually add proper cleanup functions here
   }, [pressReviewsApi, chefSpecialsApi]);
 
-  // TODO: for masonry images, might want to play around with slightly vertically
-  // scrolling the images as the page is scrolled? The whole footprint would stay the same,
-  // but the "camera" would move up and down slightly, giving the illusion of depth.
-  // I don't know if we would have to artificially "zoom in" on the images so we could scroll
-  // on them per se, or just kind of use them as is and have "viewport" into image be a bit arbitrary
+  const mobileHeroImageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Get the visible percentage of the element
+        const visiblePercentage = entry?.intersectionRatio;
+
+        if (visiblePercentage === undefined) return;
+
+        const startTransitionAt = 0.9;
+        const endTransitionAt = 0.75;
+
+        // Adjust the ratio linearly within the defined range
+        const adjustedRatio =
+          (visiblePercentage - endTransitionAt) /
+          (startTransitionAt - endTransitionAt);
+        const clampedRatio = Math.min(Math.max(-adjustedRatio, 0), 1); // Clamp between 0 and 1 to avoid overflows
+
+        // Interpolate width between 95vw and 100vw
+        const interpolatedWidth = lerp(90, 100, clampedRatio);
+
+        // Apply the interpolated width to the element style
+        if (mobileHeroImageRef.current) {
+          mobileHeroImageRef.current.style.width = `${interpolatedWidth}vw`;
+
+          const imageElement = mobileHeroImageRef.current
+            .children[0] as HTMLImageElement;
+          if (imageElement) {
+            imageElement.style.borderRadius =
+              interpolatedWidth === 100 ? "0" : "0.375rem";
+          }
+        }
+      },
+      {
+        root: null, // Assuming the viewport
+        rootMargin: "0px",
+        threshold: new Array(101).fill(0).map((v, i) => i * 0.01), // Creates an array of thresholds from 0 to 1
+      },
+    );
+
+    if (mobileHeroImageRef.current) {
+      observer.observe(mobileHeroImageRef.current);
+    }
+
+    const cleanupRef = mobileHeroImageRef.current;
+
+    return () => {
+      if (cleanupRef) {
+        observer.unobserve(cleanupRef);
+      }
+    };
+  }, []);
 
   return (
     <motion.div
@@ -90,7 +143,10 @@ export default function Home() {
           this approach
         </div> */}
 
-        <div className="baseFlex relative size-full h-[65dvh] p-4">
+        <div
+          ref={mobileHeroImageRef}
+          className="baseFlex relative size-full h-[65dvh] py-4"
+        >
           <Image
             src={"/homepage/mobileHero.webp"}
             alt={"TODO: fill in w/ appropriate alt text"}
@@ -98,7 +154,7 @@ export default function Home() {
             style={{
               objectFit: "cover",
             }}
-            className="!relative !size-full rounded-md "
+            className="!relative !size-full rounded-md"
           />
         </div>
 
