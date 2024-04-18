@@ -848,7 +848,7 @@ function MenuItemPreviewButton({
       <Button
         variant="outline"
         disabled={!menuItem.available}
-        className="baseFlex h-full w-full gap-4 border-2 py-6"
+        className="baseFlex h-full w-full gap-4 border py-6"
         onClick={() => {
           dismissToasts();
 
@@ -915,7 +915,7 @@ function MenuItemPreviewButton({
           variant={"outline"}
           size={"icon"}
           disabled={showCheckmark}
-          className="baseFlex absolute right-0 top-0 h-10 w-10 rounded-none rounded-bl-md rounded-tr-md border-2 text-primary"
+          className="baseFlex absolute right-0 top-0 h-10 w-10 rounded-none rounded-bl-md rounded-tr-md border text-primary"
           onClick={() => {
             // set prev order details so we can revert if necessary
             // with toast's undo button
@@ -1125,7 +1125,7 @@ function PreviousOrder({ order }: PreviousOrder) {
 
   return (
     <div className="relative h-40 w-full max-w-96">
-      <div className="baseFlex h-full w-full gap-4 rounded-md border-2 px-4 py-6">
+      <div className="baseFlex h-full w-full gap-4 rounded-md border px-4 py-6">
         <div className="grid w-28 grid-cols-2 grid-rows-2 !place-items-center gap-1">
           <Image
             src={"/menuItems/sampleImage.webp"}
