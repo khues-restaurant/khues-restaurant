@@ -68,7 +68,7 @@ function CartButton() {
                       delay: 0.35,
                       ease: "easeOut",
                     }}
-                    className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-white"
+                    className={`absolute rounded-full bg-primary px-2 py-0.5 text-white ${totalItems < 10 ? " -right-2 -top-2" : "-right-3 -top-3"}`}
                   >
                     <AnimatedNumbers
                       value={totalItems}

@@ -1,4 +1,5 @@
 import { io } from "socket.io-client";
+import { env } from "~/env";
 
 // this is kinda janky in its own file, should eventually be moved to a better
 // spot I think.
@@ -13,9 +14,8 @@ export function sendMessageThroughSocket({
   recipientUserId: string;
   message: string;
 }) {
-  // Assuming your Next.js server and the socket.io server are running on the same host
-  const socketServerUrl = "http://localhost:3000"; // Adjust the port if necessary
-  const path = "/api/socket"; // The path to your socket.io server
+  const socketServerUrl = env.BASE_URL;
+  const path = "/api/socket";
 
   // Initialize socket.io-client to connect to your socket.io server
   const socket = io(socketServerUrl, { path });

@@ -255,7 +255,7 @@ function OrderNow() {
             fill
             className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
           />
-          <div className="baseFlex z-10 !hidden rounded-md bg-white p-2 shadow-lg tablet:!flex">
+          <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-white p-2 shadow-lg tablet:!flex">
             <div className="experimentalBorder baseFlex font-semibold tablet:px-6 tablet:py-3 tablet:text-xl desktop:px-8 desktop:py-4 desktop:text-2xl">
               Order
             </div>
@@ -299,6 +299,8 @@ function OrderNow() {
               innerActiveClass="bg-white px-2 pt-4 h-16"
               innerClass="bg-white w-full h-12"
               className="baseFlex w-full p-2"
+              enabled={!isDrawerOpen} // not my favorite but gets rid of flicker from
+              // when we tried shouldFreeze prop approach
             >
               <Carousel
                 setApi={setStickyCategoriesApi}

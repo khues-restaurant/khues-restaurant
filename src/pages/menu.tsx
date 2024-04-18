@@ -153,7 +153,7 @@ function Menu() {
             fill
             className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
           />
-          <div className="baseFlex z-10 !hidden rounded-md bg-white p-2 shadow-lg tablet:!flex">
+          <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-white p-2 shadow-lg tablet:!flex">
             <div className="experimentalBorder baseFlex font-semibold tablet:px-6 tablet:py-3 tablet:text-xl desktop:px-8 desktop:py-4 desktop:text-2xl">
               Menu
             </div>

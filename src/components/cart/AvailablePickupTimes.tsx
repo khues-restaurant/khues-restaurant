@@ -93,13 +93,13 @@ function AvailablePickupTimes({
 
   // if it's past 10pm, we don't want to accept any new orders
   if (
-    (minPickupTime && minPickupTime.getHours() >= 22) ??
+    (minPickupTime && minPickupTime.getHours() >= 22) ||
     new Date().getHours() >= 22
   ) {
     return (
       <div className="baseVertFlex w-64 !items-start gap-2 p-4">
         <p className="font-semibold underline underline-offset-2">Notice:</p>
-        <p>
+        <p className="text-sm">
           We are not accepting any new orders for the night. Sorry for the
           inconvenience.
         </p>

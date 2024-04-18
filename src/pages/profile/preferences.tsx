@@ -48,6 +48,7 @@ import { Separator } from "~/components/ui/separator";
 import { buildClerkProps } from "@clerk/nextjs/server";
 import { type GetServerSideProps } from "next";
 import UserIsNotAuthenticated from "~/components/UserIsNotAuthenticated";
+import { formatPhoneNumber } from "~/utils/formatPhoneNumber";
 
 function Preferences() {
   const userId = useGetUserId();
@@ -159,6 +160,19 @@ function Preferences() {
       allowsRewardExpiryReminderEmails:
         user?.allowsRewardExpiryReminderEmails ?? false,
     },
+    defaultValues: {
+      firstName: user?.firstName ?? "",
+      lastName: user?.lastName ?? "",
+      phoneNumber: user?.phoneNumber ?? "",
+      dietaryRestrictions: user?.dietaryRestrictions ?? "",
+      email: user?.email ?? "",
+      birthday: user?.birthday ?? new Date(),
+      allowsEmailReceipts: user?.allowsEmailReceipts ?? false,
+      allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails ?? false,
+      allowsPromotionalEmails: user?.allowsPromotionalEmails ?? false,
+      allowsRewardExpiryReminderEmails:
+        user?.allowsRewardExpiryReminderEmails ?? false,
+    },
   });
 
   // do we need a useEffect w/ mainForm.watch() to update the form values when the user changes?
@@ -174,6 +188,8 @@ function Preferences() {
       ...values,
     });
   }
+
+  console.log(form.getValues());
 
   if (!isSignedIn) {
     return <UserIsNotAuthenticated />;
@@ -256,13 +272,25 @@ function Preferences() {
               <FormField
                 control={form.control}
                 name="phoneNumber"
-                render={({ field, fieldState: { invalid } }) => (
+                render={({
+                  field: { onChange, onBlur, value, ref },
+                  fieldState: { invalid },
+                }) => (
                   <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
                     <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
                       <FormLabel className="font-semibold">
                         Phone number
                       </FormLabel>
-                      <Input placeholder="(123) 456-7890" {...field} />
+                      <Input
+                        ref={ref}
+                        value={formatPhoneNumber(value)}
+                        onChange={(e) =>
+                          onChange(formatPhoneNumber(e.target.value))
+                        }
+                        onBlur={onBlur}
+                        placeholder="(123) 456-7890"
+                        type={"tel"}
+                      />
                     </div>
                     <AnimatePresence>
                       {invalid && (
@@ -390,70 +418,103 @@ function Preferences() {
             </div>
 
             <div className="baseVertFlex mt-4 w-full !items-start gap-6 tablet:gap-4">
-              <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                <div className="baseFlex !items-start gap-4">
-                  <FormControl>
-                    <Checkbox
-                      id="allowsEmailReceipts"
-                      {...form.register("allowsEmailReceipts")}
-                    />
-                  </FormControl>
-                  <Label htmlFor="allowsEmailReceipts" className="leading-4">
-                    Receive email receipts for your orders.
-                  </Label>
-                </div>
-              </FormItem>
+              <FormField
+                control={form.control}
+                name="allowsEmailReceipts"
+                render={({ field }) => (
+                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+                    <div className="baseFlex !items-start gap-4">
+                      <FormControl>
+                        <Checkbox
+                          id="allowsEmailReceipts"
+                          checked={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <Label
+                        htmlFor="allowsEmailReceipts"
+                        className="leading-4"
+                      >
+                        Receive email receipts for your orders.
+                      </Label>
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-              <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                <div className="baseFlex !items-start gap-4">
-                  <FormControl>
-                    <Checkbox
-                      id="allowsOrderCompleteEmails"
-                      {...form.register("allowsOrderCompleteEmails")}
-                    />
-                  </FormControl>
-                  <Label
-                    htmlFor="allowsOrderCompleteEmails"
-                    className="leading-4"
-                  >
-                    Receive an email when your order is ready to be picked up.
-                  </Label>
-                </div>
-              </FormItem>
+              <FormField
+                control={form.control}
+                name="allowsOrderCompleteEmails"
+                render={({ field }) => (
+                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+                    <div className="baseFlex !items-start gap-4">
+                      <FormControl>
+                        <Checkbox
+                          id="allowsOrderCompleteEmails"
+                          checked={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <Label
+                        htmlFor="allowsOrderCompleteEmails"
+                        className="leading-4"
+                      >
+                        Receive an email when your order is ready to be picked
+                        up.
+                      </Label>
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-              <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                <div className="baseFlex !items-start gap-4">
-                  <FormControl>
-                    <Checkbox
-                      id="allowsPromotionalEmails"
-                      {...form.register("allowsPromotionalEmails")}
-                    />
-                  </FormControl>
-                  <Label
-                    htmlFor="allowsPromotionalEmails"
-                    className="leading-4"
-                  >
-                    Receive promotional content and special menu offers.
-                  </Label>
-                </div>
-              </FormItem>
+              <FormField
+                control={form.control}
+                name="allowsPromotionalEmails"
+                render={({ field }) => (
+                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+                    <div className="baseFlex !items-start gap-4">
+                      <FormControl>
+                        <Checkbox
+                          id="allowsPromotionalEmails"
+                          checked={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <Label
+                        htmlFor="allowsPromotionalEmails"
+                        className="leading-4"
+                      >
+                        Receive promotional content and special menu offers.
+                      </Label>
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-              <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                <div className="baseFlex !items-start gap-4">
-                  <FormControl>
-                    <Checkbox
-                      id="allowsRewardExpiryReminderEmails"
-                      {...form.register("allowsRewardExpiryReminderEmails")}
-                    />
-                  </FormControl>
-                  <Label
-                    htmlFor="allowsRewardExpiryReminderEmails"
-                    className="leading-4"
-                  >
-                    Receive a reminder when your rewards are about to expire.
-                  </Label>
-                </div>
-              </FormItem>
+              <FormField
+                control={form.control}
+                name="allowsRewardExpiryReminderEmails"
+                render={({ field }) => (
+                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+                    <div className="baseFlex !items-start gap-4">
+                      <FormControl>
+                        <Checkbox
+                          id="allowsRewardExpiryReminderEmails"
+                          checked={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <Label
+                        htmlFor="allowsRewardExpiryReminderEmails"
+                        className="leading-4"
+                      >
+                        Receive a reminder when your rewards are about to
+                        expire.
+                      </Label>
+                    </div>
+                  </FormItem>
+                )}
+              />
             </div>
           </form>
         </Form>
@@ -475,6 +536,8 @@ function Preferences() {
               allowsEmailReceipts: user?.allowsEmailReceipts,
               allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails,
               allowsPromotionalEmails: user?.allowsPromotionalEmails,
+              allowsRewardExpiryReminderEmails:
+                user?.allowsRewardExpiryReminderEmails,
             })
           }
           className="absolute right-4 top-4"

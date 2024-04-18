@@ -152,7 +152,7 @@ const CarouselContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
-  const { carouselRef, orientation } = useCarousel();
+  const { carouselRef, orientation, api } = useCarousel();
 
   return (
     <div
@@ -163,6 +163,9 @@ const CarouselContent = React.forwardRef<
         ref={ref}
         className={cn(
           "flex",
+
+          `${api?.canScrollNext() || api?.canScrollPrev() ? "cursor-grab active:cursor-grabbing" : ""}`,
+
           // I honestly can't see a good reason why the -ml-4 classes were included by default...
           // revert if necessary
           // orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",

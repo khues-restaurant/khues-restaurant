@@ -68,9 +68,11 @@ const mainFormSchema = z.object({
     .refine(
       (birthday) => {
         const year = new Date(birthday).getFullYear();
-        return year <= 3000;
+        const currentYear = new Date().getFullYear();
+
+        return year > currentYear;
       },
-      { message: "Year must be 3000 or earlier" },
+      { message: "Year must not be in the future" },
     ),
 });
 

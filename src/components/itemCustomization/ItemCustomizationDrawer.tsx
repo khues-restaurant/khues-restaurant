@@ -148,7 +148,7 @@ function ItemCustomizationDrawer({
       transition={{
         duration: 0.35,
       }}
-      className="baseVertFlex max-h-[85dvh] w-full !justify-start"
+      className="baseVertFlex h-full max-h-[85dvh] w-full !justify-start"
     >
       <div className="baseVertFlex relative w-full max-w-xl !justify-start overflow-y-auto">
         {forCart && (
@@ -238,13 +238,11 @@ function ItemCustomizationDrawer({
           />
         </div>
 
-        {/* TODO: really have no clue why pb-36 is necessary here, it's like the footer just still
-          doesn't take up any space in dom? Making it relative helps, but it still is so damn weird */}
-        <div className="baseVertFlex w-full gap-12 p-8 pb-36 pt-4">
+        <div className="baseVertFlex h-full w-full gap-12 p-8 pt-4">
           {/* Description */}
           <div className="baseVertFlex w-full !items-start gap-2">
             <p className="text-lg underline underline-offset-2">Description</p>
-            <p className="max-w-96 text-wrap text-left text-gray-400 tablet:max-w-2xl">
+            <p className="max-w-96 text-wrap text-left text-sm text-gray-400 tablet:max-w-2xl">
               {itemToCustomize.description}
             </p>
           </div>
@@ -352,7 +350,7 @@ function ItemCustomizationDrawer({
                   <p className="text-lg text-black underline underline-offset-2">
                     Special instructions
                   </p>
-                  <span className="text-sm italic text-gray-400">
+                  <span className="mt-1 text-sm italic text-gray-400">
                     - Optional
                   </span>
                 </div>
@@ -382,8 +380,9 @@ function ItemCustomizationDrawer({
                   )}
 
                   <Textarea
-                    className="mt-4 h-full min-h-40 w-full resize-none rounded-md border-2 p-4"
-                    placeholder="Detail out any special instructions for this item."
+                    // purely testing the dynamic/animated font-size
+                    className="mt-4 h-full min-h-36 w-full resize-none rounded-md border-2 p-4 !text-sm transition-all focus-within:!text-base"
+                    placeholder="Let us know how you'd like your dish prepared."
                     value={localItemOrderDetails.specialInstructions}
                     onChange={(e) => {
                       if (e.target.value.length > 100) return;
@@ -394,7 +393,7 @@ function ItemCustomizationDrawer({
                       });
                     }}
                   />
-                  <p className="pointer-events-none absolute bottom-14 right-4 text-xs text-gray-400">
+                  <p className="pointer-events-none absolute bottom-10 right-4 text-xs text-gray-400">
                     {100 - localItemOrderDetails.specialInstructions.length}{" "}
                     characters remaining
                   </p>
@@ -412,102 +411,104 @@ function ItemCustomizationDrawer({
           </div> */}
         </div>
       </div>
+
       <DrawerFooter>
-        <div className="baseFlex w-full !justify-end bg-gray-200 px-4 py-2">
-          <div className="baseFlex gap-4">
-            {!itemOrderDetails?.birthdayReward &&
-              !itemOrderDetails?.pointReward && (
-                <div className="baseFlex gap-2">
-                  <span className="text-sm font-medium">Quantity</span>
-                  <div className="baseFlex h-8 rounded-md border-2 border-gray-500">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      disabled={localItemOrderDetails.quantity <= 1}
-                      className="size-7 rounded-r-none border-none p-0"
-                      onClick={() => {
-                        if (localItemOrderDetails.quantity <= 1) return;
-
-                        setLocalItemOrderDetails((prev) => ({
-                          ...prev,
-                          quantity: prev.quantity - 1,
-                        }));
-                      }}
-                    >
-                      <LuMinus className="size-4" />
-                    </Button>
-
-                    <div className="baseFlex h-full w-8 bg-white text-sm font-semibold">
-                      {localItemOrderDetails.quantity}
-                    </div>
-
-                    <Button
-                      variant="outline"
-                      disabled={localItemOrderDetails.quantity > 99}
-                      className="size-7 rounded-l-none border-none p-0"
-                      onClick={() => {
-                        if (localItemOrderDetails.quantity > 99) return;
-
-                        setLocalItemOrderDetails((prev) => ({
-                          ...prev,
-                          quantity: prev.quantity + 1,
-                        }));
-                      }}
-                    >
-                      <LuPlus className="size-4" />
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-            <Button
-              variant="default"
-              disabled={isEqual(localItemOrderDetails, initialItemState)}
-              className="text-xs font-semibold tablet:text-sm"
-              onClick={() => {
-                const newOrderDetails = structuredClone(orderDetails);
-
-                // just need to update the existing item
-                if (forCart) {
-                  const existingItemIndex = newOrderDetails.items.findIndex(
-                    (i) => i.name === itemToCustomize.name,
-                  );
-
-                  if (existingItemIndex !== -1) {
-                    newOrderDetails.items[existingItemIndex] = {
-                      ...localItemOrderDetails,
-                      pointReward: itemOrderDetails?.pointReward ?? false,
-                      birthdayReward: itemOrderDetails?.birthdayReward ?? false,
-                    };
-                  }
-                } else {
-                  newOrderDetails.items.push(localItemOrderDetails);
-                }
-
-                updateOrder({
-                  newOrderDetails,
-                });
-
-                setItemToCustomize?.(null);
-
-                setIsDrawerOpen?.(false);
-              }}
-            >
+        <div
+          className="baseFlex w-full !justify-between bg-gradient-to-br from-gray-200 
+        to-gray-300/80 px-4 py-3 shadow-inner"
+        >
+          {!itemOrderDetails?.birthdayReward &&
+            !itemOrderDetails?.pointReward && (
               <div className="baseFlex gap-2">
-                <span>{itemOrderDetails ? "Update" : "Add to order"}</span>
-                -
-                <AnimatedPrice
-                  price={formatPrice(
-                    calculateRelativeTotal({
-                      items: [localItemOrderDetails],
-                      customizationChoices,
-                      discounts,
-                    }),
-                  )}
-                />
+                <span className="text-sm font-medium">Quantity</span>
+                <div className="baseFlex h-8 rounded-md border-2 border-gray-500">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    disabled={localItemOrderDetails.quantity <= 1}
+                    className="size-7 rounded-r-none border-none p-0"
+                    onClick={() => {
+                      if (localItemOrderDetails.quantity <= 1) return;
+
+                      setLocalItemOrderDetails((prev) => ({
+                        ...prev,
+                        quantity: prev.quantity - 1,
+                      }));
+                    }}
+                  >
+                    <LuMinus className="size-4" />
+                  </Button>
+
+                  <div className="baseFlex h-full w-8 bg-white text-sm font-semibold">
+                    {localItemOrderDetails.quantity}
+                  </div>
+
+                  <Button
+                    variant="outline"
+                    disabled={localItemOrderDetails.quantity > 99}
+                    className="size-7 rounded-l-none border-none p-0"
+                    onClick={() => {
+                      if (localItemOrderDetails.quantity > 99) return;
+
+                      setLocalItemOrderDetails((prev) => ({
+                        ...prev,
+                        quantity: prev.quantity + 1,
+                      }));
+                    }}
+                  >
+                    <LuPlus className="size-4" />
+                  </Button>
+                </div>
               </div>
-            </Button>
-          </div>
+            )}
+
+          <Button
+            variant="default"
+            disabled={isEqual(localItemOrderDetails, initialItemState)}
+            className="text-xs font-semibold tablet:text-sm"
+            onClick={() => {
+              const newOrderDetails = structuredClone(orderDetails);
+
+              // just need to update the existing item
+              if (forCart) {
+                const existingItemIndex = newOrderDetails.items.findIndex(
+                  (i) => i.name === itemToCustomize.name,
+                );
+
+                if (existingItemIndex !== -1) {
+                  newOrderDetails.items[existingItemIndex] = {
+                    ...localItemOrderDetails,
+                    pointReward: itemOrderDetails?.pointReward ?? false,
+                    birthdayReward: itemOrderDetails?.birthdayReward ?? false,
+                  };
+                }
+              } else {
+                newOrderDetails.items.push(localItemOrderDetails);
+              }
+
+              updateOrder({
+                newOrderDetails,
+              });
+
+              setItemToCustomize?.(null);
+
+              setIsDrawerOpen?.(false);
+            }}
+          >
+            <div className="baseFlex gap-2">
+              <span>{itemOrderDetails ? "Update" : "Add to order"}</span>
+              -
+              <AnimatedPrice
+                price={formatPrice(
+                  calculateRelativeTotal({
+                    items: [localItemOrderDetails],
+                    customizationChoices,
+                    discounts,
+                  }),
+                )}
+              />
+            </div>
+          </Button>
         </div>
       </DrawerFooter>
     </motion.div>

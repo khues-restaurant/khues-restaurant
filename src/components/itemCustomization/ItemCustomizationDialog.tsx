@@ -378,7 +378,7 @@ function ItemCustomizerDialogContent({
                   <p className="text-lg text-black underline underline-offset-2">
                     Special instructions
                   </p>
-                  <span className="text-sm italic text-gray-400">
+                  <span className="mt-1 text-sm italic text-gray-400">
                     - Optional
                   </span>
                 </div>
@@ -408,8 +408,8 @@ function ItemCustomizerDialogContent({
                   )}
 
                   <Textarea
-                    className="mt-2 h-full w-full resize-none rounded-md border-2 p-4"
-                    placeholder="Detail out any special instructions for this item."
+                    className="mt-2 h-full min-h-28 w-full resize-none rounded-md border-2 p-4"
+                    placeholder="Let us know how you'd like your dish prepared."
                     value={localItemOrderDetails.specialInstructions}
                     onChange={(e) => {
                       if (e.target.value.length > 100) return;
@@ -438,7 +438,10 @@ function ItemCustomizerDialogContent({
           </div> */}
         </div>
         <DialogFooter>
-          <div className="baseFlex bottom-0 left-0 w-full !justify-end border-t-2 bg-gray-200 px-4 py-2 tablet:rounded-b-md">
+          <div
+            className="baseFlex bottom-0 left-0 w-full !justify-end bg-gradient-to-br from-gray-200 
+        to-gray-300/80 px-4 py-3 shadow-inner tablet:rounded-b-md"
+          >
             <div className="baseFlex w-75 !justify-end gap-2 tablet:w-96 tablet:gap-6">
               {!itemOrderDetails?.birthdayReward &&
                 !itemOrderDetails?.pointReward && (

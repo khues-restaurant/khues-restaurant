@@ -75,7 +75,7 @@ function MobileHeader() {
 
         <Sheet open={sheetIsOpen} onOpenChange={(open) => setSheetIsOpen(open)}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size={"icon"} className="relative">
+            <Button variant="ghost" size={"icon"} className="relative mx-2">
               <span
                 aria-hidden="true"
                 className="absolute top-[12px] block h-0.5 w-6 bg-current transition duration-500 ease-in-out"
@@ -104,7 +104,14 @@ function MobileHeader() {
                       process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
                     }${asPath}`}
                   >
-                    <Button className="px-8">Sign up</Button>
+                    <Button
+                      className="px-8"
+                      onClick={() => {
+                        setSheetIsOpen(false);
+                      }}
+                    >
+                      Sign up
+                    </Button>
                   </SignUpButton>
                   <SignInButton
                     mode="modal"
@@ -115,7 +122,14 @@ function MobileHeader() {
                       process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
                     }${asPath}`}
                   >
-                    <Button variant={"secondary"}>Sign in</Button>
+                    <Button
+                      variant={"secondary"}
+                      onClick={() => {
+                        setSheetIsOpen(false);
+                      }}
+                    >
+                      Sign in
+                    </Button>
                   </SignInButton>
                 </div>
               )}

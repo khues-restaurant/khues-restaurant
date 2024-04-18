@@ -1,10 +1,10 @@
 import { io } from "socket.io-client";
+import { env } from "~/env";
 
 // This function could be called within your API route or other server-side logic
 export function emitNewOrderThroughSocket() {
-  // Assuming your Next.js server and the socket.io server are running on the same host
-  const socketServerUrl = "http://localhost:3000"; // Adjust the port if necessary
-  const path = "/api/socket"; // The path to your socket.io server
+  const socketServerUrl = env.BASE_URL;
+  const path = "/api/socket";
 
   // Initialize socket.io-client to connect to your socket.io server
   const socket = io(socketServerUrl, { path });

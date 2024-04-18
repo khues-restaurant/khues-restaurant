@@ -475,7 +475,7 @@ function CartDrawer({
       </div>
 
       {/* summary of items in cart */}
-      <div className="baseVertFlex h-full w-full !items-start gap-2 p-4">
+      <div className="baseVertFlex h-full w-full !items-start !justify-start gap-2 p-4">
         <p className="text-lg font-semibold underline underline-offset-2">
           Items
         </p>
@@ -867,7 +867,7 @@ function CartDrawer({
                 </AnimatePresence>
               </div>
 
-              <div className="baseVertFlex mt-4 w-full gap-4 pb-28">
+              <div className="baseVertFlex mt-4 w-full gap-4">
                 <div
                   style={{
                     justifyContent: isSignedIn ? "space-between" : "flex-start",
@@ -926,79 +926,74 @@ function CartDrawer({
         </AnimatePresence>
       </div>
 
-      {/* TODO: why does this scroll a bit along with body when drawer is scrolled? I believe it is
-      a <Drawer> specific thing */}
-      <DrawerFooter className="z-10">
-        <div
-          className="baseVertFlex w-full border-t bg-gradient-to-br from-gray-200 to-gray-300
+      <div
+        className="baseVertFlex w-full border-t bg-gradient-to-br from-gray-200 to-gray-300
         p-4 shadow-inner"
-        >
-          <div className="baseFlex w-full !justify-between text-sm">
-            <p>Subtotal</p>
-            <AnimatedPrice price={formatPrice(orderCost.subtotal)} />
-          </div>
-
-          {/* TODO: ask eric if this threshold should apply based on subtotal or total */}
-          {isSignedIn &&
-            orderDetails.discountId &&
-            orderCost.subtotal >= 35 &&
-            discounts[orderDetails.discountId]?.name ===
-              "Spend $35, Save $5" && (
-              <div className="baseFlex w-full !justify-between text-sm text-primary">
-                <p>Spend $35, Save $5</p>
-                <AnimatedPrice price={formatPrice(-5)} />
-              </div>
-            )}
-
-          <div className="baseFlex w-full !justify-between text-sm">
-            <p>Tax</p>
-            <AnimatedPrice price={formatPrice(orderCost.tax)} />
-          </div>
-
-          <div className="baseFlex mt-2 w-full !items-end !justify-between">
-            <div className="baseFlex gap-2 text-lg font-semibold">
-              <p>Total</p>
-              <AnimatedPrice price={formatPrice(orderCost.total)} />
-            </div>
-
-            <Button
-              variant="default"
-              disabled={
-                checkoutButtonText !== "Proceed to checkout" ||
-                orderDetails.items.length === 0
-              }
-              className="text-xs font-semibold tablet:text-sm"
-              onClick={() => void mainForm.handleSubmit(onMainFormSubmit)()}
-            >
-              <AnimatePresence mode={"popLayout"}>
-                <motion.div
-                  key={`cartSheet-${checkoutButtonText}`}
-                  layout
-                  // whileTap={{ scale: 0.95 }}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  transition={{
-                    duration: 0.25,
-                  }}
-                  className="baseFlex gap-2"
-                >
-                  {checkoutButtonText}
-                  {checkoutButtonText === "Loading" && (
-                    <div
-                      className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
-                      role="status"
-                      aria-label="loading"
-                    >
-                      <span className="sr-only">Loading...</span>
-                    </div>
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </Button>
-          </div>
+      >
+        <div className="baseFlex w-full !justify-between text-sm">
+          <p>Subtotal</p>
+          <AnimatedPrice price={formatPrice(orderCost.subtotal)} />
         </div>
-      </DrawerFooter>
+
+        {/* TODO: ask eric if this threshold should apply based on subtotal or total */}
+        {isSignedIn &&
+          orderDetails.discountId &&
+          orderCost.subtotal >= 35 &&
+          discounts[orderDetails.discountId]?.name === "Spend $35, Save $5" && (
+            <div className="baseFlex w-full !justify-between text-sm text-primary">
+              <p>Spend $35, Save $5</p>
+              <AnimatedPrice price={formatPrice(-5)} />
+            </div>
+          )}
+
+        <div className="baseFlex w-full !justify-between text-sm">
+          <p>Tax</p>
+          <AnimatedPrice price={formatPrice(orderCost.tax)} />
+        </div>
+
+        <div className="baseFlex mt-2 w-full !items-end !justify-between">
+          <div className="baseFlex gap-2 text-lg font-semibold">
+            <p>Total</p>
+            <AnimatedPrice price={formatPrice(orderCost.total)} />
+          </div>
+
+          <Button
+            variant="default"
+            disabled={
+              checkoutButtonText !== "Proceed to checkout" ||
+              orderDetails.items.length === 0
+            }
+            className="text-xs font-semibold tablet:text-sm"
+            onClick={() => void mainForm.handleSubmit(onMainFormSubmit)()}
+          >
+            <AnimatePresence mode={"popLayout"}>
+              <motion.div
+                key={`cartSheet-${checkoutButtonText}`}
+                layout
+                // whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{
+                  duration: 0.25,
+                }}
+                className="baseFlex gap-2"
+              >
+                {checkoutButtonText}
+                {checkoutButtonText === "Loading" && (
+                  <div
+                    className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                    role="status"
+                    aria-label="loading"
+                  >
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </Button>
+        </div>
+      </div>
     </motion.div>
   );
 }

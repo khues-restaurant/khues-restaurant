@@ -44,7 +44,7 @@ function Footer() {
   return (
     <footer
       ref={footerRef}
-      className="baseVertFlex min-h-10 w-full gap-8 bg-primary p-4 text-white tablet:!flex-row tablet:!justify-between tablet:gap-0"
+      className="baseVertFlex z-20 min-h-10 w-full gap-8 bg-primary p-4 text-white tablet:!flex-row tablet:!justify-between tablet:gap-0"
     >
       {/* contact info */}
       <div className="baseVertFlex gap-2 tablet:!items-start tablet:!justify-start tablet:gap-0">

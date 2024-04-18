@@ -372,7 +372,7 @@ function DesktopHeader() {
                 {user.firstName}
               </Button>
             </PopoverTrigger>
-            <PopoverContent side="bottom" align="end">
+            <PopoverContent side="bottom" align="end" className="w-64">
               <div className="baseVertFlex gap-2">
                 <Button
                   variant={

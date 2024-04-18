@@ -120,7 +120,7 @@ function CustomerChats() {
 
     // Sort databaseChats by the updatedAt timestamp in descending order
     const sortedChats = databaseChats.sort(
-      (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime(),
+      (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
     );
 
     setMessages(sortedChats); // Assuming `setMessages` now expects an array of Chat objects

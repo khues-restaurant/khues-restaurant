@@ -131,11 +131,11 @@ function Chat() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.1 }}
-              className="size-10"
+              className="fixed bottom-6 right-6 z-10 size-10 "
             >
               <AlertDialogTrigger asChild>
                 <Button
-                  className="fixed bottom-3 right-3 size-12 rounded-full shadow-md tablet:hidden"
+                  className="size-12 rounded-full shadow-md tablet:hidden"
                   onClick={() => {
                     setShowingAlertDialogChat((prev) => !prev);
                   }}
@@ -285,6 +285,7 @@ function Chat() {
         <PopoverContent
           side={"top"}
           sideOffset={16}
+          showArrow={false}
           className="baseVertFlex w-full rounded-lg border-none !p-0 shadow-xl sm:mr-4 sm:max-w-sm"
         >
           {/* header */}

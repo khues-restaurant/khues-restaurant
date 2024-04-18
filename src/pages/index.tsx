@@ -80,7 +80,7 @@ export default function Home() {
 
         if (visiblePercentage === undefined) return;
 
-        const startTransitionAt = 0.9;
+        const startTransitionAt = 1;
         const endTransitionAt = 0.75;
 
         // Adjust the ratio linearly within the defined range
@@ -273,7 +273,7 @@ export default function Home() {
             // skipSnaps: true, play around with this
           }}
         >
-          <CarouselContent>
+          <CarouselContent className="xl:gap-8">
             <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md p-4 tablet:basis-1/3">
               <Image
                 src="/press/StarTribune.png"
@@ -342,7 +342,7 @@ export default function Home() {
 
         <div className="homepageFoodMasonry h-[500px] w-full max-w-sm tablet:h-[300px] tablet:max-w-2xl">
           <div className="firstMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-5} className="!absolute !top-0 !size-[150%]">
+            <Parallax speed={-3} className="!absolute !top-0 !size-[150%]">
               <Image
                 src={"/masonryFood/one.jpg"}
                 alt={"TODO: fill in w/ appropriate alt text"}
@@ -356,7 +356,7 @@ export default function Home() {
           </div>
 
           <div className="secondMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-5} className="!absolute !top-0 !size-[150%]">
+            <Parallax speed={-3} className="!absolute !top-0 !size-[150%]">
               <Image
                 src={"/masonryFood/two.webp"}
                 alt={"TODO: fill in w/ appropriate alt text"}
@@ -370,7 +370,7 @@ export default function Home() {
           </div>
 
           <div className="thirdMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-5} className="!absolute !top-0 !size-[150%]">
+            <Parallax speed={-3} className="!absolute !top-0 !size-[150%]">
               <Image
                 src={"/masonryFood/three.jpg"}
                 alt={"TODO: fill in w/ appropriate alt text"}
@@ -384,7 +384,7 @@ export default function Home() {
           </div>
 
           <div className="fourthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-5} className="!absolute !top-0 !size-[150%]">
+            <Parallax speed={-3} className="!absolute !top-0 !size-[150%]">
               <Image
                 src={"/masonryFood/four.jpg"}
                 alt={"TODO: fill in w/ appropriate alt text"}
@@ -398,7 +398,7 @@ export default function Home() {
           </div>
 
           <div className="fifthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-5} className="!absolute !top-0 !size-[150%]">
+            <Parallax speed={-3} className="!absolute !top-0 !size-[150%]">
               <Image
                 src={"/masonryFood/five.jpg"}
                 alt={"TODO: fill in w/ appropriate alt text"}
@@ -417,17 +417,15 @@ export default function Home() {
           {/* maybe have stock image of person holding a phone and you would have a proportionally
                 tilted screenshot of the order page showing on their phone? think about it */}
           <div className="relative h-60 w-full overflow-hidden rounded-t-md">
-            <Parallax speed={-7} className="!absolute !top-0 !h-96 !w-full">
-              <Image
-                src={"/rewardsPromo.jpg"}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                fill
-                style={{
-                  objectFit: "cover",
-                }}
-                className="!relative !size-full rounded-md !pb-16"
-              />
-            </Parallax>
+            <Image
+              src={"/rewardsPromo.jpg"}
+              alt={"TODO: fill in w/ appropriate alt text"}
+              fill
+              style={{
+                objectFit: "cover",
+              }}
+              className="!relative !top-0 !size-full !h-96 rounded-md !pb-32"
+            />
           </div>
           <div className="baseVertFlex gap-4 p-4">
             <p className="text-lg font-medium">
@@ -454,7 +452,9 @@ export default function Home() {
             </div>
 
             <Button asChild>
-              <Link href="/order-now">Order now</Link>
+              <Link href="/order-now" className="my-4">
+                Order now
+              </Link>
             </Button>
           </div>
         </div>
@@ -485,7 +485,7 @@ export default function Home() {
             </div>
 
             <Button asChild>
-              <Link href="/order-now" className="self-center">
+              <Link href="/order-now" className="mt-4 self-center">
                 Order now
               </Link>
             </Button>
@@ -506,17 +506,15 @@ export default function Home() {
               viewport={{ once: true, amount: 0.75 }}
               className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
             >
-              <Parallax speed={-2} className="!absolute !top-0 !h-96">
-                <Image
-                  src={"/rewardsPromo.jpg"}
-                  alt={"TODO: fill in w/ appropriate alt text"}
-                  fill
-                  style={{
-                    objectFit: "cover",
-                  }}
-                  className="!relative !size-full rounded-md !pb-8"
-                />
-              </Parallax>
+              <Image
+                src={"/rewardsPromo.jpg"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="!relative !top-0 !size-full !h-96 rounded-md !pb-8"
+              />
             </motion.div>
             <motion.div
               initial={{ opacity: 0, x: 100 }}
@@ -536,18 +534,16 @@ export default function Home() {
         {/* Meet the Chef promo section */}
         <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md  tablet:hidden">
           <div className="relative h-60 w-full overflow-hidden rounded-t-md">
-            <Parallax speed={-7} className="!absolute !top-0 !h-96 !w-full">
-              <Image
-                src={"/eric.webp"}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                fill
-                style={{
-                  objectFit: "cover",
-                  objectPosition: "top",
-                }}
-                className="!relative !size-full rounded-md"
-              />
-            </Parallax>
+            <Image
+              src={"/eric.webp"}
+              alt={"TODO: fill in w/ appropriate alt text"}
+              fill
+              style={{
+                objectFit: "cover",
+                objectPosition: "top",
+              }}
+              className="!relative !top-0 !size-full !h-96 rounded-md !pb-16"
+            />
           </div>
           <div className="baseVertFlex !items-start gap-4 p-4">
             <p className="text-lg font-medium">Meet the Chef</p>
@@ -579,18 +575,16 @@ export default function Home() {
               viewport={{ once: true, amount: 0.75 }}
               className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
             >
-              <Parallax speed={-2} className="!absolute !top-0 !h-96 !w-full">
-                <Image
-                  src={"/eric.webp"}
-                  alt={"TODO: fill in w/ appropriate alt text"}
-                  fill
-                  style={{
-                    objectFit: "cover",
-                    objectPosition: "top",
-                  }}
-                  className="!relative !size-full rounded-md"
-                />
-              </Parallax>
+              <Image
+                src={"/eric.webp"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                  objectPosition: "top",
+                }}
+                className="!relative !top-0 !size-full !h-96 rounded-md"
+              />
             </motion.div>
             <motion.div
               initial={{ opacity: 0, x: -100 }}
@@ -625,20 +619,18 @@ export default function Home() {
         {/* Reservation promo section */}
         <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md  tablet:hidden">
           <div className="relative h-60 w-full overflow-hidden rounded-t-md">
-            <Parallax speed={-7} className="!absolute !top-0 !h-96 !w-full">
-              <Image
-                src={"/reservations.webp"}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                fill
-                style={{
-                  objectFit: "cover",
-                }}
-                className="!relative !size-full rounded-md !pb-24"
-              />
-            </Parallax>
+            <Image
+              src={"/reservations.webp"}
+              alt={"TODO: fill in w/ appropriate alt text"}
+              fill
+              style={{
+                objectFit: "cover",
+              }}
+              className="!relative !top-0 !size-full !h-96 rounded-md !pb-24"
+            />
           </div>
           <div className="baseVertFlex !items-start gap-2 p-4">
-            <p className="text-lg font-medium">
+            <p className="text-lg font-medium leading-6">
               Planning a birthday dinner or get together with your friends?
             </p>
 
@@ -680,17 +672,15 @@ export default function Home() {
               viewport={{ once: true, amount: 0.75 }}
               className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
             >
-              <Parallax speed={-2} className="!absolute !top-0 !h-96">
-                <Image
-                  src={"/reservations.webp"}
-                  alt={"TODO: fill in w/ appropriate alt text"}
-                  fill
-                  style={{
-                    objectFit: "cover",
-                  }}
-                  className="!relative !size-full rounded-md !pb-16"
-                />
-              </Parallax>
+              <Image
+                src={"/reservations.webp"}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                fill
+                style={{
+                  objectFit: "cover",
+                }}
+                className="!relative !top-0 !size-full !h-96 rounded-md !pb-16"
+              />
             </motion.div>
             <motion.div
               initial={{ opacity: 0, x: 100 }}
@@ -710,7 +700,7 @@ export default function Home() {
         {/* masonry but prob more of just inside/outside the restaurant */}
         <div className="homepageInteriorMasonry h-[500px] w-full max-w-sm tablet:h-[300px] tablet:max-w-2xl">
           <div className="firstMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-5} className="!absolute !top-0 !size-[115%]">
+            <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
               <Image
                 src={"/interior/one.webp"}
                 alt={"TODO: fill in w/ appropriate alt text"}
@@ -725,7 +715,7 @@ export default function Home() {
           </div>
 
           <div className="secondMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-5} className="!absolute !top-0 !size-[115%]">
+            <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
               <Image
                 src={"/interior/two.webp"}
                 alt={"TODO: fill in w/ appropriate alt text"}
@@ -740,7 +730,7 @@ export default function Home() {
           </div>
 
           <div className="thirdMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-5} className="!absolute !top-0 !size-[115%]">
+            <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
               <Image
                 src={"/interior/three.webp"}
                 alt={"TODO: fill in w/ appropriate alt text"}
@@ -755,7 +745,7 @@ export default function Home() {
           </div>
 
           <div className="fourthMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-5} className="!absolute !top-0 !size-[115%]">
+            <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
               <Image
                 src={"/interior/four.webp"}
                 alt={"TODO: fill in w/ appropriate alt text"}
@@ -770,7 +760,7 @@ export default function Home() {
           </div>
 
           <div className="fifthMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-5} className="!absolute !top-0 !size-[125%]">
+            <Parallax speed={-3} className="!absolute !top-0 !size-[125%]">
               <Image
                 src={"/interior/five.webp"}
                 alt={"TODO: fill in w/ appropriate alt text"}

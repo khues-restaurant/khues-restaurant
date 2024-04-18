@@ -188,7 +188,7 @@ function Rewards() {
 
           {/* tablet+ images */}
           <motion.div
-            key={"rewardsHeroImageOne"}
+            key={"rewardsTabletHeroImageOne"}
             initial={{ opacity: 0, y: -150 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
@@ -210,7 +210,7 @@ function Rewards() {
           </motion.div>
 
           <motion.div
-            key={"rewardsHeroImageTwo"}
+            key={"rewardsTabletHeroImageTwo"}
             initial={{ opacity: 0, x: -125 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{
@@ -232,7 +232,7 @@ function Rewards() {
           </motion.div>
 
           <motion.div
-            key={"rewardsHeroImageThree"}
+            key={"rewardsTabletHeroImageThree"}
             initial={{ opacity: 0, y: 125 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
@@ -254,7 +254,7 @@ function Rewards() {
           </motion.div>
 
           <motion.div
-            key={"rewardsHeroImageFour"}
+            key={"rewardsTabletHeroImageFour"}
             initial={{ opacity: 0, y: -200 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
@@ -529,16 +529,16 @@ function Rewards() {
 
         <div className="baseVertFlex mt-8 max-w-7xl gap-8 px-4 text-yellow-500">
           <div className="baseFlex gap-2">
-            <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
-            <span className="text-2xl font-medium underline underline-offset-2">
+            <SideAccentSwirls className="h-4 scale-x-[-1] fill-yellow-500 sm:h-5" />
+            <span className="text-xl font-medium underline underline-offset-2 sm:text-2xl">
               Member benefits
             </span>
-            <SideAccentSwirls className="h-5 fill-yellow-500" />
+            <SideAccentSwirls className="h-4 fill-yellow-500 sm:h-5" />
           </div>
 
-          <div className="baseVertFlex gap-8 tablet:!flex-row">
-            <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md sm:w-96 tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
-              <CiGift className="size-20 h-24 text-yellow-500" />
+          <div className="baseVertFlex gap-8 2xl:!flex-row">
+            <div className="rewardsGoldBorder baseVertFlex m-4 w-72 !items-start gap-2 rounded-md text-sm shadow-md sm:h-[300px] sm:w-96 sm:text-base 2xl:m-0 2xl:w-full 2xl:justify-start">
+              <CiGift className="ml-2 size-16 h-24 text-yellow-500 sm:ml-0 sm:size-20" />
               <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
               <div className="hyphens-auto p-4 text-left">
                 Earning rewards is as simple as enjoying your favorite meals!
@@ -548,7 +548,7 @@ function Rewards() {
               </div>
             </div>
 
-            <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md sm:w-96 tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
+            <div className="rewardsGoldBorder baseVertFlex m-4 w-72 !items-start gap-2 rounded-md text-sm shadow-md sm:h-[300px] sm:w-96 sm:text-base 2xl:m-0 2xl:w-full 2xl:justify-start">
               <FaCakeCandles className="ml-4 size-12 h-24 text-yellow-500" />
               <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
               <div className="hyphens-auto p-4 text-left">
@@ -559,7 +559,7 @@ function Rewards() {
               </div>
             </div>
 
-            <div className="rewardsGoldBorder baseVertFlex m-4 !items-start gap-2 rounded-md shadow-md sm:w-96 tablet:m-0 tablet:h-[300px] tablet:w-full tablet:justify-start">
+            <div className="rewardsGoldBorder baseVertFlex m-4 w-72 !items-start gap-2 rounded-md text-sm shadow-md sm:h-[300px] sm:w-96 sm:text-base 2xl:m-0 2xl:w-full 2xl:justify-start">
               <LuCalendarClock className="ml-2 size-14 h-24 text-yellow-500" />
               <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
               <div className="hyphens-auto p-4 text-left">
