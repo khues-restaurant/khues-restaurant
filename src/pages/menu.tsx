@@ -360,6 +360,18 @@ function Menu() {
                 programmaticallyScrolling={programmaticallyScrolling}
                 stickyCategoriesApi={stickyCategoriesApi}
               />
+
+              <div className="baseFlex order-[999] mt-8 w-full gap-2">
+                <Image
+                  src="/logo.svg"
+                  alt="Khue's header logo"
+                  width={24}
+                  height={24}
+                  priority
+                  className="!size-[24px]"
+                />
+                -<span>Chef&apos;s choice</span>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -772,7 +784,7 @@ function MenuItemPreview({
       style={{
         order: listOrder + 1,
       }}
-      className="relative h-48 w-full max-w-96"
+      className="relative w-full max-w-96"
     >
       <div className="baseFlex h-full w-full gap-4 py-6">
         <Image
@@ -786,14 +798,28 @@ function MenuItemPreview({
         <div className="baseVertFlex h-full w-full !items-start !justify-between">
           <div className="baseFlex w-full !justify-between">
             <div className="baseVertFlex !items-start gap-2">
-              <p className="text-lg font-medium underline underline-offset-2">
-                {menuItem.name}
-              </p>
+              <div className="baseFlex gap-2">
+                <p className="text-lg font-medium underline underline-offset-2">
+                  {menuItem.name}
+                </p>
+                {menuItem.chefsChoice && (
+                  <Image
+                    src="/logo.svg"
+                    alt="Khue's header logo"
+                    width={16}
+                    height={16}
+                    priority
+                    className="!size-[16px]"
+                  />
+                )}
+              </div>
+
               <p className="max-w-48 text-wrap text-left text-sm text-gray-400">
                 {menuItem.description}
               </p>
             </div>
           </div>
+
           {formatMenuItemPrice(
             categoryName,
             menuItem,

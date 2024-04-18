@@ -434,16 +434,16 @@ function Rewards() {
         <div className="baseVertFlex mt-8 max-w-7xl gap-8 px-4 text-yellow-500 tablet:gap-16">
           {/* Birthday reward options */}
           {true && (
-            <div className="baseVertFlex w-full gap-8">
-              <div className="baseFlex gap-2">
-                <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
-                <span className="text-center text-2xl font-medium underline underline-offset-2">
+            <div className="baseVertFlex mb-8 w-full gap-8">
+              <div className="baseFlex sm:gap-2">
+                <SideAccentSwirls className="h-4 scale-x-[-1] fill-yellow-500 sm:h-5" />
+                <span className="w-48 text-center text-xl font-medium underline underline-offset-2 sm:w-auto sm:text-2xl">
                   Choose your birthday dessert
                 </span>
-                <SideAccentSwirls className="h-5 fill-yellow-500" />
+                <SideAccentSwirls className="h-4 fill-yellow-500 sm:h-5" />
               </div>
 
-              <div className="grid w-full grid-cols-1 !place-items-start gap-4 lg:grid-cols-2 2xl:grid-cols-3">
+              <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2 lg:!place-items-start 2xl:grid-cols-3">
                 {/* Categories */}
                 {rewards.birthdayMenuCategories.map((category) => (
                   <div
@@ -479,15 +479,15 @@ function Rewards() {
           )}
 
           <div className="baseFlex gap-2">
-            <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
-            <span className="text-center text-2xl font-medium underline underline-offset-2">
+            <SideAccentSwirls className="h-4 scale-x-[-1] fill-yellow-500 sm:h-5" />
+            <span className="text-center text-xl font-medium underline underline-offset-2 sm:text-2xl">
               Choose your reward
             </span>
-            <SideAccentSwirls className="h-5 fill-yellow-500" />
+            <SideAccentSwirls className="h-4 fill-yellow-500 sm:h-5" />
           </div>
 
           {/* Regular reward options */}
-          <div className="grid w-full grid-cols-1 !place-items-start gap-4 lg:grid-cols-2 2xl:grid-cols-3">
+          <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2 lg:!place-items-start 2xl:grid-cols-3">
             {/* Categories */}
             {rewards.rewardMenuCategories.map((category) => (
               <div

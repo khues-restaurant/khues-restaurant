@@ -94,7 +94,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
       </div>
 
       <div
-        className={`baseFlex bottom-0 left-0 z-40 w-full gap-4 border-t border-gray-400 bg-gray-100 p-1 tablet:hidden ${footerIsInView ? "relative" : "fixed"}`}
+        className={`baseFlex bottom-0 left-0 z-40 w-full gap-4 border-t border-gray-400 bg-gray-100 p-2 sm:gap-8 tablet:hidden ${footerIsInView ? "relative" : "fixed"}`}
       >
         <Button
           variant={
@@ -104,7 +104,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
         >
           <Link
             href="/profile/preferences"
-            className="baseVertFlex h-16 w-24 gap-2"
+            className="baseVertFlex h-16 w-24 gap-2 !rounded-lg"
           >
             <IoSettingsOutline className="size-5" />
             Preferences
@@ -121,7 +121,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
         >
           <Link
             href="/profile/rewards"
-            className="baseVertFlex h-16 w-24 gap-2"
+            className="baseVertFlex h-16 w-24 gap-2 !rounded-lg"
           >
             <CiGift className="size-5" />
             Rewards
@@ -138,7 +138,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
         >
           <Link
             href="/profile/my-orders"
-            className="baseVertFlex h-16 w-24 gap-2"
+            className="baseVertFlex h-16 w-24 gap-2 !rounded-lg"
           >
             <TfiReceipt className="size-5" />
             My orders

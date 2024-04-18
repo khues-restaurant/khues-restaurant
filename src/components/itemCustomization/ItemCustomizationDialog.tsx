@@ -44,6 +44,8 @@ import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import Image from "next/image";
 import { useAuth } from "@clerk/nextjs";
+import { useToast } from "~/components/ui/use-toast";
+import { ToastAction } from "~/components/ui/toast";
 
 interface ItemCustomizationDialog {
   isDialogOpen: boolean;
@@ -129,13 +131,21 @@ function ItemCustomizerDialogContent({
       },
     });
 
-  const { orderDetails, customizationChoices, discounts, userFavoriteItemIds } =
-    useMainStore((state) => ({
-      orderDetails: state.orderDetails,
-      customizationChoices: state.customizationChoices,
-      discounts: state.discounts,
-      userFavoriteItemIds: state.userFavoriteItemIds,
-    }));
+  const {
+    orderDetails,
+    customizationChoices,
+    discounts,
+    userFavoriteItemIds,
+    getPrevOrderDetails,
+    setPrevOrderDetails,
+  } = useMainStore((state) => ({
+    orderDetails: state.orderDetails,
+    customizationChoices: state.customizationChoices,
+    discounts: state.discounts,
+    userFavoriteItemIds: state.userFavoriteItemIds,
+    getPrevOrderDetails: state.getPrevOrderDetails,
+    setPrevOrderDetails: state.setPrevOrderDetails,
+  }));
 
   const { updateOrder } = useUpdateOrder();
 
@@ -180,6 +190,8 @@ function ItemCustomizerDialogContent({
     // eventually add proper cleanup functions here
   }, [suggestedPairingsApi]);
 
+  const { toast } = useToast();
+
   return (
     <DialogContent className="max-w-4xl">
       <div
@@ -206,7 +218,20 @@ function ItemCustomizerDialogContent({
           />
 
           <div className="baseFlex absolute bottom-0 left-4 gap-4 rounded-t-md bg-white px-4 py-2 text-xl font-semibold">
-            {itemToCustomize.name}
+            <div className="baseFlex gap-2">
+              {itemToCustomize.name}
+
+              {itemToCustomize.chefsChoice && (
+                <Image
+                  src="/logo.svg"
+                  alt="Khue's header logo"
+                  width={18}
+                  height={18}
+                  priority
+                  className="!size-[18px]"
+                />
+              )}
+            </div>
 
             {/* TODO: wrap the like button in a Popover to show "Only rewards members can favorite items" */}
 
@@ -510,6 +535,26 @@ function ItemCustomizerDialogContent({
                       };
                     }
                   } else {
+                    // set prev order details so we can revert if necessary
+                    // with toast's undo button
+                    setPrevOrderDetails(orderDetails);
+
+                    toast({
+                      description: `${localItemOrderDetails.name} added to your order.`,
+                      action: (
+                        <ToastAction
+                          altText={`Undo the addition of ${localItemOrderDetails.name} to your order.`}
+                          onClick={() => {
+                            updateOrder({
+                              newOrderDetails: getPrevOrderDetails(),
+                            });
+                          }}
+                        >
+                          Undo
+                        </ToastAction>
+                      ),
+                    });
+
                     newOrderDetails.items.push(localItemOrderDetails);
                   }
 

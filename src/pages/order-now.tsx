@@ -607,6 +607,18 @@ function OrderNow() {
                   stickyCategoriesApi={stickyCategoriesApi}
                 />
               ))}
+
+              <div className="baseFlex order-[999] mt-8 w-full gap-2">
+                <Image
+                  src="/logo.svg"
+                  alt="Khue's header logo"
+                  width={24}
+                  height={24}
+                  priority
+                  className="!size-[24px]"
+                />
+                -<span>Chef&apos;s choice</span>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -848,7 +860,7 @@ function MenuItemPreviewButton({
       <Button
         variant="outline"
         disabled={!menuItem.available}
-        className="baseFlex h-full w-full gap-4 border py-6"
+        className="baseFlex h-full w-full !justify-between gap-4 border !p-6 tablet:!p-4"
         onClick={() => {
           dismissToasts();
 
@@ -871,12 +883,26 @@ function MenuItemPreviewButton({
         />
 
         <div className="baseVertFlex h-full w-48 !items-start !justify-between">
-          <div className="baseVertFlex !items-start gap-2">
-            <p className="text-lg font-medium underline underline-offset-2">
-              {menuItem.name}
-            </p>
-            <p className="max-w-48 text-wrap text-left text-gray-400">
-              {menuItem.chefsChoice ? "Chef's Choice" : menuItem.description}
+          <div
+            className={`baseVertFlex !items-start gap-2 ${!menuItem.available ? "mt-4" : ""}`}
+          >
+            <div className="baseFlex gap-2">
+              <p className="text-lg font-medium underline underline-offset-2">
+                {menuItem.name}
+              </p>
+              {menuItem.chefsChoice && (
+                <Image
+                  src="/logo.svg"
+                  alt="Khue's header logo"
+                  width={16}
+                  height={16}
+                  priority
+                  className="!size-[16px]"
+                />
+              )}
+            </div>
+            <p className="line-clamp-3 max-w-48 text-wrap text-left text-gray-400">
+              {menuItem.description}
             </p>
           </div>
           <p

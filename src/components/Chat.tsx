@@ -322,7 +322,7 @@ function Chat() {
                   {format(message.createdAt, "h:mm a")}
                 </p>
                 <div
-                  className={`rounded-full px-4 py-2 ${message.senderId === userId ? "bg-primary text-white" : "bg-secondary"}`}
+                  className={`z-10 rounded-full px-4 py-2 ${message.senderId === userId ? "bg-primary text-white" : "bg-secondary"}`}
                 >
                   <p className="text-sm">{message.content}</p>
                 </div>

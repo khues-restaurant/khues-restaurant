@@ -69,17 +69,6 @@ function PaymentSuccess({
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
       <div className="baseVertFlex max-w-80 gap-6 p-4 tablet:max-w-2xl tablet:gap-8 tablet:p-8">
-        {/* <Image
-          src="/logo.webp"
-          alt="Khue's header logo"
-          style={{
-            filter: "drop-shadow(0px 1px 0.5px hsla(336, 84%, 17%, 0.25))",
-          }}
-          width={200}
-          height={185}
-          priority
-        /> */}
-
         {/* Testing just this instead of the loading spinner below */}
         <AnimatedLogo className="size-36" />
 

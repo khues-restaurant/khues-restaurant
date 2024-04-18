@@ -44,6 +44,8 @@ import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { formatPrice } from "~/utils/formatPrice";
 import Image from "next/image";
 import { useAuth } from "@clerk/nextjs";
+import { ToastAction } from "~/components/ui/toast";
+import { useToast } from "~/components/ui/use-toast";
 
 function getDefaultCustomizationChoices(item: FullMenuItem) {
   return item.customizationCategories.reduce((acc, category) => {
@@ -88,13 +90,21 @@ function ItemCustomizationDrawer({
       },
     });
 
-  const { orderDetails, customizationChoices, discounts, userFavoriteItemIds } =
-    useMainStore((state) => ({
-      orderDetails: state.orderDetails,
-      customizationChoices: state.customizationChoices,
-      discounts: state.discounts,
-      userFavoriteItemIds: state.userFavoriteItemIds,
-    }));
+  const {
+    orderDetails,
+    customizationChoices,
+    discounts,
+    userFavoriteItemIds,
+    getPrevOrderDetails,
+    setPrevOrderDetails,
+  } = useMainStore((state) => ({
+    orderDetails: state.orderDetails,
+    customizationChoices: state.customizationChoices,
+    discounts: state.discounts,
+    userFavoriteItemIds: state.userFavoriteItemIds,
+    getPrevOrderDetails: state.getPrevOrderDetails,
+    setPrevOrderDetails: state.setPrevOrderDetails,
+  }));
 
   const { updateOrder } = useUpdateOrder();
 
@@ -139,6 +149,8 @@ function ItemCustomizationDrawer({
     // eventually add proper cleanup functions here
   }, [suggestedPairingsApi]);
 
+  const { toast } = useToast();
+
   return (
     <motion.div
       key={itemToCustomize.name}
@@ -168,9 +180,22 @@ function ItemCustomizationDrawer({
           className={`baseVertFlex relative w-full gap-2 ${forCart ? "mt-12" : "mt-8"}`}
         >
           <div className="baseFlex relative w-full !justify-between px-8">
-            <p className="text-xl font-semibold underline underline-offset-2">
-              {itemToCustomize.name}
-            </p>
+            <div className="baseFlex gap-2">
+              <p className="text-xl font-semibold underline underline-offset-2">
+                {itemToCustomize.name}
+              </p>
+
+              {itemToCustomize.chefsChoice && (
+                <Image
+                  src="/logo.svg"
+                  alt="Khue's header logo"
+                  width={16}
+                  height={16}
+                  priority
+                  className="!size-[16px]"
+                />
+              )}
+            </div>
 
             {/* TODO: wrap the like button in a Popover to show "Only rewards members can favorite items" */}
 
@@ -483,6 +508,26 @@ function ItemCustomizationDrawer({
                   };
                 }
               } else {
+                // set prev order details so we can revert if necessary
+                // with toast's undo button
+                setPrevOrderDetails(orderDetails);
+
+                toast({
+                  description: `${localItemOrderDetails.name} added to your order.`,
+                  action: (
+                    <ToastAction
+                      altText={`Undo the addition of ${localItemOrderDetails.name} to your order.`}
+                      onClick={() => {
+                        updateOrder({
+                          newOrderDetails: getPrevOrderDetails(),
+                        });
+                      }}
+                    >
+                      Undo
+                    </ToastAction>
+                  ),
+                });
+
                 newOrderDetails.items.push(localItemOrderDetails);
               }
 

@@ -539,14 +539,14 @@ function CartDrawer({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="baseVertFlex mt-8 w-full gap-4 p-4"
+              className="baseVertFlex my-8 w-full gap-4 p-4"
             >
               {/* TODO: definitely have some (probably paid for) asset of an empty plate or like
           an empty dish with chopsticks beside it? */}
 
               <p className="text-lg font-semibold">Your order is empty</p>
               <p className="w-64 text-center">
-                Looks like you haven&apos;t added anything to your order yet.
+                It looks like you haven&apos;t added anything to your order yet.
               </p>
             </motion.div>
           ) : (

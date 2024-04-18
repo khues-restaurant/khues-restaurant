@@ -531,7 +531,7 @@ function CartSheet({
 
             <p className="text-lg font-semibold">Your order is empty</p>
             <p className="w-64 text-center">
-              Looks like you haven&apos;t added anything to your order yet.
+              It looks like you haven&apos;t added anything to your order yet.
             </p>
           </motion.div>
         ) : (
