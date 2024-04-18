@@ -325,7 +325,7 @@ function CartDrawer({
       transition={{
         duration: 0.35,
       }}
-      className="baseVertFlex relative h-full w-full !justify-start overflow-y-auto"
+      className="baseVertFlex relative size-full !justify-start overflow-y-auto"
     >
       <div className="baseVertFlex w-full !items-start gap-1 border-b-2 p-4">
         <div className="baseFlex !items-start gap-1">
@@ -475,7 +475,7 @@ function CartDrawer({
       </div>
 
       {/* summary of items in cart */}
-      <div className="baseVertFlex h-full w-full !items-start !justify-start gap-2 p-4">
+      <div className="baseVertFlex size-full !items-start !justify-start gap-2 p-4">
         <p className="text-lg font-semibold underline underline-offset-2">
           Items
         </p>

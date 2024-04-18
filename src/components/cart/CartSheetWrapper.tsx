@@ -53,7 +53,7 @@ function CartSheetWrapper({
               justifyContent:
                 orderDetails.items.length === 0 ? "center" : "flex-start",
             }}
-            className="baseVertFlex relative h-full w-full"
+            className="baseVertFlex relative size-full"
           >
             <CartSheet
               setShowCartSheet={setShowCartSheet}

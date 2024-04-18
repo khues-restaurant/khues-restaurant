@@ -386,7 +386,7 @@ function Preferences() {
                       <Textarea
                         maxLength={100}
                         placeholder="I am allergic to..."
-                        className="max-h-32 w-full"
+                        className="min-h-32 w-full resize-none tablet:min-h-24"
                         {...field}
                       />
                     </FormControl>

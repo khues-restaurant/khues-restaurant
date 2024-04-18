@@ -220,7 +220,7 @@ function OrderNow() {
     >
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72">
-        <div className="baseFlex absolute left-0 top-0 h-full w-full border-b-2 bg-primary tablet:gap-8 desktop:gap-16">
+        <div className="baseFlex absolute left-0 top-0 size-full border-b-2 bg-primary tablet:gap-8 desktop:gap-16">
           {/* desktop fading gradients */}
           {/* <div className="absolute left-0 top-0 h-full w-screen">
             <div className="absolute left-0 top-0 hidden h-full w-1/6 bg-gradient-to-l from-transparent to-black/50 tablet:block"></div>
@@ -281,7 +281,7 @@ function OrderNow() {
         </div>
       </div>
 
-      <div className="baseVertFlex relative h-full w-full tablet:w-3/4">
+      <div className="baseVertFlex relative size-full tablet:w-3/4">
         {ableToRenderMainContent() && (
           <motion.div
             key={"menuCategoriesPicker"}
@@ -289,7 +289,7 @@ function OrderNow() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseFlex z-10 h-full w-full bg-white shadow-lg tablet:shadow-none"
+            className="baseFlex z-10 size-full bg-white shadow-lg tablet:shadow-none"
           >
             {/* unsure of why container increases in size a bit on desktop when sticky becomes active..  */}
 
@@ -430,7 +430,7 @@ function OrderNow() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="baseVertFlex mb-8 mt-8 h-full w-full gap-8 pb-8 tablet:mt-0"
+              className="baseVertFlex my-8 size-full gap-8 p-4 pb-8 tablet:mt-0 tablet:p-0 tablet:pb-8"
             >
               {/* TODO: add Favorites + Recent orders buttons to sticky list at top.
                   should they just be the words or also have the heart/"redo" icon next to them?
@@ -860,7 +860,7 @@ function MenuItemPreviewButton({
       <Button
         variant="outline"
         disabled={!menuItem.available}
-        className="baseFlex h-full w-full !justify-between gap-4 border !p-6 tablet:!p-4"
+        className="baseFlex size-full !justify-between gap-4 border border-gray-300 !p-6 tablet:!p-4"
         onClick={() => {
           dismissToasts();
 
@@ -879,17 +879,15 @@ function MenuItemPreviewButton({
           alt={menuItem.name}
           width={96}
           height={96}
-          className="rounded-md"
+          className="mb-4 rounded-md"
         />
 
-        <div className="baseVertFlex h-full w-48 !items-start !justify-between">
+        <div className="baseVertFlex h-full w-48 !items-start">
           <div
             className={`baseVertFlex !items-start gap-2 ${!menuItem.available ? "mt-4" : ""}`}
           >
-            <div className="baseFlex gap-2">
-              <p className="text-lg font-medium underline underline-offset-2">
-                {menuItem.name}
-              </p>
+            <p className="max-w-40 text-wrap text-left text-lg font-medium underline underline-offset-2">
+              {menuItem.name}
               {menuItem.chefsChoice && (
                 <Image
                   src="/logo.svg"
@@ -897,17 +895,17 @@ function MenuItemPreviewButton({
                   width={16}
                   height={16}
                   priority
-                  className="!size-[16px]"
+                  className="ml-2 !inline-block !size-[16px]"
                 />
               )}
-            </div>
+            </p>
             <p className="line-clamp-3 max-w-48 text-wrap text-left text-gray-400">
               {menuItem.description}
             </p>
           </div>
           <p
             // TODO: idk about either the goldBorder or rewardsGoldBorder here...
-            className={`self-end text-base ${activeDiscount ? "goldBorder rounded-md !py-0.5 px-4 text-white" : ""}`}
+            className={`mt-4 self-end text-base ${activeDiscount ? "goldBorder rounded-md !py-0.5 px-4 text-white" : ""}`}
           >
             {formatPrice(
               calculateRelativeTotal({
@@ -941,7 +939,7 @@ function MenuItemPreviewButton({
           variant={"outline"}
           size={"icon"}
           disabled={showCheckmark}
-          className="baseFlex absolute right-0 top-0 h-10 w-10 rounded-none rounded-bl-md rounded-tr-md border text-primary"
+          className="baseFlex absolute right-0 top-0 h-10 w-10 rounded-none rounded-bl-md rounded-tr-md border border-gray-300 text-primary"
           onClick={() => {
             // set prev order details so we can revert if necessary
             // with toast's undo button
@@ -1151,7 +1149,7 @@ function PreviousOrder({ order }: PreviousOrder) {
 
   return (
     <div className="relative h-40 w-full max-w-96">
-      <div className="baseFlex h-full w-full gap-4 rounded-md border px-4 py-6">
+      <div className="baseFlex size-full gap-4 rounded-md border border-gray-300 px-4 py-6">
         <div className="grid w-28 grid-cols-2 grid-rows-2 !place-items-center gap-1">
           <Image
             src={"/menuItems/sampleImage.webp"}
@@ -1186,7 +1184,7 @@ function PreviousOrder({ order }: PreviousOrder) {
           )}
         </div>
 
-        <div className="baseFlex relative h-full w-full !items-start gap-4">
+        <div className="baseFlex relative size-full !items-start gap-4">
           <div className="baseVertFlex w-full !items-start gap-2">
             <p className="w-full !text-nowrap font-medium underline underline-offset-2">
               {format(order.datetimeToPickup, "EEEE, MMMM do")}

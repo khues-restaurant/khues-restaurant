@@ -647,7 +647,7 @@ function RewardMenuItem({
 
   return (
     <div className="relative w-full max-w-80 sm:max-w-96">
-      <div className="baseFlex relative h-full w-full !items-start gap-4 rounded-md p-4">
+      <div className="baseFlex relative size-full !items-start gap-4 rounded-md p-4">
         {/* <div className="imageFiller mt-2 size-16 rounded-md tablet:size-24"></div> */}
         <Image
           src={"/menuItems/sampleImage.webp"}

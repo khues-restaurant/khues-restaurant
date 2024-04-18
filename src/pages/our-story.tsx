@@ -143,7 +143,7 @@ function OurStory() {
           </Carousel>
 
           {/* max-w-80 necessary? */}
-          <div className="baseFlex relative h-full w-full max-w-80 gap-2 sm:max-w-full tablet:!flex-col">
+          <div className="baseFlex relative size-full max-w-80 gap-2 sm:max-w-full tablet:!flex-col">
             <Button
               variant={"ghost"}
               className={`!size-20 rounded-md opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 0 ? "!opacity-100" : ""}`}

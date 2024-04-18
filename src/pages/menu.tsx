@@ -118,7 +118,7 @@ function Menu() {
     >
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72">
-        <div className="baseFlex absolute left-0 top-0 h-full w-full border-b-2 bg-primary tablet:gap-8 desktop:gap-16">
+        <div className="baseFlex absolute left-0 top-0 size-full border-b-2 bg-primary tablet:gap-8 desktop:gap-16">
           {/* desktop fading gradients */}
           {/* <div className="absolute left-0 top-0 h-full w-screen">
             <div className="absolute left-0 top-0 hidden h-full w-1/6 bg-gradient-to-l from-transparent to-black/50 tablet:block"></div>
@@ -203,7 +203,7 @@ function Menu() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="baseFlex z-10 h-full w-full bg-white shadow-lg tablet:shadow-none"
+              className="baseFlex z-10 size-full bg-white shadow-lg tablet:shadow-none"
             >
               {/* unsure of why container increases in size a bit on desktop when sticky becomes active..  */}
               <Sticky
@@ -335,7 +335,7 @@ function Menu() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="baseVertFlex mb-8 mt-8 h-full w-full gap-8 tablet:mt-0"
+              className="baseVertFlex mb-8 mt-8 size-full gap-8 tablet:mt-0"
             >
               {menuCategories?.map((category) => (
                 <MenuCategory
@@ -786,7 +786,7 @@ function MenuItemPreview({
       }}
       className="relative w-full max-w-96"
     >
-      <div className="baseFlex h-full w-full gap-4 py-6">
+      <div className="baseFlex size-full gap-4 py-6">
         <Image
           src={"/menuItems/sampleImage.webp"}
           alt={menuItem.name}
@@ -795,13 +795,11 @@ function MenuItemPreview({
           className="rounded-md"
         />
 
-        <div className="baseVertFlex h-full w-full !items-start !justify-between">
+        <div className="baseVertFlex size-full !items-start">
           <div className="baseFlex w-full !justify-between">
             <div className="baseVertFlex !items-start gap-2">
-              <div className="baseFlex gap-2">
-                <p className="text-lg font-medium underline underline-offset-2">
-                  {menuItem.name}
-                </p>
+              <p className="text-wrap text-left text-lg font-medium underline underline-offset-2">
+                {menuItem.name}
                 {menuItem.chefsChoice && (
                   <Image
                     src="/logo.svg"
@@ -809,10 +807,10 @@ function MenuItemPreview({
                     width={16}
                     height={16}
                     priority
-                    className="!size-[16px]"
+                    className="ml-2 !inline-block !size-[16px]"
                   />
                 )}
-              </div>
+              </p>
 
               <p className="max-w-48 text-wrap text-left text-sm text-gray-400">
                 {menuItem.description}
@@ -820,12 +818,14 @@ function MenuItemPreview({
             </div>
           </div>
 
-          {formatMenuItemPrice(
-            categoryName,
-            menuItem,
-            activeDiscount,
-            customizationChoices,
-          )}
+          <div className="mt-4 self-end">
+            {formatMenuItemPrice(
+              categoryName,
+              menuItem,
+              activeDiscount,
+              customizationChoices,
+            )}
+          </div>
         </div>
       </div>
     </div>

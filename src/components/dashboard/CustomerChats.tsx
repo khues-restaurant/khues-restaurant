@@ -174,7 +174,7 @@ function CustomerChats() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseFlex mt-32 h-full w-full tablet:mt-48"
+      className="baseFlex mt-32 size-full tablet:mt-48"
     >
       {((viewportLabel.includes("mobile") && !selectedUserId) ||
         !viewportLabel.includes("mobile")) && (
@@ -183,7 +183,7 @@ function CustomerChats() {
             Chats
           </div>
 
-          <div className="baseVertFlex h-full w-full !justify-start overflow-y-auto">
+          <div className="baseVertFlex size-full !justify-start overflow-y-auto">
             {chats.map((chat) => {
               const lastMessage = chat.messages?.at(-1);
 
@@ -235,7 +235,7 @@ function CustomerChats() {
           </div>
 
           {/* scroll-y-auto messages container */}
-          <div className="baseVertFlex relative h-full w-full !justify-start gap-2 overflow-y-auto bg-background p-2 sm:h-96 ">
+          <div className="baseVertFlex relative size-full !justify-start gap-2 overflow-y-auto bg-background p-2 sm:h-96 ">
             <Image
               src="/logo.svg"
               alt="Khue's header logo"

@@ -105,7 +105,7 @@ function OrderManagement({ orders }: OrderManagement) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex mt-32 h-full w-full tablet:mt-48"
+      className="baseVertFlex mt-32 size-full tablet:mt-48"
     >
       <div className="baseFlex w-11/12 !justify-between  tablet:w-full tablet:max-w-lg">
         <div className="relative">

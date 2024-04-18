@@ -17,23 +17,23 @@ function Media() {
     >
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72">
-        <div className="tablet:baseFlex absolute left-0 top-0 grid h-full w-full grid-cols-2 grid-rows-2 border-b-2 tablet:gap-4">
+        <div className="tablet:baseFlex absolute left-0 top-0 grid size-full grid-cols-2 grid-rows-2 border-b-2 tablet:gap-4">
           {/* desktop fading gradients */}
           <div className="absolute left-0 top-0 h-full w-screen">
             <div className="absolute left-0 top-0 hidden h-full w-1/6 bg-gradient-to-l from-transparent to-black/50 tablet:block"></div>
             <div className="absolute right-0 top-0 hidden h-full w-1/6 bg-gradient-to-r from-transparent to-black/50 tablet:block"></div>
           </div>
 
-          <div className="imageFiller h-full w-full tablet:w-1/4">
+          <div className="imageFiller size-full tablet:w-1/4">
             maybe a combination of interior/exterior shots?
           </div>
-          <div className="imageFiller h-full w-full tablet:w-1/4">
+          <div className="imageFiller size-full tablet:w-1/4">
             maybe a combination of interior/exterior shots?
           </div>
-          <div className="imageFiller h-full w-full tablet:w-1/4">
+          <div className="imageFiller size-full tablet:w-1/4">
             maybe a combination of interior/exterior shots?
           </div>
-          <div className="imageFiller h-full w-full tablet:w-1/4">
+          <div className="imageFiller size-full tablet:w-1/4">
             maybe a combination of interior/exterior shots?
           </div>
         </div>

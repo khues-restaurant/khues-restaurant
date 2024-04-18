@@ -176,7 +176,7 @@ function Track() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="baseVertFlex h-full w-full !justify-start gap-8 p-4"
+              className="baseVertFlex size-full !justify-start gap-8 p-4"
             >
               <p className="text-xl font-semibold underline underline-offset-4">
                 Order{" "}
@@ -188,7 +188,7 @@ function Track() {
               <div className="baseVertFlex w-full gap-2">
                 {/* animated progress bar */}
                 <div className="relative h-10 w-full overflow-hidden rounded-full border-2 border-primary shadow-md ">
-                  <div className="baseFlex absolute left-0 top-0 h-full w-full">
+                  <div className="baseFlex absolute left-0 top-0 size-full">
                     {/* pre-first checkpoint */}
                     <div className="relative h-full w-[21%]">
                       <motion.div
@@ -202,7 +202,7 @@ function Track() {
                               : "linear",
                           delay: 1,
                         }}
-                        className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
+                        className="absolute left-0 top-0 size-full origin-left bg-primary"
                       ></motion.div>
                     </div>
 
@@ -234,7 +234,7 @@ function Track() {
                                 : "linear",
                             delay: 2,
                           }}
-                          className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
+                          className="absolute left-0 top-0 size-full origin-left bg-primary"
                         ></motion.div>
                       )}
                     </div>
@@ -271,7 +271,7 @@ function Track() {
                             // part to be linear
                             delay: 3,
                           }}
-                          className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
+                          className="absolute left-0 top-0 size-full origin-left bg-primary"
                         ></motion.div>
                       )}
                     </div>
@@ -302,7 +302,7 @@ function Track() {
                             ease: "easeOut",
                             delay: 4,
                           }}
-                          className="absolute left-0 top-0 h-full w-full origin-left bg-primary"
+                          className="absolute left-0 top-0 size-full origin-left bg-primary"
                         ></motion.div>
                       )}
                     </div>
@@ -736,7 +736,7 @@ function Step({
                 style={{
                   animationDuration: "3s",
                 }}
-                className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"
+                className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75"
               ></span>
               <span className="relative inline-flex size-3 rounded-full bg-primary"></span>
             </motion.span>

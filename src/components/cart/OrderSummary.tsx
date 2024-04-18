@@ -60,7 +60,7 @@ function OrderSummary({ order }: OrderSummary) {
         <span>Items</span>
       </div>
 
-      <div className="baseVertFlex mt-2 h-full w-full !items-start !justify-start gap-2 rounded-md">
+      <div className="baseVertFlex mt-2 size-full !items-start !justify-start gap-2 rounded-md">
         <div className="baseVertFlex w-full gap-4">
           {order.orderItems.map((item, idx) => (
             <motion.div

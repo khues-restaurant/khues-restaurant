@@ -298,7 +298,7 @@ function Chat() {
           </div>
 
           {/* scroll-y-auto messages container */}
-          <div className="baseVertFlex relative h-full w-full !flex-col-reverse !justify-start gap-2 overflow-y-auto bg-background p-2 sm:h-96 ">
+          <div className="baseVertFlex relative size-full !flex-col-reverse !justify-start gap-2 overflow-y-auto bg-background p-2 sm:h-96 ">
             <Image
               src="/logo.svg"
               alt="Khue's header logo"

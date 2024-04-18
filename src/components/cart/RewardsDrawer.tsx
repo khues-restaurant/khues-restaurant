@@ -129,7 +129,7 @@ function RewardsDrawer({
       transition={{
         duration: 0.35,
       }}
-      className="baseVertFlex relative h-full w-full !justify-start"
+      className="baseVertFlex relative size-full !justify-start"
     >
       <div className="baseVertFlex relative mt-8 w-full !justify-start gap-2">
         <div
@@ -364,7 +364,7 @@ function RewardMenuItem({
 
   return (
     <div className="relative w-full max-w-96">
-      <div className="baseFlex h-full w-full !items-start gap-4 rounded-md p-4">
+      <div className="baseFlex size-full !items-start gap-4 rounded-md p-4">
         <Image
           src={"/menuItems/sampleImage.webp"}
           alt={menuItem.name}

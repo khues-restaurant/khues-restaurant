@@ -202,7 +202,7 @@ function ItemCustomizerDialogContent({
         <div className="baseFlex relative h-72 w-full !justify-end rounded-md shadow-md">
           {/* red diagonal bg */}
           <div
-            className="absolute left-0 top-0 h-full w-full rounded-md bg-primary"
+            className="absolute left-0 top-0 size-full rounded-md bg-primary"
             style={{
               maskImage:
                 "linear-gradient(to bottom right, black 60%, transparent 50%)",
@@ -708,7 +708,7 @@ function CustomizationOption({
       }}
     >
       <RadioGroupItem id={choice.id} value={choice.id} />
-      <div className="baseVertFlex h-full w-full gap-2">
+      <div className="baseVertFlex size-full gap-2">
         <Label htmlFor={choice.id} className="self-start">
           {choice.name}
         </Label>

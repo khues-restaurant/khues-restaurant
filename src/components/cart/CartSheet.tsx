@@ -317,7 +317,7 @@ function CartSheet({
   }
 
   return (
-    <div className="baseVertFlex relative h-full w-full !justify-start">
+    <div className="baseVertFlex relative size-full !justify-start">
       <div className="baseVertFlex w-full !items-start gap-1 border-b-2 p-4">
         <div className="baseFlex !items-start gap-1">
           <LiaShoppingBagSolid className="h-6 w-6" />

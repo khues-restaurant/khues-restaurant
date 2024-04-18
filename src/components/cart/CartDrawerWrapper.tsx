@@ -53,7 +53,7 @@ function CartDrawerWrapper({
 
           <AnimatePresence mode="popLayout" initial={false}>
             {!itemBeingModified && !showRewardsDrawer && (
-              <motion.div key="cart" className="baseVertFlex h-full w-full">
+              <motion.div key="cart" className="baseVertFlex size-full">
                 <CartDrawer
                   setShowCartDrawer={setShowCartDrawer}
                   setItemBeingModified={setItemBeingModified}
@@ -64,10 +64,7 @@ function CartDrawerWrapper({
             )}
 
             {itemBeingModified && (
-              <motion.div
-                key="customize"
-                className="baseVertFlex h-full w-full"
-              >
+              <motion.div key="customize" className="baseVertFlex size-full">
                 <ItemCustomizationDrawer
                   itemToCustomize={itemBeingModified}
                   setItemToCustomize={setItemBeingModified}
@@ -78,7 +75,7 @@ function CartDrawerWrapper({
             )}
 
             {showRewardsDrawer && (
-              <motion.div key="rewards" className="baseVertFlex h-full w-full">
+              <motion.div key="rewards" className="baseVertFlex size-full">
                 <RewardsDrawer
                   showRewardsDrawer={showRewardsDrawer}
                   setShowRewardsDrawer={setShowRewardsDrawer}

@@ -174,7 +174,7 @@ export default function Home() {
             don't totally abandon this yet*/}
         <div className="absolute left-0 top-0 h-full w-1/2 bg-gradient-to-r from-black/25 to-transparent"></div>
 
-        <div className="relative grid h-full w-full grid-cols-3 grid-rows-3 gap-2">
+        <div className="relative grid size-full grid-cols-3 grid-rows-3 gap-2">
           {/* top left */}
           <div className="relative col-span-1 row-span-2 size-full overflow-hidden rounded-md">
             <Parallax speed={-10} className="!absolute !top-0 !size-full">
@@ -526,7 +526,7 @@ export default function Home() {
                 damping: 20,
               }}
               viewport={{ once: true, amount: 0.5 }}
-              className="absolute right-4 top-4 z-[-1] h-full w-full rounded-md bg-primary"
+              className="absolute right-4 top-4 z-[-1] size-full rounded-md bg-primary"
             ></motion.div>
           </div>
         </div>
@@ -596,7 +596,7 @@ export default function Home() {
                 damping: 20,
               }}
               viewport={{ once: true, amount: 0.5 }}
-              className="absolute left-4 top-4 z-[-1] h-full w-full rounded-md bg-primary"
+              className="absolute left-4 top-4 z-[-1] size-full rounded-md bg-primary"
             ></motion.div>
           </div>
 
@@ -692,7 +692,7 @@ export default function Home() {
                 damping: 20,
               }}
               viewport={{ once: true, amount: 0.5 }}
-              className="absolute right-4 top-4 z-[-1] h-full w-full rounded-md bg-primary"
+              className="absolute right-4 top-4 z-[-1] size-full rounded-md bg-primary"
             ></motion.div>
           </div>
         </div>

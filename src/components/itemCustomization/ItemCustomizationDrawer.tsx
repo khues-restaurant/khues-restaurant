@@ -263,7 +263,7 @@ function ItemCustomizationDrawer({
           />
         </div>
 
-        <div className="baseVertFlex h-full w-full gap-12 p-8 pt-4">
+        <div className="baseVertFlex size-full gap-12 p-8 pt-4">
           {/* Description */}
           <div className="baseVertFlex w-full !items-start gap-2">
             <p className="text-lg underline underline-offset-2">Description</p>
@@ -405,8 +405,7 @@ function ItemCustomizationDrawer({
                   )}
 
                   <Textarea
-                    // purely testing the dynamic/animated font-size
-                    className="mt-4 h-full min-h-36 w-full resize-none rounded-md border-2 p-4 !text-sm transition-all focus-within:!text-base"
+                    className="mt-4 h-full min-h-36 w-full resize-none rounded-md border-2 p-4 text-base tablet:text-sm"
                     placeholder="Let us know how you'd like your dish prepared."
                     value={localItemOrderDetails.specialInstructions}
                     onChange={(e) => {
@@ -686,7 +685,7 @@ function CustomizationOption({
       }}
     >
       <RadioGroupItem id={choice.id} value={choice.id} />
-      <div className="baseVertFlex h-full w-full gap-2">
+      <div className="baseVertFlex size-full gap-2">
         <Label htmlFor={choice.id} className="self-start">
           {choice.name}
         </Label>
