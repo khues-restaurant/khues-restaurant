@@ -189,8 +189,6 @@ function Preferences() {
     });
   }
 
-  console.log(form.getValues());
-
   if (!isSignedIn) {
     return <UserIsNotAuthenticated />;
   }

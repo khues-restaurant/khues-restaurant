@@ -21,9 +21,17 @@ import {
   AlertDialogContent,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
+import { useMainStore } from "~/stores/MainStore";
+import { useRouter } from "next/router";
 
 function Chat() {
   const userId = useGetUserId();
+  const { asPath } = useRouter();
+
+  const { footerIsInView } = useMainStore((state) => ({
+    footerIsInView: state.footerIsInView,
+  }));
+
   const ctx = api.useUtils();
 
   const { data: chat, refetch } = api.chat.getMessagesPerUser.useQuery(userId, {
@@ -131,7 +139,7 @@ function Chat() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.1 }}
-              className="fixed bottom-6 right-6 z-10 size-10 "
+              className={`fixed right-6 z-10 size-10 transition-all !duration-300 ${!footerIsInView && asPath.includes("/profile") ? "bottom-28" : "-bottom-10 !opacity-0"}`}
             >
               <AlertDialogTrigger asChild>
                 <Button

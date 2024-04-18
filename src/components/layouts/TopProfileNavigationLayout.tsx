@@ -1,6 +1,6 @@
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
-import { useMemo, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CiGift } from "react-icons/ci";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -18,9 +18,40 @@ function TopProfileNavigationLayout({ children }: Layout) {
   const { isSignedIn } = useAuth();
   const { asPath } = useRouter();
 
-  const { footerIsInView } = useMainStore((state) => ({
+  const { footerIsInView, setFooterIsInView } = useMainStore((state) => ({
     footerIsInView: state.footerIsInView,
+    setFooterIsInView: state.setFooterIsInView,
   }));
+
+  const sentinelRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setFooterIsInView(entry?.isIntersecting ?? false);
+      },
+      {
+        root: null,
+        rootMargin: "81px 0px 0px 0px",
+        threshold: 0,
+      },
+    );
+
+    if (sentinelRef.current) {
+      observer.observe(sentinelRef.current);
+    }
+
+    // to abide by eslint rule
+    const localSentinelRef = sentinelRef.current;
+
+    return () => {
+      if (localSentinelRef) {
+        observer.unobserve(localSentinelRef);
+      }
+
+      setFooterIsInView(false);
+    };
+  }, [setFooterIsInView]);
 
   const finalQueryOfUrl = useMemo(() => {
     if (asPath.includes("/rewards")) return "rewards";
@@ -93,7 +124,10 @@ function TopProfileNavigationLayout({ children }: Layout) {
         <AnimatePresence mode="wait">{children}</AnimatePresence>
       </div>
 
-      <div
+      <div ref={sentinelRef} style={{ height: "1px" }}></div>
+
+      <motion.div
+        layout
         className={`baseFlex bottom-0 left-0 z-40 w-full gap-3 border-t border-gray-400 bg-gray-100 p-2 sm:gap-8 tablet:hidden ${footerIsInView ? "relative" : "fixed"}`}
       >
         <Button
@@ -144,7 +178,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
             My orders
           </Link>
         </Button>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }

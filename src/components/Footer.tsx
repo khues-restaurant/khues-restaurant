@@ -6,46 +6,10 @@ import { FaXTwitter } from "react-icons/fa6";
 import { IoLogoInstagram } from "react-icons/io5";
 import { SiTiktok } from "react-icons/si";
 import { Button } from "~/components/ui/button";
-import { useEffect, useRef } from "react";
-import { useMainStore } from "~/stores/MainStore";
 
 function Footer() {
-  const { setFooterIsInView } = useMainStore((state) => ({
-    setFooterIsInView: state.setFooterIsInView,
-  }));
-
-  const footerRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setFooterIsInView(entry?.isIntersecting ?? false);
-      },
-      {
-        root: null,
-        threshold: 0,
-      },
-    );
-
-    if (footerRef.current) {
-      observer.observe(footerRef.current);
-    }
-
-    // to abide by eslint rule
-    const localFooterRef = footerRef.current;
-
-    return () => {
-      if (localFooterRef) {
-        observer.unobserve(localFooterRef);
-      }
-    };
-  }, [setFooterIsInView]);
-
   return (
-    <footer
-      ref={footerRef}
-      className="baseVertFlex z-20 min-h-10 w-full gap-8 bg-primary p-4 text-white tablet:!flex-row tablet:!justify-between tablet:gap-0"
-    >
+    <footer className="baseVertFlex z-20 min-h-10 w-full gap-8 bg-primary p-4 text-white tablet:!flex-row tablet:!justify-between tablet:gap-0">
       {/* contact info */}
       <div className="baseVertFlex gap-2 tablet:!items-start tablet:!justify-start tablet:gap-0">
         <p className="font-semibold underline underline-offset-2">Contact</p>
