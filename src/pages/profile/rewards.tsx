@@ -19,15 +19,25 @@ import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getRewardsPointCost } from "~/utils/getRewardsPointCost";
-import { buildClerkProps } from "@clerk/nextjs/server";
 import { type GetServerSideProps } from "next";
-import UserIsNotAuthenticated from "~/components/UserIsNotAuthenticated";
+import { buildClerkProps, getAuth } from "@clerk/nextjs/server";
+import { PrismaClient, type User } from "@prisma/client";
+import isEqual from "lodash.isequal";
 
-function Rewards() {
+function Rewards({
+  initUserData,
+  initRewardsData,
+}: {
+  initUserData: User;
+  initRewardsData: {
+    rewardMenuCategories: FullMenuItem[]; // TODO: blatantly wrong, make proper type for this later
+    birthdayMenuCategories: FullMenuItem[]; // TODO: blatantly wrong, make proper type for this later
+  };
+}) {
   const userId = useGetUserId();
   const { isSignedIn } = useAuth();
 
-  const { data: user } = api.user.get.useQuery(userId, {
+  const { data: currentUserData } = api.user.get.useQuery(userId, {
     enabled: Boolean(userId && isSignedIn),
   });
 
@@ -36,7 +46,33 @@ function Rewards() {
     orderDetails: state.orderDetails,
   }));
 
-  const { data: rewards } = api.menuCategory.getRewardsCategories.useQuery();
+  const { data: currentRewardsData } =
+    api.menuCategory.getRewardsCategories.useQuery();
+
+  const [user, setUser] = useState<User | null>(initUserData);
+  const [rewards, setRewards] = useState(initRewardsData);
+
+  useEffect(() => {
+    if (
+      currentUserData === undefined ||
+      currentUserData === null ||
+      isEqual(initUserData, currentUserData)
+    )
+      return;
+
+    setUser(currentUserData);
+  }, [initUserData, currentUserData]);
+
+  useEffect(() => {
+    if (
+      currentRewardsData === undefined ||
+      currentRewardsData === null ||
+      isEqual(initRewardsData, currentRewardsData)
+    )
+      return;
+
+    setUser(currentRewardsData);
+  }, [initRewardsData, currentRewardsData]);
 
   const { data: activeDiscounts } = api.discount.getAll.useQuery();
   // const { data: activeRewards } = api.discount.getUserRewards.useQuery(userId);
@@ -55,6 +91,7 @@ function Rewards() {
 
   const viewportLabel = useGetViewportLabel();
 
+  // get rid of this, see no need for this bs
   useEffect(() => {
     if (!user || rewardsPointsTimerSet) return;
 
@@ -115,14 +152,6 @@ function Rewards() {
   // have to make the actual content container scrollable, not the page as it is now.
   // - will first try to just use style prop to conditionally have flex direction be column or row
   // - then use layout prop from framer motion to animate the transition
-
-  if (!rewards) return null;
-  // ^ should be fine since we are eventually going to get all
-  // reward data passed in as props from getServerSideProps
-
-  if (!isSignedIn) {
-    return <UserIsNotAuthenticated />;
-  }
 
   return (
     <motion.div
@@ -607,7 +636,86 @@ export default Rewards;
 // };
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  return { props: { ...buildClerkProps(ctx.req) } };
+  const { userId } = getAuth(ctx.req);
+  if (!userId) return { props: {} };
+
+  const prisma = new PrismaClient();
+
+  const initUserData = await prisma.user.findUnique({
+    where: {
+      userId,
+    },
+  });
+
+  if (!initUserData) return { props: {} };
+
+  const menuCategories = await prisma.menuCategory.findMany({
+    where: {
+      active: true,
+    },
+    include: {
+      activeDiscount: true,
+      menuItems: {
+        include: {
+          activeDiscount: true,
+          customizationCategories: {
+            include: {
+              customizationChoices: true,
+            },
+          },
+          suggestedPairings: {
+            include: {
+              drinkMenuItem: true,
+            },
+          },
+          suggestedWith: {
+            include: {
+              foodMenuItem: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  let rewardMenuCategories = menuCategories.filter((category) => {
+    return category.menuItems.some(
+      (item) => item.isRewardItem && category.name !== "Desserts",
+    );
+  });
+
+  // filter further to only include the relevant reward items from each category
+  rewardMenuCategories = rewardMenuCategories.map((category) => {
+    return {
+      ...category,
+      menuItems: category.menuItems.filter((item) => item.isRewardItem),
+    };
+  });
+
+  let birthdayMenuCategories = menuCategories.filter((category) => {
+    return category.menuItems.some(
+      (item) => item.isRewardItem && category.name === "Desserts",
+    );
+  });
+
+  // filter further to only include the relevant reward items from each category
+  birthdayMenuCategories = birthdayMenuCategories.map((category) => {
+    return {
+      ...category,
+      menuItems: category.menuItems.filter(
+        (item) => item.isRewardItem && category.name === "Desserts",
+      ),
+    };
+  });
+
+  const initRewardsData = {
+    rewardMenuCategories,
+    birthdayMenuCategories,
+  };
+
+  return {
+    props: { initUserData, initRewardsData, ...buildClerkProps(ctx.req) },
+  };
 };
 
 interface RewardMenuItem {
@@ -648,7 +756,6 @@ function RewardMenuItem({
   return (
     <div className="relative w-full max-w-80 sm:max-w-96">
       <div className="baseFlex relative size-full !items-start gap-4 rounded-md p-4">
-        {/* <div className="imageFiller mt-2 size-16 rounded-md tablet:size-24"></div> */}
         <Image
           src={"/menuItems/sampleImage.webp"}
           alt={menuItem.name}

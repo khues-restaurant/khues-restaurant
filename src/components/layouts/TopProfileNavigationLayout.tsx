@@ -70,6 +70,8 @@ function TopProfileNavigationLayout({ children }: Layout) {
     return "w-full lg:w-[775px]";
   }
 
+  // TODO: adjust the calc() values since we tweaked the header height I think right?
+
   return (
     <motion.div
       key={"topProfileNavigationLayout"}
@@ -78,7 +80,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
       // 73 for bottom navbar, 50 for top navbar
-      className="baseVertFlex relative mt-24 min-h-[calc(100dvh-6rem-73px)] w-full !justify-start tablet:mt-32 tablet:min-h-[calc(100dvh-7rem-50px)]"
+      className="baseVertFlex relative mt-24 h-full min-h-[calc(100dvh-6rem-73px)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem-50px)] "
     >
       <div className="baseFlex my-8 !hidden gap-4 rounded-lg border border-gray-400 bg-white p-1 tablet:!flex">
         <Button
@@ -121,6 +123,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
       <div
         className={`h-full tablet:mb-16 tablet:rounded-xl tablet:border tablet:shadow-md ${getDynamicWidth()}`}
       >
+        {/* poplayout here? */}
         <AnimatePresence mode="wait">{children}</AnimatePresence>
       </div>
 

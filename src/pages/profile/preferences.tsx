@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TopProfileNavigationLayout from "~/components/layouts/TopProfileNavigationLayout";
 import { AnimatePresence, motion } from "framer-motion";
 import { z } from "zod";
@@ -45,20 +45,33 @@ import { Button } from "~/components/ui/button";
 import { FaUserAlt } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { Separator } from "~/components/ui/separator";
-import { buildClerkProps } from "@clerk/nextjs/server";
+import { buildClerkProps, getAuth } from "@clerk/nextjs/server";
 import { type GetServerSideProps } from "next";
-import UserIsNotAuthenticated from "~/components/UserIsNotAuthenticated";
 import { formatPhoneNumber } from "~/utils/formatPhoneNumber";
+import { PrismaClient, type User } from "@prisma/client";
 
-function Preferences() {
+function Preferences({ initUserData }: { initUserData: User }) {
   const userId = useGetUserId();
   const { isSignedIn } = useAuth();
   const ctx = api.useUtils();
   const { push } = useRouter();
 
-  const { data: user } = api.user.get.useQuery(userId, {
+  const { data: currentUserData } = api.user.get.useQuery(userId, {
     enabled: Boolean(userId && isSignedIn),
   });
+
+  const [user, setUser] = useState<User | null>(initUserData);
+
+  useEffect(() => {
+    if (
+      currentUserData === undefined ||
+      currentUserData === null ||
+      isEqual(initUserData, currentUserData)
+    )
+      return;
+
+    setUser(currentUserData);
+  }, [initUserData, currentUserData]);
 
   const { mutate: updateUser } = api.user.updatePreferences.useMutation({
     onSuccess: async () => {
@@ -145,6 +158,7 @@ function Preferences() {
     birthday: z.date(),
   });
 
+  // should be able to remove ?. and ?? from these now since we are using getServerSideProps
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     values: {
@@ -187,10 +201,6 @@ function Preferences() {
       ...user,
       ...values,
     });
-  }
-
-  if (!isSignedIn) {
-    return <UserIsNotAuthenticated />;
   }
 
   return (
@@ -802,5 +812,20 @@ Preferences.PageLayout = TopProfileNavigationLayout;
 export default Preferences;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  return { props: { ...buildClerkProps(ctx.req) } };
+  const { userId } = getAuth(ctx.req);
+  if (!userId) return { props: {} };
+
+  const prisma = new PrismaClient();
+
+  const initUserData = await prisma.user.findUnique({
+    where: {
+      userId,
+    },
+  });
+
+  if (!initUserData) return { props: {} };
+
+  return {
+    props: { initUserData, ...buildClerkProps(ctx.req) },
+  };
 };

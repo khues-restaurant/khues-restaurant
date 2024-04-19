@@ -157,7 +157,7 @@ function Chat() {
                     }`}
                   ></div>
 
-                  <IoChatbox className="size-5" />
+                  <IoChatbox className="size-5 drop-shadow-md" />
                 </Button>
               </AlertDialogTrigger>
             </motion.div>
@@ -274,7 +274,7 @@ function Chat() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.1 }}
                 >
-                  <X className="size-6" />
+                  <X className="size-6 drop-shadow-md" />
                 </motion.div>
               ) : (
                 <motion.div
@@ -284,7 +284,7 @@ function Chat() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.1 }}
                 >
-                  <IoChatbox className="size-6" />
+                  <IoChatbox className="size-6 drop-shadow-md" />
                 </motion.div>
               )}
             </AnimatePresence>

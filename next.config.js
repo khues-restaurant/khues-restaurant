@@ -26,6 +26,17 @@ const config = {
     ],
   },
 
+  experimental: {
+    swcPlugins: [
+      [
+        "next-superjson-plugin",
+        {
+          excluded: [],
+        },
+      ],
+    ],
+  },
+
   // TODO: remove these out before actual production
   eslint: {
     ignoreDuringBuilds: true,

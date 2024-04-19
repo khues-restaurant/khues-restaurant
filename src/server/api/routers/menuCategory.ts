@@ -24,6 +24,21 @@ export type FullMenuItem = MenuItem & {
   suggestedWith: StoreSuggestedPairing[];
 };
 
+// any validity of these copilot generated skeleton types here?
+// type RewardItem = {
+//   // Include properties of the reward item here
+// };
+
+// type MenuCategory = {
+//   // Include properties of the menu category here
+//   menuItems: RewardItem[];
+// };
+
+// type GetRewardsCategoriesResult = {
+//   rewardMenuCategories: MenuCategory[];
+//   birthdayMenuCategories: MenuCategory[];
+// };
+
 export const menuCategoryRouter = createTRPCRouter({
   getAll: publicProcedure
     .input(z.object({ onlyOnlineOrderable: z.boolean() }).optional())

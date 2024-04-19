@@ -114,7 +114,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const user = await prisma.user.findUnique({
     where: {
-      id: ctx.query.userId as string,
+      userId: ctx.query.userId as string,
     },
   });
 

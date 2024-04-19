@@ -54,47 +54,62 @@ import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { useAuth } from "@clerk/nextjs";
 import Image from "next/image";
-import { buildClerkProps } from "@clerk/nextjs/server";
+import { buildClerkProps, getAuth } from "@clerk/nextjs/server";
 import { type GetServerSideProps } from "next";
-import UserIsNotAuthenticated from "~/components/UserIsNotAuthenticated";
+import { PrismaClient } from "@prisma/client";
+import isEqual from "lodash.isequal";
 
-function RecentOrders() {
+function RecentOrders({ initOrders }: { initOrders: DBOrderSummary[] | null }) {
   const userId = useGetUserId();
   const { isSignedIn } = useAuth();
 
-  const { data: user } = api.user.get.useQuery(userId, {
-    enabled: Boolean(userId && isSignedIn),
-  });
-
-  const { data: orders } = api.order.getUsersOrders.useQuery(
+  const { data: currentOrderData } = api.order.getUsersOrders.useQuery(
     { userId },
     {
       enabled: Boolean(userId && isSignedIn),
     },
   );
 
-  const [sortedOrders, setSortedOrders] = useState<DBOrderSummary[]>([]);
+  console.log("rendering");
+
+  const [orders, setOrders] = useState<DBOrderSummary[] | null>(initOrders);
+
+  useEffect(() => {
+    if (
+      currentOrderData === undefined ||
+      currentOrderData === null ||
+      isEqual(initOrders, currentOrderData)
+    )
+      return;
+
+    setOrders(currentOrderData);
+  }, [initOrders, currentOrderData]);
+
+  const [sortedOrders, setSortedOrders] = useState<DBOrderSummary[] | null>(
+    null,
+  );
   const [sortDirection, setSortDirection] = useState("desc");
 
   useEffect(() => {
-    if (orders) {
-      const sortedOrders = orders.sort((a, b) => {
-        if (sortDirection === "desc") {
-          return b.datetimeToPickup.getTime() - a.datetimeToPickup.getTime();
-        } else {
-          return a.datetimeToPickup.getTime() - b.datetimeToPickup.getTime();
-        }
-      });
-      setSortedOrders(sortedOrders);
+    if (orders === null && sortedOrders === null) {
+      setSortedOrders([]);
+      return;
     }
+
+    const sortedOrders = orders.sort((a, b) => {
+      if (sortDirection === "desc") {
+        return b.datetimeToPickup.getTime() - a.datetimeToPickup.getTime();
+      } else {
+        return a.datetimeToPickup.getTime() - b.datetimeToPickup.getTime();
+      }
+    });
+
+    console.log("setting orders");
+    setSortedOrders(sortedOrders);
   }, [orders, sortDirection]);
 
-  // TODO: ah prob can't do the nested route level animated logo based on if user
-  // api has been fetched, since this needs the orders.. not the end of the world to define it here
-
-  if (!isSignedIn) {
-    return <UserIsNotAuthenticated />;
-  }
+  // dang, there is still seemingly the flash of layout on the initial render, investigate.
+  // could it be due to the type errors in above effect?
 
   return (
     <motion.div
@@ -103,10 +118,13 @@ function RecentOrders() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex relative mb-16 min-h-[calc(100dvh-6rem-73px)] w-full !justify-start tablet:min-h-0"
+      className="baseVertFlex relative min-h-[calc(100dvh-6rem-73px)] w-full tablet:min-h-0 tablet:!justify-start"
     >
       <div className="baseVertFlex relative mt-4 w-full p-0 transition-all tablet:my-8 tablet:p-8">
-        {sortedOrders && sortedOrders.length > 0 ? (
+        {/* fyi: don't think it makes sense to have these two be under an <AnimatePresence /> since
+            it should (rarely) ever change between 0 orders and some orders */}
+
+        {sortedOrders && sortedOrders.length > 0 && (
           <div className="baseVertFlex gap-2">
             <div className="baseFlex w-full !justify-end font-medium">
               <div className="baseFlex gap-2">
@@ -142,30 +160,25 @@ function RecentOrders() {
               ))}
             </div>
           </div>
-        ) : (
+        )}
+
+        {sortedOrders && sortedOrders.length === 0 && (
           <div className="baseVertFlex relative gap-4">
             <Image
               src={"/menuItems/myOrders.jpg"}
               alt={"TODO: fill in w/ appropriate alt text"}
               fill
-              className="!relative  rounded-md "
+              className="!relative rounded-md !px-4 "
             />
 
-            <div className="baseVertFlex gap-2">
+            <div className="baseVertFlex gap-4">
               <p className="text-center tablet:text-lg">
                 It looks like you haven&apos;t placed an order yet.
               </p>
-
-              {/* TODO: probably have different text here so you don't need
-                  to have the button side by side with text, ideally have the
-                  button just be alone by itself in bottom middle */}
-
-              <div className="baseFlex gap-2">
-                <Button asChild>
-                  <Link href="/order-now">Get started</Link>
-                </Button>
-                with your first order today!
-              </div>
+              <Button asChild>
+                <Link href="/order-now">Get started</Link>
+              </Button>
+              with your first order today!
             </div>
           </div>
         )}
@@ -179,9 +192,54 @@ RecentOrders.PageLayout = TopProfileNavigationLayout;
 export default RecentOrders;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  return { props: { ...buildClerkProps(ctx.req) } };
-};
+  const { userId } = getAuth(ctx.req);
+  if (!userId) return { props: {} };
 
+  const prisma = new PrismaClient();
+
+  const recentOrders = await prisma.order.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      orderItems: {
+        include: {
+          customizations: true,
+          discount: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  // Iterate over each order to transform the item customizations
+  // into a Record<string, string> for each order's items
+  const initOrders =
+    // @ts-expect-error asdf
+    (recentOrders?.map((order) => {
+      order.orderItems = order.orderItems.map((item) => {
+        // @ts-expect-error asdf
+        item.customizations = item.customizations.reduce(
+          (acc, customization) => {
+            acc[customization.customizationCategoryId] =
+              customization.customizationChoiceId;
+            return acc;
+          },
+          {} as Record<string, string>,
+        );
+
+        return item;
+      });
+
+      return order;
+    }) as DBOrderSummary[]) ?? null;
+
+  return {
+    props: { initOrders, ...buildClerkProps(ctx.req) },
+  };
+};
 interface OrderAccordion {
   userId: string;
   order: DBOrderSummary;
