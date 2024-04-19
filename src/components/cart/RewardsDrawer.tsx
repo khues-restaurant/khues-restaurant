@@ -18,8 +18,8 @@ import { useToast } from "~/components/ui/use-toast";
 import useGetUserId from "~/hooks/useGetUserId";
 import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
-import { FullMenuItem } from "~/server/api/routers/menuCategory";
-import { StoreCustomizations, useMainStore } from "~/stores/MainStore";
+import { type FullMenuItem } from "~/server/api/routers/menuCategory";
+import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getRewardsPointCost } from "~/utils/getRewardsPointCost";
 
@@ -131,7 +131,7 @@ function RewardsDrawer({
       }}
       className="baseVertFlex relative size-full !justify-start"
     >
-      <div className="baseVertFlex relative mt-8 w-full !justify-start gap-2">
+      <div className="baseVertFlex relative mt-8 w-full !justify-start">
         <div
           style={{
             backgroundImage:
@@ -249,17 +249,16 @@ function RewardsDrawer({
           </motion.div>
         </div>
 
-        <div className="baseFlex gap-4">
-          <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+        <div className="baseFlex w-full gap-4 border-b p-2 shadow-sm">
+          <SideAccentSwirls className="h-4 scale-x-[-1] fill-yellow-500" />
           <p className="text-center font-semibold text-yellow-500">
             Choose your reward
           </p>
-          <SideAccentSwirls className="h-5 fill-yellow-500" />
+          <SideAccentSwirls className="h-4 fill-yellow-500" />
         </div>
 
-        {/* TODO: come back to this.. I feel like a higher dvh value should work but on shorter height viewports
-    content is being cut off... just a css understanding gap, maybe you need some kind of calc trickery here? */}
-        <div className="baseVertFlex relative mt-2 h-[55dvh] !justify-start overflow-y-auto px-4 pb-24 text-yellow-500">
+        {/* TODO: come back to this.. I feel like a higher dvh value should work but on shorter height viewports content is being cut off... just a css understanding gap, maybe you need some kind of calc trickery here? */}
+        <div className="baseVertFlex relative h-[55dvh] !justify-start overflow-y-auto px-4 pb-24 pt-4 text-yellow-500">
           {/* .map() of Your rewards */}
           <div className="baseVertFlex w-full gap-8 ">
             {/* Birthday reward options */}
@@ -280,7 +279,7 @@ function RewardsDrawer({
                   </p>
 
                   {/* Items */}
-                  <div className="baseVertFlex gap-4">
+                  <div className="baseVertFlex gap-0">
                     {category.menuItems
                       .sort((a, b) => a.price - b.price)
                       .map((item, index) => (

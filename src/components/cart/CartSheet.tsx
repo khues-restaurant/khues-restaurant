@@ -854,7 +854,7 @@ function CartSheet({
               </AnimatePresence>
             </div>
 
-            <div className="baseVertFlex mt-4 w-full gap-4 pb-28">
+            <div className="baseVertFlex mt-4 w-full gap-4 pb-[120px]">
               <div
                 style={{
                   justifyContent: isSignedIn ? "space-between" : "flex-start",

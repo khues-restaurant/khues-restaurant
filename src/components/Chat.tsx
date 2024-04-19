@@ -138,12 +138,26 @@ function Chat() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.1 }}
-              className={`fixed right-6 z-10 size-10 transition-all !duration-300 ${!footerIsInView && asPath.includes("/profile") ? "bottom-28" : "-bottom-10 !opacity-0"}`}
+              transition={{ duration: 0.2 }}
+              style={{
+                bottom: asPath.includes("/profile")
+                  ? footerIsInView
+                    ? "-2.5rem"
+                    : "7rem"
+                  : "1.5rem",
+                opacity: asPath.includes("/profile")
+                  ? footerIsInView
+                    ? 0
+                    : 1
+                  : 1,
+                transition:
+                  "bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
+              className="fixed right-6 z-10 size-10 tablet:hidden"
             >
               <AlertDialogTrigger asChild>
                 <Button
-                  className="size-12 rounded-full shadow-md tablet:hidden"
+                  className="size-12 rounded-full shadow-md"
                   onClick={() => {
                     setShowingAlertDialogChat((prev) => !prev);
                   }}
@@ -268,11 +282,11 @@ function Chat() {
             <AnimatePresence mode="popLayout">
               {showingPopoverChat ? (
                 <motion.div
-                  key="openChat"
+                  key="openChatTablet+"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.1 }}
+                  transition={{ duration: 0.15 }}
                 >
                   <X className="size-6 drop-shadow-md" />
                 </motion.div>
@@ -282,7 +296,7 @@ function Chat() {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.1 }}
+                  transition={{ duration: 0.15 }}
                 >
                   <IoChatbox className="size-6 drop-shadow-md" />
                 </motion.div>

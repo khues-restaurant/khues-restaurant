@@ -35,6 +35,7 @@ function CartDrawerWrapper({
         if (!open) {
           setItemBeingModified(null);
           setInitialItemState(undefined);
+          setShowRewardsDrawer(false);
         }
       }}
     >

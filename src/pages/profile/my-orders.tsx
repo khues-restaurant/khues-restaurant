@@ -118,7 +118,7 @@ function RecentOrders({ initOrders }: { initOrders: DBOrderSummary[] | null }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex relative min-h-[calc(100dvh-6rem-73px)] w-full tablet:min-h-0 tablet:!justify-start"
+      className={`baseVertFlex relative min-h-[calc(100dvh-6rem-73px)] w-full tablet:min-h-0 tablet:!justify-start ${sortedOrders && sortedOrders.length > 0 ? "mb-16" : ""}`}
     >
       <div className="baseVertFlex relative mt-4 w-full p-0 transition-all tablet:my-8 tablet:p-8">
         {/* fyi: don't think it makes sense to have these two be under an <AnimatePresence /> since

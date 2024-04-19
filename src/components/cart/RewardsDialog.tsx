@@ -275,7 +275,7 @@ function RewardsDialogContent({
           <SideAccentSwirls className="h-5 fill-yellow-500" />
         </div>
 
-        <div className="baseVertFlex relative mt-2 !justify-start overflow-y-auto pr-4 text-yellow-500 tablet:h-[500px]">
+        <div className="baseVertFlex relative !justify-start overflow-y-auto border-t pr-4 pt-2 text-yellow-500 tablet:h-[500px]">
           {/* .map() of Your rewards */}
           <div className="baseVertFlex w-full gap-8 ">
             {/* Birthday reward options */}
@@ -296,7 +296,7 @@ function RewardsDialogContent({
                   </p>
 
                   {/* Items */}
-                  <div className="baseVertFlex gap-4">
+                  <div className="baseVertFlex">
                     {category.menuItems
                       .sort((a, b) => a.price - b.price)
                       .map((item, index) => (

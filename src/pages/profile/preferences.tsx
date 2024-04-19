@@ -8,7 +8,9 @@ import { FaTrashAlt } from "react-icons/fa";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useGetUserId from "~/hooks/useGetUserId";
 import { MdOutlineMail } from "react-icons/md";
+import { IoIosMail } from "react-icons/io";
 import { Checkbox } from "~/components/ui/checkbox";
+import { MdAdminPanelSettings } from "react-icons/md";
 import { api } from "~/utils/api";
 import {
   AlertDialog,
@@ -420,8 +422,8 @@ function Preferences({ initUserData }: { initUserData: User }) {
               )}
             />
 
-            <div className="baseFlex mt-8 gap-4 text-lg font-semibold text-primary underline underline-offset-2">
-              <MdOutlineMail />
+            <div className="baseFlex mt-8 gap-3.5 text-lg font-semibold text-primary underline underline-offset-2">
+              <IoIosMail className="size-[24px]" />
               Email communication
             </div>
 
@@ -430,13 +432,14 @@ function Preferences({ initUserData }: { initUserData: User }) {
                 control={form.control}
                 name="allowsEmailReceipts"
                 render={({ field }) => (
-                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                    <div className="baseFlex !items-start gap-4">
+                  <FormItem className="baseVertFlex relative gap-2 space-y-0">
+                    <div className="baseFlex gap-4">
                       <FormControl>
                         <Checkbox
                           id="allowsEmailReceipts"
                           checked={field.value}
-                          onChange={field.onChange}
+                          onCheckedChange={field.onChange}
+                          className="size-5"
                         />
                       </FormControl>
                       <Label
@@ -454,13 +457,14 @@ function Preferences({ initUserData }: { initUserData: User }) {
                 control={form.control}
                 name="allowsOrderCompleteEmails"
                 render={({ field }) => (
-                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                    <div className="baseFlex !items-start gap-4">
+                  <FormItem className="baseVertFlex relative gap-2 space-y-0">
+                    <div className="baseFlex gap-4">
                       <FormControl>
                         <Checkbox
                           id="allowsOrderCompleteEmails"
                           checked={field.value}
-                          onChange={field.onChange}
+                          onCheckedChange={field.onChange}
+                          className="size-5"
                         />
                       </FormControl>
                       <Label
@@ -479,13 +483,14 @@ function Preferences({ initUserData }: { initUserData: User }) {
                 control={form.control}
                 name="allowsPromotionalEmails"
                 render={({ field }) => (
-                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                    <div className="baseFlex !items-start gap-4">
+                  <FormItem className="baseVertFlex relative gap-2 space-y-0">
+                    <div className="baseFlex gap-4">
                       <FormControl>
                         <Checkbox
                           id="allowsPromotionalEmails"
                           checked={field.value}
-                          onChange={field.onChange}
+                          onCheckedChange={field.onChange}
+                          className="size-5"
                         />
                       </FormControl>
                       <Label
@@ -503,13 +508,14 @@ function Preferences({ initUserData }: { initUserData: User }) {
                 control={form.control}
                 name="allowsRewardExpiryReminderEmails"
                 render={({ field }) => (
-                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                    <div className="baseFlex !items-start gap-4">
+                  <FormItem className="baseVertFlex relative gap-2 space-y-0">
+                    <div className="baseFlex gap-4">
                       <FormControl>
                         <Checkbox
                           id="allowsRewardExpiryReminderEmails"
                           checked={field.value}
-                          onChange={field.onChange}
+                          onCheckedChange={field.onChange}
+                          className="size-5"
                         />
                       </FormControl>
                       <Label
@@ -613,7 +619,10 @@ function Preferences({ initUserData }: { initUserData: User }) {
         <AccordionItem value="item-1" className="border-none">
           {/* maybe need specific variant or just some custom code here to  */}
           <AccordionTrigger className="baseFlex !justify-start gap-2 py-2 text-lg font-semibold text-primary underline underline-offset-2">
-            Account management
+            <div className="baseFlex gap-2">
+              <MdAdminPanelSettings className="size-6" />
+              Account management
+            </div>
           </AccordionTrigger>
           <AccordionContent className="baseVertFlex mt-4 gap-8 p-4 tablet:!flex-row">
             {/* if user is not signed in with oauth (aka they have a password for their account), show button to change/reset password */}

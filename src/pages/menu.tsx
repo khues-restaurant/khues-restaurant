@@ -616,7 +616,7 @@ function NotInDatabaseCategory({
       </div>
 
       {/* wrapping container for each food item in the category */}
-      <div className="grid w-full grid-cols-2 gap-8 p-1 text-sm sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+      <div className="grid w-full grid-cols-2 gap-4 p-1 text-sm sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 tablet:gap-8">
         {menuItems.slice(0, 10).map((item) => (
           <p key={item}>{item}</p>
         ))}
