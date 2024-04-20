@@ -1,28 +1,34 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface AnimatedPrice {
   price: string;
+  animatePresenceMode?: "popLayout" | "wait";
 }
 
-function AnimatedPrice({ price }: AnimatedPrice) {
+// fyi: this still doesn't work on the inflection point
+
+function AnimatedPrice({
+  price,
+  animatePresenceMode = "popLayout",
+}: AnimatedPrice) {
   const [currentPrice, setCurrentPrice] = useState(price);
   const [animationDirection, setAnimationDirection] = useState<"up" | "down">();
 
-  useLayoutEffect(() => {
-    if (price !== currentPrice) {
-      if (Number(price) >= Number(currentPrice)) {
-        setAnimationDirection("up");
-      } else {
-        setAnimationDirection("down");
-      }
+  useEffect(() => {
+    if (price === currentPrice) return;
 
-      setCurrentPrice(price);
+    if (Number(price) >= Number(currentPrice)) {
+      setAnimationDirection("up");
+    } else {
+      setAnimationDirection("down");
     }
+
+    setCurrentPrice(price);
   }, [price, currentPrice]);
 
   return (
-    <AnimatePresence mode="popLayout">
+    <AnimatePresence mode={animatePresenceMode}>
       <motion.div
         key={currentPrice}
         initial={{

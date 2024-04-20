@@ -1,7 +1,5 @@
-import Head from "next/head";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { api } from "~/utils/api";
 import { Button } from "~/components/ui/button";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -18,7 +16,6 @@ import {
   type CarouselApi,
   CarouselItem,
 } from "~/components/ui/carousel";
-import { useMainStore } from "~/stores/MainStore";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 
 // Linear interpolation function
@@ -29,16 +26,6 @@ function lerp(start: number, end: number, ratio: number) {
 export default function Home() {
   const { isLoaded, isSignedIn } = useAuth();
   const { asPath } = useRouter();
-
-  // I think we will ditch this approach and just do the hardcoded approach for now
-  // due to seo + lack of need for loading skeletons while menu is being fetched
-  // const { menuItems } = useMainStore((state) => ({
-  //   menuItems: state.menuItems,
-  // }));
-
-  // const chefsChoiceMenuItems = Object.values(menuItems).filter(
-  //   (menuItem) => menuItem.chefsChoice,
-  // );
 
   const [pressReviewsApi, setPressReviewsApi] = useState<CarouselApi>();
   const [pressReviewsSlide, setPressReviewsSlide] = useState(0);
@@ -73,54 +60,36 @@ export default function Home() {
   const mobileHeroImageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        // Get the visible percentage of the element
-        const visiblePercentage = entry?.intersectionRatio;
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const maxHeight = document.body.scrollHeight - window.innerHeight;
+      const scrollPercentage = scrollY / maxHeight;
 
-        if (visiblePercentage === undefined) return;
+      // Interpolate width from 90vw to 100vw based on scroll percentage
+      const interpolatedWidth = lerp(90, 100, 20 * scrollPercentage);
 
-        const startTransitionAt = 1;
-        const endTransitionAt = 0.75;
+      // Apply the interpolated width to the element style
+      if (mobileHeroImageRef.current) {
+        mobileHeroImageRef.current.style.width = `${interpolatedWidth > 100 ? 100 : interpolatedWidth}vw`;
 
-        // Adjust the ratio linearly within the defined range
-        const adjustedRatio =
-          (visiblePercentage - endTransitionAt) /
-          (startTransitionAt - endTransitionAt);
-        const clampedRatio = Math.min(Math.max(-adjustedRatio, 0), 1); // Clamp between 0 and 1 to avoid overflows
-
-        // Interpolate width between 95vw and 100vw
-        const interpolatedWidth = lerp(90, 100, clampedRatio);
-
-        // Apply the interpolated width to the element style
-        if (mobileHeroImageRef.current) {
-          mobileHeroImageRef.current.style.width = `${interpolatedWidth}vw`;
-
-          const imageElement = mobileHeroImageRef.current
-            .children[0] as HTMLImageElement;
-          if (imageElement) {
-            imageElement.style.borderRadius =
-              interpolatedWidth === 100 ? "0" : "0.375rem";
-          }
+        const imageElement = mobileHeroImageRef.current
+          .children[0] as HTMLImageElement;
+        if (imageElement) {
+          imageElement.style.borderRadius =
+            interpolatedWidth >= 100 ? "0" : "0.375rem";
         }
-      },
-      {
-        root: null, // Assuming the viewport
-        rootMargin: "0px",
-        threshold: new Array(101).fill(0).map((v, i) => i * 0.01), // Creates an array of thresholds from 0 to 1
-      },
-    );
+      }
+    };
 
-    if (mobileHeroImageRef.current) {
-      observer.observe(mobileHeroImageRef.current);
-    }
+    // TODO: how can we either leverage an intersection observer here or debounce in a way that
+    // still allows for the absolute smoothest possible transition?
 
-    const cleanupRef = mobileHeroImageRef.current;
+    // Add scroll listener
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      if (cleanupRef) {
-        observer.unobserve(cleanupRef);
-      }
+      // Clean up the event listener on component unmount
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -844,7 +813,7 @@ export default function Home() {
         )}
 
         {/* Explore Our Favorites section */}
-        <div className="baseVertFlex max-w-[350px] gap-4 sm:max-w-md xl:!max-w-5xl tablet:max-w-2xl">
+        <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-5xl tablet:max-w-2xl">
           <p className="text-lg font-medium">Explore Our Favorites</p>
 
           <div className="baseVertFlex w-full gap-2">

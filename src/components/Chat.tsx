@@ -130,14 +130,34 @@ function Chat() {
   return (
     <>
       <AlertDialog open={showingAlertDialogChat}>
-        {/* figure out why the AnimatePresence isn't working really here */}
         <AnimatePresence mode="popLayout">
           {!showingAlertDialogChat && (
             <motion.div
               key="openChat"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
+              initial={{
+                opacity: asPath.includes("/profile")
+                  ? footerIsInView
+                    ? 0
+                    : 1
+                  : 1,
+                scale: 0.95,
+              }}
+              animate={{
+                opacity: asPath.includes("/profile")
+                  ? footerIsInView
+                    ? 0
+                    : 1
+                  : 1,
+                scale: 1,
+              }}
+              exit={{
+                opacity: asPath.includes("/profile")
+                  ? footerIsInView
+                    ? 0
+                    : 1
+                  : 1,
+                scale: 0.95,
+              }}
               transition={{ duration: 0.2 }}
               style={{
                 bottom: asPath.includes("/profile")
@@ -145,11 +165,6 @@ function Chat() {
                     ? "-2.5rem"
                     : "7rem"
                   : "1.5rem",
-                opacity: asPath.includes("/profile")
-                  ? footerIsInView
-                    ? 0
-                    : 1
-                  : 1,
                 transition:
                   "bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
               }}
@@ -320,7 +335,7 @@ function Chat() {
           </div>
 
           {/* scroll-y-auto messages container */}
-          <div className="baseVertFlex relative size-full !flex-col-reverse !justify-start gap-2 overflow-y-auto bg-background p-2 sm:h-96 ">
+          <div className="baseVertFlex relative size-full !flex-col-reverse !justify-start gap-2 overflow-y-auto overscroll-y-contain bg-background p-2 sm:h-96 ">
             <Image
               src="/logo.svg"
               alt="Khue's header logo"

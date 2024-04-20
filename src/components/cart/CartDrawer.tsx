@@ -335,7 +335,7 @@ function CartDrawer({
         <p className="baseFlex ml-1 h-4 gap-1.5">
           <AnimatedNumbers value={numberOfItems} fontSize={16} padding={0} />
 
-          {`item${numberOfItems > 1 ? "s" : ""}`}
+          {`item${numberOfItems === 1 ? "" : "s"}`}
         </p>
       </div>
 
@@ -475,7 +475,7 @@ function CartDrawer({
       </div>
 
       {/* summary of items in cart */}
-      <div className="baseVertFlex size-full !items-start !justify-start gap-2 p-4">
+      <div className="baseVertFlex w-full !items-start !justify-start gap-2 p-4">
         <p className="text-lg font-semibold underline underline-offset-2">
           Items
         </p>
@@ -584,9 +584,9 @@ function CartDrawer({
                       }}
                       transition={{
                         opacity: { duration: 0.1 },
-                        height: { duration: 0.2 },
-                        marginTop: { duration: 0.2 },
-                        marginBottom: { duration: 0.2 },
+                        height: { duration: 0.25 },
+                        marginTop: { duration: 0.25 },
+                        marginBottom: { duration: 0.25 },
                       }}
                       className="baseFlex w-full !items-start gap-4"
                     >
@@ -728,7 +728,7 @@ function CartDrawer({
                   ))}
 
                   {/* rewards item (if present) */}
-                  <AnimatePresence mode="wait">
+                  <AnimatePresence>
                     {rewardItems.length > 0 && (
                       <>
                         {rewardItems.map((item, idx) => (
@@ -926,13 +926,17 @@ function CartDrawer({
         </AnimatePresence>
       </div>
 
-      <div
-        className="baseVertFlex w-full border-t bg-gradient-to-br from-gray-200 to-gray-300
-        p-4 shadow-inner"
+      <motion.div
+        layout
+        className="baseVertFlex min-h-32 w-full overflow-hidden border-t
+        bg-gradient-to-br from-gray-200 to-gray-300 p-4 shadow-inner"
       >
-        <div className="baseFlex w-full !justify-between text-sm">
+        <div className="baseFlex w-full !justify-between overflow-hidden text-sm">
           <p>Subtotal</p>
-          <AnimatedPrice price={formatPrice(orderCost.subtotal)} />
+          <AnimatedPrice
+            price={formatPrice(orderCost.subtotal)}
+            animatePresenceMode={"wait"}
+          />
         </div>
 
         {/* TODO: ask eric if this threshold should apply based on subtotal or total */}
@@ -942,19 +946,28 @@ function CartDrawer({
           discounts[orderDetails.discountId]?.name === "Spend $35, Save $5" && (
             <div className="baseFlex w-full !justify-between text-sm text-primary">
               <p>Spend $35, Save $5</p>
-              <AnimatedPrice price={formatPrice(-5)} />
+              <AnimatedPrice
+                price={formatPrice(-5)}
+                animatePresenceMode={"wait"}
+              />
             </div>
           )}
 
-        <div className="baseFlex w-full !justify-between text-sm">
+        <div className="baseFlex w-full !justify-between overflow-hidden text-sm">
           <p>Tax</p>
-          <AnimatedPrice price={formatPrice(orderCost.tax)} />
+          <AnimatedPrice
+            price={formatPrice(orderCost.tax)}
+            animatePresenceMode={"wait"}
+          />
         </div>
 
-        <div className="baseFlex mt-2 w-full !items-end !justify-between">
+        <div className="baseFlex mt-2 w-full !items-end !justify-between overflow-hidden">
           <div className="baseFlex gap-2 text-lg font-semibold">
             <p>Total</p>
-            <AnimatedPrice price={formatPrice(orderCost.total)} />
+            <AnimatedPrice
+              price={formatPrice(orderCost.total)}
+              animatePresenceMode={"wait"}
+            />
           </div>
 
           <Button
@@ -993,7 +1006,7 @@ function CartDrawer({
             </AnimatePresence>
           </Button>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }

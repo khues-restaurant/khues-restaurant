@@ -326,7 +326,7 @@ function CartSheet({
         <p className="baseFlex ml-1 h-4 gap-1.5">
           <AnimatedNumbers value={numberOfItems} fontSize={16} padding={0} />
 
-          {`item${numberOfItems !== 1 ? "s" : ""}`}
+          {`item${numberOfItems === 1 ? "" : "s"}`}
         </p>
       </div>
 
@@ -524,7 +524,7 @@ function CartSheet({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="baseVertFlex mt-8 w-full gap-4 p-4"
+            className="baseVertFlex size-full gap-4 p-4"
           >
             {/* TODO: definitely have some (probably paid for) asset of an empty plate or like
           an empty dish with chopsticks beside it? */}
@@ -544,7 +544,7 @@ function CartSheet({
             transition={{ duration: 0.2 }}
             className="baseVertFlex size-full !items-start !justify-start gap-2 overflow-y-auto rounded-xl border-b p-4"
           >
-            <div className="baseVertFlex size-full !justify-start">
+            <div className="baseVertFlex w-full !justify-start">
               <AnimatePresence>
                 {regularItems.map((item, idx) => (
                   <motion.div
@@ -569,9 +569,9 @@ function CartSheet({
                     }}
                     transition={{
                       opacity: { duration: 0.1 },
-                      height: { duration: 0.2 },
-                      marginTop: { duration: 0.2 },
-                      marginBottom: { duration: 0.2 },
+                      height: { duration: 0.25 },
+                      marginTop: { duration: 0.25 },
+                      marginBottom: { duration: 0.25 },
                     }}
                     className="baseFlex w-full !items-start gap-4"
                   >
@@ -854,7 +854,7 @@ function CartSheet({
               </AnimatePresence>
             </div>
 
-            <div className="baseVertFlex mt-4 w-full gap-4 pb-[120px]">
+            <div className="baseVertFlex mt-4 w-full gap-4">
               <div
                 style={{
                   justifyContent: isSignedIn ? "space-between" : "flex-start",
@@ -910,75 +910,71 @@ function CartSheet({
         )}
       </AnimatePresence>
 
-      {/* TODO: why does this scroll a bit along with body when drawer is scrolled? */}
-      <SheetFooter>
-        <div className="baseVertFlex w-full rounded-bl-xl border-t bg-gradient-to-br from-gray-200 to-gray-300 p-4 shadow-inner">
-          <div className="baseFlex w-full !justify-between text-sm">
-            <p>Subtotal</p>
-            <AnimatedPrice price={formatPrice(orderCost.subtotal)} />
-          </div>
-
-          {/* TODO: ask eric if this threshold should apply based on subtotal or total */}
-          {isSignedIn &&
-            orderDetails.discountId &&
-            orderCost.subtotal >= 35 &&
-            discounts[orderDetails.discountId]?.name ===
-              "Spend $35, Save $5" && (
-              <div className="baseFlex w-full !justify-between text-sm text-primary">
-                <p>Spend $35, Save $5</p>
-                <AnimatedPrice price={formatPrice(-5)} />
-              </div>
-            )}
-
-          <div className="baseFlex w-full !justify-between text-sm">
-            <p>Tax</p>
-            <AnimatedPrice price={formatPrice(orderCost.tax)} />
-          </div>
-
-          <div className="baseFlex mt-2 w-full !items-end !justify-between">
-            <div className="baseFlex gap-2 text-lg font-semibold">
-              <p>Total</p>
-              <AnimatedPrice price={formatPrice(orderCost.total)} />
-            </div>
-
-            <Button
-              variant="default"
-              disabled={
-                checkoutButtonText !== "Proceed to checkout" ||
-                orderDetails.items.length === 0
-              }
-              className="text-xs font-semibold tablet:text-sm"
-              onClick={() => void mainForm.handleSubmit(onMainFormSubmit)()}
-            >
-              <AnimatePresence mode={"popLayout"}>
-                <motion.div
-                  key={`cartSheet-${checkoutButtonText}`}
-                  layout
-                  // whileTap={{ scale: 0.95 }}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  transition={{
-                    duration: 0.25,
-                  }}
-                  className="baseFlex gap-2"
-                >
-                  {checkoutButtonText}
-                  {checkoutButtonText === "Loading" && (
-                    <div
-                      className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
-                      role="status"
-                      aria-label="loading"
-                    >
-                      <span className="sr-only">Loading...</span>
-                    </div>
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </Button>
-          </div>
+      <div className="baseVertFlex w-full rounded-bl-xl border-t bg-gradient-to-br from-gray-200 to-gray-300 p-4 shadow-inner">
+        <div className="baseFlex w-full !justify-between text-sm">
+          <p>Subtotal</p>
+          <AnimatedPrice price={formatPrice(orderCost.subtotal)} />
         </div>
-      </SheetFooter>
+
+        {/* TODO: ask eric if this threshold should apply based on subtotal or total */}
+        {isSignedIn &&
+          orderDetails.discountId &&
+          orderCost.subtotal >= 35 &&
+          discounts[orderDetails.discountId]?.name === "Spend $35, Save $5" && (
+            <div className="baseFlex w-full !justify-between text-sm text-primary">
+              <p>Spend $35, Save $5</p>
+              <AnimatedPrice price={formatPrice(-5)} />
+            </div>
+          )}
+
+        <div className="baseFlex w-full !justify-between text-sm">
+          <p>Tax</p>
+          <AnimatedPrice price={formatPrice(orderCost.tax)} />
+        </div>
+
+        <div className="baseFlex mt-2 w-full !items-end !justify-between">
+          <div className="baseFlex gap-2 text-lg font-semibold">
+            <p>Total</p>
+            <AnimatedPrice price={formatPrice(orderCost.total)} />
+          </div>
+
+          <Button
+            variant="default"
+            disabled={
+              checkoutButtonText !== "Proceed to checkout" ||
+              orderDetails.items.length === 0
+            }
+            className="text-xs font-semibold tablet:text-sm"
+            onClick={() => void mainForm.handleSubmit(onMainFormSubmit)()}
+          >
+            <AnimatePresence mode={"popLayout"}>
+              <motion.div
+                key={`cartSheet-${checkoutButtonText}`}
+                layout
+                // whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{
+                  duration: 0.25,
+                }}
+                className="baseFlex gap-2"
+              >
+                {checkoutButtonText}
+                {checkoutButtonText === "Loading" && (
+                  <div
+                    className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                    role="status"
+                    aria-label="loading"
+                  >
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

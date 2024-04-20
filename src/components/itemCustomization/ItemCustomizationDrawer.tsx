@@ -398,8 +398,7 @@ function ItemCustomizationDrawer({
                         }
                       />
                       <Label htmlFor="allergySwitch" className="text-xs">
-                        Include dietary preferences associated with your
-                        account.
+                        Include your account&apos;s dietary preferences.
                       </Label>
                     </div>
                   )}
@@ -438,8 +437,12 @@ function ItemCustomizationDrawer({
 
       <DrawerFooter>
         <div
-          className="baseFlex w-full !justify-between bg-gradient-to-br from-gray-200 
-        to-gray-300/80 px-4 py-3 shadow-inner"
+          className={`baseFlex w-full bg-gradient-to-br from-gray-200 
+        to-gray-300/80 px-4 py-3 shadow-inner ${
+          itemOrderDetails?.birthdayReward || itemOrderDetails?.pointReward
+            ? "!justify-end"
+            : "!justify-between"
+        }`}
         >
           {!itemOrderDetails?.birthdayReward &&
             !itemOrderDetails?.pointReward && (

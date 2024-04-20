@@ -426,8 +426,7 @@ function ItemCustomizerDialogContent({
                         }
                       />
                       <Label htmlFor="allergySwitch">
-                        Include dietary preferences associated with your
-                        account.
+                        Include your account&apos;s dietary preferences.
                       </Label>
                     </div>
                   )}

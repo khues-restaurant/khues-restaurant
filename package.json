@@ -42,7 +42,7 @@
     "date-fns": "^3.3.1",
     "decimal.js": "^10.4.3",
     "embla-carousel-react": "^8.0.0",
-    "framer-motion": "^11.0.5",
+    "framer-motion": "^11.1.7",
     "lodash.debounce": "^4.0.8",
     "lodash.isequal": "^4.5.0",
     "lucide-react": "^0.331.0",

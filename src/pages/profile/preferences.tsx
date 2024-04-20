@@ -422,7 +422,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
               )}
             />
 
-            <div className="baseFlex mt-8 gap-3.5 text-lg font-semibold text-primary underline underline-offset-2">
+            <div className="baseFlex mt-20 gap-3.5 text-lg font-semibold text-primary underline underline-offset-2 tablet:mt-16">
               <IoIosMail className="size-[24px]" />
               Email communication
             </div>
@@ -614,7 +614,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
       <Accordion
         type="single"
         collapsible
-        className="w-full p-8 pt-2 tablet:px-16 tablet:pb-8 tablet:pt-0"
+        className="w-full p-8 pt-12 tablet:px-16 tablet:pb-8 tablet:pt-8"
       >
         <AccordionItem value="item-1" className="border-none">
           {/* maybe need specific variant or just some custom code here to  */}
