@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Parallax } from "react-scroll-parallax";
 import { Button } from "~/components/ui/button";
 import {
@@ -9,6 +9,8 @@ import {
   CarouselItem,
   type CarouselApi,
 } from "~/components/ui/carousel";
+
+const TWEEN_FACTOR_BASE = 0.2;
 
 const restaurantNamesAndBackstories = [
   {
@@ -37,6 +39,63 @@ function OurStory() {
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [carouselSlide, setCarouselSlide] = useState(0);
 
+  // const tweenFactor = useRef(0);
+  // const tweenNodes = useRef<HTMLElement[]>([]);
+
+  // const setTweenNodes = useCallback((carouselApi: CarouselApi): void => {
+  //   tweenNodes.current = carouselApi?.slideNodes().map((slideNode) => {
+  //     return slideNode.querySelector(".embla__parallax__layer") as HTMLElement;
+  //   });
+  // }, []);
+
+  // const setTweenFactor = useCallback((carouselApi: CarouselApi) => {
+  //   tweenFactor.current =
+  //     TWEEN_FACTOR_BASE * carouselApi?.scrollSnapList().length;
+  // }, []);
+
+  // const tweenParallax = useCallback(
+  //   (carouselApi: CarouselApi, eventName?: EmblaEventType) => {
+  //     const engine = carouselApi?.internalEngine();
+  //     const scrollProgress = carouselApi.scrollProgress();
+  //     const slidesInView = carouselApi.slidesInView();
+  //     const isScrollEvent = eventName === "scroll";
+
+  //     carouselApi.scrollSnapList().forEach((scrollSnap, snapIndex) => {
+  //       let diffToTarget = scrollSnap - scrollProgress;
+  //       const slidesInSnap = engine.slideRegistry[snapIndex];
+
+  //       slidesInSnap.forEach((slideIndex) => {
+  //         if (isScrollEvent && !slidesInView.includes(slideIndex)) return;
+
+  //         if (engine.options.loop) {
+  //           engine.slideLooper.loopPoints.forEach((loopItem) => {
+  //             const target = loopItem.target();
+
+  //             if (slideIndex === loopItem.index && target !== 0) {
+  //               const sign = Math.sign(target);
+
+  //               if (sign === -1) {
+  //                 diffToTarget = scrollSnap - (1 + scrollProgress);
+  //               }
+  //               if (sign === 1) {
+  //                 diffToTarget = scrollSnap + (1 - scrollProgress);
+  //               }
+  //             }
+  //           });
+  //         }
+
+  //         const translate = diffToTarget * (-1 * tweenFactor.current) * 100;
+  //         const tweenNode = tweenNodes.current[slideIndex];
+
+  //         if (tweenNode) {
+  //           tweenNode.style.transform = `translateX(${translate}%)`;
+  //         }
+  //       });
+  //     });
+  //   },
+  //   [],
+  // );
+
   useEffect(() => {
     if (!carouselApi) return;
 
@@ -46,8 +105,21 @@ function OurStory() {
       setCarouselSlide(carouselApi.selectedScrollSnap());
     });
 
+    // setTweenNodes(carouselApi);
+    // setTweenFactor(carouselApi);
+    // tweenParallax(carouselApi);
+
+    // carouselApi
+    //   .on("reInit", setTweenNodes)
+    //   .on("reInit", setTweenFactor)
+    //   .on("reInit", tweenParallax)
+    //   .on("scroll", tweenParallax);
+
     // eventually add proper cleanup functions here
-  }, [carouselApi]);
+  }, [
+    carouselApi,
+    // , tweenParallax, setTweenFactor, setTweenNodes
+  ]);
 
   console.log("carousel", carouselApi?.scrollSnapList());
 
@@ -114,26 +186,26 @@ function OurStory() {
 
             {/* recently added !items-start and max-w-80 and tried to add bandaid fixes at higher viewport
               but there are a few hiccups. Test and fix */}
-            <CarouselContent className="baseFlex max-w-80 !items-start !justify-start sm:max-w-full tablet:h-[500px] tablet:w-[600px] tablet:!flex-col  tablet:!items-center tablet:!justify-start">
-              <CarouselItem className="flex justify-center px-0 tablet:!items-start tablet:pt-2">
+            <CarouselContent className="baseFlex max-w-80 !items-start !justify-start sm:max-w-full tablet:h-[500px] tablet:w-[600px] tablet:!flex-col tablet:!items-center tablet:!justify-start">
+              <CarouselItem className="embla__parallax__layer flex justify-center px-0 tablet:!items-start tablet:pt-2">
                 <RestaurantAndBackstory
                   name={restaurantNamesAndBackstories[0]!.name}
                   backstory={restaurantNamesAndBackstories[0]!.backstory}
                 />
               </CarouselItem>
-              <CarouselItem className="flex justify-center px-0 tablet:!items-start tablet:pt-2">
+              <CarouselItem className="embla__parallax__layer flex justify-center px-0 tablet:!items-start tablet:pt-2">
                 <RestaurantAndBackstory
                   name={restaurantNamesAndBackstories[1]!.name}
                   backstory={restaurantNamesAndBackstories[1]!.backstory}
                 />
               </CarouselItem>
-              <CarouselItem className="flex justify-center px-0 tablet:!items-start tablet:pt-2">
+              <CarouselItem className="embla__parallax__layer flex justify-center px-0 tablet:!items-start tablet:pt-2">
                 <RestaurantAndBackstory
                   name={restaurantNamesAndBackstories[2]!.name}
                   backstory={restaurantNamesAndBackstories[2]!.backstory}
                 />
               </CarouselItem>
-              <CarouselItem className="flex justify-center px-0 tablet:!items-start tablet:pt-2">
+              <CarouselItem className="embla__parallax__layer flex justify-center px-0 tablet:!items-start tablet:pt-2">
                 <RestaurantAndBackstory
                   name={restaurantNamesAndBackstories[3]!.name}
                   backstory={restaurantNamesAndBackstories[3]!.backstory}
@@ -143,10 +215,10 @@ function OurStory() {
           </Carousel>
 
           {/* max-w-80 necessary? */}
-          <div className="baseFlex relative size-full max-w-80 gap-2 sm:max-w-full tablet:!flex-col">
+          <div className="baseFlex relative size-full gap-2 sm:max-w-full tablet:!flex-col">
             <Button
               variant={"ghost"}
-              className={`!size-20 rounded-md opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 0 ? "!opacity-100" : ""}`}
+              className={`relative !size-20 rounded-md !p-0 opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 0 ? "!opacity-100" : ""}`}
             >
               <Image
                 src={"/test.webp"}
@@ -155,13 +227,13 @@ function OurStory() {
                 style={{
                   objectFit: "cover",
                 }}
-                className="rounded-md"
+                className="!relative rounded-md"
                 onClick={() => carouselApi?.scrollTo(0)}
               />
             </Button>
             <Button
               variant={"ghost"}
-              className={`!size-20 rounded-md opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 1 ? "!opacity-100" : ""}`}
+              className={`relative !size-20 rounded-md !p-0 opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 1 ? "!opacity-100" : ""}`}
             >
               <Image
                 src={"/test.webp"}
@@ -170,13 +242,13 @@ function OurStory() {
                 style={{
                   objectFit: "cover",
                 }}
-                className="rounded-md"
+                className="!relative rounded-md"
                 onClick={() => carouselApi?.scrollTo(1)}
               />
             </Button>
             <Button
               variant={"ghost"}
-              className={`!size-20 rounded-md opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 2 ? "!opacity-100" : ""}`}
+              className={`relative !size-20 rounded-md !p-0 opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 2 ? "!opacity-100" : ""}`}
             >
               <Image
                 src={"/test.webp"}
@@ -185,13 +257,13 @@ function OurStory() {
                 style={{
                   objectFit: "cover",
                 }}
-                className="rounded-md"
+                className="!relative rounded-md"
                 onClick={() => carouselApi?.scrollTo(2)}
               />
             </Button>
             <Button
               variant={"ghost"}
-              className={`!size-20 rounded-md opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 3 ? "!opacity-100" : ""}`}
+              className={`relative !size-20 rounded-md !p-0 opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 3 ? "!opacity-100" : ""}`}
             >
               <Image
                 src={"/test.webp"}
@@ -200,7 +272,7 @@ function OurStory() {
                 style={{
                   objectFit: "cover",
                 }}
-                className="rounded-md"
+                className="!relative rounded-md"
                 onClick={() => carouselApi?.scrollTo(3)}
               />
             </Button>
@@ -230,12 +302,12 @@ function OurStory() {
         </div>
         <div className="baseFlex relative w-full px-4 pb-8 pt-16 tablet:max-w-4xl">
           <motion.div
-            initial={{ opacity: 0, y: -100 }}
+            initial={{ opacity: 0, y: -75 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{
               opacity: { duration: 0.2 },
               type: "spring",
-              stiffness: 200,
+              stiffness: 100,
               damping: 20,
               mass: 0.75,
             }}
@@ -246,12 +318,12 @@ function OurStory() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 100 }}
+            initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{
               opacity: { duration: 0.2 },
               type: "spring",
-              stiffness: 200,
+              stiffness: 100,
               damping: 20,
               mass: 0.75,
             }}
@@ -332,6 +404,9 @@ function RestaurantAndBackstory({ name, backstory }: RestaurantAndBackstory) {
         src="/test.webp"
         alt="Khue's"
         fill
+        style={{
+          objectFit: "cover",
+        }}
         className="!relative !w-80 rounded-t-md sm:!w-96 tablet:!h-[450px] tablet:!w-[600px] tablet:rounded-md"
       />
 
