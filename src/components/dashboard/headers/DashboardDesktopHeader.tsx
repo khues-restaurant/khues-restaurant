@@ -76,12 +76,10 @@ function DashboardDesktopHeader({
         <Image
           src="/logo.svg"
           alt="Khue's header logo"
-          style={{
-            filter: "drop-shadow(0px 1px 0.5px hsla(336, 84%, 17%, 0.25))", // keep this?
-          }}
-          width={200}
-          height={185}
+          width={65}
+          height={65}
           priority
+          className="!size-[65px]"
         />
 
         <div className="baseFlex gap-2 text-primary">

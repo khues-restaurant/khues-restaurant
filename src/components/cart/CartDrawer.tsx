@@ -60,6 +60,7 @@ import Decimal from "decimal.js";
 import { isAbleToRenderASAPTimeSlot } from "~/utils/isAbleToRenderASAPTimeSlot";
 import Image from "next/image";
 import { TbLocation } from "react-icons/tb";
+import { Separator } from "~/components/ui/separator";
 
 interface OrderCost {
   subtotal: number;
@@ -341,7 +342,7 @@ function CartDrawer({
 
       {/* location + date & time picker  (TODO: why doesn't horizontal margin work here with w-full..) */}
       <div
-        className="baseFlex my-4 w-[95%] flex-wrap !justify-start gap-1 rounded-md border border-gray-300 bg-gradient-to-br 
+        className="baseFlex my-4 w-[95%] flex-wrap !justify-start gap-1 rounded-md border border-gray-300 bg-gradient-to-br
         from-gray-200 to-gray-300/80 p-4 shadow-sm"
       >
         <span className="text-sm">
@@ -475,12 +476,12 @@ function CartDrawer({
       </div>
 
       {/* summary of items in cart */}
-      <div className="baseVertFlex w-full !items-start !justify-start gap-2 p-4">
-        <p className="text-lg font-semibold underline underline-offset-2">
+      <div className="baseVertFlex size-full !items-start !justify-start gap-2">
+        <p className="px-4 text-lg font-semibold underline underline-offset-2">
           Items
         </p>
 
-        <AnimatePresence>
+        <AnimatePresence mode={"wait"}>
           {itemNamesRemovedFromCart.length > 0 && (
             <motion.div
               key={"cartSheetRemovedItemsCard"}
@@ -539,7 +540,7 @@ function CartDrawer({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="baseVertFlex my-8 w-full gap-4 p-4"
+              className="baseVertFlex my-8 size-full gap-4 p-4"
             >
               {/* TODO: definitely have some (probably paid for) asset of an empty plate or like
           an empty dish with chopsticks beside it? */}
@@ -557,19 +558,13 @@ function CartDrawer({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="baseVertFlex size-full !items-start !justify-start gap-2"
+              className="baseVertFlex w-full !items-start !justify-start gap-2 px-4"
             >
-              <div className="baseVertFlex size-full !justify-start">
+              <div className="baseVertFlex w-full !justify-start">
                 <AnimatePresence>
                   {regularItems.map((item, idx) => (
                     <motion.div
                       key={item.id}
-                      initial={{
-                        opacity: 0,
-                        height: 0,
-                        marginTop: 0,
-                        marginBottom: 0,
-                      }}
                       animate={{
                         opacity: 1,
                         height: "auto",
@@ -733,18 +728,30 @@ function CartDrawer({
                       <>
                         {rewardItems.map((item, idx) => (
                           <motion.div
-                            key={item.id}
+                            key={`rewards${item.id}`}
                             initial={{
                               opacity: 0,
+                              height: 0,
+                              marginTop: 0,
+                              marginBottom: 0,
                             }}
                             animate={{
                               opacity: 1,
+                              height: "auto",
+                              marginTop: "0.25rem",
+                              marginBottom: "0.25rem",
                             }}
                             exit={{
                               opacity: 0,
+                              height: 0,
+                              marginTop: 0,
+                              marginBottom: 0,
                             }}
                             transition={{
-                              duration: 0.2,
+                              opacity: { duration: 0.1 },
+                              height: { duration: 0.25 },
+                              marginTop: { duration: 0.25 },
+                              marginBottom: { duration: 0.25 },
                             }}
                             className="baseFlex w-full !items-start gap-4"
                           >
@@ -924,51 +931,57 @@ function CartDrawer({
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
 
-      <motion.div
-        layout
-        className="baseVertFlex min-h-32 w-full overflow-hidden border-t
+        <motion.div
+          layout
+          className="baseFlex mt-auto min-h-24 w-full gap-4 overflow-hidden border-t
         bg-gradient-to-br from-gray-200 to-gray-300 p-4 shadow-inner"
-      >
-        <div className="baseFlex w-full !justify-between overflow-hidden text-sm">
-          <p>Subtotal</p>
-          <AnimatedPrice
-            price={formatPrice(orderCost.subtotal)}
-            animatePresenceMode={"wait"}
-          />
-        </div>
-
-        {/* TODO: ask eric if this threshold should apply based on subtotal or total */}
-        {isSignedIn &&
-          orderDetails.discountId &&
-          orderCost.subtotal >= 35 &&
-          discounts[orderDetails.discountId]?.name === "Spend $35, Save $5" && (
-            <div className="baseFlex w-full !justify-between text-sm text-primary">
-              <p>Spend $35, Save $5</p>
+        >
+          <div className="baseVertFlex w-1/2">
+            <div className="baseFlex w-full !justify-between text-sm">
+              <p>Subtotal</p>
               <AnimatedPrice
-                price={formatPrice(-5)}
+                price={formatPrice(orderCost.subtotal)}
                 animatePresenceMode={"wait"}
               />
             </div>
-          )}
 
-        <div className="baseFlex w-full !justify-between overflow-hidden text-sm">
-          <p>Tax</p>
-          <AnimatedPrice
-            price={formatPrice(orderCost.tax)}
-            animatePresenceMode={"wait"}
-          />
-        </div>
+            {/* TODO: ask eric if this threshold should apply based on subtotal or total */}
+            {isSignedIn &&
+              orderDetails.discountId &&
+              orderCost.subtotal >= 35 &&
+              discounts[orderDetails.discountId]?.name ===
+                "Spend $35, Save $5" && (
+                <div className="baseFlex w-full !justify-between text-sm text-primary">
+                  <p>Spend $35, Save $5</p>
+                  <AnimatedPrice
+                    price={formatPrice(-5)}
+                    animatePresenceMode={"wait"}
+                  />
+                </div>
+              )}
 
-        <div className="baseFlex mt-2 w-full !items-end !justify-between overflow-hidden">
-          <div className="baseFlex gap-2 text-lg font-semibold">
-            <p>Total</p>
-            <AnimatedPrice
-              price={formatPrice(orderCost.total)}
-              animatePresenceMode={"wait"}
-            />
+            <div className="baseFlex w-full !justify-between text-sm">
+              <p>Tax</p>
+              <AnimatedPrice
+                price={formatPrice(orderCost.tax)}
+                animatePresenceMode={"wait"}
+              />
+            </div>
+
+            <div className="baseFlex w-full !justify-between gap-2 text-lg font-semibold">
+              <p>Total</p>
+              <AnimatedPrice
+                price={formatPrice(orderCost.total)}
+                animatePresenceMode={"wait"}
+              />
+            </div>
           </div>
+
+          <Separator
+            orientation="vertical"
+            className="h-16 w-[1px] bg-gray-400"
+          />
 
           <Button
             variant="default"
@@ -983,7 +996,6 @@ function CartDrawer({
               <motion.div
                 key={`cartSheet-${checkoutButtonText}`}
                 layout
-                // whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
@@ -1005,8 +1017,8 @@ function CartDrawer({
               </motion.div>
             </AnimatePresence>
           </Button>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </motion.div>
   );
 }

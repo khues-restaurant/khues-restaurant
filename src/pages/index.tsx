@@ -2,7 +2,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "~/components/ui/button";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { MdOutlineMoneyOff } from "react-icons/md";
 import { BsSpeedometer2 } from "react-icons/bs";
 import { TfiReceipt } from "react-icons/tfi";
@@ -17,11 +17,6 @@ import {
   CarouselItem,
 } from "~/components/ui/carousel";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
-
-// Linear interpolation function
-function lerp(start: number, end: number, ratio: number) {
-  return start + (end - start) * ratio;
-}
 
 export default function Home() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -57,42 +52,6 @@ export default function Home() {
     // eventually add proper cleanup functions here
   }, [pressReviewsApi, chefSpecialsApi]);
 
-  const mobileHeroImageRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const maxHeight = document.body.scrollHeight - window.innerHeight;
-      const scrollPercentage = scrollY / maxHeight;
-
-      // Interpolate width from 90vw to 100vw based on scroll percentage
-      const interpolatedWidth = lerp(90, 100, 20 * scrollPercentage);
-
-      // Apply the interpolated width to the element style
-      if (mobileHeroImageRef.current) {
-        mobileHeroImageRef.current.style.width = `${interpolatedWidth > 100 ? 100 : interpolatedWidth}vw`;
-
-        const imageElement = mobileHeroImageRef.current
-          .children[0] as HTMLImageElement;
-        if (imageElement) {
-          imageElement.style.borderRadius =
-            interpolatedWidth >= 100 ? "0" : "0.375rem";
-        }
-      }
-    };
-
-    // TODO: how can we either leverage an intersection observer here or debounce in a way that
-    // still allows for the absolute smoothest possible transition?
-
-    // Add scroll listener
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      // Clean up the event listener on component unmount
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
   return (
     <motion.div
       key={"home"}
@@ -112,18 +71,16 @@ export default function Home() {
           this approach
         </div> */}
 
-        <div
-          ref={mobileHeroImageRef}
-          className="baseFlex relative size-full h-[65dvh] py-4"
-        >
+        <div className="baseFlex relative size-full h-[65dvh]">
           <Image
             src={"/homepage/mobileHero.webp"}
             alt={"TODO: fill in w/ appropriate alt text"}
+            priority
             fill
             style={{
               objectFit: "cover",
             }}
-            className="!relative !size-full rounded-md"
+            className="!relative !size-full"
           />
         </div>
 
@@ -138,7 +95,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="baseFlex relative !hidden w-full p-2 tablet:!flex tablet:h-[calc(100dvh-8rem)]">
+      <div className="baseFlex relative !hidden w-full p-2 tablet:!flex tablet:h-[calc(100dvh-7rem)]">
         {/* maybe there is still a place for this gradient, currently is below everything but
             don't totally abandon this yet*/}
         <div className="absolute left-0 top-0 h-full w-1/2 bg-gradient-to-r from-black/25 to-transparent"></div>
@@ -400,19 +357,19 @@ export default function Home() {
             <p className="text-lg font-medium">
               Order directly through us to receive mouthwatering benefits
             </p>
-            <div className="baseVertFlex !items-start gap-2 pl-4">
+            <div className="baseVertFlex !items-start gap-4 pl-4">
               <div className="baseFlex gap-4">
-                <MdOutlineMoneyOff className="size-6" />
+                <MdOutlineMoneyOff className="size-6 shrink-0" />
                 <p>Shop our lowest prices</p>
               </div>
               <div className="baseFlex gap-4">
-                <BsSpeedometer2 className="size-6" />
+                <BsSpeedometer2 className="size-6 shrink-0" />
                 <p>
                   Priority service: Your orders jump to the front of the line
                 </p>
               </div>
               <div className="baseFlex gap-4">
-                <TfiReceipt className="size-6" />
+                <TfiReceipt className="size-6 shrink-0" />
                 <p>
                   Rewards members earn points towards free meals with every
                   order
@@ -433,19 +390,19 @@ export default function Home() {
             <p className="text-lg font-medium">
               Order directly through us to receive mouthwatering benefits
             </p>
-            <div className="baseVertFlex !items-start gap-2 pl-6">
+            <div className="baseVertFlex !items-start gap-4 pl-6">
               <div className="baseFlex gap-4">
-                <MdOutlineMoneyOff className="size-6" />
+                <MdOutlineMoneyOff className="size-6 shrink-0" />
                 <p>Shop our lowest prices</p>
               </div>
               <div className="baseFlex gap-4">
-                <BsSpeedometer2 className="size-6" />
+                <BsSpeedometer2 className="size-6 shrink-0" />
                 <p>
                   Priority service: Your orders jump to the front of the line
                 </p>
               </div>
               <div className="baseFlex gap-4">
-                <TfiReceipt className="size-6" />
+                <TfiReceipt className="size-6 shrink-0" />
                 <p className="max-w-lg">
                   Rewards members earn points towards free meals with every
                   order
@@ -834,7 +791,7 @@ export default function Home() {
               className="baseFlex w-full rounded-md border"
             >
               <CarouselContent>
-                <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
+                <CarouselItem className="baseVertFlex relative basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
                   <Image
                     src={"/menuItems/sampleImage.webp"}
                     alt={"TODO: Fix later"}
@@ -842,12 +799,12 @@ export default function Home() {
                     className="!relative !h-36 !w-auto self-center rounded-md"
                   />
                   <p className="font-semibold">Appetizer One</p>
-                  <p className="text-sm">
+                  <p className="line-clamp-3 text-sm">
                     Silky ricotta, signature red sauce, Italian sausage,
                     mozzarella & parmesan cheeses.
                   </p>
                 </CarouselItem>
-                <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
+                <CarouselItem className="baseVertFlex relative basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
                   <Image
                     src={"/menuItems/sampleImage.webp"}
                     alt={"TODO: Fix later"}
@@ -855,12 +812,12 @@ export default function Home() {
                     className="!relative !h-36 !w-auto self-center rounded-md"
                   />
                   <p className="font-semibold">Appetizer Two</p>
-                  <p className="text-sm">
+                  <p className="line-clamp-3 text-sm">
                     Silky ricotta, signature red sauce, Italian sausage,
                     mozzarella & parmesan cheeses.
                   </p>
                 </CarouselItem>
-                <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
+                <CarouselItem className="baseVertFlex relative basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
                   <Image
                     src={"/menuItems/sampleImage.webp"}
                     alt={"TODO: Fix later"}
@@ -868,12 +825,12 @@ export default function Home() {
                     className="!relative !h-36 !w-auto self-center rounded-md"
                   />
                   <p className="font-semibold">Appetizer Three</p>
-                  <p className="text-sm">
+                  <p className="line-clamp-3 text-sm">
                     Silky ricotta, signature red sauce, Italian sausage,
                     mozzarella & parmesan cheeses.
                   </p>
                 </CarouselItem>
-                <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
+                <CarouselItem className="baseVertFlex relative basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
                   <Image
                     src={"/menuItems/sampleImage.webp"}
                     alt={"TODO: Fix later"}
@@ -881,12 +838,12 @@ export default function Home() {
                     className="!relative !h-36 !w-auto self-center rounded-md"
                   />
                   <p className="font-semibold">Appetizer Four</p>
-                  <p className="text-sm">
+                  <p className="line-clamp-3 text-sm">
                     Silky ricotta, signature red sauce, Italian sausage,
                     mozzarella & parmesan cheeses.
                   </p>
                 </CarouselItem>
-                <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
+                <CarouselItem className="baseVertFlex relative basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
                   <Image
                     src={"/menuItems/sampleImage.webp"}
                     alt={"TODO: Fix later"}
@@ -894,12 +851,12 @@ export default function Home() {
                     className="!relative !h-36 !w-auto self-center rounded-md"
                   />
                   <p className="font-semibold">Appetizer Five</p>
-                  <p className="text-sm">
+                  <p className="line-clamp-3 text-sm">
                     Silky ricotta, signature red sauce, Italian sausage,
                     mozzarella & parmesan cheeses.
                   </p>
                 </CarouselItem>
-                <CarouselItem className="baseVertFlex basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
+                <CarouselItem className="baseVertFlex relative basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
                   <Image
                     src={"/menuItems/sampleImage.webp"}
                     alt={"TODO: Fix later"}
@@ -907,7 +864,7 @@ export default function Home() {
                     className="!relative !h-36 !w-auto self-center rounded-md"
                   />
                   <p className="font-semibold">Appetizer Six</p>
-                  <p className="text-sm">
+                  <p className="line-clamp-3 text-sm">
                     Silky ricotta, signature red sauce, Italian sausage,
                     mozzarella & parmesan cheeses.
                   </p>

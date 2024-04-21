@@ -54,8 +54,6 @@ function RewardsDrawer({
 
   const [rewardsPointsEarned, setRewardsPointsEarned] = useState(0);
 
-  const [rewardsPointsTimerSet, setRewardsPointsTimerSet] = useState(false);
-
   const [regularSelectedRewardId, setRegularSelectedRewardId] = useState<
     string | null
   >(null);
@@ -67,16 +65,10 @@ function RewardsDrawer({
   const viewportLabel = useGetViewportLabel();
 
   useEffect(() => {
-    if (!user || rewardsPointsTimerSet) return;
+    if (!user) return;
 
-    setTimeout(() => {
-      if (user) {
-        setRewardsPointsEarned(user.rewardsPoints);
-      }
-    }, 1500);
-
-    setRewardsPointsTimerSet(true);
-  }, [user, rewardsPointsTimerSet]);
+    setRewardsPointsEarned(user.rewardsPoints);
+  }, [user]);
 
   useEffect(() => {
     let newRegularSelectedRewardId = null;

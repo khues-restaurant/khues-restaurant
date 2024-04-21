@@ -15,11 +15,16 @@ const buttonVariants = cva(
         outline: "border border-input bg-background",
         secondary: "bg-secondary text-secondary-foreground",
         ghost: "",
+
         // TODO: idk probably want/need to make a separate variant for the quantity buttons
         // becaus although outline looks great, the disabled:opacity-50 above really does not look
         // good with the borders also receiving the opacity shift
+
+        // idk I swear there can be *something* doable with having the non-active links be
+        // a different color, but grey-400 isn't it and I think "text-primary/80 hover:!text-primary"
+        // also has some flaws too.. keep at it though
         link: "underlineAnimation text-primary",
-        activeLink: "activeUnderline text-primary",
+        activeLink: "activeUnderline text-primary font-semibold",
         underline: "text-primary underline underline-offset-2",
         text: "text-neutral-400",
         rewards: "text-white", // idk white text on this yellow gradient is a bit of a problem... fallback would probably be yellow-800 or something

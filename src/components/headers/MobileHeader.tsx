@@ -137,12 +137,11 @@ function MobileHeader() {
               {isSignedIn && (
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="item-1" className="border-none">
-                    {/* maybe need specific variant or just some custom code here to  */}
-                    <AccordionTrigger className="baseFlex gap-4 py-2 text-xl font-medium text-primary !no-underline">
+                    <AccordionTrigger className="baseFlex gap-4 py-2 text-xl font-semibold text-primary !no-underline">
                       <FaUserAlt className="!rotate-0" />
                       {user?.firstName}
                     </AccordionTrigger>
-                    <AccordionContent className="pt-2">
+                    <AccordionContent className="pb-0 pt-2">
                       <div className="baseVertFlex gap-2">
                         <Button
                           variant={
@@ -154,7 +153,7 @@ function MobileHeader() {
                         >
                           <Link
                             href={"/profile/preferences"}
-                            className="baseFlex w-full !justify-between !text-lg"
+                            className="baseFlex w-52 !justify-between !text-lg"
                           >
                             Preferences
                             <IoSettingsOutline />
@@ -170,7 +169,7 @@ function MobileHeader() {
                         >
                           <Link
                             href={"/profile/rewards"}
-                            className="baseFlex w-full !justify-between !text-lg"
+                            className="baseFlex w-52 !justify-between !text-lg"
                           >
                             Rewards
                             <SlPresent />
@@ -186,7 +185,7 @@ function MobileHeader() {
                         >
                           <Link
                             href={"/profile/my-orders"}
-                            className="baseFlex w-full !justify-between !text-lg"
+                            className="baseFlex w-52 !justify-between !text-lg"
                           >
                             My orders
                             <TfiReceipt />
@@ -212,7 +211,7 @@ function MobileHeader() {
                 </Accordion>
               )}
 
-              <Separator className="mt-2 w-4/5 self-center" />
+              <Separator className="mt-2 w-4/5 self-center bg-gray-300" />
 
               <Button
                 variant={asPath.includes("/menu") ? "activeLink" : "link"}

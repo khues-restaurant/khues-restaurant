@@ -71,15 +71,13 @@ function Rewards({
     )
       return;
 
-    setUser(currentRewardsData);
+    setRewards(currentRewardsData); // TODO: I'm assuming this type error is legit?
   }, [initRewardsData, currentRewardsData]);
 
   const { data: activeDiscounts } = api.discount.getAll.useQuery();
   // const { data: activeRewards } = api.discount.getUserRewards.useQuery(userId);
 
   const [rewardsPointsEarned, setRewardsPointsEarned] = useState(0);
-
-  const [rewardsPointsTimerSet, setRewardsPointsTimerSet] = useState(false);
 
   const [regularSelectedRewardId, setRegularSelectedRewardId] = useState<
     string | null
@@ -93,16 +91,16 @@ function Rewards({
 
   // get rid of this, see no need for this bs
   useEffect(() => {
-    if (!user || rewardsPointsTimerSet) return;
+    if (!user) return;
 
-    setTimeout(() => {
-      if (user) {
-        setRewardsPointsEarned(user.rewardsPoints);
-      }
-    }, 1500);
+    setRewardsPointsEarned(user.rewardsPoints);
+  }, [user]);
 
-    setRewardsPointsTimerSet(true);
-  }, [user, rewardsPointsTimerSet]);
+  console.log(
+    user?.rewardsPoints,
+    rewardsPointsEarned,
+    toBeDeductedRewardsPoints,
+  );
 
   useEffect(() => {
     let newRegularSelectedRewardId = null;

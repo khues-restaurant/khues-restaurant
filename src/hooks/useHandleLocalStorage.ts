@@ -57,6 +57,13 @@ function useHandleLocalStorage() {
   const [orderDetailsRetrieved, setOrderDetailsRetrieved] = useState(false);
 
   useEffect(() => {
+    // console.log(
+    //   "validating from local storage",
+    //   "initially valid? ",
+    //   cartInitiallyValidated,
+    //   orderDetailsRetrieved,
+    // );
+
     if (
       !isLoaded ||
       (isSignedIn && user === undefined) ||
@@ -65,12 +72,6 @@ function useHandleLocalStorage() {
       cartInitiallyValidated
     )
       return;
-
-    console.log(
-      "validating from local storage",
-      "initially valid? ",
-      cartInitiallyValidated,
-    );
 
     const resetOrderDetails =
       localStorage.getItem("khue's-resetOrderDetails") === "true"
@@ -183,6 +184,30 @@ function useHandleLocalStorage() {
     setValidatingCart,
     validateOrder,
   ]);
+
+  // make sure orderDetails is present in localStorage no matter what
+  // otherwise this allowed for cart to sometimes hang in "validation" state
+  // because there was nothing to validate
+  useEffect(() => {
+    const localStorageOrderDetails = localStorage.getItem(
+      "khue's-orderDetails",
+    );
+
+    if (localStorageOrderDetails) return;
+
+    setOrderDetailsRetrieved(false);
+
+    localStorage.setItem(
+      "khue's-orderDetails",
+      JSON.stringify({
+        datetimeToPickUp: new Date(),
+        isASAP: false,
+        items: [],
+        includeNapkinsAndUtensils: false,
+        discountId: null,
+      }),
+    );
+  }, [isSignedIn]);
 }
 
 export default useHandleLocalStorage;

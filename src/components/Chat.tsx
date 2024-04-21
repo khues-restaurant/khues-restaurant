@@ -127,6 +127,22 @@ function Chat() {
 
   // maybe hide button until scrolled down a bit on mobile?
 
+  function getDynamicChatButtonBottomValue(forMobile?: boolean) {
+    if (asPath.includes("/profile")) {
+      if (forMobile) {
+        return footerIsInView ? "-2.5rem" : "7rem";
+      } else {
+        return footerIsInView ? "-1.5rem" : "2rem";
+      }
+    }
+
+    if (forMobile) {
+      return footerIsInView ? "-2.5rem" : "1.5rem";
+    } else {
+      return footerIsInView ? "-1.5rem" : "2rem";
+    }
+  }
+
   return (
     <>
       <AlertDialog open={showingAlertDialogChat}>
@@ -135,36 +151,20 @@ function Chat() {
             <motion.div
               key="openChat"
               initial={{
-                opacity: asPath.includes("/profile")
-                  ? footerIsInView
-                    ? 0
-                    : 1
-                  : 1,
+                opacity: footerIsInView ? 0 : 1,
                 scale: 0.95,
               }}
               animate={{
-                opacity: asPath.includes("/profile")
-                  ? footerIsInView
-                    ? 0
-                    : 1
-                  : 1,
+                opacity: footerIsInView ? 0 : 1,
                 scale: 1,
               }}
               exit={{
-                opacity: asPath.includes("/profile")
-                  ? footerIsInView
-                    ? 0
-                    : 1
-                  : 1,
+                opacity: footerIsInView ? 0 : 1,
                 scale: 0.95,
               }}
               transition={{ duration: 0.2 }}
               style={{
-                bottom: asPath.includes("/profile")
-                  ? footerIsInView
-                    ? "-2.5rem"
-                    : "7rem"
-                  : "1.5rem",
+                bottom: getDynamicChatButtonBottomValue(true),
                 transition:
                   "bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
               }}
@@ -284,41 +284,65 @@ function Chat() {
           setShowingPopoverChat(open);
         }}
       >
-        <PopoverTrigger asChild>
-          <Button className="fixed bottom-8 right-8 hidden size-14 rounded-full shadow-md tablet:block">
-            <div
-              style={{
-                animationDuration: "2s",
-              }}
-              className={`absolute left-1 top-1 z-[-1] size-12 rounded-full bg-primary ${
-                chat?.userHasUnreadMessages ? "animate-ping" : ""
-              }`}
-            ></div>
-            <AnimatePresence mode="popLayout">
-              {showingPopoverChat ? (
-                <motion.div
-                  key="openChatTablet+"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <X className="size-6 drop-shadow-md" />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="closeChat"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <IoChatbox className="size-6 drop-shadow-md" />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </Button>
-        </PopoverTrigger>
+        <motion.div
+          key="openChatContainerTablet"
+          initial={{
+            opacity: footerIsInView ? 0 : 1,
+            scale: 0.95,
+          }}
+          animate={{
+            opacity: footerIsInView ? 0 : 1,
+            scale: 1,
+          }}
+          exit={{
+            opacity: footerIsInView ? 0 : 1,
+            scale: 0.95,
+          }}
+          transition={{ duration: 0.2 }}
+          style={{
+            bottom: getDynamicChatButtonBottomValue(),
+            transition:
+              "bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+          }}
+          className="fixed right-8 z-10 hidden size-14 rounded-full shadow-md tablet:block"
+        >
+          <PopoverTrigger asChild>
+            <Button className="size-14 rounded-full shadow-md">
+              <div
+                style={{
+                  animationDuration: "2s",
+                }}
+                className={`absolute left-0 top-0 z-[-1] size-14 rounded-full bg-primary ${
+                  chat?.userHasUnreadMessages ? "animate-ping" : ""
+                }`}
+              ></div>
+              <AnimatePresence mode="popLayout">
+                {showingPopoverChat ? (
+                  <motion.div
+                    key="openChatTablet+"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <X className="size-6 drop-shadow-md" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="closeChat"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <IoChatbox className="size-6 drop-shadow-md" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </Button>
+          </PopoverTrigger>
+        </motion.div>
+
         <PopoverContent
           side={"top"}
           sideOffset={16}

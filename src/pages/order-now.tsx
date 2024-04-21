@@ -419,9 +419,9 @@ function OrderNow() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="baseVertFlex h-[calc(100dvh-6rem-14rem)] w-full tablet:h-[calc(100dvh-8rem-18rem)]"
+              className="baseVertFlex h-[calc(100dvh-6rem-14rem)] w-full tablet:h-[calc(100dvh-7rem-18rem)]"
             >
-              <AnimatedLogo className="size-24" />
+              <AnimatedLogo className="size-20 tablet:size-24" />
             </motion.div>
           ) : (
             <motion.div

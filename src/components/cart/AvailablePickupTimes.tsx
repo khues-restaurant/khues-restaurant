@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 import { SelectGroup, SelectItem, SelectLabel } from "~/components/ui/select";
 import { formatTimeString } from "~/utils/formatTimeString";
 import { is30MinsFromDatetime } from "~/utils/is30MinsFromDatetime";
@@ -91,11 +91,17 @@ function AvailablePickupTimes({
     setAvailablePickupTimes(basePickupTimes);
   }, [selectedDate, minPickupTime]);
 
-  // if it's past 10pm, we don't want to accept any new orders
-  if (
-    (minPickupTime && minPickupTime.getHours() >= 22) ||
-    new Date().getHours() >= 22
-  ) {
+  const today = useMemo(() => new Date(), []);
+
+  const orderingIsNotAvailable = useMemo(() => {
+    return (
+      selectedDate.getTime() === today.getTime() &&
+      ((minPickupTime && minPickupTime.getHours() >= 22) ||
+        today.getHours() >= 22)
+    );
+  }, [selectedDate, minPickupTime, today]);
+
+  if (orderingIsNotAvailable) {
     return (
       <div className="baseVertFlex w-64 !items-start gap-2 p-4">
         <p className="font-semibold underline underline-offset-2">Notice:</p>
