@@ -539,7 +539,7 @@ function ItemCustomizerDialogContent({
                     setPrevOrderDetails(orderDetails);
 
                     toast({
-                      description: `${localItemOrderDetails.name} added to your order.`,
+                      description: `${localItemOrderDetails.quantity > 1 ? `${localItemOrderDetails.quantity}x` : ""} ${localItemOrderDetails.name} added to your order.`,
                       action: (
                         <ToastAction
                           altText={`Undo the addition of ${localItemOrderDetails.name} to your order.`}

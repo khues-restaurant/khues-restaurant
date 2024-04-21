@@ -325,6 +325,7 @@ function CartDrawer({
       exit={{ opacity: 0, translateX: "-100%" }}
       transition={{
         duration: 0.35,
+        ease: "easeInOut",
       }}
       className="baseVertFlex relative size-full !justify-start overflow-y-auto"
     >
