@@ -108,6 +108,7 @@ model MenuItem {
     activeDiscount   Discount?    @relation(fields: [activeDiscountId], references: [id])
     activeDiscountId String?
 
+    isAlcoholic  Boolean @default(false)
     isRewardItem Boolean @default(false)
     chefsChoice  Boolean @default(false)
     reviews      String? // max three hand-picked reviews, separated/delimited by " | "
@@ -172,6 +173,8 @@ model OrderItem {
     discount   Discount? @relation(fields: [discountId], references: [id])
     discountId String?
 
+    isAlcoholic Boolean @default(false) // technically this shouldn't have a default but I don't think it is high priority
+
     pointReward    Boolean @default(false)
     birthdayReward Boolean @default(false)
 
@@ -228,6 +231,18 @@ model Order {
     // alongside their feedback. This isn't to be confused with the to be made "MenuItemReview" model
 }
 
+// TODO
+// model OrderReward {
+//     id        String   @id @default(uuid())
+//     createdAt DateTime @default(now())
+
+//     order   Order  @relation(fields: [orderId], references: [id])
+//     orderId String
+
+//     reward   Discount  @relation(fields: [rewardId], references: [id])
+//     rewardId String
+// }
+
 model Discount {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
@@ -272,8 +287,7 @@ model User {
     rewardsPoints        Int @default(500) // TODO: most likely change this later
     lifetimeRewardPoints Int @default(0)
 
-    birthdayRewardRedeemed           Boolean @default(false)
-    lastBirthdayRewardRedemptionYear Int     @default(0)
+    lastBirthdayRewardRedemptionYear Int @default(0)
 
     currentOrder Json?
 

@@ -126,6 +126,9 @@ function CartSheet({
   const [regularItems, setRegularItems] = useState<Item[]>([]);
   const [rewardItems, setRewardItems] = useState<Item[]>([]);
 
+  const [showOnlyAlcoholicItemsError, setShowOnlyAlcoholicItemsError] =
+    useState(false);
+
   useEffect(() => {
     const filteredRegularItems = [];
     const filteredRewardItems = [];
@@ -276,6 +279,14 @@ function CartSheet({
   }, [mainForm, orderDetails, updateOrder]);
 
   useEffect(() => {
+    if (showOnlyAlcoholicItemsError) {
+      if (orderDetails.items.some((item) => !item.isAlcoholic)) {
+        setShowOnlyAlcoholicItemsError(false);
+      }
+    }
+  }, [orderDetails.items, showOnlyAlcoholicItemsError]);
+
+  useEffect(() => {
     // add up all the quantities of the items in the order
     let sum = 0;
     orderDetails.items.forEach((item) => {
@@ -312,6 +323,17 @@ function CartSheet({
   ]);
 
   async function onMainFormSubmit(values: z.infer<typeof mainFormSchema>) {
+    // check first to see if there are any cart infractions
+
+    // first: order has only items that contain isAlcoholic being true
+    if (orderDetails.items.every((item) => item.isAlcoholic)) {
+      setShowOnlyAlcoholicItemsError(true);
+      return;
+    }
+
+    // TODO: second: order has a reward item but the total cost of their order is less than the threshold
+    // ($5?)
+
     setCheckoutButtonText("Loading");
 
     await initializeCheckout(); // TODO: await or void or what here
@@ -471,18 +493,21 @@ function CartSheet({
         {itemNamesRemovedFromCart.length > 0 && (
           <motion.div
             key={"cartSheetRemovedItemsCard"}
-            initial={{ opacity: 0, height: 0 }}
+            initial={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
             animate={{
               opacity: 1,
-              height: `${300 + itemNamesRemovedFromCart.length * 24}px`, // TODO: prob requires tweaking on mobile
+              height: `${215 + itemNamesRemovedFromCart.length * 24}px`, // TODO: prob requires tweaking on mobile
+              paddingTop: "1rem",
+              paddingBottom: "1rem",
             }}
-            exit={{ opacity: 0, height: 0 }}
+            exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
             transition={{ duration: 0.5 }}
             style={{ overflow: "hidden" }}
+            className="px-8"
           >
             <motion.div
               layout={"position"}
-              className="baseVertFlex relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 pr-16 text-white"
+              className="baseVertFlex relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 pr-16 text-sm text-white"
             >
               <p className="font-semibold underline underline-offset-2">
                 Your order has been modified.
@@ -506,6 +531,47 @@ function CartSheet({
                 className="absolute right-2 top-2 size-6 bg-primary !p-0 text-white"
                 onClick={() => {
                   setItemNamesRemovedFromCart([]);
+                }}
+              >
+                <X className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+              </Button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showOnlyAlcoholicItemsError && (
+          <motion.div
+            key={"alcoholicItemsErrorCard"}
+            initial={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
+            animate={{
+              opacity: 1,
+              height: "200px",
+              paddingTop: "1rem",
+              paddingBottom: "1rem",
+            }}
+            exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ overflow: "hidden" }}
+            className="px-8"
+          >
+            <motion.div
+              layout={"position"}
+              className="baseVertFlex relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 pr-16 text-white"
+            >
+              <p className="text-sm font-semibold">
+                * Orders that contain alcoholic beverages must include at least
+                one food item.
+              </p>
+
+              <Button
+                variant={"outline"} // prob diff variant or make a new one
+                // rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary
+                className="absolute right-2 top-2 size-6 bg-primary !p-0 text-white"
+                onClick={() => {
+                  setShowOnlyAlcoholicItemsError(false);
                 }}
               >
                 <X className="h-4 w-4" />
@@ -543,7 +609,7 @@ function CartSheet({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="baseVertFlex size-full !items-start !justify-start gap-2 overflow-y-auto rounded-xl border-b p-4"
+            className="baseVertFlex size-full !items-start !justify-start gap-2 overflow-y-auto p-4"
           >
             <div className="baseVertFlex w-full !justify-start">
               <AnimatePresence>
@@ -860,132 +926,134 @@ function CartSheet({
                 </AnimatePresence>
               </AnimatePresence>
             </div>
-
-            <div className="baseVertFlex mt-4 w-full gap-4">
-              <div
-                style={{
-                  justifyContent: isSignedIn ? "space-between" : "flex-start",
-                }}
-                className="baseFlex w-full"
-              >
-                <div className="baseFlex gap-2">
-                  <Switch
-                    id="prefersNapkinsAndUtensilsSwitch"
-                    checked={orderDetails.includeNapkinsAndUtensils}
-                    onCheckedChange={(checked) =>
-                      updateOrder({
-                        newOrderDetails: {
-                          ...orderDetails,
-                          includeNapkinsAndUtensils: checked,
-                        },
-                      })
-                    }
-                  />
-                  <Label htmlFor="prefersNapkinsAndUtensilsSwitch">
-                    Include napkins and utensils
-                  </Label>
-                </div>
-
-                {isSignedIn && (
-                  <Button
-                    variant="rewards"
-                    className="baseFlex gap-2 font-semibold"
-                    onClick={() => {
-                      setShowRewardsDialog(true);
-                    }}
-                  >
-                    <CiGift className="size-6" />
-                    My rewards
-                  </Button>
-                )}
-              </div>
-
-              {/* dietary restrictions legend */}
-              {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
-              {orderDetails.items.some(
-                (item) => item.includeDietaryRestrictions,
-              ) && (
-                <div className="baseFlex gap-2">
-                  <div className="size-2 rounded-full bg-primary/75" />
-                  <p className="text-sm">
-                    Item will be prepared according to your dietary restrictions
-                  </p>
-                </div>
-              )}
-            </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="baseFlex w-full !justify-between rounded-bl-xl border-t bg-gradient-to-br from-gray-200 to-gray-300 p-4 shadow-inner">
-        <div className="baseVertFlex w-1/2">
-          <div className="baseFlex w-full !justify-between text-sm">
-            <p>Subtotal</p>
-            <AnimatedPrice price={formatPrice(orderCost.subtotal)} />
-          </div>
+      <div className="baseVertFlex w-full">
+        <div className="baseVertFlex mt-4 w-full gap-4 p-4">
+          <div
+            style={{
+              justifyContent: isSignedIn ? "space-between" : "flex-start",
+            }}
+            className="baseFlex w-full"
+          >
+            <div className="baseFlex gap-2">
+              <Switch
+                id="prefersNapkinsAndUtensilsSwitch"
+                checked={orderDetails.includeNapkinsAndUtensils}
+                onCheckedChange={(checked) =>
+                  updateOrder({
+                    newOrderDetails: {
+                      ...orderDetails,
+                      includeNapkinsAndUtensils: checked,
+                    },
+                  })
+                }
+              />
+              <Label htmlFor="prefersNapkinsAndUtensilsSwitch">
+                Include napkins and utensils
+              </Label>
+            </div>
 
-          {/* TODO: ask eric if this threshold should apply based on subtotal or total */}
-          {isSignedIn &&
-            orderDetails.discountId &&
-            orderCost.subtotal >= 35 &&
-            discounts[orderDetails.discountId]?.name ===
-              "Spend $35, Save $5" && (
-              <div className="baseFlex w-full !justify-between text-sm text-primary">
-                <p>Spend $35, Save $5</p>
-                <AnimatedPrice price={formatPrice(-5)} />
-              </div>
+            {isSignedIn && (
+              <Button
+                variant="rewards"
+                className="baseFlex gap-2 font-semibold"
+                onClick={() => {
+                  setShowRewardsDialog(true);
+                }}
+              >
+                <CiGift className="size-6" />
+                My rewards
+              </Button>
             )}
-
-          <div className="baseFlex w-full  !justify-between text-sm">
-            <p>Tax</p>
-            <AnimatedPrice price={formatPrice(orderCost.tax)} />
           </div>
 
-          <div className="baseFlex w-full !justify-between gap-2 text-lg font-semibold">
-            <p>Total</p>
-            <AnimatedPrice price={formatPrice(orderCost.total)} />
-          </div>
+          {/* dietary restrictions legend */}
+          {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
+          {orderDetails.items.some(
+            (item) => item.includeDietaryRestrictions,
+          ) && (
+            <div className="baseFlex gap-2">
+              <div className="size-2 rounded-full bg-primary/75" />
+              <p className="text-sm">
+                Item will be prepared according to your dietary restrictions
+              </p>
+            </div>
+          )}
         </div>
 
-        <Separator
-          orientation="vertical"
-          className="h-12 w-[1px] bg-gray-400"
-        />
+        <div className="baseFlex w-full !justify-between rounded-bl-xl border-t bg-gradient-to-br from-gray-200 to-gray-300 p-4 shadow-inner">
+          <div className="baseVertFlex w-1/2">
+            <div className="baseFlex w-full !justify-between text-sm">
+              <p>Subtotal</p>
+              <AnimatedPrice price={formatPrice(orderCost.subtotal)} />
+            </div>
 
-        <Button
-          variant="default"
-          disabled={
-            checkoutButtonText !== "Proceed to checkout" ||
-            orderDetails.items.length === 0
-          }
-          className="text-xs font-semibold tablet:text-sm"
-          onClick={() => void mainForm.handleSubmit(onMainFormSubmit)()}
-        >
-          <AnimatePresence mode={"popLayout"}>
-            <motion.div
-              key={`cartSheet-${checkoutButtonText}`}
-              layout
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{
-                duration: 0.25,
-              }}
-              className="baseFlex gap-2"
-            >
-              {checkoutButtonText}
-              {checkoutButtonText === "Loading" && (
-                <div
-                  className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
-                  role="status"
-                  aria-label="loading"
-                >
-                  <span className="sr-only">Loading...</span>
+            {/* TODO: ask eric if this threshold should apply based on subtotal or total */}
+            {isSignedIn &&
+              orderDetails.discountId &&
+              orderCost.subtotal >= 35 &&
+              discounts[orderDetails.discountId]?.name ===
+                "Spend $35, Save $5" && (
+                <div className="baseFlex w-full !justify-between text-sm text-primary">
+                  <p>Spend $35, Save $5</p>
+                  <AnimatedPrice price={formatPrice(-5)} />
                 </div>
               )}
-            </motion.div>
-          </AnimatePresence>
-        </Button>
+
+            <div className="baseFlex w-full  !justify-between text-sm">
+              <p>Tax</p>
+              <AnimatedPrice price={formatPrice(orderCost.tax)} />
+            </div>
+
+            <div className="baseFlex w-full !justify-between gap-2 text-lg font-semibold">
+              <p>Total</p>
+              <AnimatedPrice price={formatPrice(orderCost.total)} />
+            </div>
+          </div>
+
+          <Separator
+            orientation="vertical"
+            className="h-12 w-[1px] bg-gray-400"
+          />
+
+          <Button
+            variant="default"
+            disabled={
+              checkoutButtonText !== "Proceed to checkout" ||
+              orderDetails.items.length === 0
+            }
+            className="text-xs font-semibold tablet:text-sm"
+            onClick={() => void mainForm.handleSubmit(onMainFormSubmit)()}
+          >
+            <AnimatePresence mode={"popLayout"}>
+              <motion.div
+                key={`cartSheet-${checkoutButtonText}`}
+                layout
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{
+                  duration: 0.25,
+                }}
+                className="baseFlex gap-2"
+              >
+                {checkoutButtonText}
+                {checkoutButtonText === "Loading" && (
+                  <div
+                    className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                    role="status"
+                    aria-label="loading"
+                  >
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </Button>
+        </div>
       </div>
     </div>
   );

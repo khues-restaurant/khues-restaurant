@@ -23,11 +23,16 @@ import { type GetServerSideProps } from "next";
 import { buildClerkProps, getAuth } from "@clerk/nextjs/server";
 import { PrismaClient, type User } from "@prisma/client";
 import isEqual from "lodash.isequal";
+import { isEligibleForBirthdayReward } from "~/utils/isEligibleForBirthdayReward";
+
+// TODO: honestly the logic within here is very hit or miss, comb through this for sure
 
 function Rewards({
+  isElegibleForBirthdayReward,
   initUserData,
   initRewardsData,
 }: {
+  isElegibleForBirthdayReward: boolean;
   initUserData: User;
   initRewardsData: {
     rewardMenuCategories: FullMenuItem[]; // TODO: blatantly wrong, make proper type for this later
@@ -460,7 +465,7 @@ function Rewards({
         {/* .map() of Your rewards */}
         <div className="baseVertFlex mt-8 max-w-7xl gap-8 px-4 text-yellow-500 tablet:gap-16">
           {/* Birthday reward options */}
-          {true && (
+          {isElegibleForBirthdayReward && (
             <div className="baseVertFlex mb-8 w-full gap-8">
               <div className="baseFlex sm:gap-2">
                 <SideAccentSwirls className="h-4 scale-x-[-1] fill-yellow-500 sm:h-5" />
@@ -608,31 +613,6 @@ Rewards.PageLayout = TopProfileNavigationLayout;
 
 export default Rewards;
 
-// TODO: eventually add this below, can also combine with getting the reward items too so you don't
-// have to worry about loading skeletons if you want
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   // Extract user information (e.g., from session, cookie, or context params)
-//   const userId = /* Your mechanism to get userId from the context */;
-//      ^^ this will be through clerk, then use id to query for user row in db
-//   const user = await getUserDetails(userId);
-
-//   // Check if the user is eligible for the birthday reward
-//   const isEligible = isEligibleForBirthdayReward(
-//     new Date(user.birthdate),
-//     user.birthdayRewardRedeemed,
-//     user.lastRewardRedemptionYear
-//   );
-
-//   // Pass eligibility status to the page as props
-//   return {
-//     props: {
-//       isEligible,
-//       // any other props you need
-//     },
-//   };
-// };
-
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { userId } = getAuth(ctx.req);
   if (!userId) return { props: {} };
@@ -646,6 +626,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   });
 
   if (!initUserData) return { props: {} };
+
+  // Check if the user is eligible for the birthday reward
+  const isEligibleForBirthdayRewardValue = isEligibleForBirthdayReward(
+    new Date(initUserData.birthday),
+    initUserData.lastBirthdayRewardRedemptionYear,
+  );
 
   const menuCategories = await prisma.menuCategory.findMany({
     where: {
@@ -712,7 +698,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   };
 
   return {
-    props: { initUserData, initRewardsData, ...buildClerkProps(ctx.req) },
+    props: {
+      isElegibleForBirthdayReward: isEligibleForBirthdayRewardValue,
+      initUserData,
+      initRewardsData,
+      ...buildClerkProps(ctx.req),
+    },
   };
 };
 
@@ -738,13 +729,15 @@ function RewardMenuItem({
 
   const { updateOrder } = useUpdateOrder();
 
-  const { toast } = useToast();
+  const { toast, dismiss: dismissToasts } = useToast();
 
   function isDisabled() {
     if (currentlySelectedRewardId === menuItem.id) return false;
 
     if (
-      userAvailablePoints < new Decimal(menuItem.price).div(0.01).toNumber() ||
+      (!forBirthdayReward &&
+        userAvailablePoints <
+          new Decimal(menuItem.price).div(0.01).toNumber()) ||
       !menuItem.available
     ) {
       return true;
@@ -805,6 +798,8 @@ function RewardMenuItem({
                 updatedItems.push(item);
               }
 
+              dismissToasts();
+
               updateOrder({
                 newOrderDetails: {
                   ...orderDetails,
@@ -816,8 +811,9 @@ function RewardMenuItem({
             }
 
             if (
+              !forBirthdayReward &&
               userAvailablePoints <
-              new Decimal(menuItem.price).div(0.01).toNumber()
+                new Decimal(menuItem.price).div(0.01).toNumber()
             ) {
               toast({
                 variant: "default",
@@ -849,6 +845,7 @@ function RewardMenuItem({
                     quantity: 1,
                     price: menuItem.price,
                     discountId: null,
+                    isAlcoholic: menuItem.isAlcoholic,
                     birthdayReward: forBirthdayReward,
                     pointReward: !forBirthdayReward,
                   },

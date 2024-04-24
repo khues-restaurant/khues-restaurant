@@ -2,7 +2,6 @@ import { addWeeks, subWeeks } from "date-fns";
 
 export function isEligibleForBirthdayReward(
   birthdate: Date,
-  birthdayRewardRedeemed: boolean,
   lastRewardRedemptionYear: number,
 ): boolean {
   const today: Date = new Date();
@@ -19,8 +18,7 @@ export function isEligibleForBirthdayReward(
     today >= rewardWindowStart && today <= rewardWindowEnd;
 
   // Check if the reward has not been redeemed this year
-  const notRedeemedThisYear: boolean =
-    !birthdayRewardRedeemed || lastRewardRedemptionYear < currentYear;
+  const notRedeemedThisYear: boolean = lastRewardRedemptionYear < currentYear;
 
   return isInRewardWindow && notRedeemedThisYear;
 }

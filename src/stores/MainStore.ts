@@ -40,6 +40,7 @@ const itemSchema = z.object({
   includeDietaryRestrictions: z.boolean(),
   quantity: z.number(),
   price: z.number(),
+  isAlcoholic: z.boolean(),
   pointReward: z.boolean(),
   birthdayReward: z.boolean(),
 });
@@ -72,6 +73,7 @@ export interface Item {
   includeDietaryRestrictions: boolean;
   quantity: number;
   price: number;
+  isAlcoholic: boolean;
   pointReward: boolean;
   birthdayReward: boolean;
 }
