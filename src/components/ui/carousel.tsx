@@ -164,7 +164,7 @@ const CarouselContent = React.forwardRef<
         className={cn(
           "flex",
 
-          `${api?.canScrollNext() || api?.canScrollPrev() ? "cursor-grab active:cursor-grabbing" : ""}`,
+          `${api?.slidesNotInView()?.length ?? 0 > 0 ? "cursor-grab active:cursor-grabbing" : ""}`,
 
           // I honestly can't see a good reason why the -ml-4 classes were included by default...
           // revert if necessary
