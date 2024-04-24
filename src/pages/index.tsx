@@ -199,7 +199,7 @@ export default function Home() {
             // skipSnaps: true, play around with this
           }}
         >
-          <CarouselContent className="xl:gap-8">
+          <CarouselContent className="xl:w-[1200px] 2xl:w-[1500px]">
             <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md p-4 tablet:basis-1/3">
               <Image
                 src="/press/StarTribune.png"
@@ -770,7 +770,7 @@ export default function Home() {
         )}
 
         {/* Explore Our Favorites section */}
-        <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-5xl tablet:max-w-2xl">
+        {/* <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-5xl tablet:max-w-2xl">
           <p className="text-lg font-medium">Explore Our Favorites</p>
 
           <div className="baseVertFlex w-full gap-2">
@@ -911,7 +911,7 @@ export default function Home() {
               </Button>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* maybe a gallary/slideshow section? Prob not though */}
       </div>
