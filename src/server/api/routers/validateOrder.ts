@@ -5,6 +5,7 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { getMidnightDate } from "~/utils/getMidnightDate";
 import { isAbleToRenderASAPTimeSlot } from "~/utils/isAbleToRenderASAPTimeSlot";
 import { is30MinsFromDatetime } from "~/utils/is30MinsFromDatetime";
+import Decimal from "decimal.js";
 
 const holidays = [
   new Date("2024-12-25"),
@@ -232,9 +233,35 @@ export const validateOrderRouter = createTRPCRouter({
         // If an item was a point reward or birthday reward, we (tentatively) are going to
         // still keep it in the order, but set it's values of pointReward and birthdayReward to false
 
-        if (validatingAReorder && (item.pointReward || item.birthdayReward)) {
-          item.pointReward = false;
-          item.birthdayReward = false;
+        if (item.pointReward || item.birthdayReward) {
+          if (validatingAReorder) {
+            item.pointReward = false;
+            item.birthdayReward = false;
+          } else {
+            // check if the user has enough points to redeem the point reward
+            if (item.pointReward) {
+              const itemRewardPoints = new Decimal(item.price)
+                .div(0.005)
+                .toNumber();
+
+              const user = await ctx.prisma.user.findFirst({
+                where: {
+                  userId,
+                },
+              });
+
+              if (!user) {
+                // removing item from order
+                items.splice(items.indexOf(item), 1);
+
+                // adding item name to removedItemNames
+                removedItemNames.push(item.name);
+              } else if (user.rewardsPoints < itemRewardPoints) {
+                item.pointReward = false; // choosing to leave item in order, but treat it as a regular
+                // item instead of a point reward
+              }
+            }
+          }
         }
       }
 

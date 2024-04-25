@@ -105,7 +105,7 @@ export const paymentRouter = createTRPCRouter({
             description += `${Object.values(item.customizations).length > 0 ? " | " : ""}${new Decimal(
               item.price,
             )
-              .div(0.01)
+              .div(0.005)
               .toNumber()} Point reward`;
           }
 

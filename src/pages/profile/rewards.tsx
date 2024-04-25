@@ -737,7 +737,7 @@ function RewardMenuItem({
     if (
       (!forBirthdayReward &&
         userAvailablePoints <
-          new Decimal(menuItem.price).div(0.01).toNumber()) ||
+          new Decimal(menuItem.price).div(0.005).toNumber()) ||
       !menuItem.available
     ) {
       return true;
@@ -765,7 +765,7 @@ function RewardMenuItem({
               <p className="max-w-48 text-wrap text-left text-gray-400">Free</p>
             ) : (
               <p className="max-w-48 text-wrap text-left text-gray-400">
-                {new Decimal(menuItem.price).div(0.01).toNumber()} points
+                {new Decimal(menuItem.price).div(0.005).toNumber()} points
               </p>
             )}
 
@@ -813,7 +813,7 @@ function RewardMenuItem({
             if (
               !forBirthdayReward &&
               userAvailablePoints <
-                new Decimal(menuItem.price).div(0.01).toNumber()
+                new Decimal(menuItem.price).div(0.005).toNumber()
             ) {
               toast({
                 variant: "default",

@@ -119,6 +119,7 @@ function ItemCustomizationDrawer({
       price: itemToCustomize.price,
       itemId: itemToCustomize.id,
       discountId: itemToCustomize.activeDiscountId,
+      isAlcoholic: itemToCustomize.isAlcoholic,
       pointReward: false,
       birthdayReward: false,
     },
@@ -429,6 +430,13 @@ function ItemCustomizationDrawer({
               </AccordionContent>
             </AccordionItem>
           </Accordion>
+
+          {itemToCustomize.isAlcoholic && (
+            <p className="text-center text-xs italic text-gray-400">
+              * Orders that contain alcoholic beverages must include at least
+              one food item.
+            </p>
+          )}
 
           {/* Reviews */}
           {/* <div className="baseVertFlex w-full gap-2">
@@ -743,6 +751,7 @@ function SuggestedPairing({
     price: item.price,
     itemId: item.id,
     discountId: item.activeDiscountId,
+    isAlcoholic: item.isAlcoholic,
     pointReward: false,
     birthdayReward: false,
   };

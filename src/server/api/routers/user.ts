@@ -9,6 +9,7 @@ import {
 } from "~/server/api/trpc";
 import Stripe from "stripe";
 import { env } from "~/env";
+import { addMonths } from "date-fns";
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16",
@@ -52,6 +53,18 @@ export const userRouter = createTRPCRouter({
         email: input.email,
         name: `${input.firstName} ${input.lastName}`,
         phone: input.phoneNumber,
+      });
+
+      // add inital rewards for user
+      const currentDate = new Date();
+      const sixMonthsLater = addMonths(currentDate, 6);
+
+      await ctx.prisma.reward.create({
+        data: {
+          userId: input.userId,
+          expiresAt: sixMonthsLater,
+          value: 500,
+        },
       });
 
       return ctx.prisma.user.create({

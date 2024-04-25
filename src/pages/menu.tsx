@@ -3,6 +3,7 @@ import { type Discount } from "@prisma/client";
 import { format } from "date-fns";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import {
   useEffect,
   useRef,
@@ -375,6 +376,15 @@ function Menu() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        <Button size={"lg"} asChild>
+          <Link
+            href="/order-now"
+            className="fixed bottom-8 hidden !text-lg !shadow-xl tablet:flex"
+          >
+            Order Now
+          </Link>
+        </Button>
       </div>
     </motion.div>
   );
@@ -690,6 +700,7 @@ function formatMenuItemPrice(
                 includeDietaryRestrictions: false,
                 name: menuItem.name,
                 specialInstructions: "",
+                isAlcoholic: menuItem.isAlcoholic,
                 birthdayReward: false,
                 pointReward: false,
               },
@@ -715,6 +726,7 @@ function formatMenuItemPrice(
                 includeDietaryRestrictions: false,
                 name: menuItem.name,
                 specialInstructions: "",
+                isAlcoholic: menuItem.isAlcoholic,
                 birthdayReward: false,
                 pointReward: false,
               },
@@ -745,6 +757,7 @@ function formatMenuItemPrice(
               includeDietaryRestrictions: false,
               name: menuItem.name,
               specialInstructions: "",
+              isAlcoholic: menuItem.isAlcoholic,
               birthdayReward: false,
               pointReward: false,
             },

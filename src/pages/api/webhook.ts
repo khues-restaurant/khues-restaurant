@@ -9,6 +9,7 @@ import { type OrderDetails } from "~/stores/MainStore";
 import { orderDetailsSchema } from "~/stores/MainStore";
 import Decimal from "decimal.js";
 import { splitFullName } from "~/utils/splitFullName";
+import { addMonths } from "date-fns";
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16",
@@ -151,12 +152,12 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       for (const item of orderDetails.items) {
         if (item.pointReward) {
-          const points = new Decimal(item.price).div(0.01).toNumber();
+          const points = new Decimal(item.price).div(0.005).toNumber();
           spentPoints = points;
         }
       }
 
-      const earnedPoints = Math.floor(totalPrice / 10);
+      const earnedPoints = Math.floor(totalPrice / 5);
 
       const lifetimeRewardPoints =
         (user?.lifetimeRewardPoints ?? 0) + earnedPoints;
@@ -239,24 +240,112 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       };
 
-      await prisma.order.create({
+      const order = await prisma.order.create({
         data: orderData,
       });
 
       // 3.5) set any reward discount to inactive if it was used
-      if (orderDetails.rewardBeingRedeemed) {
-        await prisma.discount.update({
-          where: {
-            id: orderDetails.rewardBeingRedeemed.reward.id,
-          },
-          data: {
-            active: false,
-          },
-        });
+      // if (orderDetails.rewardBeingRedeemed) {
+      //   await prisma.discount.update({
+      //     where: {
+      //       id: orderDetails.rewardBeingRedeemed.reward.id,
+      //     },
+      //     data: {
+      //       active: false,
+      //     },
+      //   });
+      // }
+
+      // if a reward item was redeemed:
+      // need to get all of user's rewards that are active and not expired, sorted by ascending expiration date
+      // and then loop over adding their values until we get to the rewards item's value. While doing this we
+      // would save the ids that were totally used up to then set to active: false, and the last one most likely
+      // would just have it's value subtracted (need to specifically update this row's value) based on how much
+      // was left to reach the reward item's value.
+      let rewardItemPointValue = 0;
+
+      for (const item of orderDetails.items) {
+        if (item.pointReward) {
+          rewardItemPointValue = new Decimal(item.price).div(0.005).toNumber();
+        }
       }
 
-      // 4) update user rewards points/rank + reset their currentOrder
+      if (rewardItemPointValue > 0) {
+        const rewards = await prisma.reward.findMany({
+          where: {
+            userId: payment.metadata.userId,
+            active: true,
+            expiresAt: {
+              gt: new Date(),
+            },
+          },
+          orderBy: {
+            expiresAt: "asc",
+          },
+        });
+
+        let totalValue = 0;
+        const rewardIdsToDeactivate: string[] = [];
+
+        for (const reward of rewards) {
+          totalValue += reward.value;
+
+          if (totalValue >= rewardItemPointValue) {
+            // this reward is the last one to be used up
+            if (totalValue === rewardItemPointValue) {
+              rewardIdsToDeactivate.push(reward.id);
+            } else {
+              // this reward is partially used up
+              const remainingValue = totalValue - rewardItemPointValue;
+
+              await prisma.reward.update({
+                where: {
+                  id: reward.id,
+                },
+                data: {
+                  value: remainingValue,
+                  partiallyRedeemed: true,
+                },
+              });
+            }
+
+            break;
+          }
+
+          rewardIdsToDeactivate.push(reward.id);
+        }
+
+        if (rewardIdsToDeactivate.length > 0) {
+          await prisma.reward.updateMany({
+            where: {
+              id: {
+                in: rewardIdsToDeactivate,
+              },
+            },
+            data: {
+              active: false,
+            },
+          });
+        }
+      }
+
+      // 4) if user exists, update user rewards points + reset their currentOrder
+
       if (user) {
+        if (payment.metadata.userId) {
+          const currentDate = new Date();
+          const sixMonthsLater = addMonths(currentDate, 6);
+
+          await prisma.reward.create({
+            data: {
+              userId: payment.metadata.userId,
+              expiresAt: sixMonthsLater,
+              value: earnedPoints,
+              orderId: order.id,
+            },
+          });
+        }
+
         function getTodayAtMidnight() {
           const today = new Date();
           today.setHours(0, 0, 0, 0);
@@ -282,10 +371,6 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       // 5) send websocket emit to dashboard
-
-      // seems like we may have to do some extra work to get this to send to
-      // backend socket.ts
-      // socket.emit("newOrderCreated");
       emitNewOrderThroughSocket();
 
       // 6) TODO: send post request to w/e pos system we are using

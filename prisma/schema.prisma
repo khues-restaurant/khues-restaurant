@@ -229,19 +229,29 @@ model Order {
 
     reviews Review[] // these are just the direct reviews on the order, so that the dashboard can show the user's order
     // alongside their feedback. This isn't to be confused with the to be made "MenuItemReview" model
+
+    reward Reward[]
 }
 
-// TODO
-// model OrderReward {
-//     id        String   @id @default(uuid())
-//     createdAt DateTime @default(now())
+model Reward {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    expiresAt DateTime
 
-//     order   Order  @relation(fields: [orderId], references: [id])
-//     orderId String
+    active  Boolean @default(true)
+    expired Boolean @default(false)
+    value   Int
 
-//     reward   Discount  @relation(fields: [rewardId], references: [id])
-//     rewardId String
-// }
+    partiallyRedeemed Boolean @default(false)
+
+    order   Order?  @relation(fields: [orderId], references: [id])
+    orderId String?
+
+    user   User   @relation(fields: [userId], references: [userId])
+    userId String
+
+    @@index([id, userId])
+}
 
 model Discount {
     id        String   @id @default(uuid())
@@ -292,6 +302,7 @@ model User {
     currentOrder Json?
 
     recentOrders  Order[]
+    rewards       Reward[]
     favoriteItems FavoriteItem[]
     discounts     Discount[]
     reviews       Review[]

@@ -496,12 +496,12 @@ function CartSheet({
             initial={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
             animate={{
               opacity: 1,
-              height: `${215 + itemNamesRemovedFromCart.length * 24}px`, // TODO: prob requires tweaking on mobile
+              height: `${255 + itemNamesRemovedFromCart.length * 24}px`, // TODO: prob requires tweaking on mobile
               paddingTop: "1rem",
               paddingBottom: "1rem",
             }}
             exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
             style={{ overflow: "hidden" }}
             className="px-8"
           >
@@ -513,7 +513,7 @@ function CartSheet({
                 Your order has been modified.
               </p>
 
-              <p>
+              <p className="italic">
                 {itemNamesRemovedFromCart.length > 1
                   ? "These items are"
                   : "This item is"}{" "}
@@ -521,7 +521,9 @@ function CartSheet({
               </p>
               <ul className="list-disc pl-6">
                 {itemNamesRemovedFromCart.map((name, idx) => (
-                  <li key={idx}>{name}</li>
+                  <li key={idx} className="italic">
+                    {name}
+                  </li>
                 ))}
               </ul>
 
@@ -553,7 +555,7 @@ function CartSheet({
               paddingBottom: "1rem",
             }}
             exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
             style={{ overflow: "hidden" }}
             className="px-8"
           >
@@ -561,7 +563,7 @@ function CartSheet({
               layout={"position"}
               className="baseVertFlex relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 pr-16 text-white"
             >
-              <p className="text-sm font-semibold">
+              <p className="text-sm font-semibold italic">
                 * Orders that contain alcoholic beverages must include at least
                 one food item.
               </p>
@@ -833,7 +835,7 @@ function CartSheet({
                                 {item.pointReward ? (
                                   <>
                                     {new Decimal(item.price)
-                                      .div(0.01)
+                                      .div(0.005)
                                       .toNumber()}{" "}
                                     points
                                   </>

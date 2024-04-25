@@ -344,7 +344,7 @@ function RewardMenuItem({
     if (currentlySelectedRewardId === null) return false;
 
     if (
-      userAvailablePoints < new Decimal(menuItem.price).div(0.01).toNumber() ||
+      userAvailablePoints < new Decimal(menuItem.price).div(0.005).toNumber() ||
       !menuItem.available ||
       currentlySelectedRewardId !== menuItem.id
     ) {
@@ -374,7 +374,7 @@ function RewardMenuItem({
             {/* Point cost for item */}
             {!forBirthdayReward && (
               <p className="max-w-48 text-wrap text-left text-gray-400">
-                {new Decimal(menuItem.price).div(0.01).toNumber()} points
+                {new Decimal(menuItem.price).div(0.005).toNumber()} points
               </p>
             )}
 
@@ -419,7 +419,7 @@ function RewardMenuItem({
 
             if (
               userAvailablePoints <
-              new Decimal(menuItem.price).div(0.01).toNumber()
+              new Decimal(menuItem.price).div(0.005).toNumber()
             ) {
               toast({
                 variant: "default",
@@ -451,6 +451,7 @@ function RewardMenuItem({
                     quantity: 1,
                     price: menuItem.price,
                     discountId: null,
+                    isAlcoholic: menuItem.isAlcoholic,
                     birthdayReward: forBirthdayReward,
                     pointReward: !forBirthdayReward,
                   },

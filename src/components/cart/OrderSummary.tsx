@@ -124,7 +124,7 @@ function OrderSummary({ order }: OrderSummary) {
                         <p>
                           {item.pointReward ? (
                             <>
-                              {new Decimal(item.price).div(0.01).toNumber()}{" "}
+                              {new Decimal(item.price).div(0.005).toNumber()}{" "}
                               point reward
                             </>
                           ) : (

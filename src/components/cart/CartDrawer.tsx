@@ -521,7 +521,7 @@ function CartDrawer({
                 paddingBottom: "0.5rem",
               }}
               exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
               style={{ overflow: "hidden" }}
               className="w-full px-8"
             >
@@ -533,7 +533,7 @@ function CartDrawer({
                   Your order has been modified.
                 </p>
 
-                <p>
+                <p classname="italic">
                   {itemNamesRemovedFromCart.length > 1
                     ? "These items are"
                     : "This item is"}{" "}
@@ -541,7 +541,9 @@ function CartDrawer({
                 </p>
                 <ul className="list-disc pl-6">
                   {itemNamesRemovedFromCart.map((name, idx) => (
-                    <li key={idx}>{name}</li>
+                    <li key={idx} className="italic">
+                      {name}
+                    </li>
                   ))}
                 </ul>
 
@@ -578,7 +580,7 @@ function CartDrawer({
                 paddingBottom: "0.5rem",
               }}
               exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
               style={{ overflow: "hidden" }}
               className="px-8"
             >
@@ -586,7 +588,7 @@ function CartDrawer({
                 layout={"position"}
                 className="baseVertFlex relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 pr-16 text-white"
               >
-                <p className="text-sm font-semibold">
+                <p className="text-sm font-semibold italic">
                   * Orders that contain alcoholic beverages must include at
                   least one food item.
                 </p>
@@ -857,7 +859,7 @@ function CartDrawer({
                                   {item.pointReward ? (
                                     <>
                                       {new Decimal(item.price)
-                                        .div(0.01)
+                                        .div(0.005)
                                         .toNumber()}{" "}
                                       points
                                     </>
