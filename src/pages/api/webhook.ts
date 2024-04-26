@@ -375,7 +375,9 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       // 6) TODO: send post request to w/e pos system we are using
 
-      // 7) cleanup transient order, technically not necessary though right since we just upsert either way?
+      // 7) send email receipt (if allowed) to user
+
+      // 8) cleanup transient order, technically not necessary though right since we just upsert either way?
       await prisma.transientOrder.delete({
         where: {
           userId: payment.metadata.userId,
