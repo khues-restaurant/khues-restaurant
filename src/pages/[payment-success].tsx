@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { motion } from "framer-motion";
 import { type GetServerSideProps } from "next";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { MdOutlineMail } from "react-icons/md";
@@ -19,8 +18,8 @@ function PaymentSuccess({
 
   const { data: order } = api.order.getByStripeSessionId.useQuery(sessionId, {
     enabled: isReady,
-    refetchInterval: 1000,
-    retry: 15, // prob excessive..
+    retryDelay: 1500,
+    retry: 3,
   });
 
   const { updateOrder } = useUpdateOrder();
