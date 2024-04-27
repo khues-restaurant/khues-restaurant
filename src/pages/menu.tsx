@@ -120,7 +120,10 @@ function Menu() {
     >
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72">
-        <div className="baseFlex absolute left-0 top-0 size-full border-b-2 bg-primary tablet:gap-8 desktop:gap-16">
+        <div
+          className="baseFlex to-darkPrimary from-primarytablet:gap-8 absolute left-0 top-0 size-full 
+border-b-2 bg-gradient-to-br desktop:gap-16"
+        >
           {/* desktop fading gradients */}
           {/* <div className="absolute left-0 top-0 h-full w-screen">
             <div className="absolute left-0 top-0 hidden h-full w-1/6 bg-gradient-to-l from-transparent to-black/50 tablet:block"></div>
@@ -155,7 +158,7 @@ function Menu() {
             fill
             className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
           />
-          <div className="baseFlex bg-offwhite z-10 mx-8 !hidden rounded-md p-2 shadow-lg tablet:!flex">
+          <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-offwhite p-2 shadow-lg tablet:!flex">
             <div className="baseFlex gap-4 font-semibold text-primary tablet:p-3 tablet:text-xl desktop:text-2xl">
               <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
               Menu
@@ -176,7 +179,7 @@ function Menu() {
           />
         </div>
 
-        <div className="baseFlex bg-offwhite z-10 rounded-md p-2 shadow-lg tablet:hidden">
+        <div className="baseFlex z-10 rounded-md bg-offwhite p-2 shadow-lg tablet:hidden">
           <div className="baseFlex gap-2 p-3 text-xl font-semibold text-primary tablet:px-8 tablet:py-4 tablet:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary" />
             Menu
@@ -209,7 +212,7 @@ function Menu() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="baseFlex bg-offwhite z-10 size-full shadow-lg tablet:shadow-none"
+              className="baseFlex z-10 size-full bg-offwhite shadow-lg tablet:shadow-none"
             >
               {/* unsure of why container increases in size a bit on desktop when sticky becomes active..  */}
               <Sticky
@@ -516,7 +519,7 @@ function MenuCategory({
           className="!relative !h-48 rounded-md"
         />
 
-        <div className="baseVertFlex bg-offwhite absolute bottom-4 left-4 !items-start gap-2 rounded-md px-4 py-2 shadow-heavyInner tablet:!flex-row tablet:!items-center tablet:gap-4">
+        <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md bg-offwhite px-4 py-2 shadow-heavyInner tablet:!flex-row tablet:!items-center tablet:gap-4">
           <p className="ml-1 text-xl font-semibold underline underline-offset-2">
             {name}
           </p>
@@ -614,7 +617,7 @@ function NotInDatabaseCategory({
           className="!relative !h-48 rounded-md"
         />
 
-        <div className="baseVertFlex bg-offwhite absolute bottom-4 left-4 !items-start gap-2 rounded-md px-4 py-2 shadow-heavyInner tablet:!flex-row tablet:!items-center tablet:gap-4">
+        <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md bg-offwhite px-4 py-2 shadow-heavyInner tablet:!flex-row tablet:!items-center tablet:gap-4">
           <p className="ml-1 text-xl font-semibold underline underline-offset-2">
             {name}
           </p>
@@ -650,7 +653,7 @@ function NotInDatabaseCategory({
               {/* TODO: one image w/ 3 dishes from category on mobile, three separate images on desktop
             so image isn't distorted */}
               <div className="imageFiller h-48 w-full rounded-md"></div>
-              <div className="baseVertFlex bg-offwhite absolute bottom-4 left-4 !items-start gap-2 rounded-md border-2 border-primary px-4 py-2 shadow-md tablet:!flex-row tablet:!items-center tablet:gap-4">
+              <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md border-2 border-primary bg-offwhite px-4 py-2 shadow-md tablet:!flex-row tablet:!items-center tablet:gap-4">
                 <p className="ml-1 text-xl font-semibold underline underline-offset-2">
                   {name}
                 </p>

@@ -213,6 +213,8 @@
     --active-link: 144 61% 10%;
     --offwhite: 40 100% 98%;
     --gold: 50 48% 62%;
+    --borderGold: 49 61% 52%;
+    --darkPrimary: 144 61% 15%;
   }
 
   .dark {
@@ -242,6 +244,8 @@
     --active-link: 144 61% 10%;
     --offwhite: 40 100% 98%;
     --gold: 50 48% 62%;
+    --borderGold: 49 61% 52%;
+    --darkPrimary: 144 61% 15%;
   }
 }
 

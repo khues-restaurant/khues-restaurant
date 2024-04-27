@@ -63,6 +63,8 @@ const config = {
         activeLink: "hsl(var(--active-link))",
         offwhite: "hsl(var(--offwhite))",
         gold: "hsl(var(--gold))",
+        borderGold: "hsl(var(--borderGold))",
+        darkPrimary: "hsl(var(--darkPrimary))",
       },
       borderRadius: {
         lg: "var(--radius)",

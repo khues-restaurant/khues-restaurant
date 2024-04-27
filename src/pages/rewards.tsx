@@ -165,7 +165,7 @@ function Rewards() {
           />
         </motion.div>
 
-        <div className="baseFlex bg-offwhite z-10 rounded-md text-primary shadow-lg tablet:p-2">
+        <div className="baseFlex z-10 rounded-md bg-offwhite text-primary shadow-lg tablet:p-2">
           <div className="baseVertFlex text-xl font-semibold tablet:text-2xl">
             <WideFancySwirls className="h-12 rotate-180 fill-primary tablet:h-16" />
             Khue&apos;s Rewards
@@ -311,7 +311,7 @@ function Rewards() {
       {/* Intro */}
       {/* may need an xs viewport as well at like ~400 or 425px width so it doesn't stay scrunched
       for so long. Also would be used on the member benefit cards too */}
-      <p className="max-w-72 text-sm leading-7 text-yellow-500 sm:max-w-xl sm:text-base md:max-w-2xl tablet:font-medium tablet:leading-8">
+      <p className="max-w-72 text-sm leading-7 text-primary sm:max-w-xl sm:text-base md:max-w-2xl tablet:font-medium tablet:leading-8">
         Welcome to Khue&apos;s Rewards — where every bite takes you closer to
         delightful rewards! As a token of our appreciation, we&apos;ve crafted
         an exclusive program designed to celebrate our loyal customers. Indulge
@@ -324,20 +324,20 @@ function Rewards() {
       <WideFancySwirls className="h-16 fill-primary" />
 
       {/* Benefits (main) */}
-      <div className="baseVertFlex text-offwhite mt-8 max-w-7xl gap-8">
+      <div className="baseVertFlex mt-8 max-w-7xl gap-8 text-offwhite">
         <div className="baseFlex gap-2">
-          <SideAccentSwirls className="h-4 scale-x-[-1] fill-yellow-500 sm:h-5" />
-          <span className="text-xl font-medium text-yellow-500 underline underline-offset-2 sm:text-2xl">
+          <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary sm:h-5" />
+          <span className="text-xl font-medium text-primary underline underline-offset-2 sm:text-2xl">
             Member benefits
           </span>
-          <SideAccentSwirls className="h-4 fill-yellow-500 sm:h-5" />
+          <SideAccentSwirls className="h-4 fill-primary sm:h-5" />
         </div>
 
         <div className="baseVertFlex gap-8 xl:!flex-row">
-          <div className="rewardsGoldBorder baseVertFlex m-4 w-72 !items-start gap-2 rounded-md bg-primary text-sm shadow-md sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
-            <CiGift className="text-gold ml-2 size-16 h-24 sm:ml-0 sm:size-20" />
-            <Separator className="bg-gold ml-4 h-[2px] w-[120px]" />
-            <div className="text-gold hyphens-auto p-4 text-left">
+          <div className="baseVertFlex border-b-borderGold border-t-borderGold m-4 w-72 !items-start gap-2 rounded-sm border-y-4 bg-primary p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+            <CiGift className="ml-2 size-16 h-24 text-gold sm:ml-0 sm:size-20" />
+            <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
+            <div className="hyphens-auto p-4 text-left text-gold">
               Earning rewards is as simple as enjoying your favorite meals!
               Every dollar spent earns you points, which open the door to a
               diverse selection of enticing rewards. Get started earning points
@@ -345,10 +345,10 @@ function Rewards() {
             </div>
           </div>
 
-          <div className="rewardsGoldBorder baseVertFlex m-4 w-72 !items-start gap-2 rounded-md bg-primary text-sm shadow-md sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
-            <FaCakeCandles className="text-gold ml-4 size-12 h-24" />
-            <Separator className="bg-gold ml-4 h-[2px] w-[120px]" />
-            <div className="text-gold hyphens-auto p-4 text-left">
+          <div className="baseVertFlex border-b-borderGold border-t-borderGold m-4 w-72 !items-start gap-2 rounded-sm border-y-4 bg-primary p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+            <FaCakeCandles className="ml-4 size-12 h-24 text-gold" />
+            <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
+            <div className="hyphens-auto p-4 text-left text-gold">
               Celebrate your birthday with a complimentary treat from us, adding
               a touch of sweetness to your special day. Make sure to share your
               birthday with us when you sign up, so we can ensure your
@@ -356,10 +356,10 @@ function Rewards() {
             </div>
           </div>
 
-          <div className="rewardsGoldBorder baseVertFlex m-4 w-72 !items-start gap-2 rounded-md bg-primary text-sm shadow-md sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
-            <LuCalendarClock className="text-gold ml-2 size-14 h-24" />
-            <Separator className="bg-gold ml-4 h-[2px] w-[120px]" />
-            <div className="text-gold hyphens-auto p-4 text-left">
+          <div className="baseVertFlex border-b-borderGold border-t-borderGold m-4 w-72 !items-start gap-2 rounded-sm border-y-4 bg-primary p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+            <LuCalendarClock className="ml-2 size-14 h-24 text-gold" />
+            <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
+            <div className="hyphens-auto p-4 text-left text-gold">
               As a member, you&apos;re first in line to experience our newest
               menu items. Before these delicacies make their official debut,
               you&apos;ll have the exclusive opportunity to taste what&apos;s
@@ -371,7 +371,7 @@ function Rewards() {
       </div>
 
       {/* filler images to break up the monotony */}
-      <div className="baseVertFlex relative my-8 gap-8 text-yellow-500 tablet:my-28 tablet:!flex-row tablet:gap-28">
+      <div className="baseVertFlex relative my-8 gap-8 text-primary tablet:my-28 tablet:!flex-row tablet:gap-28">
         <div className="baseVertFlex gap-4">
           <Image
             src={"/menuItems/sampleImage.webp"}
@@ -419,33 +419,33 @@ function Rewards() {
       </div>
 
       {/* side benefits (Quicker ordering/Easy ordering/tailored ordering) */}
-      <div className="baseVertFlex text-gold gap-8">
+      <div className="baseVertFlex gap-8 text-gold">
         <div className="baseFlex gap-2">
-          <SideAccentSwirls className="h-4 scale-x-[-1] fill-yellow-500 sm:h-5" />
-          <span className="text-xl font-medium text-yellow-500 underline underline-offset-2 sm:text-2xl">
+          <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary sm:h-5" />
+          <span className="text-xl font-medium text-primary underline underline-offset-2 sm:text-2xl">
             Personalized ordering
           </span>
-          <SideAccentSwirls className="h-4 fill-yellow-500 sm:h-5" />
+          <SideAccentSwirls className="h-4 fill-primary sm:h-5" />
         </div>
 
         <div className="baseVertFlex gap-8 tablet:!flex-row">
-          <div className="rewardsGoldBorder baseVertFlex max-w-72 gap-4 rounded-md !p-4 shadow-md tablet:h-36 tablet:w-96">
-            <FaRedo className="text-gold size-6" />
-            <div className="text-gold text-center text-sm sm:text-base">
+          <div className="border-b-borderGold border-t-borderGold to-darkPrimary baseVertFlex max-w-72 gap-4 rounded-sm border-y-4 bg-gradient-to-br from-primary !p-4 shadow-lg tablet:h-36 tablet:w-96">
+            <FaRedo className="size-6 text-gold" />
+            <div className="text-center text-sm text-gold sm:text-base">
               Effortless one-tap reordering of your previous orders.
             </div>
           </div>
 
-          <div className="rewardsGoldBorder baseVertFlex max-w-72 gap-2 rounded-md !p-4 shadow-md tablet:h-36 tablet:w-96">
-            <IoMdHeart className="text-gold size-8" />
-            <div className="text-gold text-center text-sm sm:text-base tablet:max-w-64">
+          <div className="border-b-borderGold border-t-borderGold to-darkPrimary baseVertFlex max-w-72 gap-2 rounded-sm border-y-4 bg-gradient-to-br from-primary !p-4 shadow-lg tablet:h-36 tablet:w-96">
+            <IoMdHeart className="size-8 text-gold" />
+            <div className="text-center text-sm text-gold sm:text-base tablet:max-w-64">
               Favorite your most loved dishes for quick and easy access.
             </div>
           </div>
 
-          <div className="rewardsGoldBorder baseVertFlex max-w-72 gap-2 rounded-md !p-4 shadow-md tablet:h-36 tablet:w-96">
-            <IoToggle className="text-gold size-9" />
-            <div className="text-gold text-center text-sm sm:text-base tablet:max-w-64">
+          <div className="border-b-borderGold border-t-borderGold to-darkPrimary baseVertFlex max-w-72 gap-2 rounded-sm border-y-4 bg-gradient-to-br from-primary !p-4 shadow-lg tablet:h-36 tablet:w-96">
+            <IoToggle className="size-9 text-gold" />
+            <div className="text-center text-sm text-gold sm:text-base tablet:max-w-64">
               Easily add your profile&apos;s dietary preferences to your orders.
             </div>
           </div>
@@ -453,7 +453,7 @@ function Rewards() {
       </div>
 
       {/* Join */}
-      <div className="baseVertFlex mb-16 mt-8 max-w-xl gap-8 border-y-4 border-b-yellow-600 border-t-yellow-500 !p-6 text-yellow-500 shadow-md sm:!p-8 tablet:rounded-sm">
+      <div className="baseVertFlex border-b-borderGold border-t-borderGold mb-16 mt-8 max-w-xl gap-8 border-y-4 !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
         <p className="text-center">
           Joining Khue&apos;s Rewards is easy! Simply create an account with us
           and start earning points with every order. Plus, you&apos;ll receive

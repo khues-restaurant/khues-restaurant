@@ -62,7 +62,7 @@ export default function Home() {
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
       {/* Hero */}
-      <div className="baseVertFlex w-full tablet:!hidden">
+      <div className="baseVertFlex to-darkPrimary w-full bg-gradient-to-br from-primary tablet:!hidden">
         {/* <div className="imageFiller baseFlex size-full h-[65dvh]">
           Image of probably three plates of food here arranged in a triangle
           (one on top, two on bottom) on a table, probably with some fancy
@@ -95,12 +95,8 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="baseFlex relative !hidden w-full p-2 tablet:!flex tablet:h-[calc(100dvh-7rem)]">
-        {/* maybe there is still a place for this gradient, currently is below everything but
-            don't totally abandon this yet*/}
-        <div className="absolute left-0 top-0 h-full w-1/2 bg-gradient-to-r from-black/25 to-transparent"></div>
-
-        <div className="relative grid size-full grid-cols-3 grid-rows-3 gap-2">
+      <div className="baseFlex relative !hidden w-full p-4 tablet:!flex tablet:h-[calc(100dvh-7rem)]">
+        <div className="relative grid size-full grid-cols-3 grid-rows-3 gap-4">
           {/* top left */}
           <div className="relative col-span-1 row-span-2 size-full overflow-hidden rounded-md">
             <Parallax speed={-10} className="!absolute !top-0 !size-full">
@@ -171,7 +167,7 @@ export default function Home() {
         </div>
 
         <div className="baseVertFlex absolute top-0 h-full xl:!left-24 tablet:left-8">
-          <div className="baseVertFlex bg-offwhite !items-start gap-1 rounded-md p-8 shadow-md">
+          <div className="baseVertFlex !items-start gap-1 rounded-md bg-offwhite p-8 shadow-md">
             <h1 className="text-4xl font-bold">Welcome to Khue&apos;s</h1>
             <h2 className="text-2xl">
               A modern take on classic Vietnamese cuisine.
@@ -735,15 +731,8 @@ export default function Home() {
           //   <WideFancySwirls />
 
           // </div>
-          <div className="baseVertFlex mb-16 mt-8 max-w-xl gap-8 border-y-4 border-b-yellow-600 border-t-yellow-500 !p-6 text-yellow-500 shadow-md sm:!p-8 tablet:rounded-sm">
-            <div className="baseFlex gap-4">
-              <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
-              <p className="text-center font-semibold tablet:text-lg">
-                Join our rewards program today!
-              </p>
-              <SideAccentSwirls className="h-5 fill-yellow-500" />
-            </div>
 
+          <div className="baseVertFlex border-b-borderGold border-t-borderGold mb-16 mt-8 max-w-xl gap-8 border-y-4 !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
             <p className="text-center">
               Valued customers enjoy exclusive rewards: earn points with every
               order to redeem for complimentary meals, gain early access to new
@@ -753,15 +742,15 @@ export default function Home() {
 
             <SignUpButton
               mode="modal"
-              afterSignUpUrl={`${
-                process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-              }${asPath}`}
-              afterSignInUrl={`${
-                process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-              }${asPath}`}
+              afterSignUpUrl={`${process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""}`}
+              afterSignInUrl={`${process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""}`}
             >
-              <Button variant={"rewards"} className="px-8 text-base">
-                Sign up
+              <Button
+                variant={"rewards"}
+                size={"lg"}
+                className="text-base shadow-md"
+              >
+                Join now
               </Button>
             </SignUpButton>
 
