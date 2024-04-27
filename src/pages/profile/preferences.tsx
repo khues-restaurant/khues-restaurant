@@ -575,7 +575,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
               {saveButtonText}
               {saveButtonText === "Saving" && (
                 <div
-                  className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                  className="text-offwhite inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent"
                   role="status"
                   aria-label="loading"
                 >
@@ -588,7 +588,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth={2}
-                  className="size-4 text-white"
+                  className="text-offwhite size-4"
                 >
                   <motion.path
                     initial={{ pathLength: 0 }}
@@ -699,7 +699,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
 
                           {deleteButtonText === "Deleting account" && (
                             <div
-                              className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                              className="text-offwhite inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent"
                               role="status"
                               aria-label="loading"
                             >
@@ -712,7 +712,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
                               viewBox="0 0 24 24"
                               stroke="currentColor"
                               strokeWidth={2}
-                              className="size-4 text-white"
+                              className="text-offwhite size-4"
                             >
                               <motion.path
                                 initial={{ pathLength: 0 }}
@@ -777,7 +777,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
                 {saveButtonText}
                 {saveButtonText === "Saving" && (
                   <div
-                    className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                    className="text-offwhite inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent"
                     role="status"
                     aria-label="loading"
                   >
@@ -790,7 +790,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                     strokeWidth={2}
-                    className="size-4 text-white"
+                    className="text-offwhite size-4"
                   >
                     <motion.path
                       initial={{ pathLength: 0 }}

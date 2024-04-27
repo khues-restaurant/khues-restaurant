@@ -527,7 +527,7 @@ function CartDrawer({
             >
               <motion.div
                 layout
-                className="baseVertFlex relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 text-sm text-white"
+                className="baseVertFlex text-offwhite relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 text-sm"
               >
                 <p className="font-semibold underline underline-offset-2">
                   Your order has been modified.
@@ -550,7 +550,7 @@ function CartDrawer({
                 <Button
                   variant={"outline"} // prob diff variant or make a new one
                   // rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary
-                  className="absolute right-2 top-2 size-6 bg-primary !p-0 text-white"
+                  className="text-offwhite absolute right-2 top-2 size-6 bg-primary !p-0"
                   onClick={() => {
                     setItemNamesRemovedFromCart([]);
                   }}
@@ -586,7 +586,7 @@ function CartDrawer({
             >
               <motion.div
                 layout={"position"}
-                className="baseVertFlex relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 pr-16 text-white"
+                className="baseVertFlex text-offwhite relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 pr-16"
               >
                 <p className="text-sm font-semibold italic">
                   * Orders that contain alcoholic beverages must include at
@@ -596,7 +596,7 @@ function CartDrawer({
                 <Button
                   variant={"outline"} // prob diff variant or make a new one
                   // rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary
-                  className="absolute right-2 top-2 size-6 bg-primary !p-0 text-white"
+                  className="text-offwhite absolute right-2 top-2 size-6 bg-primary !p-0"
                   onClick={() => {
                     setShowOnlyAlcoholicItemsError(false);
                   }}
@@ -718,7 +718,7 @@ function CartDrawer({
                                 <LuMinus className="size-4" />
                               )}
                             </Button>
-                            <div className="baseFlex h-full w-8 bg-white font-semibold">
+                            <div className="baseFlex bg-offwhite h-full w-8 font-semibold">
                               {item.quantity}
                             </div>
                             <Button
@@ -768,7 +768,7 @@ function CartDrawer({
                         <div className="baseVertFlex !items-end">
                           <div className="baseFlex gap-2">
                             {item.discountId && (
-                              <div className="baseFlex gap-2 rounded-md bg-primary px-2 py-0.5 text-xs font-semibold text-white">
+                              <div className="baseFlex text-offwhite gap-2 rounded-md bg-primary px-2 py-0.5 text-xs font-semibold">
                                 <p>{discounts[item.discountId]?.name}</p>
                               </div>
                             )}
@@ -1084,7 +1084,7 @@ function CartDrawer({
                   {checkoutButtonText}
                   {checkoutButtonText === "Loading" && (
                     <div
-                      className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                      className="text-offwhite inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent"
                       role="status"
                       aria-label="loading"
                     >

@@ -218,7 +218,7 @@ function ItemCustomizerDialogContent({
             className="z-10 my-4 mr-16 rounded-md"
           />
 
-          <div className="baseFlex absolute bottom-0 left-4 gap-4 rounded-t-md bg-white px-4 py-2 text-xl font-semibold">
+          <div className="baseFlex bg-offwhite absolute bottom-0 left-4 gap-4 rounded-t-md px-4 py-2 text-xl font-semibold">
             <div className="baseFlex gap-2">
               {itemToCustomize.name}
 
@@ -497,7 +497,7 @@ function ItemCustomizerDialogContent({
                         <LuMinus className="size-4" />
                       </Button>
 
-                      <div className="baseFlex h-full w-8 bg-white font-semibold">
+                      <div className="baseFlex bg-offwhite h-full w-8 font-semibold">
                         {localItemOrderDetails.quantity}
                       </div>
 
@@ -816,7 +816,7 @@ function SuggestedPairing({
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="size-4 text-white"
+                  className="text-offwhite size-4"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"

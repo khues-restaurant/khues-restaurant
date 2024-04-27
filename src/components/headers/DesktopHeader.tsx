@@ -58,7 +58,7 @@ function DesktopHeader() {
   return (
     <nav
       id="header"
-      className={`${classes.desktopHeader} fixed left-0 top-0 z-50 grid h-28 w-full grid-cols-1 grid-rows-1 bg-white shadow-md`}
+      className={`${classes.desktopHeader} bg-offwhite fixed left-0 top-0 z-50 grid h-28 w-full grid-cols-1 grid-rows-1 shadow-md`}
     >
       <Link href={"/"} className={`${classes.logo ?? ""}`}>
         <Image

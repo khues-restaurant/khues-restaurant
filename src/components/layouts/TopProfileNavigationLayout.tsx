@@ -82,7 +82,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
       // 73 for bottom navbar, 50 for top navbar
       className="baseVertFlex relative mt-24 h-full min-h-[calc(100dvh-6rem-73px)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem-50px)] "
     >
-      <div className="baseFlex my-8 !hidden gap-4 rounded-lg border border-gray-400 bg-white p-1 tablet:!flex">
+      <div className="baseFlex bg-offwhite my-8 !hidden gap-4 rounded-lg border border-gray-400 p-1 tablet:!flex">
         <Button
           variant={
             asPath.includes("/profile/preferences") ? "default" : "ghost"

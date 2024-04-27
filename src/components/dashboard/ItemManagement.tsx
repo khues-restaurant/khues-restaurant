@@ -103,8 +103,8 @@ function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
                     mr-4
                   ${
                     item.available
-                      ? "bg-red-500 text-white"
-                      : "bg-green-500 text-white"
+                      ? "text-offwhite bg-red-500"
+                      : "text-offwhite bg-green-500"
                   }`}
                   onClick={() => {
                     setOpenDialogId(item.id);

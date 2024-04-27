@@ -119,7 +119,7 @@ function OrderManagement({ orders }: OrderManagement) {
 
           {/* notification count */}
           {notStartedOrders.length > 0 && (
-            <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-white">
+            <div className="text-offwhite absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5">
               <AnimatedNumbers
                 value={notStartedOrders.length}
                 fontSize={14}
@@ -140,7 +140,7 @@ function OrderManagement({ orders }: OrderManagement) {
 
           {/* notification count */}
           {startedOrders.length > 0 && (
-            <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-white">
+            <div className="text-offwhite absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5">
               <AnimatedNumbers
                 value={startedOrders.length}
                 fontSize={14}

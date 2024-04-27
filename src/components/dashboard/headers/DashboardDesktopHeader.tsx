@@ -70,7 +70,7 @@ function DashboardDesktopHeader({
   return (
     <nav
       id="header"
-      className={`${classes.desktopHeader} fixed left-0 top-0 z-50 grid h-32 w-full grid-cols-1 grid-rows-1 bg-white shadow-md`}
+      className={`${classes.desktopHeader} bg-offwhite fixed left-0 top-0 z-50 grid h-32 w-full grid-cols-1 grid-rows-1 shadow-md`}
     >
       <div className={`${classes.logo} baseFlex gap-4`}>
         <Image
@@ -100,7 +100,7 @@ function DashboardDesktopHeader({
 
           {/* notification count */}
           {numberOfActiveOrders > 0 && (
-            <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-white">
+            <div className="text-offwhite absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5">
               <AnimatedNumbers
                 value={numberOfActiveOrders}
                 fontSize={14}
@@ -121,7 +121,7 @@ function DashboardDesktopHeader({
 
           {/* unreadMessages > 0 && */}
           {false && (
-            <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-white">
+            <div className="text-offwhite absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5">
               <AnimatedNumbers
                 value={numberOfActiveOrders}
                 fontSize={14}

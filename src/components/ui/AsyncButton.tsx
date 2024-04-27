@@ -78,7 +78,7 @@ function AsyncButton({
           {buttonText}
           {buttonState === ButtonState.LOADING && (
             <div
-              className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+              className="text-offwhite inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent"
               role="status"
               aria-label="loading"
             >
@@ -91,7 +91,7 @@ function AsyncButton({
               viewBox="0 0 24 24"
               stroke="currentColor"
               strokeWidth={2}
-              className="size-4 text-white"
+              className="text-offwhite size-4"
             >
               <motion.path
                 initial={{ pathLength: 0 }}

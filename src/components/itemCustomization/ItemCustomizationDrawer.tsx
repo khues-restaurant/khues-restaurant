@@ -475,7 +475,7 @@ function ItemCustomizationDrawer({
                     <LuMinus className="size-4" />
                   </Button>
 
-                  <div className="baseFlex h-full w-8 bg-white text-sm font-semibold">
+                  <div className="baseFlex bg-offwhite h-full w-8 text-sm font-semibold">
                     {localItemOrderDetails.quantity}
                   </div>
 
@@ -798,7 +798,7 @@ function SuggestedPairing({
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="size-4 text-white"
+                  className="text-offwhite size-4"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"

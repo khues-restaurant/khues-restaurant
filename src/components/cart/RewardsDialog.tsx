@@ -202,7 +202,7 @@ function RewardsDialogContent({
             />
           </motion.div>
 
-          <div className="baseVertFlex z-10 gap-4 rounded-md bg-white px-8 py-4 text-yellow-500 shadow-lg">
+          <div className="baseVertFlex bg-offwhite z-10 gap-4 rounded-md px-8 py-4 text-yellow-500 shadow-lg">
             <div className="text-center text-lg font-semibold">
               Khue&apos;s Rewards
             </div>

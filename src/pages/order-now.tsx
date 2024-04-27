@@ -39,6 +39,7 @@ import useGetUserId from "~/hooks/useGetUserId";
 import { Separator } from "~/components/ui/separator";
 import Image from "next/image";
 import AnimatedLogo from "~/components/ui/AnimatedLogo";
+import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
@@ -255,9 +256,11 @@ function OrderNow() {
             fill
             className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
           />
-          <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-white p-2 shadow-lg tablet:!flex">
-            <div className="experimentalBorder baseFlex font-semibold tablet:px-6 tablet:py-3 tablet:text-xl desktop:px-8 desktop:py-4 desktop:text-2xl">
+          <div className="baseFlex bg-offwhite z-10 mx-8 !hidden rounded-md p-2 shadow-lg tablet:!flex">
+            <div className="baseFlex gap-4 font-semibold text-primary tablet:p-3 tablet:text-xl desktop:text-2xl">
+              <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
               Order
+              <SideAccentSwirls className="h-5 fill-primary" />
             </div>
           </div>
           <Image
@@ -274,9 +277,11 @@ function OrderNow() {
           />
         </div>
 
-        <div className="baseFlex z-10 rounded-md bg-white p-2 shadow-lg tablet:hidden">
-          <div className="experimentalBorder baseFlex px-6 py-3 text-xl font-semibold tablet:px-8 tablet:py-4 tablet:text-2xl">
+        <div className="baseFlex bg-offwhite z-10 rounded-md p-2 shadow-lg tablet:hidden">
+          <div className="baseFlex gap-2 p-3 text-xl font-semibold text-primary tablet:px-8 tablet:py-4 tablet:text-2xl">
+            <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary" />
             Order
+            <SideAccentSwirls className="h-4 fill-primary" />
           </div>
         </div>
       </div>
@@ -289,16 +294,16 @@ function OrderNow() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseFlex z-10 size-full bg-white shadow-lg tablet:shadow-none"
+            className="baseFlex bg-offwhite z-10 size-full shadow-lg tablet:shadow-none"
           >
             {/* unsure of why container increases in size a bit on desktop when sticky becomes active..  */}
 
             <Sticky
               top={"#header"}
-              activeClass="bg-white h-16"
-              innerActiveClass="bg-white px-2 pt-4 h-16"
-              innerClass="bg-white w-full h-12"
-              className="baseFlex w-full p-2"
+              activeClass="bg-offwhite h-16"
+              innerActiveClass="bg-offwhite px-2 pt-4 h-16"
+              innerClass="bg-offwhite w-full h-12"
+              className="baseFlex bg-offwhite w-full p-2"
               enabled={!isDrawerOpen} // not my favorite but gets rid of flicker from
               // when we tried shouldFreeze prop approach
             >
@@ -777,7 +782,7 @@ function MenuCategory({
           className="!relative !h-48 rounded-md"
         />
 
-        <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md bg-white px-4 py-2 shadow-heavyInner tablet:!flex-row tablet:!items-center tablet:gap-4">
+        <div className="baseVertFlex bg-offwhite absolute bottom-4 left-4 !items-start gap-2 rounded-md px-4 py-2 shadow-heavyInner tablet:!flex-row tablet:!items-center tablet:gap-4">
           <p className="ml-1 text-xl font-semibold underline underline-offset-2">
             {name}
           </p>
@@ -905,7 +910,7 @@ function MenuItemPreviewButton({
           </div>
           <p
             // TODO: idk about either the goldBorder or rewardsGoldBorder here...
-            className={`mt-4 self-end text-base ${activeDiscount ? "goldBorder rounded-md !py-0.5 px-4 text-white" : ""}`}
+            className={`mt-4 self-end text-base ${activeDiscount ? "goldBorder text-offwhite rounded-md !py-0.5 px-4" : ""}`}
           >
             {formatPrice(
               calculateRelativeTotal({
@@ -1257,7 +1262,7 @@ function PreviousOrder({ order }: PreviousOrder) {
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="size-6 text-white"
+                  className="text-offwhite size-6"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -1285,7 +1290,7 @@ function PreviousOrder({ order }: PreviousOrder) {
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                  className="text-offwhite inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent"
                   role="status"
                   aria-label="loading"
                 >

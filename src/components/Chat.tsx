@@ -196,7 +196,9 @@ function Chat() {
         <AlertDialogContent className="baseVertFlex h-[70dvh] w-[90vw] rounded-lg border-none !p-0 shadow-xl sm:mr-4">
           {/* header */}
           <div className="baseVertFlex relative !items-start gap-2 rounded-t-lg bg-primary p-4">
-            <p className="text-lg font-medium text-white">Have a question?</p>
+            <p className="text-offwhite text-lg font-medium">
+              Have a question?
+            </p>
             <p className="text-sm text-gray-200">
               Send a message directly to our team and we will respond as soon as
               possible.
@@ -207,7 +209,7 @@ function Chat() {
               onClick={() => setShowingAlertDialogChat(false)}
               className="!absolute right-0 top-0"
             >
-              <X className="size-4 text-white" />
+              <X className="text-offwhite size-4" />
             </Button>
           </div>
 
@@ -236,7 +238,7 @@ function Chat() {
                   {format(message.createdAt, "h:mm a")}
                 </p>
                 <div
-                  className={`z-10 rounded-full px-4 py-2 ${message.senderId === userId ? "bg-primary text-white" : "bg-secondary"}`}
+                  className={`z-10 rounded-full px-4 py-2 ${message.senderId === userId ? "text-offwhite bg-primary" : "bg-secondary"}`}
                 >
                   <p className="text-sm">{message.content}</p>
                 </div>
@@ -272,7 +274,7 @@ function Chat() {
                 });
               }}
             >
-              <IoIosSend className="size-6 text-white" />
+              <IoIosSend className="text-offwhite size-6" />
             </Button>
           </div>
         </AlertDialogContent>
@@ -351,7 +353,9 @@ function Chat() {
         >
           {/* header */}
           <div className="baseVertFlex !items-start gap-2 rounded-t-lg bg-primary p-4">
-            <p className="text-lg font-medium text-white">Have a question?</p>
+            <p className="text-offwhite text-lg font-medium">
+              Have a question?
+            </p>
             <p className="text-sm text-gray-200">
               Send a message directly to our team and we will respond as soon as
               possible.
@@ -383,7 +387,7 @@ function Chat() {
                   {format(message.createdAt, "h:mm a")}
                 </p>
                 <div
-                  className={`z-10 rounded-full px-4 py-2 ${message.senderId === userId ? "bg-primary text-white" : "bg-secondary"}`}
+                  className={`z-10 rounded-full px-4 py-2 ${message.senderId === userId ? "text-offwhite bg-primary" : "bg-secondary"}`}
                 >
                   <p className="text-sm">{message.content}</p>
                 </div>
@@ -419,7 +423,7 @@ function Chat() {
                 });
               }}
             >
-              <IoIosSend className="size-6 text-white" />
+              <IoIosSend className="text-offwhite size-6" />
             </Button>
           </div>
         </PopoverContent>

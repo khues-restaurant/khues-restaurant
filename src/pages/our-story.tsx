@@ -152,7 +152,7 @@ function OurStory() {
           />
         </Parallax>
 
-        <div className="baseFlex z-10 rounded-md bg-white p-2 shadow-lg">
+        <div className="baseFlex bg-offwhite z-10 rounded-md p-2 shadow-lg">
           <div className="experimentalBorder baseFlex px-8 py-4 text-xl font-semibold tablet:text-2xl">
             Our story
           </div>
@@ -410,7 +410,7 @@ function RestaurantAndBackstory({ name, backstory }: RestaurantAndBackstory) {
         className="!relative !w-80 rounded-t-md sm:!w-96 tablet:!h-[450px] tablet:!w-[600px] tablet:rounded-md"
       />
 
-      <div className="baseVertFlex w-full max-w-80 gap-2 rounded-b-md p-4 sm:max-w-md tablet:absolute tablet:bottom-0 tablet:left-0 tablet:!items-start tablet:rounded-br-none tablet:rounded-tr-md tablet:bg-gradient-to-tr tablet:from-black tablet:to-black/50 tablet:text-white">
+      <div className="baseVertFlex tablet:text-offwhite w-full max-w-80 gap-2 rounded-b-md p-4 sm:max-w-md tablet:absolute tablet:bottom-0 tablet:left-0 tablet:!items-start tablet:rounded-br-none tablet:rounded-tr-md tablet:bg-gradient-to-tr tablet:from-black tablet:to-black/50">
         <p className="font-semibold underline underline-offset-2">{name}</p>
         <p className="text-sm">{backstory}</p>
       </div>

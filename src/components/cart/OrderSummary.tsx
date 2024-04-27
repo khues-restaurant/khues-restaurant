@@ -115,7 +115,7 @@ function OrderSummary({ order }: OrderSummary) {
 
                     {/* reward name + icon */}
                     {(item.pointReward || item.birthdayReward) && (
-                      <div className="baseFlex gap-2 rounded-md bg-primary px-1 py-0.5 text-xs font-semibold text-white">
+                      <div className="baseFlex text-offwhite gap-2 rounded-md bg-primary px-1 py-0.5 text-xs font-semibold">
                         {item.pointReward ? (
                           <CiGift className="size-5" />
                         ) : (
@@ -147,7 +147,7 @@ function OrderSummary({ order }: OrderSummary) {
                     )}
                   </p>
                   {item.discountId && (
-                    <div className="baseFlex gap-2 rounded-md bg-primary px-2 py-0.5 text-xs font-semibold text-white">
+                    <div className="baseFlex text-offwhite gap-2 rounded-md bg-primary px-2 py-0.5 text-xs font-semibold">
                       {discounts[item.discountId]?.name.includes("Points") && (
                         <CiGift className="size-5" />
                       )}{" "}

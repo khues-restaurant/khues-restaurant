@@ -85,7 +85,7 @@ function Welcome() {
                     />
                     <Button
                       href="https://khueskitchen.com/order-now"
-                      className="rounded-md bg-primary px-4 py-3 text-sm text-white"
+                      className="text-offwhite rounded-md bg-primary px-4 py-3 text-sm"
                     >
                       Order now
                     </Button>
@@ -93,7 +93,7 @@ function Welcome() {
                 </Section>
               </Section>
 
-              <Section className="rounded-b-lg bg-primary text-white">
+              <Section className="text-offwhite rounded-b-lg bg-primary">
                 <Column align="center">
                   <Row className="w-[350px]">
                     <Column className="text-left">
@@ -108,7 +108,7 @@ function Welcome() {
 
                     <Column className="text-right">
                       <Link href="tel:+1234567890">
-                        <Text className="mb-0 pl-2 text-xs text-white">
+                        <Text className="text-offwhite mb-0 pl-2 text-xs">
                           (123) 456-7890
                         </Text>
                       </Link>
@@ -118,7 +118,7 @@ function Welcome() {
                   <Row className="mt-1 w-52">
                     <Column className="text-left">
                       <Link href="https://khueskitchen.com">
-                        <Text className="my-0 text-xs text-white">
+                        <Text className="text-offwhite my-0 text-xs">
                           Visit our website
                         </Text>
                       </Link>
@@ -130,7 +130,7 @@ function Welcome() {
 
                     <Column className="text-right">
                       <Link href="https://khueskitchen.com/privacy">
-                        <Text className="my-0 pl-2 text-xs text-white">
+                        <Text className="text-offwhite my-0 pl-2 text-xs">
                           Privacy Policy
                         </Text>
                       </Link>
@@ -200,7 +200,7 @@ function Welcome() {
                   <Section className="w-96 text-center">
                     <Row className="text-center">
                       <Link href="https://khueskitchen.com/profile/preferences">
-                        <Text className="mt-0 text-xs text-white underline underline-offset-2">
+                        <Text className="text-offwhite mt-0 text-xs underline underline-offset-2">
                           Manage your email communication preferences
                         </Text>
                       </Link>
@@ -208,7 +208,7 @@ function Welcome() {
 
                     <Row className="text-center">
                       <Link href="https://khueskitchen.com/unsubscribe">
-                        <Text className="mt-0 pl-2 text-xs text-white underline underline-offset-2">
+                        <Text className="text-offwhite mt-0 pl-2 text-xs underline underline-offset-2">
                           Unsubscribe from all emails
                         </Text>
                       </Link>

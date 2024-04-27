@@ -566,7 +566,7 @@ function PostSignUpDialog() {
                     />
                   </motion.div>
 
-                  <div className="baseVertFlex z-10 gap-4 rounded-md bg-white px-8 py-4 text-yellow-500 shadow-lg">
+                  <div className="baseVertFlex bg-offwhite z-10 gap-4 rounded-md px-8 py-4 text-yellow-500 shadow-lg">
                     <div className="text-center text-lg font-semibold">
                       Khue&apos;s Rewards
                     </div>
@@ -705,7 +705,7 @@ function PostSignUpDialog() {
                         {saveButtonText}
                         {saveButtonText === "Saving" && (
                           <div
-                            className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                            className="text-offwhite inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent"
                             role="status"
                             aria-label="loading"
                           >
@@ -718,7 +718,7 @@ function PostSignUpDialog() {
                             viewBox="0 0 24 24"
                             stroke="currentColor"
                             strokeWidth={2}
-                            className="size-4 text-white"
+                            className="text-offwhite size-4"
                           >
                             <motion.path
                               initial={{ pathLength: 0 }}
@@ -829,7 +829,7 @@ function Step({ step, currentStep }: { step: number; currentStep: number }) {
       >
         <div className="flex items-center justify-center">
           {status === "complete" ? (
-            <CheckIcon className="size-4 text-white tablet:size-6" />
+            <CheckIcon className="text-offwhite size-4 tablet:size-6" />
           ) : (
             <span className="text-sm tablet:text-lg">{step}</span>
           )}

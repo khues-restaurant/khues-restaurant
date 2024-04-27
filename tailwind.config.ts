@@ -61,6 +61,8 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
         activeLink: "hsl(var(--active-link))",
+        offwhite: "hsl(var(--offwhite))",
+        gold: "hsl(var(--gold))",
       },
       borderRadius: {
         lg: "var(--radius)",

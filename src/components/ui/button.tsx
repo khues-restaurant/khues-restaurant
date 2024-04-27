@@ -27,7 +27,7 @@ const buttonVariants = cva(
         activeLink: "activeUnderline text-primary font-semibold",
         underline: "text-primary underline underline-offset-2",
         text: "text-neutral-400",
-        rewards: "text-white", // idk white text on this yellow gradient is a bit of a problem... fallback would probably be yellow-800 or something
+        rewards: "text-offwhite", // idk white text on this yellow gradient is a bit of a problem... fallback would probably be yellow-800 or something
       },
       size: {
         default: "h-10 px-4 py-2",

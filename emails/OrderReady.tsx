@@ -275,7 +275,7 @@ function OrderReady(
                 </Section>
               </Section>
 
-              <Section className="rounded-b-lg bg-primary text-white">
+              <Section className="text-offwhite rounded-b-lg bg-primary">
                 <Column align="center">
                   {/* 
 
@@ -290,7 +290,7 @@ function OrderReady(
 
                     <Row>
                       <Link href="tel:+1234567890">
-                        <Text className="mb-0 text-xs text-white">
+                        <Text className="mb-0 text-xs text-offwhite">
                           (123) 456-7890
                         </Text>
                       </Link>
@@ -310,7 +310,7 @@ function OrderReady(
 
                     <Column className="text-right">
                       <Link href="tel:+1234567890">
-                        <Text className="mb-0 pl-2 text-xs text-white">
+                        <Text className="text-offwhite mb-0 pl-2 text-xs">
                           (123) 456-7890
                         </Text>
                       </Link>
@@ -320,7 +320,7 @@ function OrderReady(
                   <Row className="mt-1 w-52">
                     <Column className="text-left">
                       <Link href="https://khueskitchen.com">
-                        <Text className="my-0 text-xs text-white">
+                        <Text className="text-offwhite my-0 text-xs">
                           Visit our website
                         </Text>
                       </Link>
@@ -332,7 +332,7 @@ function OrderReady(
 
                     <Column className="text-right">
                       <Link href="https://khueskitchen.com/privacy">
-                        <Text className="my-0 pl-2 text-xs text-white">
+                        <Text className="text-offwhite my-0 pl-2 text-xs">
                           Privacy Policy
                         </Text>
                       </Link>
@@ -402,7 +402,7 @@ function OrderReady(
                   <Section className="w-96 text-center">
                     <Row className="text-center">
                       <Link href="https://khueskitchen.com/profile/preferences">
-                        <Text className="mt-0 text-xs text-white underline underline-offset-2">
+                        <Text className="text-offwhite mt-0 text-xs underline underline-offset-2">
                           Manage your email communication preferences
                         </Text>
                       </Link>
@@ -410,7 +410,7 @@ function OrderReady(
 
                     <Row className="text-center">
                       <Link href="https://khueskitchen.com/unsubscribe">
-                        <Text className="mt-0 pl-2 text-xs text-white underline underline-offset-2">
+                        <Text className="text-offwhite mt-0 pl-2 text-xs underline underline-offset-2">
                           Unsubscribe from all emails
                         </Text>
                       </Link>

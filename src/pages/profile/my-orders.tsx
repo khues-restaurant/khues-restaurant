@@ -445,7 +445,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                               animate={{ scale: 1 }}
                               exit={{ scale: 0 }}
                               transition={{ duration: 0.2 }}
-                              className="size-6 text-white"
+                              className="text-offwhite size-6"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -473,7 +473,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                               animate={{ scale: 1 }}
                               exit={{ scale: 0 }}
                               transition={{ duration: 0.2 }}
-                              className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                              className="text-offwhite inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent"
                               role="status"
                               aria-label="loading"
                             >
@@ -621,7 +621,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                               animate={{ scale: 1 }}
                               exit={{ scale: 0 }}
                               transition={{ duration: 0.2 }}
-                              className="size-6 text-white"
+                              className="text-offwhite size-6"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -649,7 +649,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                               animate={{ scale: 1 }}
                               exit={{ scale: 0 }}
                               transition={{ duration: 0.2 }}
-                              className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-white"
+                              className="text-offwhite inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent"
                               role="status"
                               aria-label="loading"
                             >

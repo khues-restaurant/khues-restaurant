@@ -41,7 +41,7 @@ function Media() {
         {/* prob just want to have interior/exterior images or technically also there are images with
         eric and w/e reporter was there?*/}
 
-        <div className="baseFlex z-10 rounded-md bg-white p-2 shadow-lg">
+        <div className="baseFlex bg-offwhite z-10 rounded-md p-2 shadow-lg">
           <div className="experimentalBorder baseFlex px-8 py-4 text-xl font-semibold tablet:text-2xl">
             Media
           </div>
@@ -56,9 +56,9 @@ function Media() {
               alt="Star Tribune"
               width={200}
               height={85}
-              className="rounded-md bg-white p-4"
+              className="bg-offwhite rounded-md p-4"
             />
-            <p className="self-start text-lg font-semibold text-white underline underline-offset-2">
+            <p className="text-offwhite self-start text-lg font-semibold underline underline-offset-2">
               The Star Tribune
             </p>
           </div>
@@ -86,9 +86,9 @@ function Media() {
               alt="Star Tribune"
               width={200}
               height={85}
-              className="rounded-md bg-white p-4"
+              className="bg-offwhite rounded-md p-4"
             />
-            <p className="self-start text-lg font-semibold text-white underline underline-offset-2">
+            <p className="text-offwhite self-start text-lg font-semibold underline underline-offset-2">
               The Star Tribune
             </p>
           </div>
@@ -116,9 +116,9 @@ function Media() {
               alt="Star Tribune"
               width={200}
               height={85}
-              className="rounded-md bg-white p-4"
+              className="bg-offwhite rounded-md p-4"
             />
-            <p className="self-start text-lg font-semibold text-white underline underline-offset-2">
+            <p className="text-offwhite self-start text-lg font-semibold underline underline-offset-2">
               The Star Tribune
             </p>
           </div>

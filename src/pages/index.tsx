@@ -171,7 +171,7 @@ export default function Home() {
         </div>
 
         <div className="baseVertFlex absolute top-0 h-full xl:!left-24 tablet:left-8">
-          <div className="baseVertFlex !items-start gap-1 rounded-md bg-white p-8 shadow-md">
+          <div className="baseVertFlex bg-offwhite !items-start gap-1 rounded-md p-8 shadow-md">
             <h1 className="text-4xl font-bold">Welcome to Khue&apos;s</h1>
             <h2 className="text-2xl">
               A modern take on classic Vietnamese cuisine.
@@ -765,12 +765,12 @@ export default function Home() {
               </Button>
             </SignUpButton>
 
-            <WideFancySwirls />
+            <WideFancySwirls className="h-16 fill-primary" />
           </div>
         )}
 
         {/* Explore Our Favorites section */}
-        {/* <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-5xl tablet:max-w-2xl">
+        <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-5xl tablet:max-w-2xl">
           <p className="text-lg font-medium">Explore Our Favorites</p>
 
           <div className="baseVertFlex w-full gap-2">
@@ -911,7 +911,7 @@ export default function Home() {
               </Button>
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/* maybe a gallary/slideshow section? Prob not though */}
       </div>

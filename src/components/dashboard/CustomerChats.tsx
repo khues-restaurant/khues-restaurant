@@ -200,7 +200,7 @@ function CustomerChats() {
                 >
                   <div className="baseVertFlex gap-2">
                     <p
-                      className={`font-semibold ${userId === selectedUserId ? "text-white" : "text-gray-400"}`}
+                      className={`font-semibold ${userId === selectedUserId ? "text-offwhite" : "text-gray-400"}`}
                     >
                       Guest
                     </p>
@@ -262,7 +262,7 @@ function CustomerChats() {
                         {format(message.createdAt, "h:mm a")}
                       </p>
                       <div
-                        className={`rounded-full px-4 py-2 ${message.senderId === "dashboard" ? "bg-primary text-white" : "bg-secondary"}`}
+                        className={`rounded-full px-4 py-2 ${message.senderId === "dashboard" ? "text-offwhite bg-primary" : "bg-secondary"}`}
                       >
                         <p className="text-sm">{message.content}</p>
                       </div>
@@ -306,7 +306,7 @@ function CustomerChats() {
                 });
               }}
             >
-              <IoIosSend className="size-6 text-white" />
+              <IoIosSend className="text-offwhite size-6" />
             </Button>
           </div>
         </div>
