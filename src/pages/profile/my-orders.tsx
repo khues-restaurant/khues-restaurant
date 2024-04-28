@@ -445,7 +445,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                               animate={{ scale: 1 }}
                               exit={{ scale: 0 }}
                               transition={{ duration: 0.2 }}
-                              className="text-offwhite size-6"
+                              className="size-6 text-offwhite"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -473,7 +473,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                               animate={{ scale: 1 }}
                               exit={{ scale: 0 }}
                               transition={{ duration: 0.2 }}
-                              className="text-offwhite inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent"
+                              className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
                               role="status"
                               aria-label="loading"
                             >
@@ -621,7 +621,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                               animate={{ scale: 1 }}
                               exit={{ scale: 0 }}
                               transition={{ duration: 0.2 }}
-                              className="text-offwhite size-6"
+                              className="size-6 text-offwhite"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -649,7 +649,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                               animate={{ scale: 1 }}
                               exit={{ scale: 0 }}
                               transition={{ duration: 0.2 }}
-                              className="text-offwhite inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent"
+                              className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
                               role="status"
                               aria-label="loading"
                             >
@@ -824,7 +824,7 @@ function RateDialog({ userId, orderId }: RateDialog) {
                         maxLength={1000}
                         className="w-full"
                       />
-                      <p className="pointer-events-none absolute bottom-2 right-4 text-xs text-gray-400 tablet:bottom-1">
+                      <p className="pointer-events-none absolute bottom-2 right-4 text-xs text-stone-400 tablet:bottom-1">
                         {1000 - feedbackForm.getValues("feedback").length}{" "}
                         characters remaining
                       </p>

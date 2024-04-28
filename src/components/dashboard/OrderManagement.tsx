@@ -119,7 +119,7 @@ function OrderManagement({ orders }: OrderManagement) {
 
           {/* notification count */}
           {notStartedOrders.length > 0 && (
-            <div className="text-offwhite absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5">
+            <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite">
               <AnimatedNumbers
                 value={notStartedOrders.length}
                 fontSize={14}
@@ -140,7 +140,7 @@ function OrderManagement({ orders }: OrderManagement) {
 
           {/* notification count */}
           {startedOrders.length > 0 && (
-            <div className="text-offwhite absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5">
+            <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite">
               <AnimatedNumbers
                 value={startedOrders.length}
                 fontSize={14}
@@ -532,7 +532,7 @@ function OrderItems({ order }: OrderItems) {
 
       {order.includeNapkinsAndUtensils && (
         <div className="baseFlex w-full">
-          <div className="baseFlex gap-2 text-sm italic text-gray-400">
+          <div className="baseFlex gap-2 text-sm italic text-stone-400">
             <FaUtensils className="size-4" />
             <p>Napkins and utensils were requested.</p>
           </div>

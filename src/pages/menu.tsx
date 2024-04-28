@@ -121,8 +121,8 @@ function Menu() {
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72">
         <div
-          className="baseFlex to-darkPrimary from-primarytablet:gap-8 absolute left-0 top-0 size-full 
-border-b-2 bg-gradient-to-br desktop:gap-16"
+          className="baseFlex from-primarytablet:gap-8 absolute left-0 top-0 size-full border-b-2 
+bg-gradient-to-br to-darkPrimary desktop:gap-16"
         >
           {/* desktop fading gradients */}
           {/* <div className="absolute left-0 top-0 h-full w-screen">
@@ -299,7 +299,7 @@ border-b-2 bg-gradient-to-br desktop:gap-16"
                 {/* ah we want relative + -b-4 when not sticky
                     and then absolute -b-0 or w/e when sticky */}
 
-                <div className="absolute bottom-0 left-0 h-1 w-full bg-gray-200">
+                <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-200">
                   <div
                     style={{ width: `${scrollProgress}%` }}
                     className="h-1 bg-primary"
@@ -833,7 +833,7 @@ function MenuItemPreview({
                 )}
               </p>
 
-              <p className="max-w-48 text-wrap text-left text-sm text-gray-400">
+              <p className="max-w-48 text-wrap text-left text-sm text-stone-400">
                 {menuItem.description}
               </p>
             </div>

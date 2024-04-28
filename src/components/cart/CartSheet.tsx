@@ -354,7 +354,7 @@ function CartSheet({
       </div>
 
       {/* location + date & time picker  (TODO: why doesn't horizontal margin work here with w-full..) */}
-      <div className="baseFlex my-4 w-[80%] flex-wrap gap-2 rounded-md border border-gray-300 bg-gradient-to-br from-gray-200 to-gray-300/70 p-4 px-8 shadow-sm">
+      <div className="baseFlex my-4 w-[80%] flex-wrap gap-2 rounded-md border border-stone-300 bg-gradient-to-br from-stone-200 to-stone-300/70 p-4 px-8 shadow-sm">
         <span className="text-sm">
           Your order will be available for pickup at
         </span>
@@ -507,7 +507,7 @@ function CartSheet({
           >
             <motion.div
               layout={"position"}
-              className="baseVertFlex text-offwhite relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 pr-16 text-sm"
+              className="baseVertFlex relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 pr-16 text-sm text-offwhite"
             >
               <p className="font-semibold underline underline-offset-2">
                 Your order has been modified.
@@ -530,7 +530,7 @@ function CartSheet({
               <Button
                 variant={"outline"} // prob diff variant or make a new one
                 // rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary
-                className="text-offwhite absolute right-2 top-2 size-6 bg-primary !p-0"
+                className="absolute right-2 top-2 size-6 bg-primary !p-0 text-offwhite"
                 onClick={() => {
                   setItemNamesRemovedFromCart([]);
                 }}
@@ -561,7 +561,7 @@ function CartSheet({
           >
             <motion.div
               layout={"position"}
-              className="baseVertFlex text-offwhite relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 pr-16"
+              className="baseVertFlex relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 pr-16 text-offwhite"
             >
               <p className="text-sm font-semibold italic">
                 * Orders that contain alcoholic beverages must include at least
@@ -571,7 +571,7 @@ function CartSheet({
               <Button
                 variant={"outline"} // prob diff variant or make a new one
                 // rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary
-                className="text-offwhite absolute right-2 top-2 size-6 bg-primary !p-0"
+                className="absolute right-2 top-2 size-6 bg-primary !p-0 text-offwhite"
                 onClick={() => {
                   setShowOnlyAlcoholicItemsError(false);
                 }}
@@ -659,7 +659,7 @@ function CartSheet({
                         </div>
 
                         {/* quantity adjustment */}
-                        <div className="baseFlex h-8 rounded-md border-2 border-gray-500">
+                        <div className="baseFlex h-8 rounded-md border-2 border-stone-500">
                           <Button
                             variant="outline"
                             size="icon"
@@ -693,7 +693,7 @@ function CartSheet({
                               <LuMinus className="size-4" />
                             )}
                           </Button>
-                          <div className="baseFlex bg-offwhite h-full w-8 font-semibold">
+                          <div className="baseFlex h-full w-8 bg-offwhite font-semibold">
                             {item.quantity}
                           </div>
                           <Button
@@ -743,7 +743,7 @@ function CartSheet({
                       <div className="baseVertFlex !items-end">
                         <div className="baseFlex gap-2">
                           {item.discountId && (
-                            <div className="baseFlex text-offwhite gap-2 rounded-md bg-primary px-2 py-0.5 text-xs font-semibold">
+                            <div className="baseFlex gap-2 rounded-md bg-primary px-2 py-0.5 text-xs font-semibold text-offwhite">
                               <p>{discounts[item.discountId]?.name}</p>
                             </div>
                           )}
@@ -986,7 +986,7 @@ function CartSheet({
           )}
         </div>
 
-        <div className="baseFlex w-full !justify-between rounded-bl-xl border-t bg-gradient-to-br from-gray-200 to-gray-300 p-4 shadow-inner">
+        <div className="baseFlex w-full !justify-between rounded-bl-xl border-t bg-gradient-to-br from-stone-200 to-stone-300 p-4 shadow-inner">
           <div className="baseVertFlex w-1/2">
             <div className="baseFlex w-full !justify-between text-sm">
               <p>Subtotal</p>
@@ -1018,7 +1018,7 @@ function CartSheet({
 
           <Separator
             orientation="vertical"
-            className="h-12 w-[1px] bg-gray-400"
+            className="h-12 w-[1px] bg-stone-400"
           />
 
           <Button
@@ -1045,7 +1045,7 @@ function CartSheet({
                 {checkoutButtonText}
                 {checkoutButtonText === "Loading" && (
                   <div
-                    className="text-offwhite inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent"
+                    className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
                     role="status"
                     aria-label="loading"
                   >

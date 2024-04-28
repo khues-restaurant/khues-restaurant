@@ -201,59 +201,61 @@ function ItemCustomizationDrawer({
 
             {/* TODO: wrap the like button in a Popover to show "Only rewards members can favorite items" */}
 
-            <AnimatePresence>
-              {userFavoriteItemIds.includes(itemToCustomize.id) ? (
-                <Button
-                  variant={"outline"}
-                  disabled={unfavoritingItem}
-                  size={"sm"}
-                  onClick={() => {
-                    unfavoriteItem({
-                      userId,
-                      menuItemId: itemToCustomize.id,
-                    });
-                  }}
-                >
-                  <motion.div
-                    key={`${itemToCustomize.id}DislikeButton`}
-                    layout
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="baseFlex gap-2 text-primary"
+            {isSignedIn && (
+              <AnimatePresence>
+                {userFavoriteItemIds.includes(itemToCustomize.id) ? (
+                  <Button
+                    variant={"outline"}
+                    disabled={unfavoritingItem}
+                    size={"sm"}
+                    onClick={() => {
+                      unfavoriteItem({
+                        userId,
+                        menuItemId: itemToCustomize.id,
+                      });
+                    }}
                   >
-                    <IoMdHeart />
-                    Favorited
-                  </motion.div>
-                </Button>
-              ) : (
-                <Button
-                  variant={"outline"}
-                  disabled={favoritingItem}
-                  size={"sm"}
-                  onClick={() => {
-                    favoriteItem({
-                      userId,
-                      menuItemId: itemToCustomize.id,
-                    });
-                  }}
-                >
-                  <motion.div
-                    key={`${itemToCustomize.id}LikeButton`}
-                    layout
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="baseFlex gap-2 text-primary"
+                    <motion.div
+                      key={`${itemToCustomize.id}DislikeButton`}
+                      layout
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="baseFlex gap-2 text-primary"
+                    >
+                      <IoMdHeart />
+                      Favorited
+                    </motion.div>
+                  </Button>
+                ) : (
+                  <Button
+                    variant={"outline"}
+                    disabled={favoritingItem}
+                    size={"sm"}
+                    onClick={() => {
+                      favoriteItem({
+                        userId,
+                        menuItemId: itemToCustomize.id,
+                      });
+                    }}
                   >
-                    <IoMdHeartEmpty />
-                    Favorite
-                  </motion.div>
-                </Button>
-              )}
-            </AnimatePresence>
+                    <motion.div
+                      key={`${itemToCustomize.id}LikeButton`}
+                      layout
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="baseFlex gap-2 text-primary"
+                    >
+                      <IoMdHeartEmpty />
+                      Favorite
+                    </motion.div>
+                  </Button>
+                )}
+              </AnimatePresence>
+            )}
           </div>
 
           <Image
@@ -269,7 +271,7 @@ function ItemCustomizationDrawer({
           {/* Description */}
           <div className="baseVertFlex w-full !items-start gap-2">
             <p className="text-lg underline underline-offset-2">Description</p>
-            <p className="max-w-96 text-wrap text-left text-sm text-gray-400 tablet:max-w-2xl">
+            <p className="max-w-96 text-wrap text-left text-sm text-stone-400 tablet:max-w-2xl">
               {itemToCustomize.description}
             </p>
           </div>
@@ -377,7 +379,7 @@ function ItemCustomizationDrawer({
                   <p className="text-lg text-black underline underline-offset-2">
                     Special instructions
                   </p>
-                  <span className="mt-1 text-sm italic text-gray-400">
+                  <span className="mt-1 text-sm italic text-stone-400">
                     - Optional
                   </span>
                 </div>
@@ -418,12 +420,12 @@ function ItemCustomizationDrawer({
                       });
                     }}
                   />
-                  <p className="pointer-events-none absolute bottom-10 right-4 text-xs text-gray-400">
+                  <p className="pointer-events-none absolute bottom-10 right-4 text-xs text-stone-400">
                     {100 - localItemOrderDetails.specialInstructions.length}{" "}
                     characters remaining
                   </p>
 
-                  <p className="pl-1 text-xs italic text-gray-400">
+                  <p className="pl-1 text-xs italic text-stone-400">
                     *No price altering substitutions/additions allowed.
                   </p>
                 </div>
@@ -432,7 +434,7 @@ function ItemCustomizationDrawer({
           </Accordion>
 
           {itemToCustomize.isAlcoholic && (
-            <p className="text-center text-xs italic text-gray-400">
+            <p className="text-center text-xs italic text-stone-400">
               * Orders that contain alcoholic beverages must include at least
               one food item.
             </p>
@@ -446,8 +448,8 @@ function ItemCustomizationDrawer({
 
       <DrawerFooter>
         <div
-          className={`baseFlex w-full bg-gradient-to-br from-gray-200 
-        to-gray-300/80 px-4 py-3 shadow-inner ${
+          className={`baseFlex w-full bg-gradient-to-br from-stone-200 
+        to-stone-300/80 px-4 py-3 shadow-inner ${
           itemOrderDetails?.birthdayReward || itemOrderDetails?.pointReward
             ? "!justify-end"
             : "!justify-between"
@@ -457,7 +459,7 @@ function ItemCustomizationDrawer({
             !itemOrderDetails?.pointReward && (
               <div className="baseFlex gap-2">
                 <span className="text-sm font-medium">Quantity</span>
-                <div className="baseFlex h-8 rounded-md border-2 border-gray-500">
+                <div className="baseFlex h-8 rounded-md border-2 border-stone-500">
                   <Button
                     variant="outline"
                     size="icon"
@@ -475,7 +477,7 @@ function ItemCustomizationDrawer({
                     <LuMinus className="size-4" />
                   </Button>
 
-                  <div className="baseFlex bg-offwhite h-full w-8 text-sm font-semibold">
+                  <div className="baseFlex h-full w-8 bg-offwhite text-sm font-semibold">
                     {localItemOrderDetails.quantity}
                   </div>
 
@@ -604,7 +606,7 @@ function CustomizationGroup({
   return (
     <div key={category.id} className="baseVertFlex w-full !items-start">
       <p className="text-lg font-semibold">{category.name}</p>
-      <p className="text-gray-400">{category.description}</p>
+      <p className="text-stone-400">{category.description}</p>
       <div className="baseFlex mt-2 w-full !justify-start gap-2">
         <RadioGroup
           value={localItemOrderDetails.customizations[category.id]}
@@ -674,9 +676,9 @@ function CustomizationOption({
     <div
       key={choice.id}
       // style={{
-      //   borderColor: isHovered ? "var(--color-primary)" : "var(--color-gray-300)",
+      //   borderColor: isHovered ? "var(--color-primary)" : "var(--color-stone-300)",
       // }}
-      className={`baseFlex relative w-full cursor-pointer !justify-start gap-4 rounded-md border-2 p-4 transition-all ${isHovered || isSelected ? "border-primary" : "border-gray-300"}`}
+      className={`baseFlex relative w-full cursor-pointer !justify-start gap-4 rounded-md border-2 p-4 transition-all ${isHovered || isSelected ? "border-primary" : "border-stone-300"}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onTouchStart={() => setIsHovered(true)}
@@ -701,7 +703,7 @@ function CustomizationOption({
         <Label htmlFor={choice.id} className="self-start">
           {choice.name}
         </Label>
-        <p className="self-start text-gray-400">{choice.description}</p>
+        <p className="self-start text-stone-400">{choice.description}</p>
         <AnimatePresence>
           {!isSelected && (
             <motion.p
@@ -798,7 +800,7 @@ function SuggestedPairing({
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="text-offwhite size-4"
+                  className="size-4 text-offwhite"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -842,7 +844,7 @@ function SuggestedPairing({
             </AnimatePresence>
           </Button>
         ) : (
-          <div className="rounded-md bg-gray-100 px-2 py-0.5 text-gray-400">
+          <div className="rounded-md bg-stone-100 px-2 py-0.5 text-stone-400">
             <p className="text-xs italic">Currently unavailable</p>
           </div>
         )}

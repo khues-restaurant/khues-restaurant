@@ -54,7 +54,7 @@ function MobileHeader() {
   return (
     <nav
       id="header"
-      className="baseFlex bg-offwhite fixed left-0 top-0 z-50 h-24 w-full !justify-between p-2 shadow-md"
+      className="baseFlex fixed left-0 top-0 z-50 h-24 w-full !justify-between bg-offwhite p-2 shadow-md"
     >
       <Link
         href={"/"}
@@ -211,7 +211,7 @@ function MobileHeader() {
                 </Accordion>
               )}
 
-              <Separator className="mt-2 w-4/5 self-center bg-gray-300" />
+              <Separator className="mt-2 w-4/5 self-center bg-stone-300" />
 
               <Button
                 variant={asPath.includes("/menu") ? "activeLink" : "link"}
@@ -277,7 +277,7 @@ function MobileHeader() {
                     Hours & Location
                   </AccordionTrigger>
                   <AccordionContent className="pt-2">
-                    <div className="baseVertFlex bg-offwhite !items-start gap-8 rounded-md border p-4 shadow-sm">
+                    <div className="baseVertFlex !items-start gap-8 rounded-md border bg-offwhite p-4 shadow-sm">
                       <div className="baseVertFlex w-full !items-start gap-2">
                         <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
                           <MdAccessTime />

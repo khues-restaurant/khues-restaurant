@@ -239,19 +239,19 @@ export default function Home() {
         <div className="baseFlex gap-2 tablet:hidden">
           <Button asChild>
             <div
-              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 0 ? "!bg-primary" : "!bg-gray-300"}`}
+              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 0 ? "!bg-primary" : "!bg-stone-300"}`}
               onClick={() => pressReviewsApi?.scrollTo(0)}
             />
           </Button>
           <Button asChild>
             <div
-              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 1 ? "!bg-primary" : "!bg-gray-300"}`}
+              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 1 ? "!bg-primary" : "!bg-stone-300"}`}
               onClick={() => pressReviewsApi?.scrollTo(1)}
             />
           </Button>
           <Button asChild>
             <div
-              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 2 ? "!bg-primary" : "!bg-gray-300"}`}
+              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 2 ? "!bg-primary" : "!bg-stone-300"}`}
               onClick={() => pressReviewsApi?.scrollTo(2)}
             />
           </Button>
@@ -864,37 +864,37 @@ export default function Home() {
             <div className="baseFlex gap-2">
               <Button asChild>
                 <div
-                  className={`!size-2 cursor-pointer rounded-full !p-0 ${chefSpecialsSlide === 0 ? "!bg-primary" : "!bg-gray-300"}`}
+                  className={`!size-2 cursor-pointer rounded-full !p-0 ${chefSpecialsSlide === 0 ? "!bg-primary" : "!bg-stone-300"}`}
                   onClick={() => chefSpecialsApi?.scrollTo(0)}
                 />
               </Button>
               <Button asChild>
                 <div
-                  className={`!size-2 cursor-pointer rounded-full !p-0 ${chefSpecialsSlide === 1 ? "!bg-primary" : "!bg-gray-300"}`}
+                  className={`!size-2 cursor-pointer rounded-full !p-0 ${chefSpecialsSlide === 1 ? "!bg-primary" : "!bg-stone-300"}`}
                   onClick={() => chefSpecialsApi?.scrollTo(1)}
                 />
               </Button>
               <Button asChild>
                 <div
-                  className={`!size-2 cursor-pointer rounded-full !p-0 xl:hidden ${chefSpecialsSlide === 2 ? "!bg-primary" : "!bg-gray-300"}`}
+                  className={`!size-2 cursor-pointer rounded-full !p-0 xl:hidden ${chefSpecialsSlide === 2 ? "!bg-primary" : "!bg-stone-300"}`}
                   onClick={() => chefSpecialsApi?.scrollTo(2)}
                 />
               </Button>
               <Button asChild>
                 <div
-                  className={`!size-2 cursor-pointer rounded-full !p-0 md:hidden ${chefSpecialsSlide === 3 ? "!bg-primary" : "!bg-gray-300"}`}
+                  className={`!size-2 cursor-pointer rounded-full !p-0 md:hidden ${chefSpecialsSlide === 3 ? "!bg-primary" : "!bg-stone-300"}`}
                   onClick={() => chefSpecialsApi?.scrollTo(3)}
                 />
               </Button>
               <Button asChild>
                 <div
-                  className={`!size-2 cursor-pointer rounded-full !p-0 md:hidden ${chefSpecialsSlide === 4 ? "!bg-primary" : "!bg-gray-300"}`}
+                  className={`!size-2 cursor-pointer rounded-full !p-0 md:hidden ${chefSpecialsSlide === 4 ? "!bg-primary" : "!bg-stone-300"}`}
                   onClick={() => chefSpecialsApi?.scrollTo(4)}
                 />
               </Button>
               <Button asChild>
                 <div
-                  className={`!size-2 cursor-pointer rounded-full !p-0 md:hidden ${chefSpecialsSlide === 5 ? "!bg-primary" : "!bg-gray-300"}`}
+                  className={`!size-2 cursor-pointer rounded-full !p-0 md:hidden ${chefSpecialsSlide === 5 ? "!bg-primary" : "!bg-stone-300"}`}
                   onClick={() => chefSpecialsApi?.scrollTo(5)}
                 />
               </Button>

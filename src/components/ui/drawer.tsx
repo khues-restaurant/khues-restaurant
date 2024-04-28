@@ -56,7 +56,7 @@ const DrawerContent = React.forwardRef<
       </DrawerClose> */}
 
       <div className="baseFlex h-8 w-full shadow-md">
-        <div className="mx-auto my-1 h-2 w-[75px] rounded-full bg-gray-300" />
+        <div className="mx-auto my-1 h-2 w-[75px] rounded-full bg-stone-300" />
       </div>
       {children}
     </DrawerPrimitive.Content>

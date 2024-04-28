@@ -178,8 +178,8 @@ function CustomerChats() {
     >
       {((viewportLabel.includes("mobile") && !selectedUserId) ||
         !viewportLabel.includes("mobile")) && (
-        <div className="baseVertFlex h-[560px] w-full tablet:w-64 tablet:border-r tablet:border-gray-600">
-          <div className="w-full rounded-l bg-gray-200 p-4 text-center text-lg font-semibold">
+        <div className="baseVertFlex h-[560px] w-full tablet:w-64 tablet:border-r tablet:border-stone-600">
+          <div className="w-full rounded-l bg-stone-200 p-4 text-center text-lg font-semibold">
             Chats
           </div>
 
@@ -200,11 +200,11 @@ function CustomerChats() {
                 >
                   <div className="baseVertFlex gap-2">
                     <p
-                      className={`font-semibold ${userId === selectedUserId ? "text-offwhite" : "text-gray-400"}`}
+                      className={`font-semibold ${userId === selectedUserId ? "text-offwhite" : "text-stone-400"}`}
                     >
                       Guest
                     </p>
-                    <p className="text-xs text-gray-200">
+                    <p className="text-xs text-stone-200">
                       &ldquo;{lastMessage?.content}&rdquo;
                     </p>
                   </div>
@@ -222,7 +222,7 @@ function CustomerChats() {
         // TODO: you CAN have an optional relation to the user model to be able to get the user's name
         // but I think it's really low prio rn.
         <div className="baseVertFlex w-full sm:max-w-xl">
-          <div className="baseVertFlex relative w-full gap-2 rounded-t-md bg-gray-200 p-4 tablet:rounded-tr-md">
+          <div className="baseVertFlex relative w-full gap-2 rounded-t-md bg-stone-200 p-4 tablet:rounded-tr-md">
             <div className="text-lg font-semibold">Guest Placeholder</div>
             <Button
               variant={"link"}
@@ -257,12 +257,12 @@ function CustomerChats() {
                 `}
                     >
                       <p
-                        className={`text-xs text-gray-400 ${message.senderId === "dashboard" ? "mr-2" : "ml-2"}`}
+                        className={`text-xs text-stone-400 ${message.senderId === "dashboard" ? "mr-2" : "ml-2"}`}
                       >
                         {format(message.createdAt, "h:mm a")}
                       </p>
                       <div
-                        className={`rounded-full px-4 py-2 ${message.senderId === "dashboard" ? "text-offwhite bg-primary" : "bg-secondary"}`}
+                        className={`rounded-full px-4 py-2 ${message.senderId === "dashboard" ? "bg-primary text-offwhite" : "bg-secondary"}`}
                       >
                         <p className="text-sm">{message.content}</p>
                       </div>
@@ -293,7 +293,7 @@ function CustomerChats() {
                   });
                 }
               }}
-              className="max-h-12 flex-grow border-2 border-gray-500 bg-transparent placeholder-gray-400"
+              className="max-h-12 flex-grow border-2 border-stone-500 bg-transparent placeholder-stone-400"
             />
             <Button
               className="!p-2"
@@ -306,7 +306,7 @@ function CustomerChats() {
                 });
               }}
             >
-              <IoIosSend className="text-offwhite size-6" />
+              <IoIosSend className="size-6 text-offwhite" />
             </Button>
           </div>
         </div>

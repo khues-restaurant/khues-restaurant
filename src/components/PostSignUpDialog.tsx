@@ -219,7 +219,7 @@ function PostSignUpDialog() {
             <div className="baseVertFlex relative gap-2 pl-4 pr-4 tablet:pl-8">
               <Step step={1} currentStep={step} />
               <p
-                className={`absolute left-[0px] top-10 text-center text-xs transition-all tablet:left-[9px] tablet:top-12 tablet:text-nowrap tablet:text-sm ${step === 1 ? "font-semibold" : "text-gray-400"}`}
+                className={`absolute left-[0px] top-10 text-center text-xs transition-all tablet:left-[9px] tablet:top-12 tablet:text-nowrap tablet:text-sm ${step === 1 ? "font-semibold" : "text-stone-400"}`}
               >
                 Personal info
               </p>
@@ -259,7 +259,7 @@ function PostSignUpDialog() {
               <Step step={2} currentStep={step} />
 
               <p
-                className={`absolute left-[-3px] top-10 text-center text-xs transition-all tablet:left-[-29px] tablet:top-12 tablet:text-nowrap tablet:text-sm ${step === 2 ? "font-semibold" : "text-gray-400"}`}
+                className={`absolute left-[-3px] top-10 text-center text-xs transition-all tablet:left-[-29px] tablet:top-12 tablet:text-nowrap tablet:text-sm ${step === 2 ? "font-semibold" : "text-stone-400"}`}
               >
                 Dietary preferences
               </p>
@@ -297,7 +297,7 @@ function PostSignUpDialog() {
               <Step step={3} currentStep={step} />
               {/* <p className="absolute left-[16px] top-12">Finish</p> */}
               <CiGift
-                className={`absolute top-10 size-6 tablet:top-11 ${step === 3 ? "" : "text-gray-400"}`}
+                className={`absolute top-10 size-6 tablet:top-11 ${step === 3 ? "" : "text-stone-400"}`}
               />
             </div>
           </div>
@@ -566,7 +566,7 @@ function PostSignUpDialog() {
                     />
                   </motion.div>
 
-                  <div className="baseVertFlex bg-offwhite z-10 gap-4 rounded-md px-8 py-4 text-yellow-500 shadow-lg">
+                  <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-yellow-500 shadow-lg">
                     <div className="text-center text-lg font-semibold">
                       Khue&apos;s Rewards
                     </div>
@@ -652,7 +652,7 @@ function PostSignUpDialog() {
               className={`${
                 step === 1 || isSaving
                   ? "pointer-events-none opacity-50"
-                  : "text-gray-500"
+                  : "text-stone-500"
               }`}
             >
               Back
@@ -705,7 +705,7 @@ function PostSignUpDialog() {
                         {saveButtonText}
                         {saveButtonText === "Saving" && (
                           <div
-                            className="text-offwhite inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent"
+                            className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
                             role="status"
                             aria-label="loading"
                           >
@@ -718,7 +718,7 @@ function PostSignUpDialog() {
                             viewBox="0 0 24 24"
                             stroke="currentColor"
                             strokeWidth={2}
-                            className="text-offwhite size-4"
+                            className="size-4 text-offwhite"
                           >
                             <motion.path
                               initial={{ pathLength: 0 }}
@@ -829,7 +829,7 @@ function Step({ step, currentStep }: { step: number; currentStep: number }) {
       >
         <div className="flex items-center justify-center">
           {status === "complete" ? (
-            <CheckIcon className="text-offwhite size-4 tablet:size-6" />
+            <CheckIcon className="size-4 text-offwhite tablet:size-6" />
           ) : (
             <span className="text-sm tablet:text-lg">{step}</span>
           )}

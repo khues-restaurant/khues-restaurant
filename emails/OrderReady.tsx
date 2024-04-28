@@ -176,7 +176,7 @@ function OrderReady(
                     </Section>
 
                     {/* loop through items to make an order summary section */}
-                    <Section className="mt-4 w-80 rounded-md bg-gray-200 p-4 text-left sm:w-[350px]">
+                    <Section className="mt-4 w-80 rounded-md bg-stone-200 p-4 text-left sm:w-[350px]">
                       <Text className="mb-4 mt-0 text-lg font-semibold">
                         {items.length} {items.length > 1 ? "Items" : "Item"}
                       </Text>
@@ -225,7 +225,7 @@ function OrderReady(
                           </Column>
 
                           <Column className="w-28 text-right">
-                            <Text className="my-0 text-left italic text-gray-400">
+                            <Text className="my-0 text-left italic text-stone-400">
                               {`Napkins and utensils were ${
                                 includeNapkinsAndUtensils ? "" : "not"
                               } requested.`}
@@ -234,7 +234,7 @@ function OrderReady(
                         </Row>
                       </Section>
 
-                      <Hr className="border-gray-400" />
+                      <Hr className="border-stone-400" />
 
                       <Section className="w-48">
                         <Row>
@@ -275,7 +275,7 @@ function OrderReady(
                 </Section>
               </Section>
 
-              <Section className="text-offwhite rounded-b-lg bg-primary">
+              <Section className="rounded-b-lg bg-primary text-offwhite">
                 <Column align="center">
                   {/* 
 
@@ -310,7 +310,7 @@ function OrderReady(
 
                     <Column className="text-right">
                       <Link href="tel:+1234567890">
-                        <Text className="text-offwhite mb-0 pl-2 text-xs">
+                        <Text className="mb-0 pl-2 text-xs text-offwhite">
                           (123) 456-7890
                         </Text>
                       </Link>
@@ -320,7 +320,7 @@ function OrderReady(
                   <Row className="mt-1 w-52">
                     <Column className="text-left">
                       <Link href="https://khueskitchen.com">
-                        <Text className="text-offwhite my-0 text-xs">
+                        <Text className="my-0 text-xs text-offwhite">
                           Visit our website
                         </Text>
                       </Link>
@@ -332,7 +332,7 @@ function OrderReady(
 
                     <Column className="text-right">
                       <Link href="https://khueskitchen.com/privacy">
-                        <Text className="text-offwhite my-0 pl-2 text-xs">
+                        <Text className="my-0 pl-2 text-xs text-offwhite">
                           Privacy Policy
                         </Text>
                       </Link>
@@ -402,7 +402,7 @@ function OrderReady(
                   <Section className="w-96 text-center">
                     <Row className="text-center">
                       <Link href="https://khueskitchen.com/profile/preferences">
-                        <Text className="text-offwhite mt-0 text-xs underline underline-offset-2">
+                        <Text className="mt-0 text-xs text-offwhite underline underline-offset-2">
                           Manage your email communication preferences
                         </Text>
                       </Link>
@@ -410,7 +410,7 @@ function OrderReady(
 
                     <Row className="text-center">
                       <Link href="https://khueskitchen.com/unsubscribe">
-                        <Text className="text-offwhite mt-0 pl-2 text-xs underline underline-offset-2">
+                        <Text className="mt-0 pl-2 text-xs text-offwhite underline underline-offset-2">
                           Unsubscribe from all emails
                         </Text>
                       </Link>

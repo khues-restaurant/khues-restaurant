@@ -196,10 +196,10 @@ function Chat() {
         <AlertDialogContent className="baseVertFlex h-[70dvh] w-[90vw] rounded-lg border-none !p-0 shadow-xl sm:mr-4">
           {/* header */}
           <div className="baseVertFlex relative !items-start gap-2 rounded-t-lg bg-primary p-4">
-            <p className="text-offwhite text-lg font-medium">
+            <p className="text-lg font-medium text-offwhite">
               Have a question?
             </p>
-            <p className="text-sm text-gray-200">
+            <p className="text-sm text-stone-200">
               Send a message directly to our team and we will respond as soon as
               possible.
             </p>
@@ -209,7 +209,7 @@ function Chat() {
               onClick={() => setShowingAlertDialogChat(false)}
               className="!absolute right-0 top-0"
             >
-              <X className="text-offwhite size-4" />
+              <X className="size-4 text-offwhite" />
             </Button>
           </div>
 
@@ -233,12 +233,12 @@ function Chat() {
               `}
               >
                 <p
-                  className={`text-xs text-gray-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
+                  className={`text-xs text-stone-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
                 >
                   {format(message.createdAt, "h:mm a")}
                 </p>
                 <div
-                  className={`z-10 rounded-full px-4 py-2 ${message.senderId === userId ? "text-offwhite bg-primary" : "bg-secondary"}`}
+                  className={`z-10 rounded-full px-4 py-2 ${message.senderId === userId ? "bg-primary text-offwhite" : "bg-secondary"}`}
                 >
                   <p className="text-sm">{message.content}</p>
                 </div>
@@ -247,7 +247,7 @@ function Chat() {
           </div>
 
           {/* input */}
-          <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-gray-200 to-gray-300 p-2 px-4">
+          <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-stone-200 to-stone-300 p-2 px-4">
             <Textarea
               placeholder="Enter your message here"
               value={newMessageContent}
@@ -262,7 +262,7 @@ function Chat() {
                   });
                 }
               }}
-              className="max-h-12 flex-grow border-2 border-gray-500 bg-transparent placeholder-gray-400"
+              className="max-h-12 flex-grow border-2 border-stone-500 bg-transparent placeholder-stone-400"
             />
             <Button
               className="!p-2"
@@ -274,7 +274,7 @@ function Chat() {
                 });
               }}
             >
-              <IoIosSend className="text-offwhite size-6" />
+              <IoIosSend className="size-6 text-offwhite" />
             </Button>
           </div>
         </AlertDialogContent>
@@ -353,10 +353,10 @@ function Chat() {
         >
           {/* header */}
           <div className="baseVertFlex !items-start gap-2 rounded-t-lg bg-primary p-4">
-            <p className="text-offwhite text-lg font-medium">
+            <p className="text-lg font-medium text-offwhite">
               Have a question?
             </p>
-            <p className="text-sm text-gray-200">
+            <p className="text-sm text-stone-200">
               Send a message directly to our team and we will respond as soon as
               possible.
             </p>
@@ -382,12 +382,12 @@ function Chat() {
               `}
               >
                 <p
-                  className={`text-xs text-gray-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
+                  className={`text-xs text-stone-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
                 >
                   {format(message.createdAt, "h:mm a")}
                 </p>
                 <div
-                  className={`z-10 rounded-full px-4 py-2 ${message.senderId === userId ? "text-offwhite bg-primary" : "bg-secondary"}`}
+                  className={`z-10 rounded-full px-4 py-2 ${message.senderId === userId ? "bg-primary text-offwhite" : "bg-secondary"}`}
                 >
                   <p className="text-sm">{message.content}</p>
                 </div>
@@ -396,7 +396,7 @@ function Chat() {
           </div>
 
           {/* input */}
-          <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-gray-200 to-gray-300 p-2 px-4">
+          <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-stone-200 to-stone-300 p-2 px-4">
             <Textarea
               placeholder="Enter your message here"
               value={newMessageContent}
@@ -411,7 +411,7 @@ function Chat() {
                   });
                 }
               }}
-              className="max-h-12 flex-grow border-2 border-gray-500 bg-transparent placeholder-gray-400"
+              className="max-h-12 flex-grow border-2 border-stone-500 bg-transparent placeholder-stone-400"
             />
             <Button
               className="!p-2"
@@ -423,7 +423,7 @@ function Chat() {
                 });
               }}
             >
-              <IoIosSend className="text-offwhite size-6" />
+              <IoIosSend className="size-6 text-offwhite" />
             </Button>
           </div>
         </PopoverContent>

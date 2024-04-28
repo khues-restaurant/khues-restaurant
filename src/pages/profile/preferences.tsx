@@ -327,7 +327,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
                     <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
                       <FormLabel className="font-semibold">Email</FormLabel>
                       <Input placeholder="Email" {...field} disabled />
-                      <FaLock className="absolute bottom-3 right-2 size-3.5 text-gray-300" />
+                      <FaLock className="absolute bottom-3 right-2 size-3.5 text-stone-300" />
                     </div>
                     <AnimatePresence>
                       {invalid && (
@@ -358,7 +358,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
                         value={format(field.value, "PPP")}
                         disabled
                       />
-                      <FaLock className="absolute bottom-3 right-2 size-3.5 text-gray-300" />
+                      <FaLock className="absolute bottom-3 right-2 size-3.5 text-stone-300" />
                     </div>
                     <AnimatePresence>
                       {invalid && (
@@ -401,7 +401,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
                       />
                     </FormControl>
 
-                    <p className="pointer-events-none absolute bottom-2 right-4 text-xs text-gray-400 tablet:bottom-1">
+                    <p className="pointer-events-none absolute bottom-2 right-4 text-xs text-stone-400 tablet:bottom-1">
                       {100 - field.value.length} characters remaining
                     </p>
                   </div>
@@ -575,7 +575,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
               {saveButtonText}
               {saveButtonText === "Saving" && (
                 <div
-                  className="text-offwhite inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent"
+                  className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
                   role="status"
                   aria-label="loading"
                 >
@@ -588,7 +588,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth={2}
-                  className="text-offwhite size-4"
+                  className="size-4 text-offwhite"
                 >
                   <motion.path
                     initial={{ pathLength: 0 }}
@@ -699,7 +699,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
 
                           {deleteButtonText === "Deleting account" && (
                             <div
-                              className="text-offwhite inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent"
+                              className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
                               role="status"
                               aria-label="loading"
                             >
@@ -712,7 +712,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
                               viewBox="0 0 24 24"
                               stroke="currentColor"
                               strokeWidth={2}
-                              className="text-offwhite size-4"
+                              className="size-4 text-offwhite"
                             >
                               <motion.path
                                 initial={{ pathLength: 0 }}
@@ -777,7 +777,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
                 {saveButtonText}
                 {saveButtonText === "Saving" && (
                   <div
-                    className="text-offwhite inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent"
+                    className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
                     role="status"
                     aria-label="loading"
                   >
@@ -790,7 +790,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                     strokeWidth={2}
-                    className="text-offwhite size-4"
+                    className="size-4 text-offwhite"
                   >
                     <motion.path
                       initial={{ pathLength: 0 }}

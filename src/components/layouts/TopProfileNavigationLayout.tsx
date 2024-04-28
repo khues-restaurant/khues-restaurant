@@ -82,7 +82,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
       // 73 for bottom navbar, 50 for top navbar
       className="baseVertFlex relative mt-24 h-full min-h-[calc(100dvh-6rem-73px)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem-50px)] "
     >
-      <div className="baseFlex bg-offwhite my-8 !hidden gap-4 rounded-lg border border-gray-400 p-1 tablet:!flex">
+      <div className="baseFlex my-8 !hidden gap-4 rounded-lg border border-stone-400 bg-offwhite p-1 tablet:!flex">
         <Button
           variant={
             asPath.includes("/profile/preferences") ? "default" : "ghost"
@@ -95,7 +95,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
           </Link>
         </Button>
 
-        <Separator className="h-5 w-[1px] bg-gray-400" />
+        <Separator className="h-5 w-[1px] bg-stone-400" />
 
         <Button
           variant={asPath.includes("/profile/rewards") ? "default" : "ghost"}
@@ -107,7 +107,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
           </Link>
         </Button>
 
-        <Separator className="h-5 w-[1px] bg-gray-400" />
+        <Separator className="h-5 w-[1px] bg-stone-400" />
 
         <Button
           variant={asPath.includes("/profile/my-orders") ? "default" : "ghost"}
@@ -131,7 +131,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
 
       <motion.div
         layout
-        className={`baseFlex bottom-0 left-0 z-40 w-full gap-3 border-t border-gray-400 bg-gray-100 p-2 sm:gap-8 tablet:hidden ${footerIsInView ? "relative" : "fixed"}`}
+        className={`baseFlex bottom-0 left-0 z-40 w-full gap-3 border-t border-stone-400 bg-stone-100 p-2 sm:gap-8 tablet:hidden ${footerIsInView ? "relative" : "fixed"}`}
       >
         <Button
           variant={
@@ -148,7 +148,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
           </Link>
         </Button>
 
-        <Separator className="h-10 w-[1px] bg-gray-400" />
+        <Separator className="h-10 w-[1px] bg-stone-400" />
 
         <Button
           variant={
@@ -165,7 +165,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
           </Link>
         </Button>
 
-        <Separator className="h-10 w-[1px] bg-gray-400" />
+        <Separator className="h-10 w-[1px] bg-stone-400" />
 
         <Button
           variant={

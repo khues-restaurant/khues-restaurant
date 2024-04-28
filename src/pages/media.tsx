@@ -41,7 +41,7 @@ function Media() {
         {/* prob just want to have interior/exterior images or technically also there are images with
         eric and w/e reporter was there?*/}
 
-        <div className="baseFlex bg-offwhite z-10 rounded-md p-2 shadow-lg">
+        <div className="baseFlex z-10 rounded-md bg-offwhite p-2 shadow-lg">
           <div className="experimentalBorder baseFlex px-8 py-4 text-xl font-semibold tablet:text-2xl">
             Media
           </div>
@@ -56,9 +56,9 @@ function Media() {
               alt="Star Tribune"
               width={200}
               height={85}
-              className="bg-offwhite rounded-md p-4"
+              className="rounded-md bg-offwhite p-4"
             />
-            <p className="text-offwhite self-start text-lg font-semibold underline underline-offset-2">
+            <p className="self-start text-lg font-semibold text-offwhite underline underline-offset-2">
               The Star Tribune
             </p>
           </div>
@@ -74,7 +74,7 @@ function Media() {
               <Button variant={"link"} className="h-8 !p-0" asChild>
                 <a href="https://www.startribune.com/">Read more</a>
               </Button>
-              <p className="text-sm italic text-gray-400">12/12/2024</p>
+              <p className="text-sm italic text-stone-400">12/12/2024</p>
             </div>
           </div>
         </div>
@@ -86,9 +86,9 @@ function Media() {
               alt="Star Tribune"
               width={200}
               height={85}
-              className="bg-offwhite rounded-md p-4"
+              className="rounded-md bg-offwhite p-4"
             />
-            <p className="text-offwhite self-start text-lg font-semibold underline underline-offset-2">
+            <p className="self-start text-lg font-semibold text-offwhite underline underline-offset-2">
               The Star Tribune
             </p>
           </div>
@@ -104,7 +104,7 @@ function Media() {
               <Button variant={"link"} className="h-8 !p-0" asChild>
                 <a href="https://www.startribune.com/">Read more</a>
               </Button>
-              <p className="text-sm italic text-gray-400">12/12/2024</p>
+              <p className="text-sm italic text-stone-400">12/12/2024</p>
             </div>
           </div>
         </div>
@@ -116,9 +116,9 @@ function Media() {
               alt="Star Tribune"
               width={200}
               height={85}
-              className="bg-offwhite rounded-md p-4"
+              className="rounded-md bg-offwhite p-4"
             />
-            <p className="text-offwhite self-start text-lg font-semibold underline underline-offset-2">
+            <p className="self-start text-lg font-semibold text-offwhite underline underline-offset-2">
               The Star Tribune
             </p>
           </div>
@@ -134,7 +134,7 @@ function Media() {
               <Button variant={"link"} className="h-8 !p-0" asChild>
                 <a href="https://www.startribune.com/">Read more</a>
               </Button>
-              <p className="text-sm italic text-gray-400">12/12/2024</p>
+              <p className="text-sm italic text-stone-400">12/12/2024</p>
             </div>
           </div>
         </div>

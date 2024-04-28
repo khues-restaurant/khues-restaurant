@@ -236,7 +236,7 @@ p-2"
               />
 
               <Label htmlFor="discountExpirationDate">Expiration date</Label>
-              <span className="text-sm italic text-gray-400">
+              <span className="text-sm italic text-stone-400">
                 * Discount will expire at the start of this day
               </span>
               <Popover>

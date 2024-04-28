@@ -400,7 +400,7 @@ function OrderNow() {
               {/* ah we want relative + -b-4 when not sticky
                     and then absolute -b-0 or w/e when sticky */}
 
-              <div className="absolute bottom-0 left-0 h-1 w-full bg-gray-200">
+              <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-200">
                 <div
                   style={{ width: `${scrollProgress}%` }}
                   className="h-1 bg-primary"
@@ -505,7 +505,7 @@ function OrderNow() {
                                 className={`!size-2 cursor-pointer rounded-full !p-0 ${
                                   favoriteItemsSlide === index
                                     ? "!bg-primary"
-                                    : "!bg-gray-300"
+                                    : "!bg-stone-300"
                                 }`}
                                 onClick={() =>
                                   favoriteItemsApi?.scrollTo(index)
@@ -577,7 +577,7 @@ function OrderNow() {
                                 className={`!size-2 cursor-pointer rounded-full !p-0 ${
                                   recentOrdersSlide === index
                                     ? "!bg-primary"
-                                    : "!bg-gray-300"
+                                    : "!bg-stone-300"
                                 }`}
                                 onClick={() => recentOrdersApi?.scrollTo(index)}
                               />
@@ -859,7 +859,7 @@ function MenuItemPreviewButton({
       <Button
         variant="outline"
         disabled={!menuItem.available}
-        className="baseFlex size-full !justify-between gap-4 border border-gray-300 !p-6 tablet:!p-4"
+        className="baseFlex size-full !justify-between gap-4 border border-stone-300 !p-6 tablet:!p-4"
         onClick={() => {
           dismissToasts();
 
@@ -898,7 +898,7 @@ function MenuItemPreviewButton({
                 />
               )}
             </p>
-            <p className="line-clamp-3 max-w-48 text-wrap text-left text-gray-400">
+            <p className="line-clamp-3 max-w-48 text-wrap text-left text-stone-400">
               {menuItem.description}
             </p>
           </div>
@@ -939,7 +939,7 @@ function MenuItemPreviewButton({
           variant={"outline"}
           size={"icon"}
           disabled={showCheckmark}
-          className="baseFlex absolute right-0 top-0 h-10 w-10 rounded-none rounded-bl-md rounded-tr-md border border-gray-300 text-primary"
+          className="baseFlex absolute right-0 top-0 h-10 w-10 rounded-none rounded-bl-md rounded-tr-md border border-stone-300 text-primary"
           onClick={() => {
             // set prev order details so we can revert if necessary
             // with toast's undo button
@@ -1040,7 +1040,7 @@ function MenuItemPreviewButton({
           </AnimatePresence>
         </Button>
       ) : (
-        <div className="absolute right-2 top-2 rounded-md bg-gray-100 px-2 py-0.5 text-gray-400">
+        <div className="absolute right-2 top-2 rounded-md bg-stone-100 px-2 py-0.5 text-stone-400">
           <p className="text-xs italic">Currently unavailable</p>
         </div>
       )}
@@ -1151,7 +1151,7 @@ function PreviousOrder({ order }: PreviousOrder) {
 
   return (
     <div className="relative h-40 w-full max-w-96">
-      <div className="baseFlex size-full gap-4 rounded-md border border-gray-300 px-4 py-6">
+      <div className="baseFlex size-full gap-4 rounded-md border border-stone-300 px-4 py-6">
         <div className="grid w-28 grid-cols-2 grid-rows-2 !place-items-center gap-1">
           <Image
             src={"/menuItems/sampleImage.webp"}
@@ -1192,7 +1192,7 @@ function PreviousOrder({ order }: PreviousOrder) {
               {format(order.datetimeToPickup, "EEEE, MMMM do")}
             </p>
 
-            <div className="baseVertFlex w-full !items-start text-xs text-gray-400">
+            <div className="baseVertFlex w-full !items-start text-xs text-stone-400">
               <p className="baseFlex gap-2">
                 {order.orderItems[0]?.quantity} {order.orderItems[0]?.name}
               </p>

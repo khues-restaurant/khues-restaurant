@@ -179,7 +179,7 @@ function OrderSummary({ order }: OrderSummary) {
           )}
 
           <div className="baseFlex w-full">
-            <div className="baseFlex gap-2 text-sm italic text-gray-400">
+            <div className="baseFlex gap-2 text-sm italic text-stone-400">
               <FaUtensils className="size-4" />
               <p>
                 Napkins and utensils{" "}
@@ -190,7 +190,7 @@ function OrderSummary({ order }: OrderSummary) {
           </div>
         </div>
 
-        <div className="baseVertFlex w-full border-t border-gray-300 p-4">
+        <div className="baseVertFlex w-full border-t border-stone-300 p-4">
           <div className="baseFlex w-full !justify-between gap-2 text-sm">
             <p>Subtotal</p>
             <p>{formatPrice(orderCost.subtotal)}</p>

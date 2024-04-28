@@ -307,7 +307,7 @@ function Rewards({
             />
           </motion.div>
 
-          <div className="baseVertFlex bg-offwhite z-10 gap-4 rounded-md px-8 py-4 text-yellow-500 shadow-lg">
+          <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-yellow-500 shadow-lg">
             <div className="text-center text-lg font-semibold tablet:text-xl">
               Khue&apos;s Rewards
             </div>
@@ -554,7 +554,7 @@ function Rewards({
             ))}
           </div>
 
-          <p className="text-sm italic text-gray-400">
+          <p className="text-sm italic text-stone-400">
             Only one reward is able to be redeemed per order.*
           </p>
         </div>
@@ -762,15 +762,17 @@ function RewardMenuItem({
 
             {/* Point cost for item */}
             {forBirthdayReward ? (
-              <p className="max-w-48 text-wrap text-left text-gray-400">Free</p>
+              <p className="max-w-48 text-wrap text-left text-stone-400">
+                Free
+              </p>
             ) : (
-              <p className="max-w-48 text-wrap text-left text-gray-400">
+              <p className="max-w-48 text-wrap text-left text-stone-400">
                 {new Decimal(menuItem.price).div(0.005).toNumber()} points
               </p>
             )}
 
             {!menuItem.available && (
-              <div className="rounded-md bg-gray-100 px-2 py-0.5 text-gray-400">
+              <div className="rounded-md bg-stone-100 px-2 py-0.5 text-stone-400">
                 <p className="text-xs italic">Currently unavailable</p>
               </div>
             )}
