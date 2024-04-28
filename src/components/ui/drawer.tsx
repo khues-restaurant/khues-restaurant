@@ -44,7 +44,7 @@ const DrawerContent = React.forwardRef<
       ref={ref}
       className={cn(
         // TODO: should we just put the max-h-[85dvh] right here?
-        "fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-[10px] bg-background",
+        "fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-[10px] bg-background !duration-700",
         className,
       )}
       {...props}

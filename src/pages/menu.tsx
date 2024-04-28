@@ -120,24 +120,7 @@ function Menu() {
     >
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72">
-        <div
-          className="baseFlex from-primarytablet:gap-8 absolute left-0 top-0 size-full border-b-2 
-bg-gradient-to-br to-darkPrimary desktop:gap-16"
-        >
-          {/* desktop fading gradients */}
-          {/* <div className="absolute left-0 top-0 h-full w-screen">
-            <div className="absolute left-0 top-0 hidden h-full w-1/6 bg-gradient-to-l from-transparent to-black/50 tablet:block"></div>
-            <div className="absolute right-0 top-0 hidden h-full w-1/6 bg-gradient-to-r from-transparent to-black/50 tablet:block"></div>
-          </div> */}
-
-          {/* assuming you can get the bowls/plates to line up perfectly w/ the actual images,
-              I think having a combo of pretty varied items would look great for the mobile hero.
-               ^ implied, but this means you need to edit the images to line up into one cohesive image
-              with some software
-              
-              also obv have different dishes displayed between /menu and /order-now
-              */}
-
+        <div className="baseFlex absolute left-0 top-0 size-full border-b-2 bg-gradient-to-br from-primary to-darkPrimary tablet:gap-8 desktop:gap-16">
           <Image
             src={"/menuItems/sampleImage.webp"}
             alt={"TODO: fill in w/ appropriate alt text"}
@@ -159,7 +142,7 @@ bg-gradient-to-br to-darkPrimary desktop:gap-16"
             className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
           />
           <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-offwhite p-2 shadow-lg tablet:!flex">
-            <div className="baseFlex gap-4 font-semibold text-primary tablet:p-3 tablet:text-xl desktop:text-2xl">
+            <div className="baseFlex gap-2 font-semibold text-primary tablet:p-2 tablet:text-xl desktop:text-2xl">
               <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
               Menu
               <SideAccentSwirls className="h-5 fill-primary" />
@@ -180,7 +163,7 @@ bg-gradient-to-br to-darkPrimary desktop:gap-16"
         </div>
 
         <div className="baseFlex z-10 rounded-md bg-offwhite p-2 shadow-lg tablet:hidden">
-          <div className="baseFlex gap-2 p-3 text-xl font-semibold text-primary tablet:px-8 tablet:py-4 tablet:text-2xl">
+          <div className="baseFlex gap-2 p-2 text-xl font-semibold text-primary tablet:px-8 tablet:py-3 tablet:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary" />
             Menu
             <SideAccentSwirls className="h-4 fill-primary" />

@@ -12,7 +12,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary text-primary-foreground",
         destructive: "bg-destructive text-destructive-foreground",
-        outline: "border border-input bg-background",
+        outline: "border border-input bg-offwhite",
         secondary: "bg-secondary text-secondary-foreground",
         ghost: "",
 
@@ -64,11 +64,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       } else if (variant === "destructive") {
         return `${brightness !== 1 ? "" : ""}`; // had /90
       } else if (variant === "outline") {
-        return `${brightness !== 1 ? "bg-accent text-accent-foreground" : ""}`;
+        return `${brightness !== 1 ? "bg-offwhite text-accent-foreground" : ""}`; // is text-accent-foreground what we want btw?
       } else if (variant === "secondary") {
         return `${brightness !== 1 ? "" : ""}`; // had /80
       } else if (variant === "ghost") {
-        return `${brightness !== 1 ? "bg-accent text-accent-foreground" : ""}`;
+        return `${brightness !== 1 ? "bg-offwhite text-accent-foreground" : ""}`; // is text-accent-foreground what we want btw?
       } else if (variant === "link" || variant === "activeLink") {
         return `${brightness !== 1 ? "!text-activeLink" : ""}`; // saturate-200 least sure about this one, kind of just want to make them darker
       }
