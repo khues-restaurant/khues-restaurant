@@ -62,7 +62,7 @@ export default function Home() {
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
       {/* Hero */}
-      <div className="baseVertFlex to-darkPrimary w-full bg-gradient-to-br from-primary tablet:!hidden">
+      <div className="baseVertFlex w-full text-primary tablet:!hidden">
         {/* <div className="imageFiller baseFlex size-full h-[65dvh]">
           Image of probably three plates of food here arranged in a triangle
           (one on top, two on bottom) on a table, probably with some fancy
@@ -98,7 +98,7 @@ export default function Home() {
       <div className="baseFlex relative !hidden w-full p-4 tablet:!flex tablet:h-[calc(100dvh-7rem)]">
         <div className="relative grid size-full grid-cols-3 grid-rows-3 gap-4">
           {/* top left */}
-          <div className="relative col-span-1 row-span-2 size-full overflow-hidden rounded-md">
+          <div className="relative col-span-1 row-span-2 size-full overflow-hidden rounded-md shadow-md">
             <Parallax speed={-10} className="!absolute !top-0 !size-full">
               <Image
                 src={"/homepage/heroTwo.webp"}
@@ -113,7 +113,7 @@ export default function Home() {
           </div>
 
           {/* top right */}
-          <div className="relative col-span-2 row-span-2 size-full overflow-hidden rounded-md">
+          <div className="relative col-span-2 row-span-2 size-full overflow-hidden rounded-md shadow-md">
             <Parallax speed={-10} className="!absolute !top-0 !size-full">
               <Image
                 src={"/homepage/heroOne.jpeg"}
@@ -128,7 +128,7 @@ export default function Home() {
           </div>
 
           {/* bottom left */}
-          <div className="relative !top-0 col-span-1 row-span-1 size-full overflow-hidden rounded-md">
+          <div className="relative !top-0 col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md">
             <Parallax
               speed={-10}
               className="!absolute !top-0 !h-[150%] !w-full"
@@ -147,7 +147,7 @@ export default function Home() {
           </div>
 
           {/* bottom right */}
-          <div className="relative !top-0 col-span-2 row-span-1 size-full overflow-hidden rounded-md">
+          <div className="relative !top-0 col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md">
             <Parallax
               speed={-10}
               className="!absolute !top-0 !h-[150%] !w-full"
@@ -167,7 +167,7 @@ export default function Home() {
         </div>
 
         <div className="baseVertFlex absolute top-0 h-full xl:!left-24 tablet:left-8">
-          <div className="baseVertFlex !items-start gap-1 rounded-md bg-offwhite p-8 shadow-md">
+          <div className="baseVertFlex !items-start gap-1 rounded-md bg-offwhite p-8 text-primary shadow-md">
             <h1 className="text-4xl font-bold">Welcome to Khue&apos;s</h1>
             <h2 className="text-2xl">
               A modern take on classic Vietnamese cuisine.
@@ -732,7 +732,7 @@ export default function Home() {
 
           // </div>
 
-          <div className="baseVertFlex border-b-borderGold border-t-borderGold mb-16 mt-8 max-w-xl gap-8 border-y-4 !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
+          <div className="baseVertFlex mb-16 mt-8 max-w-xl gap-8 border-y-4 border-b-borderGold border-t-borderGold !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
             <p className="text-center">
               Valued customers enjoy exclusive rewards: earn points with every
               order to redeem for complimentary meals, gain early access to new

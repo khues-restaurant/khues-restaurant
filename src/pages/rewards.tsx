@@ -27,7 +27,7 @@ function Rewards() {
       <div
         style={{
           backgroundImage:
-            "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+            "linear-gradient(to right bottom, hsl(50deg, 48%, 62%) 0%, hsl(49deg, 61%, 58%) 100%)",
         }}
         className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72 tablet:overflow-x-hidden"
       >
@@ -334,7 +334,7 @@ function Rewards() {
         </div>
 
         <div className="baseVertFlex gap-8 xl:!flex-row">
-          <div className="baseVertFlex border-b-borderGold border-t-borderGold m-4 w-72 !items-start gap-2 rounded-sm border-y-4 bg-primary p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+          <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold  bg-primary p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
             <CiGift className="ml-2 size-16 h-24 text-gold sm:ml-0 sm:size-20" />
             <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
             <div className="hyphens-auto p-4 text-left text-gold">
@@ -345,7 +345,7 @@ function Rewards() {
             </div>
           </div>
 
-          <div className="baseVertFlex border-b-borderGold border-t-borderGold m-4 w-72 !items-start gap-2 rounded-sm border-y-4 bg-primary p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+          <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold  bg-primary p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
             <FaCakeCandles className="ml-4 size-12 h-24 text-gold" />
             <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
             <div className="hyphens-auto p-4 text-left text-gold">
@@ -356,7 +356,7 @@ function Rewards() {
             </div>
           </div>
 
-          <div className="baseVertFlex border-b-borderGold border-t-borderGold m-4 w-72 !items-start gap-2 rounded-sm border-y-4 bg-primary p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+          <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold  bg-primary p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
             <LuCalendarClock className="ml-2 size-14 h-24 text-gold" />
             <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
             <div className="hyphens-auto p-4 text-left text-gold">
@@ -429,21 +429,21 @@ function Rewards() {
         </div>
 
         <div className="baseVertFlex gap-8 tablet:!flex-row">
-          <div className="border-b-borderGold border-t-borderGold to-darkPrimary baseVertFlex max-w-72 gap-4 rounded-sm border-y-4 bg-gradient-to-br from-primary !p-4 shadow-lg tablet:h-36 tablet:w-96">
+          <div className="baseVertFlex max-w-72 gap-4 rounded-sm border-y-4 border-b-borderGold border-t-borderGold bg-gradient-to-br from-primary to-darkPrimary !p-4 shadow-lg tablet:h-36 tablet:w-96">
             <FaRedo className="size-6 text-gold" />
             <div className="text-center text-sm text-gold sm:text-base">
               Effortless one-tap reordering of your previous orders.
             </div>
           </div>
 
-          <div className="border-b-borderGold border-t-borderGold to-darkPrimary baseVertFlex max-w-72 gap-2 rounded-sm border-y-4 bg-gradient-to-br from-primary !p-4 shadow-lg tablet:h-36 tablet:w-96">
+          <div className="baseVertFlex max-w-72 gap-2 rounded-sm border-y-4 border-b-borderGold border-t-borderGold bg-gradient-to-br from-primary to-darkPrimary !p-4 shadow-lg tablet:h-36 tablet:w-96">
             <IoMdHeart className="size-8 text-gold" />
             <div className="text-center text-sm text-gold sm:text-base tablet:max-w-64">
               Favorite your most loved dishes for quick and easy access.
             </div>
           </div>
 
-          <div className="border-b-borderGold border-t-borderGold to-darkPrimary baseVertFlex max-w-72 gap-2 rounded-sm border-y-4 bg-gradient-to-br from-primary !p-4 shadow-lg tablet:h-36 tablet:w-96">
+          <div className="baseVertFlex max-w-72 gap-2 rounded-sm border-y-4 border-b-borderGold border-t-borderGold bg-gradient-to-br from-primary to-darkPrimary !p-4 shadow-lg tablet:h-36 tablet:w-96">
             <IoToggle className="size-9 text-gold" />
             <div className="text-center text-sm text-gold sm:text-base tablet:max-w-64">
               Easily add your profile&apos;s dietary preferences to your orders.
@@ -453,7 +453,7 @@ function Rewards() {
       </div>
 
       {/* Join */}
-      <div className="baseVertFlex border-b-borderGold border-t-borderGold mb-16 mt-8 max-w-xl gap-8 border-y-4 !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
+      <div className="baseVertFlex mb-16 mt-8 max-w-xl gap-8 border-y-4 border-b-borderGold border-t-borderGold !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
         <p className="text-center">
           Joining Khue&apos;s Rewards is easy! Simply create an account with us
           and start earning points with every order. Plus, you&apos;ll receive

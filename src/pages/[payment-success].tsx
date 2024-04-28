@@ -69,7 +69,7 @@ function PaymentSuccess({
     >
       <div className="baseVertFlex max-w-80 gap-6 p-4 tablet:max-w-2xl tablet:gap-8 tablet:p-8">
         {/* Testing just this instead of the loading spinner below */}
-        <AnimatedLogo className="size-36" />
+        <AnimatedLogo className="size-24" />
 
         <p className="mt-8 text-center text-lg font-semibold">
           Thank you! Your order has been successfully placed.

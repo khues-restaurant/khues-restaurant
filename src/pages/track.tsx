@@ -483,159 +483,167 @@ function Track() {
                   </p>
                 </div>
 
-                <div
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
-                  }}
-                  className="baseFlex relative h-48 w-full overflow-hidden rounded-md"
-                >
-                  <motion.div
-                    key={"rewardsHeroMobileImageOne"}
-                    initial={{ opacity: 0, y: -125, x: -125 }}
-                    animate={{ opacity: 1, y: 0, x: 0 }}
-                    transition={{
-                      opacity: { duration: 0.2 },
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 20,
-                      delay: 0.5,
+                {/* TODO: eventually implement the point transfer ability if not logged in */}
+                {isSignedIn && (
+                  <div
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
                     }}
-                    className="absolute -left-10 -top-10"
+                    className="baseFlex relative h-48 w-full overflow-hidden rounded-md"
                   >
-                    <Image
-                      src={"/menuItems/sampleImage.webp"}
-                      alt={"TODO: replace with proper alt tag text"}
-                      width={96}
-                      height={96}
-                      className="!relative"
-                    />
-                  </motion.div>
-
-                  <motion.div
-                    key={"rewardsHeroMobileImageTwo"}
-                    initial={{ opacity: 0, y: 125, x: -125 }}
-                    animate={{ opacity: 1, y: 0, x: 0 }}
-                    transition={{
-                      opacity: { duration: 0.2 },
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 20,
-                      delay: 0.75,
-                    }}
-                    className="absolute -bottom-10 -left-10"
-                  >
-                    <Image
-                      src={"/menuItems/sampleImage.webp"}
-                      alt={"TODO: replace with proper alt tag text"}
-                      width={96}
-                      height={96}
-                      className="!relative"
-                    />
-                  </motion.div>
-
-                  <div className="baseVertFlex bg-offwhite z-10 gap-4 rounded-md px-8 py-4 text-yellow-500 shadow-lg">
-                    <div className="text-center text-lg font-semibold">
-                      Khue&apos;s Rewards
-                    </div>
-
-                    <div className="baseFlex gap-4 font-bold tracking-wider">
-                      <SideAccentSwirls className="h-6 scale-x-[-1] fill-yellow-500" />
-                      <div className="baseVertFlex">
-                        <AnimatedNumbers
-                          value={rewardsPointsEarned}
-                          fontSize={viewportLabel.includes("mobile") ? 22 : 28}
-                          padding={0}
-                        />
-                        <p className="font-semibold tracking-normal">points</p>
-                      </div>
-                      <SideAccentSwirls className="h-6 fill-yellow-500" />
-                    </div>
-
-                    <div
-                      className={`baseVertFlex w-full text-sm text-yellow-500`}
+                    <motion.div
+                      key={"rewardsHeroMobileImageOne"}
+                      initial={{ opacity: 0, y: -125, x: -125 }}
+                      animate={{ opacity: 1, y: 0, x: 0 }}
+                      transition={{
+                        opacity: { duration: 0.2 },
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 20,
+                        delay: 0.5,
+                      }}
+                      className="absolute -left-10 -top-10"
                     >
-                      {isSignedIn ? (
-                        <>
-                          <div className="baseFlex gap-1">
-                            You earned
-                            <div className="font-bold">
-                              <AnimatedNumbers
-                                value={
-                                  rewardsPointsEarned - order.prevRewardsPoints
-                                }
-                                fontSize={
-                                  viewportLabel.includes("mobile") ? 14 : 16
-                                }
-                                padding={0}
-                              />
-                            </div>
-                            points for this order.
-                          </div>
-                        </>
-                      ) : (
-                        <div className="baseVertFlex mt-2 gap-4">
-                          <SignInButton
-                            mode="modal"
-                            afterSignUpUrl={`${
-                              process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                            }`}
-                            afterSignInUrl={`${
-                              process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                            }${asPath}`}
-                          >
-                            <Button variant={"rewards"}>Sign in</Button>
-                          </SignInButton>
-                          to redeem your points for this order.
+                      <Image
+                        src={"/menuItems/sampleImage.webp"}
+                        alt={"TODO: replace with proper alt tag text"}
+                        width={96}
+                        height={96}
+                        className="!relative"
+                      />
+                    </motion.div>
+
+                    <motion.div
+                      key={"rewardsHeroMobileImageTwo"}
+                      initial={{ opacity: 0, y: 125, x: -125 }}
+                      animate={{ opacity: 1, y: 0, x: 0 }}
+                      transition={{
+                        opacity: { duration: 0.2 },
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 20,
+                        delay: 0.75,
+                      }}
+                      className="absolute -bottom-10 -left-10"
+                    >
+                      <Image
+                        src={"/menuItems/sampleImage.webp"}
+                        alt={"TODO: replace with proper alt tag text"}
+                        width={96}
+                        height={96}
+                        className="!relative"
+                      />
+                    </motion.div>
+
+                    <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-yellow-500 shadow-lg">
+                      <div className="text-center text-lg font-semibold">
+                        Khue&apos;s Rewards
+                      </div>
+
+                      <div className="baseFlex gap-4 font-bold tracking-wider">
+                        <SideAccentSwirls className="h-6 scale-x-[-1] fill-yellow-500" />
+                        <div className="baseVertFlex">
+                          <AnimatedNumbers
+                            value={rewardsPointsEarned}
+                            fontSize={
+                              viewportLabel.includes("mobile") ? 22 : 28
+                            }
+                            padding={0}
+                          />
+                          <p className="font-semibold tracking-normal">
+                            points
+                          </p>
                         </div>
-                      )}
+                        <SideAccentSwirls className="h-6 fill-yellow-500" />
+                      </div>
+
+                      <div
+                        className={`baseVertFlex w-full text-sm text-yellow-500`}
+                      >
+                        {isSignedIn ? (
+                          <>
+                            <div className="baseFlex gap-1">
+                              You earned
+                              <div className="font-bold">
+                                <AnimatedNumbers
+                                  value={
+                                    rewardsPointsEarned -
+                                    order.prevRewardsPoints
+                                  }
+                                  fontSize={
+                                    viewportLabel.includes("mobile") ? 14 : 16
+                                  }
+                                  padding={0}
+                                />
+                              </div>
+                              points for this order.
+                            </div>
+                          </>
+                        ) : (
+                          <div className="baseVertFlex mt-2 gap-4">
+                            <SignInButton
+                              mode="modal"
+                              afterSignUpUrl={`${
+                                process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
+                              }`}
+                              afterSignInUrl={`${
+                                process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
+                              }${asPath}`}
+                            >
+                              <Button variant={"rewards"}>Sign in</Button>
+                            </SignInButton>
+                            to redeem your points for this order.
+                          </div>
+                        )}
+                      </div>
                     </div>
+
+                    <motion.div
+                      key={"rewardsHeroMobileImageThree"}
+                      initial={{ opacity: 0, y: -125, x: 125 }}
+                      animate={{ opacity: 1, y: 0, x: 0 }}
+                      transition={{
+                        opacity: { duration: 0.2 },
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 20,
+                        delay: 0.95,
+                      }}
+                      className="absolute -right-10 -top-10"
+                    >
+                      <Image
+                        src={"/menuItems/sampleImage.webp"}
+                        alt={"TODO: replace with proper alt tag text"}
+                        width={96}
+                        height={96}
+                        className="!relative"
+                      />
+                    </motion.div>
+
+                    <motion.div
+                      key={"rewardsHeroMobileImageFour"}
+                      initial={{ opacity: 0, y: 125, x: 125 }}
+                      animate={{ opacity: 1, y: 0, x: 0 }}
+                      transition={{
+                        opacity: { duration: 0.2 },
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 20,
+                        delay: 0.6,
+                      }}
+                      className="absolute -bottom-10 -right-10"
+                    >
+                      <Image
+                        src={"/menuItems/sampleImage.webp"}
+                        alt={"TODO: replace with proper alt tag text"}
+                        width={96}
+                        height={96}
+                        className="!relative"
+                      />
+                    </motion.div>
                   </div>
-
-                  <motion.div
-                    key={"rewardsHeroMobileImageThree"}
-                    initial={{ opacity: 0, y: -125, x: 125 }}
-                    animate={{ opacity: 1, y: 0, x: 0 }}
-                    transition={{
-                      opacity: { duration: 0.2 },
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 20,
-                      delay: 0.95,
-                    }}
-                    className="absolute -right-10 -top-10"
-                  >
-                    <Image
-                      src={"/menuItems/sampleImage.webp"}
-                      alt={"TODO: replace with proper alt tag text"}
-                      width={96}
-                      height={96}
-                      className="!relative"
-                    />
-                  </motion.div>
-
-                  <motion.div
-                    key={"rewardsHeroMobileImageFour"}
-                    initial={{ opacity: 0, y: 125, x: 125 }}
-                    animate={{ opacity: 1, y: 0, x: 0 }}
-                    transition={{
-                      opacity: { duration: 0.2 },
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 20,
-                      delay: 0.6,
-                    }}
-                    className="absolute -bottom-10 -right-10"
-                  >
-                    <Image
-                      src={"/menuItems/sampleImage.webp"}
-                      alt={"TODO: replace with proper alt tag text"}
-                      width={96}
-                      height={96}
-                      className="!relative"
-                    />
-                  </motion.div>
-                </div>
+                )}
               </div>
 
               <div className="baseFlex tablet:w-[500px]">
@@ -694,22 +702,22 @@ function Step({
         initial={false}
         variants={{
           notStarted: {
-            backgroundColor: "#fff", // neutral
+            backgroundColor: "#fffcf5", // offwhite
             borderColor: "#e5e5e5", // neutral-200
             color: "#a3a3a3", // neutral-400
           },
           inProgress: {
-            backgroundColor: "#fff",
-            borderColor: "#dc3727", //  bg-primary
-            color: "#dc3727", //  bg-primary
+            backgroundColor: "#fffcf5", // offwhite
+            borderColor: "#14522d", //  bg-primary
+            color: "#14522d", //  bg-primary
             transition: {
               delay: 2,
             },
           },
           completed: {
-            backgroundColor: "#dc3727", //  bg-primary
-            borderColor: "#dc3727", //  bg-primary
-            color: "#dc3727", //  bg-primary
+            backgroundColor: "#14522d", //  bg-primary
+            borderColor: "#14522d", //  bg-primary
+            color: "#14522d", //  bg-primary
           },
         }}
         transition={{ duration: 0.2, delay, ease: "easeOut" }}
@@ -723,7 +731,7 @@ function Step({
               transition={{ duration: 0.2, ease: "easeOut" }}
               className="baseFlex"
             >
-              <CheckIcon className="text-offwhite h-6 w-6" />
+              <CheckIcon className="h-6 w-6 text-offwhite" />
             </motion.div>
           ) : statusBeingShown === "inProgress" ? (
             <motion.span

@@ -27,7 +27,7 @@ const buttonVariants = cva(
         activeLink: "activeUnderline text-primary font-semibold",
         underline: "text-primary underline underline-offset-2",
         text: "text-neutral-400",
-        rewards: "text-offwhite", // idk white text on this yellow gradient is a bit of a problem... fallback would probably be yellow-800 or something
+        rewards: "text-offwhite bg-gradient-to-br from-gold to-borderGold", // idk white text on this yellow gradient is a bit of a problem... fallback would probably be yellow-800 or something
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -100,10 +100,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         onPointerLeave={() => setBrightness(1)}
         style={{
           filter: `brightness(${brightness}`,
-          background:
-            variant === "rewards"
-              ? "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)"
-              : "",
+          // background:
+          //   variant === "rewards"
+          //     ? "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)"
+          //     : "",
         }}
         className={cn(
           buttonVariants({ variant, size, className }),
