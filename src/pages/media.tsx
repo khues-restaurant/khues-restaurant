@@ -32,25 +32,27 @@ function Media() {
 
       <div className="relative grid w-80 grid-cols-1 gap-8 py-16 tablet:w-[900px] tablet:grid-cols-2 tablet:gap-16">
         <div className="baseVertFlex h-min w-full !justify-start rounded-md border-2 border-primary shadow-md">
-          <div className="baseVertFlex relative w-full bg-primary">
-            <Image
-              src="/media/kare11InTheKitchen.jpg"
-              alt="TODO"
-              // width={200}
-              // height={85}
-              fill
-              sizes="(min-width: 1000px) 400px, 320px"
-              className="!relative rounded-t-sm bg-offwhite"
-            />
+          <div className="baseVertFlex relative w-full bg-primary shadow-md">
+            <a
+              href="https://www.kare11.com/video/life/food/recipes/kare-in-the-kitchen-fried-chicken-sandwiches-with-eric-pham-from-khues-kitchen/89-ad173b59-cea7-4fdf-b05a-3711b8c97553"
+              className="relative size-full"
+            >
+              <Image
+                src="/media/kare11InTheKitchen.jpg"
+                alt="TODO"
+                fill
+                sizes="(min-width: 1000px) 400px, 320px"
+                className="!relative rounded-t-sm bg-offwhite transition-all hover:brightness-90 active:brightness-75"
+              />
+            </a>
           </div>
 
           <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
             <Image
-              src="/press/StarTribune.png"
+              src="/media/karetest.png"
               alt="TODO"
-              width={200}
-              height={85}
-              className="mb-4"
+              width={70}
+              height={35}
             />
             <p className="text-lg font-semibold">
               KARE in the Kitchen: Fried chicken sandwiches with Eric Pham from
@@ -61,7 +63,9 @@ function Media() {
             11&apos;s Jennifer Austin.&quot;
             <div className="baseFlex mt-2 w-full !justify-between">
               <Button variant={"link"} className="h-8 !p-0" asChild>
-                <a href="https://www.startribune.com/">Read more</a>
+                <a href="https://www.kare11.com/video/life/food/recipes/kare-in-the-kitchen-fried-chicken-sandwiches-with-eric-pham-from-khues-kitchen/89-ad173b59-cea7-4fdf-b05a-3711b8c97553">
+                  Read more
+                </a>
               </Button>
               <p className="text-sm italic text-stone-400">8/13/2022</p>
             </div>
@@ -69,25 +73,27 @@ function Media() {
         </div>
 
         <div className="baseVertFlex h-min w-full !justify-start rounded-md border-2 border-primary shadow-md">
-          <div className="baseVertFlex relative w-full bg-primary">
-            <Image
-              src="/media/kare11MothersDay.jpg"
-              alt="TODO"
-              // width={200}
-              // height={85}
-              fill
-              sizes="(min-width: 1000px) 400px, 320px"
-              className="!relative rounded-t-sm bg-offwhite"
-            />
+          <div className="baseVertFlex relative w-full bg-primary shadow-md">
+            <a
+              href="https://www.kare11.com/article/news/local/mpls-chef-credits-his-mom-for-inspiration/89-0f237053-85cf-48ae-96f7-8cbebb780555"
+              className="relative size-full"
+            >
+              <Image
+                src="/media/kare11MothersDay.jpg"
+                alt="TODO"
+                fill
+                sizes="(min-width: 1000px) 400px, 320px"
+                className="!relative rounded-t-sm bg-offwhite transition-all hover:brightness-90 active:brightness-75"
+              />
+            </a>
           </div>
 
           <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
             <Image
-              src="/press/StarTribune.png"
+              src="/media/karetest.png"
               alt="TODO"
-              width={200}
-              height={85}
-              className="mb-4"
+              width={70}
+              height={35}
             />
             <p className="text-lg font-semibold">
               Minneapolis chef credits his mom for inspiration
@@ -99,7 +105,9 @@ function Media() {
             Vietnam War...&quot;
             <div className="baseFlex mt-2 w-full !justify-between">
               <Button variant={"link"} className="h-8 !p-0" asChild>
-                <a href="https://www.startribune.com/">Read more</a>
+                <a href="https://www.kare11.com/article/news/local/mpls-chef-credits-his-mom-for-inspiration/89-0f237053-85cf-48ae-96f7-8cbebb780555">
+                  Read more
+                </a>
               </Button>
               <p className="text-sm italic text-stone-400">10/14/2023</p>
             </div>
@@ -107,25 +115,28 @@ function Media() {
         </div>
 
         <div className="baseVertFlex h-min w-full !justify-start rounded-md border-2 border-primary shadow-md">
-          <div className="baseVertFlex relative w-full bg-primary">
-            <Image
-              src="/media/starTribune.jpg"
-              alt="TODO"
-              // width={200}
-              // height={85}
-              fill
-              sizes="(min-width: 1000px) 400px, 320px"
-              className="!relative rounded-t-sm bg-offwhite"
-            />
+          <div className="baseVertFlex relative w-full bg-primary shadow-md">
+            <a
+              href="https://www.startribune.com/how-these-moms-shaped-the-next-generation-of-great-twin-cities-restaurateurs/600273728/?refresh=true"
+              className="relative size-full"
+            >
+              <Image
+                src="/media/starTribune.jpg"
+                alt="TODO"
+                fill
+                sizes="(min-width: 1000px) 400px, 320px"
+                className="!relative rounded-t-sm bg-offwhite transition-all hover:brightness-90 active:brightness-75"
+              />
+            </a>
           </div>
 
           <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
             <Image
               src="/press/StarTribune.png"
               alt="TODO"
-              width={200}
-              height={85}
-              className="mb-4"
+              width={150}
+              height={35}
+              className="-ml-3 mb-4"
             />
             <p className="text-lg font-semibold">
               These 4 Twin Cities area restaurateurs learned from the best: Mom
@@ -139,7 +150,9 @@ function Media() {
             I couldn&apos;t drive,&rdquo; said Khue. She and her...&quot;
             <div className="baseFlex mt-2 w-full !justify-between">
               <Button variant={"link"} className="h-8 !p-0" asChild>
-                <a href="https://www.startribune.com/">Read more</a>
+                <a href="https://www.startribune.com/how-these-moms-shaped-the-next-generation-of-great-twin-cities-restaurateurs/600273728/?refresh=true">
+                  Read more
+                </a>
               </Button>
               <p className="text-sm italic text-stone-400">10/10/2023</p>
             </div>
@@ -147,25 +160,28 @@ function Media() {
         </div>
 
         <div className="baseVertFlex h-min w-full !justify-start rounded-md border-2 border-primary shadow-md">
-          <div className="baseVertFlex relative w-full bg-primary">
-            <Image
-              src="/media/mpr.jpg"
-              alt="TODO"
-              // width={200}
-              // height={85}
-              fill
-              sizes="(min-width: 1000px) 400px, 320px"
-              className="!relative rounded-t-sm bg-offwhite"
-            />
+          <div className="baseVertFlex relative w-full bg-primary shadow-md">
+            <a
+              href="https://www.mprnews.org/story/2023/12/27/appetites-looks-back-on-2023-restaurants-vietnamese-meatballs-and-the-secret-to-entertaining"
+              className="relative size-full"
+            >
+              <Image
+                src="/media/mpr.jpg"
+                alt="TODO"
+                fill
+                sizes="(min-width: 1000px) 400px, 320px"
+                className="!relative rounded-t-sm bg-offwhite transition-all hover:brightness-90 active:brightness-75"
+              />
+            </a>
           </div>
 
           <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
             <Image
-              src="/press/StarTribune.png"
+              src="/media/mprLogo.png"
               alt="TODO"
-              width={200}
+              width={110}
               height={85}
-              className="mb-4"
+              className="mb-3"
             />
             <p className="text-lg font-semibold">
               Eric Pham of the Quang Restaurant family
@@ -177,7 +193,9 @@ function Media() {
             mại, Vietnamese meatball sandwiches.&quot;
             <div className="baseFlex mt-2 w-full !justify-between">
               <Button variant={"link"} className="h-8 !p-0" asChild>
-                <a href="https://www.startribune.com/">Read more</a>
+                <a href="https://www.mprnews.org/story/2023/12/27/appetites-looks-back-on-2023-restaurants-vietnamese-meatballs-and-the-secret-to-entertaining">
+                  Read more
+                </a>
               </Button>
               <p className="text-sm italic text-stone-400">12/27/2023</p>
             </div>
