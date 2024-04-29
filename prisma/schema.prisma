@@ -109,6 +109,7 @@ model MenuItem {
     activeDiscountId String?
 
     isAlcoholic  Boolean @default(false)
+    isVegetarian Boolean @default(false)
     isRewardItem Boolean @default(false)
     chefsChoice  Boolean @default(false)
     reviews      String? // max three hand-picked reviews, separated/delimited by " | "
@@ -155,6 +156,12 @@ model TransientOrder {
     userId  String @unique // not related to User model so that customers can still place order as a guest
 }
 
+// BTW, if you come back to this and wonder why we have so much "duplicate" information on below Order
+// models, there is some crossover for sure, but I think keeping them separate is the best way to go
+// especially if menu items change, or discounts change, etc. This way we can keep a record of what was
+// ordered at the time of the order for historical purposes. Also, it makes it easier to track down
+// what was ordered if a menu item is deleted or changed in the future.
+
 model OrderItem {
     id                         String  @id @default(uuid())
     name                       String
@@ -173,7 +180,8 @@ model OrderItem {
     discount   Discount? @relation(fields: [discountId], references: [id])
     discountId String?
 
-    isAlcoholic Boolean @default(false) // technically this shouldn't have a default but I don't think it is high priority
+    isAlcoholic  Boolean @default(false) // technically this shouldn't have a default but I don't think it is high priority
+    isVegetarian Boolean @default(false)
 
     pointReward    Boolean @default(false)
     birthdayReward Boolean @default(false)
@@ -230,7 +238,16 @@ model Order {
     reviews Review[] // these are just the direct reviews on the order, so that the dashboard can show the user's order
     // alongside their feedback. This isn't to be confused with the to be made "MenuItemReview" model
 
-    reward Reward[]
+    reward          Reward[]
+    orderPrintQueue OrderPrintQueue[]
+}
+
+model OrderPrintQueue {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+
+    order   Order  @relation(fields: [orderId], references: [id])
+    orderId String
 }
 
 model Reward {

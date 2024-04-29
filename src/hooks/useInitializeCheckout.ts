@@ -1,6 +1,6 @@
 import { useAuth } from "@clerk/nextjs";
 import { loadStripe, type Stripe } from "@stripe/stripe-js";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import useGetUserId from "~/hooks/useGetUserId";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
@@ -33,6 +33,8 @@ function useInitializeCheckout() {
       setValidatingCart: state.setValidatingCart,
       setItemNamesRemovedFromCart: state.setItemNamesRemovedFromCart,
     }));
+
+  const [pickupName, setPickupName] = useState("");
 
   const { updateOrder } = useUpdateOrder();
 
@@ -79,6 +81,7 @@ function useInitializeCheckout() {
       userId,
       stripeUserId: user?.stripeUserId,
       orderDetails,
+      pickupName,
     });
     const stripe = await stripePromise;
 
@@ -91,8 +94,9 @@ function useInitializeCheckout() {
     }
   }
 
-  async function initializeCheckout() {
+  async function initializeCheckout(pickupName: string) {
     setValidatingCart(true);
+    setPickupName(pickupName);
     validateOrder({ userId, orderDetails });
   }
 

@@ -61,6 +61,7 @@ import { isAbleToRenderASAPTimeSlot } from "~/utils/isAbleToRenderASAPTimeSlot";
 import Image from "next/image";
 import { TbLocation } from "react-icons/tb";
 import { Separator } from "~/components/ui/separator";
+import { Input } from "~/components/ui/input";
 
 interface OrderCost {
   subtotal: number;
@@ -73,6 +74,8 @@ interface CartDrawer {
   setItemBeingModified: Dispatch<SetStateAction<FullMenuItem | null>>;
   setInitialItemState: Dispatch<SetStateAction<Item | undefined>>;
   setShowRewardsDrawer: Dispatch<SetStateAction<boolean>>;
+  pickupName: string;
+  setPickupName: Dispatch<SetStateAction<string>>;
 }
 
 function CartDrawer({
@@ -82,6 +85,8 @@ function CartDrawer({
   setItemBeingModified,
   setInitialItemState,
   setShowRewardsDrawer,
+  pickupName,
+  setPickupName,
 }: CartDrawer) {
   const { isSignedIn } = useAuth();
   const userId = useGetUserId();
@@ -211,6 +216,9 @@ function CartDrawer({
             "Available pickup times have changed. Please select a new time.",
         },
       ),
+    pickupName: z.string().min(1, {
+      message: "Pickup name must be specified",
+    }),
   });
 
   const mainForm = useForm<z.infer<typeof mainFormSchema>>({
@@ -220,6 +228,7 @@ function CartDrawer({
       timeToPickUp: orderDetails.isASAP
         ? "ASAP (~20 mins)"
         : getHoursAndMinutesFromDate(orderDetails.datetimeToPickUp),
+      pickupName,
     },
   });
 
@@ -277,6 +286,20 @@ function CartDrawer({
       subscription.unsubscribe();
     };
   }, [mainForm, orderDetails, updateOrder]);
+
+  // pickupName form field
+  useEffect(() => {
+    // technically don't want/need to be watching the whole form for this
+    const subscription = mainForm.watch((value) => {
+      if (typeof value.pickupName !== "string") return;
+
+      setPickupName(value.pickupName);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [mainForm, setPickupName]);
 
   useEffect(() => {
     if (showOnlyAlcoholicItemsError) {
@@ -336,7 +359,7 @@ function CartDrawer({
 
     setCheckoutButtonText("Loading");
 
-    await initializeCheckout(); // TODO: await or void or what here
+    await initializeCheckout(values.pickupName); // TODO: await or void or what here
   }
 
   return (
@@ -494,6 +517,39 @@ function CartDrawer({
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={mainForm.control}
+              name="pickupName"
+              render={({ field, fieldState: { invalid } }) => (
+                <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+                  <div className="baseFlex gap-2">
+                    <FormLabel className="text-nowrap font-semibold">
+                      Pickup name
+                    </FormLabel>
+                    <Input
+                      {...field}
+                      placeholder="John Smith"
+                      className="w-[200px]"
+                    />
+                  </div>
+                  <AnimatePresence>
+                    {invalid && (
+                      <motion.div
+                        key={"pickupNameError"}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.2 }}
+                        // className="absolute -bottom-6 left-0 right-0"
+                      >
+                        <FormMessage />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </FormItem>
+              )}
+            />
           </form>
         </Form>
       </div>
@@ -533,7 +589,7 @@ function CartDrawer({
                   Your order has been modified.
                 </p>
 
-                <p classname="italic">
+                <p className="italic">
                   {itemNamesRemovedFromCart.length > 1
                     ? "These items are"
                     : "This item is"}{" "}

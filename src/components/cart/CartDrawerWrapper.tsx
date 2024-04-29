@@ -10,10 +10,14 @@ import { type Item } from "~/stores/MainStore";
 interface CartDrawerWrapper {
   showCartDrawer: boolean;
   setShowCartDrawer: Dispatch<SetStateAction<boolean>>;
+  pickupName: string;
+  setPickupName: Dispatch<SetStateAction<string>>;
 }
 function CartDrawerWrapper({
   showCartDrawer,
   setShowCartDrawer,
+  pickupName,
+  setPickupName,
 }: CartDrawerWrapper) {
   const [itemBeingModified, setItemBeingModified] =
     useState<FullMenuItem | null>(null);
@@ -60,6 +64,8 @@ function CartDrawerWrapper({
                   setItemBeingModified={setItemBeingModified}
                   setInitialItemState={setInitialItemState}
                   setShowRewardsDrawer={setShowRewardsDrawer}
+                  pickupName={pickupName}
+                  setPickupName={setPickupName}
                 />
               </motion.div>
             )}

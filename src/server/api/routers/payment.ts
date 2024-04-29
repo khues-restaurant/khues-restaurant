@@ -25,6 +25,7 @@ export const paymentRouter = createTRPCRouter({
         userId: z.string().min(1).max(100),
         stripeUserId: z.string().min(1).max(100).optional(),
         orderDetails: orderDetailsSchema,
+        pickupName: z.string().min(1).max(100),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -247,6 +248,7 @@ export const paymentRouter = createTRPCRouter({
 
         metadata: {
           userId: input.userId,
+          pickupName: input.pickupName,
         },
 
         success_url: `${env.BASE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}&userId=${input.userId}`,

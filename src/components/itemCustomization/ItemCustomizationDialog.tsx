@@ -161,6 +161,7 @@ function ItemCustomizerDialogContent({
       itemId: itemToCustomize.id,
       discountId: itemToCustomize.activeDiscountId,
       isAlcoholic: itemToCustomize.isAlcoholic,
+      isVegetarian: itemToCustomize.isVegetarian,
       pointReward: false,
       birthdayReward: false,
     },
@@ -772,6 +773,7 @@ function SuggestedPairing({
     itemId: item.id,
     discountId: item.activeDiscountId,
     isAlcoholic: item.isAlcoholic,
+    isVegetarian: item.isVegetarian,
     pointReward: false,
     birthdayReward: false,
   };

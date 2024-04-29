@@ -1,23 +1,46 @@
+import { useAuth } from "@clerk/nextjs";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import CartDrawerWrapper from "~/components/cart/CartDrawerWrapper";
 import CartSheetWrapper from "~/components/cart/CartSheetWrapper";
 import { Button } from "~/components/ui/button";
 import { useToast } from "~/components/ui/use-toast";
+import useGetUserId from "~/hooks/useGetUserId";
 import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import { useMainStore } from "~/stores/MainStore";
+import { api } from "~/utils/api";
 
 function CartButton() {
+  const userId = useGetUserId();
+
+  const { isSignedIn } = useAuth();
+
   const { orderDetails, cartInitiallyValidated } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
     cartInitiallyValidated: state.cartInitiallyValidated,
   }));
 
+  const { data: user } = api.user.get.useQuery(userId, {
+    enabled: Boolean(userId && isSignedIn),
+  });
+
   const [showCartDrawer, setShowCartDrawer] = useState(false);
   const [showCartSheet, setShowCartSheet] = useState(false);
+
+  // was planning on having this be on orderDetails object, but feels flaky
+  // to implement workaround for if user hits "undo" button (it will reset field to
+  // an empty string, which would not be expected for the user)
+  const [pickupName, setPickupName] = useState("");
+
+  useEffect(() => {
+    if (user && !cartInitiallyValidated && pickupName === "") {
+      // set pickup name to user's name in db
+      setPickupName(`${user.firstName} ${user.lastName}`);
+    }
+  }, [cartInitiallyValidated, pickupName, user]);
 
   const viewportLabel = useGetViewportLabel();
 
@@ -68,7 +91,7 @@ function CartButton() {
                       delay: 0.35,
                       ease: "easeOut",
                     }}
-                    className={`text-offwhite absolute rounded-full bg-primary px-2 py-0.5 ${totalItems < 10 ? " -right-2 -top-2" : "-right-3 -top-3"}`}
+                    className={`absolute rounded-full bg-primary px-2 py-0.5 text-offwhite ${totalItems < 10 ? " -right-2 -top-2" : "-right-3 -top-3"}`}
                   >
                     <AnimatedNumbers
                       value={totalItems}
@@ -100,11 +123,15 @@ function CartButton() {
         <CartDrawerWrapper
           showCartDrawer={showCartDrawer}
           setShowCartDrawer={setShowCartDrawer}
+          pickupName={pickupName}
+          setPickupName={setPickupName}
         />
       ) : (
         <CartSheetWrapper
           showCartSheet={showCartSheet}
           setShowCartSheet={setShowCartSheet}
+          pickupName={pickupName}
+          setPickupName={setPickupName}
         />
       )}
     </>

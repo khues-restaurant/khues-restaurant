@@ -452,6 +452,7 @@ function RewardMenuItem({
                     price: menuItem.price,
                     discountId: null,
                     isAlcoholic: menuItem.isAlcoholic,
+                    isVegetarian: menuItem.isVegetarian,
                     birthdayReward: forBirthdayReward,
                     pointReward: !forBirthdayReward,
                   },

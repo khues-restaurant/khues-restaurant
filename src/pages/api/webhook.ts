@@ -79,7 +79,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       try {
         const { firstName, lastName } = splitFullName(
-          payment.customer_details?.name ?? "",
+          payment.metadata.pickupName ?? payment.customer_details?.name ?? "",
         );
 
         const customerDetails = {
@@ -111,7 +111,13 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
-      if (user) {
+      // falling back to db first and last name if not provided/able to be extracted
+      // by splitting the name
+      if (
+        user &&
+        customerMetadata.firstName === "" &&
+        customerMetadata.lastName === ""
+      ) {
         customerMetadata.firstName = user.firstName;
         customerMetadata.lastName = user.lastName;
       }

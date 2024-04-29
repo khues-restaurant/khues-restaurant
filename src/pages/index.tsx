@@ -338,7 +338,7 @@ export default function Home() {
         <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md tablet:hidden">
           {/* maybe have stock image of person holding a phone and you would have a proportionally
                 tilted screenshot of the order page showing on their phone? think about it */}
-          <div className="relative h-60 w-full overflow-hidden rounded-t-md">
+          <div className="relative h-60 w-full overflow-hidden rounded-t-md shadow-md">
             <Image
               src={"/rewardsPromo.jpg"}
               alt={"TODO: fill in w/ appropriate alt text"}
@@ -349,23 +349,23 @@ export default function Home() {
               className="!relative !top-0 !size-full !h-96 rounded-md !pb-32"
             />
           </div>
-          <div className="baseVertFlex gap-4 p-4">
+          <div className="baseVertFlex gap-4 bg-gradient-to-br from-offwhite to-primary/10 p-4">
             <p className="text-lg font-medium">
-              Order directly through us to receive mouthwatering benefits
+              Enjoy exclusive benefits when you order direct
             </p>
             <div className="baseVertFlex !items-start gap-4 pl-4">
-              <div className="baseFlex gap-4">
+              <div className="baseFlex !items-start gap-4">
                 <MdOutlineMoneyOff className="size-6 shrink-0" />
-                <p>Shop our lowest prices</p>
+                <p>Shop our lowest menu prices</p>
               </div>
-              <div className="baseFlex gap-4">
-                <BsSpeedometer2 className="size-6 shrink-0" />
+              <div className="baseFlex !items-start gap-4">
+                <BsSpeedometer2 className="mt-2 size-6 shrink-0" />
                 <p>
-                  Priority service: Your orders jump to the front of the line
+                  Priority order processing over third-party delivery services
                 </p>
               </div>
-              <div className="baseFlex gap-4">
-                <TfiReceipt className="size-6 shrink-0" />
+              <div className="baseFlex !items-start gap-4">
+                <TfiReceipt className="mt-2 size-6 shrink-0" />
                 <p>
                   Rewards members earn points towards free meals with every
                   order
@@ -382,19 +382,19 @@ export default function Home() {
         </div>
 
         <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
-          <div className="baseVertFlex gap-4 p-4">
+          <div className="baseVertFlex !items-start gap-4 p-4">
             <p className="text-lg font-medium">
-              Order directly through us to receive mouthwatering benefits
+              Enjoy exclusive benefits when you order direct
             </p>
-            <div className="baseVertFlex !items-start gap-4 pl-6">
+            <div className="baseVertFlex !items-start gap-4">
               <div className="baseFlex gap-4">
                 <MdOutlineMoneyOff className="size-6 shrink-0" />
-                <p>Shop our lowest prices</p>
+                <p>Shop our lowest menu prices</p>
               </div>
               <div className="baseFlex gap-4">
                 <BsSpeedometer2 className="size-6 shrink-0" />
                 <p>
-                  Priority service: Your orders jump to the front of the line
+                  Priority order processing over third-party delivery services
                 </p>
               </div>
               <div className="baseFlex gap-4">

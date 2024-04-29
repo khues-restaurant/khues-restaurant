@@ -61,6 +61,7 @@ import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
 import { selectedDateIsToday } from "~/utils/selectedDateIsToday";
 import { cn } from "~/utils/shadcnuiUtils";
 import { Separator } from "~/components/ui/separator";
+import { Input } from "~/components/ui/input";
 
 interface OrderCost {
   subtotal: number;
@@ -74,6 +75,8 @@ interface CartSheet {
   setInitialItemState: Dispatch<SetStateAction<Item | undefined>>;
   setIsEditingItem: Dispatch<SetStateAction<boolean>>;
   setShowRewardsDialog: Dispatch<SetStateAction<boolean>>;
+  pickupName: string;
+  setPickupName: Dispatch<SetStateAction<string>>;
 }
 
 function CartSheet({
@@ -82,6 +85,8 @@ function CartSheet({
   setInitialItemState,
   setIsEditingItem,
   setShowRewardsDialog,
+  pickupName,
+  setPickupName,
 }: CartSheet) {
   const { isSignedIn } = useAuth();
   const userId = useGetUserId();
@@ -211,6 +216,9 @@ function CartSheet({
             "Available pickup times have changed. Please select a new time.",
         },
       ),
+    pickupName: z.string().min(1, {
+      message: "Pickup name must be specified",
+    }),
   });
 
   const mainForm = useForm<z.infer<typeof mainFormSchema>>({
@@ -220,6 +228,7 @@ function CartSheet({
       timeToPickUp: orderDetails.isASAP
         ? "ASAP (~20 mins)"
         : getHoursAndMinutesFromDate(orderDetails.datetimeToPickUp),
+      pickupName,
     },
   });
 
@@ -277,6 +286,20 @@ function CartSheet({
       subscription.unsubscribe();
     };
   }, [mainForm, orderDetails, updateOrder]);
+
+  // pickupName form field
+  useEffect(() => {
+    // technically don't want/need to be watching the whole form for this
+    const subscription = mainForm.watch((value) => {
+      if (typeof value.pickupName !== "string") return;
+
+      setPickupName(value.pickupName);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [mainForm, setPickupName]);
 
   useEffect(() => {
     if (showOnlyAlcoholicItemsError) {
@@ -336,7 +359,7 @@ function CartSheet({
 
     setCheckoutButtonText("Loading");
 
-    await initializeCheckout(); // TODO: await or void or what here
+    await initializeCheckout(values.pickupName); // TODO: await or void or what here
   }
 
   return (
@@ -369,118 +392,162 @@ function CartSheet({
         </div>
 
         <Form {...mainForm}>
-          <form className="baseFlex mt-2 !items-start gap-2">
-            <FormField
-              control={mainForm.control}
-              name="dateToPickUp"
-              render={({ field, fieldState: { invalid } }) => (
-                <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                  <div className="baseVertFlex !items-start gap-2">
-                    <FormLabel className="font-semibold">Pickup date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-[200px] justify-start text-left font-normal",
-                              !field.value && "text-muted-foreground",
-                            )}
-                          >
-                            <CiCalendarDate className="mr-2 h-5 w-5" />
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Select a date</span>
-                            )}
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          disabled={getDisabledDates()}
-                          selected={field.value}
-                          onSelect={(e) => {
-                            if (e instanceof Date) {
-                              field.onChange(e);
-                            }
-                          }}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                  <AnimatePresence>
-                    {invalid && (
-                      <motion.div
-                        key={"pickupDateError"}
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.2 }}
-                        // className="absolute -bottom-6 left-0 right-0"
-                      >
-                        <FormMessage />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={mainForm.control}
-              name="timeToPickUp"
-              render={({ field, fieldState: { invalid } }) => (
-                <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                  <div className="baseVertFlex !items-start gap-2">
-                    <FormLabel className="font-semibold">Pickup time</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="w-max gap-2 pl-4 pr-2">
-                          <FaRegClock />
-                          <SelectValue
-                            placeholder="Select a time"
-                            className="placeholder:!text-muted-foreground"
+          <form className="baseVertFlex mt-2 !items-start gap-2">
+            <div className="baseFlex !items-start gap-2">
+              <FormField
+                control={mainForm.control}
+                name="dateToPickUp"
+                render={({ field, fieldState: { invalid } }) => (
+                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+                    <div className="baseVertFlex !items-start gap-2">
+                      <FormLabel className="font-semibold">
+                        Pickup date
+                      </FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-[200px] justify-start text-left font-normal",
+                                !field.value && "text-muted-foreground",
+                              )}
+                            >
+                              <CiCalendarDate className="mr-2 h-5 w-5" />
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Select a date</span>
+                              )}
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0">
+                          <Calendar
+                            mode="single"
+                            disabled={getDisabledDates()}
+                            selected={field.value}
+                            onSelect={(e) => {
+                              if (e instanceof Date) {
+                                field.onChange(e);
+                              }
+                            }}
+                            initialFocus
                           />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent
-                        side="bottom"
-                        className={`${
-                          selectedDateIsToday(
-                            mainForm.getValues().dateToPickUp,
-                          ) &&
-                          mainForm.getValues().dateToPickUp.getHours() >= 22
-                            ? ""
-                            : "max-h-[300px]"
-                        }`}
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                    <AnimatePresence>
+                      {invalid && (
+                        <motion.div
+                          key={"pickupDateError"}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          // className="absolute -bottom-6 left-0 right-0"
+                        >
+                          <FormMessage />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={mainForm.control}
+                name="timeToPickUp"
+                render={({ field, fieldState: { invalid } }) => (
+                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+                    <div className="baseVertFlex !items-start gap-2">
+                      <FormLabel className="font-semibold">
+                        Pickup time
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
                       >
-                        <AvailablePickupTimes
-                          selectedDate={mainForm.getValues().dateToPickUp}
-                          minPickupTime={minPickupTime?.value}
-                        />
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <AnimatePresence>
-                    {invalid && (
-                      <motion.div
-                        key={"pickupTimeError"}
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.2 }}
-                        // className="absolute -bottom-6 left-0 right-0"
-                      >
-                        <FormMessage />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </FormItem>
-              )}
-            />
+                        <FormControl>
+                          <SelectTrigger className="w-max gap-2 pl-4 pr-2">
+                            <FaRegClock />
+                            <SelectValue
+                              placeholder="Select a time"
+                              className="placeholder:!text-muted-foreground"
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent
+                          side="bottom"
+                          className={`${
+                            selectedDateIsToday(
+                              mainForm.getValues().dateToPickUp,
+                            ) &&
+                            mainForm.getValues().dateToPickUp.getHours() >= 22
+                              ? ""
+                              : "max-h-[300px]"
+                          }`}
+                        >
+                          <AvailablePickupTimes
+                            selectedDate={mainForm.getValues().dateToPickUp}
+                            minPickupTime={minPickupTime?.value}
+                          />
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <AnimatePresence>
+                      {invalid && (
+                        <motion.div
+                          key={"pickupTimeError"}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          // className="absolute -bottom-6 left-0 right-0"
+                        >
+                          <FormMessage />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="baseFlex !items-start gap-2">
+              <FormField
+                control={mainForm.control}
+                name="pickupName"
+                render={({ field, fieldState: { invalid } }) => (
+                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+                    <div className="baseVertFlex !items-start gap-2">
+                      <FormLabel className="text-nowrap font-semibold">
+                        Pickup name
+                      </FormLabel>
+                      <Input
+                        {...field}
+                        placeholder="John Smith"
+                        className="w-[200px]"
+                      />
+                    </div>
+                    <AnimatePresence>
+                      {invalid && (
+                        <motion.div
+                          key={"pickupNameError"}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          // className="absolute -bottom-6 left-0 right-0"
+                        >
+                          <FormMessage />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </FormItem>
+                )}
+              />
+            </div>
           </form>
         </Form>
       </div>

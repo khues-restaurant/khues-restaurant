@@ -463,7 +463,17 @@ function Track() {
 
               {/* rewards + pickup time + address */}
               <div className="baseVertFlex w-full gap-2">
-                <div className="baseVertFlex w-full !items-start gap-2 tablet:!flex-row tablet:!justify-between tablet:gap-0">
+                {/* mobile */}
+                <div className="baseVertFlex w-full !items-start gap-2 tablet:hidden">
+                  <div className="baseVertFlex !items-start gap-2 text-sm">
+                    <p className="font-semibold underline underline-offset-2">
+                      Pickup name
+                    </p>
+                    <p className="text-sm">
+                      {order.firstName} {order.lastName}
+                    </p>
+                  </div>
+
                   <div className="baseVertFlex !items-start gap-2 text-sm">
                     <p className="font-semibold underline underline-offset-2">
                       Pickup time
@@ -473,7 +483,7 @@ function Track() {
                     </p>
                   </div>
 
-                  <p className="baseVertFlex !items-start gap-2 text-sm tablet:!items-end">
+                  <p className="baseVertFlex !items-start gap-2 text-sm">
                     <p className="font-semibold underline underline-offset-2">
                       Address
                     </p>
@@ -481,6 +491,38 @@ function Track() {
                       1234 Lorem Ipsum Dr. Roseville, MN 12345
                     </Button>
                   </p>
+                </div>
+
+                {/* tablet+ */}
+                <div className="baseVertFlex !hidden w-full !items-start gap-2 tablet:flex">
+                  <div className="baseVertFlex !items-start gap-2 text-sm">
+                    <p className="font-semibold underline underline-offset-2">
+                      Pickup name
+                    </p>
+                    <p className="text-sm">
+                      {order.firstName} {order.lastName}
+                    </p>
+                  </div>
+
+                  <div className="baseFlex w-full !justify-between gap-0">
+                    <div className="baseVertFlex !items-start gap-2 text-sm">
+                      <p className="font-semibold underline underline-offset-2">
+                        Pickup time
+                      </p>
+                      <p className="text-sm">
+                        {format(order.datetimeToPickup, "PPPp")}
+                      </p>
+                    </div>
+
+                    <p className="baseVertFlex !items-start gap-2 text-sm tablet:!items-end">
+                      <p className="font-semibold underline underline-offset-2">
+                        Address
+                      </p>
+                      <Button variant={"link"} className="h-4 !p-0">
+                        1234 Lorem Ipsum Dr. Roseville, MN 12345
+                      </Button>
+                    </p>
+                  </div>
                 </div>
 
                 {/* TODO: eventually implement the point transfer ability if not logged in */}

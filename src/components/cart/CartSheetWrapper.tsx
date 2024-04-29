@@ -9,10 +9,14 @@ import { useMainStore, type Item } from "~/stores/MainStore";
 interface CartSheetWrapper {
   showCartSheet: boolean;
   setShowCartSheet: Dispatch<SetStateAction<boolean>>;
+  pickupName: string;
+  setPickupName: Dispatch<SetStateAction<string>>;
 }
 function CartSheetWrapper({
   showCartSheet,
   setShowCartSheet,
+  pickupName,
+  setPickupName,
 }: CartSheetWrapper) {
   const { orderDetails } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
@@ -61,6 +65,8 @@ function CartSheetWrapper({
               setInitialItemState={setInitialItemState}
               setIsEditingItem={setIsEditingItem}
               setShowRewardsDialog={setShowRewardsDialog}
+              pickupName={pickupName}
+              setPickupName={setPickupName}
             />
           </div>
         </SheetContent>

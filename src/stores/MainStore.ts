@@ -41,6 +41,7 @@ const itemSchema = z.object({
   quantity: z.number(),
   price: z.number(),
   isAlcoholic: z.boolean(),
+  isVegetarian: z.boolean(),
   pointReward: z.boolean(),
   birthdayReward: z.boolean(),
 });
@@ -74,6 +75,7 @@ export interface Item {
   quantity: number;
   price: number;
   isAlcoholic: boolean;
+  isVegetarian: boolean;
   pointReward: boolean;
   birthdayReward: boolean;
 }
