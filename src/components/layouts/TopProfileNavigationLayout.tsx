@@ -131,7 +131,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
 
       <motion.div
         layout
-        className={`baseFlex bottom-0 left-0 z-40 w-full gap-3 border-t border-stone-400 bg-stone-100 p-2 sm:gap-8 tablet:hidden ${footerIsInView ? "relative" : "fixed"}`}
+        className={`baseFlex bottom-0 left-0 z-40 w-full gap-3 border-t border-stone-400 bg-offwhite p-2 sm:gap-8 tablet:hidden ${footerIsInView ? "relative" : "fixed"}`}
       >
         <Button
           variant={

@@ -433,13 +433,13 @@ function Preferences({ initUserData }: { initUserData: User }) {
                 name="allowsEmailReceipts"
                 render={({ field }) => (
                   <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                    <div className="baseFlex gap-4">
+                    <div className="baseFlex ml-1 gap-[1.15rem]">
                       <FormControl>
                         <Checkbox
                           id="allowsEmailReceipts"
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          className="size-5"
+                          className="size-4"
                         />
                       </FormControl>
                       <Label
@@ -458,13 +458,13 @@ function Preferences({ initUserData }: { initUserData: User }) {
                 name="allowsOrderCompleteEmails"
                 render={({ field }) => (
                   <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                    <div className="baseFlex gap-4">
+                    <div className="baseFlex ml-1 gap-[1.15rem]">
                       <FormControl>
                         <Checkbox
                           id="allowsOrderCompleteEmails"
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          className="size-5"
+                          className="size-4"
                         />
                       </FormControl>
                       <Label
@@ -484,13 +484,13 @@ function Preferences({ initUserData }: { initUserData: User }) {
                 name="allowsPromotionalEmails"
                 render={({ field }) => (
                   <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                    <div className="baseFlex gap-4">
+                    <div className="baseFlex ml-1 gap-[1.15rem]">
                       <FormControl>
                         <Checkbox
                           id="allowsPromotionalEmails"
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          className="size-5"
+                          className="size-4"
                         />
                       </FormControl>
                       <Label
@@ -509,13 +509,13 @@ function Preferences({ initUserData }: { initUserData: User }) {
                 name="allowsRewardExpiryReminderEmails"
                 render={({ field }) => (
                   <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                    <div className="baseFlex gap-4">
+                    <div className="baseFlex ml-1 gap-[1.15rem]">
                       <FormControl>
                         <Checkbox
                           id="allowsRewardExpiryReminderEmails"
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          className="size-5"
+                          className="size-4"
                         />
                       </FormControl>
                       <Label
