@@ -29,6 +29,7 @@ import { DashboardOrder } from "~/server/api/routers/order";
 import { socket } from "~/pages/_app";
 import { FaUtensils } from "react-icons/fa6";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
+import { Separator } from "~/components/ui/separator";
 
 // type FullOrderItems = OrderItem & {
 //   customizations: OrderItemCustomization[];
@@ -57,7 +58,7 @@ function OrderManagement({ orders }: OrderManagement) {
   const [completedOrders, setCompletedOrders] = useState<OrderWithItems[]>([]);
 
   const [selectedTab, setSelectedTab] = useState<
-    "notStarted" | "started" | "completed"
+    "notStarted" | "started" | "completed" | "future"
   >("notStarted");
 
   // TODO/FYI: if not already stated, do NOT want to ever clear the "notification" numbers
@@ -105,117 +106,141 @@ function OrderManagement({ orders }: OrderManagement) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex mt-32 size-full tablet:mt-48"
+      className="baseVertFlex mt-32 size-full tablet:mt-28"
     >
-      <div className="baseFlex w-11/12 !justify-between  tablet:w-full tablet:max-w-lg">
-        <div className="relative">
-          <Button
-            variant={"link"}
-            onClick={() => setSelectedTab("notStarted")}
-            className="text-xl"
-          >
-            Not started
-          </Button>
-
-          {/* notification count */}
-          {notStartedOrders.length > 0 && (
-            <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite">
-              <AnimatedNumbers
-                value={notStartedOrders.length}
-                fontSize={14}
-                padding={6}
-              />
-            </div>
-          )}
-        </div>
-
-        <div className="relative">
-          <Button
-            variant={"link"}
-            onClick={() => setSelectedTab("started")}
-            className="text-xl"
-          >
-            Started
-          </Button>
-
-          {/* notification count */}
-          {startedOrders.length > 0 && (
-            <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite">
-              <AnimatedNumbers
-                value={startedOrders.length}
-                fontSize={14}
-                padding={6}
-              />
-            </div>
-          )}
-        </div>
+      <div className="baseFlex !justify-end rounded-lg border p-1">
+        <Button
+          variant={
+            selectedTab === "notStarted" || selectedTab === "started"
+              ? "default"
+              : "text"
+          }
+          className={`${selectedTab !== "notStarted" && selectedTab !== "started" ? "text-primary" : ""}`}
+          onClick={() => setSelectedTab("notStarted")}
+        >
+          In progress
+        </Button>
 
         <Button
-          variant={"link"}
-          className="text-xl"
+          variant={selectedTab === "completed" ? "default" : "text"}
+          className={`${selectedTab !== "completed" ? "text-primary" : ""}`}
           onClick={() => setSelectedTab("completed")}
         >
           Completed
         </Button>
+
+        <Button
+          variant={selectedTab === "future" ? "default" : "text"}
+          className={`${selectedTab !== "future" ? "text-primary" : ""}`}
+          onClick={() => setSelectedTab("future")}
+        >
+          Future
+        </Button>
       </div>
 
-      <AnimatePresence>
-        {selectedTab === "notStarted" && (
-          <motion.div
-            key={"notStarted"}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="baseFlex w-full"
-          >
-            <AnimatePresence>
-              <div className="baseVertFlex mt-8 w-11/12 tablet:w-full tablet:max-w-3xl">
-                {notStartedOrders ? (
-                  <>
-                    {notStartedOrders.map((order) => (
-                      <CustomerOrder
-                        key={order.id}
-                        order={order}
-                        view={"notStarted"}
-                      />
-                    ))}
-                  </>
-                ) : (
-                  <div>No orders found</div>
-                )}
-              </div>
-            </AnimatePresence>
-          </motion.div>
-        )}
+      {(selectedTab === "notStarted" || selectedTab === "started") && (
+        <div className="baseFlex my-6 w-full !justify-around border-b-2 border-stone-300">
+          <div className="relative">
+            <p
+              onClick={() => setSelectedTab("notStarted")}
+              className="text-xl font-medium text-primary"
+            >
+              Not started
+            </p>
 
-        {selectedTab === "started" && (
-          <motion.div
-            key={"started"}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="baseFlex w-full"
-          >
-            <AnimatePresence>
-              <div className="baseVertFlex mt-8 w-11/12 tablet:w-full tablet:max-w-2xl">
-                {startedOrders ? (
-                  <>
-                    {startedOrders.map((order) => (
-                      <CustomerOrder
-                        key={order.id}
-                        order={order}
-                        view={"started"}
-                      />
-                    ))}
-                  </>
-                ) : (
-                  <div>No orders found</div>
-                )}
+            {/* notification count */}
+            {notStartedOrders.length > 0 && (
+              <div className="absolute -right-6 -top-4 rounded-full bg-primary px-2 py-0.5 text-offwhite">
+                <AnimatedNumbers
+                  value={notStartedOrders.length}
+                  fontSize={14}
+                  padding={6}
+                />
               </div>
-            </AnimatePresence>
-          </motion.div>
+            )}
+          </div>
+
+          <div className="relative">
+            <p
+              onClick={() => setSelectedTab("started")}
+              className="text-xl font-medium text-primary"
+            >
+              Started
+            </p>
+
+            {/* notification count */}
+            {startedOrders.length > 0 && (
+              <div className="absolute -right-6 -top-4 rounded-full bg-primary px-2 py-0.5 text-offwhite">
+                <AnimatedNumbers
+                  value={startedOrders.length}
+                  fontSize={14}
+                  padding={6}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      <div className="baseFlex w-full">
+        {selectedTab !== "completed" && selectedTab !== "future" && (
+          <div className="baseFlex w-full !items-start">
+            <motion.div
+              key={"notStarted"}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="baseFlex w-full"
+            >
+              <AnimatePresence>
+                <div className="baseVertFlex max-h-[70dvh] w-full !justify-start overflow-y-auto px-4">
+                  {notStartedOrders.length > 0 ? (
+                    <>
+                      {notStartedOrders.map((order) => (
+                        <CustomerOrder
+                          key={order.id}
+                          order={order}
+                          view={"notStarted"}
+                        />
+                      ))}
+                    </>
+                  ) : (
+                    <div>No orders found</div>
+                  )}
+                </div>
+              </AnimatePresence>
+            </motion.div>
+
+            <Separator orientation="vertical" className="h-[70dvh] " />
+
+            <motion.div
+              key={"started"}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="baseFlex w-full"
+            >
+              <AnimatePresence>
+                <div className="baseVertFlex max-h-[70dvh] w-full !justify-start overflow-y-auto px-4">
+                  {startedOrders.length > 0 ? (
+                    <>
+                      {startedOrders.map((order) => (
+                        <CustomerOrder
+                          key={order.id}
+                          order={order}
+                          view={"started"}
+                        />
+                      ))}
+                    </>
+                  ) : (
+                    <div>No orders found</div>
+                  )}
+                </div>
+              </AnimatePresence>
+            </motion.div>
+          </div>
         )}
 
         {selectedTab === "completed" && (
@@ -228,8 +253,8 @@ function OrderManagement({ orders }: OrderManagement) {
             className="baseFlex w-full"
           >
             <AnimatePresence>
-              <div className="baseVertFlex mt-8 w-11/12 tablet:w-full tablet:max-w-2xl">
-                {completedOrders ? (
+              <div className="baseVertFlex mt-8 max-h-[70dvh] w-11/12 !justify-start overflow-y-auto tablet:w-full tablet:max-w-xl">
+                {completedOrders.length > 0 ? (
                   <>
                     {completedOrders.map((order) => (
                       <CustomerOrder
@@ -246,7 +271,7 @@ function OrderManagement({ orders }: OrderManagement) {
             </AnimatePresence>
           </motion.div>
         )}
-      </AnimatePresence>
+      </div>
     </motion.div>
   );
 }
@@ -302,29 +327,33 @@ function CustomerOrder({ order, view }: CustomerOrder) {
     },
   });
 
+  function sumUpNumberOfItemsInOrder(order: OrderWithItems) {
+    return order.orderItems.reduce((acc, item) => acc + item.quantity, 0);
+  }
+
   return (
     <motion.div
       key={order.id}
-      initial={{
-        opacity: 0,
-        height: 0,
-        marginTop: 0,
-        marginBottom: 0,
-      }}
-      animate={{
-        opacity: 1,
-        height: "auto",
-        marginTop: "0.25rem",
-        marginBottom: "0.25rem",
-      }}
-      exit={{ opacity: 0, height: 0, marginTop: 0, marginBottom: 0 }}
-      transition={{
-        opacity: { duration: 0.1 },
-        height: { duration: 0.2 },
-        marginTop: { duration: 0.2 },
-        marginBottom: { duration: 0.2 },
-      }}
-      className="baseFlex w-full rounded-md border px-4 py-4 tablet:px-8"
+      // initial={{
+      //   opacity: 0,
+      //   height: 0,
+      //   marginTop: 0,
+      //   marginBottom: 0,
+      // }}
+      // animate={{
+      //   opacity: 1,
+      //   height: "auto",
+      //   marginTop: "0.25rem",
+      //   marginBottom: "0.25rem",
+      // }}
+      // exit={{ opacity: 0, height: 0, marginTop: 0, marginBottom: 0 }}
+      // transition={{
+      //   opacity: { duration: 0.1 },
+      //   height: { duration: 0.2 },
+      //   marginTop: { duration: 0.2 },
+      //   marginBottom: { duration: 0.2 },
+      // }}
+      className="baseFlex w-full rounded-md border px-4 py-4"
     >
       <Accordion
         type="single"
@@ -340,22 +369,20 @@ function CustomerOrder({ order, view }: CustomerOrder) {
           className="w-full border-none"
           data-state={accordionOpen}
         >
-          <div className="baseVertFlex relative w-11/12 !justify-between gap-4 tablet:w-full tablet:!flex-row">
-            <div className="baseFlex w-full !justify-between gap-4 tablet:w-auto tablet:!justify-center">
-              <div className="baseFlex gap-1 text-lg">
+          <div className="baseVertFlex relative w-full !justify-between gap-4">
+            <div className="baseFlex w-full !justify-between gap-4">
+              <div className="baseFlex gap-1 text-lg font-semibold">
                 <span>{order.firstName}</span>
                 <span>{order.lastName}</span>
               </div>
 
               {/* (up to) first three images w/ the (+ however many more one) */}
-              <div className="baseFlex gap-2">
+              {/* <div className="baseFlex gap-2">
                 <div className="imageFiller size-8 rounded-full" />
                 <div className="imageFiller size-8 rounded-full" />
                 <div className="imageFiller size-8 rounded-full" />
-              </div>
-            </div>
+              </div> */}
 
-            <div className="baseFlex w-full !justify-between gap-4 tablet:w-auto tablet:!justify-center">
               <p className="baseFlex gap-2 text-lg font-semibold">
                 <>
                   {view === "completed" && order.orderCompletedAt ? (
@@ -365,96 +392,113 @@ function CustomerOrder({ order, view }: CustomerOrder) {
                   )}
                 </>
               </p>
-
-              {view !== "completed" && (
-                <AlertDialog open={openDialogId === order.id}>
-                  <AlertDialogTrigger asChild>
-                    <Button
-                      className="text-base"
-                      onClick={() => {
-                        setOpenDialogId(order.id);
-                      }}
-                    >
-                      {view === "notStarted" ? "Start order" : "Complete order"}
-                    </Button>
-                  </AlertDialogTrigger>
-
-                  <AlertDialogContent>
-                    <AlertDialogHeader className="text-lg">
-                      {view === "notStarted" ? "Start order" : "Complete order"}
-                    </AlertDialogHeader>
-                    <AlertDialogDescription>
-                      Are you sure you want to{" "}
-                      {view === "notStarted" ? "start" : "complete"}{" "}
-                      <span className="font-semibold">
-                        {order.firstName} {order.lastName}&apos;s
-                      </span>{" "}
-                      order?
-                    </AlertDialogDescription>
-
-                    <AlertDialogFooter>
-                      <Button
-                        variant="secondary"
-                        disabled={orderIdBeingMutated === order.id}
-                        onClick={() => {
-                          setOpenDialogId(null);
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        disabled={orderIdBeingMutated === order.id}
-                        className="baseFlex gap-2"
-                        onClick={() => {
-                          setOrderIdBeingMutated(order.id);
-                          if (view === "notStarted") {
-                            startOrder({ id: order.id });
-                          } else {
-                            completeOrder({
-                              id: order.id,
-                              customerEmail: order.email,
-                            });
-                          }
-                        }}
-                      >
-                        Confirm
-                        {orderIdBeingMutated === order.id && (
-                          <motion.div
-                            key={`${order.id}Spinner`}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="inline-block size-4 animate-spin rounded-full border-[4px] border-current border-t-transparent text-primary"
-                            role="status"
-                            aria-label="loading"
-                          >
-                            <span className="sr-only">Loading...</span>
-                          </motion.div>
-                        )}
-                      </Button>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              )}
             </div>
 
-            {/* FYI: I am aware that this is a roundabout way of handling accessibility, but it's the
+            <div className="baseFlex w-full">
+              <div className="baseFlex w-full !justify-between gap-4">
+                <p className="font-medium">
+                  {sumUpNumberOfItemsInOrder(order) > 1
+                    ? `${sumUpNumberOfItemsInOrder(order)} items`
+                    : "1 item"}
+                </p>
+
+                {view !== "completed" && (
+                  <AlertDialog open={openDialogId === order.id}>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        className="text-base"
+                        onClick={() => {
+                          setOpenDialogId(order.id);
+                        }}
+                      >
+                        {view === "notStarted"
+                          ? "Start order"
+                          : "Complete order"}
+                      </Button>
+                    </AlertDialogTrigger>
+
+                    <AlertDialogContent>
+                      <AlertDialogHeader className="text-lg">
+                        {view === "notStarted"
+                          ? "Start order"
+                          : "Complete order"}
+                      </AlertDialogHeader>
+                      <AlertDialogDescription>
+                        Are you sure you want to{" "}
+                        {view === "notStarted" ? "start" : "complete"}{" "}
+                        <span className="font-semibold">
+                          {order.firstName} {order.lastName}&apos;s
+                        </span>{" "}
+                        order?
+                      </AlertDialogDescription>
+
+                      <AlertDialogFooter className="mt-4 gap-4">
+                        <Button
+                          variant="secondary"
+                          disabled={orderIdBeingMutated === order.id}
+                          className="w-full"
+                          onClick={() => {
+                            setOpenDialogId(null);
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          disabled={orderIdBeingMutated === order.id}
+                          className="baseFlex w-full gap-2"
+                          onClick={() => {
+                            setOrderIdBeingMutated(order.id);
+                            if (view === "notStarted") {
+                              startOrder({ id: order.id });
+                            } else {
+                              completeOrder({
+                                id: order.id,
+                                customerEmail: order.email,
+                              });
+                            }
+                          }}
+                        >
+                          Confirm
+                          {orderIdBeingMutated === order.id && (
+                            <motion.div
+                              key={`${order.id}Spinner`}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              className="inline-block size-1 animate-spin rounded-full border-[2px] border-current border-t-transparent text-offwhite"
+                              role="status"
+                              aria-label="loading"
+                            >
+                              <span className="sr-only">Loading...</span>
+                            </motion.div>
+                          )}
+                        </Button>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                )}
+              </div>
+
+              {/* FYI: I am aware that this is a roundabout way of handling accessibility, but it's the
                 best method I can find for allowing arbitrary content (buttons) within the "Trigger"
                 of the accordion */}
-            <ChevronDown
-              tabIndex={0}
-              data-state={accordionOpen}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
+              <ChevronDown
+                tabIndex={0}
+                data-state={accordionOpen}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    setAccordionOpen(
+                      accordionOpen === "open" ? "closed" : "open",
+                    );
+                  }
+                }}
+                onClick={() => {
                   setAccordionOpen(
                     accordionOpen === "open" ? "closed" : "open",
                   );
-                }
-              }}
-              onClick={() => {
-                setAccordionOpen(accordionOpen === "open" ? "closed" : "open");
-              }}
-              className={`absolute bottom-2.5 right-[-30px] h-4 w-4 shrink-0 cursor-pointer text-primary transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=open]:rotate-180 tablet:bottom-2 tablet:right-[-25px]`}
-            />
+                }}
+                className={`ml-4 h-4 w-4 shrink-0 cursor-pointer text-primary transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=open]:rotate-180`}
+              />
+            </div>
           </div>
 
           <AccordionContent>
@@ -486,8 +530,6 @@ function OrderItems({ order }: OrderItems) {
 
       {order.orderItems.map((item) => (
         <div key={item.id} className="baseFlex gap-4">
-          <div className="imageFiller size-12 rounded-md" />
-
           {/* TODO: idk why I couldn't just generically have this be h-full... 
               setting h-12 but don't want this to be hardcoded */}
           <div className="baseVertFlex h-full min-h-12 !items-start !justify-start gap-2">
@@ -495,7 +537,7 @@ function OrderItems({ order }: OrderItems) {
               <p>{item.quantity}</p>
               <p>{item.name}</p>
               {item.includeDietaryRestrictions && (
-                <div className="size-2 rounded-full bg-primary/25" />
+                <div className="size-2 rounded-full bg-primary/50" />
               )}
             </div>
 
@@ -521,12 +563,14 @@ function OrderItems({ order }: OrderItems) {
       ))}
 
       {order.dietaryRestrictions && (
-        <div className="baseVertFlex gap-2">
+        <div className="baseVertFlex w-full gap-2">
           <div className="baseFlex gap-2">
-            <div className="size-2 rounded-full bg-primary/25" />
+            <div className="size-2 rounded-full bg-primary/50" />
             Item needs to follow these dietary restrictions:
           </div>
-          <p className="text-sm">{order.dietaryRestrictions}</p>
+          <p className="text-sm font-semibold">
+            &ldquo; {order.dietaryRestrictions} &rdquo;
+          </p>
         </div>
       )}
 
@@ -538,6 +582,14 @@ function OrderItems({ order }: OrderItems) {
           </div>
         </div>
       )}
+
+      <Button
+        variant={"secondary"}
+        size={"sm"}
+        className="mt-4 !self-center text-sm"
+      >
+        Reprint
+      </Button>
     </div>
   );
 }

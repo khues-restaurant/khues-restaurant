@@ -2,7 +2,6 @@ import { SignOutButton, useAuth } from "@clerk/nextjs";
 // import { useLocalStorageValue } from "@react-hookz/web";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { FaUserAlt } from "react-icons/fa";
 import { Button } from "~/components/ui/button";
 import {
   Popover,
@@ -11,19 +10,8 @@ import {
 } from "~/components/ui/popover";
 
 import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogCancel,
-  AlertDialogTrigger,
-} from "~/components/ui/alert-dialog";
 import useGetUserId from "~/hooks/useGetUserId";
 import { api } from "~/utils/api";
-import { LuLayoutDashboard } from "react-icons/lu";
 import { IoMdMore } from "react-icons/io";
 
 import classes from "./DashboardDesktopHeader.module.css";
@@ -70,28 +58,12 @@ function DashboardDesktopHeader({
   return (
     <nav
       id="header"
-      className={`${classes.desktopHeader} bg-offwhite fixed left-0 top-0 z-50 grid h-32 w-full grid-cols-1 grid-rows-1 shadow-md`}
+      className={`baseFlex fixed left-0 top-0 z-50 grid h-24 w-full gap-4 bg-offwhite shadow-md`}
     >
-      <div className={`${classes.logo} baseFlex gap-4`}>
-        <Image
-          src="/logo.svg"
-          alt="Khue's header logo"
-          width={65}
-          height={65}
-          priority
-          className="!size-[65px]"
-        />
-
-        <div className="baseFlex gap-2 text-primary">
-          <LuLayoutDashboard className="size-6" />
-          <p className="text-2xl">Dashboard</p>
-        </div>
-      </div>
-
       <div className={`${classes.mainLinks} baseFlex gap-2`}>
         <div className="relative">
           <Button
-            variant={"link"}
+            variant={viewState === "orderManagement" ? "activeLink" : "link"}
             className="text-xl"
             onClick={() => setViewState("orderManagement")}
           >
@@ -100,7 +72,7 @@ function DashboardDesktopHeader({
 
           {/* notification count */}
           {numberOfActiveOrders > 0 && (
-            <div className="text-offwhite absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5">
+            <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite">
               <AnimatedNumbers
                 value={numberOfActiveOrders}
                 fontSize={14}
@@ -112,7 +84,7 @@ function DashboardDesktopHeader({
 
         <div className="relative">
           <Button
-            variant={"link"}
+            variant={viewState === "customerChats" ? "activeLink" : "link"}
             className="text-xl"
             onClick={() => setViewState("customerChats")}
           >
@@ -121,7 +93,7 @@ function DashboardDesktopHeader({
 
           {/* unreadMessages > 0 && */}
           {false && (
-            <div className="text-offwhite absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5">
+            <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite">
               <AnimatedNumbers
                 value={numberOfActiveOrders}
                 fontSize={14}
@@ -132,7 +104,7 @@ function DashboardDesktopHeader({
         </div>
 
         <Button
-          variant={"link"}
+          variant={viewState === "itemManagement" ? "activeLink" : "link"}
           className="text-xl"
           onClick={() => setViewState("itemManagement")}
         >
@@ -151,47 +123,27 @@ function DashboardDesktopHeader({
             <div className="baseVertFlex gap-2">
               <DiscountManagement />
               <div>TODO: Reviews</div>
+
+              {user?.email === "ericxpham@gmail.com" && (
+                <Button variant={"link"} onClick={() => setViewState("stats")}>
+                  Stats
+                </Button>
+              )}
+
+              <Button
+                variant={"link"}
+                onClick={async () => {
+                  await signOut(async () => {
+                    clearLocalStorage();
+                    await push("/");
+                  });
+                }}
+              >
+                Log out
+              </Button>
             </div>
           </PopoverContent>
         </Popover>
-      </div>
-
-      {/* order icon and auth buttons/user icon */}
-      <div className={`${classes.authentication} baseFlex gap-4`}>
-        {isSignedIn && user && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="baseFlex gap-2">
-                <FaUserAlt />
-                {user.firstName}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent side="bottom" align="end">
-              <div className="baseVertFlex gap-2">
-                {user.email === "ericxpham@gmail.com" && (
-                  <Button
-                    variant={"link"}
-                    onClick={() => setViewState("stats")}
-                  >
-                    Stats
-                  </Button>
-                )}
-
-                <Button
-                  variant={"link"}
-                  onClick={async () => {
-                    await signOut(async () => {
-                      clearLocalStorage();
-                      await push("/");
-                    });
-                  }}
-                >
-                  Log out
-                </Button>
-              </div>
-            </PopoverContent>
-          </Popover>
-        )}
       </div>
     </nav>
   );
