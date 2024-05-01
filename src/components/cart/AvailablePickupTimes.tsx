@@ -91,15 +91,23 @@ function AvailablePickupTimes({
     setAvailablePickupTimes(basePickupTimes);
   }, [selectedDate, minPickupTime]);
 
-  const today = useMemo(() => new Date(), []);
+  const todayAtMidnight = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return today;
+  }, []);
 
   const orderingIsNotAvailable = useMemo(() => {
+    const now = new Date();
+
     return (
-      selectedDate.getTime() === today.getTime() &&
+      selectedDate.getTime() === todayAtMidnight.getTime() &&
       ((minPickupTime && minPickupTime.getHours() >= 22) ||
-        today.getHours() >= 22)
+        now.getHours() >= 22 ||
+        (now.getHours() === 21 && now.getMinutes() >= 30))
     );
-  }, [selectedDate, minPickupTime, today]);
+  }, [selectedDate, minPickupTime, todayAtMidnight]);
 
   if (orderingIsNotAvailable) {
     return (

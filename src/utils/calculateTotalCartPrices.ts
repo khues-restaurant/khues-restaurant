@@ -3,7 +3,7 @@ import { Decimal } from "decimal.js";
 import { type Discount } from "@prisma/client";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { type Item } from "~/stores/MainStore";
-import { DBOrderSummaryItem } from "~/server/api/routers/order";
+import { type DBOrderSummaryItem } from "~/server/api/routers/order";
 
 interface CalculateTotalCartPrices {
   items: Item[] | DBOrderSummaryItem[];
@@ -38,7 +38,7 @@ export function calculateTotalCartPrices({
     }
   }
 
-  const tax = relativeTotal.mul(0.07);
+  const tax = relativeTotal.mul(0.08375);
   const total = relativeTotal.add(tax);
 
   return {
