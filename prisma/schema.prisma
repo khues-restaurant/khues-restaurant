@@ -92,16 +92,14 @@ model MenuItem {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
 
-    name             String
-    description      String
-    imageUrl         String
-    price            Float
-    altPrice         Float? // used for singular glass pricing of wine/beer
-    ingredientsPrice Float // never expose to the frontend, maybe have it only on w/e backend stats calculation function(s)
-    // or in it's own model in here, tied to MenuItem by id
-    available        Boolean @default(true) // whether item is able to be ordered (86'd or not)
-    discontinued     Boolean @default(false) // whether item is no longer on the menu
-    listOrder        Int     @default(autoincrement())
+    name         String
+    description  String
+    imageUrl     String
+    price        Float
+    altPrice     Float? // used for singular glass pricing of wine/beer
+    available    Boolean @default(true) // whether item is able to be ordered (86'd or not)
+    discontinued Boolean @default(false) // whether item is no longer on the menu
+    listOrder    Int     @default(autoincrement())
 
     menuCategory     MenuCategory @relation(fields: [menuCategoryId], references: [id])
     menuCategoryId   String
