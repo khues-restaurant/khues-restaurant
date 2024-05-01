@@ -107,14 +107,25 @@ export const validateOrderRouter = createTRPCRouter({
       //  - if an item is not available, it should be removed from the order, but it's Id should be
       //    added to an array which gets returned at the end of this function
       //  - Customizations:
-      //    - customization choice ids must exist in the database, otherwise set to default choice id
+      //    - customization choice ids must exist in the database, otherwise set to default choice id.
+      //      If the default choice id isn't available, cycle through the customization category's
+      //      choices and set it to the first one that is available
+      //    - similarly, if the current choice id isn't available, set it to the default choice id
+      //      or cycle to find the first available choice id
       //  - Discount:
       //    - discount id must exist in the database and it's "expirationDate" must be in the future,
       //      and it must have an "active" field set to true
       //    - if the discount id is not valid, it should be removed from the order item
       //    - if discount name includes "Points" or "Birthday", it must have the same userId as the
       //      userId passed in.
-      //  -* do we really need to check if menu item category exists in database? doesn't seem necessary
+      //  - Reward:
+      //    - if an item is a point reward, it should be checked if the user has enough points to
+      //      redeem the reward. If they aren't a user, remove the item from the order. If they don't
+      //      have enough points, remove the pointReward flag from the item.
+      //    - if validatingAReorder is true, the item should be kept in the order, but it's pointReward
+      //      and birthdayReward should be set to false
+
+      //  -? do we really need to check if menu item category exists in database? doesn't seem necessary
 
       const {
         userId,
@@ -188,7 +199,9 @@ export const validateOrderRouter = createTRPCRouter({
               },
             });
 
-          if (!dbCustomizationChoice) {
+          // if the customization choice doesn't exist, or isn't available
+          // try to set to defaultChoiceId, if that isn't avail
+          if (!dbCustomizationChoice?.isAvailable) {
             // need to query for the category's default choice id
             const dbCustomizationCategory =
               await ctx.prisma.customizationCategory.findFirst({
@@ -201,8 +214,47 @@ export const validateOrderRouter = createTRPCRouter({
               throw new Error("Customization category not found");
             }
 
-            item.customizations[categoryId] =
-              dbCustomizationCategory.defaultChoiceId;
+            const defaultChoiceId = dbCustomizationCategory.defaultChoiceId;
+
+            if (!defaultChoiceId) {
+              throw new Error("Default choice id not found");
+            }
+
+            const dbDefaultCustomizationChoice =
+              await ctx.prisma.customizationChoice.findFirst({
+                where: {
+                  id: defaultChoiceId,
+                },
+              });
+
+            if (!dbDefaultCustomizationChoice?.isAvailable) {
+              // need to cycle through the choices to find the first available one
+              const dbCustomizationChoices =
+                await ctx.prisma.customizationChoice.findMany({
+                  where: {
+                    customizationCategoryId: categoryId,
+                  },
+                  orderBy: {
+                    listOrder: "asc",
+                  },
+                });
+
+              const firstAvailableChoice = dbCustomizationChoices.find(
+                (choice) => choice.isAvailable,
+              );
+
+              if (!firstAvailableChoice) {
+                // removing item from order
+                items.splice(items.indexOf(item), 1);
+
+                // adding item name to removedItemNames
+                removedItemNames.push(item.name);
+              } else {
+                item.customizations[categoryId] = firstAvailableChoice.id;
+              }
+            } else {
+              item.customizations[categoryId] = defaultChoiceId;
+            }
           }
         }
 
@@ -233,7 +285,7 @@ export const validateOrderRouter = createTRPCRouter({
         // If an item was a point reward or birthday reward, we (tentatively) are going to
         // still keep it in the order, but set it's values of pointReward and birthdayReward to false
 
-        if (item.pointReward || item.birthdayReward) {
+        if (item.pointReward) {
           if (validatingAReorder) {
             item.pointReward = false;
             item.birthdayReward = false;
@@ -263,6 +315,17 @@ export const validateOrderRouter = createTRPCRouter({
             }
           }
         }
+
+        // TODO: validate logic for birthday reward
+        // if (item.birthdayReward) {
+        //   if (validatingAReorder) {
+        //     item.pointReward = false;
+        //     item.birthdayReward = false;
+        //   } else {
+        //     // check if the user has a birthday reward available
+        //     // if not, set birthdayReward to false
+        //   }
+        // }
       }
 
       if (validatingAReorder) {

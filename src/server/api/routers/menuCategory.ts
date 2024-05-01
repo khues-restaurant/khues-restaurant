@@ -55,7 +55,11 @@ export const menuCategoryRouter = createTRPCRouter({
               activeDiscount: true,
               customizationCategories: {
                 include: {
-                  customizationChoices: true,
+                  customizationChoices: {
+                    orderBy: {
+                      listOrder: "asc",
+                    },
+                  },
                 },
               },
               suggestedPairings: {
@@ -91,7 +95,11 @@ export const menuCategoryRouter = createTRPCRouter({
             activeDiscount: true,
             customizationCategories: {
               include: {
-                customizationChoices: true,
+                customizationChoices: {
+                  orderBy: {
+                    listOrder: "asc",
+                  },
+                },
               },
             },
             suggestedPairings: {

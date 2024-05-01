@@ -14,11 +14,16 @@ interface DashboardLayout {
 function DashboardLayout({ children }: DashboardLayout) {
   const { data: orders, refetch: refetchOrders } =
     api.order.getTodaysOrders.useQuery();
-  // const { data: chats, refetch: refetchChats } = api.chats.getAll.useQuery();
-  const { data: menuCategories, refetch: refetchItems } =
-    api.menuCategory.getAll.useQuery();
 
-  // mutations can go inside of the individual components
+  // const { data: chats, refetch: refetchChats } = api.chats.getAll.useQuery();
+
+  const { data: menuCategories, refetch: refetchItems } =
+    api.menuCategory.getAll.useQuery({
+      onlyOnlineOrderable: true,
+    });
+
+  const { data: customizationCategories, refetch: refetchCustomizations } =
+    api.customizationCategory.getAll.useQuery();
 
   const [viewState, setViewState] = useState<
     "orderManagement" | "customerChats" | "itemManagement" | "stats"
@@ -107,9 +112,14 @@ function DashboardLayout({ children }: DashboardLayout) {
           )}
 
           {viewState === "customerChats" && <CustomerChats />}
-          {viewState === "itemManagement" && menuCategories && (
-            <ItemManagement menuCategories={menuCategories} />
-          )}
+          {viewState === "itemManagement" &&
+            menuCategories &&
+            customizationCategories && (
+              <ItemManagement
+                menuCategories={menuCategories}
+                customizationCategories={customizationCategories}
+              />
+            )}
 
           {/* TODO: reviews component */}
         </>

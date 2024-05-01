@@ -135,10 +135,12 @@ model CustomizationCategory {
 }
 
 model CustomizationChoice {
-    id              String @id @default(uuid())
+    id              String  @id @default(uuid())
     name            String // e.g., "Small", "Medium", "Large" for Size
     description     String // e.g., "12 oz", "16 oz", "20 oz" for Size, or description of side dish if applicable
     priceAdjustment Float // Additional cost for this choice, can be negative
+    isAvailable     Boolean @default(true)
+    listOrder       Int     @default(autoincrement())
 
     customizationCategory   CustomizationCategory    @relation(fields: [customizationCategoryId], references: [id])
     customizationCategoryId String

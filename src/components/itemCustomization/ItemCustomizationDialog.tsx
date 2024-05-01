@@ -694,16 +694,17 @@ function CustomizationOption({
   return (
     <div
       key={choice.id}
-      // style={{
-      //   borderColor: isHovered ? "var(--color-primary)" : "var(--color-stone-300)",
-      // }}
-      className={`baseFlex relative min-w-96 cursor-pointer !justify-start gap-4 rounded-md border-2 p-4 transition-all ${isHovered || isSelected ? "border-primary" : "border-stone-300"}`}
+      className={`baseFlex relative min-w-96 !justify-start gap-4 rounded-md border-2 p-4 transition-all ${(isHovered || isSelected) && choice.isAvailable ? "border-primary" : "border-stone-300"}
+      ${choice.isAvailable ? "cursor-pointer" : ""}
+      `}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onTouchStart={() => setIsHovered(true)}
       onTouchEnd={() => setIsHovered(false)}
       onTouchCancel={() => setIsHovered(false)}
       onClick={() => {
+        if (!choice.isAvailable) return;
+
         setLocalItemOrderDetails((prev) => {
           const newCustomizations = {
             ...prev.customizations,
@@ -717,12 +718,23 @@ function CustomizationOption({
         });
       }}
     >
-      <RadioGroupItem id={choice.id} value={choice.id} />
+      <RadioGroupItem
+        id={choice.id}
+        value={choice.id}
+        disabled={!choice.isAvailable}
+      />
       <div className="baseVertFlex size-full gap-2">
         <Label htmlFor={choice.id} className="self-start">
           {choice.name}
         </Label>
         <p className="self-start text-stone-400">{choice.description}</p>
+
+        {!choice.isAvailable && (
+          <div className="absolute right-4 top-2 rounded-md bg-stone-100 px-2 py-0.5 text-stone-400">
+            <p className="text-xs italic">Currently unavailable</p>
+          </div>
+        )}
+
         <AnimatePresence>
           {!isSelected && (
             <motion.p

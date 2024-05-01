@@ -12,6 +12,7 @@ import { validateOrderRouter } from "~/server/api/routers/validateOrder";
 import { reviewRouter } from "~/server/api/routers/review";
 import { favoriteRouter } from "~/server/api/routers/favorite";
 import { chatRouter } from "~/server/api/routers/chat";
+import { customizationCategoryRouter } from "~/server/api/routers/customizationCategory";
 
 export const appRouter = createTRPCRouter({
   user: userRouter,
@@ -21,6 +22,7 @@ export const appRouter = createTRPCRouter({
   transientOrder: transientOrderRouter,
   order: orderRouter,
   minimumOrderPickupTime: minimumOrderPickupTimeRouter,
+  customizationCategory: customizationCategoryRouter,
   customizationChoice: customizationChoiceRouter,
   discount: discountRouter,
   validateOrder: validateOrderRouter,

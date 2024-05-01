@@ -295,7 +295,7 @@ function OrderNow() {
             <Sticky
               top={"#header"}
               activeClass="bg-offwhite h-16"
-              innerActiveClass="bg-offwhite px-2 pt-4 h-16"
+              innerActiveClass="bg-offwhite px-2 pt-3.5 h-16 shadow-lg tablet:shadow-none"
               innerClass="bg-offwhite w-full h-12"
               className="baseFlex w-full bg-offwhite p-2"
               enabled={!isDrawerOpen} // not my favorite but gets rid of flicker from

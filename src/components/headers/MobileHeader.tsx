@@ -319,8 +319,8 @@ function MobileHeader() {
                             Roseville, Minnesota.
                           </p>
 
-                          <div className="baseFlex gap-3">
-                            <TbLocation className="size-6 text-primary" />
+                          <div className="baseFlex gap-2">
+                            <TbLocation className="size-6 text-primary sm:size-4" />
 
                             <a
                               href="https://facebook.com"

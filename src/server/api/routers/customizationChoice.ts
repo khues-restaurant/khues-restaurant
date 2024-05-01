@@ -4,7 +4,11 @@ import {
 } from "@prisma/client";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  protectedProcedure,
+} from "~/server/api/trpc";
 
 export type CustomizationChoiceAndCategory = CustomizationChoice & {
   customizationCategory: CustomizationCategory;
@@ -28,4 +32,19 @@ export const customizationChoiceRouter = createTRPCRouter({
 
     return formattedCustomizationChoices;
   }),
+
+  changeAvailability: protectedProcedure
+    .input(z.object({ id: z.string(), isAvailable: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const menuCategories = await ctx.prisma.customizationChoice.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          isAvailable: input.isAvailable,
+        },
+      });
+
+      return menuCategories;
+    }),
 });

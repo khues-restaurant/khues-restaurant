@@ -644,7 +644,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
           activeDiscount: true,
           customizationCategories: {
             include: {
-              customizationChoices: true,
+              customizationChoices: {
+                orderBy: {
+                  listOrder: "asc",
+                },
+              },
             },
           },
           suggestedPairings: {
