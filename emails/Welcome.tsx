@@ -25,7 +25,12 @@ const baseUrl = process.env.VERCEL_URL
 
 // maybe also get user's first name to put in <Preview> section?
 
-function Welcome() {
+interface Welcome {
+  firstName: string;
+  unsubscriptionToken: string;
+}
+
+function Welcome({ firstName, unsubscriptionToken }: Welcome) {
   return (
     <Html>
       <Preview>Welcome to Khue&apos;s Rewards Program!</Preview>
@@ -34,7 +39,9 @@ function Welcome() {
           theme: {
             extend: {
               colors: {
-                primary: "#dc3727",
+                primary: "#14522d",
+                darkPrimary: "#0f3e22",
+                offwhite: "#fffcf5",
               },
             },
           },
@@ -55,7 +62,7 @@ function Welcome() {
 
         <Body style={main} className="rounded-lg">
           <Container style={container} className="rounded-lg">
-            <Section>
+            <Section className="my-4 bg-offwhite">
               <div className="w-full rounded-t-lg bg-primary">
                 <Img
                   src={`${baseUrl}/static/whiteLogo.png`}
@@ -68,7 +75,7 @@ function Welcome() {
 
               <Section className="p-4">
                 <Text className="text-xl font-semibold">
-                  Welcome to the Khue&apos;s Rewards Program 🎉
+                  Welcome to the Khue&apos;s Rewards Program, {firstName} 🎉
                 </Text>
                 <Text>
                   You now have access to free perks including earning points on
@@ -85,7 +92,7 @@ function Welcome() {
                     />
                     <Button
                       href="https://khueskitchen.com/order-now"
-                      className="text-offwhite rounded-md bg-primary px-4 py-3 text-sm"
+                      className="rounded-md bg-primary px-4 py-3 text-sm text-offwhite"
                     >
                       Order now
                     </Button>
@@ -93,7 +100,7 @@ function Welcome() {
                 </Section>
               </Section>
 
-              <Section className="text-offwhite rounded-b-lg bg-primary">
+              <Section className="rounded-b-lg bg-primary text-offwhite">
                 <Column align="center">
                   <Row className="w-[350px]">
                     <Column className="text-left">
@@ -108,7 +115,7 @@ function Welcome() {
 
                     <Column className="text-right">
                       <Link href="tel:+1234567890">
-                        <Text className="text-offwhite mb-0 pl-2 text-xs">
+                        <Text className="mb-0 pl-2 text-xs text-offwhite">
                           (123) 456-7890
                         </Text>
                       </Link>
@@ -118,7 +125,7 @@ function Welcome() {
                   <Row className="mt-1 w-52">
                     <Column className="text-left">
                       <Link href="https://khueskitchen.com">
-                        <Text className="text-offwhite my-0 text-xs">
+                        <Text className="my-0 text-xs text-offwhite">
                           Visit our website
                         </Text>
                       </Link>
@@ -130,7 +137,7 @@ function Welcome() {
 
                     <Column className="text-right">
                       <Link href="https://khueskitchen.com/privacy">
-                        <Text className="text-offwhite my-0 pl-2 text-xs">
+                        <Text className="my-0 pl-2 text-xs text-offwhite">
                           Privacy Policy
                         </Text>
                       </Link>
@@ -200,15 +207,17 @@ function Welcome() {
                   <Section className="w-96 text-center">
                     <Row className="text-center">
                       <Link href="https://khueskitchen.com/profile/preferences">
-                        <Text className="text-offwhite mt-0 text-xs underline underline-offset-2">
+                        <Text className="mt-0 text-xs text-offwhite underline underline-offset-2">
                           Manage your email communication preferences
                         </Text>
                       </Link>
                     </Row>
 
                     <Row className="text-center">
-                      <Link href="https://khueskitchen.com/unsubscribe">
-                        <Text className="text-offwhite mt-0 pl-2 text-xs underline underline-offset-2">
+                      <Link
+                        href={`https://khueskitchen.com/unsubscribe?token=${unsubscriptionToken}`}
+                      >
+                        <Text className="mt-0 pl-2 text-xs text-offwhite underline underline-offset-2">
                           Unsubscribe from all emails
                         </Text>
                       </Link>
@@ -233,6 +242,6 @@ const main = {
 };
 
 const container = {
-  backgroundColor: "#ffffff",
+  backgroundColor: "#e7e5e4",
   margin: "0 auto",
 };

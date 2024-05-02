@@ -1,6 +1,6 @@
+import { type Discount } from "@prisma/client";
 import {
   Body,
-  Button,
   Column,
   Container,
   Font,
@@ -16,8 +16,13 @@ import {
   Text,
 } from "@react-email/components";
 import { format } from "date-fns";
-import { Decimal } from "decimal.js";
 import * as React from "react";
+import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
+import { type DBOrderSummaryItem } from "~/server/api/routers/order";
+import { type Item } from "~/stores/MainStore";
+import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
+import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
+import { formatPrice } from "~/utils/formatPrice";
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -26,83 +31,51 @@ const baseUrl = process.env.VERCEL_URL
 // in other components, will want to pass in whether user is a member or not to conditionally show
 // "Manage your email communication preferences" alongside "Unsubscribe from all emails"
 
-interface Customization {
-  customizationCategory: string;
-  customizationChoice: string;
-}
-
-interface Item {
-  name: string;
-  quantity: number;
-  price: number;
-  menuItemId: string;
-  specialInstructions: string;
-  includeDietaryRestrictions: boolean;
-  customizations: Customization[];
-  discountId: string | null;
-  pointReward: boolean;
-  birthdayReward: boolean;
-}
-
 interface OrderReady {
   id: string;
   datetimeToPickup: Date;
+  pickupName: string;
   includeNapkinsAndUtensils: boolean;
-  items: Item[];
+  items: Item[] | DBOrderSummaryItem[]; // could just be DBOrderSummaryItem[] for this email template always right?
+  customizationChoices: Record<string, CustomizationChoiceAndCategory>;
+  discounts: Record<string, Discount>;
+  userIsAMember: boolean;
+  unsubscriptionToken: string;
   // dietaryRestrictions?: string;
 }
 
-function OrderReady(
-  {
-    // id,
-    // datetimeToPickup,
-    // includeNapkinsAndUtensils,
-    // items,
-  }: OrderReady,
-) {
-  const id = "123456";
-  const datetimeToPickup = new Date();
-  const includeNapkinsAndUtensils = false;
-  const items: Item[] = [
-    {
-      name: "Item 1",
-      quantity: 1,
-      price: 10,
-      menuItemId: "123",
-      specialInstructions: "No onions",
-      includeDietaryRestrictions: false,
-      customizations: [
-        {
-          customizationCategory: "Size",
-          customizationChoice: "Large",
-        },
-      ],
-      discountId: null,
-      pointReward: false,
-      birthdayReward: false,
-    },
-  ];
-
-  // Assuming tax rate is fixed, e.g., 8%
-  const TAX_RATE = 0.08;
-
-  // Calculating totals // TODO: Is this floating point safe?
-  const subtotal = items.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0,
-  );
-  const tax = new Decimal(subtotal).mul(TAX_RATE);
-  const total = new Decimal(subtotal).add(tax);
+function OrderReady({
+  id,
+  datetimeToPickup,
+  pickupName,
+  includeNapkinsAndUtensils,
+  items,
+  customizationChoices,
+  discounts,
+  userIsAMember,
+  unsubscriptionToken,
+  // dietaryRestrictions,
+}: OrderReady) {
+  const { subtotal, tax, total } = calculateTotalCartPrices({
+    items,
+    customizationChoices,
+    discounts,
+  });
 
   return (
     <Html>
-      <Preview>Come on in to pick up your order 😋</Preview>
+      <Preview>
+        Thanks for ordering from Khue&apos;s! We&apos;re preparing your order
+        now and will update when it&apos;s ready.
+      </Preview>
       <Tailwind
         config={{
           theme: {
             extend: {
               colors: {
-                primary: "#dc3727",
+                primary: "#14522d",
+                darkPrimary: "#0f3e22",
+                offwhite: "#fffcf5",
               },
             },
           },
@@ -123,8 +96,14 @@ function OrderReady(
 
         <Body style={main} className="rounded-lg">
           <Container style={container} className="rounded-lg">
-            <Section>
-              <div className="w-full rounded-t-lg bg-primary">
+            <Section className="my-4 bg-offwhite">
+              <div
+                // style={{
+                //   backgroundImage:
+                //     "linear-gradient(to bottom right, #14522d, #0f3e22)",
+                // }}
+                className="w-full rounded-t-lg bg-primary"
+              >
                 <Img
                   src={`${baseUrl}/static/whiteLogo.png`}
                   width="48"
@@ -135,6 +114,15 @@ function OrderReady(
               </div>
 
               <Section className="p-4">
+                <Row align="center" className="w-64">
+                  <Text className="text-center font-semibold">
+                    Thank you! Your order has been successfully placed and will
+                    be started soon.
+                  </Text>
+                </Row>
+
+                <Hr />
+
                 <Section className="my-8 text-center">
                   <Column align="center">
                     <Text className="text-lg font-semibold underline underline-offset-2">
@@ -142,9 +130,9 @@ function OrderReady(
                     </Text>
 
                     <Img
-                      src={`${baseUrl}/static/emailOrderReadyForPickup.png`}
+                      src={`${baseUrl}/static/emailOrderTracker.png`}
                       alt="Image of the order tracker progress bar: with steps of 'Order placed', 'In progress', and 'Ready for pickup'"
-                      className="my-8 h-[58px] w-[350px] sm:h-[78px] sm:w-[467px] "
+                      className="my-8 h-[55px] w-[333px] sm:h-[78px] sm:w-[467px]"
                     />
 
                     <Text className="text-base font-semibold">
@@ -153,6 +141,17 @@ function OrderReady(
 
                     <Section className="w-64">
                       <Row align="center">
+                        <Column>
+                          <Text className="my-0 text-left font-medium underline">
+                            Pickup name
+                          </Text>
+                          <Text className="my-0 text-left text-xs">
+                            {pickupName}
+                          </Text>
+                        </Column>
+                      </Row>
+
+                      <Row align="center" className="mt-2">
                         <Column>
                           <Text className="my-0 text-left font-medium underline">
                             Pickup time
@@ -191,16 +190,23 @@ function OrderReady(
 
                           <Column className="align-top">
                             <Text className="my-0">{item.name}</Text>
-                            {item.customizations.map(
-                              (customization, cIndex) => (
-                                <Text key={cIndex} className="my-0 text-xs">
-                                  - {customization.customizationCategory}:{" "}
-                                  {customization.customizationChoice}
+                            {Object.values(item.customizations).map(
+                              (choiceId, idx) => (
+                                <Text
+                                  key={idx}
+                                  className="my-0 max-w-64 text-xs sm:max-w-72"
+                                >
+                                  -{" "}
+                                  {
+                                    customizationChoices[choiceId]
+                                      ?.customizationCategory.name
+                                  }
+                                  : {customizationChoices[choiceId]?.name}
                                 </Text>
                               ),
                             )}
                             {item.specialInstructions && (
-                              <Text className="my-0 text-xs">
+                              <Text className="my-0 max-w-64 text-xs sm:max-w-72">
                                 - {item.specialInstructions}
                               </Text>
                             )}
@@ -208,7 +214,15 @@ function OrderReady(
 
                           <Column className="align-top">
                             <Text className="my-0 text-right">
-                              ${(item.price * item.quantity).toFixed(2)}
+                              {formatPrice(
+                                calculateRelativeTotal({
+                                  items: [item] as
+                                    | Item[]
+                                    | DBOrderSummaryItem[],
+                                  customizationChoices,
+                                  discounts,
+                                }),
+                              )}
                             </Text>
                           </Column>
                         </Row>
@@ -220,12 +234,12 @@ function OrderReady(
                             <Img
                               src={`${baseUrl}/static/utensils.png`}
                               alt="Image of a fork and knife to represent napkins and utensils"
-                              className="ml-auto mr-2 h-4 w-4"
+                              className="ml-auto mr-2 h-3 w-3"
                             />
                           </Column>
 
                           <Column className="w-28 text-right">
-                            <Text className="my-0 text-left italic text-stone-400">
+                            <Text className="my-0 text-left text-xs italic text-stone-400">
                               {`Napkins and utensils were ${
                                 includeNapkinsAndUtensils ? "" : "not"
                               } requested.`}
@@ -243,7 +257,7 @@ function OrderReady(
                           </Column>
                           <Column>
                             <Text className="my-0 text-right">
-                              ${subtotal.toFixed(2)}
+                              {formatPrice(subtotal)}
                             </Text>
                           </Column>
                         </Row>
@@ -253,7 +267,7 @@ function OrderReady(
                           </Column>
                           <Column>
                             <Text className="my-0 text-right">
-                              ${tax.toFixed(2)}
+                              {formatPrice(tax)}
                             </Text>
                           </Column>
                         </Row>
@@ -265,7 +279,7 @@ function OrderReady(
                           </Column>
                           <Column>
                             <Text className="my-0 text-right text-base font-semibold">
-                              ${total.toFixed(2)}
+                              {formatPrice(total)}
                             </Text>
                           </Column>
                         </Row>
@@ -400,16 +414,20 @@ function OrderReady(
                   </Text>
 
                   <Section className="w-96 text-center">
-                    <Row className="text-center">
-                      <Link href="https://khueskitchen.com/profile/preferences">
-                        <Text className="mt-0 text-xs text-offwhite underline underline-offset-2">
-                          Manage your email communication preferences
-                        </Text>
-                      </Link>
-                    </Row>
+                    {userIsAMember && (
+                      <Row className="text-center">
+                        <Link href="https://khueskitchen.com/profile/preferences">
+                          <Text className="mt-0 text-xs text-offwhite underline underline-offset-2">
+                            Manage your email communication preferences
+                          </Text>
+                        </Link>
+                      </Row>
+                    )}
 
                     <Row className="text-center">
-                      <Link href="https://khueskitchen.com/unsubscribe">
+                      <Link
+                        href={`https://khueskitchen.com/unsubscribe?token=${unsubscriptionToken}`}
+                      >
                         <Text className="mt-0 pl-2 text-xs text-offwhite underline underline-offset-2">
                           Unsubscribe from all emails
                         </Text>
@@ -435,6 +453,6 @@ const main = {
 };
 
 const container = {
-  backgroundColor: "#ffffff",
+  backgroundColor: "#e7e5e4",
   margin: "0 auto",
 };

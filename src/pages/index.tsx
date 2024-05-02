@@ -167,7 +167,7 @@ export default function Home() {
         </div>
 
         <div className="baseVertFlex absolute top-0 h-full xl:!left-24 tablet:left-8">
-          <div className="baseVertFlex !items-start gap-1 rounded-md bg-offwhite p-8 text-primary shadow-md">
+          <div className="baseVertFlex !items-start gap-1 rounded-md bg-offwhite p-8 shadow-md">
             <h1 className="text-4xl font-bold">Welcome to Khue&apos;s</h1>
             <h2 className="text-2xl">
               A modern take on classic Vietnamese cuisine.
@@ -467,7 +467,7 @@ export default function Home() {
               className="!relative !top-0 !size-full !h-96 rounded-md !pb-16"
             />
           </div>
-          <div className="baseVertFlex !items-start gap-4 p-4">
+          <div className="baseVertFlex !items-start gap-4 bg-gradient-to-br from-offwhite to-primary/10 p-4">
             <p className="text-lg font-medium">Meet the Chef</p>
 
             <p>
@@ -551,7 +551,7 @@ export default function Home() {
               className="!relative !top-0 !size-full !h-96 rounded-md !pb-24"
             />
           </div>
-          <div className="baseVertFlex !items-start gap-2 p-4">
+          <div className="baseVertFlex !items-start gap-2 bg-gradient-to-br from-offwhite to-primary/10 p-4">
             <p className="text-lg font-medium leading-6">
               Planning a birthday dinner or get together with your friends?
             </p>

@@ -10,6 +10,10 @@ import {
 import Stripe from "stripe";
 import { env } from "~/env";
 import { addMonths } from "date-fns";
+import { Resend } from "resend";
+import Welcome from "emails/Welcome";
+
+const resend = new Resend(env.RESEND_API_KEY);
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16",
@@ -56,20 +60,73 @@ export const userRouter = createTRPCRouter({
       });
 
       // add inital rewards for user
-      const currentDate = new Date();
-      const sixMonthsLater = addMonths(currentDate, 6);
-
-      await ctx.prisma.reward.create({
+      void ctx.prisma.reward.create({
         data: {
           userId: input.userId,
-          expiresAt: sixMonthsLater,
+          expiresAt: addMonths(new Date(), 6),
           value: 500,
         },
       });
 
+      // create email unsubscription token + send welcome email
+      const unsubscriptionToken =
+        await ctx.prisma.emailUnsubscriptionToken.create({
+          data: {
+            expiresAt: addMonths(new Date(), 3),
+            emailAddress: input.email,
+          },
+        });
+
+      try {
+        const { data, error } = await resend.emails.send({
+          from: "onboarding@resend.dev",
+          to: "khues.dev@gmail.com", // input.email,
+          subject: "Hello world",
+          react: Welcome({
+            firstName: input.firstName,
+            unsubscriptionToken: unsubscriptionToken.id,
+          }),
+        });
+
+        if (error) {
+          // res.status(400).json({ error });
+          console.error(error);
+        }
+
+        // res.status(200).json({ data });
+        console.log("went through", data);
+      } catch (error) {
+        // res.status(400).json({ error });
+        console.error(error);
+      }
+
+      // if user's email existed in BlacklistedEmail model,
+      // then initialize their email preferences all to be false
+
+      const blacklistedEmail = await ctx.prisma.blacklistedEmail.findFirst({
+        where: {
+          emailAddress: input.email,
+        },
+      });
+
+      const initialEmailPreferences = blacklistedEmail
+        ? {
+            allowsEmailReceipts: false,
+            allowsOrderCompleteEmails: false,
+            allowsPromotionalEmails: false,
+            allowsRewardAvailabilityReminderEmails: false,
+          }
+        : {
+            allowsEmailReceipts: true,
+            allowsOrderCompleteEmails: true,
+            allowsPromotionalEmails: true,
+            allowsRewardAvailabilityReminderEmails: true,
+          };
+
       return ctx.prisma.user.create({
         data: {
           stripeUserId: customer.id,
+          ...initialEmailPreferences,
           ...input,
         },
       });

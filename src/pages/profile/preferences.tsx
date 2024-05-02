@@ -153,7 +153,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
     allowsEmailReceipts: z.boolean(),
     allowsOrderCompleteEmails: z.boolean(),
     allowsPromotionalEmails: z.boolean(),
-    allowsRewardExpiryReminderEmails: z.boolean(),
+    allowsRewardAvailabilityReminderEmails: z.boolean(),
 
     // these fields will be disabled but just to be safe
     email: z.string().email(),
@@ -173,8 +173,8 @@ function Preferences({ initUserData }: { initUserData: User }) {
       allowsEmailReceipts: user?.allowsEmailReceipts ?? false,
       allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails ?? false,
       allowsPromotionalEmails: user?.allowsPromotionalEmails ?? false,
-      allowsRewardExpiryReminderEmails:
-        user?.allowsRewardExpiryReminderEmails ?? false,
+      allowsRewardAvailabilityReminderEmails:
+        user?.allowsRewardAvailabilityReminderEmails ?? false,
     },
     defaultValues: {
       firstName: user?.firstName ?? "",
@@ -186,8 +186,8 @@ function Preferences({ initUserData }: { initUserData: User }) {
       allowsEmailReceipts: user?.allowsEmailReceipts ?? false,
       allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails ?? false,
       allowsPromotionalEmails: user?.allowsPromotionalEmails ?? false,
-      allowsRewardExpiryReminderEmails:
-        user?.allowsRewardExpiryReminderEmails ?? false,
+      allowsRewardAvailabilityReminderEmails:
+        user?.allowsRewardAvailabilityReminderEmails ?? false,
     },
   });
 
@@ -506,24 +506,24 @@ function Preferences({ initUserData }: { initUserData: User }) {
 
               <FormField
                 control={form.control}
-                name="allowsRewardExpiryReminderEmails"
+                name="allowsRewardAvailabilityReminderEmails"
                 render={({ field }) => (
                   <FormItem className="baseVertFlex relative gap-2 space-y-0">
                     <div className="baseFlex ml-1 gap-[1.15rem]">
                       <FormControl>
                         <Checkbox
-                          id="allowsRewardExpiryReminderEmails"
+                          id="allowsRewardAvailabilityReminderEmails"
                           checked={field.value}
                           onCheckedChange={field.onChange}
                           className="size-4"
                         />
                       </FormControl>
                       <Label
-                        htmlFor="allowsRewardExpiryReminderEmails"
+                        htmlFor="allowsRewardAvailabilityReminderEmails"
                         className="leading-4"
                       >
-                        Receive a reminder when your rewards are about to
-                        expire.
+                        Receive reminders about the availability of your
+                        rewards.
                       </Label>
                     </div>
                   </FormItem>
@@ -550,8 +550,8 @@ function Preferences({ initUserData }: { initUserData: User }) {
               allowsEmailReceipts: user?.allowsEmailReceipts,
               allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails,
               allowsPromotionalEmails: user?.allowsPromotionalEmails,
-              allowsRewardExpiryReminderEmails:
-                user?.allowsRewardExpiryReminderEmails,
+              allowsRewardAvailabilityReminderEmails:
+                user?.allowsRewardAvailabilityReminderEmails,
             })
           }
           className="absolute right-4 top-4"

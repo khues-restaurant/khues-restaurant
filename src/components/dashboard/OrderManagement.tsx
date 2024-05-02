@@ -453,6 +453,7 @@ function CustomerOrder({ order, view }: CustomerOrder) {
                             } else {
                               completeOrder({
                                 id: order.id,
+                                userId: order.userId,
                                 customerEmail: order.email,
                               });
                             }

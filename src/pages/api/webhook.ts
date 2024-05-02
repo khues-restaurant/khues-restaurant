@@ -2,7 +2,7 @@ import type { NextApiResponse, NextApiRequest } from "next";
 import { buffer } from "micro";
 import { env } from "~/env";
 import Stripe from "stripe";
-import { PrismaClient } from "@prisma/client";
+import { type Discount, PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { emitNewOrderThroughSocket } from "~/utils/emitNewOrderThroughSocket";
 import { type OrderDetails } from "~/stores/MainStore";
@@ -10,6 +10,12 @@ import { orderDetailsSchema } from "~/stores/MainStore";
 import Decimal from "decimal.js";
 import { splitFullName } from "~/utils/splitFullName";
 import { addMonths } from "date-fns";
+import { Resend } from "resend";
+import Receipt from "emails/Receipt";
+import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
+import { prisma } from "~/server/db";
+
+const resend = new Resend(env.RESEND_API_KEY);
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16",
@@ -379,9 +385,41 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       // 5) send websocket emit to dashboard
       emitNewOrderThroughSocket();
 
-      // 6) TODO: send post request to w/e pos system we are using
+      // TODO: remove/uncomment this depending on if using STAR cloudPRNT solution
+      // 6) add order to print queue model in database
+      // await prisma.orderPrintQueue.create({
+      //   data: {
+      //     orderId: order.id,
+      //   },
+      // });
 
       // 7) send email receipt (if allowed) to user
+      if (user?.allowsEmailReceipts) {
+        await SendEmailReceipt({
+          // email: customerMetadata.email,
+          order,
+          orderDetails,
+          userIsAMember: true,
+        });
+      }
+
+      // check if customer email is on do not email blacklist in database
+      else {
+        const emailBlacklistValue = await prisma.blacklistedEmail.findFirst({
+          where: {
+            emailAddress: customerMetadata.email,
+          },
+        });
+
+        if (!emailBlacklistValue) {
+          await SendEmailReceipt({
+            // email: customerMetadata.email,
+            order,
+            orderDetails,
+            userIsAMember: false,
+          });
+        }
+      }
 
       // 8) cleanup transient order, technically not necessary though right since we just upsert either way?
       await prisma.transientOrder.delete({
@@ -398,3 +436,111 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export default webhook;
+
+interface SendEmailReceipt {
+  order: {
+    id: string;
+    datetimeToPickup: Date;
+    firstName: string;
+    lastName: string;
+    email: string;
+    includeNapkinsAndUtensils: boolean;
+  };
+  orderDetails: {
+    items: {
+      id: string;
+      name: string;
+      quantity: number;
+      price: number;
+      itemId: string;
+      specialInstructions: string;
+      includeDietaryRestrictions: boolean;
+      customizations: Record<string, string>;
+      discountId: string | null;
+      isAlcoholic: boolean;
+      isVegetarian: boolean;
+      pointReward: boolean;
+      birthdayReward: boolean;
+    }[];
+  };
+  userIsAMember: boolean;
+}
+
+async function SendEmailReceipt({
+  order,
+  orderDetails,
+  userIsAMember,
+}: SendEmailReceipt) {
+  console.log("sending email receipt");
+
+  const unsubscriptionToken = await prisma.emailUnsubscriptionToken.create({
+    data: {
+      expiresAt: addMonths(new Date(), 3),
+      emailAddress: order.email,
+    },
+  });
+
+  const rawCustomizationChoices = await prisma.customizationChoice.findMany({
+    include: {
+      customizationCategory: true,
+    },
+  });
+
+  const customizationChoices = rawCustomizationChoices.reduce(
+    (acc, choice) => {
+      acc[choice.id] = choice;
+      return acc;
+    },
+    {} as Record<string, CustomizationChoiceAndCategory>,
+  );
+
+  const rawDiscounts = await prisma.discount.findMany({
+    where: {
+      active: true,
+      expirationDate: {
+        gte: new Date(),
+      },
+      userId: null,
+      menuItem: undefined, // assuming that we are most likely not doing the category/item %/bogo discounts
+      menuCategory: undefined, // assuming that we are most likely not doing the category/item %/bogo discounts
+    },
+  });
+
+  const discounts = rawDiscounts.reduce(
+    (acc, discount) => {
+      acc[discount.id] = discount;
+      return acc;
+    },
+    {} as Record<string, Discount>,
+  );
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: "khues.dev@gmail.com", // order.email,
+      subject: "Hello world",
+      react: Receipt({
+        id: order.id,
+        datetimeToPickup: order.datetimeToPickup,
+        pickupName: `${order.firstName} ${order.lastName}`,
+        includeNapkinsAndUtensils: order.includeNapkinsAndUtensils,
+        items: orderDetails.items,
+        customizationChoices,
+        discounts,
+        userIsAMember,
+        unsubscriptionToken: unsubscriptionToken.id,
+      }),
+    });
+
+    if (error) {
+      // res.status(400).json({ error });
+      console.error(error);
+    }
+
+    // res.status(200).json({ data });
+    console.log("went through", data);
+  } catch (error) {
+    // res.status(400).json({ error });
+    console.error(error);
+  }
+}

@@ -10,6 +10,23 @@ datasource db {
 // TODO: very very carefully prune through which models/relations need onDelete: Cascade or some
 // variation
 
+model BlacklistedEmail {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+
+    emailAddress String @unique
+
+    @@index([emailAddress])
+}
+
+model EmailUnsubscriptionToken {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    expiresAt DateTime // 3 months from createdAt, ample time for customer to click the link if they want
+
+    emailAddress String @unique
+}
+
 model Chat {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
@@ -306,10 +323,10 @@ model User {
     birthday            DateTime
     dietaryRestrictions String
 
-    allowsEmailReceipts              Boolean @default(true)
-    allowsOrderCompleteEmails        Boolean @default(true)
-    allowsPromotionalEmails          Boolean @default(true)
-    allowsRewardExpiryReminderEmails Boolean @default(true)
+    allowsEmailReceipts                    Boolean @default(true)
+    allowsOrderCompleteEmails              Boolean @default(true)
+    allowsPromotionalEmails                Boolean @default(true)
+    allowsRewardAvailabilityReminderEmails Boolean @default(true)
 
     rewardsPoints        Int @default(500) // TODO: most likely change this later
     lifetimeRewardPoints Int @default(0)

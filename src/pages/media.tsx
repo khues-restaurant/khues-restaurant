@@ -49,9 +49,9 @@ function Media() {
 
           <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
             <Image
-              src="/media/karetest.png"
+              src="/media/kare11Logo.png"
               alt="TODO"
-              width={70}
+              width={75}
               height={35}
             />
             <p className="text-lg font-semibold">
@@ -90,9 +90,9 @@ function Media() {
 
           <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
             <Image
-              src="/media/karetest.png"
+              src="/media/kare11Logo.png"
               alt="TODO"
-              width={70}
+              width={75}
               height={35}
             />
             <p className="text-lg font-semibold">
