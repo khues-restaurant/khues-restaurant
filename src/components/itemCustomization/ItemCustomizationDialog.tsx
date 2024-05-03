@@ -4,7 +4,7 @@ import {
   type Discount,
 } from "@prisma/client";
 import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
-import { LuMinus, LuPlus } from "react-icons/lu";
+import { LuMinus, LuPlus, LuVegan } from "react-icons/lu";
 import AnimatedPrice from "~/components/AnimatedPrice";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogFooter } from "~/components/ui/dialog";
@@ -46,6 +46,8 @@ import Image from "next/image";
 import { useAuth } from "@clerk/nextjs";
 import { useToast } from "~/components/ui/use-toast";
 import { ToastAction } from "~/components/ui/toast";
+import { SiLeaflet } from "react-icons/si";
+import { Separator } from "~/components/ui/separator";
 
 interface ItemCustomizationDialog {
   isDialogOpen: boolean;
@@ -160,8 +162,13 @@ function ItemCustomizerDialogContent({
       price: itemToCustomize.price,
       itemId: itemToCustomize.id,
       discountId: itemToCustomize.activeDiscountId,
+      isChefsChoice: itemToCustomize.isChefsChoice,
       isAlcoholic: itemToCustomize.isAlcoholic,
       isVegetarian: itemToCustomize.isVegetarian,
+      isVegan: itemToCustomize.isVegan,
+      isGlutenFree: itemToCustomize.isGlutenFree,
+      showUndercookedOrRawDisclaimer:
+        itemToCustomize.showUndercookedOrRawDisclaimer,
       pointReward: false,
       birthdayReward: false,
     },
@@ -201,8 +208,8 @@ function ItemCustomizerDialogContent({
         ${itemToCustomize.suggestedPairings.length > 0 || itemToCustomize.suggestedWith.length > 0 || itemToCustomize.customizationCategories.length > 0 ? "desktop:h-[700px]" : "desktop:h-[600px]"}
       `}
       >
-        <div className="baseFlex relative h-72 w-full !justify-end rounded-md shadow-md">
-          {/* red diagonal bg */}
+        <div className="baseFlex relative h-72 w-full !justify-end rounded-md bg-offwhite shadow-md">
+          {/* primary diagonal bg */}
           <div
             className="absolute left-0 top-0 size-full rounded-md bg-primary"
             style={{
@@ -220,20 +227,7 @@ function ItemCustomizerDialogContent({
           />
 
           <div className="baseFlex absolute bottom-0 left-4 gap-4 rounded-t-md bg-offwhite px-4 py-2 text-xl font-semibold">
-            <div className="baseFlex gap-2">
-              {itemToCustomize.name}
-
-              {itemToCustomize.chefsChoice && (
-                <Image
-                  src="/logo.svg"
-                  alt="Khue's header logo"
-                  width={18}
-                  height={18}
-                  priority
-                  className="!size-[18px]"
-                />
-              )}
-            </div>
+            <div className="baseFlex gap-2">{itemToCustomize.name}</div>
 
             {/* TODO: wrap the like button in a Popover to show "Only rewards members can favorite items" */}
 
@@ -302,6 +296,59 @@ function ItemCustomizerDialogContent({
             <p className="max-w-96 text-wrap text-left text-stone-400 tablet:max-w-2xl">
               {itemToCustomize.description}
             </p>
+
+            <div className="baseVertFlex mt-2 w-full gap-2">
+              <div className="baseFlex w-full gap-2">
+                {(() => {
+                  const elements = [];
+
+                  if (itemToCustomize.isChefsChoice) {
+                    elements.push(
+                      <div className="baseFlex gap-2">
+                        <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
+                          K
+                        </p>
+                        <p>Chef&apos;s Choice</p>
+                      </div>,
+                    );
+                  }
+
+                  if (itemToCustomize.isVegetarian) {
+                    if (elements.length > 0) {
+                      // Add a divider if this isn't the first element
+                      elements.push(<Separator className="h-4 w-[1px]" />);
+                    }
+                    elements.push(
+                      <p className="baseFlex gap-2">
+                        <SiLeaflet className="size-4" />
+                        Vegetarian
+                      </p>,
+                    );
+                  }
+
+                  if (itemToCustomize.isVegan) {
+                    if (elements.length > 0) {
+                      elements.push(<Separator className="h-4 w-[1px]" />);
+                    }
+                    elements.push(
+                      <p className="baseFlex gap-2 ">
+                        <LuVegan className="size-4" />
+                        Vegan
+                      </p>,
+                    );
+                  }
+
+                  if (itemToCustomize.isGlutenFree) {
+                    if (elements.length > 0) {
+                      elements.push(<Separator className="h-4 w-[1px]" />);
+                    }
+                    elements.push(<p className="baseFlex">GF - Gluten Free</p>);
+                  }
+
+                  return elements;
+                })()}
+              </div>
+            </div>
           </div>
 
           {/* Customizations */}
@@ -461,12 +508,21 @@ function ItemCustomizerDialogContent({
             </AccordionItem>
           </Accordion>
 
-          {itemToCustomize.isAlcoholic && (
-            <p className="text-center text-xs italic text-stone-400">
-              * Orders that contain alcoholic beverages must include at least
-              one food item.
-            </p>
-          )}
+          <div className="baseVertFlex w-full gap-2">
+            {itemToCustomize.isAlcoholic && (
+              <p className="text-center text-xs italic text-stone-400">
+                * Orders that contain alcoholic beverages must include at least
+                one food item.
+              </p>
+            )}
+
+            {itemToCustomize.showUndercookedOrRawDisclaimer && (
+              <p className="text-center text-xs italic text-stone-400">
+                * Consuming raw or undercooked meats, poultry, seafood,
+                shellfish, or eggs may increase your risk of foodborne illness.
+              </p>
+            )}
+          </div>
 
           {/* Reviews */}
           {/* <div className="baseVertFlex w-full gap-2">
@@ -784,8 +840,12 @@ function SuggestedPairing({
     price: item.price,
     itemId: item.id,
     discountId: item.activeDiscountId,
+    isChefsChoice: item.isChefsChoice,
     isAlcoholic: item.isAlcoholic,
     isVegetarian: item.isVegetarian,
+    isVegan: item.isVegan,
+    isGlutenFree: item.isGlutenFree,
+    showUndercookedOrRawDisclaimer: item.showUndercookedOrRawDisclaimer,
     pointReward: false,
     birthdayReward: false,
   };

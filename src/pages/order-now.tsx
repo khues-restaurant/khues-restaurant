@@ -26,6 +26,8 @@ import { FaRedo } from "react-icons/fa";
 import { formatPrice } from "~/utils/formatPrice";
 import { useToast } from "~/components/ui/use-toast";
 import { ToastAction } from "~/components/ui/toast";
+import { SiLeaflet } from "react-icons/si";
+import { LuVegan } from "react-icons/lu";
 import {
   Carousel,
   CarouselContent,
@@ -885,19 +887,23 @@ function MenuItemPreviewButton({
           <div
             className={`baseVertFlex !items-start gap-2 ${!menuItem.available ? "mt-4" : ""}`}
           >
-            <p className="max-w-40 text-wrap text-left text-lg font-medium underline underline-offset-2">
-              {menuItem.name}
-              {menuItem.chefsChoice && (
-                <Image
-                  src="/logo.svg"
-                  alt="Khue's header logo"
-                  width={16}
-                  height={16}
-                  priority
-                  className="ml-2 !inline-block !size-[16px]"
-                />
-              )}
-            </p>
+            <div className="baseVertFlex !items-start gap-1">
+              <p className="max-w-40 text-wrap text-left text-lg font-medium underline underline-offset-2">
+                {menuItem.name}
+              </p>
+
+              <div className="baseFlex !justify-start gap-1">
+                {menuItem.isChefsChoice && (
+                  <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
+                    K
+                  </p>
+                )}
+                {menuItem.isVegetarian && <SiLeaflet className="size-4" />}
+                {menuItem.isVegan && <LuVegan className="size-4" />}
+                {menuItem.isGlutenFree && <p className="text-sm">GF</p>}
+              </div>
+            </div>
+
             <p className="line-clamp-3 max-w-48 text-wrap text-left text-stone-400">
               {menuItem.description}
             </p>
@@ -921,8 +927,13 @@ function MenuItemPreviewButton({
                     includeDietaryRestrictions: false,
                     name: menuItem.name,
                     specialInstructions: "",
+                    isChefsChoice: menuItem.isChefsChoice,
                     isAlcoholic: menuItem.isAlcoholic,
                     isVegetarian: menuItem.isVegetarian,
+                    isVegan: menuItem.isVegan,
+                    isGlutenFree: menuItem.isGlutenFree,
+                    showUndercookedOrRawDisclaimer:
+                      menuItem.showUndercookedOrRawDisclaimer,
                     birthdayReward: false,
                     pointReward: false,
                   },
@@ -984,8 +995,13 @@ function MenuItemPreviewButton({
                     includeDietaryRestrictions: false,
                     quantity: 1,
                     price: menuItem.price,
+                    isChefsChoice: menuItem.isChefsChoice,
                     isAlcoholic: menuItem.isAlcoholic,
                     isVegetarian: menuItem.isVegetarian,
+                    isVegan: menuItem.isVegan,
+                    isGlutenFree: menuItem.isGlutenFree,
+                    showUndercookedOrRawDisclaimer:
+                      menuItem.showUndercookedOrRawDisclaimer,
                     discountId: activeDiscount?.id ?? null,
                     birthdayReward: false,
                     pointReward: false,
@@ -1075,17 +1091,19 @@ function PreviousOrder({ order }: PreviousOrder) {
   const { mutate: addItemsFromOrderToCart, isLoading: isValidatingOrder } =
     api.validateOrder.validate.useMutation({
       onSuccess: (data) => {
-        if (!data.validItems) return;
+        if (!data.validItems) {
+          // TODO: show a dialog mostly likely with something along the lines of
+          // "We're sorry, but the items from your previous order are not currently available."
+          // ^ "to be reordered. Please try again later."
+
+          return;
+        }
 
         // set prev order details so we can revert if necessary
         // with toast's undo button
         setPrevOrderDetails(orderDetails);
 
-        const itemsWithRewardsRemoved = data.validItems.filter(
-          (item) => !item.birthdayReward && !item.pointReward,
-        );
-
-        const totalValidItems = itemsWithRewardsRemoved.reduce(
+        const totalValidItems = data.validItems.reduce(
           (acc, item) => acc + item.quantity,
           0,
         );
@@ -1112,7 +1130,7 @@ function PreviousOrder({ order }: PreviousOrder) {
             ...orderDetails,
             items: [
               ...orderDetails.items,
-              ...itemsWithRewardsRemoved.map((item) => ({
+              ...data.validItems.map((item) => ({
                 id: crypto.randomUUID(),
                 itemId: item.itemId,
                 name: item.name,
@@ -1121,8 +1139,13 @@ function PreviousOrder({ order }: PreviousOrder) {
                 includeDietaryRestrictions: item.includeDietaryRestrictions,
                 quantity: item.quantity,
                 price: item.price,
+                isChefsChoice: item.isChefsChoice,
                 isAlcoholic: item.isAlcoholic,
                 isVegetarian: item.isVegetarian,
+                isVegan: item.isVegan,
+                isGlutenFree: item.isGlutenFree,
+                showUndercookedOrRawDisclaimer:
+                  item.showUndercookedOrRawDisclaimer,
                 discountId: item.discountId,
                 birthdayReward: item.birthdayReward,
                 pointReward: item.pointReward,
@@ -1239,8 +1262,13 @@ function PreviousOrder({ order }: PreviousOrder) {
                     includeDietaryRestrictions: item.includeDietaryRestrictions,
                     quantity: item.quantity,
                     price: item.price,
+                    isChefsChoice: item.isChefsChoice,
                     isAlcoholic: item.isAlcoholic,
                     isVegetarian: item.isVegetarian,
+                    isVegan: item.isVegan,
+                    isGlutenFree: item.isGlutenFree,
+                    showUndercookedOrRawDisclaimer:
+                      item.showUndercookedOrRawDisclaimer,
                     discountId: item.discountId,
                     birthdayReward: item.birthdayReward,
                     pointReward: item.pointReward,

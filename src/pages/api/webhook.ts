@@ -457,8 +457,12 @@ interface SendEmailReceipt {
       includeDietaryRestrictions: boolean;
       customizations: Record<string, string>;
       discountId: string | null;
+      isChefsChoice: boolean;
       isAlcoholic: boolean;
       isVegetarian: boolean;
+      isVegan: boolean;
+      isGlutenFree: boolean;
+      showUndercookedOrRawDisclaimer: boolean;
       pointReward: boolean;
       birthdayReward: boolean;
     }[];

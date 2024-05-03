@@ -123,10 +123,14 @@ model MenuItem {
     activeDiscount   Discount?    @relation(fields: [activeDiscountId], references: [id])
     activeDiscountId String?
 
-    isAlcoholic  Boolean @default(false)
-    isVegetarian Boolean @default(false)
+    isChefsChoice                  Boolean @default(false)
+    isAlcoholic                    Boolean @default(false)
+    isVegetarian                   Boolean @default(false)
+    isVegan                        Boolean @default(false)
+    isGlutenFree                   Boolean @default(false)
+    showUndercookedOrRawDisclaimer Boolean @default(false)
+
     isRewardItem Boolean @default(false)
-    chefsChoice  Boolean @default(false)
     reviews      String? // max three hand-picked reviews, separated/delimited by " | "
 
     favoriteItem            FavoriteItem[]
@@ -197,8 +201,16 @@ model OrderItem {
     discount   Discount? @relation(fields: [discountId], references: [id])
     discountId String?
 
-    isAlcoholic  Boolean @default(false) // technically this shouldn't have a default but I don't think it is high priority
-    isVegetarian Boolean @default(false)
+    // TODO: are these fields below necessary? I thought maybe the isAlcoholic one was for when
+    // reordering an order that had an alcoholic item in it, but I think that can be inferred
+    // to be valid if the original order was valid. Maybe just remove these fields if you can be 100%
+    // sure that they aren't necessary
+    isChefsChoice                  Boolean @default(false)
+    isAlcoholic                    Boolean @default(false)
+    isVegetarian                   Boolean @default(false)
+    isVegan                        Boolean @default(false)
+    isGlutenFree                   Boolean @default(false)
+    showUndercookedOrRawDisclaimer Boolean @default(false)
 
     pointReward    Boolean @default(false)
     birthdayReward Boolean @default(false)

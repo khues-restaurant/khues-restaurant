@@ -13,7 +13,7 @@ import {
 } from "~/components/ui/accordion";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { IoIosArrowBack, IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
-import { LuMinus, LuPlus } from "react-icons/lu";
+import { LuMinus, LuPlus, LuVegan } from "react-icons/lu";
 import AnimatedPrice from "~/components/AnimatedPrice";
 import { Button } from "~/components/ui/button";
 import { DrawerFooter } from "~/components/ui/drawer";
@@ -23,6 +23,8 @@ import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
+import { SiLeaflet } from "react-icons/si";
+import { Separator } from "~/components/ui/separator";
 import {
   Carousel,
   CarouselContent,
@@ -119,8 +121,13 @@ function ItemCustomizationDrawer({
       price: itemToCustomize.price,
       itemId: itemToCustomize.id,
       discountId: itemToCustomize.activeDiscountId,
+      isChefsChoice: itemToCustomize.isChefsChoice,
       isAlcoholic: itemToCustomize.isAlcoholic,
       isVegetarian: itemToCustomize.isVegetarian,
+      isVegan: itemToCustomize.isVegan,
+      isGlutenFree: itemToCustomize.isGlutenFree,
+      showUndercookedOrRawDisclaimer:
+        itemToCustomize.showUndercookedOrRawDisclaimer,
       pointReward: false,
       birthdayReward: false,
     },
@@ -187,17 +194,6 @@ function ItemCustomizationDrawer({
               <p className="text-xl font-semibold underline underline-offset-2">
                 {itemToCustomize.name}
               </p>
-
-              {itemToCustomize.chefsChoice && (
-                <Image
-                  src="/logo.svg"
-                  alt="Khue's header logo"
-                  width={16}
-                  height={16}
-                  priority
-                  className="!size-[16px]"
-                />
-              )}
             </div>
 
             {/* TODO: wrap the like button in a Popover to show "Only rewards members can favorite items" */}
@@ -275,6 +271,35 @@ function ItemCustomizationDrawer({
             <p className="max-w-96 text-wrap text-left text-sm text-stone-400 tablet:max-w-2xl">
               {itemToCustomize.description}
             </p>
+
+            <div className="baseVertFlex mt-2 w-full !items-start gap-2">
+              {itemToCustomize.isChefsChoice && (
+                <div className="baseFlex gap-2">
+                  <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
+                    K
+                  </p>
+                  <p>Chef&apos;s Choice</p>
+                </div>
+              )}
+
+              {itemToCustomize.isVegetarian && (
+                <div className="baseFlex gap-2">
+                  <SiLeaflet className="size-4" />
+                  <p>Vegetarian</p>
+                </div>
+              )}
+
+              {itemToCustomize.isVegan && (
+                <div className="baseFlex gap-2">
+                  <LuVegan className="size-4" />
+                  <p>Vegan</p>
+                </div>
+              )}
+
+              {itemToCustomize.isGlutenFree && (
+                <p className="baseFlex">GF - Gluten Free</p>
+              )}
+            </div>
           </div>
 
           {/* Customizations */}
@@ -434,12 +459,21 @@ function ItemCustomizationDrawer({
             </AccordionItem>
           </Accordion>
 
-          {itemToCustomize.isAlcoholic && (
-            <p className="text-center text-xs italic text-stone-400">
-              * Orders that contain alcoholic beverages must include at least
-              one food item.
-            </p>
-          )}
+          <div className="baseVertFlex w-full gap-2">
+            {itemToCustomize.isAlcoholic && (
+              <p className="text-center text-xs italic text-stone-400">
+                * Orders that contain alcoholic beverages must include at least
+                one food item.
+              </p>
+            )}
+
+            {itemToCustomize.showUndercookedOrRawDisclaimer && (
+              <p className="text-center text-xs italic text-stone-400">
+                * Consuming raw or undercooked meats, poultry, seafood,
+                shellfish, or eggs may increase your risk of foodborne illness.
+              </p>
+            )}
+          </div>
 
           {/* Reviews */}
           {/* <div className="baseVertFlex w-full gap-2">
@@ -767,8 +801,12 @@ function SuggestedPairing({
     price: item.price,
     itemId: item.id,
     discountId: item.activeDiscountId,
+    isChefsChoice: item.isChefsChoice,
     isAlcoholic: item.isAlcoholic,
     isVegetarian: item.isVegetarian,
+    isVegan: item.isVegan,
+    isGlutenFree: item.isGlutenFree,
+    showUndercookedOrRawDisclaimer: item.showUndercookedOrRawDisclaimer,
     pointReward: false,
     birthdayReward: false,
   };

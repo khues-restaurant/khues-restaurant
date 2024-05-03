@@ -11,6 +11,8 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
+import { LuVegan } from "react-icons/lu";
+import { SiLeaflet } from "react-icons/si";
 import Sticky from "react-stickynode";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
@@ -691,8 +693,13 @@ function formatMenuItemPrice(
                 includeDietaryRestrictions: false,
                 name: menuItem.name,
                 specialInstructions: "",
+                isChefsChoice: menuItem.isChefsChoice,
                 isAlcoholic: menuItem.isAlcoholic,
                 isVegetarian: menuItem.isVegetarian,
+                isVegan: menuItem.isVegan,
+                isGlutenFree: menuItem.isGlutenFree,
+                showUndercookedOrRawDisclaimer:
+                  menuItem.showUndercookedOrRawDisclaimer,
                 birthdayReward: false,
                 pointReward: false,
               },
@@ -718,8 +725,13 @@ function formatMenuItemPrice(
                 includeDietaryRestrictions: false,
                 name: menuItem.name,
                 specialInstructions: "",
+                isChefsChoice: menuItem.isChefsChoice,
                 isAlcoholic: menuItem.isAlcoholic,
                 isVegetarian: menuItem.isVegetarian,
+                isVegan: menuItem.isVegan,
+                isGlutenFree: menuItem.isGlutenFree,
+                showUndercookedOrRawDisclaimer:
+                  menuItem.showUndercookedOrRawDisclaimer,
                 birthdayReward: false,
                 pointReward: false,
               },
@@ -750,8 +762,13 @@ function formatMenuItemPrice(
               includeDietaryRestrictions: false,
               name: menuItem.name,
               specialInstructions: "",
+              isChefsChoice: menuItem.isChefsChoice,
               isAlcoholic: menuItem.isAlcoholic,
               isVegetarian: menuItem.isVegetarian,
+              isVegan: menuItem.isVegan,
+              isGlutenFree: menuItem.isGlutenFree,
+              showUndercookedOrRawDisclaimer:
+                menuItem.showUndercookedOrRawDisclaimer,
               birthdayReward: false,
               pointReward: false,
             },
@@ -804,20 +821,21 @@ function MenuItemPreview({
 
         <div className="baseVertFlex size-full !items-start">
           <div className="baseFlex w-full !justify-between">
-            <div className="baseVertFlex !items-start gap-2">
+            <div className="baseVertFlex !items-start gap-1">
               <p className="text-wrap text-left text-lg font-medium underline underline-offset-2">
                 {menuItem.name}
-                {menuItem.chefsChoice && (
-                  <Image
-                    src="/logo.svg"
-                    alt="Khue's header logo"
-                    width={16}
-                    height={16}
-                    priority
-                    className="ml-2 !inline-block !size-[16px]"
-                  />
-                )}
               </p>
+
+              <div className="baseFlex !justify-start gap-1">
+                {menuItem.isChefsChoice && (
+                  <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
+                    K
+                  </p>
+                )}
+                {menuItem.isVegetarian && <SiLeaflet className="size-4" />}
+                {menuItem.isVegan && <LuVegan className="size-4" />}
+                {menuItem.isGlutenFree && <p className="text-sm">GF</p>}
+              </div>
 
               <p className="max-w-48 text-wrap text-left text-sm text-stone-400">
                 {menuItem.description}

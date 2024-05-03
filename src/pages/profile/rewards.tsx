@@ -851,8 +851,13 @@ function RewardMenuItem({
                     quantity: 1,
                     price: menuItem.price,
                     discountId: null,
+                    isChefsChoice: menuItem.isChefsChoice,
                     isAlcoholic: menuItem.isAlcoholic,
                     isVegetarian: menuItem.isVegetarian,
+                    isVegan: menuItem.isVegan,
+                    isGlutenFree: menuItem.isGlutenFree,
+                    showUndercookedOrRawDisclaimer:
+                      menuItem.showUndercookedOrRawDisclaimer,
                     birthdayReward: forBirthdayReward,
                     pointReward: !forBirthdayReward,
                   },
