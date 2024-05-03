@@ -4,7 +4,9 @@ import { type GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { MdOutlineMail } from "react-icons/md";
+import Stripe from "stripe";
 import AnimatedLogo from "~/components/ui/AnimatedLogo";
+import { env } from "~/env";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { api } from "~/utils/api";
 
@@ -117,11 +119,41 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
   });
 
-  const emailReceiptsAllowed = user?.allowsEmailReceipts ?? false;
+  if (user) {
+    return {
+      props: {
+        emailReceiptsAllowed: user.allowsEmailReceipts,
+      },
+    };
+  }
+
+  // check stripe session to get the email address to be able to check
+  // whether it is in EmailBlacklist model in prisma
+  const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
+    apiVersion: "2023-10-16",
+  });
+
+  const session = await stripe.checkout.sessions.retrieve(
+    ctx.query.session_id as string,
+  );
+
+  if (session.customer_email === null) {
+    return {
+      props: {
+        emailReceiptsAllowed: false,
+      },
+    };
+  }
+
+  const emailIsBlacklisted = await prisma.blacklistedEmail.findFirst({
+    where: {
+      emailAddress: session.customer_email,
+    },
+  });
 
   return {
     props: {
-      emailReceiptsAllowed,
+      emailReceiptsAllowed: !emailIsBlacklisted,
     },
   };
 };
