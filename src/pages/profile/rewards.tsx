@@ -24,6 +24,7 @@ import { buildClerkProps, getAuth } from "@clerk/nextjs/server";
 import { PrismaClient, type User } from "@prisma/client";
 import isEqual from "lodash.isequal";
 import { isEligibleForBirthdayReward } from "~/utils/isEligibleForBirthdayReward";
+import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 
 // TODO: honestly the logic within here is very hit or miss, comb through this for sure
 
@@ -827,13 +828,6 @@ function RewardMenuItem({
               });
 
               return;
-            }
-
-            function getDefaultCustomizationChoices(item: FullMenuItem) {
-              return item.customizationCategories.reduce((acc, category) => {
-                acc[category.id] = category.defaultChoiceId;
-                return acc;
-              }, {} as StoreCustomizations);
             }
 
             updateOrder({

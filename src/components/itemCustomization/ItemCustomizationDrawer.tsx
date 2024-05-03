@@ -48,13 +48,7 @@ import Image from "next/image";
 import { useAuth } from "@clerk/nextjs";
 import { ToastAction } from "~/components/ui/toast";
 import { useToast } from "~/components/ui/use-toast";
-
-function getDefaultCustomizationChoices(item: FullMenuItem) {
-  return item.customizationCategories.reduce((acc, category) => {
-    acc[category.id] = category.defaultChoiceId;
-    return acc;
-  }, {} as StoreCustomizations);
-}
+import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 
 interface ItemCustomizationDrawer {
   setIsDrawerOpen?: Dispatch<SetStateAction<boolean>>;

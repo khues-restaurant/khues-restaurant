@@ -21,6 +21,7 @@ import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
+import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 import { getRewardsPointCost } from "~/utils/getRewardsPointCost";
 
 // okay so we kinda spliced together some basic structure here, just look through it
@@ -427,13 +428,6 @@ function RewardMenuItem({
               });
 
               return;
-            }
-
-            function getDefaultCustomizationChoices(item: FullMenuItem) {
-              return item.customizationCategories.reduce((acc, category) => {
-                acc[category.id] = category.defaultChoiceId;
-                return acc;
-              }, {} as StoreCustomizations);
             }
 
             updateOrder({

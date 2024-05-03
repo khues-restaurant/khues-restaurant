@@ -48,6 +48,7 @@ import { useToast } from "~/components/ui/use-toast";
 import { ToastAction } from "~/components/ui/toast";
 import { SiLeaflet } from "react-icons/si";
 import { Separator } from "~/components/ui/separator";
+import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 
 interface ItemCustomizationDialog {
   isDialogOpen: boolean;
@@ -91,13 +92,6 @@ function ItemCustomizationDialog({
 }
 
 export default ItemCustomizationDialog;
-
-function getDefaultCustomizationChoices(item: FullMenuItem) {
-  return item.customizationCategories.reduce((acc, category) => {
-    acc[category.id] = category.defaultChoiceId;
-    return acc;
-  }, {} as StoreCustomizations);
-}
 
 interface ItemCustomizerDialogContent {
   itemToCustomize: FullMenuItem;

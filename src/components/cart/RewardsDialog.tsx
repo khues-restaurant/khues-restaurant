@@ -22,6 +22,7 @@ import { getRewardsPointCost } from "~/utils/getRewardsPointCost";
 import { motion } from "framer-motion";
 import { Separator } from "~/components/ui/separator";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
+import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 
 interface RewardsDialog {
   showRewardsDialog: boolean;
@@ -438,13 +439,6 @@ function RewardMenuItem({
               });
 
               return;
-            }
-
-            function getDefaultCustomizationChoices(item: FullMenuItem) {
-              return item.customizationCategories.reduce((acc, category) => {
-                acc[category.id] = category.defaultChoiceId;
-                return acc;
-              }, {} as StoreCustomizations);
             }
 
             updateOrder({

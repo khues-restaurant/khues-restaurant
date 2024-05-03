@@ -42,6 +42,7 @@ import { Separator } from "~/components/ui/separator";
 import Image from "next/image";
 import AnimatedLogo from "~/components/ui/AnimatedLogo";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
+import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
@@ -973,13 +974,6 @@ function MenuItemPreviewButton({
 
             // directly add to order w/ defaults + trigger toast notification
             setShowCheckmark(true);
-
-            function getDefaultCustomizationChoices(item: FullMenuItem) {
-              return item.customizationCategories.reduce((acc, category) => {
-                acc[category.id] = category.defaultChoiceId;
-                return acc;
-              }, {} as StoreCustomizations);
-            }
 
             updateOrder({
               newOrderDetails: {
