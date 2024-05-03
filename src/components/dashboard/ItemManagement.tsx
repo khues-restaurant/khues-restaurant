@@ -41,8 +41,11 @@ function ItemManagement({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex my-8 h-full max-w-3xl tablet:mb-24 tablet:mt-48"
+      className="baseVertFlex my-8 mb-24 mt-24 h-full max-w-3xl tablet:mt-28"
     >
+      <p className="mt-8 pb-8 text-xl font-semibold underline underline-offset-2">
+        Menu items
+      </p>
       <div className="grid w-full grid-cols-2 gap-4">
         {menuCategories?.map((category) => (
           <MenuCategoryContainer
@@ -55,6 +58,9 @@ function ItemManagement({
 
       <Separator className="my-4 h-[1px] w-full bg-gray-300" />
 
+      <p className="mt-8 pb-8 text-xl font-semibold underline underline-offset-2">
+        Customizations
+      </p>
       <div className="grid w-full grid-cols-2 gap-4">
         {customizationCategories?.map((category) => (
           <CustomizationCategoryContainer
@@ -112,6 +118,9 @@ function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
         {menuItems.map((item) => (
           <div
             key={item.id}
+            style={{
+              order: item.listOrder,
+            }}
             className="baseFlex w-full !justify-between rounded-md border p-2"
           >
             <p>{item.name}</p>
@@ -134,7 +143,7 @@ function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
               </AlertDialogTrigger>
 
               <AlertDialogContent>
-                <AlertDialogHeader>
+                <AlertDialogHeader className="font-semibold">
                   {item.available ? "Disable ordering" : "Enable ordering"}
                 </AlertDialogHeader>
                 <AlertDialogDescription>
@@ -233,6 +242,9 @@ function CustomizationCategoryContainer({
         {customizationChoices.map((choice) => (
           <div
             key={choice.id}
+            style={{
+              order: choice.listOrder,
+            }}
             className="baseFlex w-full !justify-between rounded-md border p-2"
           >
             <p>{choice.name}</p>

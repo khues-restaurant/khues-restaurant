@@ -149,7 +149,11 @@ function OrderManagement({ orders }: OrderManagement) {
 
             {/* notification count */}
             {notStartedOrders.length > 0 && (
-              <div className="absolute -right-6 -top-4 rounded-full bg-primary px-2 py-0.5 text-offwhite">
+              <div
+                className={`absolute -top-4 rounded-full bg-primary px-2 py-0.5 text-offwhite
+                ${notStartedOrders.length < 10 ? "-right-6" : "-right-8"}
+              `}
+              >
                 <AnimatedNumbers
                   value={notStartedOrders.length}
                   fontSize={14}
@@ -169,7 +173,11 @@ function OrderManagement({ orders }: OrderManagement) {
 
             {/* notification count */}
             {startedOrders.length > 0 && (
-              <div className="absolute -right-6 -top-4 rounded-full bg-primary px-2 py-0.5 text-offwhite">
+              <div
+                className={`absolute -top-4 rounded-full bg-primary px-2 py-0.5 text-offwhite
+                ${startedOrders.length < 10 ? "-right-6" : "-right-8"}
+              `}
+              >
                 <AnimatedNumbers
                   value={startedOrders.length}
                   fontSize={14}
@@ -193,7 +201,7 @@ function OrderManagement({ orders }: OrderManagement) {
               className="baseFlex w-full"
             >
               <AnimatePresence>
-                <div className="baseVertFlex max-h-[70dvh] w-full !justify-start overflow-y-auto px-4">
+                <div className="baseVertFlex max-h-[70dvh] w-full !justify-start gap-2 overflow-y-auto px-4 pb-4">
                   {notStartedOrders.length > 0 ? (
                     <>
                       {notStartedOrders.map((order) => (
@@ -222,7 +230,7 @@ function OrderManagement({ orders }: OrderManagement) {
               className="baseFlex w-full"
             >
               <AnimatePresence>
-                <div className="baseVertFlex max-h-[70dvh] w-full !justify-start overflow-y-auto px-4">
+                <div className="baseVertFlex max-h-[70dvh] w-full !justify-start gap-2 overflow-y-auto px-4 pb-4">
                   {startedOrders.length > 0 ? (
                     <>
                       {startedOrders.map((order) => (
@@ -252,7 +260,7 @@ function OrderManagement({ orders }: OrderManagement) {
             className="baseFlex w-full"
           >
             <AnimatePresence>
-              <div className="baseVertFlex mt-8 max-h-[70dvh] w-11/12 !justify-start overflow-y-auto tablet:w-full tablet:max-w-xl">
+              <div className="baseVertFlex mt-8 max-h-[70dvh] w-11/12 !justify-start gap-2 overflow-y-auto pb-4 tablet:w-full tablet:max-w-xl">
                 {completedOrders.length > 0 ? (
                   <>
                     {completedOrders.map((order) => (
@@ -495,7 +503,7 @@ function CustomerOrder({ order, view }: CustomerOrder) {
             </div>
           </div>
 
-          <AccordionContent>
+          <AccordionContent className="pb-0">
             <OrderItems order={order} />
           </AccordionContent>
         </AccordionItem>
@@ -518,7 +526,7 @@ function OrderItems({ order }: OrderItems) {
     }));
 
   return (
-    <div className="baseVertFlex mt-4 !items-start gap-2 border-t p-2 pt-4">
+    <div className="baseVertFlex mt-4 !items-start gap-2 border-t p-2 pb-0 pt-4">
       {/* TODO: if chatgpt search reveals this person is influential, put disclaimer right here,
       also obv make the background of the accordion "trigger" goldish */}
 

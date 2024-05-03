@@ -152,7 +152,7 @@ function CustomerChats() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseFlex mt-32 size-full tablet:mt-48"
+      className="baseFlex mt-24 size-full tablet:mt-28"
     >
       {((viewportLabel.includes("mobile") && !selectedUserId) ||
         !viewportLabel.includes("mobile")) && (

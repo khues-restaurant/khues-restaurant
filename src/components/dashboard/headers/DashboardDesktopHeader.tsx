@@ -72,7 +72,11 @@ function DashboardDesktopHeader({
 
           {/* notification count */}
           {numberOfActiveOrders > 0 && (
-            <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite">
+            <div
+              className={`absolute -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite
+                ${numberOfActiveOrders < 10 ? "-right-2" : "-right-4"}
+              `}
+            >
               <AnimatedNumbers
                 value={numberOfActiveOrders}
                 fontSize={14}
@@ -93,7 +97,11 @@ function DashboardDesktopHeader({
 
           {/* unreadMessages > 0 && */}
           {false && (
-            <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite">
+            <div
+              className={`absolute -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite
+                ${numberOfActiveOrders < 10 ? "-right-2" : "-right-4"}
+              `}
+            >
               <AnimatedNumbers
                 value={numberOfActiveOrders}
                 fontSize={14}
