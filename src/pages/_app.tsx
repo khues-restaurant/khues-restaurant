@@ -1,17 +1,12 @@
 import { type AppProps } from "next/app";
 import { ClerkProvider } from "@clerk/nextjs";
 import { api } from "~/utils/api";
-import { io } from "socket.io-client";
 
 import "~/styles/globals.css";
 import GeneralLayout from "~/components/layouts/GeneralLayout";
 import { useRouter } from "next/router";
 import DashboardLayout from "~/components/dashboard/DashboardLayout";
 import { ParallaxProvider } from "react-scroll-parallax";
-
-export const socket = io({
-  path: "/api/socket",
-});
 
 // might in some way mess with t3 bootstrapping, be wary
 type ComponentWithPageLayout = AppProps & {

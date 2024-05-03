@@ -228,8 +228,6 @@ export const orderRouter = createTRPCRouter({
           orderStartedAt: new Date(),
         },
       });
-
-      // send out socket.io event if it works in trpc here
     }),
   completeOrder: protectedProcedure
     .input(
@@ -254,8 +252,6 @@ export const orderRouter = createTRPCRouter({
           email: input.customerEmail,
         },
       });
-
-      // send out socket.io event if it works in trpc here
 
       // send email receipt (if allowed) to user
       if (user?.allowsEmailReceipts) {

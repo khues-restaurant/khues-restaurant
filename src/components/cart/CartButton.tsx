@@ -18,9 +18,16 @@ function CartButton() {
 
   const { isSignedIn } = useAuth();
 
-  const { orderDetails, cartInitiallyValidated } = useMainStore((state) => ({
+  const {
+    orderDetails,
+    cartInitiallyValidated,
+    refetchMenu,
+    refetchMinOrderPickupTime,
+  } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
     cartInitiallyValidated: state.cartInitiallyValidated,
+    refetchMenu: state.refetchMenu,
+    refetchMinOrderPickupTime: state.refetchMinOrderPickupTime,
   }));
 
   const { data: user } = api.user.get.useQuery(userId, {
@@ -41,6 +48,13 @@ function CartButton() {
       setPickupName(`${user.firstName} ${user.lastName}`);
     }
   }, [cartInitiallyValidated, pickupName, user]);
+
+  useEffect(() => {
+    if (showCartSheet || showCartDrawer) {
+      refetchMenu?.();
+      refetchMinOrderPickupTime?.();
+    }
+  }, [refetchMenu, refetchMinOrderPickupTime, showCartDrawer, showCartSheet]);
 
   const viewportLabel = useGetViewportLabel();
 

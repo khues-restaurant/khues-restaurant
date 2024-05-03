@@ -5,7 +5,6 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { sendMessageThroughSocket } from "~/utils/sendMessageThroughSocket";
 
 export const chatRouter = createTRPCRouter({
   sendMessage: publicProcedure
@@ -75,13 +74,6 @@ export const chatRouter = createTRPCRouter({
         data: {
           updatedAt: new Date(),
         },
-      });
-
-      // Emit the message through the socket
-      sendMessageThroughSocket({
-        senderUserId: input.senderUserId,
-        recipientUserId: input.recipientUserId,
-        message: input.message,
       });
 
       return message;

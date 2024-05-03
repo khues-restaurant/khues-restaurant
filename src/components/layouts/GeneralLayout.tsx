@@ -5,7 +5,7 @@ import Footer from "~/components/Footer";
 import PostSignUpDialog from "~/components/PostSignUpDialog";
 import useHandleLocalStorage from "~/hooks/useHandleLocalStorage";
 import useKeepOrderDetailsValidated from "~/hooks/useKeepOrderDetailsValidated";
-import useAttachSocketListeners from "~/hooks/useAttachSocketListeners";
+import useInitializeStoreDBQueries from "~/hooks/useInitializeStoreDBQueries";
 import { Toaster } from "~/components/ui/toaster";
 import Chat from "~/components/Chat";
 import { useMainStore } from "~/stores/MainStore";
@@ -52,7 +52,7 @@ function GeneralLayout({ children }: GeneralLayout) {
 
   useHandleLocalStorage();
   useKeepOrderDetailsValidated();
-  useAttachSocketListeners();
+  useInitializeStoreDBQueries();
 
   return (
     <>

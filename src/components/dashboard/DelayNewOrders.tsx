@@ -23,7 +23,6 @@ import { api } from "~/utils/api";
 import { formatTimeString } from "~/utils/formatTimeString";
 import { getHoursAndMinutesFromDate } from "~/utils/getHoursAndMinutesFromDate";
 import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
-import { socket } from "~/pages/_app";
 
 const times = [
   "15:00",
@@ -52,9 +51,6 @@ function DelayNewOrders() {
       onSuccess: () => {
         void ctx.minimumOrderPickupTime.get.refetch();
         setShowDialog(false);
-
-        // send out emit to sever to send actual emit to all clients
-        socket.emit("minOrderPickupTimeChanged");
       },
       onError: (e) => {
         // toast notification here

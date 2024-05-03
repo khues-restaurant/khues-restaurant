@@ -4,7 +4,6 @@ import { env } from "~/env";
 import Stripe from "stripe";
 import { type Discount, PrismaClient } from "@prisma/client";
 import { z } from "zod";
-import { emitNewOrderThroughSocket } from "~/utils/emitNewOrderThroughSocket";
 import { type OrderDetails } from "~/stores/MainStore";
 import { orderDetailsSchema } from "~/stores/MainStore";
 import Decimal from "decimal.js";
@@ -382,18 +381,15 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         });
       }
 
-      // 5) send websocket emit to dashboard
-      emitNewOrderThroughSocket();
-
       // TODO: remove/uncomment this depending on if using STAR cloudPRNT solution
-      // 6) add order to print queue model in database
+      // 5) add order to print queue model in database
       // await prisma.orderPrintQueue.create({
       //   data: {
       //     orderId: order.id,
       //   },
       // });
 
-      // 7) send email receipt (if allowed) to user
+      // 6) send email receipt (if allowed) to user
       if (user?.allowsEmailReceipts) {
         await SendEmailReceipt({
           // email: customerMetadata.email,
@@ -421,7 +417,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       }
 
-      // 8) cleanup transient order, technically not necessary though right since we just upsert either way?
+      // 7) cleanup transient order, technically not necessary though right since we just upsert either way?
       await prisma.transientOrder.delete({
         where: {
           userId: payment.metadata.userId,

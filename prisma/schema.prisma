@@ -244,7 +244,7 @@ model Order {
     email                     String
     phoneNumber               String?
     includeNapkinsAndUtensils Boolean @default(false)
-    dietaryRestrictions       String? // gets queried for and added on /websocket if user has dietary restrictions and has 1+ item in order that has dietary restrictions boolean as true
+    dietaryRestrictions       String?
 
     orderItems OrderItem[]
     discount   Discount?   @relation(fields: [discountId], references: [id])

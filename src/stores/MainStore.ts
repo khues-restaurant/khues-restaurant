@@ -6,18 +6,6 @@ import { type CustomizationChoiceAndCategory } from "~/server/api/routers/custom
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { z } from "zod";
 
-// might want to use this pattern at some point based on some route navigation
-// const initialStoreState = {};
-
-// store the entire list of menu items in the store, with key being the name of the item
-// and the value being the item object
-// we will have an initialization hook to get the intial data and presumably we would have the cart button
-// be disabled/a loading spinner while we don't have the data yet
-
-// and then we can just always directly reference the store for the menu items
-// and still have a socket.io listener for whenever an item is 86'd to refetch the data
-// and update the store.
-
 const storeCustomizationChoiceSchema = z.record(z.string());
 
 const discountSchema = z.object({
@@ -173,6 +161,11 @@ interface StoreState {
   footerIsInView: boolean;
   setFooterIsInView: (footerIsInView: boolean) => void;
 
+  refetchMenu?: () => void;
+  setRefetchMenu: (refetchMenu: () => void) => void;
+  refetchMinOrderPickupTime?: () => void;
+  setRefetchMinOrderPickupTime: (refetchMinOrderPickupTime: () => void) => void;
+
   resetStore: () => void;
 }
 
@@ -244,6 +237,15 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
       footerIsInView: false,
       setFooterIsInView: (footerIsInView: boolean) => {
         set({ footerIsInView });
+      },
+
+      refetchMenu: undefined,
+      setRefetchMenu: (refetchMenu: () => void) => {
+        set({ refetchMenu });
+      },
+      refetchMinOrderPickupTime: undefined,
+      setRefetchMinOrderPickupTime: (refetchMinOrderPickupTime: () => void) => {
+        set({ refetchMinOrderPickupTime });
       },
 
       resetStore: () => {

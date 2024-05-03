@@ -126,7 +126,9 @@ function CartSheet({
     enabled: Boolean(userId && isSignedIn),
   });
 
-  const { initializeCheckout } = useInitializeCheckout();
+  const { initializeCheckout } = useInitializeCheckout({
+    setCheckoutButtonText,
+  });
 
   const [regularItems, setRegularItems] = useState<Item[]>([]);
   const [rewardItems, setRewardItems] = useState<Item[]>([]);
@@ -563,14 +565,14 @@ function CartSheet({
             initial={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
             animate={{
               opacity: 1,
-              height: `${255 + itemNamesRemovedFromCart.length * 24}px`, // TODO: prob requires tweaking on mobile
+              height: `${100 + itemNamesRemovedFromCart.length * 24}px`, // TODO: prob requires tweaking on mobile
               paddingTop: "1rem",
               paddingBottom: "1rem",
             }}
             exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
             style={{ overflow: "hidden" }}
-            className="px-8"
+            className="shrink-0 px-8"
           >
             <motion.div
               layout={"position"}
@@ -624,7 +626,7 @@ function CartSheet({
             exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
             style={{ overflow: "hidden" }}
-            className="px-8"
+            className="shrink-0 px-8"
           >
             <motion.div
               layout={"position"}
@@ -662,9 +664,6 @@ function CartSheet({
             transition={{ duration: 0.2 }}
             className="baseVertFlex size-full gap-4 p-4"
           >
-            {/* TODO: definitely have some (probably paid for) asset of an empty plate or like
-          an empty dish with chopsticks beside it? */}
-
             <p className="text-lg font-semibold">Your order is empty</p>
             <p className="w-64 text-center">
               It looks like you haven&apos;t added anything to your order yet.
@@ -1107,7 +1106,8 @@ function CartSheet({
                 transition={{
                   duration: 0.25,
                 }}
-                className="baseFlex gap-2"
+                // static width to prevent layout shift
+                className="baseFlex w-[150px] gap-2"
               >
                 {checkoutButtonText}
                 {checkoutButtonText === "Loading" && (

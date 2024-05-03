@@ -1,6 +1,6 @@
 import { useAuth } from "@clerk/nextjs";
 import { loadStripe, type Stripe } from "@stripe/stripe-js";
-import { useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import useGetUserId from "~/hooks/useGetUserId";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
@@ -16,10 +16,13 @@ const useStripe = () => {
   return stripe;
 };
 
-// TODO: prob allow this to accept props for user details so this
-// can also be used for guest checkout
+interface UseInitializeCheckout {
+  setCheckoutButtonText: Dispatch<SetStateAction<string>>;
+}
 
-function useInitializeCheckout() {
+function useInitializeCheckout({
+  setCheckoutButtonText,
+}: UseInitializeCheckout) {
   const userId = useGetUserId();
   const { isSignedIn } = useAuth();
 
@@ -53,6 +56,12 @@ function useInitializeCheckout() {
 
       if (data.removedItemNames && data.removedItemNames.length > 0) {
         setItemNamesRemovedFromCart(data.removedItemNames);
+
+        setCheckoutButtonText("Proceed to checkout");
+
+        // do not want to proceed with checkout if there was any change of the
+        // items in the cart for any reason.
+        return;
       }
 
       await createTransientOrder({

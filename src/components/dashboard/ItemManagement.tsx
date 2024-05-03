@@ -1,25 +1,22 @@
 import {
-  type MenuItem,
+  type CustomizationCategory,
+  type CustomizationChoice,
   type MenuCategory,
-  CustomizationCategory,
-  CustomizationChoice,
+  type MenuItem,
 } from "@prisma/client";
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { api } from "~/utils/api";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import {
-  AlertDialogFooter,
-  AlertDialogHeader,
   AlertDialog,
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import { socket } from "~/pages/_app";
 import { Button } from "~/components/ui/button";
-import { TRPCClientErrorLike } from "@trpc/client";
-import { UseMutateFunction } from "@tanstack/react-query";
 import { Separator } from "~/components/ui/separator";
+import { api } from "~/utils/api";
 
 type MenuCategoryWithItems = MenuCategory & { menuItems: MenuItem[] };
 
@@ -96,9 +93,6 @@ function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
         void ctx.menuCategory.getAll.refetch();
         setOpenDialogId(null);
         setItemIdBeingMutated(null);
-
-        // emit an event to the socket server
-        socket.emit("menuItemAvailabilityChanged");
       },
     });
 
@@ -220,10 +214,6 @@ function CustomizationCategoryContainer({
         void ctx.customizationCategory.getAll.refetch();
         setOpenDialogId(null);
         setCustomizationIdBeingMutated(null);
-
-        // emit an event to the socket server (same emit since the query also
-        // fetches the customization categories/choices)
-        socket.emit("menuItemAvailabilityChanged");
       },
     });
 

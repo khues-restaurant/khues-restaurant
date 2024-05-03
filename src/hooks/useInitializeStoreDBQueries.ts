@@ -1,11 +1,10 @@
 import { useAuth } from "@clerk/nextjs";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import useGetUserId from "~/hooks/useGetUserId";
-import { socket } from "~/pages/_app";
 import { type StoreMenuItems, useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 
-function useAttachSocketListeners() {
+function useInitializeStoreDBQueries() {
   const { isSignedIn } = useAuth();
   const userId = useGetUserId();
 
@@ -16,6 +15,10 @@ function useAttachSocketListeners() {
     discounts,
     setDiscounts,
     setUserFavoriteItemIds,
+    refetchMenu,
+    setRefetchMenu,
+    refetchMinOrderPickupTime,
+    setRefetchMinOrderPickupTime,
   } = useMainStore((state) => ({
     setMenuItems: state.setMenuItems,
     customizationChoices: state.customizationChoices,
@@ -23,6 +26,10 @@ function useAttachSocketListeners() {
     discounts: state.discounts,
     setDiscounts: state.setDiscounts,
     setUserFavoriteItemIds: state.setUserFavoriteItemIds,
+    refetchMenu: state.refetchMenu,
+    setRefetchMenu: state.setRefetchMenu,
+    refetchMinOrderPickupTime: state.refetchMinOrderPickupTime,
+    setRefetchMinOrderPickupTime: state.setRefetchMinOrderPickupTime,
   }));
 
   const { data: menuCategories, refetch: getUpdatedMenuCategories } =
@@ -41,24 +48,19 @@ function useAttachSocketListeners() {
       enabled: Boolean(userId && isSignedIn),
     });
 
-  // socket listeners to fetch queries
   useEffect(() => {
-    function refetchMenuCategories() {
-      void getUpdatedMenuCategories();
-    }
+    if (refetchMenu && refetchMinOrderPickupTime) return;
 
-    function refetchMinOrderPickupTime() {
-      void getUpdatedMinOrderPickupTime();
-    }
-
-    socket.on("refetchMenuCategories", refetchMenuCategories);
-    socket.on("refetchMinOrderPickupTime", refetchMinOrderPickupTime);
-
-    return () => {
-      socket.off("refetchMenuCategories", refetchMenuCategories);
-      socket.off("refetchMinOrderPickupTime", refetchMinOrderPickupTime);
-    };
-  }, [getUpdatedMenuCategories, getUpdatedMinOrderPickupTime]);
+    setRefetchMenu(getUpdatedMenuCategories);
+    setRefetchMinOrderPickupTime(getUpdatedMinOrderPickupTime);
+  }, [
+    getUpdatedMenuCategories,
+    getUpdatedMinOrderPickupTime,
+    setRefetchMenu,
+    setRefetchMinOrderPickupTime,
+    refetchMenu,
+    refetchMinOrderPickupTime,
+  ]);
 
   useEffect(() => {
     if (!menuCategories) return;
@@ -101,4 +103,4 @@ function useAttachSocketListeners() {
   ]);
 }
 
-export default useAttachSocketListeners;
+export default useInitializeStoreDBQueries;

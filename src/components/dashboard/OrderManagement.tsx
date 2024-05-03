@@ -26,7 +26,6 @@ import {
 import { useMainStore, type OrderDetails } from "~/stores/MainStore";
 import { ChevronDown } from "lucide-react";
 import { DashboardOrder } from "~/server/api/routers/order";
-import { socket } from "~/pages/_app";
 import { FaUtensils } from "react-icons/fa6";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import { Separator } from "~/components/ui/separator";
@@ -305,9 +304,6 @@ function CustomerOrder({ order, view }: CustomerOrder) {
       setAccordionOpen("closed");
       setOpenDialogId(null);
       setOrderIdBeingMutated(null);
-
-      // notify the customer that their order has been started
-      socket.emit("orderStatusUpdate", order.id);
     },
   });
   const { mutate: completeOrder } = api.order.completeOrder.useMutation({
@@ -321,9 +317,6 @@ function CustomerOrder({ order, view }: CustomerOrder) {
       setAccordionOpen("closed");
       setOpenDialogId(null);
       setOrderIdBeingMutated(null);
-
-      // notify the customer that their order has been started
-      socket.emit("orderStatusUpdate", order.id);
     },
   });
 

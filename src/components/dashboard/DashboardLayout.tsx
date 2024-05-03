@@ -83,24 +83,6 @@ function DashboardLayout({ children }: DashboardLayout) {
     setMenuItems(menuItemsObject);
   }, [menuCategories, setMenuItems]);
 
-  // useEffect(() => {
-  //   function handleNewOrder() {
-  //     refetchOrders();
-  //   }
-
-  //   function handleNewChat() {
-  //     refetchChats();
-  //   }
-
-  //   socket.on("newOrder", handleNewOrder);
-  // socket.on("newChat", handleNewChat);
-
-  //   return () => {
-  //     socket.off("newOrder", handleNewOrder);
-  //     socket.off("newChat", handleNewChat);
-  //   };
-  // }, []);
-
   return (
     <main className="baseVertFlex relative min-h-[100dvh] w-full !justify-between">
       <DashboardHeaderShell viewState={viewState} setViewState={setViewState} />

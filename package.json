@@ -10,7 +10,7 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start -H 0.0.0.0 -p ${PORT:-8080}",
+    "start": "next start",
     "email": "email dev"
   },
   "dependencies": {
@@ -61,8 +61,6 @@
     "react-stickynode": "^4.1.1",
     "resend": "^3.2.0",
     "sharp": "^0.33.3",
-    "socket.io": "^4.7.4",
-    "socket.io-client": "^4.7.4",
     "stripe": "^14.17.0",
     "superjson": "^2.2.1",
     "tailwind-merge": "^2.2.1",

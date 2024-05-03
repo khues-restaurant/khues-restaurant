@@ -13,7 +13,6 @@ import AnimatedLogo from "~/components/ui/AnimatedLogo";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
 import useGetViewportLabel from "~/hooks/useGetViewportLabel";
-import { socket } from "~/pages/_app";
 import { api } from "~/utils/api";
 
 // stretch, but if you really wanted to have the order "number" but just numbers,
@@ -24,10 +23,6 @@ function Track() {
   const { isSignedIn } = useAuth();
   const { asPath, isReady, query } = useRouter();
   const orderId = query.id;
-
-  // doing trpc fetch here instead of in getServerSideProps so that when order
-  // is started/completed from the dashboard, the dashboard can send out a socket emit
-  // to refetch the order on here
 
   // const session = api.payment.getStripeSession.useQuery(
   //   { orderId },
@@ -91,20 +86,6 @@ function Track() {
 
     return () => window.removeEventListener("resize", updatePositions);
   }, [order, minTimeoutElapsed]);
-
-  useEffect(() => {
-    function refetchOrderStatus(orderIdToRefetch: string) {
-      if (orderId === orderIdToRefetch) {
-        void refetch();
-      }
-    }
-
-    socket.on("orderStatusUpdated", refetchOrderStatus);
-
-    return () => {
-      socket.off("orderStatusUpdated", refetchOrderStatus);
-    };
-  }, [orderId, refetch]);
 
   const viewportLabel = useGetViewportLabel();
 

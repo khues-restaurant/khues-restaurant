@@ -11,7 +11,6 @@ import {
 
 import { Button } from "~/components/ui/button";
 import { AnimatePresence, motion } from "framer-motion";
-import { socket } from "~/pages/_app";
 import useGetUserId from "~/hooks/useGetUserId";
 import { Textarea } from "~/components/ui/textarea";
 import Image from "next/image";
@@ -94,27 +93,6 @@ function Chat() {
   const [showingAlertDialogChat, setShowingAlertDialogChat] = useState(false);
   const [showingPopoverChat, setShowingPopoverChat] = useState(false);
   const [newMessageContent, setNewMessageContent] = useState("");
-
-  useEffect(() => {
-    function refetchMessages({
-      senderUserId,
-      recipientUserId,
-      message,
-    }: {
-      senderUserId: string;
-      recipientUserId: string;
-      message: string;
-    }) {
-      if (recipientUserId !== userId) return;
-      void refetch();
-    }
-
-    socket.on("newMessageSent", refetchMessages);
-
-    return () => {
-      socket.off("newMessageSent", refetchMessages);
-    };
-  }, [chat, refetch, userId]);
 
   useEffect(() => {
     if (

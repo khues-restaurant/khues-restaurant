@@ -126,7 +126,9 @@ function CartDrawer({
     enabled: Boolean(userId && isSignedIn),
   });
 
-  const { initializeCheckout } = useInitializeCheckout();
+  const { initializeCheckout } = useInitializeCheckout({
+    setCheckoutButtonText,
+  });
 
   const [regularItems, setRegularItems] = useState<Item[]>([]);
   const [rewardItems, setRewardItems] = useState<Item[]>([]);
@@ -674,11 +676,8 @@ function CartDrawer({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="baseVertFlex my-8 size-full gap-4 p-4"
+              className="baseVertFlex my-8 w-full gap-4 p-4"
             >
-              {/* TODO: definitely have some (probably paid for) asset of an empty plate or like
-          an empty dish with chopsticks beside it? */}
-
               <p className="text-lg font-semibold">Your order is empty</p>
               <p className="w-64 text-center">
                 It looks like you haven&apos;t added anything to your order yet.
@@ -1067,7 +1066,7 @@ function CartDrawer({
           </div>
 
           <div
-            className="baseFlex min-h-24 w-full gap-4 overflow-hidden border-t
+            className="baseFlex min-h-24 w-full !justify-between gap-4 overflow-hidden border-t
         bg-gradient-to-br from-stone-200 to-stone-300 p-4 shadow-inner"
           >
             <div className="baseVertFlex w-1/2">
@@ -1135,7 +1134,8 @@ function CartDrawer({
                   transition={{
                     duration: 0.25,
                   }}
-                  className="baseFlex gap-2"
+                  // static width to prevent layout shift
+                  className="baseFlex w-[119.48px] gap-2"
                 >
                   {checkoutButtonText}
                   {checkoutButtonText === "Loading" && (
