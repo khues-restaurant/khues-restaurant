@@ -808,7 +808,7 @@ function MenuItemPreview({
       style={{
         order: listOrder + 1,
       }}
-      className="relative w-full max-w-96"
+      className="relative w-full max-w-96 px-2"
     >
       <div className="baseFlex size-full gap-4 py-6">
         <Image
@@ -837,7 +837,7 @@ function MenuItemPreview({
                 {menuItem.isGlutenFree && <p className="text-sm">GF</p>}
               </div>
 
-              <p className="max-w-48 text-wrap text-left text-sm text-stone-400">
+              <p className="max-w-72 text-wrap text-left text-sm text-stone-400">
                 {menuItem.description}
               </p>
             </div>
