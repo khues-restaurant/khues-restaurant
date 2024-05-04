@@ -450,7 +450,7 @@ function OrderNow() {
                     <p>Favorites</p>
                   </div>
 
-                  <div className="baseVertFlex w-full gap-2">
+                  <div className="baseVertFlex w-full gap-4">
                     <Carousel
                       setApi={setFavoriteItemsApi}
                       opts={{
@@ -533,7 +533,7 @@ function OrderNow() {
                     <p>Recent orders</p>
                   </div>
 
-                  <div className="baseVertFlex w-full gap-2">
+                  <div className="baseVertFlex w-full gap-4">
                     <Carousel
                       setApi={setRecentOrdersApi}
                       opts={{

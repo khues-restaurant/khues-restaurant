@@ -762,7 +762,7 @@ export default function Home() {
         <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-5xl tablet:max-w-2xl">
           <p className="text-lg font-medium">Explore Our Favorites</p>
 
-          <div className="baseVertFlex w-full gap-2">
+          <div className="baseVertFlex w-full gap-4">
             <Carousel
               setApi={setChefSpecialsApi}
               opts={{
