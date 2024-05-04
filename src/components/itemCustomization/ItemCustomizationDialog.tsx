@@ -291,7 +291,7 @@ function ItemCustomizerDialogContent({
               {itemToCustomize.description}
             </p>
 
-            <div className="baseVertFlex mt-2 w-full gap-2">
+            {/* <div className="baseVertFlex mt-2 w-full gap-2">
               <div className="baseFlex w-full gap-2">
                 {(() => {
                   const elements = [];
@@ -342,6 +342,36 @@ function ItemCustomizerDialogContent({
                   return elements;
                 })()}
               </div>
+            </div> */}
+
+            <div className="baseFlex mt-2 w-full flex-wrap !justify-start gap-2 text-sm text-stone-400">
+              {itemToCustomize.isChefsChoice && (
+                <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                  <p className="baseFlex size-4 rounded-full border border-stone-400 bg-offwhite p-2">
+                    K
+                  </p>
+                  -<p>Chef&apos;s Choice</p>
+                </div>
+              )}
+
+              {itemToCustomize.isVegetarian && (
+                <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                  <SiLeaflet className="size-4" />
+                  <p>Vegetarian</p>
+                </div>
+              )}
+
+              {itemToCustomize.isVegan && (
+                <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                  <LuVegan className="size-4" />-<p>Vegan</p>
+                </div>
+              )}
+
+              {itemToCustomize.isGlutenFree && (
+                <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                  <span>GF</span>-<span>Gluten Free</span>
+                </div>
+              )}
             </div>
           </div>
 
