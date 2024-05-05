@@ -216,6 +216,9 @@ model OrderItem {
     birthdayReward Boolean @default(false)
 
     customizations OrderItemCustomization[]
+
+    alcoholicOrder   AlcoholicOrder? @relation(fields: [alcoholicOrderId], references: [id])
+    alcoholicOrderId String?
 }
 
 model OrderItemCustomization {
@@ -277,6 +280,31 @@ model OrderPrintQueue {
 
     order   Order  @relation(fields: [orderId], references: [id])
     orderId String
+}
+
+// *just* for the ability to separate out the alcoholic items from the rest of the order
+// to be printed at bar printer. Will not be used for any analytics because the main
+// Order row has the full order details.
+model AlcoholicOrder {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+
+    firstName        String
+    lastName         String
+    datetimeToPickup DateTime
+
+    orderId    String
+    orderItems OrderItem[]
+
+    alcoholicOrderPrintQueue AlcoholicOrderPrintQueue[]
+}
+
+model AlcoholicOrderPrintQueue {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+
+    alcoholicOrder   AlcoholicOrder @relation(fields: [alcoholicOrderId], references: [id])
+    alcoholicOrderId String
 }
 
 model Reward {

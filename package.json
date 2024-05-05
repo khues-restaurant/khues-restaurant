@@ -59,6 +59,7 @@
     "react-icons": "^5.0.1",
     "react-scroll-parallax": "^3.4.5",
     "react-stickynode": "^4.1.1",
+    "react-thermal-printer": "^0.18.1",
     "resend": "^3.2.0",
     "sharp": "^0.33.3",
     "stripe": "^14.17.0",

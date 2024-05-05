@@ -204,32 +204,18 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       // fyi: prisma already assigns the uuid of the order being created here to orderId field
 
       const orderItemsData = orderDetails.items.map((item) => ({
-        name: item.name,
-        quantity: item.quantity,
-        price: item.price,
+        ...item,
         menuItemId: item.itemId,
-        specialInstructions: item.specialInstructions,
-        includeDietaryRestrictions: item.includeDietaryRestrictions,
-        customizations: {
-          create: Object.entries(item.customizations).map(
-            ([categoryId, choiceId]) => ({
-              customizationCategoryId: categoryId,
-              customizationChoiceId: choiceId,
-            }),
-          ),
-        },
-        discountId: item.discountId,
-        pointReward: item.pointReward,
-        birthdayReward: item.birthdayReward,
+        id: undefined, // idk if this is necessary since the id is already a uuid that should be safe
       }));
 
       let adjustedDatetimeToPickup = new Date(orderDetails.datetimeToPickUp);
 
-      // add 20 minutes to current time if order is ASAP
+      // add 15 minutes to current time if order is ASAP
       if (orderDetails.isASAP) {
         adjustedDatetimeToPickup = new Date();
         adjustedDatetimeToPickup.setMinutes(
-          adjustedDatetimeToPickup.getMinutes() + 20,
+          adjustedDatetimeToPickup.getMinutes() + 15,
         );
       }
 
@@ -381,13 +367,47 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         });
       }
 
-      // TODO: remove/uncomment this depending on if using STAR cloudPRNT solution
       // 5) add order to print queue model in database
-      // await prisma.orderPrintQueue.create({
-      //   data: {
-      //     orderId: order.id,
-      //   },
-      // });
+      await prisma.orderPrintQueue.create({
+        data: {
+          orderId: order.id,
+        },
+      });
+
+      // if order contains alcoholic items, add to alcohol print queue model in database
+      const alcoholicItems = orderDetails.items.filter(
+        (item) => item.isAlcoholic,
+      );
+
+      if (alcoholicItems.length > 0) {
+        const alcoholicOrderItemsData = alcoholicItems.map((item) => ({
+          ...item,
+          menuItemId: item.itemId,
+          menuItem: {
+            connect: {
+              id: item.itemId, // why do we need to connect to menuItem here and not on the orderItemsData above?
+            },
+          },
+          order: {
+            connect: {
+              id: order.id,
+            },
+          },
+          id: undefined, // idk if this is necessary since the id is already a uuid that should be safe
+        }));
+
+        await prisma.alcoholicOrder.create({
+          data: {
+            orderId: order.id,
+            firstName: customerMetadata.firstName,
+            lastName: customerMetadata.lastName,
+            datetimeToPickup: adjustedDatetimeToPickup,
+            orderItems: {
+              create: alcoholicOrderItemsData,
+            },
+          },
+        });
+      }
 
       // 6) send email receipt (if allowed) to user
       if (user?.allowsEmailReceipts) {
