@@ -51,12 +51,18 @@ import { buildClerkProps, getAuth } from "@clerk/nextjs/server";
 import { type GetServerSideProps } from "next";
 import { formatPhoneNumber } from "~/utils/formatPhoneNumber";
 import { PrismaClient, type User } from "@prisma/client";
+import { clearLocalStorage } from "~/utils/clearLocalStorage";
+import { useMainStore } from "~/stores/MainStore";
 
 function Preferences({ initUserData }: { initUserData: User }) {
   const userId = useGetUserId();
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, signOut } = useAuth();
   const ctx = api.useUtils();
   const { push } = useRouter();
+
+  const { resetStore } = useMainStore((state) => ({
+    resetStore: state.resetStore,
+  }));
 
   const { data: currentUserData } = api.user.get.useQuery(userId, {
     enabled: Boolean(userId && isSignedIn),
@@ -636,6 +642,20 @@ function Preferences({ initUserData }: { initUserData: User }) {
               Change password
               {/* TODO: looks like you need to create your own jsx for this, shouldn't be terrible
                 but prob just open up an alert dialog to do this in? seems most reasonable/safe */}
+            </Button>
+
+            <Button
+              variant={"secondary"}
+              // className="mt-2 h-8"
+              onClick={async () => {
+                await signOut(async () => {
+                  clearLocalStorage();
+                  resetStore();
+                  await push("/");
+                });
+              }}
+            >
+              Log out
             </Button>
 
             <Separator className="h-[1px] w-1/2 tablet:h-[25px] tablet:w-[1px]" />
