@@ -89,7 +89,7 @@ function OrderSummary({ order }: OrderSummary) {
               <div className="baseFlex w-full !items-start !justify-between">
                 <div className="baseVertFlex !items-start">
                   {/* item quantity, name, dietary restrictions */}
-                  <div className="baseFlex gap-2">
+                  <div className="baseFlex gap-2 text-base">
                     <p>{item.quantity}</p>
                     <p>{item.name}</p>
 
@@ -98,7 +98,7 @@ function OrderSummary({ order }: OrderSummary) {
                     )}
                   </div>
 
-                  <div className="baseVertFlex w-full !items-start text-sm">
+                  <div className="baseVertFlex w-full !items-start text-xs">
                     {Object.values(item.customizations).map((choiceId, idx) => (
                       <p key={idx}>
                         -{" "}
@@ -137,7 +137,7 @@ function OrderSummary({ order }: OrderSummary) {
                 </div>
 
                 <div className="baseVertFlex !items-end">
-                  <p>
+                  <p className="text-base">
                     {formatPrice(
                       calculateRelativeTotal({
                         items: [item],
@@ -163,11 +163,11 @@ function OrderSummary({ order }: OrderSummary) {
           ))}
         </div>
 
-        <div className="baseVertFlex mt-8 w-full !items-start gap-4">
+        <div className="baseVertFlex mt-8 w-full gap-4">
           {/* dietary restrictions legend */}
           {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
           {order.orderItems.some((item) => item.includeDietaryRestrictions) && (
-            <div className="baseVertFlex w-full gap-2">
+            <div className="baseVertFlex w-64 gap-2 sm:w-auto">
               <div className="baseFlex gap-4">
                 <div className="size-2 shrink-0 rounded-full bg-primary/75" />
                 <p className="text-sm">
