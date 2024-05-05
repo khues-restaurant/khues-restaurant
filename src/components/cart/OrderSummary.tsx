@@ -94,7 +94,7 @@ function OrderSummary({ order }: OrderSummary) {
                     <p>{item.name}</p>
 
                     {item.includeDietaryRestrictions && (
-                      <div className="ml-1 size-2 rounded-full bg-primary/75" />
+                      <div className="ml-1 size-2 shrink-0 rounded-full bg-primary/75" />
                     )}
                   </div>
 
@@ -168,8 +168,8 @@ function OrderSummary({ order }: OrderSummary) {
           {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
           {order.orderItems.some((item) => item.includeDietaryRestrictions) && (
             <div className="baseVertFlex w-full gap-2">
-              <div className="baseFlex gap-2">
-                <div className="size-2 rounded-full bg-primary/75" />
+              <div className="baseFlex gap-4">
+                <div className="size-2 shrink-0 rounded-full bg-primary/75" />
                 <p className="text-sm">
                   Item will be prepared according to your dietary restrictions:
                 </p>

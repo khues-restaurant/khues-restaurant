@@ -539,7 +539,7 @@ function OrderItems({ order }: OrderItems) {
               <p>{item.quantity}</p>
               <p>{item.name}</p>
               {item.includeDietaryRestrictions && (
-                <div className="size-2 rounded-full bg-primary/75" />
+                <div className="size-2 shrink-0 rounded-full bg-primary/75" />
               )}
             </div>
 
@@ -567,7 +567,7 @@ function OrderItems({ order }: OrderItems) {
       {order.dietaryRestrictions && (
         <div className="baseVertFlex w-full gap-2">
           <div className="baseFlex gap-2">
-            <div className="size-2 rounded-full bg-primary/75" />
+            <div className="size-2 shrink-0 rounded-full bg-primary/75" />
             Item needs to follow these dietary restrictions:
           </div>
           <p className="text-sm font-semibold">

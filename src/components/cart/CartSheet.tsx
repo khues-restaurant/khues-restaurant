@@ -720,7 +720,7 @@ function CartSheet({
                           <p className="text-lg">{item.name}</p>
 
                           {item.includeDietaryRestrictions && (
-                            <div className="size-2 rounded-full bg-primary/75" />
+                            <div className="size-2 shrink-0 rounded-full bg-primary/75" />
                           )}
                         </div>
 
@@ -893,7 +893,7 @@ function CartSheet({
                                 <p className="text-lg">{item.name}</p>
 
                                 {item.includeDietaryRestrictions && (
-                                  <div className="size-2 rounded-full bg-primary/75" />
+                                  <div className="size-2 shrink-0 rounded-full bg-primary/75" />
                                 )}
                               </div>
 
@@ -1044,7 +1044,7 @@ function CartSheet({
             (item) => item.includeDietaryRestrictions,
           ) && (
             <div className="baseFlex gap-2">
-              <div className="size-2 rounded-full bg-primary/75" />
+              <div className="size-2 shrink-0 rounded-full bg-primary/75" />
               <p className="text-sm">
                 Item will be prepared according to your dietary restrictions
               </p>
