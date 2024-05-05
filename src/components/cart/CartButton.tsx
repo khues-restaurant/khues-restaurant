@@ -81,40 +81,42 @@ function CartButton() {
           }
         }}
       >
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="wait">
           {cartInitiallyValidated ? (
             <motion.div
               key={"cart-item-validated"}
               initial={{ scale: 0.75, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.75, opacity: 0 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
+              transition={{ duration: 0.35, ease: "easeInOut" }}
               className="baseFlex"
             >
               <LiaShoppingBagSolid className="h-6 w-6" />
 
-              <AnimatePresence>
-                {totalItems > 0 && (
-                  <motion.div
-                    key={"cart-item-count"}
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0, opacity: 0 }}
-                    transition={{
-                      duration: 0.25,
-                      delay: 0.35,
-                      ease: "easeOut",
-                    }}
-                    className={`absolute rounded-full bg-primary px-2 py-0.5 text-offwhite ${totalItems < 10 ? " -right-2 -top-2" : "-right-3 -top-3"}`}
-                  >
-                    <AnimatedNumbers
-                      value={totalItems}
-                      fontSize={14}
-                      padding={6}
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <div className="absolute size-6">
+                <AnimatePresence mode="wait">
+                  {totalItems > 0 && cartInitiallyValidated && (
+                    <motion.div
+                      key={"cart-item-count"}
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={{
+                        duration: 0.25,
+                        delay: 0.35,
+                        ease: "easeInOut",
+                      }}
+                      className={`absolute rounded-full bg-primary px-2 py-0.5 text-offwhite ${totalItems < 10 ? " -right-6 -top-4" : "-right-8 -top-4"}`}
+                    >
+                      <AnimatedNumbers
+                        value={totalItems}
+                        fontSize={14}
+                        padding={6}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </motion.div>
           ) : (
             <motion.div
@@ -123,7 +125,7 @@ function CartButton() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="inline-block size-4 animate-spin rounded-full border-[2px] border-current border-t-transparent text-primary"
+              className="mx-1 inline-block size-4 animate-spin rounded-full border-[2px] border-current border-t-transparent text-primary"
               role="status"
               aria-label="loading"
             >
