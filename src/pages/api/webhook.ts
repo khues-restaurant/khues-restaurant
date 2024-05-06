@@ -13,8 +13,12 @@ import { Resend } from "resend";
 import Receipt from "emails/Receipt";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { prisma } from "~/server/db";
+import OpenAI from "openai";
 
 const resend = new Resend(env.RESEND_API_KEY);
+const openai = new OpenAI({
+  apiKey: env.OPEN_AI_KEY,
+});
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16",
@@ -231,6 +235,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         prevRewardsPoints: prevPoints,
         earnedRewardsPoints: earnedPoints,
         spentRewardsPoints: spentPoints,
+        rewardsPointsRedeemed: user ? true : false,
         userId: user ? user.userId : null,
         orderItems: {
           create: orderItemsData, // Nested array for order items and their customizations
@@ -437,7 +442,37 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       }
 
-      // 7) cleanup transient order, technically not necessary though right since we just upsert either way?
+      // TODO: uncomment for production
+      // 7) do chatgpt search for whether or not the user is a notable food critic, news reporter,
+      // writer, or otherwise influential person in the food industry.
+
+      // const params: OpenAI.Chat.ChatCompletionCreateParams = {
+      //   messages: [
+      //     {
+      //       role: "user",
+      //       content: `Given the name ${customerMetadata.firstName} ${customerMetadata.lastName}, provide a brief one-sentence summary indicating if they are a notable food critic, news reporter, writer, influential person related to the food industry, popular on social media, or a 'foodie'. Otherwise, reply with the response: "Person is not notable"`,
+      //     },
+      //   ],
+      //   model: "gpt-4",
+      // };
+      // const chatCompletion: OpenAI.Chat.ChatCompletion =
+      //   await openai.chat.completions.create(params);
+
+      // const response = chatCompletion.choices[0]?.message.content;
+
+      // if (response && response !== "Person is not notable") {
+      //   // update the Order row with the descripion of the notable person
+      //   await prisma.order.update({
+      //     where: {
+      //       id: order.id,
+      //     },
+      //     data: {
+      //       notableUserDescription: response,
+      //     },
+      //   });
+      // }
+
+      // 8) cleanup transient order, technically not necessary though right since we just upsert either way?
       await prisma.transientOrder.delete({
         where: {
           userId: payment.metadata.userId,

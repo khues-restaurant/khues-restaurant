@@ -354,7 +354,9 @@ function CustomerOrder({ order, view }: CustomerOrder) {
       //   marginTop: { duration: 0.2 },
       //   marginBottom: { duration: 0.2 },
       // }}
-      className="baseFlex w-full rounded-md border px-4 py-4"
+      className={`baseFlex w-full rounded-md border p-4
+      ${order.notableUserDescription ? "border-yellow-500 bg-gradient-to-br from-amber-200 to-amber-400" : ""}
+      `}
     >
       <Accordion
         type="single"
@@ -371,7 +373,11 @@ function CustomerOrder({ order, view }: CustomerOrder) {
           data-state={accordionOpen}
         >
           <div className="baseVertFlex relative w-full !justify-between gap-4">
-            <div className="baseFlex w-full !justify-between gap-4">
+            <div
+              className={`baseFlex w-full !justify-between gap-4
+            ${order.notableUserDescription ? "text-primary" : ""}
+            `}
+            >
               <div className="baseFlex gap-1 text-lg font-semibold">
                 <span>{order.firstName}</span>
                 <span>{order.lastName}</span>
@@ -395,7 +401,11 @@ function CustomerOrder({ order, view }: CustomerOrder) {
               </p>
             </div>
 
-            <div className="baseFlex w-full">
+            <div
+              className={`baseFlex w-full
+            ${order.notableUserDescription ? "text-primary" : ""}
+            `}
+            >
               <div className="baseFlex w-full !justify-between gap-4">
                 <p className="font-medium">
                   {sumUpNumberOfItemsInOrder(order) > 1
@@ -526,15 +536,22 @@ function OrderItems({ order }: OrderItems) {
     }));
 
   return (
-    <div className="baseVertFlex mt-4 !items-start gap-2 border-t p-2 pb-0 pt-4">
+    <div className="baseVertFlex mt-4 !items-start gap-2 rounded-b-md border-t bg-offwhite p-2 pb-0 pt-4">
       {/* TODO: if chatgpt search reveals this person is influential, put disclaimer right here,
       also obv make the background of the accordion "trigger" goldish */}
 
+      {order.notableUserDescription && (
+        <div className="baseVertFlex w-full gap-2 pb-2">
+          <p className="text-lg font-semibold">Notable user description:</p>
+          <p>{order.notableUserDescription}</p>
+        </div>
+      )}
+
       {order.orderItems.map((item) => (
-        <div key={item.id} className="baseFlex gap-4">
+        <div key={item.id} className="baseFlex">
           {/* TODO: idk why I couldn't just generically have this be h-full... 
               setting h-12 but don't want this to be hardcoded */}
-          <div className="baseVertFlex h-full min-h-12 !items-start !justify-start gap-2">
+          <div className="baseVertFlex h-full !items-start !justify-start gap-2">
             <div className="baseFlex gap-2 text-xl font-semibold">
               <p>{item.quantity}</p>
               <p>{item.name}</p>
@@ -543,29 +560,38 @@ function OrderItems({ order }: OrderItems) {
               )}
             </div>
 
-            <div className="baseVertFlex w-full !items-start gap-2 text-sm">
-              {Object.values(item.customizations).map((customization, idx) => (
-                <p key={idx}>
-                  -{" "}
-                  {
-                    customizationChoices[customization.customizationChoiceId]
-                      ?.customizationCategory.name
-                  }
-                  :{" "}
-                  {
-                    customizationChoices[customization.customizationChoiceId]
-                      ?.name
-                  }
-                </p>
-              ))}
-              {item.specialInstructions && <p>- {item.specialInstructions}</p>}
-            </div>
+            {(item.customizations.length > 0 || item.specialInstructions) && (
+              <div className="baseVertFlex ml-4 w-full !items-start gap-2 text-sm">
+                {Object.values(item.customizations).map(
+                  (customization, idx) => (
+                    <p key={idx}>
+                      -{" "}
+                      {
+                        customizationChoices[
+                          customization.customizationChoiceId
+                        ]?.customizationCategory.name
+                      }
+                      :{" "}
+                      {
+                        customizationChoices[
+                          customization.customizationChoiceId
+                        ]?.name
+                      }
+                    </p>
+                  ),
+                )}
+
+                {item.specialInstructions && (
+                  <p>- {item.specialInstructions}</p>
+                )}
+              </div>
+            )}
           </div>
         </div>
       ))}
 
       {order.dietaryRestrictions && (
-        <div className="baseVertFlex w-full gap-2">
+        <div className="baseVertFlex mt-2 w-full gap-2">
           <div className="baseFlex gap-2">
             <div className="size-2 shrink-0 rounded-full bg-primary/75" />
             Item needs to follow these dietary restrictions:

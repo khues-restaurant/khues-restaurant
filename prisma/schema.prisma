@@ -259,7 +259,9 @@ model Order {
 
     stripeSessionId String @unique // used for tracking the order in Stripe
 
-    userLeftFeedback Boolean @default(false)
+    notableUserDescription String?
+    rewardsPointsRedeemed  Boolean @default(false)
+    userLeftFeedback       Boolean @default(false)
 
     // could have the userDescription field on here to be populated by chatGPT response to if
     // the user is noteworthy. Prob want to delay this until order is first created though, just a setTimeout()
