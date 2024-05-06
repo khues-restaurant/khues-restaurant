@@ -2,6 +2,7 @@ import { useAuth } from "@clerk/nextjs";
 import { type Discount } from "@prisma/client";
 import { format } from "date-fns";
 import { AnimatePresence, motion, useInView } from "framer-motion";
+import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -120,6 +121,29 @@ function Menu() {
       transition={{ duration: 0.5 }}
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
+      <Head>
+        <title>Menu | Khue&apos;s</title>
+        <meta
+          name="description"
+          content="Explore the vibrant menu at Khue's, featuring innovative Vietnamese dishes crafted with fresh ingredients and bold flavors."
+        />
+        <meta property="og:title" content="Menu | Khue's"></meta>
+        <meta property="og:url" content="www.khueskitchen.com/menu" />
+        <meta
+          property="og:description"
+          content="Explore the vibrant menu at Khue's, featuring innovative Vietnamese dishes crafted with fresh ingredients and bold flavors."
+        />
+        <meta property="og:type" content="website" />
+        {/* <meta
+          property="og:image"
+          content="https://www.autostrum.com/opengraphScreenshots/explore.png"
+        ></meta> */}
+        {/* <meta
+          property="og:image:alt"
+          content="TODO: A description of what is in the image (not a caption). If the page specifies an og:image it should specify og:image:alt"
+        ></meta> */}
+      </Head>
+
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72">
         <div className="baseFlex absolute left-0 top-0 size-full border-b-2 bg-gradient-to-br from-primary to-darkPrimary tablet:gap-8 desktop:gap-16">

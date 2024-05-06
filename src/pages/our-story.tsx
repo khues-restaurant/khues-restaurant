@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Head from "next/head";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Parallax } from "react-scroll-parallax";
@@ -132,6 +133,29 @@ function OurStory() {
       transition={{ duration: 0.5 }}
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
+      <Head>
+        <title>Our story | Khue&apos;s</title>
+        <meta
+          name="description"
+          content="Discover the inspiring story behind Khue's Kitchen, where Chef Eric Pham honors his mother's legacy through modern Vietnamese cuisine, blending tradition with innovation."
+        />
+        <meta property="og:title" content="Our story | Khue's"></meta>
+        <meta property="og:url" content="www.khueskitchen.com/our-story" />
+        <meta
+          property="og:description"
+          content="Discover the inspiring story behind Khue's Kitchen, where Chef Eric Pham honors his mother's legacy through modern Vietnamese cuisine, blending tradition with innovation."
+        />
+        <meta property="og:type" content="website" />
+        {/* <meta
+          property="og:image"
+          content="https://www.autostrum.com/opengraphScreenshots/explore.png"
+        ></meta> */}
+        {/* <meta
+          property="og:image:alt"
+          content="TODO: A description of what is in the image (not a caption). If the page specifies an og:image it should specify og:image:alt"
+        ></meta> */}
+      </Head>
+
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden border-b-2 tablet:h-72">
         {/* wide-ish angle shot of the dining room maybe? technically could also
@@ -152,7 +176,7 @@ function OurStory() {
           />
         </Parallax>
 
-        <div className="baseFlex bg-offwhite z-10 rounded-md p-2 shadow-lg">
+        <div className="baseFlex z-10 rounded-md bg-offwhite p-2 shadow-lg">
           <div className="experimentalBorder baseFlex px-8 py-4 text-xl font-semibold tablet:text-2xl">
             Our story
           </div>
@@ -410,7 +434,7 @@ function RestaurantAndBackstory({ name, backstory }: RestaurantAndBackstory) {
         className="!relative !w-80 rounded-t-md sm:!w-96 tablet:!h-[450px] tablet:!w-[600px] tablet:rounded-md"
       />
 
-      <div className="baseVertFlex tablet:text-offwhite w-full max-w-80 gap-2 rounded-b-md p-4 sm:max-w-md tablet:absolute tablet:bottom-0 tablet:left-0 tablet:!items-start tablet:rounded-br-none tablet:rounded-tr-md tablet:bg-gradient-to-tr tablet:from-black tablet:to-black/50">
+      <div className="baseVertFlex w-full max-w-80 gap-2 rounded-b-md p-4 sm:max-w-md tablet:absolute tablet:bottom-0 tablet:left-0 tablet:!items-start tablet:rounded-br-none tablet:rounded-tr-md tablet:bg-gradient-to-tr tablet:from-black tablet:to-black/50 tablet:text-offwhite">
         <p className="font-semibold underline underline-offset-2">{name}</p>
         <p className="text-sm">{backstory}</p>
       </div>

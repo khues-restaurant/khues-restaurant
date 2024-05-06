@@ -43,6 +43,7 @@ import Image from "next/image";
 import AnimatedLogo from "~/components/ui/AnimatedLogo";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
+import Head from "next/head";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
@@ -222,6 +223,29 @@ function OrderNow() {
       transition={{ duration: 0.5 }}
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
+      <Head>
+        <title>Order | Khue&apos;s</title>
+        <meta
+          name="description"
+          content="Order directly from Khue's for exclusive benefits, including our lowest menu prices, priority processing, and rewards points towards free meals."
+        />
+        <meta property="og:title" content="Order | Khue's"></meta>
+        <meta property="og:url" content="www.khueskitchen.com/order-now" />
+        <meta
+          property="og:description"
+          content="Order directly from Khue's for exclusive benefits, including our lowest menu prices, priority processing, and rewards points towards free meals."
+        />
+        <meta property="og:type" content="website" />
+        {/* <meta
+          property="og:image"
+          content="https://www.autostrum.com/opengraphScreenshots/explore.png"
+        ></meta> */}
+        {/* <meta
+          property="og:image:alt"
+          content="TODO: A description of what is in the image (not a caption). If the page specifies an og:image it should specify og:image:alt"
+        ></meta> */}
+      </Head>
+
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72">
         <div className="baseFlex absolute left-0 top-0 size-full border-b-2 bg-gradient-to-br from-primary to-darkPrimary tablet:gap-8 desktop:gap-16">
