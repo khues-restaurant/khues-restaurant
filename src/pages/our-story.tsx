@@ -178,7 +178,7 @@ function OurStory() {
 
         <div className="baseFlex z-10 rounded-md bg-offwhite p-2 shadow-lg">
           <div className="experimentalBorder baseFlex px-8 py-4 text-xl font-semibold tablet:text-2xl">
-            Our story
+            <h1>Our story</h1>
           </div>
         </div>
       </div>

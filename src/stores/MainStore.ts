@@ -131,7 +131,7 @@ interface StoreState {
   orderDetails: OrderDetails;
   setOrderDetails: (orderDetails: OrderDetails) => void;
 
-  // used for "Undo" button on order-now menu item toasts
+  // used for "Undo" button on order menu item toasts
   prevOrderDetails: OrderDetails;
   setPrevOrderDetails: (orderDetails: OrderDetails) => void;
   getPrevOrderDetails: () => OrderDetails; // needed since getting prevOrderDetails inside onClick

@@ -176,7 +176,7 @@ function RecentOrders({ initOrders }: { initOrders: DBOrderSummary[] | null }) {
                 It looks like you haven&apos;t placed an order yet.
               </p>
               <Button asChild>
-                <Link href="/order-now">Get started</Link>
+                <Link href="/order">Get started</Link>
               </Button>
               with your first order today!
             </div>

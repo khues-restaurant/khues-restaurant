@@ -58,7 +58,7 @@ function DesktopHeader() {
   return (
     <nav
       id="header"
-      className={`${classes.desktopHeader} bg-offwhite fixed left-0 top-0 z-50 grid h-28 w-full grid-cols-1 grid-rows-1 shadow-md`}
+      className={`${classes.desktopHeader} fixed left-0 top-0 z-50 grid h-28 w-full grid-cols-1 grid-rows-1 bg-offwhite shadow-md`}
     >
       <Link href={"/"} className={`${classes.logo ?? ""}`}>
         <Image
@@ -82,10 +82,10 @@ function DesktopHeader() {
         </Button>
 
         <Button
-          variant={asPath.includes("/order-now") ? "activeLink" : "link"}
+          variant={asPath.includes("/order") ? "activeLink" : "link"}
           asChild
         >
-          <Link href={"/order-now"} className="!text-xl">
+          <Link href={"/order"} className="!text-xl">
             Order now
           </Link>
         </Button>

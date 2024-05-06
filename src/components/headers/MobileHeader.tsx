@@ -223,10 +223,10 @@ function MobileHeader() {
               </Button>
 
               <Button
-                variant={asPath.includes("/order-now") ? "activeLink" : "link"}
+                variant={asPath.includes("/order") ? "activeLink" : "link"}
                 asChild
               >
-                <Link href={"/order-now"} className="!text-xl">
+                <Link href={"/order"} className="!text-xl">
                   Order now
                 </Link>
               </Button>

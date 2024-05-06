@@ -108,15 +108,15 @@ export default function Home() {
           />
         </div>
 
-        <div className="baseVertFlex gap-1 p-8">
+        <section className="baseVertFlex gap-1 p-8">
           <h1 className="text-2xl font-bold">Welcome to Khue&apos;s</h1>
-          <h2 className="text-center text-lg">
+          <p className="text-center text-lg">
             A modern take on classic Vietnamese cuisine.
-          </h2>
+          </p>
           <Button asChild className="mt-4">
-            <Link href="/order-now">Order now</Link>
+            <Link href="/order">Order now</Link>
           </Button>
-        </div>
+        </section>
       </div>
 
       <div className="baseFlex relative !hidden w-full p-4 tablet:!flex tablet:h-[calc(100dvh-7rem)]">
@@ -191,15 +191,15 @@ export default function Home() {
         </div>
 
         <div className="baseVertFlex absolute top-0 h-full xl:!left-24 tablet:left-8">
-          <div className="baseVertFlex !items-start gap-1 rounded-md bg-offwhite p-8 shadow-md">
+          <section className="baseVertFlex !items-start gap-1 rounded-md bg-offwhite p-8 shadow-md">
             <h1 className="text-4xl font-bold">Welcome to Khue&apos;s</h1>
-            <h2 className="text-2xl">
+            <p className="text-2xl">
               A modern take on classic Vietnamese cuisine.
-            </h2>
+            </p>
             <Button asChild className="mt-4">
-              <Link href="/order-now">Order now</Link>
+              <Link href="/order">Order now</Link>
             </Button>
-          </div>
+          </section>
         </div>
       </div>
 
@@ -398,7 +398,7 @@ export default function Home() {
             </div>
 
             <Button asChild>
-              <Link href="/order-now" className="my-4">
+              <Link href="/order" className="my-4">
                 Order now
               </Link>
             </Button>
@@ -431,7 +431,7 @@ export default function Home() {
             </div>
 
             <Button asChild>
-              <Link href="/order-now" className="mt-4 self-center">
+              <Link href="/order" className="mt-4 self-center">
                 Order now
               </Link>
             </Button>

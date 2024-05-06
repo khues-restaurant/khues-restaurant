@@ -48,7 +48,7 @@ function Media() {
         <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-2 shadow-lg tablet:!flex">
           <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
-            Media
+            <h1>Media</h1>
             <SideAccentSwirls className="h-4 fill-primary desktop:h-5" />
           </div>
         </div>

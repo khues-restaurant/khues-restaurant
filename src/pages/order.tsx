@@ -216,7 +216,7 @@ function OrderNow() {
 
   return (
     <motion.div
-      key={"order-now"}
+      key={"order"}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -230,7 +230,7 @@ function OrderNow() {
           content="Order directly from Khue's for exclusive benefits, including our lowest menu prices, priority processing, and rewards points towards free meals."
         />
         <meta property="og:title" content="Order | Khue's"></meta>
-        <meta property="og:url" content="www.khueskitchen.com/order-now" />
+        <meta property="og:url" content="www.khueskitchen.com/order" />
         <meta
           property="og:description"
           content="Order directly from Khue's for exclusive benefits, including our lowest menu prices, priority processing, and rewards points towards free meals."
@@ -254,7 +254,7 @@ function OrderNow() {
               ^ implied, but this means you need to edit the images to line up into one cohesive image
               with some software
               
-              also obv have different dishes displayed between /menu and /order-now
+              also obv have different dishes displayed between /menu and /order
               */}
 
           <Image
@@ -280,7 +280,7 @@ function OrderNow() {
           <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-offwhite p-2 shadow-lg tablet:!flex">
             <div className="baseFlex gap-2 font-semibold text-primary tablet:p-2 tablet:text-xl desktop:text-2xl">
               <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
-              Order
+              <h1>Order</h1>
               <SideAccentSwirls className="h-5 fill-primary" />
             </div>
           </div>
@@ -301,7 +301,7 @@ function OrderNow() {
         <div className="baseFlex z-10 rounded-md bg-offwhite p-2 shadow-lg tablet:hidden">
           <div className="baseFlex gap-2 p-2 text-xl font-semibold text-primary tablet:px-8 tablet:py-3 tablet:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary" />
-            Order
+            <h1>Order</h1>
             <SideAccentSwirls className="h-4 fill-primary" />
           </div>
         </div>

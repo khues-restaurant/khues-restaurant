@@ -192,7 +192,7 @@ function Rewards() {
         <div className="baseFlex z-10 rounded-md bg-offwhite text-primary shadow-lg tablet:p-2">
           <div className="baseVertFlex text-xl font-semibold tablet:text-2xl">
             <WideFancySwirls className="h-12 rotate-180 fill-primary tablet:h-16" />
-            Khue&apos;s Rewards
+            <h1>Khue&apos;s Rewards</h1>
             <WideFancySwirls className="h-12 fill-primary tablet:h-16" />
           </div>
         </div>

@@ -91,7 +91,7 @@ function Welcome({ firstName, unsubscriptionToken }: Welcome) {
                       className="my-8 h-[126px] w-[240px] rounded-md sm:h-[252px] sm:w-[480px]"
                     />
                     <Button
-                      href="https://khueskitchen.com/order-now"
+                      href="https://khueskitchen.com/order"
                       className="rounded-md bg-primary px-4 py-3 text-sm text-offwhite"
                     >
                       Order now

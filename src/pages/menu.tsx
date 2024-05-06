@@ -170,7 +170,7 @@ function Menu() {
           <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-offwhite p-2 shadow-lg tablet:!flex">
             <div className="baseFlex gap-2 font-semibold text-primary tablet:p-2 tablet:text-xl desktop:text-2xl">
               <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
-              Menu
+              <h1>Menu</h1>
               <SideAccentSwirls className="h-5 fill-primary" />
             </div>
           </div>
@@ -191,7 +191,7 @@ function Menu() {
         <div className="baseFlex z-10 rounded-md bg-offwhite p-2 shadow-lg tablet:hidden">
           <div className="baseFlex gap-2 p-2 text-xl font-semibold text-primary tablet:px-8 tablet:py-3 tablet:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary" />
-            Menu
+            <h1>Menu</h1>
             <SideAccentSwirls className="h-4 fill-primary" />
           </div>
         </div>
@@ -396,7 +396,7 @@ function Menu() {
 
         <Button size={"lg"} asChild>
           <Link
-            href="/order-now"
+            href="/order"
             className="fixed bottom-5 !text-lg !shadow-xl tablet:bottom-10"
           >
             Order now
