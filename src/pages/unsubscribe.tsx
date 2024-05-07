@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import { type GetServerSideProps } from "next";
+import Head from "next/head";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { api } from "~/utils/api";
@@ -32,6 +33,13 @@ function Unsubscribe({ email }: { email?: string }) {
       transition={{ duration: 0.5 }}
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
+      <Head>
+        <title>Unsubscribe | Khue&apos;s</title>
+        <meta property="og:title" content="Unsubscribe | Khue's"></meta>
+        <meta property="og:url" content={`www.khueskitchen.com/unsubscribe`} />
+        <meta property="og:type" content="website" />
+      </Head>
+
       <div className="baseVertFlex max-w-80 gap-6 p-4 tablet:max-w-2xl tablet:gap-8 tablet:p-8">
         <p className="text-center text-xl font-semibold">
           Unsubscribe from all emails

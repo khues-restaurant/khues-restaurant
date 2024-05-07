@@ -14,6 +14,8 @@ import Image from "next/image";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import Head from "next/head";
 
+import sampleImage from "/public/menuItems/sampleImage.webp";
+
 function Rewards() {
   return (
     <motion.div
@@ -49,11 +51,11 @@ function Rewards() {
 
       {/* Hero */}
       <div
-        style={{
-          backgroundImage:
-            "linear-gradient(to right bottom, hsl(50deg, 48%, 62%) 0%, hsl(49deg, 61%, 58%) 100%)",
-        }}
-        className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72 tablet:overflow-x-hidden"
+        // style={{
+        //   backgroundImage:
+        //     "linear-gradient(to right bottom, hsl(50deg, 48%, 62%) 0%, hsl(49deg, 61%, 58%) 100%)",
+        // }}
+        className="baseFlex relative h-56 w-full overflow-hidden bg-gradient-to-br from-primary to-darkPrimary tablet:h-72 tablet:overflow-x-hidden"
       >
         {/* mobile images */}
         <motion.div
@@ -70,7 +72,7 @@ function Rewards() {
           className="absolute -left-10 -top-10 tablet:hidden"
         >
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: replace with proper alt tag text"}
             width={96}
             height={96}
@@ -92,7 +94,7 @@ function Rewards() {
           className="absolute -bottom-10 -left-10 tablet:hidden"
         >
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: replace with proper alt tag text"}
             width={96}
             height={96}
@@ -115,7 +117,7 @@ function Rewards() {
           className="absolute -top-1 left-24 hidden tablet:flex"
         >
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
@@ -137,7 +139,7 @@ function Rewards() {
           className="absolute -left-16 bottom-10 hidden tablet:flex"
         >
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
@@ -159,7 +161,7 @@ function Rewards() {
           className="absolute -bottom-14 left-36 hidden tablet:flex"
         >
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
@@ -181,7 +183,7 @@ function Rewards() {
           className="absolute left-72 top-14 hidden xl:flex"
         >
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
@@ -189,11 +191,11 @@ function Rewards() {
           />
         </motion.div>
 
-        <div className="baseFlex z-10 rounded-md bg-offwhite text-primary shadow-lg tablet:p-2">
+        <div className="baseFlex z-10 rounded-md bg-offwhite text-gold shadow-lg tablet:p-2">
           <div className="baseVertFlex text-xl font-semibold tablet:text-2xl">
-            <WideFancySwirls className="h-12 rotate-180 fill-primary tablet:h-16" />
+            <WideFancySwirls className="h-12 rotate-180 fill-gold tablet:h-16" />
             <h1>Khue&apos;s Rewards</h1>
-            <WideFancySwirls className="h-12 fill-primary tablet:h-16" />
+            <WideFancySwirls className="h-12 fill-gold tablet:h-16" />
           </div>
         </div>
 
@@ -212,7 +214,7 @@ function Rewards() {
           className="absolute -right-10 -top-10 tablet:hidden"
         >
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: replace with proper alt tag text"}
             width={96}
             height={96}
@@ -234,7 +236,7 @@ function Rewards() {
           className="absolute -bottom-10 -right-10 tablet:hidden"
         >
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: replace with proper alt tag text"}
             width={96}
             height={96}
@@ -257,7 +259,7 @@ function Rewards() {
           className="absolute -top-1 right-24 hidden tablet:flex"
         >
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
@@ -279,7 +281,7 @@ function Rewards() {
           className="absolute -right-16 bottom-10 hidden tablet:flex"
         >
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
@@ -301,7 +303,7 @@ function Rewards() {
           className="absolute -bottom-14 right-36 hidden tablet:flex"
         >
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
@@ -323,7 +325,7 @@ function Rewards() {
           className="absolute right-72 top-14 hidden xl:flex"
         >
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
@@ -358,10 +360,10 @@ function Rewards() {
         </div>
 
         <div className="baseVertFlex gap-8 xl:!flex-row">
-          <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold  bg-primary p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
-            <CiGift className="ml-2 size-16 h-24 text-gold sm:ml-0 sm:size-20" />
+          <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+            <CiGift className="ml-2 size-16 h-20 text-primary" />
             <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
-            <div className="hyphens-auto p-4 text-left text-gold">
+            <div className="hyphens-auto p-4 text-left text-primary">
               Earning rewards is as simple as enjoying your favorite meals!
               Every dollar spent earns you points, which open the door to a
               diverse selection of enticing rewards. Get started earning points
@@ -369,10 +371,10 @@ function Rewards() {
             </div>
           </div>
 
-          <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold  bg-primary p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
-            <FaCakeCandles className="ml-4 size-12 h-24 text-gold" />
+          <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+            <FaCakeCandles className="ml-4 size-10 h-20 text-primary" />
             <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
-            <div className="hyphens-auto p-4 text-left text-gold">
+            <div className="hyphens-auto p-4 text-left text-primary">
               Celebrate your birthday with a complimentary treat from us, adding
               a touch of sweetness to your special day. Make sure to share your
               birthday with us when you sign up, so we can ensure your
@@ -380,10 +382,10 @@ function Rewards() {
             </div>
           </div>
 
-          <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold  bg-primary p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
-            <LuCalendarClock className="ml-2 size-14 h-24 text-gold" />
+          <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+            <LuCalendarClock className="ml-2 size-12 h-20 shrink-0 text-primary" />
             <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
-            <div className="hyphens-auto p-4 text-left text-gold">
+            <div className="hyphens-auto p-4 text-left text-primary">
               As a member, you&apos;re first in line to experience our newest
               menu items. Before these delicacies make their official debut,
               you&apos;ll have the exclusive opportunity to taste what&apos;s
@@ -398,11 +400,10 @@ function Rewards() {
       <div className="baseVertFlex relative my-8 gap-8 text-primary tablet:my-28 tablet:!flex-row tablet:gap-28">
         <div className="baseVertFlex gap-4">
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: replace with proper alt tag text"}
-            fill
-            sizes="(min-width: 1000px) 256px, 192px"
-            className="!relative rounded-md"
+            sizes="(max-width: 1000px) 192px, 256px"
+            className="!relative size-48 rounded-md tablet:size-64"
           />
 
           <div className="baseVertFlex">
@@ -413,11 +414,10 @@ function Rewards() {
 
         <div className="baseVertFlex gap-4">
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: replace with proper alt tag text"}
-            fill
-            sizes="(min-width: 1000px) 256px, 192px"
-            className="!relative rounded-md"
+            sizes="(max-width: 1000px) 192px, 256px"
+            className="!relative size-48 rounded-md tablet:size-64"
           />
 
           <div className="baseVertFlex">
@@ -428,11 +428,10 @@ function Rewards() {
 
         <div className="baseVertFlex gap-4">
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: replace with proper alt tag text"}
-            fill
-            sizes="(min-width: 1000px) 256px, 192px"
-            className="!relative rounded-md"
+            sizes="(max-width: 1000px) 192px, 256px"
+            className="!relative size-48 rounded-md tablet:size-64"
           />
 
           <div className="baseVertFlex">
@@ -453,31 +452,49 @@ function Rewards() {
         </div>
 
         <div className="baseVertFlex gap-8 tablet:!flex-row">
-          <div className="baseVertFlex max-w-72 gap-4 rounded-sm border-y-4 border-b-borderGold border-t-borderGold bg-gradient-to-br from-primary to-darkPrimary !p-4 shadow-lg tablet:h-36 tablet:w-96">
-            <FaRedo className="size-6 text-gold" />
-            <div className="text-center text-sm text-gold sm:text-base">
+          <div className="baseVertFlex max-w-72 gap-4 rounded-sm border-y-4 border-y-borderGold bg-offwhite !p-4 shadow-lg tablet:h-36 tablet:w-96">
+            <FaRedo className="size-6 text-primary" />
+            <div className="text-center text-sm text-primary sm:text-base">
               Effortless one-tap reordering of your previous orders.
             </div>
           </div>
 
-          <div className="baseVertFlex max-w-72 gap-2 rounded-sm border-y-4 border-b-borderGold border-t-borderGold bg-gradient-to-br from-primary to-darkPrimary !p-4 shadow-lg tablet:h-36 tablet:w-96">
-            <IoMdHeart className="size-8 text-gold" />
-            <div className="text-center text-sm text-gold sm:text-base tablet:max-w-64">
+          <div className="baseVertFlex max-w-72 gap-2 rounded-sm border-y-4 border-y-borderGold bg-offwhite !p-4 shadow-lg tablet:h-36 tablet:w-96">
+            <IoMdHeart className="size-8 text-primary" />
+            <div className="text-center text-sm text-primary sm:text-base tablet:max-w-64">
               Favorite your most loved dishes for quick and easy access.
             </div>
           </div>
 
-          <div className="baseVertFlex max-w-72 gap-2 rounded-sm border-y-4 border-b-borderGold border-t-borderGold bg-gradient-to-br from-primary to-darkPrimary !p-4 shadow-lg tablet:h-36 tablet:w-96">
-            <IoToggle className="size-9 text-gold" />
-            <div className="text-center text-sm text-gold sm:text-base tablet:max-w-64">
+          <div className="baseVertFlex max-w-72 gap-2 rounded-sm border-y-4 border-y-borderGold bg-offwhite !p-4 shadow-lg tablet:h-36 tablet:w-96">
+            <IoToggle className="size-9 text-primary" />
+            <div className="text-center text-sm text-primary sm:text-base tablet:max-w-64">
               Easily add your profile&apos;s dietary preferences to your orders.
             </div>
           </div>
         </div>
       </div>
 
+      {/* 
+      #DAA520 is interesting, #FFECB3 as a top left ? still too bright though,
+
+      #e2c479 - #dbb658
+      
+          background: linear-gradient(to right, #DF9F28, #FDE08D, #DF9F28);
+^ maybe?
+  
+linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, hsl(46 65% 59% / 1) 100%)
+^ this was legit just playing around with numbers
+
+maybe lean more towards oklch realm or keep asking chatgpt to refine on
+
+^ maybe have highlight section but usually with gradients it just looks washed out..
+ maybe have some kind of texture effect layed over to make up for this/make it look like actual gold?
+
+      */}
+
       {/* Join */}
-      <div className="baseVertFlex mb-16 mt-8 max-w-xl gap-8 border-y-4 border-b-borderGold border-t-borderGold !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
+      <div className="baseVertFlex mb-16 mt-8 max-w-xl gap-8 border-y-4 border-b-borderGold border-t-borderGold bg-offwhite !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
         <p className="text-center">
           Joining Khue&apos;s Rewards is easy! Simply create an account with us
           and start earning points with every order. Plus, you&apos;ll receive

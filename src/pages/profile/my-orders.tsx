@@ -59,6 +59,9 @@ import { type GetServerSideProps } from "next";
 import { PrismaClient } from "@prisma/client";
 import isEqual from "lodash.isequal";
 
+import noOrders from "/public/menuItems/myOrders.jpg";
+import Head from "next/head";
+
 function RecentOrders({ initOrders }: { initOrders: DBOrderSummary[] | null }) {
   const userId = useGetUserId();
   const { isSignedIn } = useAuth();
@@ -90,13 +93,14 @@ function RecentOrders({ initOrders }: { initOrders: DBOrderSummary[] | null }) {
   );
   const [sortDirection, setSortDirection] = useState("desc");
 
+  // idk what this logic is on about, check this later since there shouldn't be a typeerror
   useEffect(() => {
     if (orders === null && sortedOrders === null) {
       setSortedOrders([]);
       return;
     }
 
-    const sortedOrders = orders.sort((a, b) => {
+    const localSortedOrders = orders.sort((a, b) => {
       if (sortDirection === "desc") {
         return b.datetimeToPickup.getTime() - a.datetimeToPickup.getTime();
       } else {
@@ -105,8 +109,8 @@ function RecentOrders({ initOrders }: { initOrders: DBOrderSummary[] | null }) {
     });
 
     console.log("setting orders");
-    setSortedOrders(sortedOrders);
-  }, [orders, sortDirection]);
+    setSortedOrders(localSortedOrders);
+  }, [orders, sortedOrders, sortDirection]);
 
   // dang, there is still seemingly the flash of layout on the initial render, investigate.
   // could it be due to the type errors in above effect?
@@ -118,8 +122,21 @@ function RecentOrders({ initOrders }: { initOrders: DBOrderSummary[] | null }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className={`baseVertFlex relative min-h-[calc(100dvh-6rem-73px)] w-full tablet:min-h-0 tablet:!justify-start ${sortedOrders && sortedOrders.length > 0 ? "mb-16" : ""}`}
+      className={`baseVertFlex relative min-h-[calc(100dvh-6rem-81px)] w-full !justify-start tablet:min-h-0 
+      ${sortedOrders && sortedOrders.length > 0 ? "tablet:mb-16" : ""}
+      ${sortedOrders && sortedOrders.length > 5 ? "mb-16" : ""}
+      `}
     >
+      <Head>
+        <title>My orders | Khue&apos;s</title>
+        <meta property="og:title" content="My orders | Khue's"></meta>
+        <meta
+          property="og:url"
+          content="www.khueskitchen.com/profile/my-orders"
+        />
+        <meta property="og:type" content="website" />
+      </Head>
+
       <div className="baseVertFlex relative mt-4 w-full p-0 transition-all tablet:my-8 tablet:p-8">
         {/* fyi: don't think it makes sense to have these two be under an <AnimatePresence /> since
             it should (rarely) ever change between 0 orders and some orders */}
@@ -165,10 +182,10 @@ function RecentOrders({ initOrders }: { initOrders: DBOrderSummary[] | null }) {
         {sortedOrders && sortedOrders.length === 0 && (
           <div className="baseVertFlex relative gap-4">
             <Image
-              src={"/menuItems/myOrders.jpg"}
+              src={noOrders}
               alt={"TODO: fill in w/ appropriate alt text"}
-              fill
-              className="!relative rounded-md !px-4 "
+              sizes="(max-width: 640px) 80vw, 50vw"
+              className="!relative !rounded-md !px-4"
             />
 
             <div className="baseVertFlex gap-4">

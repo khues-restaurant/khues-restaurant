@@ -53,6 +53,7 @@ import { formatPhoneNumber } from "~/utils/formatPhoneNumber";
 import { PrismaClient, type User } from "@prisma/client";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { useMainStore } from "~/stores/MainStore";
+import Head from "next/head";
 
 function Preferences({ initUserData }: { initUserData: User }) {
   const userId = useGetUserId();
@@ -220,6 +221,16 @@ function Preferences({ initUserData }: { initUserData: User }) {
       transition={{ duration: 0.5 }}
       className="baseVertFlex relative my-8 w-full tablet:mt-0"
     >
+      <Head>
+        <title>Preferences | Khue&apos;s</title>
+        <meta property="og:title" content="Preferences | Khue's"></meta>
+        <meta
+          property="og:url"
+          content="www.khueskitchen.com/profile/preferences"
+        />
+        <meta property="og:type" content="website" />
+      </Head>
+
       <div className="baseVertFlex relative w-full !items-start p-8 transition-all tablet:my-8 tablet:p-16 tablet:pb-0">
         {/* Personal Information */}
 

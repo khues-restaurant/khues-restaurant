@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { motion } from "framer-motion";
 import { type GetServerSideProps } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { MdOutlineMail } from "react-icons/md";
@@ -17,6 +18,7 @@ function PaymentSuccess({
 }) {
   const { push, isReady, query } = useRouter();
   const sessionId = query.session_id as string;
+  const userId = query.userId as string;
 
   const { data: order } = api.order.getByStripeSessionId.useQuery(sessionId, {
     enabled: isReady,
@@ -69,6 +71,16 @@ function PaymentSuccess({
       // to be a tiny tiny element on this page
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
+      <Head>
+        <title>Payment success | Khue&apos;s</title>
+        <meta property="og:title" content="Payment success | Khue's"></meta>
+        <meta
+          property="og:url"
+          content={`www.khueskitchen.com/payment-sucess?session_id=${sessionId}&userId=${userId}`}
+        />
+        <meta property="og:type" content="website" />
+      </Head>
+
       <div className="baseVertFlex max-w-80 gap-6 p-4 tablet:max-w-2xl tablet:gap-8 tablet:p-8">
         {/* Testing just this instead of the loading spinner below */}
         <AnimatedLogo className="size-24" />

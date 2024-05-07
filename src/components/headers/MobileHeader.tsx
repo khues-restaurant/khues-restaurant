@@ -24,6 +24,8 @@ import { api } from "~/utils/api";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { TbLocation } from "react-icons/tb";
 
+import outsideOfRestaurant from "/public/homepage/heroTwo.webp";
+
 function MobileHeader() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
   const userId = useGetUserId();
@@ -283,7 +285,7 @@ function MobileHeader() {
                           <MdAccessTime />
                           Hours
                         </div>
-                        <div className="grid w-full grid-cols-2">
+                        <div className="grid w-full max-w-[250px] grid-cols-2">
                           <div className="baseVertFlex w-full !items-start">
                             <p>Monday</p>
                             <p>Tuesday</p>
@@ -295,11 +297,11 @@ function MobileHeader() {
                           </div>
                           <div className="baseVertFlex w-full !items-start">
                             <p>Closed</p>
-                            <p>3pm-10pm</p>
-                            <p>3pm-10pm</p>
-                            <p>3pm-10pm</p>
-                            <p>3pm-10pm</p>
-                            <p>3pm-10pm</p>
+                            <p>3PM - 10PM</p>
+                            <p>3PM - 10PM</p>
+                            <p>3PM - 10PM</p>
+                            <p>3PM - 10PM</p>
+                            <p>3PM - 10PM</p>
                             <p>Closed</p>
                           </div>
                         </div>
@@ -334,13 +336,10 @@ function MobileHeader() {
                         </div>
 
                         <Image
-                          src={"/homepage/heroTwo.webp"}
+                          src={outsideOfRestaurant}
                           alt={"TODO: fill in w/ appropriate alt text"}
-                          fill
-                          style={{
-                            objectFit: "cover",
-                          }}
-                          className="!relative !h-48 !w-full rounded-md"
+                          sizes="(max-width: 640px) 60vw, 700px"
+                          className="!relative !h-48 !w-full rounded-md object-cover shadow-sm"
                         />
                       </div>
                     </div>

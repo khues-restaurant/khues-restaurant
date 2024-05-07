@@ -26,6 +26,9 @@ import isEqual from "lodash.isequal";
 import { isEligibleForBirthdayReward } from "~/utils/isEligibleForBirthdayReward";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 
+import sampleImage from "/public/menuItems/sampleImage.webp";
+import Head from "next/head";
+
 // TODO: honestly the logic within here is very hit or miss, comb through this for sure
 
 function Rewards({
@@ -166,6 +169,16 @@ function Rewards({
       transition={{ duration: 0.5 }}
       className="baseVertFlex relative mb-16 w-full"
     >
+      <Head>
+        <title>Rewards | Khue&apos;s</title>
+        <meta property="og:title" content="Rewards | Khue's"></meta>
+        <meta
+          property="og:url"
+          content="www.khueskitchen.com/profile/rewards"
+        />
+        <meta property="og:type" content="website" />
+      </Head>
+
       <div className="baseVertFlex relative w-full gap-8 transition-all">
         <div
           style={{
@@ -189,7 +202,7 @@ function Rewards({
             className="absolute -left-10 -top-10 tablet:hidden"
           >
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={sampleImage}
               alt={"TODO: replace with proper alt tag text"}
               width={96}
               height={96}
@@ -211,7 +224,7 @@ function Rewards({
             className="absolute -bottom-10 -left-10 tablet:hidden"
           >
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={sampleImage}
               alt={"TODO: replace with proper alt tag text"}
               width={96}
               height={96}
@@ -234,7 +247,7 @@ function Rewards({
             className="absolute -top-1 left-24 hidden tablet:flex"
           >
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={sampleImage}
               alt={"TODO: replace with proper alt tag text"}
               width={144}
               height={144}
@@ -256,7 +269,7 @@ function Rewards({
             className="absolute -left-16 bottom-10 hidden tablet:flex"
           >
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={sampleImage}
               alt={"TODO: replace with proper alt tag text"}
               width={144}
               height={144}
@@ -278,7 +291,7 @@ function Rewards({
             className="absolute -bottom-14 left-36 hidden tablet:flex"
           >
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={sampleImage}
               alt={"TODO: replace with proper alt tag text"}
               width={144}
               height={144}
@@ -300,7 +313,7 @@ function Rewards({
             className="absolute left-72 top-14 hidden xl:flex"
           >
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={sampleImage}
               alt={"TODO: replace with proper alt tag text"}
               width={144}
               height={144}
@@ -343,7 +356,7 @@ function Rewards({
             className="absolute -right-10 -top-10 tablet:hidden"
           >
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={sampleImage}
               alt={"TODO: replace with proper alt tag text"}
               width={96}
               height={96}
@@ -365,7 +378,7 @@ function Rewards({
             className="absolute -bottom-10 -right-10 tablet:hidden"
           >
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={sampleImage}
               alt={"TODO: replace with proper alt tag text"}
               width={96}
               height={96}
@@ -388,7 +401,7 @@ function Rewards({
             className="absolute -top-1 right-24 hidden tablet:flex"
           >
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={sampleImage}
               alt={"TODO: replace with proper alt tag text"}
               width={144}
               height={144}
@@ -410,7 +423,7 @@ function Rewards({
             className="absolute -right-16 bottom-10 hidden tablet:flex"
           >
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={sampleImage}
               alt={"TODO: replace with proper alt tag text"}
               width={144}
               height={144}
@@ -432,7 +445,7 @@ function Rewards({
             className="absolute -bottom-14 right-36 hidden tablet:flex"
           >
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={sampleImage}
               alt={"TODO: replace with proper alt tag text"}
               width={144}
               height={144}
@@ -454,7 +467,7 @@ function Rewards({
             className="absolute right-72 top-14 hidden xl:flex"
           >
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={sampleImage}
               alt={"TODO: replace with proper alt tag text"}
               width={144}
               height={144}
@@ -753,7 +766,7 @@ function RewardMenuItem({
     <div className="relative w-full max-w-80 sm:max-w-96">
       <div className="baseFlex relative size-full !items-start gap-4 rounded-md p-4">
         <Image
-          src={"/menuItems/sampleImage.webp"}
+          src={sampleImage}
           alt={menuItem.name}
           fill
           className="!relative !size-16 rounded-md tablet:!size-24"

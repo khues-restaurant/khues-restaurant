@@ -44,8 +44,8 @@ function Media() {
       </Head>
 
       {/* Hero */}
-      <div className="baseFlex relative h-56 w-full overflow-hidden bg-gradient-to-br from-primary to-darkPrimary tablet:h-72">
-        <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-2 shadow-lg tablet:!flex">
+      <div className="baseFlex relative h-56 w-full overflow-hidden bg-gradient-to-br from-primary to-darkPrimary shadow-md tablet:h-72">
+        <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-lg tablet:!flex">
           <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
             <h1>Media</h1>

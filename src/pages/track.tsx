@@ -1,6 +1,7 @@
 import { SignInButton, useAuth } from "@clerk/nextjs";
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
+import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState, type ComponentProps } from "react";
@@ -148,6 +149,16 @@ function Track() {
       transition={{ duration: 0.5 }}
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full p-4 tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
+      <Head>
+        <title>Track your order | Khue&apos;s</title>
+        <meta property="og:title" content="Track your order | Khue's"></meta>
+        <meta
+          property="og:url"
+          content={`www.khueskitchen.com/track?id=${typeof orderId === "string" ? orderId ?? "" : ""}`}
+        />
+        <meta property="og:type" content="website" />
+      </Head>
+
       <div className="baseVertFlex w-full gap-4 px-0 py-4 tablet:max-w-2xl tablet:p-8">
         <AnimatePresence mode="popLayout">
           {order && minTimeoutElapsed ? (

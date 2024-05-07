@@ -98,7 +98,7 @@ function OrderSummary({ order }: OrderSummary) {
                     )}
                   </div>
 
-                  <div className="baseVertFlex w-full !items-start text-xs">
+                  <div className="baseVertFlex w-full max-w-40 !items-start text-xs">
                     {Object.values(item.customizations).map((choiceId, idx) => (
                       <p key={idx}>
                         -{" "}

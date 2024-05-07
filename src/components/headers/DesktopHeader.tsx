@@ -25,6 +25,8 @@ import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { Button } from "../ui/button";
 import classes from "./DesktopHeader.module.css";
 
+import outsideOfRestaurant from "/public/homepage/heroTwo.webp";
+
 function DesktopHeader() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
   const { asPath, push, events } = useRouter();
@@ -253,7 +255,7 @@ function DesktopHeader() {
               Hours & Location
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-[900px]">
+          <DialogContent extraBottomSpacer={false} className="max-w-[900px]">
             <div className="baseFlex w-[850px] !items-start gap-8">
               <div className="baseVertFlex w-64 !items-start gap-2">
                 <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
@@ -272,11 +274,11 @@ function DesktopHeader() {
                   </div>
                   <div className="baseVertFlex w-full !items-start gap-2">
                     <p>Closed</p>
-                    <p>3pm-10pm</p>
-                    <p>3pm-10pm</p>
-                    <p>3pm-10pm</p>
-                    <p>3pm-10pm</p>
-                    <p>3pm-10pm</p>
+                    <p>3PM - 10PM</p>
+                    <p>3PM - 10PM</p>
+                    <p>3PM - 10PM</p>
+                    <p>3PM - 10PM</p>
+                    <p>3PM - 10PM</p>
                     <p>Closed</p>
                   </div>
                 </div>
@@ -311,13 +313,10 @@ function DesktopHeader() {
                 </div>
 
                 <Image
-                  src={"/homepage/heroTwo.webp"}
+                  src={outsideOfRestaurant}
                   alt={"TODO: fill in w/ appropriate alt text"}
-                  fill
-                  style={{
-                    objectFit: "cover",
-                  }}
-                  className="!relative !h-48 !w-full rounded-md"
+                  sizes="550px"
+                  className="!relative !h-64 !w-full rounded-md object-cover shadow-sm"
                 />
               </div>
             </div>

@@ -3,6 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Parallax } from "react-scroll-parallax";
+import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
 import {
   Carousel,
@@ -10,6 +11,9 @@ import {
   CarouselItem,
   type CarouselApi,
 } from "~/components/ui/carousel";
+
+import ourStoryHero from "/public/interior/seven.webp";
+import test from "/public/test.webp";
 
 const TWEEN_FACTOR_BASE = 0.2;
 
@@ -157,28 +161,27 @@ function OurStory() {
       </Head>
 
       {/* Hero */}
-      <div className="baseFlex relative h-56 w-full overflow-hidden border-b-2 tablet:h-72">
+      <div className="baseFlex relative h-56 w-full overflow-hidden shadow-md tablet:h-72">
         {/* wide-ish angle shot of the dining room maybe? technically could also
               do outside shot of restaurant as well! also obv just a collage of images of eric could work well
               too, but maybe save those for below in the actual content of this page? */}
         <Parallax
           speed={-10}
-          className="!absolute !-top-10 !left-0 !h-56 !w-full tablet:!h-72"
+          className="!absolute !left-0 !top-0 !h-[475px] !w-full tablet:!h-[650px]"
         >
           <Image
-            src={"/interior/seven.webp"}
+            src={ourStoryHero}
             alt={"TODO: Alt text"}
-            fill
-            style={{
-              objectFit: "cover",
-            }}
-            className={`!relative !h-56 !w-full tablet:!h-72`}
+            sizes="100vw"
+            className={`!relative !h-56 !w-full object-cover tablet:!h-72`}
           />
         </Parallax>
 
-        <div className="baseFlex z-10 rounded-md bg-offwhite p-2 shadow-lg">
-          <div className="experimentalBorder baseFlex px-8 py-4 text-xl font-semibold tablet:text-2xl">
+        <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-lg tablet:!flex">
+          <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
+            <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
             <h1>Our story</h1>
+            <SideAccentSwirls className="h-4 fill-primary desktop:h-5" />
           </div>
         </div>
       </div>
@@ -245,13 +248,10 @@ function OurStory() {
               className={`relative !size-20 rounded-md !p-0 opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 0 ? "!opacity-100" : ""}`}
             >
               <Image
-                src={"/test.webp"}
+                src={test}
                 alt={"Quang's"}
-                fill
-                style={{
-                  objectFit: "cover",
-                }}
-                className="!relative rounded-md"
+                sizes="(max-width: 1000px) 80px, 96px"
+                className="!relative !size-full rounded-md"
                 onClick={() => carouselApi?.scrollTo(0)}
               />
             </Button>
@@ -260,13 +260,10 @@ function OurStory() {
               className={`relative !size-20 rounded-md !p-0 opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 1 ? "!opacity-100" : ""}`}
             >
               <Image
-                src={"/test.webp"}
+                src={test}
                 alt={"Quang's"}
-                fill
-                style={{
-                  objectFit: "cover",
-                }}
-                className="!relative rounded-md"
+                sizes="(max-width: 1000px) 80px, 96px"
+                className="!relative !size-full rounded-md"
                 onClick={() => carouselApi?.scrollTo(1)}
               />
             </Button>
@@ -275,13 +272,10 @@ function OurStory() {
               className={`relative !size-20 rounded-md !p-0 opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 2 ? "!opacity-100" : ""}`}
             >
               <Image
-                src={"/test.webp"}
+                src={test}
                 alt={"Quang's"}
-                fill
-                style={{
-                  objectFit: "cover",
-                }}
-                className="!relative rounded-md"
+                sizes="(max-width: 1000px) 80px, 96px"
+                className="!relative !size-full rounded-md"
                 onClick={() => carouselApi?.scrollTo(2)}
               />
             </Button>
@@ -290,13 +284,10 @@ function OurStory() {
               className={`relative !size-20 rounded-md !p-0 opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 3 ? "!opacity-100" : ""}`}
             >
               <Image
-                src={"/test.webp"}
+                src={test}
                 alt={"Quang's"}
-                fill
-                style={{
-                  objectFit: "cover",
-                }}
-                className="!relative rounded-md"
+                sizes="(max-width: 1000px) 80px, 96px"
+                className="!relative !size-full rounded-md"
                 onClick={() => carouselApi?.scrollTo(3)}
               />
             </Button>
@@ -352,7 +343,7 @@ function OurStory() {
               mass: 0.75,
             }}
             viewport={{ once: true, amount: 0.35 }}
-            className="absolute bottom-0 left-0 z-[-1] h-3/4 w-full bg-primary tablet:rounded-md"
+            className="absolute bottom-0 left-0 z-[-1] h-3/4 w-full bg-gradient-to-br from-primary to-darkPrimary tablet:rounded-md"
           ></motion.div>
         </div>
         {/* Q&A w/ Eric */}
@@ -425,13 +416,10 @@ function RestaurantAndBackstory({ name, backstory }: RestaurantAndBackstory) {
   return (
     <div className="baseVertFlex relative rounded-md border sm:pt-4 tablet:rounded-none tablet:border-none  tablet:pt-0 ">
       <Image
-        src="/test.webp"
+        src={test}
         alt="Khue's"
-        fill
-        style={{
-          objectFit: "cover",
-        }}
-        className="!relative !w-80 rounded-t-md sm:!w-96 tablet:!h-[450px] tablet:!w-[600px] tablet:rounded-md"
+        sizes="(max-width: 400px) 320px, (max-width: 640px) 384px, (max-width: 1000px) 600px, 33vw"
+        className="!relative !w-80 rounded-t-md object-cover sm:!w-96 tablet:!h-[450px] tablet:!w-[600px] tablet:rounded-md"
       />
 
       <div className="baseVertFlex w-full max-w-80 gap-2 rounded-b-md p-4 sm:max-w-md tablet:absolute tablet:bottom-0 tablet:left-0 tablet:!items-start tablet:rounded-br-none tablet:rounded-tr-md tablet:bg-gradient-to-tr tablet:from-black tablet:to-black/50 tablet:text-offwhite">

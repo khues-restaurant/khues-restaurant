@@ -33,6 +33,9 @@ import { api } from "~/utils/api";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { formatPrice } from "~/utils/formatPrice";
 
+import sampleImage from "/public/menuItems/sampleImage.webp";
+import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";
+
 const mixedDrinkItems = [
   "Sunset Mojito - $8.50",
   "Velvet Martini - $9.00",
@@ -148,7 +151,7 @@ function Menu() {
       <div className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72">
         <div className="baseFlex absolute left-0 top-0 size-full border-b-2 bg-gradient-to-br from-primary to-darkPrimary tablet:gap-8 desktop:gap-16">
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: fill in w/ appropriate alt text"}
             width={204}
             height={204}
@@ -156,15 +159,15 @@ function Menu() {
           />
 
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: fill in w/ appropriate alt text"}
-            fill
+            sizes="(min-width: 1000px) 160px, 192px"
             className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
           />
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: fill in w/ appropriate alt text"}
-            fill
+            sizes="(min-width: 1000px) 160px, 192px"
             className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
           />
           <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-offwhite p-2 shadow-lg tablet:!flex">
@@ -175,15 +178,15 @@ function Menu() {
             </div>
           </div>
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: fill in w/ appropriate alt text"}
-            fill
+            sizes="(min-width: 1000px) 160px, 192px"
             className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
           />
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={sampleImage}
             alt={"TODO: fill in w/ appropriate alt text"}
-            fill
+            sizes="(min-width: 1000px) 160px, 192px"
             className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
           />
         </div>
@@ -519,13 +522,10 @@ function MenuCategory({
     >
       <div className="baseFlex relative w-full rounded-md">
         <Image
-          src={"/menuItems/wideAngleFoodShot.webp"}
+          src={wideAngleFoodShot}
           alt={name}
-          fill
-          style={{
-            objectFit: "cover",
-          }}
-          className="!relative !h-48 rounded-md"
+          sizes="(min-width: 1000px) 90vw, 75vw"
+          className="!relative !h-48 w-full rounded-md object-cover"
         />
 
         <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md bg-offwhite px-4 py-2 shadow-heavyInner tablet:!flex-row tablet:!items-center tablet:gap-4">
@@ -617,13 +617,10 @@ function NotInDatabaseCategory({
     >
       <div className="baseFlex relative w-full rounded-md">
         <Image
-          src={"/menuItems/wideAngleFoodShot.webp"}
+          src={wideAngleFoodShot}
           alt={name}
-          fill
-          style={{
-            objectFit: "cover",
-          }}
-          className="!relative !h-48 rounded-md"
+          sizes="(min-width: 1000px) 90vw, 75vw"
+          className="!relative !h-48 w-full rounded-md object-cover"
         />
 
         <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md bg-offwhite px-4 py-2 shadow-heavyInner tablet:!flex-row tablet:!items-center tablet:gap-4">
