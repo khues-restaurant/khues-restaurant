@@ -73,6 +73,7 @@ function PaymentSuccess({
     >
       <Head>
         <title>Payment success | Khue&apos;s</title>
+        <meta name="robots" content="noindex,nofollow" />
         <meta property="og:title" content="Payment success | Khue's"></meta>
         <meta
           property="og:url"

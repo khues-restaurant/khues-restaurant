@@ -223,6 +223,7 @@ function Preferences({ initUserData }: { initUserData: User }) {
     >
       <Head>
         <title>Preferences | Khue&apos;s</title>
+        <meta name="robots" content="noindex,nofollow" />
         <meta property="og:title" content="Preferences | Khue's"></meta>
         <meta
           property="og:url"

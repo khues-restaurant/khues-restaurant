@@ -35,6 +35,7 @@ function Unsubscribe({ email }: { email?: string }) {
     >
       <Head>
         <title>Unsubscribe | Khue&apos;s</title>
+        <meta name="robots" content="noindex,nofollow" />
         <meta property="og:title" content="Unsubscribe | Khue's"></meta>
         <meta property="og:url" content={`www.khueskitchen.com/unsubscribe`} />
         <meta property="og:type" content="website" />

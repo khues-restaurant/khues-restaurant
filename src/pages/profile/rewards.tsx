@@ -171,6 +171,7 @@ function Rewards({
     >
       <Head>
         <title>Rewards | Khue&apos;s</title>
+        <meta name="robots" content="noindex,nofollow" />
         <meta property="og:title" content="Rewards | Khue's"></meta>
         <meta
           property="og:url"

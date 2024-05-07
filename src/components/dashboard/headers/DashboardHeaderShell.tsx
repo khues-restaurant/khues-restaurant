@@ -2,6 +2,7 @@ import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import DashboardDesktopHeader from "~/components/dashboard/headers/DashboardDesktopHeader";
 import DashboardMobileHeader from "~/components/dashboard/headers/DashboardMobileHeader";
 import { type Dispatch, type SetStateAction } from "react";
+import Head from "next/head";
 
 interface DashboardHeaderShell {
   viewState: "orderManagement" | "customerChats" | "itemManagement" | "stats";
@@ -23,6 +24,11 @@ function DashboardHeaderShell({
 
   return (
     <>
+      <Head>
+        <title>Dashboard | Khue&apos;s</title>
+        <meta name="robots" content="noindex,nofollow" />
+      </Head>
+
       {viewportLabel.includes("mobile") ? (
         <DashboardMobileHeader
           viewState={viewState}

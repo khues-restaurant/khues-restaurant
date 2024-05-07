@@ -1,12 +1,19 @@
-import { authMiddleware } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-export default authMiddleware({
-  publicRoutes: (req) =>
-    !req.url.includes("/dashboard") && !req.url.includes("/profile"),
+const isDashboardRoute = createRouteMatcher(["/dashboard(.*)"]);
+const isProfileRoute = createRouteMatcher(["/profile(.*)"]);
 
-  // ignoredRoutes: [`/((?!api|trpc|domains))(_next.*|.+\\.[\\w]+$)`] idk is this wanted/needed?
+export default clerkMiddleware((auth, req) => {
+  // Restrict admin route to users with specific role
+  if (isDashboardRoute(req)) auth().protect({ role: "org:admin" });
+
+  // otherwise, just check based on userId if roles are weird
+  // ^ auth().userId;
+
+  // Restrict profile routes to signed in users
+  if (isProfileRoute(req)) auth().protect();
 });
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };

@@ -151,6 +151,7 @@ function Track() {
     >
       <Head>
         <title>Track your order | Khue&apos;s</title>
+        <meta name="robots" content="noindex,nofollow" />
         <meta property="og:title" content="Track your order | Khue's"></meta>
         <meta
           property="og:url"

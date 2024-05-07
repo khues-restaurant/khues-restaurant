@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /profile
+Disallow: /payment-success
+Disallow: /track
+Disallow: /unsubscribe
+Disallow: /dashboard

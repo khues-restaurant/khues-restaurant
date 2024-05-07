@@ -129,6 +129,7 @@ function RecentOrders({ initOrders }: { initOrders: DBOrderSummary[] | null }) {
     >
       <Head>
         <title>My orders | Khue&apos;s</title>
+        <meta name="robots" content="noindex,nofollow" />
         <meta property="og:title" content="My orders | Khue's"></meta>
         <meta
           property="og:url"
