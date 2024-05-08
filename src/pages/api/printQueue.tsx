@@ -25,7 +25,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  console.dir(req, { depth: null });
+  // console.dir(req, { depth: null });
+  // ("https://khues-restaurant.vercel.app/api/printQueue?mac=00%3A11%3A62%3A42%3A27%3A03&type=text%2Fplain");
 
   switch (req.method) {
     // printer's interval based POST request. Checks every 5 seconds
@@ -131,7 +132,7 @@ export default async function handler(
       break;
     default:
       // Block any other type of HTTP method
-      res.setHeader("Allow", ["GET", "DELETE"]);
+      res.setHeader("Allow", ["GET", "POST", "DELETE"]);
       res.status(405).end(`Method ${req.method} Not Allowed`);
       break;
   }
