@@ -18,6 +18,12 @@ import {
   type OrderItem,
   type OrderItemCustomization,
 } from "@prisma/client";
+import {
+  generatePrintCommandsForImage,
+  generatePrintCommandsForCanvas,
+} from "@vaju/image-thermal-printer";
+// import receiptLine from "receiptline"
+const receiptline = require("receiptline");
 import { format } from "date-fns";
 import { Fragment } from "react";
 
@@ -50,9 +56,10 @@ export default async function handler(
 
         res.status(200).json({
           jobReady: true,
+          mediaTypes: ["application/vnd.star.starprnt"],
           jobToken: encodeURIComponent(printJobAvailable.id),
-          clientAction: { request: "Encodings", options: "" },
         });
+        // clientAction: { request: "Encodings", options: "" },
         // mediaTypes: ["image/png"], // if you need later: also "image/png"
       } else {
         console.log("no job ready");
@@ -108,22 +115,53 @@ export default async function handler(
 
       // if there is a print job, return it
       if (printJob) {
-        const formattedReceipt = formatReceipt(printJob.order);
-        const data = await render(formattedReceipt);
+        // const formattedReceipt = formatReceipt(printJob.order);
+        // const data = await render(formattedReceipt);
 
         // also send token to delete the print job from the queue here right?
 
-        const sizeInBytes = data.length; // Total number of bytes
-        const sizeInMegabytes = sizeInBytes / 1024 / 1024; // Convert bytes to MB
+        // const sizeInBytes = data.length; // Total number of bytes
+        // const sizeInMegabytes = sizeInBytes / 1024 / 1024; // Convert bytes to MB
 
-        console.log("sending back data to print", data, sizeInMegabytes, "MB");
+        // console.log("sending back data to print", data, sizeInMegabytes, "MB");
 
-        res.setHeader("Content-Type", "application/octet-stream");
-        // Set any custom headers needed for specific printer models here
-        // maybe .end() instead of .send()?
-        // res.status(200).send(data);
-        res.status(200).send(Buffer.from(data));
-        // res.status(200).json(data);
+        const printer = {
+          cpl: 48,
+          encoding: "cp437",
+          upsideDown: false,
+          spacing: true,
+          command: "starsbcs",
+        };
+
+        const order = () => `{width:*}
+^^^Online Order
+${new Date().toLocaleString("en")}
+{width:4,*}
+---
+|^^^2|^^Hamburger
+|    |Tomato, Onion, Meat sauce, Mayonnaise
+|    |\`"~Mustard~
+|^^^2|^^Clam chowder
+|    |Oyster cracker
+---
+{code:1234567890; option:code128,2,72,hri}`;
+
+        const data = order();
+
+        const command = receiptline.transform(data, printer);
+        // remove ESC @ (command initialization) ESC GS a 0 (disable status transmission)
+        const bin = Buffer.from(command.slice(6), "binary");
+
+        console.log("sending this print job with", bin.length);
+        res.setHeader("Content-Type", "application/vnd.star.starprnt");
+        res.status(200).send(bin);
+
+        // res.setHeader("Content-Type", "application/octet-stream");
+        // // Set any custom headers needed for specific printer models here
+        // // maybe .end() instead of .send()?
+        // // res.status(200).send(data);
+        // res.status(200).send(Buffer.from(data));
+        // // res.status(200).json(data);
       } else {
         // if there isn't a print job, return a 404
         res.status(404).json({ message: "No print jobs in the queue" });
