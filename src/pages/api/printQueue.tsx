@@ -50,7 +50,7 @@ export default async function handler(
 
         res.status(200).json({
           jobReady: true,
-          mediaTypes: ["text/plain"], // if you need later: also "image/png"
+          mediaTypes: ["image/png"], // if you need later: also "image/png"
           jobToken: encodeURIComponent(printJobAvailable.id),
         });
       } else {
@@ -114,8 +114,9 @@ export default async function handler(
 
         console.log("sending back data to print", data);
 
-        res.setHeader("Content-Type", "text/plain");
+        res.setHeader("Content-Type", "image/png");
         // Set any custom headers needed for specific printer models here
+        // maybe .end() instead of .send()?
         res.status(200).send(data);
 
         // res.status(200).json(data);
@@ -279,3 +280,5 @@ function formatReceipt(order: PrintedOrder) {
     </Printer>
   );
 }
+
+// TODO: includ ethe napkins and utensils partr
