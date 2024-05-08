@@ -44,7 +44,7 @@ export default async function handler(
       });
 
       if (printJobAvailable !== null) {
-        console.log("a job ready");
+        console.log("a job ready", encodeURIComponent(printJobAvailable.id));
 
         res.status(200).json({
           jobReady: true,
@@ -108,15 +108,15 @@ export default async function handler(
     // the print job being successfully printed or due to an error (determined by the printer)
     case "DELETE":
       // get the "code" query parameter, which corresponds to id of the print job
-      const { code } = req.query;
+      const { token } = req.query;
 
-      console.log("deleting code", code, "from the print queue");
+      console.log("deleting token", token, "from the print queue");
 
       // delete the print job from the queue
-      if (typeof code === "string") {
+      if (typeof token === "string") {
         const deletedPrintJob = await prisma.orderPrintQueue.delete({
           where: {
-            id: code,
+            id: token,
           },
         });
 
@@ -125,7 +125,7 @@ export default async function handler(
       } else {
         // TODO: is this part wanted/necessary?
 
-        // if the "code" query parameter is not a string, return a 400
+        // if the "token" query parameter is not a string, return a 400
         res.status(400).json({ message: "Invalid query parameter" });
       }
 
