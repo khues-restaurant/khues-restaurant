@@ -23,8 +23,30 @@ import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { TbLocation } from "react-icons/tb";
+import { motion } from "framer-motion";
 
 import outsideOfRestaurant from "/public/homepage/heroTwo.webp";
+
+const linkContainer = {
+  visible: {
+    transition: {
+      delayChildren: 0.15,
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const linkVariants = {
+  hidden: { opacity: 0, x: 25 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.3,
+      ease: "easeInOut",
+    },
+  },
+};
 
 function MobileHeader() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
@@ -199,137 +221,162 @@ function MobileHeader() {
 
               <Separator className="mt-2 w-4/5 self-center bg-stone-300" />
 
-              <Button
-                variant={asPath.includes("/menu") ? "activeLink" : "link"}
-                asChild
+              <motion.div
+                variants={linkContainer}
+                initial="hidden"
+                animate="visible"
+                className="baseVertFlex w-full gap-4 overflow-x-hidden"
               >
-                <Link href={"/menu"} className="!text-xl">
-                  Menu
-                </Link>
-              </Button>
+                <motion.div variants={linkVariants}>
+                  <Button
+                    variant={asPath.includes("/menu") ? "activeLink" : "link"}
+                    asChild
+                  >
+                    <Link href={"/menu"} className="!text-xl">
+                      Menu
+                    </Link>
+                  </Button>
+                </motion.div>
 
-              <Button
-                variant={asPath.includes("/order") ? "activeLink" : "link"}
-                asChild
-              >
-                <Link href={"/order"} className="!text-xl">
-                  Order now
-                </Link>
-              </Button>
+                <motion.div variants={linkVariants}>
+                  <Button
+                    variant={asPath.includes("/order") ? "activeLink" : "link"}
+                    asChild
+                  >
+                    <Link href={"/order"} className="!text-xl">
+                      Order now
+                    </Link>
+                  </Button>
+                </motion.div>
 
-              <Button variant={"link"} asChild>
-                <a
-                  href={"/resylink"}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-xl"
-                >
-                  Reservations
-                </a>
-              </Button>
+                <motion.div variants={linkVariants}>
+                  <Button variant={"link"} asChild>
+                    <a
+                      href={"/resylink"}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xl"
+                    >
+                      Reservations
+                    </a>
+                  </Button>
+                </motion.div>
 
-              {isLoaded && !isSignedIn && (
-                <Button
-                  variant={asPath.includes("/rewards") ? "activeLink" : "link"}
-                  asChild
-                >
-                  <Link href={"/rewards"} className="!text-xl">
-                    Rewards
-                  </Link>
-                </Button>
-              )}
+                {isLoaded && !isSignedIn && (
+                  <motion.div variants={linkVariants}>
+                    <Button
+                      variant={
+                        asPath.includes("/rewards") ? "activeLink" : "link"
+                      }
+                      asChild
+                    >
+                      <Link href={"/rewards"} className="!text-xl">
+                        Rewards
+                      </Link>
+                    </Button>
+                  </motion.div>
+                )}
 
-              <Button
-                variant={asPath.includes("/our-story") ? "activeLink" : "link"}
-                asChild
-              >
-                <Link href={"/our-story"} className="!text-xl">
-                  Our story
-                </Link>
-              </Button>
+                <motion.div variants={linkVariants}>
+                  <Button
+                    variant={
+                      asPath.includes("/our-story") ? "activeLink" : "link"
+                    }
+                    asChild
+                  >
+                    <Link href={"/our-story"} className="!text-xl">
+                      Our story
+                    </Link>
+                  </Button>
+                </motion.div>
 
-              <Button
-                variant={asPath.includes("/media") ? "activeLink" : "link"}
-                asChild
-              >
-                <Link href={"/media"} className="!text-xl">
-                  Media
-                </Link>
-              </Button>
+                <motion.div variants={linkVariants}>
+                  <Button
+                    variant={asPath.includes("/media") ? "activeLink" : "link"}
+                    asChild
+                  >
+                    <Link href={"/media"} className="!text-xl">
+                      Media
+                    </Link>
+                  </Button>
+                </motion.div>
 
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="item-1" className="border-none">
-                  <AccordionTrigger className="baseFlex py-2 text-xl text-primary !no-underline">
-                    Hours & Location
-                  </AccordionTrigger>
-                  <AccordionContent className="pt-2">
-                    <div className="baseVertFlex !items-start gap-8 rounded-md border bg-offwhite p-4 shadow-sm">
-                      <div className="baseVertFlex w-full !items-start gap-2">
-                        <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
-                          <MdAccessTime />
-                          Hours
+                <motion.div variants={linkVariants} className="w-full">
+                  <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="item-1" className="border-none">
+                      <AccordionTrigger className="baseFlex py-2 text-xl text-primary !no-underline">
+                        Hours & Location
+                      </AccordionTrigger>
+                      <AccordionContent className="pt-2">
+                        <div className="baseVertFlex !items-start gap-8 rounded-md border bg-offwhite p-4 shadow-sm">
+                          <div className="baseVertFlex w-full !items-start gap-2">
+                            <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
+                              <MdAccessTime />
+                              Hours
+                            </div>
+                            <div className="grid w-full max-w-[250px] grid-cols-2">
+                              <div className="baseVertFlex w-full !items-start">
+                                <p>Monday</p>
+                                <p>Tuesday</p>
+                                <p>Wednesday</p>
+                                <p>Thursday</p>
+                                <p>Friday</p>
+                                <p>Saturday</p>
+                                <p>Sunday</p>
+                              </div>
+                              <div className="baseVertFlex w-full !items-start">
+                                <p>Closed</p>
+                                <p>3PM - 10PM</p>
+                                <p>3PM - 10PM</p>
+                                <p>3PM - 10PM</p>
+                                <p>3PM - 10PM</p>
+                                <p>3PM - 10PM</p>
+                                <p>Closed</p>
+                              </div>
+                            </div>
+                            {/* any special hours for holidays would go here */}
+                          </div>
+
+                          <Separator className="w-4/5 self-center" />
+
+                          <div className="baseVertFlex relative !items-start gap-4">
+                            <div className="baseVertFlex !items-start gap-2">
+                              <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
+                                <TbLocation />
+                                Location
+                              </div>
+                              <p>
+                                We are located just outside of the HarMar Mall
+                                in Roseville, Minnesota.
+                              </p>
+
+                              <div className="baseFlex gap-2">
+                                <TbLocation className="size-6 text-primary sm:size-4" />
+
+                                <a
+                                  href="https://facebook.com"
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-primary"
+                                >
+                                  1234 Lorem Ipsum Dr. Roseville, MN 12345
+                                </a>
+                              </div>
+                            </div>
+
+                            <Image
+                              src={outsideOfRestaurant}
+                              alt={"TODO: fill in w/ appropriate alt text"}
+                              sizes="(max-width: 640px) 60vw, 700px"
+                              className="!relative !h-48 !w-full rounded-md object-cover shadow-sm"
+                            />
+                          </div>
                         </div>
-                        <div className="grid w-full max-w-[250px] grid-cols-2">
-                          <div className="baseVertFlex w-full !items-start">
-                            <p>Monday</p>
-                            <p>Tuesday</p>
-                            <p>Wednesday</p>
-                            <p>Thursday</p>
-                            <p>Friday</p>
-                            <p>Saturday</p>
-                            <p>Sunday</p>
-                          </div>
-                          <div className="baseVertFlex w-full !items-start">
-                            <p>Closed</p>
-                            <p>3PM - 10PM</p>
-                            <p>3PM - 10PM</p>
-                            <p>3PM - 10PM</p>
-                            <p>3PM - 10PM</p>
-                            <p>3PM - 10PM</p>
-                            <p>Closed</p>
-                          </div>
-                        </div>
-                        {/* any special hours for holidays would go here */}
-                      </div>
-
-                      <Separator className="w-4/5 self-center" />
-
-                      <div className="baseVertFlex relative !items-start gap-4">
-                        <div className="baseVertFlex !items-start gap-2">
-                          <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
-                            <TbLocation />
-                            Location
-                          </div>
-                          <p>
-                            We are located just outside of the HarMar Mall in
-                            Roseville, Minnesota.
-                          </p>
-
-                          <div className="baseFlex gap-2">
-                            <TbLocation className="size-6 text-primary sm:size-4" />
-
-                            <a
-                              href="https://facebook.com"
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-primary"
-                            >
-                              1234 Lorem Ipsum Dr. Roseville, MN 12345
-                            </a>
-                          </div>
-                        </div>
-
-                        <Image
-                          src={outsideOfRestaurant}
-                          alt={"TODO: fill in w/ appropriate alt text"}
-                          sizes="(max-width: 640px) 60vw, 700px"
-                          className="!relative !h-48 !w-full rounded-md object-cover shadow-sm"
-                        />
-                      </div>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                </motion.div>
+              </motion.div>
             </div>
           </SheetContent>
         </Sheet>
