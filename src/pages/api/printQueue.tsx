@@ -123,8 +123,9 @@ export default async function handler(
           cpl: 48,
           encoding: "cp437",
           upsideDown: false,
-          spacing: true,
+          spacing: false, // check this
           command: "starsbcs",
+          cutting: true,
         };
 
         const command = receiptline.transform(data, printer);
@@ -215,26 +216,28 @@ function formatReceipt(order: PrintedOrder) {
     items.food.some((item) => item.includeDietaryRestrictions);
 
   // Header section
-  let receipt = `|
+  let receipt = `
 |\n|
 ^^^Khue's
 799 University Ave W, St Paul, MN 55104
 (651) 222-3301
-|\n|
 -
 Online Order (Pickup)
 ^^^${order.firstName} ${order.lastName}
-${format(new Date(order.createdAt), "h:mma 'on' MM/dd/yyyy")}
+${format(new Date(order.datetimeToPickup), "h:mma 'on' MM/dd/yyyy")}
 "Order #${order.id.substring(0, 6).toUpperCase()}"
 -
 `;
 
   // Food items section
   if (items.food.length > 0) {
+    receipt += "{width:7,*}";
     receipt += "_Items_\n";
+    receipt += "{width:4,*}";
     items.food.forEach((orderItem) => {
       receipt += `|^^^${orderItem.quantity}|^^${orderItem.menuItem.name} ${orderItem.includeDietaryRestrictions ? "*" : ""}
-${orderItem.customizations.map((custom) => `|    |- ${custom.customizationCategory.name}: "${custom.customizationChoice.name}"`).join("\n")}
+${orderItem.customizations.map((custom) => `|    |- ${custom.customizationCategory.name}: ${custom.customizationChoice.name}`).join("\n")}
+${orderItem.specialInstructions ? `|    |- \"${orderItem.specialInstructions}\"` : ""}\n
 `;
     });
     receipt += "-\n";
@@ -242,7 +245,9 @@ ${orderItem.customizations.map((custom) => `|    |- ${custom.customizationCatego
 
   // Alcoholic beverages section
   if (items.alcoholicBeverages.length > 0) {
+    receipt += "{width:21,*}";
     receipt += "_Alcoholic beverages_\n";
+    receipt += "{width:4,*}";
     items.alcoholicBeverages.forEach((orderItem) => {
       receipt += `|^^^${orderItem.quantity}|^^${orderItem.menuItem.name}
 `;
@@ -250,131 +255,20 @@ ${orderItem.customizations.map((custom) => `|    |- ${custom.customizationCatego
     receipt += "-\n";
   }
 
+  receipt += "{width:*}";
+
   // Napkins and utensils request
   if (order.includeNapkinsAndUtensils) {
-    receipt += "Utensils and napkins were requested.\n|\n|";
+    receipt += "Utensils and napkins were requested.\n";
   }
 
   // Dietary preferences
   if (atLeastOneDietaryRestriction) {
-    receipt += "\n_* Dietary preferences_\n";
-    receipt += `"I am allergic to ${order.dietaryRestrictions}."\n`;
+    receipt += "_* Dietary preferences_";
+    receipt += `"\"${order.dietaryRestrictions}.\""\n`;
   }
 
   receipt += "|\n|\n";
 
   return receipt;
 }
-
-// function formatReceipt(order: PrintedOrder) {
-//   const items: {
-//     food: PrintedOrderItem[];
-//     alcoholicBeverages: PrintedOrderItem[];
-//   } = {
-//     food: [],
-//     alcoholicBeverages: [],
-//   };
-
-//   order.orderItems.forEach((orderItem) => {
-//     if (orderItem.menuItem.isAlcoholic) {
-//       items.alcoholicBeverages.push(orderItem);
-//     } else {
-//       items.food.push(orderItem);
-//     }
-//   });
-
-//   const atLeastOneDietaryRestriction =
-//     order.dietaryRestrictions &&
-//     items.food.some((orderItem) => orderItem.includeDietaryRestrictions);
-
-//   return (
-//     <Printer type="star" width={48} characterSet="pc437_usa">
-//       <Text bold={true} size={{ width: 2, height: 2 }}>
-//         Khue&apos;s
-//       </Text>
-//       <Text>799 University Ave W, St Paul, MN 55104</Text>
-//       <Text>651-222-3301</Text>
-
-//       <Br />
-
-//       <Line />
-
-//       <Text bold={true} align="center" size={{ width: 2, height: 2 }}>
-//         {order.firstName} {order.lastName}
-//       </Text>
-//       <Text bold={true} align="center" size={{ width: 2, height: 2 }}>
-//         {format(new Date(order.createdAt), "HH:mm")}
-//       </Text>
-//       <Text align="center">
-//         on {format(new Date(order.createdAt), "MM/dd/yyyy")}
-//       </Text>
-//       <Text bold={true} align="center">
-//         Order #{order.id.toUpperCase().substring(0, 6)}
-//       </Text>
-
-//       <Line character="=" />
-
-//       <Text align="left" underline="1dot-thick">
-//         Items
-//       </Text>
-//       {items.food.map((orderItem) => (
-//         <Fragment key={orderItem.id}>
-//           <Text bold={true} align="left">
-//             {orderItem.quantity} {orderItem.menuItem.name}
-//             {orderItem.includeDietaryRestrictions && "*"}
-//           </Text>
-
-//           {orderItem.customizations.map((customization) => (
-//             <Text key={customization.id} align="left">
-//               {"   - "}
-//               {customization.customizationCategory.name}:{" "}
-//               {customization.customizationChoice.name}
-//             </Text>
-//           ))}
-//         </Fragment>
-//       ))}
-
-//       <Line />
-
-//       <Text align="left" underline="1dot-thick">
-//         Alcoholic beverages
-//       </Text>
-//       {items.alcoholicBeverages.map((orderItem) => (
-//         <Fragment key={orderItem.id}>
-//           <Text bold={true} align="left">
-//             {orderItem.quantity} {orderItem.menuItem.name}
-//           </Text>
-
-//           {orderItem.customizations.map((customization) => (
-//             <Text key={customization.id} align="left">
-//               {"   - "}
-//               {customization.customizationCategory.name}:{" "}
-//               {customization.customizationChoice.name}
-//             </Text>
-//           ))}
-//         </Fragment>
-//       ))}
-
-//       {(order.includeNapkinsAndUtensils || atLeastOneDietaryRestriction) && (
-//         <Br />
-//       )}
-
-//       {order.includeNapkinsAndUtensils && (
-//         <>
-//           <Text align="center">Napkins and utensils were requested.</Text>
-//         </>
-//       )}
-
-//       {atLeastOneDietaryRestriction && (
-//         <>
-//           <Text align="center" underline="1dot-thick">
-//             * Dietary preferences
-//           </Text>
-//           <Text align="center">&ldquo;{order.dietaryRestrictions}&rdquo;</Text>
-//         </>
-//       )}
-
-//       <Cut />
-//     </Printer>
-//   );
-// }
