@@ -236,11 +236,12 @@ ${format(new Date(order.datetimeToPickup), "h:mma 'on' MM/dd/yyyy")}
     receipt += `
     {width:7,*}
     _Items_
-    {width:4,*}`;
+    {width:4,*}
+    `;
     items.food.forEach((orderItem) => {
       receipt += `|^^^${orderItem.quantity}|^^${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}
 ${orderItem.customizations.map((custom) => `|    |- ${custom.customizationCategory.name}: "${custom.customizationChoice.name}"`).join("\n")}
-${orderItem.specialInstructions ? `|    |- \"${orderItem.specialInstructions}\"` : ""}
+${orderItem.specialInstructions ? `|    |- \\"${orderItem.specialInstructions}\\"` : ""}
 `;
     });
     receipt += `
@@ -261,7 +262,9 @@ ${orderItem.specialInstructions ? `|    |- \"${orderItem.specialInstructions}\"`
     -`;
   }
 
-  receipt += `{width:*}`;
+  receipt += `
+  {width:*}
+  `;
 
   // Napkins and utensils request
   if (order.includeNapkinsAndUtensils) {
@@ -272,7 +275,7 @@ ${orderItem.specialInstructions ? `|    |- \"${orderItem.specialInstructions}\"`
   if (atLeastOneDietaryRestriction) {
     receipt += `
     _* Dietary preferences_
-    \"${order.dietaryRestrictions}\"`;
+    \\"${order.dietaryRestrictions}\\"`;
   }
 
   return receipt;
