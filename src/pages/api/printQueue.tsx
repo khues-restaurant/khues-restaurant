@@ -28,6 +28,8 @@ export default async function handler(
   // console.dir(req, { depth: null });
   // ("https://khues-restaurant.vercel.app/api/printQueue?mac=00%3A11%3A62%3A42%3A27%3A03&type=text%2Fplain");
 
+  const { token } = req.query;
+
   switch (req.method) {
     // printer's interval based POST request. Checks every 5 seconds
     // to see if there are any new print jobs in the queue. Expects a
@@ -49,7 +51,7 @@ export default async function handler(
         res.status(200).json({
           jobReady: true,
           mediaTypes: ["text/plain"], // if you need later: also "image/png"
-          token: encodeURIComponent(printJobAvailable.id),
+          jobToken: encodeURIComponent(printJobAvailable.id),
         });
       } else {
         console.log("no job ready");
@@ -60,8 +62,22 @@ export default async function handler(
 
     // printer has requested the latest print job in the queue
     case "GET":
+      // get the "code" query parameter, which corresponds to id of the print job
+
+      if (typeof token !== "string") {
+        {
+          // if there isn't a print job, return a 404
+          res.status(404).json({ message: "No print jobs in the queue" });
+        }
+        break;
+      }
+
       // get the oldest print job in the queue
-      const printJob = await prisma.orderPrintQueue.findFirst({
+      const printJob = await prisma.orderPrintQueue.findUnique({
+        where: {
+          id: token,
+        },
+
         include: {
           order: {
             include: {
@@ -84,9 +100,9 @@ export default async function handler(
           },
         },
 
-        orderBy: {
-          createdAt: "asc", // oldest first, so we can pop it off the queue
-        },
+        // orderBy: {
+        //   createdAt: "asc", // oldest first, so we can pop it off the queue
+        // },
       });
 
       // if there is a print job, return it
@@ -94,9 +110,15 @@ export default async function handler(
         const formattedReceipt = formatReceipt(printJob.order);
         const data = await render(formattedReceipt);
 
+        // also send token to delete the print job from the queue here right?
+
         console.log("sending back data to print", data);
 
-        res.status(200).json(data);
+        res.setHeader("Content-Type", "text/plain");
+        // Set any custom headers needed for specific printer models here
+        res.status(200).send(data);
+
+        // res.status(200).json(data);
       } else {
         // if there isn't a print job, return a 404
         res.status(404).json({ message: "No print jobs in the queue" });
@@ -108,7 +130,6 @@ export default async function handler(
     // the print job being successfully printed or due to an error (determined by the printer)
     case "DELETE":
       // get the "code" query parameter, which corresponds to id of the print job
-      const { token } = req.query;
 
       console.log("deleting token", token, "from the print queue");
 
