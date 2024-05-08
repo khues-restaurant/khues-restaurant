@@ -51,6 +51,7 @@ export default async function handler(
         res.status(200).json({
           jobReady: true,
           jobToken: encodeURIComponent(printJobAvailable.id),
+          clientAction: { request: "Encodings", options: "" },
         });
         // mediaTypes: ["image/png"], // if you need later: also "image/png"
       } else {
@@ -112,9 +113,12 @@ export default async function handler(
 
         // also send token to delete the print job from the queue here right?
 
-        console.log("sending back data to print", data);
+        const sizeInBytes = data.length; // Total number of bytes
+        const sizeInMegabytes = sizeInBytes / 1024 / 1024; // Convert bytes to MB
 
-        // res.setHeader("Content-Type", "image/png");
+        console.log("sending back data to print", data, sizeInMegabytes, "MB");
+
+        res.setHeader("Content-Type", "application/octet-stream");
         // Set any custom headers needed for specific printer models here
         // maybe .end() instead of .send()?
         // res.status(200).send(data);
@@ -153,6 +157,8 @@ export default async function handler(
 
       break;
     default:
+      console.log("not allowed!", req.method, req.url);
+
       // Block any other type of HTTP method
       res.setHeader("Allow", ["GET", "POST", "DELETE"]);
       res.status(405).end(`Method ${req.method} Not Allowed`);
