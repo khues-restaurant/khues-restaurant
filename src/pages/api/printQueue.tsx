@@ -25,6 +25,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  console.log("printQueue endpoint hit");
+
   switch (req.method) {
     // printer's interval based POST request. Checks every 5 seconds
     // to see if there are any new print jobs in the queue. Expects a

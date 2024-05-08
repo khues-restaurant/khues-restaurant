@@ -207,11 +207,22 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       // fyi: prisma already assigns the uuid of the order being created here to orderId field
 
-      const orderItemsData = orderDetails.items.map((item) => ({
-        ...item,
-        menuItemId: item.itemId,
-        id: undefined, // idk if this is necessary since the id is already a uuid that should be safe
-      }));
+      const orderItemsData = orderDetails.items.map(
+        ({ itemId, id, customizations, ...rest }) => ({
+          ...rest,
+          menuItemId: itemId,
+          customizations: {
+            create: Object.entries(customizations).map(
+              ([categoryId, choiceId]) => ({
+                customizationCategoryId: categoryId,
+                customizationChoiceId: choiceId,
+              }),
+            ),
+          },
+        }),
+      );
+
+      console.log(orderItemsData);
 
       let adjustedDatetimeToPickup = new Date(orderDetails.datetimeToPickUp);
 
