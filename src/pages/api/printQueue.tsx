@@ -25,7 +25,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  console.log("printQueue endpoint hit");
+  console.dir(req, { depth: null });
 
   switch (req.method) {
     // printer's interval based POST request. Checks every 5 seconds
@@ -43,12 +43,15 @@ export default async function handler(
       });
 
       if (printJobAvailable !== null) {
+        console.log("a job ready");
+
         res.status(200).json({
           jobReady: true,
           mediaTypes: ["text/plain"], // if you need later: also "image/png"
           token: encodeURIComponent(printJobAvailable.id),
         });
       } else {
+        console.log("no job ready");
         res.status(200).json({ jobReady: false });
       }
 
@@ -90,6 +93,8 @@ export default async function handler(
         const formattedReceipt = formatReceipt(printJob.order);
         const data = await render(formattedReceipt);
 
+        console.log("sending back data to print", data);
+
         res.status(200).json(data);
       } else {
         // if there isn't a print job, return a 404
@@ -103,6 +108,8 @@ export default async function handler(
     case "DELETE":
       // get the "code" query parameter, which corresponds to id of the print job
       const { code } = req.query;
+
+      console.log("deleting code", code, "from the print queue");
 
       // delete the print job from the queue
       if (typeof code === "string") {
