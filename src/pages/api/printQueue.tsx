@@ -123,10 +123,12 @@ export default async function handler(
           cpl: 48,
           encoding: "cp437",
           upsideDown: false,
-          spacing: false, // check this
+          spacing: true,
           command: "starsbcs",
           cutting: true,
         };
+
+        console.log(data);
 
         const command = receiptline.transform(data, printer);
         // remove ESC @ (command initialization) ESC GS a 0 (disable status transmission)
@@ -218,6 +220,7 @@ function formatReceipt(order: PrintedOrder) {
   // Header section
   let receipt = `
 |\n|
+{width:*}
 ^^^Khue's
 799 University Ave W, St Paul, MN 55104
 (651) 222-3301
@@ -232,7 +235,8 @@ ${format(new Date(order.datetimeToPickup), "h:mma 'on' MM/dd/yyyy")}
   // Food items section
   if (items.food.length > 0) {
     receipt += "{width:7,*}";
-    receipt += "_Items_\n";
+    receipt += "_Items_";
+    receipt += "|\n|";
     receipt += "{width:4,*}";
     items.food.forEach((orderItem) => {
       receipt += `|^^^${orderItem.quantity}|^^${orderItem.menuItem.name} ${orderItem.includeDietaryRestrictions ? "*" : ""}
@@ -259,12 +263,14 @@ ${orderItem.specialInstructions ? `|    |- \"${orderItem.specialInstructions}\"`
 
   // Napkins and utensils request
   if (order.includeNapkinsAndUtensils) {
-    receipt += "Utensils and napkins were requested.\n";
+    receipt += "Utensils and napkins were requested.";
+    receipt += "|\n|";
   }
 
   // Dietary preferences
   if (atLeastOneDietaryRestriction) {
     receipt += "_* Dietary preferences_";
+    receipt += "|\n|";
     receipt += `"\"${order.dietaryRestrictions}.\""\n`;
   }
 
