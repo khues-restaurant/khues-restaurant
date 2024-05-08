@@ -523,7 +523,7 @@ function Track() {
                   <div
                     style={{
                       backgroundImage:
-                        "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+                        "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
                     }}
                     className="baseFlex relative h-48 w-full overflow-hidden rounded-md"
                   >
@@ -617,15 +617,7 @@ function Track() {
                           </>
                         ) : (
                           <div className="baseVertFlex mt-2 gap-4">
-                            <SignInButton
-                              mode="modal"
-                              afterSignUpUrl={`${
-                                process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                              }`}
-                              afterSignInUrl={`${
-                                process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                              }${asPath}`}
-                            >
+                            <SignInButton mode="modal">
                               <Button variant={"rewards"}>Sign in</Button>
                             </SignInButton>
                             to redeem your points for this order.

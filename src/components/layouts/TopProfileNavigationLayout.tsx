@@ -131,7 +131,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
 
       <motion.div
         layout
-        className={`baseFlex bottom-0 left-0 z-40 w-full gap-3 border-t border-stone-400 bg-offwhite p-2 sm:gap-8 tablet:hidden ${footerIsInView ? "relative" : "fixed"}`}
+        className={`baseFlex bottom-0 left-0 z-40 h-20 w-full gap-0 border-t border-stone-400 bg-offwhite tablet:hidden ${footerIsInView ? "relative" : "fixed"}`}
       >
         <Button
           variant={
@@ -141,14 +141,14 @@ function TopProfileNavigationLayout({ children }: Layout) {
         >
           <Link
             href="/profile/preferences"
-            className="baseVertFlex h-16 w-24 gap-2 !rounded-lg text-xs"
+            className="baseVertFlex h-20 w-full gap-2 !rounded-none text-xs"
           >
             <IoSettingsOutline className="size-5" />
             Preferences
           </Link>
         </Button>
 
-        <Separator className="h-10 w-[1px] bg-stone-400" />
+        <Separator className="h-20 w-[1px] bg-stone-400" />
 
         <Button
           variant={
@@ -158,14 +158,14 @@ function TopProfileNavigationLayout({ children }: Layout) {
         >
           <Link
             href="/profile/rewards"
-            className="baseVertFlex h-16 w-24 gap-2 !rounded-lg text-xs"
+            className="baseVertFlex h-20 w-full gap-2 !rounded-none text-xs"
           >
-            <CiGift className="size-5" />
-            Rewards
+            <CiGift className="size-6" />
+            <span className="pb-0.5">Rewards</span>
           </Link>
         </Button>
 
-        <Separator className="h-10 w-[1px] bg-stone-400" />
+        <Separator className="h-20 w-[1px] bg-stone-400" />
 
         <Button
           variant={
@@ -175,7 +175,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
         >
           <Link
             href="/profile/my-orders"
-            className="baseVertFlex h-16 w-24 gap-2 !rounded-lg text-xs"
+            className="baseVertFlex h-20 w-full gap-2 !rounded-none text-xs"
           >
             <TfiReceipt className="size-5" />
             My orders

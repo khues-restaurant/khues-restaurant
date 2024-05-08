@@ -120,7 +120,7 @@
 }
 
 .goldBorder {
-  background-image: linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%);
+  background-image: linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%);
 }
 
 .rewardsGoldBorder {
@@ -212,7 +212,8 @@
 
     --active-link: 144 61% 10%;
     --offwhite: 40 100% 98%;
-    --gold: 50 48% 62%;
+    /* --gold: 50 48% 62%; */
+    --gold: 43.62 61.12 52.98;
     --borderGold: 49 61% 58%;
     --darkPrimary: 144 61% 15%;
   }
@@ -243,7 +244,10 @@
 
     --active-link: 144 61% 10%;
     --offwhite: 40 100% 98%;
-    --gold: 50 48% 62%;
+    /* --gold: 50 48% 62%; */
+    --gold: 43.62 61.12 52.98;
+    /* 43.62 61.12 52.98 */
+    /*  */
     --borderGold: 49 61% 52%;
     --darkPrimary: 144 61% 15%;
   }

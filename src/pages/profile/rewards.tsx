@@ -184,7 +184,7 @@ function Rewards({
         <div
           style={{
             backgroundImage:
-              "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+              "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
           }}
           className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72 tablet:overflow-x-hidden tablet:rounded-t-lg"
         >
@@ -322,13 +322,13 @@ function Rewards({
             />
           </motion.div>
 
-          <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-yellow-500 shadow-lg">
+          <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-primary shadow-lg">
             <div className="text-center text-lg font-semibold tablet:text-xl">
               Khue&apos;s Rewards
             </div>
 
             <div className="baseFlex gap-4 font-bold tracking-wider">
-              <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+              <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
 
               <div className="baseVertFlex">
                 <AnimatedNumbers
@@ -338,7 +338,7 @@ function Rewards({
                 />
                 <p className="font-semibold tracking-normal">points</p>
               </div>
-              <SideAccentSwirls className="h-5 fill-yellow-500" />
+              <SideAccentSwirls className="h-5 fill-primary" />
             </div>
           </div>
 
@@ -478,16 +478,16 @@ function Rewards({
         </div>
 
         {/* .map() of Your rewards */}
-        <div className="baseVertFlex mt-8 max-w-7xl gap-8 px-4 text-yellow-500 tablet:gap-16">
+        <div className="baseVertFlex mt-8 max-w-7xl gap-8 px-4 text-primary tablet:gap-16">
           {/* Birthday reward options */}
           {isElegibleForBirthdayReward && (
             <div className="baseVertFlex mb-8 w-full gap-8">
               <div className="baseFlex sm:gap-2">
-                <SideAccentSwirls className="h-4 scale-x-[-1] fill-yellow-500 sm:h-5" />
+                <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary sm:h-5" />
                 <span className="w-48 text-center text-xl font-medium underline underline-offset-2 sm:w-auto sm:text-2xl">
                   Choose your birthday dessert
                 </span>
-                <SideAccentSwirls className="h-4 fill-yellow-500 sm:h-5" />
+                <SideAccentSwirls className="h-4 fill-primary sm:h-5" />
               </div>
 
               <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2 lg:!place-items-start 2xl:grid-cols-3">
@@ -526,15 +526,15 @@ function Rewards({
           )}
 
           <div className="baseFlex gap-2">
-            <SideAccentSwirls className="h-4 scale-x-[-1] fill-yellow-500 sm:h-5" />
-            <span className="text-center text-xl font-medium underline underline-offset-2 sm:text-2xl">
+            <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary sm:h-[18px]" />
+            <span className="text-center text-xl font-medium text-primary underline underline-offset-2 sm:text-2xl">
               Choose your reward
             </span>
-            <SideAccentSwirls className="h-4 fill-yellow-500 sm:h-5" />
+            <SideAccentSwirls className="h-4 fill-primary sm:h-[18px]" />
           </div>
 
           {/* Regular reward options */}
-          <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2 lg:!place-items-start 2xl:grid-cols-3">
+          <div className="grid w-full grid-cols-1 gap-4 text-primary lg:grid-cols-2 lg:!place-items-start 2xl:grid-cols-3">
             {/* Categories */}
             {rewards.rewardMenuCategories.map((category) => (
               <div
@@ -574,20 +574,20 @@ function Rewards({
           </p>
         </div>
 
-        <div className="baseVertFlex mt-8 max-w-7xl gap-8 px-4 text-yellow-500">
+        <div className="baseVertFlex mt-8 max-w-7xl gap-8 text-offwhite">
           <div className="baseFlex gap-2">
-            <SideAccentSwirls className="h-4 scale-x-[-1] fill-yellow-500 sm:h-5" />
-            <span className="text-xl font-medium underline underline-offset-2 sm:text-2xl">
+            <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary sm:h-[18px]" />
+            <span className="text-xl font-medium text-primary underline underline-offset-2 sm:text-2xl">
               Member benefits
             </span>
-            <SideAccentSwirls className="h-4 fill-yellow-500 sm:h-5" />
+            <SideAccentSwirls className="h-4 fill-primary sm:h-[18px]" />
           </div>
 
-          <div className="baseVertFlex gap-8 2xl:!flex-row">
-            <div className="rewardsGoldBorder baseVertFlex m-4 w-72 !items-start gap-2 rounded-md text-sm shadow-md sm:h-[300px] sm:w-96 sm:text-base 2xl:m-0 2xl:w-full 2xl:justify-start">
-              <CiGift className="ml-2 size-16 h-24 text-yellow-500 sm:ml-0 sm:size-20" />
-              <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
-              <div className="hyphens-auto p-4 text-left">
+          <div className="baseVertFlex gap-8 xl:!flex-row">
+            <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+              <CiGift className="ml-2 size-16 h-20 text-primary" />
+              <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
+              <div className="hyphens-auto p-4 text-left text-primary">
                 Earning rewards is as simple as enjoying your favorite meals!
                 Every dollar spent earns you points, which open the door to a
                 diverse selection of enticing rewards. Get started earning
@@ -595,10 +595,10 @@ function Rewards({
               </div>
             </div>
 
-            <div className="rewardsGoldBorder baseVertFlex m-4 w-72 !items-start gap-2 rounded-md text-sm shadow-md sm:h-[300px] sm:w-96 sm:text-base 2xl:m-0 2xl:w-full 2xl:justify-start">
-              <FaCakeCandles className="ml-4 size-12 h-24 text-yellow-500" />
-              <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
-              <div className="hyphens-auto p-4 text-left">
+            <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+              <FaCakeCandles className="ml-4 size-10 h-20 text-primary" />
+              <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
+              <div className="hyphens-auto p-4 text-left text-primary">
                 Celebrate your birthday with a complimentary treat from us,
                 adding a touch of sweetness to your special day. Make sure to
                 share your birthday with us when you sign up, so we can ensure
@@ -606,10 +606,10 @@ function Rewards({
               </div>
             </div>
 
-            <div className="rewardsGoldBorder baseVertFlex m-4 w-72 !items-start gap-2 rounded-md text-sm shadow-md sm:h-[300px] sm:w-96 sm:text-base 2xl:m-0 2xl:w-full 2xl:justify-start">
-              <LuCalendarClock className="ml-2 size-14 h-24 text-yellow-500" />
-              <Separator className="ml-4 h-[2px] w-[120px] bg-yellow-500" />
-              <div className="hyphens-auto p-4 text-left">
+            <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+              <LuCalendarClock className="ml-2 size-12 h-20 shrink-0 text-primary" />
+              <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
+              <div className="hyphens-auto p-4 text-left text-primary">
                 As a member, you&apos;re first in line to experience our newest
                 menu items. Before these delicacies make their official debut,
                 you&apos;ll have the exclusive opportunity to taste what&apos;s
@@ -764,7 +764,7 @@ function RewardMenuItem({
   }
 
   return (
-    <div className="relative w-full max-w-80 sm:max-w-96">
+    <div className="relative w-full max-w-80 text-primary sm:max-w-96">
       <div className="baseFlex relative size-full !items-start gap-4 rounded-md p-4">
         <Image
           src={sampleImage}
@@ -798,6 +798,7 @@ function RewardMenuItem({
           </div>
         </div>
         <Button
+          variant="outline"
           disabled={isDisabled()}
           className={`self-end`}
           onClick={() => {

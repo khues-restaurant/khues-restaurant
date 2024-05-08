@@ -897,7 +897,7 @@ function CartSheet({
                                 )}
                               </div>
 
-                              <div className="rewardsGoldBorder my-1 !px-2 !py-1 text-xs text-yellow-500">
+                              <div className="my-1 rounded-md border border-primary !px-2 !py-1 text-xs text-primary">
                                 {item.pointReward ? (
                                   <>
                                     {new Decimal(item.price)

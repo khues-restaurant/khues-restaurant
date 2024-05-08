@@ -155,9 +155,9 @@ function RewardsDialogContent({
         <div
           style={{
             backgroundImage:
-              "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+              "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
           }}
-          className="baseFlex relative h-48 w-full overflow-hidden rounded-md"
+          className="baseFlex relative h-48 w-full overflow-hidden rounded-md shadow-sm"
         >
           <motion.div
             key={"rewardsHeroMobileImageOne"}
@@ -203,13 +203,13 @@ function RewardsDialogContent({
             />
           </motion.div>
 
-          <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-yellow-500 shadow-lg">
+          <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-primary shadow-lg">
             <div className="text-center text-lg font-semibold">
               Khue&apos;s Rewards
             </div>
 
             <div className="baseFlex gap-4 font-bold tracking-wider">
-              <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+              <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
 
               <div className="baseVertFlex">
                 <AnimatedNumbers
@@ -219,7 +219,7 @@ function RewardsDialogContent({
                 />
                 <p className="font-semibold tracking-normal">points</p>
               </div>
-              <SideAccentSwirls className="h-5 fill-yellow-500" />
+              <SideAccentSwirls className="h-5 fill-primary" />
             </div>
           </div>
 
@@ -269,14 +269,14 @@ function RewardsDialogContent({
         </div>
 
         <div className="baseFlex gap-4">
-          <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
-          <p className="text-center font-semibold text-yellow-500 tablet:text-lg">
+          <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary" />
+          <p className="text-center font-semibold text-primary tablet:text-lg">
             Choose your reward
           </p>
-          <SideAccentSwirls className="h-5 fill-yellow-500" />
+          <SideAccentSwirls className="h-4 fill-primary" />
         </div>
 
-        <div className="baseVertFlex relative !justify-start overflow-y-auto border-t pr-4 pt-2 text-yellow-500 tablet:h-[500px]">
+        <div className="baseVertFlex relative !justify-start overflow-y-auto border-t pr-4 pt-2 text-primary tablet:h-[500px]">
           {/* .map() of Your rewards */}
           <div className="baseVertFlex w-full gap-8 ">
             {/* Birthday reward options */}
@@ -398,6 +398,7 @@ function RewardMenuItem({
           </div>
         </div>
         <Button
+          variant={"outline"}
           disabled={isDisabled()}
           className={`self-end`}
           onClick={() => {

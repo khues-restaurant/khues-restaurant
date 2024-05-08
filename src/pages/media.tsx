@@ -4,8 +4,13 @@ import Image from "next/image";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
 
-// TODO: import these images so you don't have to declare the
-// width and height for <Images>? seems like a free win
+import kare11InTheKitchen from "/public/media/kare11InTheKitchen.jpg";
+import kare11MothersDay from "/public/media/kare11MothersDay.jpg";
+import starTribune from "/public/media/starTribune.jpg";
+import mpr from "/public/media/mpr.jpg";
+import kare11Logo from "/public/media/kare11Logo.png";
+import starTribuneLogo from "/public/media/starTribuneLogo.png";
+import mprLogo from "/public/media/mprLogo.png";
 
 function Media() {
   // don't see why you wouldn't want to have the title of the publication be a link
@@ -62,7 +67,7 @@ function Media() {
               className="relative size-full"
             >
               <Image
-                src="/media/kare11InTheKitchen.jpg"
+                src={kare11InTheKitchen}
                 alt="TODO"
                 fill
                 sizes="(min-width: 1000px) 400px, 320px"
@@ -72,12 +77,7 @@ function Media() {
           </div>
 
           <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
-            <Image
-              src="/media/kare11Logo.png"
-              alt="TODO"
-              width={75}
-              height={35}
-            />
+            <Image src={kare11Logo} alt="Kare 11 Logo" width={75} height={35} />
             <p className="text-lg font-semibold">
               KARE in the Kitchen: Fried chicken sandwiches with Eric Pham from
               Khue&apos;s Kitchen
@@ -103,7 +103,7 @@ function Media() {
               className="relative size-full"
             >
               <Image
-                src="/media/kare11MothersDay.jpg"
+                src={kare11MothersDay}
                 alt="TODO"
                 fill
                 sizes="(min-width: 1000px) 400px, 320px"
@@ -113,12 +113,7 @@ function Media() {
           </div>
 
           <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
-            <Image
-              src="/media/kare11Logo.png"
-              alt="TODO"
-              width={75}
-              height={35}
-            />
+            <Image src={kare11Logo} alt="Kare 11 Logo" width={75} height={35} />
             <p className="text-lg font-semibold">
               Minneapolis chef credits his mom for inspiration
             </p>
@@ -145,7 +140,7 @@ function Media() {
               className="relative size-full"
             >
               <Image
-                src="/media/starTribune.jpg"
+                src={starTribune}
                 alt="TODO"
                 fill
                 sizes="(min-width: 1000px) 400px, 320px"
@@ -156,7 +151,7 @@ function Media() {
 
           <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
             <Image
-              src="/press/StarTribune.png"
+              src={starTribuneLogo}
               alt="TODO"
               width={150}
               height={35}
@@ -190,7 +185,7 @@ function Media() {
               className="relative size-full"
             >
               <Image
-                src="/media/mpr.jpg"
+                src={mpr}
                 alt="TODO"
                 fill
                 sizes="(min-width: 1000px) 400px, 320px"
@@ -201,7 +196,7 @@ function Media() {
 
           <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
             <Image
-              src="/media/mprLogo.png"
+              src={mprLogo}
               alt="TODO"
               width={110}
               height={85}

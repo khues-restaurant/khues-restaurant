@@ -403,8 +403,8 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                     {order.orderItems.length > 2 && (
                       <>
                         {order.orderItems.length > 3 ? (
-                          <div className="baseVertFlex size-12 rounded-md border p-1 text-sm">
-                            +{order.orderItems.length - 2}
+                          <div className="baseVertFlex size-12 text-sm">
+                            + {order.orderItems.length - 2}
                             <span>more</span>
                           </div>
                         ) : (

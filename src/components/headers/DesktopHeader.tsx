@@ -60,18 +60,22 @@ function DesktopHeader() {
   return (
     <nav
       id="header"
-      className={`${classes.desktopHeader} fixed left-0 top-0 z-50 grid h-28 w-full grid-cols-1 grid-rows-1 bg-offwhite shadow-md`}
+      className={`${classes.desktopHeader} fixed left-0 top-0 z-50 grid h-28 w-screen grid-cols-1 grid-rows-1 bg-offwhite shadow-md
+      `}
     >
-      <Link href={"/"} className={`${classes.logo ?? ""}`}>
-        <Image
+      <Button variant="link" asChild>
+        <Link href={"/"} className={`${classes.logo ?? ""}`}>
+          {/* <Image
           src="/logo.svg"
           alt="Khue's header logo"
           width={65}
           height={65}
           priority
           className="!size-[65px]"
-        />
-      </Link>
+        /> */}
+          <p className="text-3xl font-semibold text-primary">Khue&apos;s</p>
+        </Link>
+      </Button>
 
       <div className={`${classes.mainLinks} baseFlex 2xl:gap-2`}>
         <Button
@@ -316,7 +320,7 @@ function DesktopHeader() {
                   src={outsideOfRestaurant}
                   alt={"TODO: fill in w/ appropriate alt text"}
                   sizes="550px"
-                  className="!relative !h-64 !w-full rounded-md object-cover shadow-sm"
+                  className="!relative !h-64 !w-full rounded-md object-cover shadow-md"
                 />
               </div>
             </div>
@@ -329,26 +333,10 @@ function DesktopHeader() {
         {!isSignedIn && (
           <div className={`${classes.authentication ?? ""} baseFlex gap-4`}>
             {/* how to maybe get colors to match theme + also have an option to specify username? */}
-            <SignUpButton
-              mode="modal"
-              afterSignUpUrl={`${
-                process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-              }${asPath}`}
-              afterSignInUrl={`${
-                process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-              }${asPath}`}
-            >
+            <SignUpButton mode="modal">
               <Button className="px-8">Sign up</Button>
             </SignUpButton>
-            <SignInButton
-              mode="modal"
-              afterSignUpUrl={`${
-                process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-              }${asPath}`}
-              afterSignInUrl={`${
-                process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-              }${asPath}`}
-            >
+            <SignInButton mode="modal">
               <Button variant={"secondary"}>Sign in</Button>
             </SignInButton>
           </div>

@@ -25,6 +25,10 @@ import topRightTabletHero from "/public/homepage/heroOne.jpeg";
 import bottomLeftTabletHero from "/public/homepage/heroThree.webp";
 import bottomRightTabletHero from "/public/homepage/heroFour.jpg";
 
+import starTribuneLogo from "/public/media/starTribuneLogo.png";
+import kare11Logo from "/public/media/kare11Logo.png";
+import mprLogo from "/public/media/mprLogo.png";
+
 import masonryFoodOne from "/public/masonryFood/one.jpg";
 import masonryFoodTwo from "/public/masonryFood/two.webp";
 import masonryFoodThree from "/public/masonryFood/three.jpg";
@@ -218,7 +222,8 @@ export default function Home() {
       </div>
 
       {/* Press Reviews */}
-      <div className="baseVertFlex w-full gap-2 border-y-[1px] pb-4">
+      <div className="baseVertFlex w-full border-y-[1px] bg-gradient-to-br from-offwhite to-primary/10 pb-4">
+        <p className="mt-4 font-medium tablet:text-xl">Find us on</p>
         <Carousel
           setApi={setPressReviewsApi}
           opts={{
@@ -230,45 +235,47 @@ export default function Home() {
                 active: false,
               },
             },
-            // skipSnaps: true, play around with this
           }}
         >
-          <CarouselContent className="xl:w-[1200px] 2xl:w-[1500px]">
-            <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md p-4 tablet:basis-1/3">
-              <Image
-                src="/press/StarTribune.png"
-                alt="Star Tribune"
-                width={200}
-                height={85}
-              />
-              <p className="text-center text-sm italic tablet:text-base">
-                &ldquo;Khue&apos;s is a must-visit for anyone in the Twin
-                Cities.&rdquo;
-              </p>
+          <CarouselContent className="mb-4 xl:w-[800px] tablet:mb-0">
+            <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md tablet:basis-1/3">
+              <a
+                href="https://www.startribune.com/how-these-moms-shaped-the-next-generation-of-great-twin-cities-restaurateurs/600273728/?refresh=true"
+                className="baseFlex"
+              >
+                <Image
+                  src={starTribuneLogo}
+                  alt="Star Tribune Logo"
+                  width={200}
+                  height={85}
+                />
+              </a>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md p-4 tablet:basis-1/3">
-              <Image
-                src="/press/StarTribune.png"
-                alt="Star Tribune"
-                width={200}
-                height={85}
-              />
-              <p className="text-center text-sm italic tablet:text-base">
-                &ldquo;Khue&apos;s is a must-visit for anyone in the Twin
-                Cities.&rdquo;
-              </p>
+            <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md tablet:basis-1/3">
+              <a
+                href="https://www.kare11.com/article/news/local/mpls-chef-credits-his-mom-for-inspiration/89-0f237053-85cf-48ae-96f7-8cbebb780555"
+                className="baseFlex"
+              >
+                <Image
+                  src={kare11Logo}
+                  alt="Kare 11 Logo"
+                  width={150}
+                  height={63.75}
+                />
+              </a>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md p-4 tablet:basis-1/3">
-              <Image
-                src="/press/StarTribune.png"
-                alt="Star Tribune"
-                width={200}
-                height={85}
-              />
-              <p className="text-center text-sm italic tablet:text-base">
-                &ldquo;Khue&apos;s is a must-visit for anyone in the Twin
-                Cities.&rdquo;
-              </p>
+            <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md tablet:basis-1/3">
+              <a
+                href="https://www.mprnews.org/story/2023/12/27/appetites-looks-back-on-2023-restaurants-vietnamese-meatballs-and-the-secret-to-entertaining"
+                className="baseFlex"
+              >
+                <Image
+                  src={mprLogo}
+                  alt="MPR Logo"
+                  width={150}
+                  height={63.75}
+                />
+              </a>
             </CarouselItem>
           </CarouselContent>
         </Carousel>
@@ -299,7 +306,6 @@ export default function Home() {
       {/* wrapping (prob just for padding?) container of promo sections below */}
       <div className="baseVertFlex w-full gap-16 p-8">
         {/* masonry of featured food items */}
-
         <div className="homepageFoodMasonry h-[700px] w-full max-w-sm tablet:h-[450px] tablet:max-w-4xl">
           <div className="firstMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
             <Parallax speed={-3} className="!absolute !top-0 !size-[120%]">
@@ -440,13 +446,13 @@ export default function Home() {
             {/* maybe have stock image of person holding a phone and you would have a proportionally
                 tilted screenshot of the order page showing on their phone? think about it */}
             <motion.div
-              initial={{ opacity: 0, y: -100 }}
+              initial={{ opacity: 0, y: -50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{
                 opacity: { duration: 0.2 },
                 type: "spring",
-                stiffness: 200,
-                damping: 20,
+                stiffness: 100,
+                damping: 15,
               }}
               viewport={{ once: true, amount: 0.75 }}
               className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
@@ -462,16 +468,16 @@ export default function Home() {
               />
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, x: 100 }}
+              initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{
                 opacity: { duration: 0.2 },
                 type: "spring",
-                stiffness: 200,
-                damping: 20,
+                stiffness: 100,
+                damping: 15,
               }}
               viewport={{ once: true, amount: 0.5 }}
-              className="absolute right-4 top-4 z-[-1] size-full rounded-md bg-primary"
+              className="absolute right-4 top-4 z-[-1] size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
             ></motion.div>
           </div>
         </div>
@@ -509,13 +515,13 @@ export default function Home() {
         <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
           <div className="baseFlex relative size-72">
             <motion.div
-              initial={{ opacity: 0, y: -100 }}
+              initial={{ opacity: 0, y: -50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{
                 opacity: { duration: 0.2 },
                 type: "spring",
-                stiffness: 200,
-                damping: 20,
+                stiffness: 100,
+                damping: 15,
               }}
               viewport={{ once: true, amount: 0.75 }}
               className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
@@ -532,16 +538,16 @@ export default function Home() {
               />
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, x: -100 }}
+              initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{
                 opacity: { duration: 0.2 },
                 type: "spring",
-                stiffness: 200,
-                damping: 20,
+                stiffness: 100,
+                damping: 15,
               }}
               viewport={{ once: true, amount: 0.5 }}
-              className="absolute left-4 top-4 z-[-1] size-full rounded-md bg-primary"
+              className="absolute left-4 top-4 z-[-1] size-full rounded-md bg-gradient-to-bl from-primary to-darkPrimary"
             ></motion.div>
           </div>
 
@@ -606,13 +612,13 @@ export default function Home() {
 
           <div className="baseFlex relative size-72">
             <motion.div
-              initial={{ opacity: 0, y: -100 }}
+              initial={{ opacity: 0, y: -50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{
                 opacity: { duration: 0.2 },
                 type: "spring",
-                stiffness: 200,
-                damping: 20,
+                stiffness: 100,
+                damping: 15,
               }}
               viewport={{ once: true, amount: 0.75 }}
               className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
@@ -628,16 +634,16 @@ export default function Home() {
               />
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, x: 100 }}
+              initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{
                 opacity: { duration: 0.2 },
                 type: "spring",
-                stiffness: 200,
-                damping: 20,
+                stiffness: 100,
+                damping: 15,
               }}
               viewport={{ once: true, amount: 0.5 }}
-              className="absolute right-4 top-4 z-[-1] size-full rounded-md bg-primary"
+              className="absolute right-4 top-4 z-[-1] size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
             ></motion.div>
           </div>
         </div>
@@ -706,10 +712,10 @@ export default function Home() {
           //   style={
           //     {
           //       // background:
-          //       //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+          //       //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
           //       // border: "4px solid transparent" /* Set the border width */,
           //       // borderImage:
-          //       //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%) 1 stretch",
+          //       //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%) 1 stretch",
           //     }
           //   }
           //   className="baseVertFlex rewardsGoldBorder w-full max-w-sm gap-4 rounded-md p-4 !pb-8 text-yellow-500 shadow-md tablet:max-w-2xl tablet:p-8"
@@ -743,11 +749,7 @@ export default function Home() {
               choice!
             </p>
 
-            <SignUpButton
-              mode="modal"
-              afterSignUpUrl={`${process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""}`}
-              afterSignInUrl={`${process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""}`}
-            >
+            <SignUpButton mode="modal">
               <Button
                 variant={"rewards"}
                 size={"lg"}

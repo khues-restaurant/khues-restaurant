@@ -261,8 +261,8 @@ export const paymentRouter = createTRPCRouter({
             console.log("expired session", session);
           });
         },
-        1000 * 60 * 10,
-      ); // 10 mins
+        1000 * 60 * 5,
+      ); // 5 mins
 
       return session; // TODO: okay shoot I believe when we return we will be ending the http request,
       // and therefore the setTimeout will not be able to run... maybe we need to make a separate tprc endpoint

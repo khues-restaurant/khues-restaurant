@@ -97,15 +97,7 @@ function MobileHeader() {
               {!isSignedIn && (
                 <div className="baseFlex gap-4">
                   {/* how to maybe get colors to match theme + also have an option to specify username? */}
-                  <SignUpButton
-                    mode="modal"
-                    afterSignUpUrl={`${
-                      process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                    }${asPath}`}
-                    afterSignInUrl={`${
-                      process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                    }${asPath}`}
-                  >
+                  <SignUpButton mode="modal">
                     <Button
                       className="px-8"
                       onClick={() => {
@@ -115,15 +107,7 @@ function MobileHeader() {
                       Sign up
                     </Button>
                   </SignUpButton>
-                  <SignInButton
-                    mode="modal"
-                    afterSignUpUrl={`${
-                      process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                    }${asPath}`}
-                    afterSignInUrl={`${
-                      process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""
-                    }${asPath}`}
-                  >
+                  <SignInButton mode="modal">
                     <Button
                       variant={"secondary"}
                       onClick={() => {

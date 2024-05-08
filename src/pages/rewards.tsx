@@ -51,11 +51,11 @@ function Rewards() {
 
       {/* Hero */}
       <div
-        // style={{
-        //   backgroundImage:
-        //     "linear-gradient(to right bottom, hsl(50deg, 48%, 62%) 0%, hsl(49deg, 61%, 58%) 100%)",
-        // }}
-        className="baseFlex relative h-56 w-full overflow-hidden bg-gradient-to-br from-primary to-darkPrimary tablet:h-72 tablet:overflow-x-hidden"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
+        }}
+        className="baseFlex relative h-56 w-full overflow-hidden shadow-md tablet:h-72 tablet:overflow-x-hidden"
       >
         {/* mobile images */}
         <motion.div
@@ -191,11 +191,11 @@ function Rewards() {
           />
         </motion.div>
 
-        <div className="baseFlex z-10 rounded-md bg-offwhite text-gold shadow-lg tablet:p-2">
+        <div className="baseFlex z-10 rounded-md bg-offwhite text-primary shadow-lg tablet:p-2">
           <div className="baseVertFlex text-xl font-semibold tablet:text-2xl">
-            <WideFancySwirls className="h-12 rotate-180 fill-gold tablet:h-16" />
+            <WideFancySwirls className="h-12 rotate-180 fill-primary tablet:h-16" />
             <h1>Khue&apos;s Rewards</h1>
-            <WideFancySwirls className="h-12 fill-gold tablet:h-16" />
+            <WideFancySwirls className="h-12 fill-primary tablet:h-16" />
           </div>
         </div>
 
@@ -501,11 +501,7 @@ maybe lean more towards oklch realm or keep asking chatgpt to refine on
           exclusive offers and surprises along the way.
         </p>
 
-        <SignUpButton
-          mode="modal"
-          afterSignUpUrl={`${process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""}`}
-          afterSignInUrl={`${process.env.NEXT_PUBLIC_DOMAIN_URL ?? ""}`}
-        >
+        <SignUpButton mode="modal">
           <Button
             variant={"rewards"}
             size={"lg"}

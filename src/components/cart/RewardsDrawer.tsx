@@ -129,9 +129,9 @@ function RewardsDrawer({
         <div
           style={{
             backgroundImage:
-              "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+              "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
           }}
-          className="baseFlex relative mt-2 h-40 w-full overflow-hidden"
+          className="baseFlex relative mt-2 h-40 w-full overflow-hidden shadow-sm"
         >
           <motion.div
             key={"rewardsHeroMobileImageOne"}
@@ -177,13 +177,13 @@ function RewardsDrawer({
             />
           </motion.div>
 
-          <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-yellow-500 shadow-lg">
+          <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-primary shadow-lg">
             <div className="text-center text-lg font-semibold">
               Khue&apos;s Rewards
             </div>
 
             <div className="baseFlex gap-4 font-bold tracking-wider">
-              <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+              <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
 
               <div className="baseVertFlex">
                 <AnimatedNumbers
@@ -194,7 +194,7 @@ function RewardsDrawer({
                 <p className="font-semibold tracking-normal">points</p>
               </div>
 
-              <SideAccentSwirls className="h-5 fill-yellow-500" />
+              <SideAccentSwirls className="h-5 fill-primary" />
             </div>
           </div>
 
@@ -243,16 +243,16 @@ function RewardsDrawer({
           </motion.div>
         </div>
 
-        <div className="baseFlex w-full gap-4 border-b p-2 shadow-sm">
-          <SideAccentSwirls className="h-4 scale-x-[-1] fill-yellow-500" />
-          <p className="text-center font-semibold text-yellow-500">
+        <div className="baseFlex w-full gap-2 border-b p-2 shadow-sm">
+          <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-primary" />
+          <p className="text-center font-semibold text-primary">
             Choose your reward
           </p>
-          <SideAccentSwirls className="h-4 fill-yellow-500" />
+          <SideAccentSwirls className="h-[14px] fill-primary" />
         </div>
 
         {/* TODO: come back to this.. I feel like a higher dvh value should work but on shorter height viewports content is being cut off... just a css understanding gap, maybe you need some kind of calc trickery here? */}
-        <div className="baseVertFlex relative h-[55dvh] !justify-start overflow-y-auto px-4 pb-24 pt-4 text-yellow-500">
+        <div className="baseVertFlex relative h-[55dvh] !justify-start overflow-y-auto px-4 pb-24 pt-4 text-primary">
           {/* .map() of Your rewards */}
           <div className="baseVertFlex w-full gap-8 ">
             {/* Birthday reward options */}
@@ -387,6 +387,7 @@ function RewardMenuItem({
           </div>
         </div>
         <Button
+          variant={"outline"}
           disabled={isDisabled()}
           className={`self-end`}
           onClick={() => {

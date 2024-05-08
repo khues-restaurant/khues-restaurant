@@ -70,7 +70,9 @@ const mainFormSchema = z.object({
         const year = new Date(birthday).getFullYear();
         const currentYear = new Date().getFullYear();
 
-        return year > currentYear;
+        console.log(year, currentYear, birthday);
+
+        return year <= currentYear;
       },
       { message: "Year must not be in the future" },
     ),
@@ -197,10 +199,7 @@ function PostSignUpDialog() {
 
   if (!mounted) return <></>;
 
-  // TODO: can't think of a good reason why you would need to keep the <input> type of "calendar" for birthday
-  // since I think every rational person would just be typing in the numbers rather than using w/e ui is provided.
-  // therefore I think just doing the same realtime sanitization of the input as the phone number would be best.
-  // ^ then you can also add a phone/calendar icon inside on left side of the input to make it look nicer
+  // TODO: you can add a phone/calendar icon inside on left side of the input to make it look nicer
   // ^ FaPhone and CiCalendarDate
 
   return (
@@ -212,9 +211,7 @@ function PostSignUpDialog() {
           }}
           className="baseVertFlex relative overflow-hidden"
         >
-          <p className="text-center font-semibold">
-            Finish setting up your account
-          </p>
+          <p className="text-center font-semibold">Account setup</p>
           <div className="baseFlex mt-4 w-full !justify-between p-0 pb-8 pt-2 tablet:mt-0 tablet:p-8">
             <div className="baseVertFlex relative gap-2 pl-4 pr-4 tablet:pl-8">
               <Step step={1} currentStep={step} />
@@ -230,9 +227,8 @@ function PostSignUpDialog() {
                 position: "relative",
                 flex: 1,
                 height: "2px",
-                backgroundColor: "#6b7280",
               }}
-              className="rounded-md"
+              className="rounded-md bg-stone-400"
             >
               <AnimatePresence>
                 {step > 1 && (
@@ -245,7 +241,7 @@ function PostSignUpDialog() {
                     style={{
                       position: "absolute",
                       height: "2px",
-                      backgroundColor: "hsl(5.3deg, 72.11%, 50.78%)",
+                      backgroundColor: "hsl(144deg, 61%, 20%)",
                       top: 0,
                       left: 0,
                     }}
@@ -270,8 +266,8 @@ function PostSignUpDialog() {
                 position: "relative",
                 flex: 1,
                 height: "2px",
-                backgroundColor: "#6b7280",
               }}
+              className="rounded-md bg-stone-400"
             >
               <AnimatePresence>
                 {step === 3 && (
@@ -284,7 +280,7 @@ function PostSignUpDialog() {
                     style={{
                       position: "absolute",
                       height: "2px",
-                      backgroundColor: "hsl(5.3deg, 72.11%, 50.78%)",
+                      backgroundColor: "hsl(144deg, 61%, 20%)",
                       top: 0,
                       left: 0,
                     }}
@@ -518,9 +514,9 @@ function PostSignUpDialog() {
                 <div
                   style={{
                     backgroundImage:
-                      "linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, rgb(212, 175, 55) 100%)",
+                      "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
                   }}
-                  className="baseFlex relative h-48 w-full overflow-hidden rounded-md"
+                  className="baseFlex relative h-48 w-full overflow-hidden rounded-md shadow-md"
                 >
                   <motion.div
                     key={"rewardsHeroMobileImageOne"}
@@ -566,13 +562,13 @@ function PostSignUpDialog() {
                     />
                   </motion.div>
 
-                  <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-yellow-500 shadow-lg">
+                  <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-primary shadow-lg">
                     <div className="text-center text-lg font-semibold">
                       Khue&apos;s Rewards
                     </div>
 
                     <div className="baseFlex gap-4 font-bold tracking-wider">
-                      <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
+                      <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
 
                       <div className="baseVertFlex">
                         <AnimatedNumbers
@@ -583,7 +579,7 @@ function PostSignUpDialog() {
                         <p className="font-semibold tracking-normal">points</p>
                       </div>
 
-                      <SideAccentSwirls className="h-5 fill-yellow-500" />
+                      <SideAccentSwirls className="h-5 fill-primary" />
                     </div>
                   </div>
 
@@ -799,29 +795,29 @@ function Step({ step, currentStep }: { step: number; currentStep: number }) {
           type: "tween",
           ease: "circOut",
         }}
-        className="absolute inset-0 rounded-full bg-red-200"
+        className="absolute inset-0 rounded-full bg-primary/40"
       />
 
       <motion.div
         initial={false}
         variants={{
           inactive: {
-            backgroundColor: "#fff", // neutral
+            backgroundColor: "#fffcf5", // offwhite
             borderColor: "#e5e5e5", // neutral-200
             color: "#a3a3a3", // neutral-400
           },
           active: {
-            backgroundColor: "#fff",
-            borderColor: "#dc3727", //  bg-primary
-            color: "#dc3727", //  bg-primary
+            backgroundColor: "#fffcf5", // offwhite
+            borderColor: "#14522d", //  bg-primary
+            color: "#14522d", //  bg-primary
             transition: {
-              delay: 0.5,
+              delay: 2,
             },
           },
           complete: {
-            backgroundColor: "#dc3727", //  bg-primary
-            borderColor: "#dc3727", //  bg-primary
-            color: "#dc3727", //  bg-primary
+            backgroundColor: "#14522d", //  bg-primary
+            borderColor: "#14522d", //  bg-primary
+            color: "#14522d", //  bg-primary
           },
         }}
         transition={{ duration: 0.2 }}
