@@ -130,16 +130,11 @@ export default async function handler(
 
         console.log(data);
 
-        console.log("---------");
-
         const command = receiptline.transform(data, printer);
-
-        console.log(command);
 
         // slice - removes ESC @ (command initialization) ESC GS a 0 (disable status transmission)
         const bin = Buffer.from(command.slice(6), "binary");
 
-        console.log("sending this print job with", bin.length);
         res.setHeader("Content-Type", "application/vnd.star.starprnt");
         res.status(200).send(bin);
       } else {
@@ -224,7 +219,6 @@ function formatReceipt(order: PrintedOrder) {
 
   // Constructing the receipt using template literals
   let receipt = `
-
 {width:*}
 ^^^Khue's
 799 University Ave W, St Paul, MN 55104
@@ -239,26 +233,30 @@ ${format(new Date(order.datetimeToPickup), "h:mma 'on' MM/dd/yyyy")}
   // Food items section
   if (items.food.length > 0) {
     receipt += `
-    {width:7,*}
+    {width:8,*}
     "_Items_"
-    {width:4,*}
+    {width:5,*}
     `;
 
     items.food.forEach((orderItem) => {
       receipt += `|"${orderItem.quantity}"|"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
 
       if (orderItem.customizations.length > 0) {
-        receipt += ` \n
-      ${orderItem.customizations.map((custom) => `||- ${custom.customizationCategory.name}: ${custom.customizationChoice.name}`).join(" \n")}`;
+        receipt += ` \n`; // space before \n necessary?
+        const itemCustomizations = orderItem.customizations
+          .map(
+            (c) =>
+              `||- ${c.customizationCategory.name}: ${c.customizationChoice.name}`,
+          )
+          .join(" \n");
+        receipt += itemCustomizations;
       }
 
       if (orderItem.specialInstructions) {
-        receipt += ` \n
-      ||- \\"${orderItem.specialInstructions}\\"`;
+        receipt += ` \n`; // space before \n necessary?
+        receipt += `||- \\"${orderItem.specialInstructions}\\"`;
       }
     });
-
-    // .join(" \n") seems suspect to me
 
     receipt += `
     -`;
@@ -290,6 +288,7 @@ ${format(new Date(order.datetimeToPickup), "h:mma 'on' MM/dd/yyyy")}
   // Dietary preferences
   if (atLeastOneDietaryRestriction) {
     receipt += `
+
     _* Dietary preferences_
     \\"${order.dietaryRestrictions}\\"`;
   }
