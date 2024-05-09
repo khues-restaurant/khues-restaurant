@@ -235,10 +235,10 @@ ${format(new Date(order.datetimeToPickup), "h:mma 'on' MM/dd/yyyy")}
     receipt += `
     {width:8,*}
     "_Items_"
-    {width:5,*}
+    {width:6,*}
     `;
 
-    items.food.forEach((orderItem) => {
+    items.food.forEach((orderItem, index) => {
       receipt += `|"${orderItem.quantity}"|"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
 
       if (orderItem.customizations.length > 0) {
@@ -255,6 +255,10 @@ ${format(new Date(order.datetimeToPickup), "h:mma 'on' MM/dd/yyyy")}
       if (orderItem.specialInstructions) {
         receipt += ` \n`; // space before \n necessary?
         receipt += `||- \\"${orderItem.specialInstructions}\\"`;
+      }
+
+      if (index < items.food.length - 1) {
+        receipt += ` \n`; // space before \n necessary?
       }
     });
 
