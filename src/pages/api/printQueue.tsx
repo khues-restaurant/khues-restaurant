@@ -270,13 +270,19 @@ ${format(new Date(order.datetimeToPickup), "h:mma 'on' MM/dd/yyyy")}
   // Alcoholic beverages section
   if (items.alcoholicBeverages.length > 0) {
     receipt += `
-    {width:21,*}
+    {width:22,*}
     "_Alcoholic beverages_"
-    {width:8,*}`;
-    items.alcoholicBeverages.forEach((orderItem) => {
-      receipt += `|"${orderItem.quantity}"|"${orderItem.menuItem.name}"
-`;
+    {width:8,*}
+    `;
+
+    items.alcoholicBeverages.forEach((orderItem, index) => {
+      receipt += `|"${orderItem.quantity}"|"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
+
+      if (index < items.alcoholicBeverages.length - 1) {
+        receipt += ` \n`; // space before \n necessary?
+      }
     });
+
     receipt += `
     -`;
   }
