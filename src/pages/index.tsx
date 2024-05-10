@@ -35,6 +35,10 @@ import masonryFoodThree from "/public/masonryFood/three.jpg";
 import masonryFoodFour from "/public/masonryFood/four.png";
 import masonryFoodFive from "/public/masonryFood/five.jpg";
 
+import rewardsPromo from "/public/rewardsPromo.jpg";
+import eric from "/public/eric.webp";
+import reservations from "/public/reservations.webp";
+
 import masonryInteriorOne from "/public/interior/one.webp";
 import masonryInteriorTwo from "/public/interior/two.webp";
 import masonryInteriorThree from "/public/interior/three.webp";
@@ -108,7 +112,7 @@ export default function Home() {
       </Head>
 
       {/* Hero */}
-      <div className="baseVertFlex w-full text-primary tablet:!hidden">
+      <div className="baseVertFlex w-full tablet:!hidden">
         {/* <div className="imageFiller baseFlex size-full h-[65dvh]">
           Image of probably three plates of food here arranged in a triangle
           (one on top, two on bottom) on a table, probably with some fancy
@@ -369,13 +373,10 @@ export default function Home() {
                 tilted screenshot of the order page showing on their phone? think about it */}
           <div className="relative h-60 w-full overflow-hidden rounded-t-md shadow-md">
             <Image
-              src={"/rewardsPromo.jpg"}
+              src={rewardsPromo}
               alt={"TODO: fill in w/ appropriate alt text"}
-              fill
-              style={{
-                objectFit: "cover",
-              }}
-              className="!relative !top-0 !size-full !h-96 rounded-md !pb-32"
+              width={384}
+              className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-32"
             />
           </div>
           <div className="baseVertFlex gap-4 bg-gradient-to-br from-offwhite to-primary/10 p-4">
@@ -486,14 +487,10 @@ export default function Home() {
         <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md  tablet:hidden">
           <div className="relative h-60 w-full overflow-hidden rounded-t-md">
             <Image
-              src={"/eric.webp"}
+              src={eric}
               alt={"TODO: fill in w/ appropriate alt text"}
-              fill
-              style={{
-                objectFit: "cover",
-                objectPosition: "top",
-              }}
-              className="!relative !top-0 !size-full !h-96 rounded-md !pb-16"
+              width={384}
+              className="!relative !top-0 !size-full !h-96 rounded-md object-cover !object-top !pb-16"
             />
           </div>
           <div className="baseVertFlex !items-start gap-4 bg-gradient-to-br from-offwhite to-primary/10 p-4">
@@ -571,13 +568,10 @@ export default function Home() {
         <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md  tablet:hidden">
           <div className="relative h-60 w-full overflow-hidden rounded-t-md">
             <Image
-              src={"/reservations.webp"}
+              src={reservations}
               alt={"TODO: fill in w/ appropriate alt text"}
-              fill
-              style={{
-                objectFit: "cover",
-              }}
-              className="!relative !top-0 !size-full !h-96 rounded-md !pb-24"
+              width={384}
+              className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-24"
             />
           </div>
           <div className="baseVertFlex !items-start gap-2 bg-gradient-to-br from-offwhite to-primary/10 p-4">

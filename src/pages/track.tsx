@@ -13,8 +13,10 @@ import OrderSummary from "~/components/cart/OrderSummary";
 import AnimatedLogo from "~/components/ui/AnimatedLogo";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
+import { Separator } from "~/components/ui/separator";
 import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import { api } from "~/utils/api";
+import { getFirstSixNumbers } from "~/utils/getFirstSixNumbers";
 
 // stretch, but if you really wanted to have the order "number" but just numbers,
 // you could just have a function that takes in whole id and returns first 6 numbers,
@@ -171,13 +173,6 @@ function Track() {
               transition={{ duration: 0.5 }}
               className="baseVertFlex size-full !justify-start gap-8 p-4"
             >
-              <p className="text-xl font-semibold underline underline-offset-4">
-                Order{" "}
-                {typeof orderId === "string"
-                  ? orderId.toUpperCase().substring(0, 6)
-                  : ""}
-              </p>
-
               <div className="baseVertFlex w-full gap-2">
                 {/* animated progress bar */}
                 <div className="relative h-10 w-full overflow-hidden rounded-full border-2 border-primary shadow-md ">
@@ -405,7 +400,6 @@ function Track() {
                   </motion.div>
                 </div>
               </div>
-
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -420,7 +414,7 @@ function Track() {
                       animate={{ x: 0, opacity: 1 }}
                       exit={{ x: "-100%", opacity: 0 }}
                       transition={{ duration: 0.5, ease: "easeOut" }}
-                      className="text-lg font-medium"
+                      className="font-medium tablet:text-lg"
                     >
                       Your order has been received
                     </motion.p>
@@ -433,7 +427,7 @@ function Track() {
                       animate={{ x: 0, opacity: 1 }}
                       exit={{ x: "-100%", opacity: 0 }}
                       transition={{ duration: 0.5, ease: "easeOut" }}
-                      className="text-lg font-medium"
+                      className="font-medium tablet:text-lg"
                     >
                       Your order is being prepared
                     </motion.p>
@@ -446,16 +440,16 @@ function Track() {
                       animate={{ x: 0, opacity: 1 }}
                       exit={{ x: "-100%", opacity: 0 }}
                       transition={{ duration: 0.5, ease: "easeOut" }}
-                      className="text-lg font-medium"
+                      className="font-medium tablet:text-lg"
                     >
                       Your order is ready to be picked up!
                     </motion.p>
                   )}
                 </AnimatePresence>
               </motion.div>
-
+              <Separator className="w-full" />
               {/* rewards + pickup time + address */}
-              <div className="baseVertFlex w-full gap-2">
+              <div className="baseVertFlex w-full gap-8">
                 {/* mobile */}
                 <div className="baseVertFlex w-full !items-start gap-2 tablet:hidden">
                   <div className="baseVertFlex !items-start gap-2 text-sm">
@@ -476,6 +470,17 @@ function Track() {
                     </p>
                   </div>
 
+                  <div className="baseVertFlex !items-start gap-2 text-sm">
+                    <p className="font-semibold underline underline-offset-2">
+                      Order #
+                    </p>
+                    <p className="text-sm">
+                      {typeof orderId === "string"
+                        ? getFirstSixNumbers(orderId)
+                        : ""}
+                    </p>
+                  </div>
+
                   <p className="baseVertFlex !items-start gap-2 text-sm">
                     <p className="font-semibold underline underline-offset-2">
                       Address
@@ -488,16 +493,29 @@ function Track() {
 
                 {/* tablet+ */}
                 <div className="baseVertFlex !hidden w-full !items-start gap-2 tablet:!flex">
-                  <div className="baseVertFlex !items-start gap-2 text-sm">
-                    <p className="font-semibold underline underline-offset-2">
-                      Pickup name
-                    </p>
-                    <p className="text-sm">
-                      {order.firstName} {order.lastName}
+                  <div className="baseFlex w-full !justify-between">
+                    <div className="baseVertFlex !items-start gap-2 text-sm">
+                      <p className="font-semibold underline underline-offset-2">
+                        Pickup name
+                      </p>
+                      <p className="text-sm">
+                        {order.firstName} {order.lastName}
+                      </p>
+                    </div>
+
+                    <p className="baseVertFlex !items-start gap-2 text-sm tablet:!items-end">
+                      <p className="font-semibold underline underline-offset-2">
+                        Order #
+                      </p>
+                      <p className="text-sm">
+                        {typeof orderId === "string"
+                          ? getFirstSixNumbers(orderId)
+                          : ""}
+                      </p>
                     </p>
                   </div>
 
-                  <div className="baseFlex w-full !justify-between gap-0">
+                  <div className="baseFlex w-full !justify-between">
                     <div className="baseVertFlex !items-start gap-2 text-sm">
                       <p className="font-semibold underline underline-offset-2">
                         Pickup time
@@ -525,7 +543,7 @@ function Track() {
                       backgroundImage:
                         "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
                     }}
-                    className="baseFlex relative h-48 w-full overflow-hidden rounded-md"
+                    className="baseFlex relative w-full overflow-hidden rounded-md py-6 shadow-md"
                   >
                     <motion.div
                       key={"rewardsHeroMobileImageOne"}
@@ -571,13 +589,13 @@ function Track() {
                       />
                     </motion.div>
 
-                    <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-primary shadow-lg">
+                    <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite p-4 text-primary shadow-lg tablet:px-8 tablet:py-4">
                       <div className="text-center text-lg font-semibold">
                         Khue&apos;s Rewards
                       </div>
 
                       <div className="baseFlex gap-4 font-bold tracking-wider">
-                        <SideAccentSwirls className="h-6 scale-x-[-1] fill-primary" />
+                        <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary tablet:h-6" />
                         <div className="baseVertFlex">
                           <AnimatedNumbers
                             value={rewardsPointsEarned}
@@ -590,7 +608,7 @@ function Track() {
                             points
                           </p>
                         </div>
-                        <SideAccentSwirls className="h-6 fill-primary" />
+                        <SideAccentSwirls className="h-5 fill-primary tablet:h-6" />
                       </div>
 
                       <div
@@ -672,11 +690,9 @@ function Track() {
                   </div>
                 )}
               </div>
-
               <div className="baseFlex tablet:w-[500px]">
                 <OrderSummary order={order} />
               </div>
-
               <Button variant={"underline"} className="text-primary">
                 Need assistance with your order?
               </Button>

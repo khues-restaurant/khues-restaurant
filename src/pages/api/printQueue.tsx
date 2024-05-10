@@ -12,6 +12,7 @@ import {
 import receiptline, { type Printer } from "receiptline";
 import { format } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
+import { getFirstSixNumbers } from "~/utils/getFirstSixNumbers";
 
 export default async function handler(
   req: NextApiRequest,
@@ -204,7 +205,7 @@ type PrintedOrder = Order & {
 // Online Order (Pickup)
 // ^^^${order.firstName} ${order.lastName}
 // ${format(chicagoZonedTime, "h:mma 'on' MM/dd/yyyy")}
-// "Order #${order.id.substring(0, 6).toUpperCase()}"
+// "Order #${getFirstSixNumbers(order.id)}"
 // -`;
 
 //   // Food items section
@@ -327,7 +328,7 @@ type PrintedOrder = Order & {
 // Online Order (Pickup)
 // ^^^${order.firstName} ${order.lastName}
 // ${format(chicagoZonedTime, "h:mma 'on' MM/dd/yyyy")}
-// "Order #${order.id.substring(0, 6).toUpperCase()}"
+// "Order #${getFirstSixNumbers(order.id)}"
 // {border:space; width:50}`;
 
 //   // Food items section
@@ -457,7 +458,7 @@ function formatReceipt(order: PrintedOrder) {
     Online Order (Pickup)
     ^^^${order.firstName} ${order.lastName}
     ${format(chicagoZonedTime, "h:mma 'on' MM/dd/yyyy")}
-    "Order #${order.id.substring(0, 6).toUpperCase()}"
+    "Order #${getFirstSixNumbers(order.id)}"
     -`;
 
   // Food items section

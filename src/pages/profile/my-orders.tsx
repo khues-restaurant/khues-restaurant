@@ -100,13 +100,15 @@ function RecentOrders({ initOrders }: { initOrders: DBOrderSummary[] | null }) {
       return;
     }
 
-    const localSortedOrders = orders.sort((a, b) => {
+    const localSortedOrders = orders?.sort((a, b) => {
       if (sortDirection === "desc") {
         return b.datetimeToPickup.getTime() - a.datetimeToPickup.getTime();
       } else {
         return a.datetimeToPickup.getTime() - b.datetimeToPickup.getTime();
       }
     });
+
+    if (localSortedOrders === undefined) return;
 
     console.log("setting orders");
     setSortedOrders(localSortedOrders);
@@ -377,8 +379,8 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
           {viewportLabel.includes("mobile") ? (
             <div className="baseVertFlex w-full gap-4">
               {/* item image previews + track / reorder/rate */}
-              <div className="baseFlex w-full !justify-between gap-12">
-                <div className="baseVertFlex !items-start gap-2">
+              <div className="baseFlex w-full !items-end !justify-between gap-12">
+                <div className="baseVertFlex !items-start gap-2 !self-start">
                   <div>{format(new Date(order.createdAt), "PPP")}</div>
                   {/* preview images */}
                   <div className="baseFlex gap-2">

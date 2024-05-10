@@ -1010,8 +1010,8 @@ function CartDrawer({
           )}
         </AnimatePresence>
 
-        <div className="baseVertFlex mt-auto w-full ">
-          <div className="baseVertFlex mt-4 w-full gap-4 p-4">
+        <div className="baseVertFlex mt-auto w-full border-t ">
+          <div className="baseVertFlex w-full gap-4 p-4">
             <div
               style={{
                 justifyContent: isSignedIn ? "space-between" : "flex-start",

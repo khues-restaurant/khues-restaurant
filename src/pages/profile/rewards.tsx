@@ -478,7 +478,7 @@ function Rewards({
         </div>
 
         {/* .map() of Your rewards */}
-        <div className="baseVertFlex mt-8 max-w-7xl gap-8 px-4 text-primary tablet:gap-16">
+        <div className="baseVertFlex max-w-7xl gap-8 px-4 text-primary tablet:mt-4 tablet:gap-16">
           {/* Birthday reward options */}
           {isElegibleForBirthdayReward && (
             <div className="baseVertFlex mb-8 w-full gap-8">
@@ -751,16 +751,17 @@ function RewardMenuItem({
   const { toast, dismiss: dismissToasts } = useToast();
 
   function isDisabled() {
-    if (currentlySelectedRewardId === menuItem.id) return false;
+    if (currentlySelectedRewardId === null) return false;
 
     if (
-      (!forBirthdayReward &&
-        userAvailablePoints <
-          new Decimal(menuItem.price).div(0.005).toNumber()) ||
-      !menuItem.available
+      userAvailablePoints < new Decimal(menuItem.price).div(0.005).toNumber() ||
+      !menuItem.available ||
+      currentlySelectedRewardId !== menuItem.id
     ) {
       return true;
     }
+
+    return false;
   }
 
   return (

@@ -183,7 +183,7 @@ function OrderSummary({ order }: OrderSummary) {
           <div className="baseFlex w-full">
             <div className="baseFlex gap-2 text-sm italic text-stone-400">
               <FaUtensils className="size-4" />
-              <p>
+              <p className="min-w-fit">
                 Napkins and utensils{" "}
                 {order.includeNapkinsAndUtensils ? "were" : "were not"}{" "}
                 requested.

@@ -30,7 +30,7 @@ import outsideOfRestaurant from "/public/homepage/heroTwo.webp";
 const linkContainer = {
   visible: {
     transition: {
-      delayChildren: 0.15,
+      delayChildren: 0.25,
       staggerChildren: 0.1,
     },
   },
@@ -42,8 +42,8 @@ const linkVariants = {
     opacity: 1,
     x: 0,
     transition: {
-      duration: 0.3,
-      ease: "easeInOut",
+      duration: 0.35,
+      ease: "easeOut",
     },
   },
 };

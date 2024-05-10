@@ -510,7 +510,7 @@ interface SendEmailReceipt {
   };
   orderDetails: {
     items: {
-      id: string;
+      id: number;
       name: string;
       quantity: number;
       price: number;

@@ -19,7 +19,7 @@ const discountSchema = z.object({
 });
 
 const itemSchema = z.object({
-  id: z.string(),
+  id: z.number(),
   itemId: z.string(),
   name: z.string(),
   customizations: storeCustomizationChoiceSchema,
@@ -57,7 +57,7 @@ export type StoreMenuItems = Record<string, FullMenuItem>;
 export type StoreCustomizations = Record<string, string>;
 
 export interface Item {
-  id: string; // unique uuid to identify the item
+  id: number; // unique (increasing int), used to identify the item for map keys + consistent ordering
   itemId: string; // tied to database row id
   name: string;
   customizations: StoreCustomizations;

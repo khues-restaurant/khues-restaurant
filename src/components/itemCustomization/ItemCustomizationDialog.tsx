@@ -147,7 +147,8 @@ function ItemCustomizerDialogContent({
 
   const [localItemOrderDetails, setLocalItemOrderDetails] = useState(
     itemOrderDetails ?? {
-      id: crypto.randomUUID(),
+      id:
+        orderDetails.items.length === 0 ? 0 : orderDetails.items.at(-1)!.id + 1,
       name: itemToCustomize.name,
       customizations: getDefaultCustomizationChoices(itemToCustomize),
       specialInstructions: "",
@@ -855,7 +856,7 @@ function SuggestedPairing({
   // since fetching them here feels a bit weird.
 
   const defaultItemConfig = {
-    id: crypto.randomUUID(),
+    id: orderDetails.items.length === 0 ? 0 : orderDetails.items.at(-1)!.id + 1,
     name: item.name,
     customizations: {}, // getDefaultCustomizationChoices(item),
     specialInstructions: "",

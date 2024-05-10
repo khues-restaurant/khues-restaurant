@@ -24,6 +24,7 @@ import { type Item } from "~/stores/MainStore";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
 import { formatPrice } from "~/utils/formatPrice";
+import { getFirstSixNumbers } from "~/utils/getFirstSixNumbers";
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -132,7 +133,7 @@ function Receipt({
                 <Section className="my-8 text-center">
                   <Column align="center">
                     <Text className="text-lg font-semibold underline underline-offset-2">
-                      Order {id.toUpperCase().substring(0, 6)}
+                      Order {getFirstSixNumbers(id)}
                     </Text>
 
                     <Img
