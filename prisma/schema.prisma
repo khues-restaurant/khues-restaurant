@@ -24,7 +24,7 @@ model EmailUnsubscriptionToken {
     createdAt DateTime @default(now())
     expiresAt DateTime // 3 months from createdAt, ample time for customer to click the link if they want
 
-    emailAddress String @unique
+    emailAddress String
 }
 
 model Chat {
