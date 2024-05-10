@@ -156,7 +156,7 @@ export const orderRouter = createTRPCRouter({
           },
         },
         orderBy: {
-          createdAt: "desc",
+          datetimeToPickup: "desc",
         },
       });
 

@@ -487,7 +487,7 @@ function Track() {
                 </div>
 
                 {/* tablet+ */}
-                <div className="baseVertFlex !hidden w-full !items-start gap-2 tablet:flex">
+                <div className="baseVertFlex !hidden w-full !items-start gap-2 tablet:!flex">
                   <div className="baseVertFlex !items-start gap-2 text-sm">
                     <p className="font-semibold underline underline-offset-2">
                       Pickup name
@@ -571,13 +571,13 @@ function Track() {
                       />
                     </motion.div>
 
-                    <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-yellow-500 shadow-lg">
+                    <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-primary shadow-lg">
                       <div className="text-center text-lg font-semibold">
                         Khue&apos;s Rewards
                       </div>
 
                       <div className="baseFlex gap-4 font-bold tracking-wider">
-                        <SideAccentSwirls className="h-6 scale-x-[-1] fill-yellow-500" />
+                        <SideAccentSwirls className="h-6 scale-x-[-1] fill-primary" />
                         <div className="baseVertFlex">
                           <AnimatedNumbers
                             value={rewardsPointsEarned}
@@ -590,11 +590,11 @@ function Track() {
                             points
                           </p>
                         </div>
-                        <SideAccentSwirls className="h-6 fill-yellow-500" />
+                        <SideAccentSwirls className="h-6 fill-primary" />
                       </div>
 
                       <div
-                        className={`baseVertFlex w-full text-sm text-yellow-500`}
+                        className={`baseVertFlex w-full text-sm text-primary`}
                       >
                         {isSignedIn ? (
                           <>

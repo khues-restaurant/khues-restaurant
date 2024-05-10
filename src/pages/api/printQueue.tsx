@@ -1,15 +1,6 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { prisma } from "~/server/db";
 import {
-  Br,
-  Cut,
-  Line,
-  Printer,
-  Text,
-  Row,
-  render,
-} from "react-thermal-printer";
-import {
   type CustomizationCategory,
   type CustomizationChoice,
   type Discount,
@@ -18,33 +9,25 @@ import {
   type OrderItem,
   type OrderItemCustomization,
 } from "@prisma/client";
-import {
-  generatePrintCommandsForImage,
-  generatePrintCommandsForCanvas,
-} from "@vaju/image-thermal-printer";
-// import receiptLine from "receiptline"
-const receiptline = require("receiptline");
+import receiptline, { type Printer } from "receiptline";
 import { format } from "date-fns";
-import { Fragment } from "react";
+import { toZonedTime } from "date-fns-tz";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  // console.dir(req, { depth: null });
-  // ("https://khues-restaurant.vercel.app/api/printQueue?mac=00%3A11%3A62%3A42%3A27%3A03&type=text%2Fplain");
-
   const { token } = req.query;
 
   switch (req.method) {
-    // printer's interval based POST request. Checks every 5 seconds
+    // printer's interval based POST request. Checks every (default of) 5 seconds
     // to see if there are any new print jobs in the queue. Expects a
     // response either way.
     case "POST":
       // checks to see if there are any print jobs in the queue
       const printJobAvailable = await prisma.orderPrintQueue.findFirst({
         orderBy: {
-          createdAt: "desc", // oldest first, so we can pop it off the queue
+          createdAt: "desc", // newest first, just so reprints print asap
         },
         select: {
           id: true,
@@ -52,17 +35,16 @@ export default async function handler(
       });
 
       if (printJobAvailable !== null) {
-        console.log("a job ready", encodeURIComponent(printJobAvailable.id));
+        // console.log("a job ready", encodeURIComponent(printJobAvailable.id));
 
         res.status(200).json({
           jobReady: true,
           mediaTypes: ["application/vnd.star.starprnt"],
           jobToken: encodeURIComponent(printJobAvailable.id),
         });
-        // clientAction: { request: "Encodings", options: "" },
-        // mediaTypes: ["image/png"], // if you need later: also "image/png"
       } else {
-        console.log("no job ready");
+        // console.log("no job ready");
+
         res.status(200).json({ jobReady: false });
       }
 
@@ -70,8 +52,6 @@ export default async function handler(
 
     // printer has requested the latest print job in the queue
     case "GET":
-      // get the "code" query parameter, which corresponds to id of the print job
-
       if (typeof token !== "string") {
         {
           // if there isn't a print job, return a 404
@@ -80,7 +60,7 @@ export default async function handler(
         break;
       }
 
-      // get the oldest print job in the queue
+      // get the requested print job (by token id) from the queue
       const printJob = await prisma.orderPrintQueue.findUnique({
         where: {
           id: token,
@@ -107,19 +87,14 @@ export default async function handler(
             },
           },
         },
-
-        // orderBy: {
-        //   createdAt: "asc", // oldest first, so we can pop it off the queue
-        // },
       });
 
       // if there is a print job, return it
       if (printJob) {
         const data = formatReceipt(printJob.order);
+        console.log(data);
 
-        // also send token to delete the print job from the queue here right?
-
-        const printer = {
+        const printer: Printer = {
           cpl: 48,
           encoding: "cp437",
           upsideDown: false,
@@ -127,16 +102,13 @@ export default async function handler(
           command: "starsbcs",
           cutting: true,
         };
-
-        console.log(data);
-
         const command = receiptline.transform(data, printer);
 
         // slice - removes ESC @ (command initialization) ESC GS a 0 (disable status transmission)
-        const bin = Buffer.from(command.slice(6), "binary");
+        const binaryFormattedData = Buffer.from(command.slice(6), "binary");
 
         res.setHeader("Content-Type", "application/vnd.star.starprnt");
-        res.status(200).send(bin);
+        res.status(200).send(binaryFormattedData);
       } else {
         // if there isn't a print job, return a 404
         res.status(404).json({ message: "No print jobs in the queue" });
@@ -147,9 +119,7 @@ export default async function handler(
     // printer has requested to delete the latest print job in the queue, either due to
     // the print job being successfully printed or due to an error (determined by the printer)
     case "DELETE":
-      // get the "code" query parameter, which corresponds to id of the print job
-
-      console.log("deleting token", token, "from the print queue");
+      // console.log("deleting token", token, "from the print queue");
 
       // delete the print job from the queue
       if (typeof token === "string") {
@@ -170,7 +140,7 @@ export default async function handler(
 
       break;
     default:
-      console.log("not allowed!", req.method, req.url);
+      // console.log("not allowed!", req.method, req.url);
 
       // Block any other type of HTTP method
       res.setHeader("Allow", ["GET", "POST", "DELETE"]);
@@ -197,6 +167,11 @@ type PrintedOrder = Order & {
 // standard
 
 // function formatReceipt(order: PrintedOrder) {
+// const chicagoZonedTime = toZonedTime(
+//   order.datetimeToPickup,
+//   "America/Chicago",
+// );
+
 //   // Separate items into food and alcoholic beverages
 //   const items: {
 //     food: PrintedOrderItem[];
@@ -228,7 +203,7 @@ type PrintedOrder = Order & {
 // -
 // Online Order (Pickup)
 // ^^^${order.firstName} ${order.lastName}
-// ${format(new Date(order.datetimeToPickup), "h:mma 'on' MM/dd/yyyy")}
+// ${format(chicagoZonedTime, "h:mma 'on' MM/dd/yyyy")}
 // "Order #${order.id.substring(0, 6).toUpperCase()}"
 // -`;
 
@@ -314,6 +289,11 @@ type PrintedOrder = Order & {
 // // individual borders
 
 // function formatReceipt(order: PrintedOrder) {
+// const chicagoZonedTime = toZonedTime(
+//   order.datetimeToPickup,
+//   "America/Chicago",
+// );
+//
 //   // Separate items into food and alcoholic beverages
 //   const items: {
 //     food: PrintedOrderItem[];
@@ -346,7 +326,7 @@ type PrintedOrder = Order & {
 // -
 // Online Order (Pickup)
 // ^^^${order.firstName} ${order.lastName}
-// ${format(new Date(order.datetimeToPickup), "h:mma 'on' MM/dd/yyyy")}
+// ${format(chicagoZonedTime, "h:mma 'on' MM/dd/yyyy")}
 // "Order #${order.id.substring(0, 6).toUpperCase()}"
 // {border:space; width:50}`;
 
@@ -439,6 +419,11 @@ type PrintedOrder = Order & {
 // // full borders
 
 function formatReceipt(order: PrintedOrder) {
+  const chicagoZonedTime = toZonedTime(
+    order.datetimeToPickup,
+    "America/Chicago",
+  );
+
   // Separate items into food and alcoholic beverages
   const items: {
     food: PrintedOrderItem[];
@@ -463,17 +448,17 @@ function formatReceipt(order: PrintedOrder) {
 
   // Constructing the receipt using template literals
   let receipt = `
-{width:*}
-{border:line; width:50}
-^^^Khue's
-799 University Ave W, St Paul, MN 55104
-(651) 222-3301
--
-Online Order (Pickup)
-^^^${order.firstName} ${order.lastName}
-${format(new Date(order.datetimeToPickup), "h:mma 'on' MM/dd/yyyy")}
-"Order #${order.id.substring(0, 6).toUpperCase()}"
--`;
+    {width:*}
+    {border:line; width:50}
+    ^^^Khue's
+    799 University Ave W, St Paul, MN 55104
+    (651) 222-3301
+    -
+    Online Order (Pickup)
+    ^^^${order.firstName} ${order.lastName}
+    ${format(chicagoZonedTime, "h:mma 'on' MM/dd/yyyy")}
+    "Order #${order.id.substring(0, 6).toUpperCase()}"
+    -`;
 
   // Food items section
   if (items.food.length > 0) {

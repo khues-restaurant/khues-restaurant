@@ -124,6 +124,14 @@ export default PaymentSuccess;
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const prisma = new PrismaClient();
 
+  if (!ctx.query.session_id || !ctx.query.userId) {
+    return {
+      props: {
+        emailReceiptsAllowed: false,
+      },
+    };
+  }
+
   // maybe could have gotten this through clerk but w/e
 
   const user = await prisma.user.findUnique({

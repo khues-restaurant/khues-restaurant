@@ -555,7 +555,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
             <div className="baseFlex w-full !justify-between">
               <div className="baseVertFlex !items-start gap-4">
                 <div className="text-nowrap">
-                  {format(new Date(order.createdAt), "PPP")}
+                  {format(new Date(order.datetimeToPickup), "PPP")}
                 </div>
                 {/* item image previews + (date + item names) */}
                 <div className="baseFlex relative w-full !justify-start gap-2">
@@ -580,7 +580,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                   {order.orderItems.length > 2 && (
                     <>
                       {order.orderItems.length > 3 ? (
-                        <div className="baseVertFlex size-12 rounded-md border p-1 text-sm">
+                        <div className="baseVertFlex size-12 text-sm">
                           +{order.orderItems.length - 2}
                           <span>more</span>
                         </div>

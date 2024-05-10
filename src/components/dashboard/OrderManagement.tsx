@@ -29,6 +29,7 @@ import { DashboardOrder } from "~/server/api/routers/order";
 import { FaUtensils } from "react-icons/fa6";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import { Separator } from "~/components/ui/separator";
+import { format } from "date-fns";
 
 // type FullOrderItems = OrderItem & {
 //   customizations: OrderItemCustomization[];
@@ -393,9 +394,9 @@ function CustomerOrder({ order, view }: CustomerOrder) {
               <p className="baseFlex gap-2 text-lg font-semibold">
                 <>
                   {view === "completed" && order.orderCompletedAt ? (
-                    <>Completed at {formatTime(order.orderCompletedAt)}</>
+                    <>Completed at {format(order.orderCompletedAt, "h:mm a")}</>
                   ) : (
-                    <>Due at {formatTime(order.datetimeToPickup)}</>
+                    <>Due at {format(order.datetimeToPickup, "h:mm a")}</>
                   )}
                 </>
               </p>
@@ -535,8 +536,24 @@ function OrderItems({ order }: OrderItems) {
       discounts: state.discounts,
     }));
 
+  const [orderBeingReprinted, setOrderBeingReprinted] = useState(false);
+
+  const { mutate: reprintOrder } = api.orderPrintQueue.create.useMutation({
+    onError: (error) => {
+      console.error(error);
+      // toast this error
+    },
+    onSettled: async () => {
+      setOrderBeingReprinted(false);
+    },
+  });
+
   return (
-    <div className="baseVertFlex mt-4 !items-start gap-2 rounded-b-md border-t bg-offwhite p-2 pb-0 pt-4">
+    <div
+      className={`baseVertFlex mt-4 !items-start gap-2 border-t bg-offwhite p-2 pb-0 pt-4
+      ${order.notableUserDescription ? "rounded-md pb-4" : "rounded-b-md"}
+    `}
+    >
       {/* TODO: if chatgpt search reveals this person is influential, put disclaimer right here,
       also obv make the background of the accordion "trigger" goldish */}
 
@@ -613,10 +630,28 @@ function OrderItems({ order }: OrderItems) {
 
       <Button
         variant={"secondary"}
+        disabled={orderBeingReprinted}
         size={"sm"}
         className="mt-4 !self-center text-sm"
+        onClick={() => {
+          setOrderBeingReprinted(true);
+          reprintOrder({ orderId: order.id });
+          // TODO: toast that the order has been reprinted?
+        }}
       >
         Reprint
+        {orderBeingReprinted && (
+          <motion.div
+            key={`${order.id}Spinner`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="inline-block size-1 animate-spin rounded-full border-[2px] border-current border-t-transparent text-offwhite"
+            role="status"
+            aria-label="loading"
+          >
+            <span className="sr-only">Loading...</span>
+          </motion.div>
+        )}
       </Button>
     </div>
   );

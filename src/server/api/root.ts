@@ -14,6 +14,7 @@ import { favoriteRouter } from "~/server/api/routers/favorite";
 import { chatRouter } from "~/server/api/routers/chat";
 import { customizationCategoryRouter } from "~/server/api/routers/customizationCategory";
 import { blacklistedEmailRouter } from "~/server/api/routers/blacklistedEmail";
+import { orderPrintQueueRouter } from "~/server/api/routers/orderPrintQueue";
 
 export const appRouter = createTRPCRouter({
   user: userRouter,
@@ -31,6 +32,7 @@ export const appRouter = createTRPCRouter({
   favorite: favoriteRouter,
   chat: chatRouter,
   blacklistedEmail: blacklistedEmailRouter,
+  orderPrintQueue: orderPrintQueueRouter,
 });
 
 // export type definition of API
