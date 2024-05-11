@@ -137,8 +137,8 @@ function CartSheet({
     useState(false);
 
   useEffect(() => {
-    const filteredRegularItems = [];
     const filteredRewardItems = [];
+    const filteredRegularItems = [];
 
     for (const item of orderDetails.items) {
       if (item.pointReward || item.birthdayReward) {
@@ -148,20 +148,19 @@ function CartSheet({
       }
     }
 
-    if (!isEqual(filteredRewardItems, rewardItems)) {
-      const sortedItems = filteredRewardItems.sort((a, b) => {
-        return a.id - b.id;
-      });
+    const sortedRewardsItems = filteredRewardItems.sort((a, b) => {
+      return a.id - b.id;
+    });
+    const sortedRegularItems = filteredRegularItems.sort((a, b) => {
+      return a.id - b.id;
+    });
 
-      setRewardItems(sortedItems);
+    if (!isEqual(sortedRewardsItems, rewardItems)) {
+      setRewardItems(sortedRewardsItems);
     }
 
-    if (!isEqual(filteredRegularItems, regularItems)) {
-      const sortedItems = filteredRewardItems.sort((a, b) => {
-        return a.id - b.id;
-      });
-
-      setRegularItems(sortedItems);
+    if (!isEqual(sortedRegularItems, regularItems)) {
+      setRegularItems(sortedRegularItems);
     }
   }, [orderDetails, regularItems, rewardItems]);
 
