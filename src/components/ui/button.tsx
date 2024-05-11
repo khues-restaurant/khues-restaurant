@@ -85,21 +85,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <Comp
-        onMouseEnter={() => {
-          // if (variant === "ghost") {
-          //   setAlternateIndicator(true);
-          //   return;
-          // } ah yeah idk best way since doing every logical check through just brightness is
-          // pretty ugly
-
-          setBrightness(0.9);
-        }}
-        onMouseLeave={() => setBrightness(1)}
+        onMouseEnter={() => setBrightness(0.9)}
         onPointerDown={() => setBrightness(0.75)}
         onPointerUp={() => setBrightness(1)}
         onPointerLeave={() => setBrightness(1)}
         style={{
-          filter: `brightness(${brightness}`,
+          // filter: `brightness(${brightness}`,
           background:
             variant === "rewards"
               ? "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.70 0.13 87.8) 100%)"
@@ -108,6 +99,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(
           buttonVariants({ variant, size, className }),
           getDynamicStyles(),
+          "hover:brightness-90 active:brightness-75",
         )}
         ref={ref}
         {...props}
