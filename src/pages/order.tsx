@@ -315,25 +315,29 @@ function OrderNow() {
           <div className="baseFlex z-10 h-12 w-full bg-offwhite shadow-lg tablet:shadow-none">
             {/* unsure of why container increases in size a bit on desktop when sticky becomes active..  */}
             <AnimatePresence mode="popLayout">
-              <Sticky
-                top={viewportLabel.includes("mobile") ? 95 : 112}
-                activeClass="bg-offwhite h-12"
-                innerActiveClass="bg-offwhite baseFlex px-2 py-1 h-16 shadow-lg tablet:shadow-none"
-                innerClass="bg-offwhite w-full h-12"
-                className="baseFlex w-full bg-offwhite p-2"
-                // enabled={!isDrawerOpen} // prevents sticky from activating when drawer is open
-              >
-                {!isDrawerOpen && (
-                  <motion.div
-                    key={"menuCategoriesPicker"}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{
-                      duration: 1,
-                      ease: "easeInOut",
+              {true && (
+                <motion.div
+                  key={"menuCategoriesPicker"}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    duration: 0.35,
+                    ease: "easeInOut",
+                  }}
+                  className="baseFlex w-full"
+                >
+                  <Sticky
+                    top={viewportLabel.includes("mobile") ? 95 : 112}
+                    activeClass="bg-offwhite h-12"
+                    innerActiveClass="bg-offwhite baseFlex px-2 py-1 h-16 shadow-lg tablet:shadow-none"
+                    innerClass="bg-offwhite w-full h-12"
+                    className="baseFlex w-full bg-offwhite p-2"
+                    shouldFreeze={() => {
+                      console.log(isDrawerOpen);
+                      return isDrawerOpen;
                     }}
-                    className="baseFlex w-full"
+                    // enabled={!isDrawerOpen} // prevents sticky from activating when drawer is open
                   >
                     <Carousel
                       setApi={setStickyCategoriesApi}
@@ -384,7 +388,7 @@ function OrderNow() {
                             userRecentOrders.length > 0)) && (
                           <Separator
                             orientation="vertical"
-                            className="mx-2 h-[35px] w-[2px]" // why did h-full not work here?
+                            className="mx-2 h-[35px] w-[2px]"
                           />
                         )}
 
@@ -449,9 +453,9 @@ function OrderNow() {
                         className="h-1 bg-primary"
                       ></div>
                     </div>
-                  </motion.div>
-                )}
-              </Sticky>
+                  </Sticky>
+                </motion.div>
+              )}
             </AnimatePresence>
           </div>
         )}
