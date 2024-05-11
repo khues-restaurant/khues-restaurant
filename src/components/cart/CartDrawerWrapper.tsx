@@ -32,7 +32,6 @@ function CartDrawerWrapper({
 
   return (
     <Drawer
-      noBodyStyles={true}
       open={showCartDrawer}
       onOpenChange={(open) => {
         setShowCartDrawer(open);

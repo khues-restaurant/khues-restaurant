@@ -325,11 +325,12 @@ function OrderNow() {
             {/* unsure of why container increases in size a bit on desktop when sticky becomes active..  */}
 
             <Sticky
-              top={"#header"}
+              top={viewportLabel.includes("mobile") ? 95 : 112}
               activeClass="bg-offwhite h-16"
               innerActiveClass="bg-offwhite px-2 pt-3.5 h-16 shadow-lg tablet:shadow-none"
               innerClass="bg-offwhite w-full h-12"
               className="baseFlex w-full bg-offwhite p-2"
+              enabled={!isDrawerOpen} // prevents sticky from activating when drawer is open
             >
               <Carousel
                 setApi={setStickyCategoriesApi}
@@ -655,7 +656,6 @@ function OrderNow() {
 
       {viewportLabel.includes("mobile") ? (
         <Drawer
-          noBodyStyles={true}
           open={Boolean(isDrawerOpen && itemToCustomize)}
           onOpenChange={(open) => {
             if (!open) {
