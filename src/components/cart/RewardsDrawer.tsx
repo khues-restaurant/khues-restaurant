@@ -437,7 +437,10 @@ function RewardMenuItem({
                 items: [
                   ...orderDetails.items,
                   {
-                    id: crypto.randomUUID(),
+                    id:
+                      orderDetails.items.length === 0
+                        ? 0
+                        : orderDetails.items.at(-1)!.id + 1,
                     itemId: menuItem.id,
                     name: menuItem.name,
                     customizations: getDefaultCustomizationChoices(menuItem),

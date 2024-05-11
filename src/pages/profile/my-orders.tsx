@@ -319,7 +319,10 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
             items: [
               ...orderDetails.items,
               ...data.validItems.map((item) => ({
-                id: crypto.randomUUID(),
+                id:
+                  orderDetails.items.length === 0
+                    ? 0
+                    : orderDetails.items.at(-1)!.id + 1,
                 itemId: item.itemId,
                 name: item.name,
                 customizations: item.customizations,
@@ -327,6 +330,13 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                 includeDietaryRestrictions: item.includeDietaryRestrictions,
                 quantity: item.quantity,
                 price: item.price,
+                isChefsChoice: item.isChefsChoice,
+                isAlcoholic: item.isAlcoholic,
+                isVegetarian: item.isVegetarian,
+                isVegan: item.isVegan,
+                isGlutenFree: item.isGlutenFree,
+                showUndercookedOrRawDisclaimer:
+                  item.showUndercookedOrRawDisclaimer,
                 discountId: item.discountId,
                 pointReward: item.pointReward,
                 birthdayReward: item.birthdayReward,
@@ -435,9 +445,13 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                             userId,
                             orderDetails: {
                               datetimeToPickUp: new Date(),
+                              isASAP: false,
                               includeNapkinsAndUtensils: false,
                               items: order.orderItems.map((item) => ({
-                                id: crypto.randomUUID(),
+                                id:
+                                  orderDetails.items.length === 0
+                                    ? 0
+                                    : orderDetails.items.at(-1)!.id + 1,
                                 itemId: item.menuItemId,
                                 name: item.name,
                                 customizations: item.customizations,
@@ -446,6 +460,13 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                                   item.includeDietaryRestrictions,
                                 quantity: item.quantity,
                                 price: item.price,
+                                isChefsChoice: item.isChefsChoice,
+                                isAlcoholic: item.isAlcoholic,
+                                isVegetarian: item.isVegetarian,
+                                isVegan: item.isVegan,
+                                isGlutenFree: item.isGlutenFree,
+                                showUndercookedOrRawDisclaimer:
+                                  item.showUndercookedOrRawDisclaimer,
                                 discountId: item.discountId,
                                 pointReward: item.pointReward,
                                 birthdayReward: item.birthdayReward,
@@ -612,8 +633,12 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                             orderDetails: {
                               datetimeToPickUp: new Date(),
                               includeNapkinsAndUtensils: false,
+                              isASAP: false,
                               items: order.orderItems.map((item) => ({
-                                id: crypto.randomUUID(),
+                                id:
+                                  orderDetails.items.length === 0
+                                    ? 0
+                                    : orderDetails.items.at(-1)!.id + 1,
                                 itemId: item.menuItemId,
                                 name: item.name,
                                 customizations: item.customizations,
@@ -622,6 +647,13 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                                   item.includeDietaryRestrictions,
                                 quantity: item.quantity,
                                 price: item.price,
+                                isChefsChoice: item.isChefsChoice,
+                                isAlcoholic: item.isAlcoholic,
+                                isVegetarian: item.isVegetarian,
+                                isVegan: item.isVegan,
+                                isGlutenFree: item.isGlutenFree,
+                                showUndercookedOrRawDisclaimer:
+                                  item.showUndercookedOrRawDisclaimer,
                                 discountId: item.discountId,
                                 pointReward: item.pointReward,
                                 birthdayReward: item.birthdayReward,

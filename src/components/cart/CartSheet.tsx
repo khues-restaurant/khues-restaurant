@@ -149,11 +149,19 @@ function CartSheet({
     }
 
     if (!isEqual(filteredRewardItems, rewardItems)) {
-      setRewardItems(filteredRewardItems);
+      const sortedItems = filteredRewardItems.sort((a, b) => {
+        return a.id - b.id;
+      });
+
+      setRewardItems(sortedItems);
     }
 
     if (!isEqual(filteredRegularItems, regularItems)) {
-      setRegularItems(filteredRegularItems);
+      const sortedItems = filteredRewardItems.sort((a, b) => {
+        return a.id - b.id;
+      });
+
+      setRegularItems(sortedItems);
     }
   }, [orderDetails, regularItems, rewardItems]);
 

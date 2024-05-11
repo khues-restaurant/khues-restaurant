@@ -946,7 +946,10 @@ function MenuItemPreviewButton({
                     discountId: activeDiscount?.id ?? null,
 
                     // only necessary to fit Item shape
-                    id: menuItem.id,
+                    id:
+                      orderDetails.items.length === 0
+                        ? 0
+                        : orderDetails.items.at(-1)!.id + 1,
                     itemId: menuItem.id,
                     customizations: {}, // not necessary since all default choices are already included in price
                     includeDietaryRestrictions: false,
@@ -1005,7 +1008,10 @@ function MenuItemPreviewButton({
                 items: [
                   ...orderDetails.items,
                   {
-                    id: crypto.randomUUID(),
+                    id:
+                      orderDetails.items.length === 0
+                        ? 0
+                        : orderDetails.items.at(-1)!.id + 1,
                     itemId: menuItem.id,
                     name: menuItem.name,
                     customizations: getDefaultCustomizationChoices(menuItem),
@@ -1149,7 +1155,10 @@ function PreviousOrder({ order }: PreviousOrder) {
             items: [
               ...orderDetails.items,
               ...data.validItems.map((item) => ({
-                id: crypto.randomUUID(),
+                id:
+                  orderDetails.items.length === 0
+                    ? 0
+                    : orderDetails.items.at(-1)!.id + 1,
                 itemId: item.itemId,
                 name: item.name,
                 customizations: item.customizations,
@@ -1272,7 +1281,10 @@ function PreviousOrder({ order }: PreviousOrder) {
                   isASAP: orderDetails.isASAP,
                   includeNapkinsAndUtensils: false,
                   items: order.orderItems.map((item) => ({
-                    id: crypto.randomUUID(),
+                    id:
+                      orderDetails.items.length === 0
+                        ? 0
+                        : orderDetails.items.at(-1)!.id + 1,
                     itemId: item.menuItemId,
                     name: item.name,
                     customizations: item.customizations,
