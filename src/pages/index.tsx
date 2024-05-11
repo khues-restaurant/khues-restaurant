@@ -702,46 +702,15 @@ export default function Home() {
 
         {/* Rewards program promo section */}
         {isLoaded && !isSignedIn && (
-          // <div
-          //   style={
-          //     {
-          //       // background:
-          //       //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
-          //       // border: "4px solid transparent" /* Set the border width */,
-          //       // borderImage:
-          //       //   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%) 1 stretch",
-          //     }
-          //   }
-          //   className="baseVertFlex rewardsGoldBorder w-full max-w-sm gap-4 rounded-md p-4 !pb-8 text-yellow-500 shadow-md tablet:max-w-2xl tablet:p-8"
-          // >
-          //   <div className="baseFlex gap-4">
-          //     <SideAccentSwirls className="h-5 scale-x-[-1] fill-yellow-500" />
-
-          //     <p className="text-center font-semibold tablet:text-lg">
-          //       Join our rewards program today!
-          //     </p>
-          //     <SideAccentSwirls className="h-5 fill-yellow-500" />
-          //   </div>
-
-          //   {/* idk both left/justified and text-center look off here */}
-          //   <p className="text-center">
-          //     Valued customers enjoy exclusive rewards: earn points with every
-          //     order to redeem for complimentary meals, gain early access to new
-          //     dishes, and celebrate your birthday with a free dessert of your
-          //     choice!
-          //   </p>
-
-          //   <WideFancySwirls />
-
-          // </div>
-
-          <div className="baseVertFlex mb-16 mt-8 max-w-xl gap-8 border-y-4 border-b-borderGold border-t-borderGold !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
-            <p className="text-center">
-              Valued customers enjoy exclusive rewards: earn points with every
-              order to redeem for complimentary meals, gain early access to new
-              dishes, and celebrate your birthday with a free dessert of your
-              choice!
-            </p>
+          <div className="baseVertFlex mb-16 mt-8 w-screen max-w-xl gap-8 border-y-4 border-y-gold !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
+            <span className="w-64 text-center font-semibold">
+              Join Khue&apos;s Rewards and unlock exclusive benefits!
+            </span>
+            <span className="text-center text-sm tablet:text-base">
+              With every order, you&apos;ll earn points which can be redeemed
+              for complimentary meals. Plus, get early access to new dishes and
+              celebrate your birthday with a free dessert of your choice!
+            </span>
 
             <SignUpButton mode="modal">
               <Button
