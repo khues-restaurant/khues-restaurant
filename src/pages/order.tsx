@@ -312,89 +312,48 @@ function OrderNow() {
 
       <div className="baseVertFlex relative size-full tablet:w-3/4">
         {ableToRenderMainContent() && (
-          <motion.div
-            key={"menuCategoriesPicker"}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{
-              duration: 0.5,
-            }}
-            className="baseFlex z-10 size-full bg-offwhite shadow-lg tablet:shadow-none"
-          >
+          <div className="baseFlex z-10 h-12 w-full bg-offwhite shadow-lg tablet:shadow-none">
             {/* unsure of why container increases in size a bit on desktop when sticky becomes active..  */}
-
-            <Sticky
-              top={viewportLabel.includes("mobile") ? 95 : 112}
-              activeClass="bg-offwhite h-16"
-              innerActiveClass="bg-offwhite px-2 pt-3.5 h-16 shadow-lg tablet:shadow-none"
-              innerClass="bg-offwhite w-full h-12"
-              className="baseFlex w-full bg-offwhite p-2"
-              enabled={!isDrawerOpen} // prevents sticky from activating when drawer is open
-            >
-              <Carousel
-                setApi={setStickyCategoriesApi}
-                opts={{
-                  breakpoints: {
-                    "(min-width: 1000px)": {
-                      active: false,
-                    },
-                  },
-                  dragFree: true,
-                  align: "start",
-                }}
-                className="baseFlex w-full"
+            <AnimatePresence mode="popLayout">
+              <Sticky
+                top={viewportLabel.includes("mobile") ? 95 : 112}
+                activeClass="bg-offwhite h-12"
+                innerActiveClass="bg-offwhite baseFlex px-2 py-1 h-16 shadow-lg tablet:shadow-none"
+                innerClass="bg-offwhite w-full h-12"
+                className="baseFlex w-full bg-offwhite p-2"
+                // enabled={!isDrawerOpen} // prevents sticky from activating when drawer is open
               >
-                <CarouselContent>
-                  {userFavoriteItemIds.length > 0 && (
-                    <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
-                      <MenuCategoryButton
-                        name={"Favorites"}
-                        listOrder={menuCategoryIndicies!.Favorites!}
-                        currentlyInViewCategory={currentlyInViewCategory}
-                        setProgrammaticallyScrolling={
-                          setProgrammaticallyScrolling
-                        }
-                        stickyCategoriesApi={stickyCategoriesApi}
-                      />
-                    </CarouselItem>
-                  )}
-
-                  {userRecentOrders && userRecentOrders.length > 0 && (
-                    <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
-                      <MenuCategoryButton
-                        name={"Recent orders"}
-                        listOrder={menuCategoryIndicies!["Recent orders"]!}
-                        currentlyInViewCategory={currentlyInViewCategory}
-                        setProgrammaticallyScrolling={
-                          setProgrammaticallyScrolling
-                        }
-                        stickyCategoriesApi={stickyCategoriesApi}
-                      />
-                    </CarouselItem>
-                  )}
-
-                  {(userFavoriteItemIds.length > 0 ||
-                    (userRecentOrders && userRecentOrders.length > 0)) && (
-                    <Separator
-                      orientation="vertical"
-                      className="mx-2 h-[35px] w-[2px]" // why did h-full not work here?
-                    />
-                  )}
-
-                  {menuCategories?.map((category) => {
-                    if (category.name === "Beer") {
-                      return (
-                        <div key={category.id} className="baseFlex gap-2">
-                          <Separator
-                            orientation="vertical"
-                            className="ml-4 mr-2 h-full w-[2px]"
-                          />
+                {!isDrawerOpen && (
+                  <motion.div
+                    key={"menuCategoriesPicker"}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{
+                      duration: 1,
+                      ease: "easeInOut",
+                    }}
+                    className="baseFlex w-full"
+                  >
+                    <Carousel
+                      setApi={setStickyCategoriesApi}
+                      opts={{
+                        breakpoints: {
+                          "(min-width: 1000px)": {
+                            active: false,
+                          },
+                        },
+                        dragFree: true,
+                        align: "start",
+                      }}
+                      className="baseFlex w-full"
+                    >
+                      <CarouselContent>
+                        {userFavoriteItemIds.length > 0 && (
                           <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
                             <MenuCategoryButton
-                              key={category.id}
-                              name={category.name}
-                              listOrder={menuCategoryIndicies!.Beer!}
+                              name={"Favorites"}
+                              listOrder={menuCategoryIndicies!.Favorites!}
                               currentlyInViewCategory={currentlyInViewCategory}
                               setProgrammaticallyScrolling={
                                 setProgrammaticallyScrolling
@@ -402,43 +361,99 @@ function OrderNow() {
                               stickyCategoriesApi={stickyCategoriesApi}
                             />
                           </CarouselItem>
-                        </div>
-                      );
-                    }
+                        )}
 
-                    return (
-                      <CarouselItem
-                        className="baseFlex basis-1/5 tablet:basis-auto"
-                        key={category.id}
-                      >
-                        <MenuCategoryButton
-                          name={category.name}
-                          listOrder={menuCategoryIndicies![category.name] ?? 0}
-                          currentlyInViewCategory={currentlyInViewCategory}
-                          setProgrammaticallyScrolling={
-                            setProgrammaticallyScrolling
+                        {userRecentOrders && userRecentOrders.length > 0 && (
+                          <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
+                            <MenuCategoryButton
+                              name={"Recent orders"}
+                              listOrder={
+                                menuCategoryIndicies!["Recent orders"]!
+                              }
+                              currentlyInViewCategory={currentlyInViewCategory}
+                              setProgrammaticallyScrolling={
+                                setProgrammaticallyScrolling
+                              }
+                              stickyCategoriesApi={stickyCategoriesApi}
+                            />
+                          </CarouselItem>
+                        )}
+
+                        {(userFavoriteItemIds.length > 0 ||
+                          (userRecentOrders &&
+                            userRecentOrders.length > 0)) && (
+                          <Separator
+                            orientation="vertical"
+                            className="mx-2 h-[35px] w-[2px]" // why did h-full not work here?
+                          />
+                        )}
+
+                        {menuCategories?.map((category) => {
+                          if (category.name === "Beer") {
+                            return (
+                              <div key={category.id} className="baseFlex gap-2">
+                                <Separator
+                                  orientation="vertical"
+                                  className="ml-4 mr-2 h-full w-[2px]"
+                                />
+                                <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
+                                  <MenuCategoryButton
+                                    key={category.id}
+                                    name={category.name}
+                                    listOrder={menuCategoryIndicies!.Beer!}
+                                    currentlyInViewCategory={
+                                      currentlyInViewCategory
+                                    }
+                                    setProgrammaticallyScrolling={
+                                      setProgrammaticallyScrolling
+                                    }
+                                    stickyCategoriesApi={stickyCategoriesApi}
+                                  />
+                                </CarouselItem>
+                              </div>
+                            );
                           }
-                          stickyCategoriesApi={stickyCategoriesApi}
-                        />
-                      </CarouselItem>
-                    );
-                  })}
-                </CarouselContent>
-              </Carousel>
 
-              {/* Custom scrollbar indicating scroll progress */}
+                          return (
+                            <CarouselItem
+                              className="baseFlex basis-1/5 tablet:basis-auto"
+                              key={category.id}
+                            >
+                              <MenuCategoryButton
+                                name={category.name}
+                                listOrder={
+                                  menuCategoryIndicies![category.name] ?? 0
+                                }
+                                currentlyInViewCategory={
+                                  currentlyInViewCategory
+                                }
+                                setProgrammaticallyScrolling={
+                                  setProgrammaticallyScrolling
+                                }
+                                stickyCategoriesApi={stickyCategoriesApi}
+                              />
+                            </CarouselItem>
+                          );
+                        })}
+                      </CarouselContent>
+                    </Carousel>
 
-              {/* ah we want relative + -b-4 when not sticky
+                    {/* Custom scrollbar indicating scroll progress */}
+
+                    {/* ah we want relative + -b-4 when not sticky
                     and then absolute -b-0 or w/e when sticky */}
 
-              <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-200">
-                <div
-                  style={{ width: `${scrollProgress}%` }}
-                  className="h-1 bg-primary"
-                ></div>
-              </div>
-            </Sticky>
-          </motion.div>
+                    <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-200">
+                      <div
+                        style={{ width: `${scrollProgress}%` }}
+                        className="h-1 bg-primary"
+                      ></div>
+                    </div>
+                  </motion.div>
+                )}
+              </Sticky>
+            </AnimatePresence>
+          </div>
         )}
 
         <AnimatePresence mode="popLayout">
