@@ -313,150 +313,122 @@ function OrderNow() {
       <div className="baseVertFlex relative size-full tablet:w-3/4">
         {ableToRenderMainContent() && (
           <div className="baseFlex z-10 h-12 w-full bg-offwhite shadow-lg tablet:shadow-none">
-            {/* unsure of why container increases in size a bit on desktop when sticky becomes active..  */}
-            <AnimatePresence mode="popLayout">
-              {true && (
-                <motion.div
-                  key={"menuCategoriesPicker"}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{
-                    duration: 0.35,
-                    ease: "easeInOut",
-                  }}
-                  className="baseFlex w-full"
-                >
-                  <Sticky
-                    top={viewportLabel.includes("mobile") ? 95 : 112}
-                    activeClass="bg-offwhite h-12"
-                    innerActiveClass="bg-offwhite baseFlex px-2 py-1 h-16 shadow-lg tablet:shadow-none"
-                    innerClass="bg-offwhite w-full h-12"
-                    className="baseFlex w-full bg-offwhite p-2"
-                    shouldFreeze={() => {
-                      console.log(isDrawerOpen);
-                      return isDrawerOpen;
-                    }}
-                    // enabled={!isDrawerOpen} // prevents sticky from activating when drawer is open
-                  >
-                    <Carousel
-                      setApi={setStickyCategoriesApi}
-                      opts={{
-                        breakpoints: {
-                          "(min-width: 1000px)": {
-                            active: false,
-                          },
-                        },
-                        dragFree: true,
-                        align: "start",
-                      }}
-                      className="baseFlex w-full"
-                    >
-                      <CarouselContent>
-                        {userFavoriteItemIds.length > 0 && (
-                          <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
-                            <MenuCategoryButton
-                              name={"Favorites"}
-                              listOrder={menuCategoryIndicies!.Favorites!}
-                              currentlyInViewCategory={currentlyInViewCategory}
-                              setProgrammaticallyScrolling={
-                                setProgrammaticallyScrolling
-                              }
-                              stickyCategoriesApi={stickyCategoriesApi}
-                            />
-                          </CarouselItem>
-                        )}
+            <Sticky
+              top={viewportLabel.includes("mobile") ? 95 : 112}
+              activeClass="bg-offwhite h-12"
+              innerActiveClass="bg-offwhite baseFlex px-2 py-1 h-16 shadow-lg tablet:shadow-none"
+              innerClass="bg-offwhite w-full h-12"
+              className="baseFlex w-full bg-offwhite p-2"
+              shouldFreeze={() => {
+                return isDrawerOpen;
+              }}
+            >
+              <Carousel
+                setApi={setStickyCategoriesApi}
+                opts={{
+                  breakpoints: {
+                    "(min-width: 1000px)": {
+                      active: false,
+                    },
+                  },
+                  dragFree: true,
+                  align: "start",
+                }}
+                className="baseFlex w-full"
+              >
+                <CarouselContent>
+                  {userFavoriteItemIds.length > 0 && (
+                    <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
+                      <MenuCategoryButton
+                        name={"Favorites"}
+                        listOrder={menuCategoryIndicies!.Favorites!}
+                        currentlyInViewCategory={currentlyInViewCategory}
+                        setProgrammaticallyScrolling={
+                          setProgrammaticallyScrolling
+                        }
+                        stickyCategoriesApi={stickyCategoriesApi}
+                      />
+                    </CarouselItem>
+                  )}
 
-                        {userRecentOrders && userRecentOrders.length > 0 && (
-                          <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
-                            <MenuCategoryButton
-                              name={"Recent orders"}
-                              listOrder={
-                                menuCategoryIndicies!["Recent orders"]!
-                              }
-                              currentlyInViewCategory={currentlyInViewCategory}
-                              setProgrammaticallyScrolling={
-                                setProgrammaticallyScrolling
-                              }
-                              stickyCategoriesApi={stickyCategoriesApi}
-                            />
-                          </CarouselItem>
-                        )}
+                  {userRecentOrders && userRecentOrders.length > 0 && (
+                    <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
+                      <MenuCategoryButton
+                        name={"Recent orders"}
+                        listOrder={menuCategoryIndicies!["Recent orders"]!}
+                        currentlyInViewCategory={currentlyInViewCategory}
+                        setProgrammaticallyScrolling={
+                          setProgrammaticallyScrolling
+                        }
+                        stickyCategoriesApi={stickyCategoriesApi}
+                      />
+                    </CarouselItem>
+                  )}
 
-                        {(userFavoriteItemIds.length > 0 ||
-                          (userRecentOrders &&
-                            userRecentOrders.length > 0)) && (
+                  {(userFavoriteItemIds.length > 0 ||
+                    (userRecentOrders && userRecentOrders.length > 0)) && (
+                    <Separator
+                      orientation="vertical"
+                      className="mx-2 h-[35px] w-[2px]"
+                    />
+                  )}
+
+                  {menuCategories?.map((category) => {
+                    if (category.name === "Beer") {
+                      return (
+                        <div key={category.id} className="baseFlex gap-2">
                           <Separator
                             orientation="vertical"
-                            className="mx-2 h-[35px] w-[2px]"
+                            className="ml-4 mr-2 h-full w-[2px]"
                           />
-                        )}
-
-                        {menuCategories?.map((category) => {
-                          if (category.name === "Beer") {
-                            return (
-                              <div key={category.id} className="baseFlex gap-2">
-                                <Separator
-                                  orientation="vertical"
-                                  className="ml-4 mr-2 h-full w-[2px]"
-                                />
-                                <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
-                                  <MenuCategoryButton
-                                    key={category.id}
-                                    name={category.name}
-                                    listOrder={menuCategoryIndicies!.Beer!}
-                                    currentlyInViewCategory={
-                                      currentlyInViewCategory
-                                    }
-                                    setProgrammaticallyScrolling={
-                                      setProgrammaticallyScrolling
-                                    }
-                                    stickyCategoriesApi={stickyCategoriesApi}
-                                  />
-                                </CarouselItem>
-                              </div>
-                            );
-                          }
-
-                          return (
-                            <CarouselItem
-                              className="baseFlex basis-1/5 tablet:basis-auto"
+                          <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
+                            <MenuCategoryButton
                               key={category.id}
-                            >
-                              <MenuCategoryButton
-                                name={category.name}
-                                listOrder={
-                                  menuCategoryIndicies![category.name] ?? 0
-                                }
-                                currentlyInViewCategory={
-                                  currentlyInViewCategory
-                                }
-                                setProgrammaticallyScrolling={
-                                  setProgrammaticallyScrolling
-                                }
-                                stickyCategoriesApi={stickyCategoriesApi}
-                              />
-                            </CarouselItem>
-                          );
-                        })}
-                      </CarouselContent>
-                    </Carousel>
+                              name={category.name}
+                              listOrder={menuCategoryIndicies!.Beer!}
+                              currentlyInViewCategory={currentlyInViewCategory}
+                              setProgrammaticallyScrolling={
+                                setProgrammaticallyScrolling
+                              }
+                              stickyCategoriesApi={stickyCategoriesApi}
+                            />
+                          </CarouselItem>
+                        </div>
+                      );
+                    }
 
-                    {/* Custom scrollbar indicating scroll progress */}
+                    return (
+                      <CarouselItem
+                        className="baseFlex basis-1/5 tablet:basis-auto"
+                        key={category.id}
+                      >
+                        <MenuCategoryButton
+                          name={category.name}
+                          listOrder={menuCategoryIndicies![category.name] ?? 0}
+                          currentlyInViewCategory={currentlyInViewCategory}
+                          setProgrammaticallyScrolling={
+                            setProgrammaticallyScrolling
+                          }
+                          stickyCategoriesApi={stickyCategoriesApi}
+                        />
+                      </CarouselItem>
+                    );
+                  })}
+                </CarouselContent>
+              </Carousel>
 
-                    {/* ah we want relative + -b-4 when not sticky
+              {/* Custom scrollbar indicating scroll progress */}
+
+              {/* ah we want relative + -b-4 when not sticky
                     and then absolute -b-0 or w/e when sticky */}
 
-                    <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-200">
-                      <div
-                        style={{ width: `${scrollProgress}%` }}
-                        className="h-1 bg-primary"
-                      ></div>
-                    </div>
-                  </Sticky>
-                </motion.div>
-              )}
-            </AnimatePresence>
+              <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-200">
+                <div
+                  style={{ width: `${scrollProgress}%` }}
+                  className="h-1 bg-primary"
+                ></div>
+              </div>
+            </Sticky>
           </div>
         )}
 
