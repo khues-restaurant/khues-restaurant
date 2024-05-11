@@ -75,7 +75,7 @@ function ItemCustomizationDialog({
           setIsDialogOpen(false);
           setTimeout(() => {
             setItemToCustomize(null);
-          }, 300);
+          }, 150);
         }
       }}
     >

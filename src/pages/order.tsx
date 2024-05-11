@@ -317,7 +317,9 @@ function OrderNow() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{
+              duration: 0.5,
+            }}
             className="baseFlex z-10 size-full bg-offwhite shadow-lg tablet:shadow-none"
           >
             {/* unsure of why container increases in size a bit on desktop when sticky becomes active..  */}
@@ -328,8 +330,6 @@ function OrderNow() {
               innerActiveClass="bg-offwhite px-2 pt-3.5 h-16 shadow-lg tablet:shadow-none"
               innerClass="bg-offwhite w-full h-12"
               className="baseFlex w-full bg-offwhite p-2"
-              enabled={!isDrawerOpen} // not my favorite but gets rid of flicker from
-              // when we tried shouldFreeze prop approach
             >
               <Carousel
                 setApi={setStickyCategoriesApi}
@@ -655,13 +655,12 @@ function OrderNow() {
 
       {viewportLabel.includes("mobile") ? (
         <Drawer
+          noBodyStyles={true}
           open={Boolean(isDrawerOpen && itemToCustomize)}
           onOpenChange={(open) => {
             if (!open) {
               setIsDrawerOpen(false);
-              setTimeout(() => {
-                setItemToCustomize(null);
-              }, 300);
+              setItemToCustomize(null);
             }
           }}
         >
