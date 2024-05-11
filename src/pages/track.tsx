@@ -178,7 +178,7 @@ function Track() {
                 <div className="relative h-10 w-full overflow-hidden rounded-full border-2 border-primary shadow-md ">
                   <div className="baseFlex absolute left-0 top-0 size-full">
                     {/* pre-first checkpoint */}
-                    <div className="relative h-full w-[21%]">
+                    <div className="relative h-full w-[24%] tablet:w-[20%]">
                       <motion.div
                         initial={{ scaleX: "0%" }}
                         animate={{ scaleX: "100%" }}
@@ -197,7 +197,7 @@ function Track() {
                     {/* first checkpoint w/ animated checkmark */}
                     <div
                       ref={(el) => (targetRefs.current[0] = el)}
-                      className="absolute left-[14.25%] top-1 z-10"
+                      className="absolute left-[11%] top-1 z-10"
                     >
                       <Step
                         status={
@@ -208,7 +208,7 @@ function Track() {
                     </div>
 
                     {/* pre-second checkpoint */}
-                    <div className="relative h-full w-[35%]">
+                    <div className="relative h-full w-[37%] tablet:w-[35%]">
                       {(orderStatus === "inProgress" ||
                         orderStatus === "readyForPickup") && (
                         <motion.div
@@ -230,7 +230,7 @@ function Track() {
                     {/* second checkpoint w/ animated checkmark */}
                     <div
                       ref={(el) => (targetRefs.current[1] = el)}
-                      className="absolute left-[47.15%] top-1 z-10"
+                      className="absolute left-[45%] top-1 z-10"
                     >
                       <Step
                         status={
@@ -245,18 +245,15 @@ function Track() {
                       />
                     </div>
 
-                    {/* pre-third checkpoint */}
-                    <div className="relative h-full w-[35%]">
+                    {/* pre + post third checkpoint */}
+                    <div className="relative h-full w-[40%] tablet:w-[46%]">
                       {orderStatus === "readyForPickup" && (
                         <motion.div
                           initial={{ scaleX: "0%" }}
                           animate={{ scaleX: "100%" }}
                           transition={{
                             duration: 1,
-                            ease: "easeOut", // TODO: probably need another state to check and see if the time elapsed
-                            // on this component is greater than a few seconds, and only if so do you want this to be easeOut,
-                            // since if you view tracking page when order is ready for pickup, you want this pre-third
-                            // part to be linear
+                            ease: "easeOut",
                             delay: 3,
                           }}
                           className="absolute left-0 top-0 size-full origin-left bg-primary"
@@ -277,22 +274,6 @@ function Track() {
                         }
                         delay={3.75}
                       />
-                    </div>
-
-                    {/* post-third checkpoint */}
-                    <div className="relative h-full w-[15%]">
-                      {orderStatus === "readyForPickup" && (
-                        <motion.div
-                          initial={{ scaleX: "0%" }}
-                          animate={{ scaleX: "100%" }}
-                          transition={{
-                            duration: 1,
-                            ease: "easeOut",
-                            delay: 4,
-                          }}
-                          className="absolute left-0 top-0 size-full origin-left bg-primary"
-                        ></motion.div>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -400,11 +381,12 @@ function Track() {
                   </motion.div>
                 </div>
               </div>
+
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1, delay: 1.5 }}
-                className="baseFlex w-full gap-4"
+                className="baseFlex w-full gap-4 overflow-x-hidden"
               >
                 <AnimatePresence mode="popLayout">
                   {orderStatus === "orderPlaced" && (
@@ -447,6 +429,7 @@ function Track() {
                   )}
                 </AnimatePresence>
               </motion.div>
+
               <Separator className="w-full" />
               {/* rewards + pickup time + address */}
               <div className="baseVertFlex w-full gap-8">
