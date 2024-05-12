@@ -1,10 +1,11 @@
 import MobileHeader from "~/components/headers/MobileHeader";
 import DesktopHeader from "~/components/headers/DesktopHeader";
-import useGetViewportLabel from "~/hooks/useGetViewportLabel";
+import { useMainStore } from "~/stores/MainStore";
 
 function HeaderShell() {
-  const viewportLabel = useGetViewportLabel();
-  // maybe want to also expose width/height from hook as well?
+  const { viewportLabel } = useMainStore((state) => ({
+    viewportLabel: state.viewportLabel,
+  }));
 
   return (
     <>

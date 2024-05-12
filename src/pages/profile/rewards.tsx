@@ -13,7 +13,6 @@ import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { useToast } from "~/components/ui/use-toast";
 import useGetUserId from "~/hooks/useGetUserId";
-import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
@@ -50,9 +49,10 @@ function Rewards({
     enabled: Boolean(userId && isSignedIn),
   });
 
-  const { menuItems, orderDetails } = useMainStore((state) => ({
+  const { menuItems, orderDetails, viewportLabel } = useMainStore((state) => ({
     menuItems: state.menuItems,
     orderDetails: state.orderDetails,
+    viewportLabel: state.viewportLabel,
   }));
 
   const { data: currentRewardsData } =
@@ -95,8 +95,6 @@ function Rewards({
     string | null
   >(null);
   const [toBeDeductedRewardsPoints, setToBeDeductedRewardsPoints] = useState(0);
-
-  const viewportLabel = useGetViewportLabel();
 
   // get rid of this, see no need for this bs
   useEffect(() => {

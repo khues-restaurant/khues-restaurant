@@ -14,7 +14,7 @@ import AnimatedLogo from "~/components/ui/AnimatedLogo";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
-import useGetViewportLabel from "~/hooks/useGetViewportLabel";
+import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getFirstSixNumbers } from "~/utils/getFirstSixNumbers";
 
@@ -26,6 +26,10 @@ function Track() {
   const { isSignedIn } = useAuth();
   const { asPath, isReady, query } = useRouter();
   const orderId = query.id;
+
+  const { viewportLabel } = useMainStore((state) => ({
+    viewportLabel: state.viewportLabel,
+  }));
 
   // const session = api.payment.getStripeSession.useQuery(
   //   { orderId },
@@ -89,8 +93,6 @@ function Track() {
 
     return () => window.removeEventListener("resize", updatePositions);
   }, [order, minTimeoutElapsed]);
-
-  const viewportLabel = useGetViewportLabel();
 
   // need the undefined state here so that we can transition the orderPlaced checkpoint.
   // Otherwise it would immediately show the completed state w/o any animation.

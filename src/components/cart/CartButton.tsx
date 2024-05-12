@@ -9,7 +9,6 @@ import CartSheetWrapper from "~/components/cart/CartSheetWrapper";
 import { Button } from "~/components/ui/button";
 import { useToast } from "~/components/ui/use-toast";
 import useGetUserId from "~/hooks/useGetUserId";
-import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 
@@ -23,11 +22,13 @@ function CartButton() {
     cartInitiallyValidated,
     refetchMenu,
     refetchMinOrderPickupTime,
+    viewportLabel,
   } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
     cartInitiallyValidated: state.cartInitiallyValidated,
     refetchMenu: state.refetchMenu,
     refetchMinOrderPickupTime: state.refetchMinOrderPickupTime,
+    viewportLabel: state.viewportLabel,
   }));
 
   const { data: user } = api.user.get.useQuery(userId, {
@@ -55,8 +56,6 @@ function CartButton() {
       refetchMinOrderPickupTime?.();
     }
   }, [refetchMenu, refetchMinOrderPickupTime, showCartDrawer, showCartSheet]);
-
-  const viewportLabel = useGetViewportLabel();
 
   const totalItems = orderDetails.items.reduce(
     (acc, item) => acc + item.quantity,

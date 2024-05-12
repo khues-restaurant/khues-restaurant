@@ -13,7 +13,6 @@ import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent } from "~/components/ui/dialog";
 import { useToast } from "~/components/ui/use-toast";
 import useGetUserId from "~/hooks/useGetUserId";
-import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
@@ -68,9 +67,10 @@ function RewardsDialogContent({
     enabled: Boolean(userId && isSignedIn),
   });
 
-  const { menuItems, orderDetails } = useMainStore((state) => ({
+  const { menuItems, orderDetails, viewportLabel } = useMainStore((state) => ({
     menuItems: state.menuItems,
     orderDetails: state.orderDetails,
+    viewportLabel: state.viewportLabel,
   }));
 
   const { data: rewards } = api.menuCategory.getRewardsCategories.useQuery();
@@ -89,8 +89,6 @@ function RewardsDialogContent({
     string | null
   >(null);
   const [toBeDeductedRewardsPoints, setToBeDeductedRewardsPoints] = useState(0);
-
-  const viewportLabel = useGetViewportLabel();
 
   useEffect(() => {
     if (!user || rewardsPointsTimerSet) return;

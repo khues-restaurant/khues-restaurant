@@ -41,7 +41,6 @@ import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import { format } from "date-fns";
 import { Textarea } from "~/components/ui/textarea";
-import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import isEqual from "lodash.isequal";
 import { Button } from "~/components/ui/button";
 import { FaUserAlt } from "react-icons/fa";
@@ -61,8 +60,9 @@ function Preferences({ initUserData }: { initUserData: User }) {
   const ctx = api.useUtils();
   const { push } = useRouter();
 
-  const { resetStore } = useMainStore((state) => ({
+  const { resetStore, viewportLabel } = useMainStore((state) => ({
     resetStore: state.resetStore,
+    viewportLabel: state.viewportLabel,
   }));
 
   const { data: currentUserData } = api.user.get.useQuery(userId, {
@@ -114,7 +114,6 @@ function Preferences({ initUserData }: { initUserData: User }) {
     },
   });
 
-  const viewportLabel = useGetViewportLabel();
   const [showChangePasswordDialog, setShowChangePasswordDialog] =
     useState(false);
   const [showDeleteUserDialog, setShowDeleteUserDialog] = useState(false);

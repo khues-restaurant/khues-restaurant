@@ -1,8 +1,8 @@
-import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import DashboardDesktopHeader from "~/components/dashboard/headers/DashboardDesktopHeader";
 import DashboardMobileHeader from "~/components/dashboard/headers/DashboardMobileHeader";
 import { type Dispatch, type SetStateAction } from "react";
 import Head from "next/head";
+import { useMainStore } from "~/stores/MainStore";
 
 interface DashboardHeaderShell {
   viewState: "orderManagement" | "customerChats" | "itemManagement" | "stats";
@@ -17,7 +17,10 @@ function DashboardHeaderShell({
   viewState,
   setViewState,
 }: DashboardHeaderShell) {
-  const viewportLabel = useGetViewportLabel();
+  const { viewportLabel } = useMainStore((state) => ({
+    viewportLabel: state.viewportLabel,
+  }));
+
   // maybe want to also expose width/height from hook as well?
 
   // TODO: set discounts ActionDialog, link to set discounts and reviews page

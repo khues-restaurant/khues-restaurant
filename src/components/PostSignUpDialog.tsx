@@ -22,7 +22,6 @@ import {
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import useGetUserId from "~/hooks/useGetUserId";
-import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { formatPhoneNumber } from "~/utils/formatPhoneNumber";
@@ -89,8 +88,9 @@ function PostSignUpDialog() {
   const { user } = useUser();
   const userId = useGetUserId();
 
-  const { orderDetails } = useMainStore((state) => ({
+  const { orderDetails, viewportLabel } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
+    viewportLabel: state.viewportLabel,
   }));
 
   const { data: userExists } = api.user.isUserRegistered.useQuery(userId, {
@@ -163,8 +163,6 @@ function PostSignUpDialog() {
     setdietaryRestrictionsValues(values);
     setStep(3);
   }
-
-  const viewportLabel = useGetViewportLabel();
 
   // TODO: technically need to have left/right sliding content transitions respect which
   // direction the user is going in, but this is a low priority atm

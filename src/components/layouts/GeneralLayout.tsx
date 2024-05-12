@@ -9,16 +9,19 @@ import useInitializeStoreDBQueries from "~/hooks/useInitializeStoreDBQueries";
 import { Toaster } from "~/components/ui/toaster";
 import Chat from "~/components/Chat";
 import { useMainStore } from "~/stores/MainStore";
+import useViewportLabelResizeListener from "~/hooks/useViewportLabelResizeListener";
 
 interface GeneralLayout {
   children: ReactNode;
 }
 
 function GeneralLayout({ children }: GeneralLayout) {
-  const { setFooterIsInView } = useMainStore((state) => ({
-    footerIsInView: state.footerIsInView,
+  const { initViewportLabelSet, setFooterIsInView } = useMainStore((state) => ({
+    initViewportLabelSet: state.initViewportLabelSet,
     setFooterIsInView: state.setFooterIsInView,
   }));
+
+  useViewportLabelResizeListener();
 
   const sentinelRef = useRef(null);
 
@@ -53,6 +56,8 @@ function GeneralLayout({ children }: GeneralLayout) {
   useHandleLocalStorage();
   useKeepOrderDetailsValidated();
   useInitializeStoreDBQueries();
+
+  if (initViewportLabelSet === false) return null;
 
   return (
     <>

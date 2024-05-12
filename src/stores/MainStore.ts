@@ -124,6 +124,8 @@ function resetStore() {
     cartInitiallyValidated: false,
     validatingCart: true,
     footerIsInView: false,
+    viewportLabel: undefined,
+    initViewportLabelSet: false,
   };
 }
 
@@ -165,6 +167,13 @@ interface StoreState {
   setRefetchMenu: (refetchMenu: () => void) => void;
   refetchMinOrderPickupTime?: () => void;
   setRefetchMinOrderPickupTime: (refetchMinOrderPickupTime: () => void) => void;
+
+  viewportLabel: "mobile" | "mobileLarge" | "tablet" | "desktop";
+  setViewportLabel: (
+    viewportLabel: "mobile" | "mobileLarge" | "tablet" | "desktop",
+  ) => void;
+  initViewportLabelSet: boolean;
+  setInitViewportLabelSet: (initViewportLabelSet: boolean) => void;
 
   resetStore: () => void;
 }
@@ -246,6 +255,17 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
       refetchMinOrderPickupTime: undefined,
       setRefetchMinOrderPickupTime: (refetchMinOrderPickupTime: () => void) => {
         set({ refetchMinOrderPickupTime });
+      },
+
+      viewportLabel: "mobile",
+      setViewportLabel: (
+        viewportLabel: "mobile" | "mobileLarge" | "tablet" | "desktop",
+      ) => {
+        set({ viewportLabel });
+      },
+      initViewportLabelSet: false,
+      setInitViewportLabelSet: (initViewportLabelSet: boolean) => {
+        set({ initViewportLabelSet });
       },
 
       resetStore: () => {

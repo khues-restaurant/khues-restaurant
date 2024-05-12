@@ -16,7 +16,6 @@ import ItemCustomizationDrawer from "~/components/itemCustomization/ItemCustomiz
 import { Button } from "~/components/ui/button";
 import { Drawer, DrawerContent } from "~/components/ui/drawer";
 import { Skeleton } from "~/components/ui/skeleton";
-import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
@@ -55,10 +54,13 @@ function OrderNow() {
   const { isLoaded, isSignedIn } = useAuth();
   const userId = useGetUserId();
 
-  const { menuItems, userFavoriteItemIds } = useMainStore((state) => ({
-    menuItems: state.menuItems,
-    userFavoriteItemIds: state.userFavoriteItemIds,
-  }));
+  const { menuItems, userFavoriteItemIds, viewportLabel } = useMainStore(
+    (state) => ({
+      menuItems: state.menuItems,
+      userFavoriteItemIds: state.userFavoriteItemIds,
+      viewportLabel: state.viewportLabel,
+    }),
+  );
 
   const { data: menuCategories } = api.menuCategory.getAll.useQuery({
     onlyOnlineOrderable: true,
@@ -184,8 +186,6 @@ function OrderNow() {
 
     // eventually add proper cleanup functions here
   }, [userRecentOrders, recentOrdersApi]);
-
-  const viewportLabel = useGetViewportLabel();
 
   useEffect(() => {
     const updateScrollProgress = () => {
@@ -850,15 +850,15 @@ function MenuItemPreviewButton({
     setPrevOrderDetails,
     customizationChoices,
     discounts,
+    viewportLabel,
   } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
     getPrevOrderDetails: state.getPrevOrderDetails,
     setPrevOrderDetails: state.setPrevOrderDetails,
     customizationChoices: state.customizationChoices,
     discounts: state.discounts,
+    viewportLabel: state.viewportLabel,
   }));
-
-  const viewportLabel = useGetViewportLabel();
 
   const [showCheckmark, setShowCheckmark] = useState(false);
 
@@ -1093,6 +1093,7 @@ function PreviousOrder({ order }: PreviousOrder) {
     customizationChoices,
     discounts,
     setItemNamesRemovedFromCart,
+    viewportLabel,
   } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
     getPrevOrderDetails: state.getPrevOrderDetails,
@@ -1100,6 +1101,7 @@ function PreviousOrder({ order }: PreviousOrder) {
     customizationChoices: state.customizationChoices,
     discounts: state.discounts,
     setItemNamesRemovedFromCart: state.setItemNamesRemovedFromCart,
+    viewportLabel: state.viewportLabel,
   }));
 
   const { mutate: addItemsFromOrderToCart, isLoading: isValidatingOrder } =
@@ -1183,8 +1185,6 @@ function PreviousOrder({ order }: PreviousOrder) {
         console.error("Error adding items from previous order to cart", error);
       },
     });
-
-  const viewportLabel = useGetViewportLabel();
 
   const [showCheckmark, setShowCheckmark] = useState(false);
 

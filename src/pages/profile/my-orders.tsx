@@ -46,7 +46,6 @@ import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
 import { useToast } from "~/components/ui/use-toast";
 import useGetUserId from "~/hooks/useGetUserId";
-import useGetViewportLabel from "~/hooks/useGetViewportLabel";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type DBOrderSummary } from "~/server/api/routers/order";
 import { ToastAction } from "~/components/ui/toast";
@@ -273,6 +272,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
     customizationChoices,
     discounts,
     setItemNamesRemovedFromCart,
+    viewportLabel,
   } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
     getPrevOrderDetails: state.getPrevOrderDetails,
@@ -280,6 +280,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
     customizationChoices: state.customizationChoices,
     discounts: state.discounts,
     setItemNamesRemovedFromCart: state.setItemNamesRemovedFromCart,
+    viewportLabel: state.viewportLabel,
   }));
 
   const { mutate: addItemsFromOrderToCart, isLoading: isValidatingOrder } =
@@ -361,7 +362,6 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
   const [accordionOpen, setAccordionOpen] = useState<"open" | "closed">(
     "closed",
   );
-  const viewportLabel = useGetViewportLabel();
 
   const [showCheckmark, setShowCheckmark] = useState(false);
 

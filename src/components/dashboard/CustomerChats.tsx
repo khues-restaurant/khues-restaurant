@@ -15,13 +15,17 @@ import { Textarea } from "~/components/ui/textarea";
 import Image from "next/image";
 import { format } from "date-fns";
 import { type Chat, type ChatMessage } from "@prisma/client";
-import useGetViewportLabel from "~/hooks/useGetViewportLabel";
+import { useMainStore } from "~/stores/MainStore";
 
 // TODO: still have to implement the total # of unread chat messages
 
 function CustomerChats() {
   const userId = useGetUserId();
   const ctx = api.useUtils();
+
+  const { viewportLabel } = useMainStore((state) => ({
+    viewportLabel: state.viewportLabel,
+  }));
 
   const { data: databaseChats, refetch } = api.chat.getAllMessages.useQuery();
 
@@ -79,8 +83,6 @@ function CustomerChats() {
       messages: ChatMessage[];
     })[]
   >([]);
-
-  const viewportLabel = useGetViewportLabel();
 
   const [newMessageContent, setNewMessageContent] = useState("");
   const [selectedUserId, setSelectedUserId] = useState("");
