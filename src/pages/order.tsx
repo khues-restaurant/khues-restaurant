@@ -312,7 +312,7 @@ function OrderNow() {
 
       <div className="baseVertFlex relative size-full tablet:w-3/4">
         {ableToRenderMainContent() && (
-          <div className="baseFlex z-10 h-12 w-full bg-offwhite shadow-lg tablet:shadow-none">
+          <div className="baseFlex z-10 h-12 w-full bg-offwhite shadow-lg tablet:h-16 tablet:shadow-none">
             <Sticky
               top={viewportLabel.includes("mobile") ? 95 : 112}
               activeClass="bg-offwhite h-12"

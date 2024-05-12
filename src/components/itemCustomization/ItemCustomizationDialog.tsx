@@ -804,7 +804,11 @@ function CustomizationOption({
         value={choice.id}
         disabled={!choice.isAvailable}
       />
-      <div className="baseVertFlex size-full gap-2">
+      <div
+        className={`baseVertFlex size-full gap-2
+        ${!choice.isAvailable ? "opacity-50" : ""}
+      `}
+      >
         <Label htmlFor={choice.id} className="self-start">
           {choice.name}
         </Label>
