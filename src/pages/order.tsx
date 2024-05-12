@@ -408,18 +408,7 @@ function OrderNow() {
         )}
 
         <AnimatePresence mode="popLayout">
-          {true ? (
-            <motion.div
-              key={"loadingMenuContent"}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="baseVertFlex h-[calc(100dvh-6rem-14rem)] w-full tablet:h-[calc(100dvh-7rem-18rem)]"
-            >
-              <AnimatedLotus className="size-20 fill-primary tablet:size-24" />
-            </motion.div>
-          ) : (
+          {ableToRenderMainContent() ? (
             <motion.div
               key={"menuContent"}
               initial={{ opacity: 0 }}
@@ -615,6 +604,17 @@ function OrderNow() {
                 />
                 -<span>Chef&apos;s choice</span>
               </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key={"loadingMenuContent"}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="baseVertFlex h-[calc(100dvh-6rem-14rem)] w-full tablet:h-[calc(100dvh-7rem-18rem)]"
+            >
+              <AnimatedLotus className="size-20 fill-primary tablet:size-24" />
             </motion.div>
           )}
         </AnimatePresence>
