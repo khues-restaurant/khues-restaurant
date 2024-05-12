@@ -54,13 +54,13 @@ function OrderNow() {
   const { isLoaded, isSignedIn } = useAuth();
   const userId = useGetUserId();
 
-  const { menuItems, userFavoriteItemIds, viewportLabel } = useMainStore(
-    (state) => ({
+  const { menuItems, userFavoriteItemIds, viewportLabel, cartDrawerIsOpen } =
+    useMainStore((state) => ({
       menuItems: state.menuItems,
       userFavoriteItemIds: state.userFavoriteItemIds,
       viewportLabel: state.viewportLabel,
-    }),
-  );
+      cartDrawerIsOpen: state.cartDrawerIsOpen,
+    }));
 
   const { data: menuCategories } = api.menuCategory.getAll.useQuery({
     onlyOnlineOrderable: true,
@@ -320,7 +320,7 @@ function OrderNow() {
               innerClass="bg-offwhite w-full h-12"
               className="baseFlex w-full bg-offwhite p-2"
               shouldFreeze={() => {
-                return isDrawerOpen;
+                return isDrawerOpen || cartDrawerIsOpen;
               }}
             >
               <Carousel

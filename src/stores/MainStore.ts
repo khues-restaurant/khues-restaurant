@@ -126,6 +126,7 @@ function resetStore() {
     footerIsInView: false,
     viewportLabel: undefined,
     initViewportLabelSet: false,
+    cartDrawerIsOpen: false,
   };
 }
 
@@ -174,6 +175,10 @@ interface StoreState {
   ) => void;
   initViewportLabelSet: boolean;
   setInitViewportLabelSet: (initViewportLabelSet: boolean) => void;
+
+  // just to let <Sticky> know whether to freeze itself or not
+  cartDrawerIsOpen: boolean;
+  setCartDrawerIsOpen: (cartDrawerIsOpen: boolean) => void;
 
   resetStore: () => void;
 }
@@ -266,6 +271,11 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
       initViewportLabelSet: false,
       setInitViewportLabelSet: (initViewportLabelSet: boolean) => {
         set({ initViewportLabelSet });
+      },
+
+      cartDrawerIsOpen: false,
+      setCartDrawerIsOpen: (cartDrawerIsOpen: boolean) => {
+        set({ cartDrawerIsOpen });
       },
 
       resetStore: () => {

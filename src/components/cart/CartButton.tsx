@@ -23,12 +23,14 @@ function CartButton() {
     refetchMenu,
     refetchMinOrderPickupTime,
     viewportLabel,
+    setCartDrawerIsOpen,
   } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
     cartInitiallyValidated: state.cartInitiallyValidated,
     refetchMenu: state.refetchMenu,
     refetchMinOrderPickupTime: state.refetchMinOrderPickupTime,
     viewportLabel: state.viewportLabel,
+    setCartDrawerIsOpen: state.setCartDrawerIsOpen,
   }));
 
   const { data: user } = api.user.get.useQuery(userId, {
@@ -75,6 +77,7 @@ function CartButton() {
 
           if (viewportLabel.includes("mobile")) {
             setShowCartDrawer(true);
+            setCartDrawerIsOpen(true);
           } else {
             setShowCartSheet(true);
           }
