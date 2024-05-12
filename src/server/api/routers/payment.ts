@@ -237,8 +237,6 @@ export const paymentRouter = createTRPCRouter({
         currency: "usd",
         customer: customer?.id,
 
-        // idempotencyKey how to do this?
-
         line_items: lineItems,
         discounts: [discountToApply],
 
@@ -257,12 +255,21 @@ export const paymentRouter = createTRPCRouter({
 
       setTimeout(
         () => {
-          void stripe.checkout.sessions.expire(session.id).then((session) => {
-            console.log("expired session", session);
+          // check if session is still active after 5 mins, if so expire it
+          void stripe.checkout.sessions.retrieve(session.id).then((session) => {
+            console.log("retrieved session", session.status);
+            if (session.status === "open") {
+              console.log("session is still open, expiring it");
+              void stripe.checkout.sessions
+                .expire(session.id)
+                .then((session) => {
+                  console.log("expired session", session);
+                });
+            }
           });
         },
         1000 * 60 * 5,
-      ); // 5 mins
+      );
 
       return session; // TODO: okay shoot I believe when we return we will be ending the http request,
       // and therefore the setTimeout will not be able to run... maybe we need to make a separate tprc endpoint
@@ -270,6 +277,10 @@ export const paymentRouter = createTRPCRouter({
 
       // TODO: if this doesn't work in production, then prob have to make a cron job to handle this
       // but what mess you would have to have the checking frequency be so often... hopefully this works
+
+      // ^^^ dang I don't think that you can use the "waitUntil()" vercel function method because
+      // on the pro plan I think the max function execution time you can have is 300ms (5 mins)...
+      // ^ maybe workaround would be to expire it at 4 mins 30 seconds instead? probably the easiest option imo
     }),
   getStripeSession: publicProcedure
     .input(

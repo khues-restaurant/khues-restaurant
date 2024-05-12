@@ -3,15 +3,9 @@ import {
   type CustomizationChoice,
   type Discount,
   type MenuItem,
-  type SuggestedPairing,
 } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-
-type StoreSuggestedPairing = SuggestedPairing & {
-  foodMenuItem: MenuItem;
-  drinkMenuItem: MenuItem;
-};
 
 export type StoreCustomizationCategory = CustomizationCategory & {
   customizationChoices: CustomizationChoice[];
@@ -20,8 +14,6 @@ export type StoreCustomizationCategory = CustomizationCategory & {
 export type FullMenuItem = MenuItem & {
   activeDiscount: Discount | null;
   customizationCategories: StoreCustomizationCategory[];
-  suggestedPairings: StoreSuggestedPairing[];
-  suggestedWith: StoreSuggestedPairing[];
 };
 
 // any validity of these copilot generated skeleton types here?
@@ -62,16 +54,6 @@ export const menuCategoryRouter = createTRPCRouter({
                   },
                 },
               },
-              suggestedPairings: {
-                include: {
-                  drinkMenuItem: true,
-                },
-              },
-              suggestedWith: {
-                include: {
-                  foodMenuItem: true,
-                },
-              },
             },
           },
         },
@@ -100,16 +82,6 @@ export const menuCategoryRouter = createTRPCRouter({
                     listOrder: "asc",
                   },
                 },
-              },
-            },
-            suggestedPairings: {
-              include: {
-                drinkMenuItem: true,
-              },
-            },
-            suggestedWith: {
-              include: {
-                foodMenuItem: true,
               },
             },
           },

@@ -338,7 +338,7 @@ function OrderNow() {
               >
                 <CarouselContent>
                   {userFavoriteItemIds.length > 0 && (
-                    <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
+                    <CarouselItem className="baseFlex basis-auto">
                       <MenuCategoryButton
                         name={"Favorites"}
                         listOrder={menuCategoryIndicies!.Favorites!}
@@ -352,7 +352,7 @@ function OrderNow() {
                   )}
 
                   {userRecentOrders && userRecentOrders.length > 0 && (
-                    <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
+                    <CarouselItem className="baseFlex basis-auto">
                       <MenuCategoryButton
                         name={"Recent orders"}
                         listOrder={menuCategoryIndicies!["Recent orders"]!}
@@ -373,47 +373,22 @@ function OrderNow() {
                     />
                   )}
 
-                  {menuCategories?.map((category) => {
-                    if (category.name === "Beer") {
-                      return (
-                        <div key={category.id} className="baseFlex gap-2">
-                          <Separator
-                            orientation="vertical"
-                            className="ml-4 mr-2 h-full w-[2px]"
-                          />
-                          <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
-                            <MenuCategoryButton
-                              key={category.id}
-                              name={category.name}
-                              listOrder={menuCategoryIndicies!.Beer!}
-                              currentlyInViewCategory={currentlyInViewCategory}
-                              setProgrammaticallyScrolling={
-                                setProgrammaticallyScrolling
-                              }
-                              stickyCategoriesApi={stickyCategoriesApi}
-                            />
-                          </CarouselItem>
-                        </div>
-                      );
-                    }
-
-                    return (
-                      <CarouselItem
-                        className="baseFlex basis-1/5 tablet:basis-auto"
-                        key={category.id}
-                      >
-                        <MenuCategoryButton
-                          name={category.name}
-                          listOrder={menuCategoryIndicies![category.name] ?? 0}
-                          currentlyInViewCategory={currentlyInViewCategory}
-                          setProgrammaticallyScrolling={
-                            setProgrammaticallyScrolling
-                          }
-                          stickyCategoriesApi={stickyCategoriesApi}
-                        />
-                      </CarouselItem>
-                    );
-                  })}
+                  {menuCategories?.map((category) => (
+                    <CarouselItem
+                      className="baseFlex basis-auto"
+                      key={category.id}
+                    >
+                      <MenuCategoryButton
+                        name={category.name}
+                        listOrder={menuCategoryIndicies![category.name] ?? 0}
+                        currentlyInViewCategory={currentlyInViewCategory}
+                        setProgrammaticallyScrolling={
+                          setProgrammaticallyScrolling
+                        }
+                        stickyCategoriesApi={stickyCategoriesApi}
+                      />
+                    </CarouselItem>
+                  ))}
                 </CarouselContent>
               </Carousel>
 
@@ -464,7 +439,7 @@ function OrderNow() {
                   id={"FavoritesContainer"}
                   className="baseVertFlex mt-4 w-full scroll-m-48 !items-start gap-2"
                 >
-                  <div className="baseFlex gap-3 pl-4 text-xl underline underline-offset-2">
+                  <div className="baseFlex gap-3 pl-4 text-xl font-semibold underline underline-offset-2">
                     <IoMdHeart />
                     <p>Favorites</p>
                   </div>
@@ -1079,6 +1054,7 @@ function MenuItemPreviewButton({
     </div>
   );
 }
+
 interface PreviousOrder {
   order: DBOrderSummary;
 }

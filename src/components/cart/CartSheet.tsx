@@ -133,7 +133,7 @@ function CartSheet({
   const [regularItems, setRegularItems] = useState<Item[]>([]);
   const [rewardItems, setRewardItems] = useState<Item[]>([]);
 
-  const [showOnlyAlcoholicItemsError, setShowOnlyAlcoholicItemsError] =
+  const [showOnlyRewardItemsError, setShowOnlyRewardItemsError] =
     useState(false);
 
   useEffect(() => {
@@ -311,12 +311,16 @@ function CartSheet({
   }, [mainForm, setPickupName]);
 
   useEffect(() => {
-    if (showOnlyAlcoholicItemsError) {
-      if (orderDetails.items.some((item) => !item.isAlcoholic)) {
-        setShowOnlyAlcoholicItemsError(false);
+    if (showOnlyRewardItemsError) {
+      if (
+        orderDetails.items.some(
+          (item) => !item.pointReward && !item.birthdayReward,
+        )
+      ) {
+        setShowOnlyRewardItemsError(false);
       }
     }
-  }, [orderDetails.items, showOnlyAlcoholicItemsError]);
+  }, [orderDetails.items, showOnlyRewardItemsError]);
 
   useEffect(() => {
     // add up all the quantities of the items in the order
@@ -355,20 +359,22 @@ function CartSheet({
   ]);
 
   async function onMainFormSubmit(values: z.infer<typeof mainFormSchema>) {
-    // check first to see if there are any cart infractions
+    // check first to see if there are any cart infractions:
 
-    // first: order has only items that contain isAlcoholic being true
-    if (orderDetails.items.every((item) => item.isAlcoholic)) {
-      setShowOnlyAlcoholicItemsError(true);
+    // check if order has only reward items & show error if so
+    if (
+      orderDetails.items.every(
+        (item) => item.birthdayReward || item.pointReward,
+      )
+    ) {
+      console.log("here");
+      setShowOnlyRewardItemsError(true);
       return;
     }
 
-    // TODO: second: order has a reward item but the total cost of their order is less than the threshold
-    // ($5?)
-
     setCheckoutButtonText("Loading");
 
-    await initializeCheckout(values.pickupName); // TODO: await or void or what here
+    await initializeCheckout(values.pickupName);
   }
 
   return (
@@ -620,13 +626,13 @@ function CartSheet({
       </AnimatePresence>
 
       <AnimatePresence>
-        {showOnlyAlcoholicItemsError && (
+        {showOnlyRewardItemsError && (
           <motion.div
-            key={"alcoholicItemsErrorCard"}
+            key={"rewardOnlyItemsErrorCard"}
             initial={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
             animate={{
               opacity: 1,
-              height: "200px",
+              height: "75px",
               paddingTop: "1rem",
               paddingBottom: "1rem",
             }}
@@ -640,8 +646,7 @@ function CartSheet({
               className="baseVertFlex relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 pr-16 text-offwhite"
             >
               <p className="text-sm font-semibold italic">
-                * Orders that contain alcoholic beverages must include at least
-                one food item.
+                * Orders must contain at least one non-reward item.
               </p>
 
               <Button
@@ -649,7 +654,7 @@ function CartSheet({
                 // rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary
                 className="absolute right-2 top-2 size-6 bg-primary !p-0 text-offwhite"
                 onClick={() => {
-                  setShowOnlyAlcoholicItemsError(false);
+                  setShowOnlyRewardItemsError(false);
                 }}
               >
                 <X className="h-4 w-4" />

@@ -167,172 +167,118 @@ type PrintedOrder = Order & {
 
 // standard
 
+function formatReceipt(order: PrintedOrder) {
+  const chicagoZonedTime = toZonedTime(
+    order.datetimeToPickup,
+    "America/Chicago",
+  );
+
+  // Check for dietary restrictions
+  const atLeastOneDietaryRestriction =
+    order.dietaryRestrictions &&
+    order.orderItems.some((item) => item.includeDietaryRestrictions);
+
+  // Constructing the receipt using template literals
+  let receipt = `
+    {width:*}
+    ^^^Khue's
+    799 University Ave W, St Paul, MN 55104
+    (651) 222-3301
+    -
+    Online Order (Pickup)
+    ^^^${order.firstName} ${order.lastName}
+    ${format(chicagoZonedTime, "h:mma 'on' MM/dd/yyyy")}
+    "Order #${getFirstSixNumbers(order.id)}"
+    -`;
+
+  // Food items section
+  if (order.orderItems.length > 0) {
+    receipt += `
+    {width:8,*}
+    "_Items_"
+    `;
+
+    order.orderItems.forEach((orderItem, index) => {
+      receipt += `|"${orderItem.quantity}"|"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
+
+      if (orderItem.customizations.length > 0) {
+        receipt += ` \n`; // space before \n necessary?
+        const itemCustomizations = orderItem.customizations
+          .map(
+            (c) =>
+              `||- ${c.customizationCategory.name}: ${c.customizationChoice.name}`,
+          )
+          .join(" \n");
+        receipt += itemCustomizations;
+      }
+
+      if (orderItem.specialInstructions) {
+        receipt += ` \n`; // space before \n necessary?
+        receipt += `||- \\"${orderItem.specialInstructions}\\"`;
+      }
+
+      if (index < order.orderItems.length - 1) {
+        receipt += ` \n`; // space before \n necessary?
+      }
+    });
+
+    receipt += `
+    -`;
+  }
+
+  receipt += `
+  {width:*}
+  `;
+
+  // Napkins and utensils request
+  if (order.includeNapkinsAndUtensils) {
+    receipt += `Utensils and napkins were requested.`;
+  }
+
+  // Dietary preferences
+  if (atLeastOneDietaryRestriction) {
+    receipt += `
+
+    _* Dietary preferences_
+    \\"${order.dietaryRestrictions}\\"`;
+  }
+
+  receipt += `
+
+  `;
+
+  return receipt;
+}
+
+// individual borders
+
 // function formatReceipt(order: PrintedOrder) {
-// const chicagoZonedTime = toZonedTime(
-//   order.datetimeToPickup,
-//   "America/Chicago",
-// );
-
-//   // Separate items into food and alcoholic beverages
-//   const items: {
-//     food: PrintedOrderItem[];
-//     alcoholicBeverages: PrintedOrderItem[];
-//   } = {
-//     food: [],
-//     alcoholicBeverages: [],
-//   };
-
-//   order.orderItems.forEach((orderItem) => {
-//     if (orderItem.menuItem.isAlcoholic) {
-//       items.alcoholicBeverages.push(orderItem);
-//     } else {
-//       items.food.push(orderItem);
-//     }
-//   });
+//   const chicagoZonedTime = toZonedTime(
+//     order.datetimeToPickup,
+//     "America/Chicago",
+//   );
 
 //   // Check for dietary restrictions
 //   const atLeastOneDietaryRestriction =
 //     order.dietaryRestrictions &&
-//     items.food.some((item) => item.includeDietaryRestrictions);
+//     order.orderItems.some((item) => item.includeDietaryRestrictions);
 
 //   // Constructing the receipt using template literals
 //   let receipt = `
-// {width:*}
-// ^^^Khue's
-// 799 University Ave W, St Paul, MN 55104
-// (651) 222-3301
-// -
-// Online Order (Pickup)
-// ^^^${order.firstName} ${order.lastName}
-// ${format(chicagoZonedTime, "h:mma 'on' MM/dd/yyyy")}
-// "Order #${getFirstSixNumbers(order.id)}"
-// -`;
+//     {width:*}
+//     {border:line; width:50}
+//     ^^^Khue's
+//     799 University Ave W, St Paul, MN 55104
+//     (651) 222-3301
+//     -
+//     Online Order (Pickup)
+//     ^^^${order.firstName} ${order.lastName}
+//     ${format(chicagoZonedTime, "h:mma 'on' MM/dd/yyyy")}
+//     "Order #${getFirstSixNumbers(order.id)}"
+//     {border:space; width:50}`;
 
 //   // Food items section
-//   if (items.food.length > 0) {
-//     receipt += `
-//     {width:8,*}
-//     "_Items_"
-//     `;
-
-//     items.food.forEach((orderItem, index) => {
-//       receipt += `|"${orderItem.quantity}"|"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
-
-//       if (orderItem.customizations.length > 0) {
-//         receipt += ` \n`; // space before \n necessary?
-//         const itemCustomizations = orderItem.customizations
-//           .map(
-//             (c) =>
-//               `||- ${c.customizationCategory.name}: ${c.customizationChoice.name}`,
-//           )
-//           .join(" \n");
-//         receipt += itemCustomizations;
-//       }
-
-//       if (orderItem.specialInstructions) {
-//         receipt += ` \n`; // space before \n necessary?
-//         receipt += `||- \\"${orderItem.specialInstructions}\\"`;
-//       }
-
-//       if (index < items.food.length - 1) {
-//         receipt += ` \n`; // space before \n necessary?
-//       }
-//     });
-
-//     receipt += `
-//     -`;
-//   }
-
-//   // Alcoholic beverages section
-//   if (items.alcoholicBeverages.length > 0) {
-//     receipt += `
-//     {width:22,*}
-//     "_Alcoholic beverages_"
-//     {width:8,*}
-//     `;
-
-//     items.alcoholicBeverages.forEach((orderItem, index) => {
-//       receipt += `|"${orderItem.quantity}"|"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
-
-//       if (index < items.alcoholicBeverages.length - 1) {
-//         receipt += ` \n`; // space before \n necessary?
-//       }
-//     });
-
-//     receipt += `
-//     -`;
-//   }
-
-//   receipt += `
-//   {width:*}
-//   `;
-
-//   // Napkins and utensils request
-//   if (order.includeNapkinsAndUtensils) {
-//     receipt += `Utensils and napkins were requested.`;
-//   }
-
-//   // Dietary preferences
-//   if (atLeastOneDietaryRestriction) {
-//     receipt += `
-
-//     _* Dietary preferences_
-//     \\"${order.dietaryRestrictions}\\"`;
-//   }
-
-//   receipt += `
-
-//   `;
-
-//   return receipt;
-// }
-
-// // individual borders
-
-// function formatReceipt(order: PrintedOrder) {
-// const chicagoZonedTime = toZonedTime(
-//   order.datetimeToPickup,
-//   "America/Chicago",
-// );
-//
-//   // Separate items into food and alcoholic beverages
-//   const items: {
-//     food: PrintedOrderItem[];
-//     alcoholicBeverages: PrintedOrderItem[];
-//   } = {
-//     food: [],
-//     alcoholicBeverages: [],
-//   };
-
-//   order.orderItems.forEach((orderItem) => {
-//     if (orderItem.menuItem.isAlcoholic) {
-//       items.alcoholicBeverages.push(orderItem);
-//     } else {
-//       items.food.push(orderItem);
-//     }
-//   });
-
-//   // Check for dietary restrictions
-//   const atLeastOneDietaryRestriction =
-//     order.dietaryRestrictions &&
-//     items.food.some((item) => item.includeDietaryRestrictions);
-
-//   // Constructing the receipt using template literals
-//   let receipt = `
-// {width:*}
-// {border:line; width:50}
-// ^^^Khue's
-// 799 University Ave W, St Paul, MN 55104
-// (651) 222-3301
-// -
-// Online Order (Pickup)
-// ^^^${order.firstName} ${order.lastName}
-// ${format(chicagoZonedTime, "h:mma 'on' MM/dd/yyyy")}
-// "Order #${getFirstSixNumbers(order.id)}"
-// {border:space; width:50}`;
-
-//   // Food items section
-//   if (items.food.length > 0) {
+//   if (order.orderItems.length > 0) {
 //     receipt += `
 //     {width:8,*}
 //     "_Items_"
@@ -340,7 +286,7 @@ type PrintedOrder = Order & {
 //     {width:6,50}
 //     `;
 
-//     items.food.forEach((orderItem, index) => {
+//     order.orderItems.forEach((orderItem, index) => {
 //       receipt += `|"${orderItem.quantity}"|"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
 
 //       if (orderItem.customizations.length > 0) {
@@ -359,35 +305,13 @@ type PrintedOrder = Order & {
 //         receipt += `||- \\"${orderItem.specialInstructions}\\"`;
 //       }
 
-//       if (index < items.food.length - 1) {
+//       if (index < order.orderItems.length - 1) {
 //         receipt += ` \n`; // space before \n necessary?
 //       }
 //     });
 
 //     receipt += `
 //     -`;
-//   }
-
-//   // Alcoholic beverages section
-//   if (items.alcoholicBeverages.length > 0) {
-//     receipt += `
-//       {border:space; width:50}
-//       {width:22,*}
-//       "_Alcoholic beverages_"
-//       {border:line; width:50}
-//       {width:6,50}
-//       `;
-
-//     items.alcoholicBeverages.forEach((orderItem, index) => {
-//       receipt += `|"${orderItem.quantity}"|"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
-
-//       if (index < items.alcoholicBeverages.length - 1) {
-//         receipt += ` \n`; // space before \n necessary?
-//       }
-//     });
-
-//     receipt += `
-//       -`;
 //   }
 
 //   receipt += `
@@ -417,125 +341,89 @@ type PrintedOrder = Order & {
 //   return receipt;
 // }
 
-// // full borders
+// full borders
 
-function formatReceipt(order: PrintedOrder) {
-  const chicagoZonedTime = toZonedTime(
-    order.datetimeToPickup,
-    "America/Chicago",
-  );
+// function formatReceipt(order: PrintedOrder) {
+//   const chicagoZonedTime = toZonedTime(
+//     order.datetimeToPickup,
+//     "America/Chicago",
+//   );
 
-  // Separate items into food and alcoholic beverages
-  const items: {
-    food: PrintedOrderItem[];
-    alcoholicBeverages: PrintedOrderItem[];
-  } = {
-    food: [],
-    alcoholicBeverages: [],
-  };
+//   // Check for dietary restrictions
+//   const atLeastOneDietaryRestriction =
+//     order.dietaryRestrictions &&
+//     order.orderItems.some((item) => item.includeDietaryRestrictions);
 
-  order.orderItems.forEach((orderItem) => {
-    if (orderItem.menuItem.isAlcoholic) {
-      items.alcoholicBeverages.push(orderItem);
-    } else {
-      items.food.push(orderItem);
-    }
-  });
+//   // Constructing the receipt using template literals
+//   let receipt = `
+//     {width:*}
+//     {border:line; width:50}
+//     ^^^Khue's
+//     799 University Ave W, St Paul, MN 55104
+//     (651) 222-3301
+//     -
+//     Online Order (Pickup)
+//     ^^^${order.firstName} ${order.lastName}
+//     ${format(chicagoZonedTime, "h:mma 'on' MM/dd/yyyy")}
+//     "Order #${getFirstSixNumbers(order.id)}"
+//     -`;
 
-  // Check for dietary restrictions
-  const atLeastOneDietaryRestriction =
-    order.dietaryRestrictions &&
-    items.food.some((item) => item.includeDietaryRestrictions);
+//   // Food items section
+//   if (order.orderItems.length > 0) {
+//     receipt += `
+//     {width:6,*}
+//     ||"_Items_"
 
-  // Constructing the receipt using template literals
-  let receipt = `
-    {width:*}
-    {border:line; width:50}
-    ^^^Khue's
-    799 University Ave W, St Paul, MN 55104
-    (651) 222-3301
-    -
-    Online Order (Pickup)
-    ^^^${order.firstName} ${order.lastName}
-    ${format(chicagoZonedTime, "h:mma 'on' MM/dd/yyyy")}
-    "Order #${getFirstSixNumbers(order.id)}"
-    -`;
+//     `;
 
-  // Food items section
-  if (items.food.length > 0) {
-    receipt += `
-    {width:6,*}
-    ||"_Items_"
+//     order.orderItems.forEach((orderItem, index) => {
+//       receipt += `|"${orderItem.quantity}"|"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
 
-    `;
+//       if (orderItem.customizations.length > 0) {
+//         receipt += ` \n`; // space before \n necessary?
+//         const itemCustomizations = orderItem.customizations
+//           .map(
+//             (c) =>
+//               `||- ${c.customizationCategory.name}: ${c.customizationChoice.name}`,
+//           )
+//           .join(" \n");
+//         receipt += itemCustomizations;
+//       }
 
-    items.food.forEach((orderItem, index) => {
-      receipt += `|"${orderItem.quantity}"|"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
+//       if (orderItem.specialInstructions) {
+//         receipt += ` \n`; // space before \n necessary?
+//         receipt += `||- \\"${orderItem.specialInstructions}\\"`;
+//       }
 
-      if (orderItem.customizations.length > 0) {
-        receipt += ` \n`; // space before \n necessary?
-        const itemCustomizations = orderItem.customizations
-          .map(
-            (c) =>
-              `||- ${c.customizationCategory.name}: ${c.customizationChoice.name}`,
-          )
-          .join(" \n");
-        receipt += itemCustomizations;
-      }
+//       if (index < order.orderItems.length - 1) {
+//         receipt += ` \n`; // space before \n necessary?
+//       }
+//     });
 
-      if (orderItem.specialInstructions) {
-        receipt += ` \n`; // space before \n necessary?
-        receipt += `||- \\"${orderItem.specialInstructions}\\"`;
-      }
+//     receipt += `
+//     -`;
+//   }
 
-      if (index < items.food.length - 1) {
-        receipt += ` \n`; // space before \n necessary?
-      }
-    });
+//   receipt += `
+//     {width:*}
 
-    receipt += `
-    -`;
-  }
+//   `;
 
-  // Alcoholic beverages section
-  if (items.alcoholicBeverages.length > 0) {
-    receipt += `
-      ||"_Alcoholic beverages_"
+//   // Napkins and utensils request
+//   if (order.includeNapkinsAndUtensils) {
+//     receipt += `Utensils and napkins were requested.`;
+//   }
 
-      `;
+//   // Dietary preferences
+//   if (atLeastOneDietaryRestriction) {
+//     receipt += `
 
-    items.alcoholicBeverages.forEach((orderItem, index) => {
-      receipt += `|"${orderItem.quantity}"|"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
+//     _* Dietary preferences_
+//     \\"${order.dietaryRestrictions}\\"`;
+//   }
 
-      if (index < items.alcoholicBeverages.length - 1) {
-        receipt += ` \n`; // space before \n necessary?
-      }
-    });
+//   receipt += `
+//   `;
 
-    receipt += `
-      -`;
-  }
-
-  receipt += `
-    {width:*}
-    
-  `;
-
-  // Napkins and utensils request
-  if (order.includeNapkinsAndUtensils) {
-    receipt += `Utensils and napkins were requested.`;
-  }
-
-  // Dietary preferences
-  if (atLeastOneDietaryRestriction) {
-    receipt += `
-
-    _* Dietary preferences_
-    \\"${order.dietaryRestrictions}\\"`;
-  }
-
-  receipt += `
-  `;
-
-  return receipt;
-}
+//   return receipt;
+// }

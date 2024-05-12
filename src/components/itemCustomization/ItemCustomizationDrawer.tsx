@@ -130,29 +130,6 @@ function ItemCustomizationDrawer({
 
   const initialItemState = itemOrderDetails;
 
-  const [suggestedPairingsApi, setSuggestedPairingsApi] =
-    useState<CarouselApi>();
-  const [suggestedPairingsSlide, setSuggestedPairingsSlide] = useState(0);
-
-  useEffect(() => {
-    if (!suggestedPairingsApi) {
-      return;
-    }
-
-    setSuggestedPairingsSlide(suggestedPairingsApi.selectedScrollSnap());
-
-    suggestedPairingsApi.on("select", () => {
-      setSuggestedPairingsSlide(suggestedPairingsApi.selectedScrollSnap());
-    });
-
-    suggestedPairingsApi.on("resize", () => {
-      setSuggestedPairingsSlide(0);
-      suggestedPairingsApi.scrollTo(0);
-    });
-
-    // eventually add proper cleanup functions here
-  }, [suggestedPairingsApi]);
-
   const { toast } = useToast();
 
   return (
@@ -320,66 +297,6 @@ function ItemCustomizationDrawer({
                   />
                 ))}
               </div>
-            </div>
-          )}
-
-          {itemToCustomize.suggestedPairings.length > 0 && (
-            <div className="baseVertFlex w-full !items-start gap-2">
-              <p className="text-lg underline underline-offset-2">
-                Suggested Pairings
-              </p>
-              <Carousel
-                setApi={setSuggestedPairingsApi}
-                opts={{
-                  skipSnaps: true,
-                }}
-                className="baseFlex w-full !justify-start"
-              >
-                <CarouselContent>
-                  {itemToCustomize.suggestedPairings.map((pairing) => (
-                    <CarouselItem
-                      key={pairing.drinkMenuItem.id}
-                      className="basis-1/3"
-                    >
-                      <SuggestedPairing
-                        item={pairing.drinkMenuItem}
-                        customizationChoices={customizationChoices}
-                        discounts={discounts}
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-              </Carousel>
-            </div>
-          )}
-
-          {itemToCustomize.suggestedWith.length > 0 && (
-            <div className="baseVertFlex w-full !items-start gap-2">
-              <p className="text-lg underline underline-offset-2">
-                Suggested Pairings
-              </p>
-              <Carousel
-                setApi={setSuggestedPairingsApi}
-                opts={{
-                  skipSnaps: true,
-                }}
-                className="baseFlex w-full !justify-start"
-              >
-                <CarouselContent>
-                  {itemToCustomize.suggestedWith.map((pairing) => (
-                    <CarouselItem
-                      key={pairing.foodMenuItem.id}
-                      className="basis-1/3"
-                    >
-                      <SuggestedPairing
-                        item={pairing.foodMenuItem}
-                        customizationChoices={customizationChoices}
-                        discounts={discounts}
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-              </Carousel>
             </div>
           )}
 

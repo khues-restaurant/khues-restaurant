@@ -204,7 +204,6 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       // }
 
       // 3) create order row
-
       // fyi: prisma already assigns the uuid of the order being created here to orderId field
 
       const orderItemsData = orderDetails.items.map(
@@ -343,7 +342,6 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       // 4) if user exists, update user rewards points + reset their currentOrder
-
       if (user) {
         if (payment.metadata.userId) {
           const currentDate = new Date();
@@ -389,41 +387,6 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
           orderId: order.id,
         },
       });
-
-      // if order contains alcoholic items, add to alcohol print queue model in database
-      const alcoholicItems = orderDetails.items.filter(
-        (item) => item.isAlcoholic,
-      );
-
-      if (alcoholicItems.length > 0) {
-        const alcoholicOrderItemsData = alcoholicItems.map((item) => ({
-          ...item,
-          menuItemId: item.itemId,
-          menuItem: {
-            connect: {
-              id: item.itemId, // why do we need to connect to menuItem here and not on the orderItemsData above?
-            },
-          },
-          order: {
-            connect: {
-              id: order.id,
-            },
-          },
-          id: undefined, // idk if this is necessary since the id is already a uuid that should be safe
-        }));
-
-        await prisma.alcoholicOrder.create({
-          data: {
-            orderId: order.id,
-            firstName: customerMetadata.firstName,
-            lastName: customerMetadata.lastName,
-            datetimeToPickup: adjustedDatetimeToPickup,
-            orderItems: {
-              create: alcoholicOrderItemsData,
-            },
-          },
-        });
-      }
 
       // 6) send email receipt (if allowed) to user
       if (user?.allowsEmailReceipts) {

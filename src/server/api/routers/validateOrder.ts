@@ -87,25 +87,24 @@ export const validateOrderRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      // Date validation
-      //  rules:
+      // Date validation rules:
       //  - datetimeToPickUp must be in the future
       //  - (potentially also check if it's not on a day the store is closed)
 
-      // Pickup time validation
-      //  rules:
+      // Pickup time validation rules:
       //  - pickup time must be greater than the minOrderPickupDatetime
       //  - pickup time must be greater than current datetime
       //  - not doing the +30 minutes here since we want the user to get that feedback on press of
       //    the "proceed to checkout" button
 
-      // Item validation
-      //  rules:
+      // Item validation rules:
+      //  - General item rules:
       //  - item must exist in the database and have an "available" field set to true
       //  - item must have a price that matches the price in the database
       //  - item must have a quantity that is greater than 0
       //  - if an item is not available, it should be removed from the order, but it's Id should be
       //    added to an array which gets returned at the end of this function
+      //  - shouldn't ever happen, but just remove item if it has "isAlcoholic" field set to true
       //  - Customizations:
       //    - customization choice ids must exist in the database, otherwise set to default choice id.
       //      If the default choice id isn't available, cycle through the customization category's
@@ -172,6 +171,7 @@ export const validateOrderRouter = createTRPCRouter({
           !dbItem ||
           !dbItem.available ||
           dbItem.price !== item.price ||
+          dbItem.isAlcoholic ||
           item.quantity <= 0
         ) {
           // removing item from order

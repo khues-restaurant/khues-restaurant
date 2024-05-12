@@ -171,36 +171,13 @@ function ItemCustomizerDialogContent({
 
   const initialItemState = itemOrderDetails;
 
-  const [suggestedPairingsApi, setSuggestedPairingsApi] =
-    useState<CarouselApi>();
-  const [suggestedPairingsSlide, setSuggestedPairingsSlide] = useState(0);
-
-  useEffect(() => {
-    if (!suggestedPairingsApi) {
-      return;
-    }
-
-    setSuggestedPairingsSlide(suggestedPairingsApi.selectedScrollSnap());
-
-    suggestedPairingsApi.on("select", () => {
-      setSuggestedPairingsSlide(suggestedPairingsApi.selectedScrollSnap());
-    });
-
-    suggestedPairingsApi.on("resize", () => {
-      setSuggestedPairingsSlide(0);
-      suggestedPairingsApi.scrollTo(0);
-    });
-
-    // eventually add proper cleanup functions here
-  }, [suggestedPairingsApi]);
-
   const { toast } = useToast();
 
   return (
     <DialogContent className="max-w-4xl">
       <div
         className={`baseVertFlex relative w-full !justify-start overflow-y-auto pr-4 pt-4 tablet:h-[600px] 
-        ${itemToCustomize.suggestedPairings.length > 0 || itemToCustomize.suggestedWith.length > 0 || itemToCustomize.customizationCategories.length > 0 ? "desktop:h-[700px]" : "desktop:h-[600px]"}
+        ${itemToCustomize.customizationCategories.length > 0 ? "desktop:h-[700px]" : "desktop:h-[600px]"}
       `}
       >
         <div className="baseFlex relative h-72 w-full !justify-end rounded-md bg-offwhite shadow-md">
@@ -398,66 +375,6 @@ function ItemCustomizerDialogContent({
                   />
                 ))}
               </div>
-            </div>
-          )}
-
-          {itemToCustomize.suggestedPairings.length > 0 && (
-            <div className="baseVertFlex w-full !items-start gap-2">
-              <p className="text-lg underline underline-offset-2">
-                Suggested Pairings
-              </p>
-              <Carousel
-                setApi={setSuggestedPairingsApi}
-                opts={{
-                  skipSnaps: true,
-                }}
-                className="baseFlex w-full !justify-start"
-              >
-                <CarouselContent>
-                  {itemToCustomize.suggestedPairings.map((pairing) => (
-                    <CarouselItem
-                      key={pairing.drinkMenuItem.id}
-                      className="basis-1/3"
-                    >
-                      <SuggestedPairing
-                        item={pairing.drinkMenuItem}
-                        customizationChoices={customizationChoices}
-                        discounts={discounts}
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-              </Carousel>
-            </div>
-          )}
-
-          {itemToCustomize.suggestedWith.length > 0 && (
-            <div className="baseVertFlex w-full !items-start gap-2">
-              <p className="text-lg underline underline-offset-2">
-                Suggested Pairings
-              </p>
-              <Carousel
-                setApi={setSuggestedPairingsApi}
-                opts={{
-                  skipSnaps: true,
-                }}
-                className="baseFlex w-full !justify-start"
-              >
-                <CarouselContent>
-                  {itemToCustomize.suggestedWith.map((pairing) => (
-                    <CarouselItem
-                      key={pairing.foodMenuItem.id}
-                      className="basis-1/3"
-                    >
-                      <SuggestedPairing
-                        item={pairing.foodMenuItem}
-                        customizationChoices={customizationChoices}
-                        discounts={discounts}
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-              </Carousel>
             </div>
           )}
 
@@ -834,141 +751,6 @@ function CustomizationOption({
             </motion.p>
           )}
         </AnimatePresence>
-      </div>
-    </div>
-  );
-}
-
-interface SuggestedPairing {
-  item: MenuItem;
-  customizationChoices: Record<string, CustomizationChoiceAndCategory>;
-  discounts: Record<string, Discount>;
-}
-
-function SuggestedPairing({
-  item,
-  customizationChoices,
-  discounts,
-}: SuggestedPairing) {
-  const { orderDetails } = useMainStore((state) => ({
-    orderDetails: state.orderDetails,
-  }));
-
-  const [showCheckmark, setShowCheckmark] = useState(false);
-
-  // TODO: ah idk maybe need to also include the default itemization choice(s) in prisma query
-  // since fetching them here feels a bit weird.
-
-  const defaultItemConfig = {
-    id: orderDetails.items.length === 0 ? 0 : orderDetails.items.at(-1)!.id + 1,
-    name: item.name,
-    customizations: {}, // getDefaultCustomizationChoices(item),
-    specialInstructions: "",
-    includeDietaryRestrictions: false,
-    quantity: 1,
-    price: item.price,
-    itemId: item.id,
-    discountId: item.activeDiscountId,
-    isChefsChoice: item.isChefsChoice,
-    isAlcoholic: item.isAlcoholic,
-    isVegetarian: item.isVegetarian,
-    isVegan: item.isVegan,
-    isGlutenFree: item.isGlutenFree,
-    showUndercookedOrRawDisclaimer: item.showUndercookedOrRawDisclaimer,
-    pointReward: false,
-    birthdayReward: false,
-  };
-
-  const { updateOrder } = useUpdateOrder();
-
-  return (
-    <div className="baseVertFlex min-w-56 gap-2 rounded-md border p-2">
-      <Image
-        src={"/menuItems/sampleImage.webp"}
-        alt={item.name}
-        width={96}
-        height={96}
-        className="rounded-md"
-      />
-
-      <p className="text-lg font-medium">{item.name}</p>
-
-      <div className="baseFlex mt-2 gap-4 !self-center">
-        {item.available ? (
-          <Button
-            disabled={showCheckmark}
-            size="sm"
-            onClick={() => {
-              setShowCheckmark(true);
-
-              updateOrder({
-                newOrderDetails: {
-                  ...orderDetails,
-                  items: [...orderDetails.items, defaultItemConfig],
-                },
-              });
-
-              setTimeout(() => {
-                setShowCheckmark(false);
-              }, 1000);
-            }}
-          >
-            <AnimatePresence mode="wait">
-              {showCheckmark ? (
-                <motion.svg
-                  key={`addPairingToOrderCheckmark-${item.id}`}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="size-4 text-offwhite"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <motion.path
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{
-                      delay: 0.2,
-                      type: "tween",
-                      ease: "easeOut",
-                      duration: 0.3,
-                    }}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </motion.svg>
-              ) : (
-                <motion.p
-                  key={`addPairingToOrder-${item.id}`}
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: "auto" }}
-                  exit={{ opacity: 0, width: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="baseFlex gap-2"
-                >
-                  Add to order -
-                  <p>
-                    {formatPrice(
-                      calculateRelativeTotal({
-                        items: [defaultItemConfig],
-                        customizationChoices,
-                        discounts,
-                      }),
-                    )}
-                  </p>
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </Button>
-        ) : (
-          <div className="rounded-md bg-stone-100 px-2 py-0.5 text-stone-400">
-            <p className="text-xs italic">Currently unavailable</p>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -664,16 +664,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
               },
             },
           },
-          suggestedPairings: {
-            include: {
-              drinkMenuItem: true,
-            },
-          },
-          suggestedWith: {
-            include: {
-              foodMenuItem: true,
-            },
-          },
         },
       },
     },
