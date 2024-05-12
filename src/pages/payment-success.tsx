@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { MdOutlineMail } from "react-icons/md";
 import Stripe from "stripe";
-import AnimatedLogo from "~/components/ui/AnimatedLogo";
+import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import { env } from "~/env";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { api } from "~/utils/api";
@@ -83,8 +83,7 @@ function PaymentSuccess({
       </Head>
 
       <div className="baseVertFlex max-w-80 gap-6 p-4 tablet:max-w-2xl tablet:gap-8 tablet:p-8">
-        {/* Testing just this instead of the loading spinner below */}
-        <AnimatedLogo className="size-24" />
+        <AnimatedLotus className="size-24 fill-primary" />
 
         <p className="mt-8 text-center text-lg font-semibold">
           Thank you! Your order has been successfully placed.

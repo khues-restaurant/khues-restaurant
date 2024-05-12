@@ -10,7 +10,7 @@ import { PiCookingPotBold } from "react-icons/pi";
 import { TfiReceipt } from "react-icons/tfi";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import OrderSummary from "~/components/cart/OrderSummary";
-import AnimatedLogo from "~/components/ui/AnimatedLogo";
+import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
@@ -690,7 +690,7 @@ function Track() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <AnimatedLogo className="size-24" />
+              <AnimatedLotus className="size-24 fill-primary" />
             </motion.div>
           )}
         </AnimatePresence>

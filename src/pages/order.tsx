@@ -39,7 +39,7 @@ import { IoMdHeart } from "react-icons/io";
 import useGetUserId from "~/hooks/useGetUserId";
 import { Separator } from "~/components/ui/separator";
 import Image from "next/image";
-import AnimatedLogo from "~/components/ui/AnimatedLogo";
+import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 import Head from "next/head";
@@ -408,7 +408,7 @@ function OrderNow() {
         )}
 
         <AnimatePresence mode="popLayout">
-          {!ableToRenderMainContent() ? (
+          {true ? (
             <motion.div
               key={"loadingMenuContent"}
               initial={{ opacity: 0 }}
@@ -417,7 +417,7 @@ function OrderNow() {
               transition={{ duration: 0.5 }}
               className="baseVertFlex h-[calc(100dvh-6rem-14rem)] w-full tablet:h-[calc(100dvh-7rem-18rem)]"
             >
-              <AnimatedLogo className="size-20 tablet:size-24" />
+              <AnimatedLotus className="size-20 fill-primary tablet:size-24" />
             </motion.div>
           ) : (
             <motion.div
