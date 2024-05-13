@@ -10,12 +10,22 @@ import { Toaster } from "~/components/ui/toaster";
 import Chat from "~/components/Chat";
 import { useMainStore } from "~/stores/MainStore";
 import useViewportLabelResizeListener from "~/hooks/useViewportLabelResizeListener";
+import { useAuth } from "@clerk/nextjs";
+import { api } from "~/utils/api";
+import useGetUserId from "~/hooks/useGetUserId";
 
 interface GeneralLayout {
   children: ReactNode;
 }
 
 function GeneralLayout({ children }: GeneralLayout) {
+  const { isLoaded, isSignedIn } = useAuth();
+  const userId = useGetUserId();
+
+  const { data: user } = api.user.get.useQuery(userId, {
+    enabled: Boolean(userId && isSignedIn),
+  });
+
   const { initViewportLabelSet, setFooterIsInView } = useMainStore((state) => ({
     initViewportLabelSet: state.initViewportLabelSet,
     setFooterIsInView: state.setFooterIsInView,
@@ -57,7 +67,12 @@ function GeneralLayout({ children }: GeneralLayout) {
   useKeepOrderDetailsValidated();
   useInitializeStoreDBQueries();
 
-  if (initViewportLabelSet === false) return null;
+  if (
+    initViewportLabelSet === false ||
+    !isLoaded ||
+    (isLoaded && isSignedIn && user === undefined)
+  )
+    return null;
 
   return (
     <>
