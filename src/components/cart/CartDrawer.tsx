@@ -70,7 +70,6 @@ interface OrderCost {
 }
 
 interface CartDrawer {
-  setShowCartDrawer: Dispatch<SetStateAction<boolean>>;
   setItemBeingModified: Dispatch<SetStateAction<FullMenuItem | null>>;
   setInitialItemState: Dispatch<SetStateAction<Item | undefined>>;
   setShowRewardsDrawer: Dispatch<SetStateAction<boolean>>;
@@ -79,9 +78,6 @@ interface CartDrawer {
 }
 
 function CartDrawer({
-  setShowCartDrawer,
-  //^  prob only used if doing the "Close" underlined button in top right
-  // (as a general drawer thing though, so maybe directly on <Drawer>?)
   setItemBeingModified,
   setInitialItemState,
   setShowRewardsDrawer,

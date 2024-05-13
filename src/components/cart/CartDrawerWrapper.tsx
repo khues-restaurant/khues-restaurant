@@ -5,20 +5,18 @@ import RewardsDrawer from "~/components/cart/RewardsDrawer";
 import ItemCustomizationDrawer from "~/components/itemCustomization/ItemCustomizationDrawer";
 import { Drawer, DrawerContent } from "~/components/ui/drawer";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
-import { type Item } from "~/stores/MainStore";
+import { useMainStore, type Item } from "~/stores/MainStore";
 
 interface CartDrawerWrapper {
-  showCartDrawer: boolean;
-  setShowCartDrawer: Dispatch<SetStateAction<boolean>>;
   pickupName: string;
   setPickupName: Dispatch<SetStateAction<string>>;
 }
-function CartDrawerWrapper({
-  showCartDrawer,
-  setShowCartDrawer,
-  pickupName,
-  setPickupName,
-}: CartDrawerWrapper) {
+function CartDrawerWrapper({ pickupName, setPickupName }: CartDrawerWrapper) {
+  const { cartDrawerIsOpen, setCartDrawerIsOpen } = useMainStore((state) => ({
+    cartDrawerIsOpen: state.cartDrawerIsOpen,
+    setCartDrawerIsOpen: state.setCartDrawerIsOpen,
+  }));
+
   const [itemBeingModified, setItemBeingModified] =
     useState<FullMenuItem | null>(null);
 
@@ -32,9 +30,9 @@ function CartDrawerWrapper({
 
   return (
     <Drawer
-      open={showCartDrawer}
+      open={cartDrawerIsOpen}
       onOpenChange={(open) => {
-        setShowCartDrawer(open);
+        setCartDrawerIsOpen(open);
 
         if (!open) {
           setItemBeingModified(null);
@@ -60,7 +58,6 @@ function CartDrawerWrapper({
             {!itemBeingModified && !showRewardsDrawer && (
               <motion.div key="cart" className="baseVertFlex size-full">
                 <CartDrawer
-                  setShowCartDrawer={setShowCartDrawer}
                   setItemBeingModified={setItemBeingModified}
                   setInitialItemState={setInitialItemState}
                   setShowRewardsDrawer={setShowRewardsDrawer}

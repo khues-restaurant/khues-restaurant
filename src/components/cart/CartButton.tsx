@@ -23,6 +23,7 @@ function CartButton() {
     refetchMenu,
     refetchMinOrderPickupTime,
     viewportLabel,
+    cartDrawerIsOpen,
     setCartDrawerIsOpen,
   } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
@@ -30,6 +31,7 @@ function CartButton() {
     refetchMenu: state.refetchMenu,
     refetchMinOrderPickupTime: state.refetchMinOrderPickupTime,
     viewportLabel: state.viewportLabel,
+    cartDrawerIsOpen: state.cartDrawerIsOpen,
     setCartDrawerIsOpen: state.setCartDrawerIsOpen,
   }));
 
@@ -37,7 +39,6 @@ function CartButton() {
     enabled: Boolean(userId && isSignedIn),
   });
 
-  const [showCartDrawer, setShowCartDrawer] = useState(false);
   const [showCartSheet, setShowCartSheet] = useState(false);
 
   // was planning on having this be on orderDetails object, but feels flaky
@@ -53,11 +54,11 @@ function CartButton() {
   }, [cartInitiallyValidated, pickupName, user]);
 
   useEffect(() => {
-    if (showCartSheet || showCartDrawer) {
+    if (showCartSheet || cartDrawerIsOpen) {
       refetchMenu?.();
       refetchMinOrderPickupTime?.();
     }
-  }, [refetchMenu, refetchMinOrderPickupTime, showCartDrawer, showCartSheet]);
+  }, [refetchMenu, refetchMinOrderPickupTime, cartDrawerIsOpen, showCartSheet]);
 
   const totalItems = orderDetails.items.reduce(
     (acc, item) => acc + item.quantity,
@@ -76,7 +77,6 @@ function CartButton() {
           dismissToasts();
 
           if (viewportLabel.includes("mobile")) {
-            setShowCartDrawer(true);
             setCartDrawerIsOpen(true);
           } else {
             setShowCartSheet(true);
@@ -139,8 +139,6 @@ function CartButton() {
 
       {viewportLabel.includes("mobile") ? (
         <CartDrawerWrapper
-          showCartDrawer={showCartDrawer}
-          setShowCartDrawer={setShowCartDrawer}
           pickupName={pickupName}
           setPickupName={setPickupName}
         />
