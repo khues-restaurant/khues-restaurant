@@ -504,7 +504,7 @@ export default function Home() {
             </p>
 
             <Button variant={"link"} className="h-8 !p-0" asChild>
-              <Link href="/about-us">Read more</Link>
+              <Link href="/our-story">Read more</Link>
             </Button>
           </div>
         </div>
@@ -559,7 +559,7 @@ export default function Home() {
             </p>
 
             <Button variant={"link"} className="h-8 !p-0" asChild>
-              <Link href="/about-us">Read more</Link>
+              <Link href="/our-story">Read more</Link>
             </Button>
           </div>
         </div>
