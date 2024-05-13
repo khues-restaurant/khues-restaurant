@@ -16,7 +16,7 @@ function AnimatedLotus({ className }: AnimatedLotus) {
       version="1.1"
       x="0px"
       y="0px"
-      viewBox="1 25 98 55"
+      viewBox="1 22 98 56"
       enableBackground="new 0 0 100 100"
       xmlSpace="preserve"
       className={className}
