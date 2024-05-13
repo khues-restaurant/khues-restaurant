@@ -673,7 +673,7 @@ function CartSheet({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
             className="baseVertFlex size-full gap-4 p-4"
           >
             <p className="text-lg font-semibold">Your order is empty</p>
@@ -685,10 +685,10 @@ function CartSheet({
           <motion.div
             key={"cartSheetItemsCard"}
             layout={"position"}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0, paddingBottom: 0 }}
+            animate={{ opacity: 1, paddingBottom: "4rem" }}
+            exit={{ opacity: 0, paddingBottom: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
             className="baseVertFlex size-full !items-start !justify-start gap-2 overflow-y-auto p-4"
           >
             <div className="baseVertFlex w-full !justify-start">

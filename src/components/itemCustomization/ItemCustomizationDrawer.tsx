@@ -346,23 +346,26 @@ function ItemCustomizationDrawer({
                     </div>
                   )}
 
-                  <Textarea
-                    className="mt-4 h-full min-h-36 w-full resize-none rounded-md border-2 p-4 text-base tablet:text-sm"
-                    placeholder="Let us know how you'd like your dish prepared."
-                    value={localItemOrderDetails.specialInstructions}
-                    onChange={(e) => {
-                      if (e.target.value.length > 100) return;
+                  <div className="baseFlex relative w-full">
+                    <Textarea
+                      className="relative mt-4 h-full min-h-36 w-full resize-none rounded-md border-2 p-4 text-base tablet:text-sm"
+                      placeholder="Let us know how you'd like your dish prepared."
+                      value={localItemOrderDetails.specialInstructions}
+                      onChange={(e) => {
+                        if (e.target.value.length > 100) return;
 
-                      setLocalItemOrderDetails({
-                        ...localItemOrderDetails,
-                        specialInstructions: e.target.value,
-                      });
-                    }}
-                  />
-                  <p className="pointer-events-none absolute bottom-14 right-4 text-xs text-stone-400">
-                    {100 - localItemOrderDetails.specialInstructions.length}{" "}
-                    characters remaining
-                  </p>
+                        setLocalItemOrderDetails({
+                          ...localItemOrderDetails,
+                          specialInstructions: e.target.value,
+                        });
+                      }}
+                    />
+
+                    <p className="pointer-events-none absolute bottom-4 right-4 text-xs text-stone-400">
+                      {100 - localItemOrderDetails.specialInstructions.length}{" "}
+                      characters remaining
+                    </p>
+                  </div>
 
                   <p className="pl-1 text-xs italic text-stone-400">
                     *No price altering substitutions/additions allowed.
