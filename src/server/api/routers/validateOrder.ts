@@ -25,26 +25,26 @@ function isHoliday(date: Date, holidays: Date[]) {
   );
 }
 
-function validateDateToPickUp(orderDetails: OrderDetails, holidays: Date[]) {
-  let datetimeToPickUp = new Date(orderDetails.datetimeToPickUp);
+function validateDateToPickup(orderDetails: OrderDetails, holidays: Date[]) {
+  let datetimeToPickup = new Date(orderDetails.datetimeToPickup);
   const now = new Date();
   now.setHours(0, 0, 0, 0); // Normalize now to midnight for consistent comparison
 
-  // If datetimeToPickUp is in the past, adjust it to midnight today
-  if (datetimeToPickUp <= now) {
-    datetimeToPickUp = now;
+  // If datetimeToPickup is in the past, adjust it to midnight today
+  if (datetimeToPickup <= now) {
+    datetimeToPickup = now;
   }
 
   // Check and adjust for Sundays, Mondays, and Holidays
   while (
-    isSundayOrMonday(datetimeToPickUp) ||
-    isHoliday(datetimeToPickUp, holidays)
+    isSundayOrMonday(datetimeToPickup) ||
+    isHoliday(datetimeToPickup, holidays)
   ) {
-    datetimeToPickUp.setDate(datetimeToPickUp.getDate() + 1); // Move to the next day
+    datetimeToPickup.setDate(datetimeToPickup.getDate() + 1); // Move to the next day
   }
 
   // Update the orderDetails with the validated or adjusted date
-  orderDetails.datetimeToPickUp = datetimeToPickUp;
+  orderDetails.datetimeToPickup = datetimeToPickup;
 }
 
 function validateTimeToPickup(
@@ -52,7 +52,7 @@ function validateTimeToPickup(
   minOrderPickupDatetime: Date,
 ) {
   const now = new Date();
-  const datetimeToPickUp = orderDetails.datetimeToPickUp;
+  const datetimeToPickup = orderDetails.datetimeToPickup;
 
   // ASAP time slot validation
   if (
@@ -65,14 +65,14 @@ function validateTimeToPickup(
 
   // Regular pickup time validation
   if (
-    datetimeToPickUp > now &&
-    datetimeToPickUp > minOrderPickupDatetime &&
-    is30MinsFromDatetime(datetimeToPickUp, new Date())
+    datetimeToPickup > now &&
+    datetimeToPickup > minOrderPickupDatetime &&
+    is30MinsFromDatetime(datetimeToPickup, new Date())
   ) {
     return;
   }
 
-  orderDetails.datetimeToPickUp = getMidnightDate(now);
+  orderDetails.datetimeToPickup = getMidnightDate(now);
 }
 
 export const validateOrderRouter = createTRPCRouter({
@@ -83,12 +83,11 @@ export const validateOrderRouter = createTRPCRouter({
         orderDetails: orderDetailsSchema,
         forceReturnOrderDetails: z.boolean().optional(),
         validatingAReorder: z.boolean().optional(),
-        resetOrderDetails: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       // Date validation rules:
-      //  - datetimeToPickUp must be in the future
+      //  - datetimeToPickup must be in the future
       //  - (potentially also check if it's not on a day the store is closed)
 
       // Pickup time validation rules:
@@ -131,14 +130,13 @@ export const validateOrderRouter = createTRPCRouter({
         orderDetails: originalOrderDetails,
         forceReturnOrderDetails,
         validatingAReorder,
-        resetOrderDetails,
       } = input;
 
       const orderDetails = structuredClone(originalOrderDetails);
 
       if (!validatingAReorder) {
         // Date validation
-        validateDateToPickUp(orderDetails, holidays);
+        validateDateToPickup(orderDetails, holidays);
 
         // Pickup time validation
         const dbMinOrderPickupTime =
@@ -157,7 +155,7 @@ export const validateOrderRouter = createTRPCRouter({
       }
 
       // Item validation
-      const items = resetOrderDetails ? [] : orderDetails.items;
+      const items = orderDetails.items;
       const removedItemNames = [];
 
       for (const item of items) {

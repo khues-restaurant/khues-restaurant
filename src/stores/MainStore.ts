@@ -5,6 +5,7 @@ import { type Discount } from "@prisma/client";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { z } from "zod";
+import { getTodayAtMidnight } from "~/utils/getTodayAtMidnight";
 
 const storeCustomizationChoiceSchema = z.record(z.string());
 
@@ -39,7 +40,7 @@ const itemSchema = z.object({
 });
 
 export const orderDetailsSchema = z.object({
-  datetimeToPickUp: z.date().or(z.string().transform((val) => new Date(val))),
+  datetimeToPickup: z.date().or(z.string().transform((val) => new Date(val))),
   isASAP: z.boolean(),
   items: z.array(itemSchema),
   includeNapkinsAndUtensils: z.boolean(),
@@ -77,7 +78,7 @@ export interface Item {
 }
 
 export interface OrderDetails {
-  datetimeToPickUp: Date;
+  datetimeToPickup: Date;
   isASAP: boolean;
   items: Item[];
   includeNapkinsAndUtensils: boolean;
@@ -92,25 +93,17 @@ export interface OrderDetails {
   // based on what the items are and what the discount is
 }
 
-// TODO: need absolutely airtight validation on initialization from localStorage/db values
-
-function getTodayAtMidnight() {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return today;
-}
-
 function resetStore() {
   return {
     orderDetails: {
-      datetimeToPickUp: getTodayAtMidnight(),
+      datetimeToPickup: getTodayAtMidnight(),
       isASAP: false,
       items: [],
       includeNapkinsAndUtensils: false,
       discountId: null,
     },
     prevOrderDetails: {
-      datetimeToPickUp: getTodayAtMidnight(),
+      datetimeToPickup: getTodayAtMidnight(),
       isASAP: false,
       items: [],
       includeNapkinsAndUtensils: false,
@@ -127,6 +120,7 @@ function resetStore() {
     viewportLabel: undefined,
     initViewportLabelSet: false,
     cartDrawerIsOpen: false,
+    initOrderDetailsRetrieved: false,
   };
 }
 
@@ -180,6 +174,9 @@ interface StoreState {
   cartDrawerIsOpen: boolean;
   setCartDrawerIsOpen: (cartDrawerIsOpen: boolean) => void;
 
+  initOrderDetailsRetrieved: boolean;
+  setInitOrderDetailsRetrieved: (initOrderDetailsRetrieved: boolean) => void;
+
   resetStore: () => void;
 }
 
@@ -187,7 +184,7 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
   devtools(
     (set, get) => ({
       orderDetails: {
-        datetimeToPickUp: getTodayAtMidnight(),
+        datetimeToPickup: getTodayAtMidnight(),
         isASAP: false,
         items: [],
         includeNapkinsAndUtensils: false,
@@ -198,7 +195,7 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
       },
 
       prevOrderDetails: {
-        datetimeToPickUp: getTodayAtMidnight(),
+        datetimeToPickup: getTodayAtMidnight(),
         isASAP: false,
         items: [],
         includeNapkinsAndUtensils: false,
@@ -276,6 +273,11 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
       cartDrawerIsOpen: false,
       setCartDrawerIsOpen: (cartDrawerIsOpen: boolean) => {
         set({ cartDrawerIsOpen });
+      },
+
+      initOrderDetailsRetrieved: false,
+      setInitOrderDetailsRetrieved: (initOrderDetailsRetrieved: boolean) => {
+        set({ initOrderDetailsRetrieved });
       },
 
       resetStore: () => {

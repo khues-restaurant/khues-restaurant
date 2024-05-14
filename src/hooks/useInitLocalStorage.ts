@@ -5,8 +5,10 @@ import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { orderDetailsSchema } from "~/stores/MainStore";
 import { useMainStore, type OrderDetails } from "~/stores/MainStore";
 import { api } from "~/utils/api";
+import { clearLocalStorage } from "~/utils/clearLocalStorage";
+import { getTodayAtMidnight } from "~/utils/getTodayAtMidnight";
 
-function useHandleLocalStorage() {
+function useInitLocalStorage() {
   const userId = useGetUserId();
   const { isLoaded, isSignedIn } = useAuth();
 
@@ -16,12 +18,16 @@ function useHandleLocalStorage() {
     setItemNamesRemovedFromCart,
     setCartInitiallyValidated,
     setValidatingCart,
+    initOrderDetailsRetrieved,
+    setInitOrderDetailsRetrieved,
   } = useMainStore((state) => ({
     cartInitiallyValidated: state.cartInitiallyValidated,
     setOrderDetails: state.setOrderDetails,
     setItemNamesRemovedFromCart: state.setItemNamesRemovedFromCart,
     setCartInitiallyValidated: state.setCartInitiallyValidated,
     setValidatingCart: state.setValidatingCart,
+    initOrderDetailsRetrieved: state.initOrderDetailsRetrieved,
+    setInitOrderDetailsRetrieved: state.setInitOrderDetailsRetrieved,
   }));
 
   const { updateOrder } = useUpdateOrder();
@@ -53,30 +59,23 @@ function useHandleLocalStorage() {
     },
   });
 
-  // maybe find better name for this
-  const [orderDetailsRetrieved, setOrderDetailsRetrieved] = useState(false);
-
   useEffect(() => {
-    // console.log(
-    //   "validating from local storage",
-    //   "initially valid? ",
-    //   cartInitiallyValidated,
-    //   orderDetailsRetrieved,
-    // );
-
     if (
       !isLoaded ||
       (isSignedIn && user === undefined) ||
       userId === "" ||
-      orderDetailsRetrieved ||
+      initOrderDetailsRetrieved ||
       cartInitiallyValidated
     )
       return;
 
-    const resetOrderDetails =
-      localStorage.getItem("khue's-resetOrderDetails") === "true"
-        ? true
-        : false;
+    const defaultCart = {
+      datetimeToPickup: getTodayAtMidnight(),
+      isASAP: false,
+      items: [],
+      includeNapkinsAndUtensils: false,
+      discountId: null,
+    } as OrderDetails;
 
     if (user) {
       try {
@@ -91,49 +90,20 @@ function useHandleLocalStorage() {
           orderDetails: parsedOrder,
           forceReturnOrderDetails: true,
         });
-        setOrderDetailsRetrieved(true);
+        setInitOrderDetailsRetrieved(true);
 
         return;
       } catch {
         // falling back to localstorage if user.currentOrder is not in valid shape
-        let localStorageOrder = localStorage.getItem("khue's-orderDetails");
-
-        if (!localStorageOrder) {
-          // set local storage to default values (right?)
-          localStorage.setItem(
-            "khue's-orderDetails",
-            JSON.stringify({
-              datetimeToPickUp: new Date(),
-              isASAP: false,
-              items: [],
-              includeNapkinsAndUtensils: false,
-              discountId: null,
-            }),
-          );
-
-          localStorageOrder = JSON.stringify({
-            datetimeToPickUp: new Date(),
-            items: [],
-            includeNapkinsAndUtensils: false,
-            discountId: null,
-          });
-        }
-
-        const parsedOrder = JSON.parse(localStorageOrder) as OrderDetails;
-
-        parsedOrder.datetimeToPickUp = new Date(parsedOrder.datetimeToPickUp);
 
         setValidatingCart(true);
         validateOrder({
           userId,
-          orderDetails: parsedOrder,
+          orderDetails: defaultCart,
           forceReturnOrderDetails: true,
-          resetOrderDetails,
         });
-        setOrderDetailsRetrieved(true);
+        setInitOrderDetailsRetrieved(true);
 
-        // TODO: just check logic of this, do we want to clearLocalStorage() here if user is
-        // logged in? I can't see a reason to keep it w/ it's potentially stale data.
         return;
       }
     }
@@ -141,73 +111,59 @@ function useHandleLocalStorage() {
     let localStorageOrder = localStorage.getItem("khue's-orderDetails");
 
     if (!localStorageOrder) {
-      // set local storage to default values (right?)
-      localStorage.setItem(
-        "khue's-orderDetails",
-        JSON.stringify({
-          datetimeToPickUp: new Date(),
-          isASAP: false,
-          items: [],
-          includeNapkinsAndUtensils: false,
-          discountId: null,
-        }),
-      );
+      // set local storage to default (empty cart)
+      localStorage.setItem("khue's-orderDetails", JSON.stringify(defaultCart));
 
-      localStorageOrder = JSON.stringify({
-        datetimeToPickUp: new Date(),
-        items: [],
-        includeNapkinsAndUtensils: false,
-        discountId: null,
-      });
+      localStorageOrder = JSON.stringify(defaultCart);
     }
 
     const parsedOrder = JSON.parse(localStorageOrder) as OrderDetails;
 
-    parsedOrder.datetimeToPickUp = new Date(parsedOrder.datetimeToPickUp);
+    parsedOrder.datetimeToPickup = new Date(parsedOrder.datetimeToPickup);
 
     setValidatingCart(true);
     validateOrder({
       userId,
       orderDetails: parsedOrder,
       forceReturnOrderDetails: true,
-      resetOrderDetails,
     });
-    setOrderDetailsRetrieved(true);
+    setInitOrderDetailsRetrieved(true);
   }, [
     cartInitiallyValidated,
     setOrderDetails,
     userId,
-    orderDetailsRetrieved,
+    initOrderDetailsRetrieved,
     user,
     isLoaded,
     isSignedIn,
     setValidatingCart,
     validateOrder,
+    setInitOrderDetailsRetrieved,
   ]);
 
-  // make sure orderDetails is present in localStorage no matter what
-  // otherwise this allowed for cart to sometimes hang in "validation" state
-  // because there was nothing to validate
   useEffect(() => {
-    const localStorageOrderDetails = localStorage.getItem(
-      "khue's-orderDetails",
-    );
+    if (isSignedIn) {
+      clearLocalStorage();
+    } else if (isSignedIn === false) {
+      // if user doesn't have any orderDetails in their localstorage, then set it to default
+      const localStorageOrder = localStorage.getItem("khue's-orderDetails");
 
-    if (localStorageOrderDetails) return;
+      if (!localStorageOrder) {
+        const defaultCart = {
+          datetimeToPickup: getTodayAtMidnight(),
+          isASAP: false,
+          items: [],
+          includeNapkinsAndUtensils: false,
+          discountId: null,
+        } as OrderDetails;
 
-    setOrderDetailsRetrieved(false);
-
-    localStorage.setItem(
-      "khue's-orderDetails",
-      JSON.stringify({
-        datetimeToPickUp: new Date(),
-        isASAP: false,
-        items: [],
-        includeNapkinsAndUtensils: false,
-        discountId: null,
-      }),
-    );
+        localStorage.setItem(
+          "khue's-orderDetails",
+          JSON.stringify(defaultCart),
+        );
+      }
+    }
   }, [isSignedIn]);
 }
 
-export default useHandleLocalStorage;
+export default useInitLocalStorage;

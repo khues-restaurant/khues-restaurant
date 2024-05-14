@@ -5,6 +5,7 @@ import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { orderDetailsSchema } from "~/stores/MainStore";
 import { useMainStore, type OrderDetails } from "~/stores/MainStore";
 import { api } from "~/utils/api";
+import { getTodayAtMidnight } from "~/utils/getTodayAtMidnight";
 
 function useKeepOrderDetailsValidated() {
   const userId = useGetUserId();
@@ -55,6 +56,14 @@ function useKeepOrderDetailsValidated() {
       if (user === undefined || userId === "" || !cartInitiallyValidated)
         return;
 
+      const defaultCart = {
+        datetimeToPickup: getTodayAtMidnight(),
+        isASAP: false,
+        items: [],
+        includeNapkinsAndUtensils: false,
+        discountId: null,
+      } as OrderDetails;
+
       if (user) {
         try {
           orderDetailsSchema.parse(user.currentOrder);
@@ -66,17 +75,9 @@ function useKeepOrderDetailsValidated() {
 
           return;
         } catch {
-          // falling back to localstorage if user.currentOrder is not in valid shape
-          const localStorageOrder = localStorage.getItem("khue's-orderDetails");
-
-          if (!localStorageOrder) return;
-
-          const parsedOrder = JSON.parse(localStorageOrder) as OrderDetails;
-
-          parsedOrder.datetimeToPickUp = new Date(parsedOrder.datetimeToPickUp);
-
+          // falling back to default (empty cart) if user.currentOrder is not in valid shape
           setValidatingCart(true);
-          validateOrder({ userId, orderDetails: parsedOrder });
+          validateOrder({ userId, orderDetails: defaultCart });
 
           return;
         }
@@ -85,28 +86,17 @@ function useKeepOrderDetailsValidated() {
       let localStorageOrder = localStorage.getItem("khue's-orderDetails");
 
       if (!localStorageOrder) {
-        // set local storage to default values (right?)
+        // set local storage to default (empty cart)
         localStorage.setItem(
           "khue's-orderDetails",
-          JSON.stringify({
-            datetimeToPickUp: new Date(),
-            isASAP: false,
-            items: [],
-            includeNapkinsAndUtensils: false,
-            discountId: null,
-          }),
+          JSON.stringify(defaultCart),
         );
 
-        localStorageOrder = JSON.stringify({
-          datetimeToPickUp: new Date(),
-          items: [],
-          includeNapkinsAndUtensils: false,
-          discountId: null,
-        });
+        localStorageOrder = JSON.stringify(defaultCart);
       }
       const parsedOrder = JSON.parse(localStorageOrder) as OrderDetails;
 
-      parsedOrder.datetimeToPickUp = new Date(parsedOrder.datetimeToPickUp);
+      parsedOrder.datetimeToPickup = new Date(parsedOrder.datetimeToPickup);
 
       setValidatingCart(true);
       validateOrder({ userId, orderDetails: parsedOrder });

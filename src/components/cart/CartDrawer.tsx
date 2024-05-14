@@ -161,7 +161,7 @@ function CartDrawer({
   }, [orderDetails, regularItems, rewardItems]);
 
   const mainFormSchema = z.object({
-    dateToPickUp: z
+    dateToPickup: z
       .date({
         required_error: "Pickup date must be specified",
       })
@@ -177,7 +177,7 @@ function CartDrawer({
           message: "The pickup date cannot be in the past.",
         },
       ),
-    timeToPickUp: z
+    timeToPickup: z
       .string({
         required_error: "Pickup time must be specified",
       })
@@ -202,18 +202,18 @@ function CartDrawer({
             );
           }
 
-          const datetimeToPickUp = mergeDateAndTime(
-            mainForm.getValues().dateToPickUp,
+          const datetimeToPickup = mergeDateAndTime(
+            mainForm.getValues().dateToPickup,
             time,
           );
 
-          if (!datetimeToPickUp) return false;
+          if (!datetimeToPickup) return false;
 
           // Regular pickup time validation
           return (
-            datetimeToPickUp > now &&
-            datetimeToPickUp > minOrderPickupDatetime &&
-            is30MinsFromDatetime(datetimeToPickUp, new Date())
+            datetimeToPickup > now &&
+            datetimeToPickup > minOrderPickupDatetime &&
+            is30MinsFromDatetime(datetimeToPickup, new Date())
           );
         },
         {
@@ -229,39 +229,39 @@ function CartDrawer({
   const mainForm = useForm<z.infer<typeof mainFormSchema>>({
     resolver: zodResolver(mainFormSchema),
     values: {
-      dateToPickUp: getMidnightDate(orderDetails.datetimeToPickUp),
-      timeToPickUp: orderDetails.isASAP
+      dateToPickup: getMidnightDate(orderDetails.datetimeToPickup),
+      timeToPickup: orderDetails.isASAP
         ? "ASAP (~20 mins)"
-        : getHoursAndMinutesFromDate(orderDetails.datetimeToPickUp),
+        : getHoursAndMinutesFromDate(orderDetails.datetimeToPickup),
       pickupName,
     },
   });
 
   useEffect(() => {
     const subscription = mainForm.watch((value) => {
-      if (value.dateToPickUp === undefined || value.timeToPickUp === undefined)
+      if (value.dateToPickup === undefined || value.timeToPickup === undefined)
         return;
 
       const newDate =
-        value.timeToPickUp === "ASAP (~20 mins)"
-          ? value.dateToPickUp
-          : mergeDateAndTime(value.dateToPickUp, value.timeToPickUp);
+        value.timeToPickup === "ASAP (~20 mins)"
+          ? value.dateToPickup
+          : mergeDateAndTime(value.dateToPickup, value.timeToPickup);
 
       if (newDate === undefined) return;
 
       // if the date was changed then just set the time to be midnight of w/e the new date is
       if (
-        value.dateToPickUp.getDate() !==
-          orderDetails.datetimeToPickUp.getDate() ||
-        value.dateToPickUp.getMonth() !==
-          orderDetails.datetimeToPickUp.getMonth() ||
-        value.dateToPickUp.getFullYear() !==
-          orderDetails.datetimeToPickUp.getFullYear()
+        value.dateToPickup.getDate() !==
+          orderDetails.datetimeToPickup.getDate() ||
+        value.dateToPickup.getMonth() !==
+          orderDetails.datetimeToPickup.getMonth() ||
+        value.dateToPickup.getFullYear() !==
+          orderDetails.datetimeToPickup.getFullYear()
       ) {
         newDate.setHours(0, 0, 0, 0);
-      } else if (value.timeToPickUp === "ASAP (~20 mins)") {
+      } else if (value.timeToPickup === "ASAP (~20 mins)") {
         const newOrderDetails = structuredClone(orderDetails);
-        newOrderDetails.datetimeToPickUp = newDate;
+        newOrderDetails.datetimeToPickup = newDate;
         newOrderDetails.isASAP = true;
 
         console.log("updating");
@@ -273,11 +273,11 @@ function CartDrawer({
         return;
       }
 
-      // make sure that the new date isn't the same as the current orderDetails.datetimeToPickUp
-      if (newDate.getTime() === orderDetails.datetimeToPickUp.getTime()) return;
+      // make sure that the new date isn't the same as the current orderDetails.datetimeToPickup
+      if (newDate.getTime() === orderDetails.datetimeToPickup.getTime()) return;
 
       const newOrderDetails = structuredClone(orderDetails);
-      newOrderDetails.datetimeToPickUp = newDate;
+      newOrderDetails.datetimeToPickup = newDate;
       newOrderDetails.isASAP = false;
 
       console.log("updating");
@@ -418,7 +418,7 @@ function CartDrawer({
           <form className="baseVertFlex mt-4 !items-start gap-2">
             <FormField
               control={mainForm.control}
-              name="dateToPickUp"
+              name="dateToPickup"
               render={({ field, fieldState: { invalid } }) => (
                 <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
                   <div className="baseFlex gap-4">
@@ -477,7 +477,7 @@ function CartDrawer({
 
             <FormField
               control={mainForm.control}
-              name="timeToPickUp"
+              name="timeToPickup"
               render={({ field, fieldState: { invalid } }) => (
                 <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
                   <div className="baseFlex gap-4">
@@ -496,15 +496,15 @@ function CartDrawer({
                         side="bottom"
                         className={`${
                           selectedDateIsToday(
-                            mainForm.getValues().dateToPickUp,
+                            mainForm.getValues().dateToPickup,
                           ) &&
-                          mainForm.getValues().dateToPickUp.getHours() >= 22
+                          mainForm.getValues().dateToPickup.getHours() >= 22
                             ? ""
                             : "max-h-[300px]"
                         }`}
                       >
                         <AvailablePickupTimes
-                          selectedDate={mainForm.getValues().dateToPickUp}
+                          selectedDate={mainForm.getValues().dateToPickup}
                           minPickupTime={minPickupTime?.value}
                         />
                       </SelectContent>

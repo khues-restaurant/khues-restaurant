@@ -3,7 +3,6 @@ import { useRef, useEffect, type ReactNode } from "react";
 import HeaderShell from "~/components/headers/HeaderShell";
 import Footer from "~/components/Footer";
 import PostSignUpDialog from "~/components/PostSignUpDialog";
-import useHandleLocalStorage from "~/hooks/useHandleLocalStorage";
 import useKeepOrderDetailsValidated from "~/hooks/useKeepOrderDetailsValidated";
 import useInitializeStoreDBQueries from "~/hooks/useInitializeStoreDBQueries";
 import { Toaster } from "~/components/ui/toaster";
@@ -13,6 +12,7 @@ import useViewportLabelResizeListener from "~/hooks/useViewportLabelResizeListen
 import { useAuth } from "@clerk/nextjs";
 import { api } from "~/utils/api";
 import useGetUserId from "~/hooks/useGetUserId";
+import useInitLocalStorage from "~/hooks/useInitLocalStorage";
 
 interface GeneralLayout {
   children: ReactNode;
@@ -63,7 +63,7 @@ function GeneralLayout({ children }: GeneralLayout) {
     };
   }, [setFooterIsInView]);
 
-  useHandleLocalStorage();
+  useInitLocalStorage();
   useKeepOrderDetailsValidated();
   useInitializeStoreDBQueries();
 

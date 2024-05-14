@@ -14,6 +14,7 @@ import Receipt from "emails/Receipt";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { prisma } from "~/server/db";
 import OpenAI from "openai";
+import { getTodayAtMidnight } from "~/utils/getTodayAtMidnight";
 
 const resend = new Resend(env.RESEND_API_KEY);
 const openai = new OpenAI({
@@ -223,7 +224,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       console.log(orderItemsData);
 
-      let adjustedDatetimeToPickup = new Date(orderDetails.datetimeToPickUp);
+      let adjustedDatetimeToPickup = new Date(orderDetails.datetimeToPickup);
 
       // add 15 minutes to current time if order is ASAP
       if (orderDetails.isASAP) {
@@ -357,12 +358,6 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
           });
         }
 
-        function getTodayAtMidnight() {
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          return today;
-        }
-
         await prisma.user.update({
           where: {
             userId: payment.metadata.userId,
@@ -371,7 +366,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
             rewardsPoints: prevPoints + earnedPoints - spentPoints,
             lifetimeRewardPoints,
             currentOrder: {
-              datetimeToPickUp: getTodayAtMidnight(),
+              datetimeToPickup: getTodayAtMidnight(),
               isASAP: false,
               items: [],
               includeNapkinsAndUtensils: false,

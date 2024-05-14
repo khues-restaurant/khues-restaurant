@@ -60,6 +60,7 @@ import isEqual from "lodash.isequal";
 
 import noOrders from "/public/menuItems/myOrders.jpg";
 import Head from "next/head";
+import { getTodayAtMidnight } from "~/utils/getTodayAtMidnight";
 
 function RecentOrders({ initOrders }: { initOrders: DBOrderSummary[] | null }) {
   const userId = useGetUserId();
@@ -444,7 +445,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                           addItemsFromOrderToCart({
                             userId,
                             orderDetails: {
-                              datetimeToPickUp: new Date(),
+                              datetimeToPickup: getTodayAtMidnight(),
                               isASAP: false,
                               includeNapkinsAndUtensils: false,
                               items: order.orderItems.map((item) => ({
@@ -631,7 +632,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                           addItemsFromOrderToCart({
                             userId,
                             orderDetails: {
-                              datetimeToPickUp: new Date(),
+                              datetimeToPickup: getTodayAtMidnight(),
                               includeNapkinsAndUtensils: false,
                               isASAP: false,
                               items: order.orderItems.map((item) => ({

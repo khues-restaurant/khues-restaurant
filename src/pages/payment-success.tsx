@@ -1,3 +1,4 @@
+import { useAuth } from "@clerk/nextjs";
 import { PrismaClient } from "@prisma/client";
 import { motion } from "framer-motion";
 import { type GetServerSideProps } from "next";
@@ -9,13 +10,16 @@ import Stripe from "stripe";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import { env } from "~/env";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
+import { OrderDetails, useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
+import { getTodayAtMidnight } from "~/utils/getTodayAtMidnight";
 
 function PaymentSuccess({
   emailReceiptsAllowed,
 }: {
   emailReceiptsAllowed: boolean;
 }) {
+  const { isLoaded, isSignedIn } = useAuth();
   const { push, isReady, query } = useRouter();
   const sessionId = query.session_id as string;
   const userId = query.userId as string;
@@ -26,39 +30,50 @@ function PaymentSuccess({
     retry: 3,
   });
 
+  const { setOrderDetails } = useMainStore((state) => ({
+    setOrderDetails: state.setOrderDetails,
+  }));
+
   const { updateOrder } = useUpdateOrder();
 
-  // why did we name this orderHasBeenReset?
-  const [orderHasBeenReset, setOrderHasBeenReset] = useState(false);
+  const [orderHasBeenAcknowledged, setOrderHasBeenAcknowledged] =
+    useState(false);
 
   useEffect(() => {
-    if (order && !orderHasBeenReset) {
-      setOrderHasBeenReset(true);
-
-      if (localStorage.getItem("khue's-resetOrderDetails") === "true") {
-        localStorage.setItem(
-          "khue's-orderDetails",
-          JSON.stringify({
-            datetimeToPickUp: new Date(),
-            isASAP: false,
-            items: [],
-            includeNapkinsAndUtensils: false,
-            discountId: null,
-          }),
-        );
-
-        localStorage.removeItem("khue's-resetOrderDetails");
-      }
+    if (order && !orderHasBeenAcknowledged) {
+      setOrderHasBeenAcknowledged(true);
 
       setTimeout(() => {
         push(`/track?id=${order.id}`).catch(console.error);
       }, 3000);
     }
-  }, [order, updateOrder, push, orderHasBeenReset]);
+  }, [
+    order,
+    updateOrder,
+    push,
+    orderHasBeenAcknowledged,
+    isLoaded,
+    isSignedIn,
+  ]);
 
-  // TODO: I have to imagine that the "missing" piece of this design is to add some images (probably of food items
-  // right?), but idk the best way to incorporate them tbh.. you do have to remember that this page should ideally
-  // be visible for no longer than like 5 seconds.. so parsing of the text should remain the main focus
+  // resetting cart to empty state if user isn't logged in (since we already reset
+  // their cart in their database row otherwise)
+  useEffect(() => {
+    // included the orderCompletedAt === null so that if user somehow navigates back to
+    // this page sometime in the future, they won't (*shouldn't*) have their cart reset
+    if (isLoaded && !isSignedIn && order?.orderCompletedAt === null) {
+      const defaultCart = {
+        datetimeToPickup: getTodayAtMidnight(),
+        isASAP: false,
+        items: [],
+        includeNapkinsAndUtensils: false,
+        discountId: null,
+      } as OrderDetails;
+
+      localStorage.setItem("khue's-orderDetails", JSON.stringify(defaultCart));
+      setOrderDetails(defaultCart);
+    }
+  }, [isLoaded, isSignedIn, order, setOrderDetails]);
 
   return (
     <motion.div
