@@ -605,10 +605,7 @@ function Track() {
                               You earned
                               <div className="font-bold">
                                 <AnimatedNumbers
-                                  value={
-                                    rewardsPointsEarned -
-                                    order.prevRewardsPoints
-                                  }
+                                  value={order.earnedRewardsPoints}
                                   fontSize={
                                     viewportLabel.includes("mobile") ? 14 : 16
                                   }
