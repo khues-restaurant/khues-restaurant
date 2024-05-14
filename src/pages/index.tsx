@@ -121,7 +121,7 @@ export default function Home() {
           this approach
         </div> */}
 
-        <div className="baseFlex relative size-full h-[65dvh]">
+        <div className="baseFlex relative size-full h-[65svh]">
           <Image
             src={mobileHero}
             alt={"TODO: fill in w/ appropriate alt text"}
