@@ -51,7 +51,7 @@ const linkVariants = {
 function MobileHeader() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
   const userId = useGetUserId();
-  const { asPath, push, events } = useRouter();
+  const { asPath, events } = useRouter();
 
   const { data: user } = api.user.get.useQuery(userId, {
     enabled: Boolean(userId && isSignedIn),
@@ -204,11 +204,9 @@ function MobileHeader() {
                           variant={"link"}
                           className="mt-2 h-8"
                           onClick={async () => {
-                            await signOut(async () => {
-                              clearLocalStorage();
-                              resetStore();
-                              await push("/");
-                            });
+                            clearLocalStorage();
+                            resetStore();
+                            await signOut({ redirectUrl: "/" });
                           }}
                         >
                           Log out

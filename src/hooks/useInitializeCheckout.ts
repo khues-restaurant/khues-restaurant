@@ -70,6 +70,10 @@ function useInitializeCheckout({
         // that is always returned rather than these conditional returns. Ah I remember but maybe it's still doable
       });
 
+      if (isSignedIn === false) {
+        localStorage.setItem("khue's-resetOrderDetails", "true");
+      }
+
       checkout().catch(console.error);
     },
     onError: (error) => {

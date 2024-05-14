@@ -14,7 +14,7 @@ import Receipt from "emails/Receipt";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { prisma } from "~/server/db";
 import OpenAI from "openai";
-import { getTodayAtMidnight } from "~/utils/getTodayAtMidnight";
+import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
 
 const resend = new Resend(env.RESEND_API_KEY);
 const openai = new OpenAI({
@@ -366,7 +366,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
             rewardsPoints: prevPoints + earnedPoints - spentPoints,
             lifetimeRewardPoints,
             currentOrder: {
-              datetimeToPickup: getTodayAtMidnight(),
+              datetimeToPickup: getFirstValidMidnightDate(new Date()),
               isASAP: false,
               items: [],
               includeNapkinsAndUtensils: false,

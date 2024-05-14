@@ -1,16 +1,18 @@
 import { useAuth } from "@clerk/nextjs";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { orderDetailsSchema } from "~/stores/MainStore";
 import { useMainStore, type OrderDetails } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
-import { getTodayAtMidnight } from "~/utils/getTodayAtMidnight";
+import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
 
 function useInitLocalStorage() {
   const userId = useGetUserId();
   const { isLoaded, isSignedIn } = useAuth();
+  const { asPath } = useRouter();
 
   const {
     cartInitiallyValidated,
@@ -70,12 +72,16 @@ function useInitLocalStorage() {
       return;
 
     const defaultCart = {
-      datetimeToPickup: getTodayAtMidnight(),
+      datetimeToPickup: getFirstValidMidnightDate(new Date()),
       isASAP: false,
       items: [],
       includeNapkinsAndUtensils: false,
       discountId: null,
     } as OrderDetails;
+
+    const resetOrderDetails = asPath.includes("/payment-success")
+      ? localStorage.getItem("khue's-resetOrderDetails")
+      : false;
 
     if (user) {
       try {
@@ -108,7 +114,13 @@ function useInitLocalStorage() {
       }
     }
 
-    let localStorageOrder = localStorage.getItem("khue's-orderDetails");
+    let localStorageOrder = resetOrderDetails
+      ? null
+      : localStorage.getItem("khue's-orderDetails");
+
+    if (resetOrderDetails) {
+      localStorage.removeItem("khue's-resetOrderDetails");
+    }
 
     if (!localStorageOrder) {
       // set local storage to default (empty cart)
@@ -139,6 +151,7 @@ function useInitLocalStorage() {
     setValidatingCart,
     validateOrder,
     setInitOrderDetailsRetrieved,
+    asPath,
   ]);
 
   useEffect(() => {
@@ -150,7 +163,7 @@ function useInitLocalStorage() {
 
       if (!localStorageOrder) {
         const defaultCart = {
-          datetimeToPickup: getTodayAtMidnight(),
+          datetimeToPickup: getFirstValidMidnightDate(new Date()),
           isASAP: false,
           items: [],
           includeNapkinsAndUtensils: false,

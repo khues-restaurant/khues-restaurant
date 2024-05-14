@@ -46,7 +46,7 @@ import Head from "next/head";
 
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";
-import { getTodayAtMidnight } from "~/utils/getTodayAtMidnight";
+import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
@@ -1244,7 +1244,7 @@ function PreviousOrder({ order }: PreviousOrder) {
               addItemsFromOrderToCart({
                 userId,
                 orderDetails: {
-                  datetimeToPickup: getTodayAtMidnight(),
+                  datetimeToPickup: getFirstValidMidnightDate(new Date()),
                   isASAP: orderDetails.isASAP,
                   includeNapkinsAndUtensils: false,
                   items: order.orderItems.map((item) => ({

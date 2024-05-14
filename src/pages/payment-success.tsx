@@ -10,9 +10,7 @@ import Stripe from "stripe";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import { env } from "~/env";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
-import { OrderDetails, useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import { getTodayAtMidnight } from "~/utils/getTodayAtMidnight";
 
 function PaymentSuccess({
   emailReceiptsAllowed,
@@ -29,10 +27,6 @@ function PaymentSuccess({
     retryDelay: 1500,
     retry: 3,
   });
-
-  const { setOrderDetails } = useMainStore((state) => ({
-    setOrderDetails: state.setOrderDetails,
-  }));
 
   const { updateOrder } = useUpdateOrder();
 
@@ -55,25 +49,6 @@ function PaymentSuccess({
     isLoaded,
     isSignedIn,
   ]);
-
-  // resetting cart to empty state if user isn't logged in (since we already reset
-  // their cart in their database row otherwise)
-  useEffect(() => {
-    // included the orderCompletedAt === null so that if user somehow navigates back to
-    // this page sometime in the future, they won't (*shouldn't*) have their cart reset
-    if (isLoaded && !isSignedIn && order?.orderCompletedAt === null) {
-      const defaultCart = {
-        datetimeToPickup: getTodayAtMidnight(),
-        isASAP: false,
-        items: [],
-        includeNapkinsAndUtensils: false,
-        discountId: null,
-      } as OrderDetails;
-
-      localStorage.setItem("khue's-orderDetails", JSON.stringify(defaultCart));
-      setOrderDetails(defaultCart);
-    }
-  }, [isLoaded, isSignedIn, order, setOrderDetails]);
 
   return (
     <motion.div
@@ -172,7 +147,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     ctx.query.session_id as string,
   );
 
-  if (session.customer_email === null) {
+  if (
+    session.customer_details?.email === null ||
+    session.customer_details?.email === undefined
+  ) {
     return {
       props: {
         emailReceiptsAllowed: false,
@@ -182,7 +160,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const emailIsBlacklisted = await prisma.blacklistedEmail.findFirst({
     where: {
-      emailAddress: session.customer_email,
+      emailAddress: session.customer_details.email,
     },
   });
 

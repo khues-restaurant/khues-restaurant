@@ -5,11 +5,11 @@ import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { orderDetailsSchema } from "~/stores/MainStore";
 import { useMainStore, type OrderDetails } from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import { getTodayAtMidnight } from "~/utils/getTodayAtMidnight";
+import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
 
 function useKeepOrderDetailsValidated() {
   const userId = useGetUserId();
-  const { isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn } = useAuth();
 
   const {
     cartInitiallyValidated,
@@ -53,11 +53,16 @@ function useKeepOrderDetailsValidated() {
   // revalidates order details on window refocus
   useEffect(() => {
     function validateOrderOnWindowRefocus() {
-      if (user === undefined || userId === "" || !cartInitiallyValidated)
+      if (
+        !isLoaded ||
+        (isSignedIn && user === undefined) ||
+        userId === "" ||
+        !cartInitiallyValidated
+      )
         return;
 
       const defaultCart = {
-        datetimeToPickup: getTodayAtMidnight(),
+        datetimeToPickup: getFirstValidMidnightDate(new Date()),
         isASAP: false,
         items: [],
         includeNapkinsAndUtensils: false,
@@ -94,6 +99,7 @@ function useKeepOrderDetailsValidated() {
 
         localStorageOrder = JSON.stringify(defaultCart);
       }
+
       const parsedOrder = JSON.parse(localStorageOrder) as OrderDetails;
 
       parsedOrder.datetimeToPickup = new Date(parsedOrder.datetimeToPickup);
@@ -109,6 +115,8 @@ function useKeepOrderDetailsValidated() {
     };
   }, [
     setOrderDetails,
+    isLoaded,
+    isSignedIn,
     userId,
     user,
     validateOrder,

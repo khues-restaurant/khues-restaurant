@@ -5,7 +5,7 @@ import { type Discount } from "@prisma/client";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { z } from "zod";
-import { getTodayAtMidnight } from "~/utils/getTodayAtMidnight";
+import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
 
 const storeCustomizationChoiceSchema = z.record(z.string());
 
@@ -93,17 +93,18 @@ export interface OrderDetails {
   // based on what the items are and what the discount is
 }
 
+// used solely when logging out the current user
 function resetStore() {
   return {
     orderDetails: {
-      datetimeToPickup: getTodayAtMidnight(),
+      datetimeToPickup: getFirstValidMidnightDate(new Date()),
       isASAP: false,
       items: [],
       includeNapkinsAndUtensils: false,
       discountId: null,
     },
     prevOrderDetails: {
-      datetimeToPickup: getTodayAtMidnight(),
+      datetimeToPickup: getFirstValidMidnightDate(new Date()),
       isASAP: false,
       items: [],
       includeNapkinsAndUtensils: false,
@@ -114,13 +115,13 @@ function resetStore() {
     discounts: {},
     userFavoriteItemIds: [],
     itemNamesRemovedFromCart: [],
-    cartInitiallyValidated: false,
+    cartInitiallyValidated: true, // both true because otherwise useInitLocalStorage will revalidate while user is still signed in
+    initOrderDetailsRetrieved: true, // both true because otherwise useInitLocalStorage will revalidate while user is still signed in
     validatingCart: true,
     footerIsInView: false,
     viewportLabel: undefined,
     initViewportLabelSet: false,
     cartDrawerIsOpen: false,
-    initOrderDetailsRetrieved: false,
   };
 }
 
@@ -184,7 +185,7 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
   devtools(
     (set, get) => ({
       orderDetails: {
-        datetimeToPickup: getTodayAtMidnight(),
+        datetimeToPickup: getFirstValidMidnightDate(new Date()),
         isASAP: false,
         items: [],
         includeNapkinsAndUtensils: false,
@@ -195,7 +196,7 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
       },
 
       prevOrderDetails: {
-        datetimeToPickup: getTodayAtMidnight(),
+        datetimeToPickup: getFirstValidMidnightDate(new Date()),
         isASAP: false,
         items: [],
         includeNapkinsAndUtensils: false,

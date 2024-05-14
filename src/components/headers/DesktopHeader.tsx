@@ -29,11 +29,12 @@ import outsideOfRestaurant from "/public/homepage/heroTwo.webp";
 
 function DesktopHeader() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
-  const { asPath, push, events } = useRouter();
+  const { asPath, events } = useRouter();
   const userId = useGetUserId();
 
-  const { resetStore } = useMainStore((state) => ({
+  const { resetStore, orderDetails } = useMainStore((state) => ({
     resetStore: state.resetStore,
+    orderDetails: state.orderDetails,
   }));
 
   const { data: user } = api.user.get.useQuery(userId, {
@@ -41,6 +42,21 @@ function DesktopHeader() {
   });
 
   const [showUserPopoverLinks, setShowUserPopoverLinks] = useState(false);
+  const [numberOfItems, setNumberOfItems] = useState(0);
+
+  useEffect(() => {
+    // add up all the quantities of the items in the order
+    let sum = 0;
+    orderDetails.items.forEach((item) => {
+      sum += item.quantity;
+    });
+
+    if (orderDetails.rewardBeingRedeemed) {
+      sum++;
+    }
+
+    setNumberOfItems(sum);
+  }, [orderDetails.items, orderDetails.rewardBeingRedeemed]);
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -248,7 +264,11 @@ function DesktopHeader() {
       </div>
 
       {/* order icon and auth buttons/user icon */}
-      <div className={`${classes.authentication} baseFlex relative gap-4`}>
+      <div
+        className={`${classes.authentication} baseFlex relative transition-all
+        ${numberOfItems > 9 ? "gap-8" : "gap-4"}
+      `}
+      >
         <Dialog>
           <DialogTrigger asChild>
             <Button
@@ -412,11 +432,9 @@ function DesktopHeader() {
                   variant={"link"}
                   className="mt-2 h-8"
                   onClick={async () => {
-                    await signOut(async () => {
-                      clearLocalStorage();
-                      resetStore();
-                      await push("/");
-                    });
+                    clearLocalStorage();
+                    resetStore();
+                    await signOut({ redirectUrl: "/" });
                   }}
                 >
                   Log out
