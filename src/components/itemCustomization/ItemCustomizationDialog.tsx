@@ -269,59 +269,6 @@ function ItemCustomizerDialogContent({
               {itemToCustomize.description}
             </p>
 
-            {/* <div className="baseVertFlex mt-2 w-full gap-2">
-              <div className="baseFlex w-full gap-2">
-                {(() => {
-                  const elements = [];
-
-                  if (itemToCustomize.isChefsChoice) {
-                    elements.push(
-                      <div className="baseFlex gap-2">
-                        <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
-                          K
-                        </p>
-                        <p>Chef&apos;s Choice</p>
-                      </div>,
-                    );
-                  }
-
-                  if (itemToCustomize.isVegetarian) {
-                    if (elements.length > 0) {
-                      // Add a divider if this isn't the first element
-                      elements.push(<Separator className="h-4 w-[1px]" />);
-                    }
-                    elements.push(
-                      <p className="baseFlex gap-2">
-                        <SiLeaflet className="size-4" />
-                        Vegetarian
-                      </p>,
-                    );
-                  }
-
-                  if (itemToCustomize.isVegan) {
-                    if (elements.length > 0) {
-                      elements.push(<Separator className="h-4 w-[1px]" />);
-                    }
-                    elements.push(
-                      <p className="baseFlex gap-2 ">
-                        <LuVegan className="size-4" />
-                        Vegan
-                      </p>,
-                    );
-                  }
-
-                  if (itemToCustomize.isGlutenFree) {
-                    if (elements.length > 0) {
-                      elements.push(<Separator className="h-4 w-[1px]" />);
-                    }
-                    elements.push(<p className="baseFlex">GF - Gluten Free</p>);
-                  }
-
-                  return elements;
-                })()}
-              </div>
-            </div> */}
-
             <div className="baseFlex mt-2 w-full flex-wrap !justify-start gap-2 text-sm text-stone-400">
               {itemToCustomize.isChefsChoice && (
                 <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">

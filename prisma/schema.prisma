@@ -125,7 +125,7 @@ model MenuItem {
     reviews      String? // max three hand-picked reviews, separated/delimited by " | "
 
     favoriteItem            FavoriteItem[]
-    customizationCategories CustomizationCategory[]
+    customizationCategories MenuItemCustomizationCategory[]
     orderItem               OrderItem[]
 }
 
@@ -136,7 +136,7 @@ model CustomizationCategory {
 
     defaultChoiceId String
 
-    menuItem               MenuItem[]
+    menuItems              MenuItemCustomizationCategory[]
     customizationChoices   CustomizationChoice[]
     orderItemCustomization OrderItemCustomization[]
 }
@@ -152,6 +152,18 @@ model CustomizationChoice {
     customizationCategory   CustomizationCategory    @relation(fields: [customizationCategoryId], references: [id])
     customizationCategoryId String
     orderItemCustomization  OrderItemCustomization[]
+}
+
+// Join table for MenuItem and CustomizationCategory
+model MenuItemCustomizationCategory {
+    id String @id @default(uuid())
+
+    menuItemId              String
+    customizationCategoryId String
+    menuItem                MenuItem              @relation(fields: [menuItemId], references: [id])
+    customizationCategory   CustomizationCategory @relation(fields: [customizationCategoryId], references: [id])
+
+    @@index([menuItemId, customizationCategoryId])
 }
 
 // used to store the order details so before stripe session is created

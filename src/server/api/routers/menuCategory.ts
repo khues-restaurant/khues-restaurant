@@ -47,9 +47,13 @@ export const menuCategoryRouter = createTRPCRouter({
               activeDiscount: true,
               customizationCategories: {
                 include: {
-                  customizationChoices: {
-                    orderBy: {
-                      listOrder: "asc",
+                  customizationCategory: {
+                    include: {
+                      customizationChoices: {
+                        orderBy: {
+                          listOrder: "asc",
+                        },
+                      },
                     },
                   },
                 },
@@ -62,7 +66,24 @@ export const menuCategoryRouter = createTRPCRouter({
         },
       });
 
-      return menuCategories;
+      // filter out the "extra" field for "customizationCategory" for each menu item
+      const filteredMenuCategories = menuCategories.map((category) => {
+        return {
+          ...category,
+          menuItems: category.menuItems.map((item) => {
+            return {
+              ...item,
+              customizationCategories: item.customizationCategories.map(
+                (category) => {
+                  return category.customizationCategory;
+                },
+              ),
+            };
+          }),
+        };
+      });
+
+      return filteredMenuCategories;
     }),
 
   getRewardsCategories: publicProcedure.query(async ({ ctx }) => {
@@ -77,9 +98,13 @@ export const menuCategoryRouter = createTRPCRouter({
             activeDiscount: true,
             customizationCategories: {
               include: {
-                customizationChoices: {
-                  orderBy: {
-                    listOrder: "asc",
+                customizationCategory: {
+                  include: {
+                    customizationChoices: {
+                      orderBy: {
+                        listOrder: "asc",
+                      },
+                    },
                   },
                 },
               },
@@ -89,7 +114,24 @@ export const menuCategoryRouter = createTRPCRouter({
       },
     });
 
-    let rewardMenuCategories = menuCategories.filter((category) => {
+    // filter out the "extra" field for "customizationCategory" for each menu item
+    const filteredMenuCategories = menuCategories.map((category) => {
+      return {
+        ...category,
+        menuItems: category.menuItems.map((item) => {
+          return {
+            ...item,
+            customizationCategories: item.customizationCategories.map(
+              (category) => {
+                return category.customizationCategory;
+              },
+            ),
+          };
+        }),
+      };
+    });
+
+    let rewardMenuCategories = filteredMenuCategories.filter((category) => {
       return category.menuItems.some(
         (item) => item.isRewardItem && category.name !== "Desserts",
       );
@@ -103,7 +145,7 @@ export const menuCategoryRouter = createTRPCRouter({
       };
     });
 
-    let birthdayMenuCategories = menuCategories.filter((category) => {
+    let birthdayMenuCategories = filteredMenuCategories.filter((category) => {
       return category.menuItems.some(
         (item) => item.isRewardItem && category.name === "Desserts",
       );
