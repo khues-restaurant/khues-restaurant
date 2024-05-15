@@ -573,7 +573,7 @@ function MenuCategory({
       </div>
 
       {/* wrapping container for each food item in the category */}
-      <div className="grid w-full grid-cols-1 place-items-center p-1 sm:grid-cols-2 sm:gap-8 xl:grid-cols-3 2xl:grid-cols-4">
+      <div className="grid w-full grid-cols-1 place-items-start p-1 sm:grid-cols-2 sm:gap-8 xl:grid-cols-3 2xl:grid-cols-4">
         {menuItems.map((item) => (
           <MenuItemPreview
             key={item.id}
@@ -865,50 +865,52 @@ function MenuItemPreview({
       }}
       className="relative w-full max-w-96 px-2"
     >
-      <div className="baseFlex size-full gap-4 py-6">
-        <Image
-          src={"/menuItems/sampleImage.webp"}
-          alt={menuItem.name}
-          width={96}
-          height={96}
-          className="rounded-md"
-        />
+      <div className="baseVertFlex size-full !justify-between gap-4 py-1 tablet:py-4">
+        <div className="baseFlex mt-4 w-full gap-4 tablet:mt-0">
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={menuItem.name}
+            width={96}
+            height={96}
+            className="rounded-md"
+          />
 
-        <div className="baseVertFlex size-full !items-start">
-          <div className="baseFlex w-full !justify-between">
-            <div className="baseVertFlex !items-start gap-1">
-              <p className="text-wrap text-left text-lg font-medium ">
-                <span className="underline underline-offset-2">
-                  {menuItem.name}
-                </span>
-                {menuItem.showUndercookedOrRawDisclaimer ? "*" : ""}
-              </p>
+          <div className="baseVertFlex size-full !items-start">
+            <div className="baseFlex w-full !justify-between">
+              <div className="baseVertFlex !items-start gap-1">
+                <p className="text-wrap text-left text-lg font-medium ">
+                  <span className="underline underline-offset-2">
+                    {menuItem.name}
+                  </span>
+                  {menuItem.showUndercookedOrRawDisclaimer ? "*" : ""}
+                </p>
 
-              <div className="baseFlex !justify-start gap-1">
-                {menuItem.isChefsChoice && (
-                  <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
-                    K
-                  </p>
-                )}
-                {menuItem.isVegetarian && <SiLeaflet className="size-4" />}
-                {menuItem.isVegan && <LuVegan className="size-4" />}
-                {menuItem.isGlutenFree && <p className="text-sm">GF</p>}
+                <div className="baseFlex !justify-start gap-1">
+                  {menuItem.isChefsChoice && (
+                    <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
+                      K
+                    </p>
+                  )}
+                  {menuItem.isVegetarian && <SiLeaflet className="size-4" />}
+                  {menuItem.isVegan && <LuVegan className="size-4" />}
+                  {menuItem.isGlutenFree && <p className="text-sm">GF</p>}
+                </div>
+
+                <p className="max-w-72 text-wrap text-left text-sm text-stone-400">
+                  {menuItem.description}
+                </p>
               </div>
-
-              <p className="max-w-72 text-wrap text-left text-sm text-stone-400">
-                {menuItem.description}
-              </p>
             </div>
           </div>
+        </div>
 
-          <div className="mt-4 self-end">
-            {formatMenuItemPrice(
-              categoryName,
-              menuItem,
-              activeDiscount,
-              customizationChoices,
-            )}
-          </div>
+        <div className="self-end">
+          {formatMenuItemPrice(
+            categoryName,
+            menuItem,
+            activeDiscount,
+            customizationChoices,
+          )}
         </div>
       </div>
     </div>

@@ -803,7 +803,7 @@ function MenuCategory({
       </div>
 
       {/* wrapping container for each food item in the category */}
-      <div className="grid w-full grid-cols-1 place-items-center gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+      <div className="grid w-full grid-cols-1 place-items-start gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {menuItems.map((item) => (
           <MenuItemPreviewButton
             key={item.id}
@@ -864,12 +864,12 @@ function MenuItemPreviewButton({
       style={{
         order: listOrder,
       }}
-      className="relative h-48 w-full max-w-96"
+      className="relative w-full max-w-96"
     >
       <Button
         variant="outline"
         disabled={!menuItem.available}
-        className="baseFlex size-full !justify-between gap-4 border border-stone-300 !p-6 tablet:!p-4"
+        className="baseVertFlex size-full !justify-between gap-4 border border-stone-300 !p-4"
         onClick={() => {
           dismissToasts();
 
@@ -883,78 +883,81 @@ function MenuItemPreviewButton({
           }
         }}
       >
-        <Image
-          src={"/menuItems/sampleImage.webp"}
-          alt={menuItem.name}
-          width={96}
-          height={96}
-          className="mb-4 rounded-md"
-        />
+        <div className="baseFlex mt-4 w-full gap-4 tablet:mt-0">
+          <Image
+            src={"/menuItems/sampleImage.webp"}
+            alt={menuItem.name}
+            width={96}
+            height={96}
+            className="rounded-md"
+          />
 
-        <div className="baseVertFlex h-full w-48 !items-start">
-          <div
-            className={`baseVertFlex !items-start gap-2 ${!menuItem.available ? "mt-4" : ""}`}
-          >
-            <div className="baseVertFlex !items-start gap-1">
-              <p className="max-w-40 text-wrap text-left text-lg font-medium underline underline-offset-2">
-                {menuItem.name}
-              </p>
+          <div className="baseVertFlex h-full w-48 !items-start">
+            <div
+              className={`baseVertFlex !items-start gap-2 ${!menuItem.available ? "mt-4" : ""}`}
+            >
+              <div className="baseVertFlex !items-start gap-1">
+                <p className="max-w-40 text-wrap text-left text-lg font-medium underline underline-offset-2">
+                  {menuItem.name}
+                </p>
 
-              <div className="baseFlex !justify-start gap-1">
-                {menuItem.isChefsChoice && (
-                  <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
-                    K
-                  </p>
-                )}
-                {menuItem.isVegetarian && <SiLeaflet className="size-4" />}
-                {menuItem.isVegan && <LuVegan className="size-4" />}
-                {menuItem.isGlutenFree && <p className="text-sm">GF</p>}
+                <div className="baseFlex !justify-start gap-1">
+                  {menuItem.isChefsChoice && (
+                    <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
+                      K
+                    </p>
+                  )}
+                  {menuItem.isVegetarian && <SiLeaflet className="size-4" />}
+                  {menuItem.isVegan && <LuVegan className="size-4" />}
+                  {menuItem.isGlutenFree && <p className="text-sm">GF</p>}
+                </div>
               </div>
+
+              <p className="line-clamp-3 max-w-48 text-wrap text-left text-stone-400">
+                {menuItem.description}
+              </p>
             </div>
-
-            <p className="line-clamp-3 max-w-48 text-wrap text-left text-stone-400">
-              {menuItem.description}
-            </p>
           </div>
-          <p
-            // TODO: idk about either the goldBorder or rewardsGoldBorder here...
-            className={`mt-4 self-end text-base ${activeDiscount ? "goldBorder rounded-md !py-0.5 px-4 text-offwhite" : ""}`}
-          >
-            {formatPrice(
-              calculateRelativeTotal({
-                items: [
-                  {
-                    price: menuItem.price,
-                    quantity: 1,
-                    discountId: activeDiscount?.id ?? null,
-
-                    // only necessary to fit Item shape
-                    id:
-                      orderDetails.items.length === 0
-                        ? 0
-                        : orderDetails.items.at(-1)!.id + 1,
-                    itemId: menuItem.id,
-                    customizations: {}, // not necessary since all default choices are already included in price
-                    includeDietaryRestrictions: false,
-                    name: menuItem.name,
-                    specialInstructions: "",
-                    isChefsChoice: menuItem.isChefsChoice,
-                    isAlcoholic: menuItem.isAlcoholic,
-                    isVegetarian: menuItem.isVegetarian,
-                    isVegan: menuItem.isVegan,
-                    isGlutenFree: menuItem.isGlutenFree,
-                    showUndercookedOrRawDisclaimer:
-                      menuItem.showUndercookedOrRawDisclaimer,
-                    birthdayReward: false,
-                    pointReward: false,
-                  },
-                ],
-                customizationChoices,
-                discounts,
-              }),
-            )}
-          </p>
         </div>
+
+        <p
+          // TODO: idk about either the goldBorder or rewardsGoldBorder here...
+          className={`self-end text-base ${activeDiscount ? "goldBorder rounded-md !py-0.5 px-4 text-offwhite" : ""}`}
+        >
+          {formatPrice(
+            calculateRelativeTotal({
+              items: [
+                {
+                  price: menuItem.price,
+                  quantity: 1,
+                  discountId: activeDiscount?.id ?? null,
+
+                  // only necessary to fit Item shape
+                  id:
+                    orderDetails.items.length === 0
+                      ? 0
+                      : orderDetails.items.at(-1)!.id + 1,
+                  itemId: menuItem.id,
+                  customizations: {}, // not necessary since all default choices are already included in price
+                  includeDietaryRestrictions: false,
+                  name: menuItem.name,
+                  specialInstructions: "",
+                  isChefsChoice: menuItem.isChefsChoice,
+                  isAlcoholic: menuItem.isAlcoholic,
+                  isVegetarian: menuItem.isVegetarian,
+                  isVegan: menuItem.isVegan,
+                  isGlutenFree: menuItem.isGlutenFree,
+                  showUndercookedOrRawDisclaimer:
+                    menuItem.showUndercookedOrRawDisclaimer,
+                  birthdayReward: false,
+                  pointReward: false,
+                },
+              ],
+              customizationChoices,
+              discounts,
+            }),
+          )}
+        </p>
       </Button>
 
       {menuItem.available ? (
