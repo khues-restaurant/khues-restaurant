@@ -241,7 +241,7 @@ export default function Home() {
             },
           }}
         >
-          <CarouselContent className="mb-4 xl:w-[800px] tablet:mb-0">
+          <CarouselContent className="mb-8 mt-4 xl:w-[800px] tablet:mb-4">
             <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md tablet:basis-1/3">
               <a
                 href="https://www.startribune.com/how-these-moms-shaped-the-next-generation-of-great-twin-cities-restaurateurs/600273728/?refresh=true"

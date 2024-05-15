@@ -77,7 +77,15 @@ function Media() {
           </div>
 
           <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
-            <Image src={kare11Logo} alt="Kare 11 Logo" width={75} height={35} />
+            <a href="https://www.kare11.com/">
+              <Image
+                src={kare11Logo}
+                alt="Kare 11 Logo"
+                width={86}
+                height={40}
+                className="mb-1"
+              />
+            </a>
             <p className="text-lg font-semibold">
               KARE in the Kitchen: Fried chicken sandwiches with Eric Pham from
               Khue&apos;s Kitchen
@@ -113,7 +121,15 @@ function Media() {
           </div>
 
           <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
-            <Image src={kare11Logo} alt="Kare 11 Logo" width={75} height={35} />
+            <a href="https://www.kare11.com/">
+              <Image
+                src={kare11Logo}
+                alt="Kare 11 Logo"
+                width={86}
+                height={40}
+                className="mb-1"
+              />
+            </a>
             <p className="text-lg font-semibold">
               Minneapolis chef credits his mom for inspiration
             </p>
@@ -150,13 +166,15 @@ function Media() {
           </div>
 
           <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
-            <Image
-              src={starTribuneLogo}
-              alt="TODO"
-              width={150}
-              height={35}
-              className="-ml-3 mb-4"
-            />
+            <a href="https://www.startribune.com/">
+              <Image
+                src={starTribuneLogo}
+                alt="TODO"
+                width={150}
+                height={35}
+                className="-ml-3 mb-4"
+              />
+            </a>
             <p className="text-lg font-semibold">
               These 4 Twin Cities area restaurateurs learned from the best: Mom
             </p>
@@ -195,13 +213,15 @@ function Media() {
           </div>
 
           <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
-            <Image
-              src={mprLogo}
-              alt="TODO"
-              width={110}
-              height={85}
-              className="mb-3"
-            />
+            <a href="https://www.mprnews.org/">
+              <Image
+                src={mprLogo}
+                alt="TODO"
+                width={110}
+                height={85}
+                className="mb-3"
+              />
+            </a>
             <p className="text-lg font-semibold">
               Eric Pham of the Quang Restaurant family
             </p>
