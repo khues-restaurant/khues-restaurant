@@ -15,10 +15,9 @@ import ItemCustomizationDialog from "~/components/itemCustomization/ItemCustomiz
 import ItemCustomizationDrawer from "~/components/itemCustomization/ItemCustomizationDrawer";
 import { Button } from "~/components/ui/button";
 import { Drawer, DrawerContent } from "~/components/ui/drawer";
-import { Skeleton } from "~/components/ui/skeleton";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
-import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
+import { useMainStore } from "~/stores/MainStore";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { api } from "~/utils/api";
 import { FaRedo } from "react-icons/fa";
@@ -429,7 +428,7 @@ function OrderNow() {
                   id={"FavoritesContainer"}
                   className="baseVertFlex mt-4 w-full scroll-m-48 !items-start gap-2"
                 >
-                  <div className="baseFlex gap-3 pl-4 text-xl font-semibold underline underline-offset-2">
+                  <div className="baseFlex gap-3 pl-4 text-xl font-medium underline underline-offset-2">
                     <IoMdHeart />
                     <p>Favorites</p>
                   </div>
@@ -512,7 +511,7 @@ function OrderNow() {
                   id={"Recent ordersContainer"}
                   className="baseVertFlex mt-4 w-full scroll-m-48 !items-start gap-2"
                 >
-                  <div className="baseFlex gap-3 pl-4 text-xl underline underline-offset-2">
+                  <div className="baseFlex gap-3 pl-4 text-xl font-medium underline underline-offset-2">
                     <FaRedo className="size-4" />
                     <p>Recent orders</p>
                   </div>
@@ -582,7 +581,7 @@ function OrderNow() {
                   key={category.id}
                   name={category.name}
                   activeDiscount={category.activeDiscount}
-                  menuItems={category.menuItems as FullMenuItem[]}
+                  menuItems={category.menuItems}
                   listOrder={menuCategoryIndicies![category.name]!}
                   currentlyInViewCategory={currentlyInViewCategory}
                   setCurrentlyInViewCategory={setCurrentlyInViewCategory}
@@ -594,16 +593,34 @@ function OrderNow() {
                 />
               ))}
 
-              <div className="baseFlex order-[999] mt-8 w-full gap-2">
-                <Image
-                  src="/logo.svg"
-                  alt="Khue's header logo"
-                  width={24}
-                  height={24}
-                  priority
-                  className="!size-[24px]"
-                />
-                -<span>Chef&apos;s choice</span>
+              <div className="baseVertFlex order-[999] mt-8 w-full gap-4 px-4 ">
+                <div className="baseFlex w-full flex-wrap gap-4 text-sm tablet:text-base">
+                  <div className="baseFlex gap-2">
+                    <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
+                      K
+                    </p>
+                    -<p>Chef&apos;s Choice</p>
+                  </div>
+                  |
+                  <div className="baseFlex gap-2">
+                    <SiLeaflet className="size-4" />
+                    <p>Vegetarian</p>
+                  </div>
+                  |
+                  <div className="baseFlex gap-2">
+                    <LuVegan className="size-4" />-<p>Vegan</p>
+                  </div>
+                  |
+                  <div className="baseFlex gap-2">
+                    <span>GF</span>-<span>Gluten Free</span>
+                  </div>
+                </div>
+                <p className="text-center text-xs italic text-stone-400 tablet:text-sm">
+                  <span className="not-italic">* </span>
+                  Consuming raw or undercooked meats, poultry, seafood,
+                  shellfish, or eggs may increase your risk of foodborne
+                  illness.
+                </p>
               </div>
             </motion.div>
           ) : (

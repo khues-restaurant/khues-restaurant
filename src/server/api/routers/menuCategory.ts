@@ -1,4 +1,5 @@
 import {
+  type MenuCategory,
   type CustomizationCategory,
   type CustomizationChoice,
   type Discount,
@@ -14,6 +15,11 @@ export type StoreCustomizationCategory = CustomizationCategory & {
 export type FullMenuItem = MenuItem & {
   activeDiscount: Discount | null;
   customizationCategories: StoreCustomizationCategory[];
+};
+
+export type FilteredMenuCategory = MenuCategory & {
+  activeDiscount: Discount | null;
+  menuItems: FullMenuItem[];
 };
 
 // any validity of these copilot generated skeleton types here?
@@ -83,7 +89,7 @@ export const menuCategoryRouter = createTRPCRouter({
         };
       });
 
-      return filteredMenuCategories;
+      return filteredMenuCategories as FilteredMenuCategory[];
     }),
 
   getRewardsCategories: publicProcedure.query(async ({ ctx }) => {
