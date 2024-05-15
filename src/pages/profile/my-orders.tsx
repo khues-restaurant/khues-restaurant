@@ -53,47 +53,27 @@ import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { useAuth } from "@clerk/nextjs";
 import Image from "next/image";
-import { buildClerkProps, getAuth } from "@clerk/nextjs/server";
-import { type GetServerSideProps } from "next";
-import { PrismaClient } from "@prisma/client";
-import isEqual from "lodash.isequal";
-
 import noOrders from "/public/menuItems/myOrders.jpg";
 import Head from "next/head";
 import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
+import AnimatedLotus from "~/components/ui/AnimatedLotus";
 
-function RecentOrders({ initOrders }: { initOrders: DBOrderSummary[] | null }) {
+function RecentOrders() {
   const userId = useGetUserId();
   const { isSignedIn } = useAuth();
 
-  const { data: currentOrderData } = api.order.getUsersOrders.useQuery(
+  const { data: orders } = api.order.getUsersOrders.useQuery(
     { userId },
     {
       enabled: Boolean(userId && isSignedIn),
     },
   );
 
-  console.log("rendering");
-
-  const [orders, setOrders] = useState<DBOrderSummary[] | null>(initOrders);
-
-  useEffect(() => {
-    if (
-      currentOrderData === undefined ||
-      currentOrderData === null ||
-      isEqual(initOrders, currentOrderData)
-    )
-      return;
-
-    setOrders(currentOrderData);
-  }, [initOrders, currentOrderData]);
-
   const [sortedOrders, setSortedOrders] = useState<DBOrderSummary[] | null>(
     null,
   );
   const [sortDirection, setSortDirection] = useState("desc");
 
-  // idk what this logic is on about, check this later since there shouldn't be a typeerror
   useEffect(() => {
     if (orders === null && sortedOrders === null) {
       setSortedOrders([]);
@@ -110,7 +90,6 @@ function RecentOrders({ initOrders }: { initOrders: DBOrderSummary[] | null }) {
 
     if (localSortedOrders === undefined) return;
 
-    console.log("setting orders");
     setSortedOrders(localSortedOrders);
   }, [orders, sortedOrders, sortDirection]);
 
@@ -140,69 +119,95 @@ function RecentOrders({ initOrders }: { initOrders: DBOrderSummary[] | null }) {
         <meta property="og:type" content="website" />
       </Head>
 
-      <div className="baseVertFlex relative mt-4 w-full p-0 transition-all tablet:my-8 tablet:p-8">
-        {/* fyi: don't think it makes sense to have these two be under an <AnimatePresence /> since
+      <AnimatePresence mode="wait">
+        {orders === undefined ? (
+          <motion.div
+            key={"my-ordersLoadingContent"}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="baseVertFlex h-full min-h-[calc(100dvh-6rem-140px)] w-full items-center justify-center tablet:min-h-[calc(100dvh-7rem-120px)] "
+          >
+            <AnimatedLotus className="size-20 fill-primary tablet:size-24" />
+          </motion.div>
+        ) : (
+          <motion.div
+            key={"my-ordersLoadedContent"}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="baseVertFlex relative mt-4 w-full p-0 transition-all tablet:my-8 tablet:p-8"
+          >
+            {/* fyi: don't think it makes sense to have these two be under an <AnimatePresence /> since
             it should (rarely) ever change between 0 orders and some orders */}
 
-        {sortedOrders && sortedOrders.length > 0 && (
-          <div className="baseVertFlex gap-2">
-            <div className="baseFlex w-full !justify-end font-medium">
-              <div className="baseFlex gap-2">
-                <Label htmlFor="sortDirection" className="text-nowrap">
-                  Sort by
-                </Label>
-                <Select
-                  value={sortDirection}
-                  onValueChange={(direction) => setSortDirection(direction)}
-                >
-                  <SelectTrigger id={"sortDirection"}>
-                    <SelectValue placeholder="Sort direction" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Sort direction</SelectLabel>
+            {sortedOrders && sortedOrders.length > 0 && (
+              <div className="baseVertFlex gap-2">
+                <div className="baseFlex w-full !justify-end font-medium">
+                  <div className="baseFlex gap-2">
+                    <Label htmlFor="sortDirection" className="text-nowrap">
+                      Sort by
+                    </Label>
+                    <Select
+                      value={sortDirection}
+                      onValueChange={(direction) => setSortDirection(direction)}
+                    >
+                      <SelectTrigger id={"sortDirection"}>
+                        <SelectValue placeholder="Sort direction" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Sort direction</SelectLabel>
 
-                      <SelectItem value={"desc"}>
-                        <div className="baseFlex gap-1">Newest</div>
-                      </SelectItem>
-                      <SelectItem value={"asc"}>
-                        <div className="baseFlex gap-1">Oldest</div>
-                      </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                          <SelectItem value={"desc"}>
+                            <div className="baseFlex gap-1">Newest</div>
+                          </SelectItem>
+                          <SelectItem value={"asc"}>
+                            <div className="baseFlex gap-1">Oldest</div>
+                          </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="baseVertFlex gap-4">
+                  {sortedOrders.map((order) => (
+                    <OrderAccordion
+                      key={order.id}
+                      userId={userId}
+                      order={order}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="baseVertFlex gap-4">
-              {sortedOrders.map((order) => (
-                <OrderAccordion key={order.id} userId={userId} order={order} />
-              ))}
-            </div>
-          </div>
+            {sortedOrders && sortedOrders.length === 0 && (
+              <div className="baseVertFlex relative gap-4">
+                <Image
+                  src={noOrders}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  sizes="(max-width: 640px) 80vw, 50vw"
+                  className="!relative !rounded-md !px-4"
+                />
+
+                <div className="baseVertFlex gap-4">
+                  <p className="text-center tablet:text-lg">
+                    It looks like you haven&apos;t placed an order yet.
+                  </p>
+                  <Button asChild>
+                    <Link href="/order">Get started</Link>
+                  </Button>
+                  with your first order today!
+                </div>
+              </div>
+            )}
+          </motion.div>
         )}
-
-        {sortedOrders && sortedOrders.length === 0 && (
-          <div className="baseVertFlex relative gap-4">
-            <Image
-              src={noOrders}
-              alt={"TODO: fill in w/ appropriate alt text"}
-              sizes="(max-width: 640px) 80vw, 50vw"
-              className="!relative !rounded-md !px-4"
-            />
-
-            <div className="baseVertFlex gap-4">
-              <p className="text-center tablet:text-lg">
-                It looks like you haven&apos;t placed an order yet.
-              </p>
-              <Button asChild>
-                <Link href="/order">Get started</Link>
-              </Button>
-              with your first order today!
-            </div>
-          </div>
-        )}
-      </div>
+      </AnimatePresence>
     </motion.div>
   );
 }
@@ -211,55 +216,6 @@ RecentOrders.PageLayout = TopProfileNavigationLayout;
 
 export default RecentOrders;
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { userId } = getAuth(ctx.req);
-  if (!userId) return { props: {} };
-
-  const prisma = new PrismaClient();
-
-  const recentOrders = await prisma.order.findMany({
-    where: {
-      userId,
-    },
-    include: {
-      orderItems: {
-        include: {
-          customizations: true,
-          discount: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
-  // Iterate over each order to transform the item customizations
-  // into a Record<string, string> for each order's items
-  const initOrders =
-    // @ts-expect-error asdf
-    (recentOrders?.map((order) => {
-      order.orderItems = order.orderItems.map((item) => {
-        // @ts-expect-error asdf
-        item.customizations = item.customizations.reduce(
-          (acc, customization) => {
-            acc[customization.customizationCategoryId] =
-              customization.customizationChoiceId;
-            return acc;
-          },
-          {} as Record<string, string>,
-        );
-
-        return item;
-      });
-
-      return order;
-    }) as DBOrderSummary[]) ?? null;
-
-  return {
-    props: { initOrders, ...buildClerkProps(ctx.req) },
-  };
-};
 interface OrderAccordion {
   userId: string;
   order: DBOrderSummary;

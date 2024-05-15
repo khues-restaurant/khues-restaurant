@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import TopProfileNavigationLayout from "~/components/layouts/TopProfileNavigationLayout";
 import { AnimatePresence, motion } from "framer-motion";
 import { z } from "zod";
@@ -7,7 +7,6 @@ import { useAuth } from "@clerk/nextjs";
 import { FaTrashAlt } from "react-icons/fa";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useGetUserId from "~/hooks/useGetUserId";
-import { MdOutlineMail } from "react-icons/md";
 import { IoIosMail } from "react-icons/io";
 import { Checkbox } from "~/components/ui/checkbox";
 import { MdAdminPanelSettings } from "react-icons/md";
@@ -46,15 +45,13 @@ import { Button } from "~/components/ui/button";
 import { FaUserAlt } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { Separator } from "~/components/ui/separator";
-import { buildClerkProps, getAuth } from "@clerk/nextjs/server";
-import { type GetServerSideProps } from "next";
 import { formatPhoneNumber } from "~/utils/formatPhoneNumber";
-import { PrismaClient, type User } from "@prisma/client";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { useMainStore } from "~/stores/MainStore";
 import Head from "next/head";
+import AnimatedLotus from "~/components/ui/AnimatedLotus";
 
-function Preferences({ initUserData }: { initUserData: User }) {
+function Preferences() {
   const userId = useGetUserId();
   const { isSignedIn, signOut } = useAuth();
   const ctx = api.useUtils();
@@ -65,22 +62,9 @@ function Preferences({ initUserData }: { initUserData: User }) {
     viewportLabel: state.viewportLabel,
   }));
 
-  const { data: currentUserData } = api.user.get.useQuery(userId, {
+  const { data: user } = api.user.get.useQuery(userId, {
     enabled: Boolean(userId && isSignedIn),
   });
-
-  const [user, setUser] = useState<User | null>(initUserData);
-
-  useEffect(() => {
-    if (
-      currentUserData === undefined ||
-      currentUserData === null ||
-      isEqual(initUserData, currentUserData)
-    )
-      return;
-
-    setUser(currentUserData);
-  }, [initUserData, currentUserData]);
 
   const { mutate: updateUser } = api.user.updatePreferences.useMutation({
     onSuccess: async () => {
@@ -231,618 +215,653 @@ function Preferences({ initUserData }: { initUserData: User }) {
         <meta property="og:type" content="website" />
       </Head>
 
-      <div className="baseVertFlex relative w-full !items-start p-8 transition-all tablet:my-8 tablet:p-16 tablet:pb-0">
-        {/* Personal Information */}
-
-        <div className="baseFlex gap-4 text-lg font-semibold text-primary underline underline-offset-2">
-          <FaUserAlt />
-          Personal information
-        </div>
-
-        <Form {...form}>
-          <form className="baseVertFlex mt-8 w-full !items-start gap-2">
-            <div className="baseVertFlex w-full !items-start gap-8 tablet:!grid tablet:grid-cols-2 tablet:gap-x-16">
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field, fieldState: { invalid } }) => (
-                  <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
-                    <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
-                      <FormLabel className="font-semibold">
-                        First name
-                      </FormLabel>
-                      <Input placeholder="First name" {...field} />
-                    </div>
-                    <AnimatePresence>
-                      {invalid && (
-                        <motion.div
-                          key={"firstNameError"}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <FormMessage />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field, fieldState: { invalid } }) => (
-                  <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
-                    <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
-                      <FormLabel className="font-semibold">Last name</FormLabel>
-                      <Input placeholder="Last name" {...field} />
-                    </div>
-                    <AnimatePresence>
-                      {invalid && (
-                        <motion.div
-                          key={"lastNameError"}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <FormMessage />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="phoneNumber"
-                render={({
-                  field: { onChange, onBlur, value, ref },
-                  fieldState: { invalid },
-                }) => (
-                  <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
-                    <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
-                      <FormLabel className="font-semibold">
-                        Phone number
-                      </FormLabel>
-                      <Input
-                        ref={ref}
-                        value={formatPhoneNumber(value)}
-                        onChange={(e) =>
-                          onChange(formatPhoneNumber(e.target.value))
-                        }
-                        onBlur={onBlur}
-                        placeholder="(123) 456-7890"
-                        type={"tel"}
-                      />
-                    </div>
-                    <AnimatePresence>
-                      {invalid && (
-                        <motion.div
-                          key={"phoneNumberError"}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <FormMessage />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field, fieldState: { invalid } }) => (
-                  <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
-                    <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
-                      <FormLabel className="font-semibold">Email</FormLabel>
-                      <Input placeholder="Email" {...field} disabled />
-                      <FaLock className="absolute bottom-3 right-2 size-3.5 text-stone-300" />
-                    </div>
-                    <AnimatePresence>
-                      {invalid && (
-                        <motion.div
-                          key={"emailError"}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <FormMessage />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="birthday"
-                render={({ field, fieldState: { invalid } }) => (
-                  <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
-                    <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
-                      <FormLabel className="font-semibold">Birthday</FormLabel>
-                      <Input
-                        {...field}
-                        value={format(field.value, "PPP")}
-                        disabled
-                      />
-                      <FaLock className="absolute bottom-3 right-2 size-3.5 text-stone-300" />
-                    </div>
-                    <AnimatePresence>
-                      {invalid && (
-                        <motion.div
-                          key={"birthdayError"}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <FormMessage />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            {/* Dietary preferences */}
-            <FormField
-              control={form.control}
-              name="dietaryRestrictions"
-              render={({ field, fieldState: { invalid } }) => (
-                <FormItem className="baseVertFlex relative mt-8 w-full max-w-lg !items-start gap-2 space-y-0">
-                  <div className="baseVertFlex w-full !items-start gap-2">
-                    <FormLabel className="font-semibold">
-                      Dietary preferences
-                    </FormLabel>
-                    <FormDescription>
-                      Please list any allergies or dietary restrictions you may
-                      have.
-                    </FormDescription>
-                    <FormControl>
-                      <Textarea
-                        maxLength={100}
-                        placeholder="I am allergic to..."
-                        className="min-h-32 w-full resize-none tablet:min-h-24"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <p className="pointer-events-none absolute bottom-2 right-4 text-xs text-stone-400 tablet:bottom-1">
-                      {100 - field.value.length} characters remaining
-                    </p>
-                  </div>
-                  <AnimatePresence>
-                    {invalid && (
-                      <motion.div
-                        key={"dietaryRestrictionsError"}
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <FormMessage />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </FormItem>
-              )}
-            />
-
-            <div className="baseFlex mt-20 gap-3.5 text-lg font-semibold text-primary underline underline-offset-2 tablet:mt-16">
-              <IoIosMail className="size-[24px]" />
-              Email communication
-            </div>
-
-            <div className="baseVertFlex mt-4 w-full !items-start gap-6 tablet:gap-4">
-              <FormField
-                control={form.control}
-                name="allowsEmailReceipts"
-                render={({ field }) => (
-                  <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                    <div className="baseFlex ml-1 gap-[1.15rem]">
-                      <FormControl>
-                        <Checkbox
-                          id="allowsEmailReceipts"
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          className="size-4"
-                        />
-                      </FormControl>
-                      <Label
-                        htmlFor="allowsEmailReceipts"
-                        className="leading-4"
-                      >
-                        Receive email receipts for your orders.
-                      </Label>
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="allowsOrderCompleteEmails"
-                render={({ field }) => (
-                  <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                    <div className="baseFlex ml-1 gap-[1.15rem]">
-                      <FormControl>
-                        <Checkbox
-                          id="allowsOrderCompleteEmails"
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          className="size-4"
-                        />
-                      </FormControl>
-                      <Label
-                        htmlFor="allowsOrderCompleteEmails"
-                        className="leading-4"
-                      >
-                        Receive an email when your order is ready to be picked
-                        up.
-                      </Label>
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="allowsPromotionalEmails"
-                render={({ field }) => (
-                  <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                    <div className="baseFlex ml-1 gap-[1.15rem]">
-                      <FormControl>
-                        <Checkbox
-                          id="allowsPromotionalEmails"
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          className="size-4"
-                        />
-                      </FormControl>
-                      <Label
-                        htmlFor="allowsPromotionalEmails"
-                        className="leading-4"
-                      >
-                        Receive promotional content and special menu offers.
-                      </Label>
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="allowsRewardAvailabilityReminderEmails"
-                render={({ field }) => (
-                  <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                    <div className="baseFlex ml-1 gap-[1.15rem]">
-                      <FormControl>
-                        <Checkbox
-                          id="allowsRewardAvailabilityReminderEmails"
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          className="size-4"
-                        />
-                      </FormControl>
-                      <Label
-                        htmlFor="allowsRewardAvailabilityReminderEmails"
-                        className="leading-4"
-                      >
-                        Receive reminders about the availability of your
-                        rewards.
-                      </Label>
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-          </form>
-        </Form>
-      </div>
-
-      {/* Save changes button/card */}
-
-      {!viewportLabel.includes("mobile") && (
-        <Button
-          disabled={
-            saveButtonText !== "Save changes" ||
-            isEqual(form.getValues(), {
-              firstName: user?.firstName,
-              lastName: user?.lastName,
-              phoneNumber: user?.phoneNumber,
-              email: user?.email,
-              birthday: user?.birthday,
-              dietaryRestrictions: user?.dietaryRestrictions,
-              allowsEmailReceipts: user?.allowsEmailReceipts,
-              allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails,
-              allowsPromotionalEmails: user?.allowsPromotionalEmails,
-              allowsRewardAvailabilityReminderEmails:
-                user?.allowsRewardAvailabilityReminderEmails,
-            })
-          }
-          className="absolute right-4 top-4"
-          onClick={() => {
-            void form.handleSubmit(onFormSubmit)();
-          }}
-        >
-          <AnimatePresence mode={"popLayout"}>
-            <motion.div
-              key={saveButtonText}
-              layout
-              // whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{
-                duration: 0.25,
-              }}
-              className="baseFlex gap-2"
-            >
-              {saveButtonText}
-              {saveButtonText === "Saving" && (
-                <div
-                  className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
-                  role="status"
-                  aria-label="loading"
-                >
-                  <span className="sr-only">Loading...</span>
-                </div>
-              )}
-              {saveButtonText === "Saved" && (
-                <svg
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  className="size-4 text-offwhite"
-                >
-                  <motion.path
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{
-                      delay: 0.2,
-                      type: "tween",
-                      ease: "easeOut",
-                      duration: 0.3,
-                    }}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </Button>
-      )}
-
-      {/* Account management */}
-      <Accordion
-        type="single"
-        collapsible
-        className="w-full p-8 pt-12 tablet:px-16 tablet:pb-8 tablet:pt-8"
-      >
-        <AccordionItem value="item-1" className="border-none">
-          {/* maybe need specific variant or just some custom code here to  */}
-          <AccordionTrigger className="baseFlex !justify-start gap-2 py-2 text-lg font-semibold text-primary underline underline-offset-2">
-            <div className="baseFlex gap-2">
-              <MdAdminPanelSettings className="size-6" />
-              Account management
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="baseVertFlex mt-4 gap-8 p-4 tablet:!flex-row">
-            {/* if user is not signed in with oauth (aka they have a password for their account), show button to change/reset password */}
-
-            <Button
-              variant={"secondary"}
-              onClick={() => {
-                // TODO
-              }}
-            >
-              Change password
-              {/* TODO: looks like you need to create your own jsx for this, shouldn't be terrible
-                but prob just open up an alert dialog to do this in? seems most reasonable/safe */}
-            </Button>
-
-            <Button
-              variant={"secondary"}
-              // className="mt-2 h-8"
-              onClick={async () => {
-                await signOut(async () => {
-                  clearLocalStorage();
-                  resetStore();
-                  await push("/");
-                });
-              }}
-            >
-              Log out
-            </Button>
-
-            <Separator className="h-[1px] w-1/2 tablet:h-[25px] tablet:w-[1px]" />
-
-            <AlertDialog open={showDeleteUserDialog}>
-              <AlertDialogTrigger asChild>
-                <Button
-                  variant={"ghost"}
-                  className="baseFlex gap-2 border-destructive text-destructive"
-                  onClick={() => setShowDeleteUserDialog(true)}
-                >
-                  <FaTrashAlt />
-                  Delete account
-                </Button>
-              </AlertDialogTrigger>
-
-              <AlertDialogContent>
-                <AlertDialogDescription>
-                  Are you sure you want to delete your account? This action is
-                  <span className="font-semibold italic">
-                    {" "}
-                    irreversible
-                  </span>{" "}
-                  and all of your data will be lost.
-                </AlertDialogDescription>
-
-                <AlertDialogFooter>
-                  <AlertDialogCancel asChild>
-                    <Button
-                      variant="secondary"
-                      onClick={() => setShowDeleteUserDialog(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </AlertDialogCancel>
-                  <AlertDialogAction asChild>
-                    <Button
-                      variant={"destructive"}
-                      disabled={deleteButtonText !== "Delete account"}
-                      onClick={() => {
-                        setDeleteButtonText("Deleting account");
-                        deleteUser(userId);
-                      }}
-                    >
-                      <AnimatePresence mode={"popLayout"}>
-                        <motion.div
-                          key={deleteButtonText}
-                          layout
-                          // whileTap={{ scale: 0.95 }}
-                          initial={{ opacity: 0, y: -20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 20 }}
-                          transition={{
-                            duration: 0.25,
-                          }}
-                          className="baseFlex gap-2"
-                        >
-                          <FaTrashAlt />
-
-                          {deleteButtonText}
-
-                          {deleteButtonText === "Deleting account" && (
-                            <div
-                              className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
-                              role="status"
-                              aria-label="loading"
-                            >
-                              <span className="sr-only">Loading...</span>
-                            </div>
-                          )}
-                          {deleteButtonText === "Account deleted" && (
-                            <svg
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2}
-                              className="size-4 text-offwhite"
-                            >
-                              <motion.path
-                                initial={{ pathLength: 0 }}
-                                animate={{ pathLength: 1 }}
-                                transition={{
-                                  delay: 0.2,
-                                  type: "tween",
-                                  ease: "easeOut",
-                                  duration: 0.3,
-                                }}
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M5 13l4 4L19 7"
-                              />
-                            </svg>
-                          )}
-                        </motion.div>
-                      </AnimatePresence>
-                    </Button>
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-
-      {viewportLabel.includes("mobile") && (
-        <div className="baseFlex w-11/12 border-t py-8">
-          <Button
-            disabled={
-              saveButtonText !== "Save changes" ||
-              isEqual(form.getValues(), {
-                firstName: user?.firstName,
-                lastName: user?.lastName,
-                phoneNumber: user?.phoneNumber,
-                email: user?.email,
-                birthday: user?.birthday,
-                dietaryRestrictions: user?.dietaryRestrictions,
-                allowsEmailReceipts: user?.allowsEmailReceipts,
-                allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails,
-                allowsPromotionalEmails: user?.allowsPromotionalEmails,
-              })
-            }
-            onClick={() => {
-              void form.handleSubmit(onFormSubmit)();
-            }}
+      <AnimatePresence mode="wait">
+        {user === undefined ? (
+          <motion.div
+            key={"preferencesLoadingContent"}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="baseVertFlex h-full min-h-[calc(100dvh-6rem-140px)] w-full items-center justify-center tablet:min-h-[calc(100dvh-7rem-120px)] "
           >
-            <AnimatePresence mode={"popLayout"}>
-              <motion.div
-                key={saveButtonText}
-                layout
-                // whileTap={{ scale: 0.95 }}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{
-                  duration: 0.25,
-                }}
-                className="baseFlex gap-2"
-              >
-                {saveButtonText}
-                {saveButtonText === "Saving" && (
-                  <div
-                    className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
-                    role="status"
-                    aria-label="loading"
-                  >
-                    <span className="sr-only">Loading...</span>
-                  </div>
-                )}
-                {saveButtonText === "Saved" && (
-                  <svg
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                    className="size-4 text-offwhite"
-                  >
-                    <motion.path
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{
-                        delay: 0.2,
-                        type: "tween",
-                        ease: "easeOut",
-                        duration: 0.3,
-                      }}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 13l4 4L19 7"
+            <AnimatedLotus className="size-20 fill-primary tablet:size-24" />
+          </motion.div>
+        ) : (
+          <motion.div
+            key={"preferencesLoadedContent"}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="baseVertFlex w-full"
+          >
+            <div className="baseVertFlex relative w-full !items-start p-8 transition-all tablet:my-8 tablet:p-16 tablet:pb-0">
+              {/* Personal Information */}
+
+              <div className="baseFlex gap-4 text-lg font-semibold text-primary underline underline-offset-2">
+                <FaUserAlt />
+                Personal information
+              </div>
+
+              <Form {...form}>
+                <form className="baseVertFlex mt-8 w-full !items-start gap-2">
+                  <div className="baseVertFlex w-full !items-start gap-8 tablet:!grid tablet:grid-cols-2 tablet:gap-x-16">
+                    <FormField
+                      control={form.control}
+                      name="firstName"
+                      render={({ field, fieldState: { invalid } }) => (
+                        <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
+                          <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
+                            <FormLabel className="font-semibold">
+                              First name
+                            </FormLabel>
+                            <Input placeholder="First name" {...field} />
+                          </div>
+                          <AnimatePresence>
+                            {invalid && (
+                              <motion.div
+                                key={"firstNameError"}
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                              >
+                                <FormMessage />
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </FormItem>
+                      )}
                     />
-                  </svg>
-                )}
-              </motion.div>
-            </AnimatePresence>
-          </Button>
-        </div>
-      )}
+
+                    <FormField
+                      control={form.control}
+                      name="lastName"
+                      render={({ field, fieldState: { invalid } }) => (
+                        <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
+                          <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
+                            <FormLabel className="font-semibold">
+                              Last name
+                            </FormLabel>
+                            <Input placeholder="Last name" {...field} />
+                          </div>
+                          <AnimatePresence>
+                            {invalid && (
+                              <motion.div
+                                key={"lastNameError"}
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                              >
+                                <FormMessage />
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="phoneNumber"
+                      render={({
+                        field: { onChange, onBlur, value, ref },
+                        fieldState: { invalid },
+                      }) => (
+                        <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
+                          <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
+                            <FormLabel className="font-semibold">
+                              Phone number
+                            </FormLabel>
+                            <Input
+                              ref={ref}
+                              value={formatPhoneNumber(value)}
+                              onChange={(e) =>
+                                onChange(formatPhoneNumber(e.target.value))
+                              }
+                              onBlur={onBlur}
+                              placeholder="(123) 456-7890"
+                              type={"tel"}
+                            />
+                          </div>
+                          <AnimatePresence>
+                            {invalid && (
+                              <motion.div
+                                key={"phoneNumberError"}
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                              >
+                                <FormMessage />
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field, fieldState: { invalid } }) => (
+                        <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
+                          <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
+                            <FormLabel className="font-semibold">
+                              Email
+                            </FormLabel>
+                            <Input placeholder="Email" {...field} disabled />
+                            <FaLock className="absolute bottom-3 right-2 size-3.5 text-stone-300" />
+                          </div>
+                          <AnimatePresence>
+                            {invalid && (
+                              <motion.div
+                                key={"emailError"}
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                              >
+                                <FormMessage />
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="birthday"
+                      render={({ field, fieldState: { invalid } }) => (
+                        <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
+                          <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
+                            <FormLabel className="font-semibold">
+                              Birthday
+                            </FormLabel>
+                            <Input
+                              {...field}
+                              value={format(field.value, "PPP")}
+                              disabled
+                            />
+                            <FaLock className="absolute bottom-3 right-2 size-3.5 text-stone-300" />
+                          </div>
+                          <AnimatePresence>
+                            {invalid && (
+                              <motion.div
+                                key={"birthdayError"}
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                              >
+                                <FormMessage />
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Dietary preferences */}
+                  <FormField
+                    control={form.control}
+                    name="dietaryRestrictions"
+                    render={({ field, fieldState: { invalid } }) => (
+                      <FormItem className="baseVertFlex relative mt-8 w-full max-w-lg !items-start gap-2 space-y-0">
+                        <div className="baseVertFlex w-full !items-start gap-2">
+                          <FormLabel className="font-semibold">
+                            Dietary preferences
+                          </FormLabel>
+                          <FormDescription>
+                            Please list any allergies or dietary restrictions
+                            you may have.
+                          </FormDescription>
+                          <FormControl>
+                            <Textarea
+                              maxLength={100}
+                              placeholder="I am allergic to..."
+                              className="min-h-32 w-full resize-none tablet:min-h-24"
+                              {...field}
+                            />
+                          </FormControl>
+
+                          <p className="pointer-events-none absolute bottom-2 right-4 text-xs text-stone-400 tablet:bottom-1">
+                            {100 - field.value.length} characters remaining
+                          </p>
+                        </div>
+                        <AnimatePresence>
+                          {invalid && (
+                            <motion.div
+                              key={"dietaryRestrictionsError"}
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <FormMessage />
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="baseFlex mt-20 gap-3.5 text-lg font-semibold text-primary underline underline-offset-2 tablet:mt-16">
+                    <IoIosMail className="size-[24px]" />
+                    Email communication
+                  </div>
+
+                  <div className="baseVertFlex mt-4 w-full !items-start gap-6 tablet:gap-4">
+                    <FormField
+                      control={form.control}
+                      name="allowsEmailReceipts"
+                      render={({ field }) => (
+                        <FormItem className="baseVertFlex relative gap-2 space-y-0">
+                          <div className="baseFlex ml-1 gap-[1.15rem]">
+                            <FormControl>
+                              <Checkbox
+                                id="allowsEmailReceipts"
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                className="size-4"
+                              />
+                            </FormControl>
+                            <Label
+                              htmlFor="allowsEmailReceipts"
+                              className="leading-4"
+                            >
+                              Receive email receipts for your orders.
+                            </Label>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="allowsOrderCompleteEmails"
+                      render={({ field }) => (
+                        <FormItem className="baseVertFlex relative gap-2 space-y-0">
+                          <div className="baseFlex ml-1 gap-[1.15rem]">
+                            <FormControl>
+                              <Checkbox
+                                id="allowsOrderCompleteEmails"
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                className="size-4"
+                              />
+                            </FormControl>
+                            <Label
+                              htmlFor="allowsOrderCompleteEmails"
+                              className="leading-4"
+                            >
+                              Receive an email when your order is ready to be
+                              picked up.
+                            </Label>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="allowsPromotionalEmails"
+                      render={({ field }) => (
+                        <FormItem className="baseVertFlex relative gap-2 space-y-0">
+                          <div className="baseFlex ml-1 gap-[1.15rem]">
+                            <FormControl>
+                              <Checkbox
+                                id="allowsPromotionalEmails"
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                className="size-4"
+                              />
+                            </FormControl>
+                            <Label
+                              htmlFor="allowsPromotionalEmails"
+                              className="leading-4"
+                            >
+                              Receive promotional content and special menu
+                              offers.
+                            </Label>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="allowsRewardAvailabilityReminderEmails"
+                      render={({ field }) => (
+                        <FormItem className="baseVertFlex relative gap-2 space-y-0">
+                          <div className="baseFlex ml-1 gap-[1.15rem]">
+                            <FormControl>
+                              <Checkbox
+                                id="allowsRewardAvailabilityReminderEmails"
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                className="size-4"
+                              />
+                            </FormControl>
+                            <Label
+                              htmlFor="allowsRewardAvailabilityReminderEmails"
+                              className="leading-4"
+                            >
+                              Receive reminders about the availability of your
+                              rewards.
+                            </Label>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </form>
+              </Form>
+            </div>
+
+            {/* Save changes button/card */}
+
+            {!viewportLabel.includes("mobile") && (
+              <Button
+                disabled={
+                  saveButtonText !== "Save changes" ||
+                  isEqual(form.getValues(), {
+                    firstName: user?.firstName,
+                    lastName: user?.lastName,
+                    phoneNumber: user?.phoneNumber,
+                    email: user?.email,
+                    birthday: user?.birthday,
+                    dietaryRestrictions: user?.dietaryRestrictions,
+                    allowsEmailReceipts: user?.allowsEmailReceipts,
+                    allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails,
+                    allowsPromotionalEmails: user?.allowsPromotionalEmails,
+                    allowsRewardAvailabilityReminderEmails:
+                      user?.allowsRewardAvailabilityReminderEmails,
+                  })
+                }
+                className="absolute right-4 top-4"
+                onClick={() => {
+                  void form.handleSubmit(onFormSubmit)();
+                }}
+              >
+                <AnimatePresence mode={"popLayout"}>
+                  <motion.div
+                    key={saveButtonText}
+                    layout
+                    // whileTap={{ scale: 0.95 }}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    transition={{
+                      duration: 0.25,
+                    }}
+                    className="baseFlex gap-2"
+                  >
+                    {saveButtonText}
+                    {saveButtonText === "Saving" && (
+                      <div
+                        className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
+                        role="status"
+                        aria-label="loading"
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    )}
+                    {saveButtonText === "Saved" && (
+                      <svg
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        className="size-4 text-offwhite"
+                      >
+                        <motion.path
+                          initial={{ pathLength: 0 }}
+                          animate={{ pathLength: 1 }}
+                          transition={{
+                            delay: 0.2,
+                            type: "tween",
+                            ease: "easeOut",
+                            duration: 0.3,
+                          }}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              </Button>
+            )}
+
+            {/* Account management */}
+            <Accordion
+              type="single"
+              collapsible
+              className="w-full p-8 pt-12 tablet:px-16 tablet:pb-8 tablet:pt-8"
+            >
+              <AccordionItem value="item-1" className="border-none">
+                {/* maybe need specific variant or just some custom code here to  */}
+                <AccordionTrigger className="baseFlex !justify-start gap-2 py-2 text-lg font-semibold text-primary underline underline-offset-2">
+                  <div className="baseFlex gap-2">
+                    <MdAdminPanelSettings className="size-6" />
+                    Account management
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="baseVertFlex mt-4 gap-8 p-4 tablet:!flex-row">
+                  {/* if user is not signed in with oauth (aka they have a password for their account), show button to change/reset password */}
+
+                  <Button
+                    variant={"secondary"}
+                    onClick={() => {
+                      // TODO
+                    }}
+                  >
+                    Change password
+                    {/* TODO: looks like you need to create your own jsx for this, shouldn't be terrible
+                but prob just open up an alert dialog to do this in? seems most reasonable/safe */}
+                  </Button>
+
+                  <Button
+                    variant={"secondary"}
+                    // className="mt-2 h-8"
+                    onClick={async () => {
+                      await signOut(async () => {
+                        clearLocalStorage();
+                        resetStore();
+                        await push("/");
+                      });
+                    }}
+                  >
+                    Log out
+                  </Button>
+
+                  <Separator className="h-[1px] w-1/2 tablet:h-[25px] tablet:w-[1px]" />
+
+                  <AlertDialog open={showDeleteUserDialog}>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant={"ghost"}
+                        className="baseFlex gap-2 border-destructive text-destructive"
+                        onClick={() => setShowDeleteUserDialog(true)}
+                      >
+                        <FaTrashAlt />
+                        Delete account
+                      </Button>
+                    </AlertDialogTrigger>
+
+                    <AlertDialogContent>
+                      <AlertDialogDescription>
+                        Are you sure you want to delete your account? This
+                        action is
+                        <span className="font-semibold italic">
+                          {" "}
+                          irreversible
+                        </span>{" "}
+                        and all of your data will be lost.
+                      </AlertDialogDescription>
+
+                      <AlertDialogFooter>
+                        <AlertDialogCancel asChild>
+                          <Button
+                            variant="secondary"
+                            onClick={() => setShowDeleteUserDialog(false)}
+                          >
+                            Cancel
+                          </Button>
+                        </AlertDialogCancel>
+                        <AlertDialogAction asChild>
+                          <Button
+                            variant={"destructive"}
+                            disabled={deleteButtonText !== "Delete account"}
+                            onClick={() => {
+                              setDeleteButtonText("Deleting account");
+                              deleteUser(userId);
+                            }}
+                          >
+                            <AnimatePresence mode={"popLayout"}>
+                              <motion.div
+                                key={deleteButtonText}
+                                layout
+                                // whileTap={{ scale: 0.95 }}
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 20 }}
+                                transition={{
+                                  duration: 0.25,
+                                }}
+                                className="baseFlex gap-2"
+                              >
+                                <FaTrashAlt />
+
+                                {deleteButtonText}
+
+                                {deleteButtonText === "Deleting account" && (
+                                  <div
+                                    className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
+                                    role="status"
+                                    aria-label="loading"
+                                  >
+                                    <span className="sr-only">Loading...</span>
+                                  </div>
+                                )}
+                                {deleteButtonText === "Account deleted" && (
+                                  <svg
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    strokeWidth={2}
+                                    className="size-4 text-offwhite"
+                                  >
+                                    <motion.path
+                                      initial={{ pathLength: 0 }}
+                                      animate={{ pathLength: 1 }}
+                                      transition={{
+                                        delay: 0.2,
+                                        type: "tween",
+                                        ease: "easeOut",
+                                        duration: 0.3,
+                                      }}
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="M5 13l4 4L19 7"
+                                    />
+                                  </svg>
+                                )}
+                              </motion.div>
+                            </AnimatePresence>
+                          </Button>
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+
+            {viewportLabel.includes("mobile") && (
+              <div className="baseFlex w-11/12 border-t py-8">
+                <Button
+                  disabled={
+                    saveButtonText !== "Save changes" ||
+                    isEqual(form.getValues(), {
+                      firstName: user?.firstName,
+                      lastName: user?.lastName,
+                      phoneNumber: user?.phoneNumber,
+                      email: user?.email,
+                      birthday: user?.birthday,
+                      dietaryRestrictions: user?.dietaryRestrictions,
+                      allowsEmailReceipts: user?.allowsEmailReceipts,
+                      allowsOrderCompleteEmails:
+                        user?.allowsOrderCompleteEmails,
+                      allowsPromotionalEmails: user?.allowsPromotionalEmails,
+                      allowsRewardAvailabilityReminderEmails:
+                        user?.allowsRewardAvailabilityReminderEmails,
+                    })
+                  }
+                  onClick={() => {
+                    void form.handleSubmit(onFormSubmit)();
+                  }}
+                >
+                  <AnimatePresence mode={"popLayout"}>
+                    <motion.div
+                      key={saveButtonText}
+                      layout
+                      // whileTap={{ scale: 0.95 }}
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      transition={{
+                        duration: 0.25,
+                      }}
+                      className="baseFlex gap-2"
+                    >
+                      {saveButtonText}
+                      {saveButtonText === "Saving" && (
+                        <div
+                          className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
+                          role="status"
+                          aria-label="loading"
+                        >
+                          <span className="sr-only">Loading...</span>
+                        </div>
+                      )}
+                      {saveButtonText === "Saved" && (
+                        <svg
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                          className="size-4 text-offwhite"
+                        >
+                          <motion.path
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{
+                              delay: 0.2,
+                              type: "tween",
+                              ease: "easeOut",
+                              duration: 0.3,
+                            }}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                </Button>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
@@ -850,22 +869,3 @@ function Preferences({ initUserData }: { initUserData: User }) {
 Preferences.PageLayout = TopProfileNavigationLayout;
 
 export default Preferences;
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { userId } = getAuth(ctx.req);
-  if (!userId) return { props: {} };
-
-  const prisma = new PrismaClient();
-
-  const initUserData = await prisma.user.findUnique({
-    where: {
-      userId,
-    },
-  });
-
-  if (!initUserData) return { props: {} };
-
-  return {
-    props: { initUserData, ...buildClerkProps(ctx.req) },
-  };
-};

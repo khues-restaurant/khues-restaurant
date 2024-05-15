@@ -1,6 +1,6 @@
 import { useAuth } from "@clerk/nextjs";
 import Decimal from "decimal.js";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
 import { CiGift } from "react-icons/ci";
@@ -15,39 +15,31 @@ import { useToast } from "~/components/ui/use-toast";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
-import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
+import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getRewardsPointCost } from "~/utils/getRewardsPointCost";
-import { type GetServerSideProps } from "next";
-import { buildClerkProps, getAuth } from "@clerk/nextjs/server";
-import { PrismaClient, type User } from "@prisma/client";
-import isEqual from "lodash.isequal";
 import { isEligibleForBirthdayReward } from "~/utils/isEligibleForBirthdayReward";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import Head from "next/head";
+import AnimatedLotus from "~/components/ui/AnimatedLotus";
 
 // TODO: honestly the logic within here is very hit or miss, comb through this for sure
 
-function Rewards({
-  isElegibleForBirthdayReward,
-  initUserData,
-  initRewardsData,
-}: {
-  isElegibleForBirthdayReward: boolean;
-  initUserData: User;
-  initRewardsData: {
-    rewardMenuCategories: FullMenuItem[]; // TODO: blatantly wrong, make proper type for this later
-    birthdayMenuCategories: FullMenuItem[]; // TODO: blatantly wrong, make proper type for this later
-  };
-}) {
+function Rewards() {
   const userId = useGetUserId();
   const { isSignedIn } = useAuth();
 
-  const { data: currentUserData } = api.user.get.useQuery(userId, {
+  const { data: user } = api.user.get.useQuery(userId, {
     enabled: Boolean(userId && isSignedIn),
   });
+
+  const { data: rewards } = api.menuCategory.getRewardsCategories.useQuery();
+
+  const { data: activeDiscounts } = api.discount.getAll.useQuery();
+
+  // const { data: activeRewards } = api.discount.getUserRewards.useQuery(userId);
 
   const { menuItems, orderDetails, viewportLabel } = useMainStore((state) => ({
     menuItems: state.menuItems,
@@ -55,36 +47,8 @@ function Rewards({
     viewportLabel: state.viewportLabel,
   }));
 
-  const { data: currentRewardsData } =
-    api.menuCategory.getRewardsCategories.useQuery();
-
-  const [user, setUser] = useState<User | null>(initUserData);
-  const [rewards, setRewards] = useState(initRewardsData);
-
-  useEffect(() => {
-    if (
-      currentUserData === undefined ||
-      currentUserData === null ||
-      isEqual(initUserData, currentUserData)
-    )
-      return;
-
-    setUser(currentUserData);
-  }, [initUserData, currentUserData]);
-
-  useEffect(() => {
-    if (
-      currentRewardsData === undefined ||
-      currentRewardsData === null ||
-      isEqual(initRewardsData, currentRewardsData)
-    )
-      return;
-
-    setRewards(currentRewardsData); // TODO: I'm assuming this type error is legit?
-  }, [initRewardsData, currentRewardsData]);
-
-  const { data: activeDiscounts } = api.discount.getAll.useQuery();
-  // const { data: activeRewards } = api.discount.getUserRewards.useQuery(userId);
+  const [isElegibleForBirthdayReward, setIsElegibleForBirthdayReward] =
+    useState<boolean | undefined>(undefined);
 
   const [rewardsPointsEarned, setRewardsPointsEarned] = useState(0);
 
@@ -96,18 +60,23 @@ function Rewards({
   >(null);
   const [toBeDeductedRewardsPoints, setToBeDeductedRewardsPoints] = useState(0);
 
-  // get rid of this, see no need for this bs
+  // TODO: get rid of this right? just use user.rewardsPoints directly
   useEffect(() => {
     if (!user) return;
 
     setRewardsPointsEarned(user.rewardsPoints);
   }, [user]);
 
-  console.log(
-    user?.rewardsPoints,
-    rewardsPointsEarned,
-    toBeDeductedRewardsPoints,
-  );
+  useEffect(() => {
+    if (!user) return;
+
+    setIsElegibleForBirthdayReward(
+      isEligibleForBirthdayReward(
+        new Date(user.birthday),
+        user.lastBirthdayRewardRedemptionYear,
+      ),
+    );
+  }, [user]);
 
   useEffect(() => {
     let newRegularSelectedRewardId = null;
@@ -178,325 +147,396 @@ function Rewards({
         <meta property="og:type" content="website" />
       </Head>
 
-      <div className="baseVertFlex relative w-full gap-8 transition-all">
-        <div
-          style={{
-            backgroundImage:
-              "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
-          }}
-          className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72 tablet:overflow-x-hidden tablet:rounded-t-lg"
-        >
-          {/* mobile images */}
+      <AnimatePresence mode="wait">
+        {rewards === undefined ||
+        user === undefined ||
+        isElegibleForBirthdayReward === undefined ? (
           <motion.div
-            key={"rewardsHeroMobileImageOne"}
-            initial={{ opacity: 0, y: -125, x: -125 }}
-            animate={{ opacity: 1, y: 0, x: 0 }}
-            transition={{
-              opacity: { duration: 0.2 },
-              type: "spring",
-              stiffness: 200,
-              damping: 20,
-              delay: 0.5,
-            }}
-            className="absolute -left-10 -top-10 tablet:hidden"
+            key={"rewardsLoadingContent"}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="baseVertFlex h-full min-h-[calc(100dvh-6rem-140px)] w-full items-center justify-center tablet:min-h-[calc(100dvh-7rem-120px)] "
           >
-            <Image
-              src={sampleImage}
-              alt={"TODO: replace with proper alt tag text"}
-              width={96}
-              height={96}
-              className="!relative"
-            />
+            <AnimatedLotus className="size-20 fill-primary tablet:size-24" />
           </motion.div>
-
+        ) : (
           <motion.div
-            key={"rewardsHeroMobileImageTwo"}
-            initial={{ opacity: 0, y: 125, x: -125 }}
-            animate={{ opacity: 1, y: 0, x: 0 }}
-            transition={{
-              opacity: { duration: 0.2 },
-              type: "spring",
-              stiffness: 200,
-              damping: 20,
-              delay: 0.75,
-            }}
-            className="absolute -bottom-10 -left-10 tablet:hidden"
+            key={"rewardsLoadedContent"}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="baseVertFlex relative w-full gap-8 transition-all"
           >
-            <Image
-              src={sampleImage}
-              alt={"TODO: replace with proper alt tag text"}
-              width={96}
-              height={96}
-              className="!relative"
-            />
-          </motion.div>
-
-          {/* tablet+ images */}
-          <motion.div
-            key={"rewardsTabletHeroImageOne"}
-            initial={{ opacity: 0, y: -150 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              opacity: { duration: 0.2 },
-              type: "spring",
-              stiffness: 200,
-              damping: 20,
-              delay: 0.5,
-            }}
-            className="absolute -top-1 left-24 hidden tablet:flex"
-          >
-            <Image
-              src={sampleImage}
-              alt={"TODO: replace with proper alt tag text"}
-              width={144}
-              height={144}
-              className="!relative"
-            />
-          </motion.div>
-
-          <motion.div
-            key={"rewardsTabletHeroImageTwo"}
-            initial={{ opacity: 0, x: -125 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{
-              opacity: { duration: 0.2 },
-              type: "spring",
-              stiffness: 200,
-              damping: 20,
-              delay: 0.15,
-            }}
-            className="absolute -left-16 bottom-10 hidden tablet:flex"
-          >
-            <Image
-              src={sampleImage}
-              alt={"TODO: replace with proper alt tag text"}
-              width={144}
-              height={144}
-              className="!relative"
-            />
-          </motion.div>
-
-          <motion.div
-            key={"rewardsTabletHeroImageThree"}
-            initial={{ opacity: 0, y: 125 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              opacity: { duration: 0.2 },
-              type: "spring",
-              stiffness: 200,
-              damping: 20,
-              delay: 0.6,
-            }}
-            className="absolute -bottom-14 left-36 hidden tablet:flex"
-          >
-            <Image
-              src={sampleImage}
-              alt={"TODO: replace with proper alt tag text"}
-              width={144}
-              height={144}
-              className="!relative"
-            />
-          </motion.div>
-
-          <motion.div
-            key={"rewardsTabletHeroImageFour"}
-            initial={{ opacity: 0, y: -200 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              opacity: { duration: 0.2 },
-              type: "spring",
-              stiffness: 200,
-              damping: 20,
-              delay: 0.75,
-            }}
-            className="absolute left-72 top-14 hidden xl:flex"
-          >
-            <Image
-              src={sampleImage}
-              alt={"TODO: replace with proper alt tag text"}
-              width={144}
-              height={144}
-              className="!relative"
-            />
-          </motion.div>
-
-          <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-primary shadow-lg">
-            <div className="text-center text-lg font-semibold tablet:text-xl">
-              Khue&apos;s Rewards
-            </div>
-
-            <div className="baseFlex gap-4 font-bold tracking-wider">
-              <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
-
-              <div className="baseVertFlex">
-                <AnimatedNumbers
-                  value={rewardsPointsEarned - toBeDeductedRewardsPoints}
-                  fontSize={viewportLabel.includes("mobile") ? 18 : 24}
-                  padding={0}
+            <div
+              style={{
+                backgroundImage:
+                  "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
+              }}
+              className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72 tablet:overflow-x-hidden tablet:rounded-t-lg"
+            >
+              {/* mobile images */}
+              <motion.div
+                key={"rewardsHeroMobileImageOne"}
+                initial={{ opacity: 0, y: -125, x: -125 }}
+                animate={{ opacity: 1, y: 0, x: 0 }}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20,
+                  delay: 0.5,
+                }}
+                className="absolute -left-10 -top-10 tablet:hidden"
+              >
+                <Image
+                  src={sampleImage}
+                  alt={"TODO: replace with proper alt tag text"}
+                  width={96}
+                  height={96}
+                  className="!relative"
                 />
-                <p className="font-semibold tracking-normal">points</p>
+              </motion.div>
+
+              <motion.div
+                key={"rewardsHeroMobileImageTwo"}
+                initial={{ opacity: 0, y: 125, x: -125 }}
+                animate={{ opacity: 1, y: 0, x: 0 }}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20,
+                  delay: 0.75,
+                }}
+                className="absolute -bottom-10 -left-10 tablet:hidden"
+              >
+                <Image
+                  src={sampleImage}
+                  alt={"TODO: replace with proper alt tag text"}
+                  width={96}
+                  height={96}
+                  className="!relative"
+                />
+              </motion.div>
+
+              {/* tablet+ images */}
+              <motion.div
+                key={"rewardsTabletHeroImageOne"}
+                initial={{ opacity: 0, y: -150 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20,
+                  delay: 0.5,
+                }}
+                className="absolute -top-1 left-24 hidden tablet:flex"
+              >
+                <Image
+                  src={sampleImage}
+                  alt={"TODO: replace with proper alt tag text"}
+                  width={144}
+                  height={144}
+                  className="!relative"
+                />
+              </motion.div>
+
+              <motion.div
+                key={"rewardsTabletHeroImageTwo"}
+                initial={{ opacity: 0, x: -125 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20,
+                  delay: 0.15,
+                }}
+                className="absolute -left-16 bottom-10 hidden tablet:flex"
+              >
+                <Image
+                  src={sampleImage}
+                  alt={"TODO: replace with proper alt tag text"}
+                  width={144}
+                  height={144}
+                  className="!relative"
+                />
+              </motion.div>
+
+              <motion.div
+                key={"rewardsTabletHeroImageThree"}
+                initial={{ opacity: 0, y: 125 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20,
+                  delay: 0.6,
+                }}
+                className="absolute -bottom-14 left-36 hidden tablet:flex"
+              >
+                <Image
+                  src={sampleImage}
+                  alt={"TODO: replace with proper alt tag text"}
+                  width={144}
+                  height={144}
+                  className="!relative"
+                />
+              </motion.div>
+
+              <motion.div
+                key={"rewardsTabletHeroImageFour"}
+                initial={{ opacity: 0, y: -200 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20,
+                  delay: 0.75,
+                }}
+                className="absolute left-72 top-14 hidden xl:flex"
+              >
+                <Image
+                  src={sampleImage}
+                  alt={"TODO: replace with proper alt tag text"}
+                  width={144}
+                  height={144}
+                  className="!relative"
+                />
+              </motion.div>
+
+              <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-primary shadow-lg">
+                <div className="text-center text-lg font-semibold tablet:text-xl">
+                  Khue&apos;s Rewards
+                </div>
+
+                <div className="baseFlex gap-4 font-bold tracking-wider">
+                  <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
+
+                  <div className="baseVertFlex">
+                    <AnimatedNumbers
+                      value={rewardsPointsEarned - toBeDeductedRewardsPoints}
+                      fontSize={viewportLabel.includes("mobile") ? 18 : 24}
+                      padding={0}
+                    />
+                    <p className="font-semibold tracking-normal">points</p>
+                  </div>
+                  <SideAccentSwirls className="h-5 fill-primary" />
+                </div>
               </div>
-              <SideAccentSwirls className="h-5 fill-primary" />
+
+              {/* mobile images */}
+              <motion.div
+                key={"rewardsHeroMobileImageThree"}
+                initial={{ opacity: 0, y: -125, x: 125 }}
+                animate={{ opacity: 1, y: 0, x: 0 }}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20,
+                  delay: 0.95,
+                }}
+                className="absolute -right-10 -top-10 tablet:hidden"
+              >
+                <Image
+                  src={sampleImage}
+                  alt={"TODO: replace with proper alt tag text"}
+                  width={96}
+                  height={96}
+                  className="!relative"
+                />
+              </motion.div>
+
+              <motion.div
+                key={"rewardsHeroMobileImageFour"}
+                initial={{ opacity: 0, y: 125, x: 125 }}
+                animate={{ opacity: 1, y: 0, x: 0 }}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20,
+                  delay: 0.6,
+                }}
+                className="absolute -bottom-10 -right-10 tablet:hidden"
+              >
+                <Image
+                  src={sampleImage}
+                  alt={"TODO: replace with proper alt tag text"}
+                  width={96}
+                  height={96}
+                  className="!relative"
+                />
+              </motion.div>
+
+              {/* tablet+ images */}
+              <motion.div
+                key={"rewardsHeroImageOne"}
+                initial={{ opacity: 0, y: -150 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20,
+                  delay: 0.5,
+                }}
+                className="absolute -top-1 right-24 hidden tablet:flex"
+              >
+                <Image
+                  src={sampleImage}
+                  alt={"TODO: replace with proper alt tag text"}
+                  width={144}
+                  height={144}
+                  className="!relative "
+                />
+              </motion.div>
+
+              <motion.div
+                key={"rewardsHeroImageTwo"}
+                initial={{ opacity: 0, x: 125 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20,
+                  delay: 0.15,
+                }}
+                className="absolute -right-16 bottom-10 hidden tablet:flex"
+              >
+                <Image
+                  src={sampleImage}
+                  alt={"TODO: replace with proper alt tag text"}
+                  width={144}
+                  height={144}
+                  className="!relative"
+                />
+              </motion.div>
+
+              <motion.div
+                key={"rewardsHeroImageThree"}
+                initial={{ opacity: 0, y: 125 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20,
+                  delay: 0.6,
+                }}
+                className="absolute -bottom-14 right-36 hidden tablet:flex"
+              >
+                <Image
+                  src={sampleImage}
+                  alt={"TODO: replace with proper alt tag text"}
+                  width={144}
+                  height={144}
+                  className="!relative"
+                />
+              </motion.div>
+
+              <motion.div
+                key={"rewardsHeroImageFour"}
+                initial={{ opacity: 0, y: -200 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20,
+                  delay: 0.75,
+                }}
+                className="absolute right-72 top-14 hidden xl:flex"
+              >
+                <Image
+                  src={sampleImage}
+                  alt={"TODO: replace with proper alt tag text"}
+                  width={144}
+                  height={144}
+                  className="!relative"
+                />
+              </motion.div>
             </div>
-          </div>
 
-          {/* mobile images */}
-          <motion.div
-            key={"rewardsHeroMobileImageThree"}
-            initial={{ opacity: 0, y: -125, x: 125 }}
-            animate={{ opacity: 1, y: 0, x: 0 }}
-            transition={{
-              opacity: { duration: 0.2 },
-              type: "spring",
-              stiffness: 200,
-              damping: 20,
-              delay: 0.95,
-            }}
-            className="absolute -right-10 -top-10 tablet:hidden"
-          >
-            <Image
-              src={sampleImage}
-              alt={"TODO: replace with proper alt tag text"}
-              width={96}
-              height={96}
-              className="!relative"
-            />
-          </motion.div>
+            {/* .map() of Your rewards */}
+            <div className="baseVertFlex max-w-7xl gap-8 px-4 text-primary tablet:mt-4 tablet:gap-16">
+              {/* Birthday reward options */}
+              {isElegibleForBirthdayReward && (
+                <div className="baseVertFlex mb-8 w-full gap-8">
+                  <div className="baseFlex sm:gap-2">
+                    <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary sm:h-5" />
+                    <span className="w-48 text-center text-xl font-medium underline underline-offset-2 sm:w-auto sm:text-2xl">
+                      Choose your birthday dessert
+                    </span>
+                    <SideAccentSwirls className="h-4 fill-primary sm:h-5" />
+                  </div>
 
-          <motion.div
-            key={"rewardsHeroMobileImageFour"}
-            initial={{ opacity: 0, y: 125, x: 125 }}
-            animate={{ opacity: 1, y: 0, x: 0 }}
-            transition={{
-              opacity: { duration: 0.2 },
-              type: "spring",
-              stiffness: 200,
-              damping: 20,
-              delay: 0.6,
-            }}
-            className="absolute -bottom-10 -right-10 tablet:hidden"
-          >
-            <Image
-              src={sampleImage}
-              alt={"TODO: replace with proper alt tag text"}
-              width={96}
-              height={96}
-              className="!relative"
-            />
-          </motion.div>
+                  <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2 lg:!place-items-start 2xl:grid-cols-3">
+                    {/* Categories */}
+                    {rewards.birthdayMenuCategories.map((category) => (
+                      <div
+                        key={category.id}
+                        className="baseVertFlex w-full !items-start gap-4"
+                      >
+                        {/* Items */}
+                        <div className="baseVertFlex gap-4 tablet:!flex-row">
+                          {category.menuItems
+                            .sort((a, b) => a.price - b.price)
+                            .map((item, index) => (
+                              <Fragment key={item.id}>
+                                <RewardMenuItem
+                                  menuItem={item}
+                                  currentlySelectedRewardId={
+                                    regularSelectedRewardId
+                                  }
+                                  userAvailablePoints={
+                                    rewardsPointsEarned -
+                                    toBeDeductedRewardsPoints
+                                  }
+                                  forBirthdayReward={true}
+                                />
+                                {index !== category.menuItems.length - 1 && (
+                                  <Separator className="h-[1px] w-11/12 tablet:h-28 tablet:w-[1px]" />
+                                )}
+                              </Fragment>
+                            ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-          {/* tablet+ images */}
-          <motion.div
-            key={"rewardsHeroImageOne"}
-            initial={{ opacity: 0, y: -150 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              opacity: { duration: 0.2 },
-              type: "spring",
-              stiffness: 200,
-              damping: 20,
-              delay: 0.5,
-            }}
-            className="absolute -top-1 right-24 hidden tablet:flex"
-          >
-            <Image
-              src={sampleImage}
-              alt={"TODO: replace with proper alt tag text"}
-              width={144}
-              height={144}
-              className="!relative "
-            />
-          </motion.div>
-
-          <motion.div
-            key={"rewardsHeroImageTwo"}
-            initial={{ opacity: 0, x: 125 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{
-              opacity: { duration: 0.2 },
-              type: "spring",
-              stiffness: 200,
-              damping: 20,
-              delay: 0.15,
-            }}
-            className="absolute -right-16 bottom-10 hidden tablet:flex"
-          >
-            <Image
-              src={sampleImage}
-              alt={"TODO: replace with proper alt tag text"}
-              width={144}
-              height={144}
-              className="!relative"
-            />
-          </motion.div>
-
-          <motion.div
-            key={"rewardsHeroImageThree"}
-            initial={{ opacity: 0, y: 125 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              opacity: { duration: 0.2 },
-              type: "spring",
-              stiffness: 200,
-              damping: 20,
-              delay: 0.6,
-            }}
-            className="absolute -bottom-14 right-36 hidden tablet:flex"
-          >
-            <Image
-              src={sampleImage}
-              alt={"TODO: replace with proper alt tag text"}
-              width={144}
-              height={144}
-              className="!relative"
-            />
-          </motion.div>
-
-          <motion.div
-            key={"rewardsHeroImageFour"}
-            initial={{ opacity: 0, y: -200 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              opacity: { duration: 0.2 },
-              type: "spring",
-              stiffness: 200,
-              damping: 20,
-              delay: 0.75,
-            }}
-            className="absolute right-72 top-14 hidden xl:flex"
-          >
-            <Image
-              src={sampleImage}
-              alt={"TODO: replace with proper alt tag text"}
-              width={144}
-              height={144}
-              className="!relative"
-            />
-          </motion.div>
-        </div>
-
-        {/* .map() of Your rewards */}
-        <div className="baseVertFlex max-w-7xl gap-8 px-4 text-primary tablet:mt-4 tablet:gap-16">
-          {/* Birthday reward options */}
-          {isElegibleForBirthdayReward && (
-            <div className="baseVertFlex mb-8 w-full gap-8">
-              <div className="baseFlex sm:gap-2">
-                <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary sm:h-5" />
-                <span className="w-48 text-center text-xl font-medium underline underline-offset-2 sm:w-auto sm:text-2xl">
-                  Choose your birthday dessert
+              <div className="baseFlex gap-2">
+                <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary sm:h-[18px]" />
+                <span className="text-center text-xl font-medium text-primary underline underline-offset-2 sm:text-2xl">
+                  Choose your reward
                 </span>
-                <SideAccentSwirls className="h-4 fill-primary sm:h-5" />
+                <SideAccentSwirls className="h-4 fill-primary sm:h-[18px]" />
               </div>
 
-              <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2 lg:!place-items-start 2xl:grid-cols-3">
+              {/* Regular reward options */}
+              <div className="grid w-full grid-cols-1 gap-4 text-primary lg:grid-cols-2 lg:!place-items-start 2xl:grid-cols-3">
                 {/* Categories */}
-                {rewards.birthdayMenuCategories.map((category) => (
+                {rewards.rewardMenuCategories.map((category) => (
                   <div
                     key={category.id}
-                    className="baseVertFlex w-full !items-start gap-4"
+                    className="baseVertFlex !items-start gap-4"
                   >
+                    <p className="text-lg font-semibold underline underline-offset-2">
+                      {category.name}
+                    </p>
+
                     {/* Items */}
-                    <div className="baseVertFlex gap-4 tablet:!flex-row">
+                    <div className="baseVertFlex">
                       {category.menuItems
                         .sort((a, b) => a.price - b.price)
                         .map((item, index) => (
@@ -509,10 +549,10 @@ function Rewards({
                               userAvailablePoints={
                                 rewardsPointsEarned - toBeDeductedRewardsPoints
                               }
-                              forBirthdayReward={true}
+                              forBirthdayReward={false}
                             />
                             {index !== category.menuItems.length - 1 && (
-                              <Separator className="h-[1px] w-11/12 tablet:h-28 tablet:w-[1px]" />
+                              <Separator className="h-[1px] w-11/12" />
                             )}
                           </Fragment>
                         ))}
@@ -520,104 +560,60 @@ function Rewards({
                   </div>
                 ))}
               </div>
+
+              <p className="text-sm italic text-stone-400">
+                Only one reward is able to be redeemed per order.*
+              </p>
             </div>
-          )}
 
-          <div className="baseFlex gap-2">
-            <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary sm:h-[18px]" />
-            <span className="text-center text-xl font-medium text-primary underline underline-offset-2 sm:text-2xl">
-              Choose your reward
-            </span>
-            <SideAccentSwirls className="h-4 fill-primary sm:h-[18px]" />
-          </div>
+            <div className="baseVertFlex mt-8 max-w-7xl gap-8 text-offwhite">
+              <div className="baseFlex gap-2">
+                <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary sm:h-[18px]" />
+                <span className="text-xl font-medium text-primary underline underline-offset-2 sm:text-2xl">
+                  Member benefits
+                </span>
+                <SideAccentSwirls className="h-4 fill-primary sm:h-[18px]" />
+              </div>
 
-          {/* Regular reward options */}
-          <div className="grid w-full grid-cols-1 gap-4 text-primary lg:grid-cols-2 lg:!place-items-start 2xl:grid-cols-3">
-            {/* Categories */}
-            {rewards.rewardMenuCategories.map((category) => (
-              <div
-                key={category.id}
-                className="baseVertFlex !items-start gap-4"
-              >
-                <p className="text-lg font-semibold underline underline-offset-2">
-                  {category.name}
-                </p>
+              <div className="baseVertFlex gap-8 xl:!flex-row">
+                <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+                  <CiGift className="ml-2 size-16 h-20 text-primary" />
+                  <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
+                  <div className="hyphens-auto p-4 text-left text-primary">
+                    Earning rewards is as simple as enjoying your favorite
+                    meals! Every dollar spent earns you points, which open the
+                    door to a diverse selection of enticing rewards. Get started
+                    earning points today!
+                  </div>
+                </div>
 
-                {/* Items */}
-                <div className="baseVertFlex">
-                  {category.menuItems
-                    .sort((a, b) => a.price - b.price)
-                    .map((item, index) => (
-                      <Fragment key={item.id}>
-                        <RewardMenuItem
-                          menuItem={item}
-                          currentlySelectedRewardId={regularSelectedRewardId}
-                          userAvailablePoints={
-                            rewardsPointsEarned - toBeDeductedRewardsPoints
-                          }
-                          forBirthdayReward={false}
-                        />
-                        {index !== category.menuItems.length - 1 && (
-                          <Separator className="h-[1px] w-11/12" />
-                        )}
-                      </Fragment>
-                    ))}
+                <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+                  <FaCakeCandles className="ml-4 size-10 h-20 text-primary" />
+                  <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
+                  <div className="hyphens-auto p-4 text-left text-primary">
+                    Celebrate your birthday with a complimentary treat from us,
+                    adding a touch of sweetness to your special day. Make sure
+                    to share your birthday with us when you sign up, so we can
+                    ensure your celebration is memorable.
+                  </div>
+                </div>
+
+                <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+                  <LuCalendarClock className="ml-2 size-12 h-20 shrink-0 text-primary" />
+                  <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
+                  <div className="hyphens-auto p-4 text-left text-primary">
+                    As a member, you&apos;re first in line to experience our
+                    newest menu items. Before these delicacies make their
+                    official debut, you&apos;ll have the exclusive opportunity
+                    to taste what&apos;s next on our culinary horizon. Stay
+                    connected for these exciting previews!
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
-
-          <p className="text-sm italic text-stone-400">
-            Only one reward is able to be redeemed per order.*
-          </p>
-        </div>
-
-        <div className="baseVertFlex mt-8 max-w-7xl gap-8 text-offwhite">
-          <div className="baseFlex gap-2">
-            <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary sm:h-[18px]" />
-            <span className="text-xl font-medium text-primary underline underline-offset-2 sm:text-2xl">
-              Member benefits
-            </span>
-            <SideAccentSwirls className="h-4 fill-primary sm:h-[18px]" />
-          </div>
-
-          <div className="baseVertFlex gap-8 xl:!flex-row">
-            <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
-              <CiGift className="ml-2 size-16 h-20 text-primary" />
-              <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
-              <div className="hyphens-auto p-4 text-left text-primary">
-                Earning rewards is as simple as enjoying your favorite meals!
-                Every dollar spent earns you points, which open the door to a
-                diverse selection of enticing rewards. Get started earning
-                points today!
-              </div>
             </div>
-
-            <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
-              <FaCakeCandles className="ml-4 size-10 h-20 text-primary" />
-              <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
-              <div className="hyphens-auto p-4 text-left text-primary">
-                Celebrate your birthday with a complimentary treat from us,
-                adding a touch of sweetness to your special day. Make sure to
-                share your birthday with us when you sign up, so we can ensure
-                your celebration is memorable.
-              </div>
-            </div>
-
-            <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
-              <LuCalendarClock className="ml-2 size-12 h-20 shrink-0 text-primary" />
-              <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
-              <div className="hyphens-auto p-4 text-left text-primary">
-                As a member, you&apos;re first in line to experience our newest
-                menu items. Before these delicacies make their official debut,
-                you&apos;ll have the exclusive opportunity to taste what&apos;s
-                next on our culinary horizon. Stay connected for these exciting
-                previews!
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
@@ -625,94 +621,6 @@ function Rewards({
 Rewards.PageLayout = TopProfileNavigationLayout;
 
 export default Rewards;
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { userId } = getAuth(ctx.req);
-  if (!userId) return { props: {} };
-
-  const prisma = new PrismaClient();
-
-  const initUserData = await prisma.user.findUnique({
-    where: {
-      userId,
-    },
-  });
-
-  if (!initUserData) return { props: {} };
-
-  // Check if the user is eligible for the birthday reward
-  const isEligibleForBirthdayRewardValue = isEligibleForBirthdayReward(
-    new Date(initUserData.birthday),
-    initUserData.lastBirthdayRewardRedemptionYear,
-  );
-
-  const menuCategories = await prisma.menuCategory.findMany({
-    where: {
-      active: true,
-    },
-    include: {
-      activeDiscount: true,
-      menuItems: {
-        include: {
-          activeDiscount: true,
-          customizationCategories: {
-            include: {
-              customizationChoices: {
-                orderBy: {
-                  listOrder: "asc",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  });
-
-  let rewardMenuCategories = menuCategories.filter((category) => {
-    return category.menuItems.some(
-      (item) => item.isRewardItem && category.name !== "Desserts",
-    );
-  });
-
-  // filter further to only include the relevant reward items from each category
-  rewardMenuCategories = rewardMenuCategories.map((category) => {
-    return {
-      ...category,
-      menuItems: category.menuItems.filter((item) => item.isRewardItem),
-    };
-  });
-
-  let birthdayMenuCategories = menuCategories.filter((category) => {
-    return category.menuItems.some(
-      (item) => item.isRewardItem && category.name === "Desserts",
-    );
-  });
-
-  // filter further to only include the relevant reward items from each category
-  birthdayMenuCategories = birthdayMenuCategories.map((category) => {
-    return {
-      ...category,
-      menuItems: category.menuItems.filter(
-        (item) => item.isRewardItem && category.name === "Desserts",
-      ),
-    };
-  });
-
-  const initRewardsData = {
-    rewardMenuCategories,
-    birthdayMenuCategories,
-  };
-
-  return {
-    props: {
-      isElegibleForBirthdayReward: isEligibleForBirthdayRewardValue,
-      initUserData,
-      initRewardsData,
-      ...buildClerkProps(ctx.req),
-    },
-  };
-};
 
 interface RewardMenuItem {
   menuItem: FullMenuItem;
