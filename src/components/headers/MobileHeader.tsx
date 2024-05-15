@@ -242,7 +242,7 @@ function MobileHeader() {
                     asChild
                   >
                     <Link href={"/order"} className="!text-xl">
-                      Order now
+                      Order
                     </Link>
                   </Button>
                 </motion.div>
