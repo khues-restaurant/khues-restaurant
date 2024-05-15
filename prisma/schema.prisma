@@ -133,8 +133,9 @@ model CustomizationCategory {
     id          String @id @default(uuid())
     name        String // e.g., "Size", "Toppings"
     description String // e.g., "Select your drink size"
-
     defaultChoiceId String
+
+    internalName String @default("") // used for internal distinction purposes, e.g., "Pho sides" vs "Platter sides"
 
     menuItems              MenuItemCustomizationCategory[]
     customizationChoices   CustomizationChoice[]
