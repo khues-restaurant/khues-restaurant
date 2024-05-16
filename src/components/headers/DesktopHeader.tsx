@@ -79,16 +79,8 @@ function DesktopHeader() {
       className={`${classes.desktopHeader} fixed left-0 top-0 z-50 grid h-28 w-screen grid-cols-1 grid-rows-1 bg-offwhite shadow-md
       `}
     >
-      <Button variant="link" asChild>
+      <Button variant="text" asChild>
         <Link href={"/"} className={`${classes.logo ?? ""}`}>
-          {/* <Image
-          src="/logo.svg"
-          alt="Khue's header logo"
-          width={65}
-          height={65}
-          priority
-          className="!size-[65px]"
-        /> */}
           <p className="text-3xl font-semibold text-primary">Khue&apos;s</p>
         </Link>
       </Button>

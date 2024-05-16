@@ -80,19 +80,11 @@ function MobileHeader() {
       id="header"
       className="baseFlex fixed left-0 top-0 z-50 h-24 w-full !justify-between bg-offwhite p-2 shadow-md"
     >
-      <Link
-        href={"/"}
-        className="baseFlex h-12 pl-2 transition-[filter] hover:brightness-[1.05] active:brightness-[0.95]"
-      >
-        <Image
-          src="/logo.svg"
-          alt="Khue's header logo"
-          width={50}
-          height={50}
-          priority
-          className="!size-[50px]"
-        />
-      </Link>
+      <Button variant="text" asChild>
+        <Link href={"/"}>
+          <p className="text-2xl font-semibold text-primary">Khue&apos;s</p>
+        </Link>
+      </Button>
 
       <div className="baseFlex gap-4">
         <CartButton />
