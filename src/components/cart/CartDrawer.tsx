@@ -398,7 +398,7 @@ function CartDrawer({
 
       {/* location + date & time picker  (TODO: why doesn't horizontal margin work here with w-full..) */}
       <div
-        className="baseFlex my-4 w-[95%] flex-wrap !justify-start gap-1 rounded-md border border-stone-300 bg-gradient-to-br
+        className="baseVertFlex my-4 w-[95%] max-w-md !justify-start gap-1 rounded-md border border-stone-300 bg-gradient-to-br
         from-stone-200 to-stone-300/80 p-4 shadow-sm"
       >
         <span className="text-sm">
@@ -565,7 +565,7 @@ function CartDrawer({
       </div>
 
       {/* summary of items in cart */}
-      <div className="baseVertFlex size-full !items-start !justify-start gap-2">
+      <div className="baseVertFlex size-full max-w-md !items-start !justify-start gap-2">
         <p className="px-4 text-lg font-semibold underline underline-offset-2">
           Items
         </p>

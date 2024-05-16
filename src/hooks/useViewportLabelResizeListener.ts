@@ -27,11 +27,11 @@ function useViewportLabelResizeListener() {
         localViewportLabel = "mobileLarge";
       }
 
-      if (window.innerWidth > 1000 && window.innerHeight > 700) {
+      if (window.innerWidth > 1000 && window.innerHeight > 600) {
         localViewportLabel = "tablet";
       }
 
-      if (window.innerWidth > 1500 && window.innerHeight > 800) {
+      if (window.innerWidth > 1500 && window.innerHeight > 600) {
         localViewportLabel = "desktop";
       }
 

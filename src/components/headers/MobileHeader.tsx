@@ -107,7 +107,7 @@ function MobileHeader() {
             </Button>
           </SheetTrigger>
           <SheetContent className="!h-dvh !overflow-auto p-6">
-            <div className="baseVertFlex !justify-start gap-4 overflow-y-scroll pt-12">
+            <div className="baseVertFlex !justify-start gap-4 overflow-y-auto pt-12">
               {!isSignedIn && (
                 <div className="baseFlex gap-4">
                   {/* how to maybe get colors to match theme + also have an option to specify username? */}

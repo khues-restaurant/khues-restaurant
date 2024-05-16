@@ -342,7 +342,7 @@ body {
 
 }
 
-@media (min-height: 700px) and (min-width: 1000px) {
+@media (min-height: 600px) and (min-width: 1000px) {
   .homepageFoodMasonry {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-template-rows: repeat(2, minmax(0, 1fr));
@@ -387,7 +387,7 @@ body {
 
 }
 
-@media (min-height: 700px) and (min-width: 1000px) {
+@media (min-height: 600px) and (min-width: 1000px) {
   .homepageInteriorMasonry {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-template-rows: repeat(2, minmax(0, 1fr));

@@ -157,7 +157,10 @@ function DesktopHeader() {
                     Hours & Location
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-[900px]">
+                <DialogContent
+                  extraBottomSpacer={false}
+                  className="max-w-[900px]"
+                >
                   <div className="baseFlex w-[850px] !items-start gap-8">
                     <div className="baseVertFlex w-64 !items-start gap-2">
                       <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
