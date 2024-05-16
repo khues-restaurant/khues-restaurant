@@ -13,6 +13,8 @@ import { useAuth } from "@clerk/nextjs";
 import { api } from "~/utils/api";
 import useGetUserId from "~/hooks/useGetUserId";
 import useInitLocalStorage from "~/hooks/useInitLocalStorage";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 
 interface GeneralLayout {
   children: ReactNode;
@@ -95,6 +97,9 @@ function GeneralLayout({ children }: GeneralLayout) {
         <PostSignUpDialog />
 
         <Toaster />
+
+        <SpeedInsights />
+        <Analytics />
       </main>
     </>
   );
