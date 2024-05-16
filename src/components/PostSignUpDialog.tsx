@@ -69,9 +69,23 @@ const mainFormSchema = z.object({
         const year = new Date(birthday).getFullYear();
         const currentYear = new Date().getFullYear();
 
-        console.log(year, currentYear, birthday);
+        return currentYear - year >= 13;
+      },
+      { message: "Users must be at least 13 years old to sign up." },
+    )
+    .refine(
+      (birthday) => {
+        const date = new Date(birthday);
+        const now = new Date();
+        const age = now.getFullYear() - date.getFullYear();
+        const isOldEnoughToSignup =
+          age > 13 ||
+          (age === 13 && now.getMonth() > date.getMonth()) ||
+          (age === 13 &&
+            now.getMonth() === date.getMonth() &&
+            now.getDate() >= date.getDate());
 
-        return year <= currentYear;
+        return isOldEnoughToSignup;
       },
       { message: "Year must not be in the future" },
     ),
@@ -334,6 +348,7 @@ function PostSignUpDialog() {
                                     animate={{ opacity: 1, height: "auto" }}
                                     exit={{ opacity: 0, height: 0 }}
                                     transition={{ duration: 0.2 }}
+                                    className="max-w-48"
                                   >
                                     <FormMessage />
                                   </motion.div>
@@ -367,6 +382,7 @@ function PostSignUpDialog() {
                                     animate={{ opacity: 1, height: "auto" }}
                                     exit={{ opacity: 0, height: 0 }}
                                     transition={{ duration: 0.2 }}
+                                    className="max-w-48"
                                   >
                                     <FormMessage />
                                   </motion.div>
@@ -410,6 +426,7 @@ function PostSignUpDialog() {
                                     animate={{ opacity: 1, height: "auto" }}
                                     exit={{ opacity: 0, height: 0 }}
                                     transition={{ duration: 0.2 }}
+                                    className="max-w-48"
                                   >
                                     <FormMessage />
                                   </motion.div>
@@ -443,6 +460,7 @@ function PostSignUpDialog() {
                                     animate={{ opacity: 1, height: "auto" }}
                                     exit={{ opacity: 0, height: 0 }}
                                     transition={{ duration: 0.2 }}
+                                    className="max-w-48"
                                   >
                                     <FormMessage />
                                   </motion.div>
