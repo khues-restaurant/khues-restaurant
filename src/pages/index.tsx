@@ -8,17 +8,15 @@ import { BsSpeedometer2 } from "react-icons/bs";
 import { TfiReceipt } from "react-icons/tfi";
 import { SignUpButton, useAuth } from "@clerk/nextjs";
 import { Parallax } from "react-scroll-parallax";
-import { useRouter } from "next/router";
 import WideFancySwirls from "~/components/ui/wideFancySwirls";
+import { HiOutlineNewspaper } from "react-icons/hi2";
 import {
   Carousel,
   CarouselContent,
   type CarouselApi,
   CarouselItem,
 } from "~/components/ui/carousel";
-import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import Head from "next/head";
-
 import mobileHero from "/public/homepage/mobileHero.webp";
 import topLeftTabletHero from "/public/homepage/heroTwo.webp";
 import topRightTabletHero from "/public/homepage/heroOne.jpeg";
@@ -47,7 +45,6 @@ import masonryInteriorFive from "/public/interior/five.webp";
 
 export default function Home() {
   const { isLoaded, isSignedIn } = useAuth();
-  const { asPath } = useRouter();
 
   const [pressReviewsApi, setPressReviewsApi] = useState<CarouselApi>();
   const [pressReviewsSlide, setPressReviewsSlide] = useState(0);
@@ -227,7 +224,10 @@ export default function Home() {
 
       {/* Press Reviews */}
       <div className="baseVertFlex w-full border-y-[1px] bg-gradient-to-br from-offwhite to-primary/10 pb-4">
-        <p className="mt-4 font-medium tablet:text-xl">Find us on</p>
+        <div className="baseFlex gap-3 rounded-md rounded-t-none border border-t-0 p-2 px-8 font-medium shadow-sm tablet:text-xl ">
+          <HiOutlineNewspaper />
+          Find us on
+        </div>
         <Carousel
           setApi={setPressReviewsApi}
           opts={{
@@ -235,13 +235,11 @@ export default function Home() {
               "(min-width: 1000px)": {
                 active: false,
               },
-              "(min-height:700px)": {
-                active: false,
-              },
             },
+            loop: true,
           }}
         >
-          <CarouselContent className="mb-8 mt-4 xl:w-[800px] tablet:mb-4">
+          <CarouselContent className="mb-8 mt-8 xl:w-[800px] tablet:mb-4">
             <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md tablet:basis-1/3">
               <a
                 href="https://www.startribune.com/how-these-moms-shaped-the-next-generation-of-great-twin-cities-restaurateurs/600273728/?refresh=true"
@@ -459,13 +457,10 @@ export default function Home() {
               className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
             >
               <Image
-                src={"/rewardsPromo.jpg"}
+                src={rewardsPromo}
                 alt={"TODO: fill in w/ appropriate alt text"}
-                fill
-                style={{
-                  objectFit: "cover",
-                }}
-                className="!relative !top-0 !size-full !h-96 rounded-md !pb-8"
+                sizes="500px"
+                className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-8"
               />
             </motion.div>
             <motion.div
@@ -524,14 +519,10 @@ export default function Home() {
               className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
             >
               <Image
-                src={"/eric.webp"}
+                src={eric}
                 alt={"TODO: fill in w/ appropriate alt text"}
-                fill
-                style={{
-                  objectFit: "cover",
-                  objectPosition: "top",
-                }}
-                className="!relative !top-0 !size-full !h-96 rounded-md"
+                sizes="288px"
+                className="!relative !top-0 !size-full !h-96 rounded-md object-cover object-top"
               />
             </motion.div>
             <motion.div
@@ -618,13 +609,10 @@ export default function Home() {
               className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
             >
               <Image
-                src={"/reservations.webp"}
+                src={reservations}
                 alt={"TODO: fill in w/ appropriate alt text"}
-                fill
-                style={{
-                  objectFit: "cover",
-                }}
-                className="!relative !top-0 !size-full !h-96 rounded-md !pb-16"
+                sizes="750px"
+                className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-16"
               />
             </motion.div>
             <motion.div
