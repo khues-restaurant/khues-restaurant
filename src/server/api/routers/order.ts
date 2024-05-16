@@ -247,60 +247,61 @@ export const orderRouter = createTRPCRouter({
         },
       });
 
-      const user = await ctx.prisma.user.findFirst({
-        where: {
-          email: input.customerEmail,
-        },
-      });
+      // TODO: uncomment for production
+      // const user = await ctx.prisma.user.findFirst({
+      //   where: {
+      //     email: input.customerEmail,
+      //   },
+      // });
 
-      // send email receipt (if allowed) to user
-      if (user?.allowsEmailReceipts) {
-        const orderDetails = await queryForOrderDetails(input.id);
+      // // send email receipt (if allowed) to user
+      // if (user?.allowsEmailReceipts) {
+      //   const orderDetails = await queryForOrderDetails(input.id);
 
-        if (orderDetails) {
-          await SendOrderReadyEmail({
-            order: {
-              id: input.id,
-              datetimeToPickup: orderDetails.datetimeToPickup,
-              firstName: orderDetails.firstName,
-              lastName: orderDetails.lastName,
-              email: user.email,
-              includeNapkinsAndUtensils: orderDetails.includeNapkinsAndUtensils,
-            },
-            orderDetails,
-            userIsAMember: true,
-          });
-        }
-      }
+      //   if (orderDetails) {
+      //     await SendOrderReadyEmail({
+      //       order: {
+      //         id: input.id,
+      //         datetimeToPickup: orderDetails.datetimeToPickup,
+      //         firstName: orderDetails.firstName,
+      //         lastName: orderDetails.lastName,
+      //         email: user.email,
+      //         includeNapkinsAndUtensils: orderDetails.includeNapkinsAndUtensils,
+      //       },
+      //       orderDetails,
+      //       userIsAMember: true,
+      //     });
+      //   }
+      // }
 
-      // check if customer email is on do not email blacklist in database
-      else {
-        const emailBlacklistValue = await prisma.blacklistedEmail.findFirst({
-          where: {
-            emailAddress: input.customerEmail,
-          },
-        });
+      // // check if customer email is on do not email blacklist in database
+      // else {
+      //   const emailBlacklistValue = await prisma.blacklistedEmail.findFirst({
+      //     where: {
+      //       emailAddress: input.customerEmail,
+      //     },
+      //   });
 
-        if (!emailBlacklistValue) {
-          const orderDetails = await queryForOrderDetails(input.id);
+      //   if (!emailBlacklistValue) {
+      //     const orderDetails = await queryForOrderDetails(input.id);
 
-          if (orderDetails) {
-            await SendOrderReadyEmail({
-              order: {
-                id: input.id,
-                datetimeToPickup: orderDetails.datetimeToPickup,
-                firstName: orderDetails.firstName,
-                lastName: orderDetails.lastName,
-                email: input.customerEmail,
-                includeNapkinsAndUtensils:
-                  orderDetails.includeNapkinsAndUtensils,
-              },
-              orderDetails,
-              userIsAMember: false,
-            });
-          }
-        }
-      }
+      //     if (orderDetails) {
+      //       await SendOrderReadyEmail({
+      //         order: {
+      //           id: input.id,
+      //           datetimeToPickup: orderDetails.datetimeToPickup,
+      //           firstName: orderDetails.firstName,
+      //           lastName: orderDetails.lastName,
+      //           email: input.customerEmail,
+      //           includeNapkinsAndUtensils:
+      //             orderDetails.includeNapkinsAndUtensils,
+      //         },
+      //         orderDetails,
+      //         userIsAMember: false,
+      //       });
+      //     }
+      //   }
+      // }
     }),
 });
 

@@ -383,33 +383,34 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
-      // 6) send email receipt (if allowed) to user
-      if (user?.allowsEmailReceipts) {
-        await SendEmailReceipt({
-          // email: customerMetadata.email,
-          order,
-          orderDetails,
-          userIsAMember: true,
-        });
-      }
+      // TODO: uncomment for production
+      // // 6) send email receipt (if allowed) to user
+      // if (user?.allowsEmailReceipts) {
+      //   await SendEmailReceipt({
+      //     // email: customerMetadata.email,
+      //     order,
+      //     orderDetails,
+      //     userIsAMember: true,
+      //   });
+      // }
 
-      // check if customer email is on do not email blacklist in database
-      else {
-        const emailBlacklistValue = await prisma.blacklistedEmail.findFirst({
-          where: {
-            emailAddress: customerMetadata.email,
-          },
-        });
+      // // check if customer email is on do not email blacklist in database
+      // else {
+      //   const emailBlacklistValue = await prisma.blacklistedEmail.findFirst({
+      //     where: {
+      //       emailAddress: customerMetadata.email,
+      //     },
+      //   });
 
-        if (!emailBlacklistValue) {
-          await SendEmailReceipt({
-            // email: customerMetadata.email,
-            order,
-            orderDetails,
-            userIsAMember: false,
-          });
-        }
-      }
+      //   if (!emailBlacklistValue) {
+      //     await SendEmailReceipt({
+      //       // email: customerMetadata.email,
+      //       order,
+      //       orderDetails,
+      //       userIsAMember: false,
+      //     });
+      //   }
+      // }
 
       // TODO: uncomment for production
       // 7) do chatgpt search for whether or not the user is a notable food critic, news reporter,
