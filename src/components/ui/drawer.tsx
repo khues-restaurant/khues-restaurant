@@ -5,7 +5,7 @@ import { Button } from "~/components/ui/button";
 import { cn } from "~/utils/shadcnuiUtils";
 
 const Drawer = ({
-  shouldScaleBackground = true,
+  shouldScaleBackground = false,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
   <DrawerPrimitive.Root
