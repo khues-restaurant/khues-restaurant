@@ -138,7 +138,7 @@ function RecentOrders() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseVertFlex relative mt-4 w-full p-0 transition-all tablet:my-8 tablet:p-8"
+            className="baseVertFlex relative my-8 w-full p-0 transition-all tablet:p-8"
           >
             {/* fyi: don't think it makes sense to have these two be under an <AnimatePresence /> since
             it should (rarely) ever change between 0 orders and some orders */}
