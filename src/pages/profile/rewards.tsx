@@ -479,7 +479,7 @@ function Rewards() {
                     <SideAccentSwirls className="h-4 fill-primary sm:h-5" />
                   </div>
 
-                  <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2 lg:!place-items-start 2xl:grid-cols-3">
+                  <div className="baseFlex w-full">
                     {/* Categories */}
                     {rewards.birthdayMenuCategories.map((category) => (
                       <div
@@ -495,7 +495,7 @@ function Rewards() {
                                 <RewardMenuItem
                                   menuItem={item}
                                   currentlySelectedRewardId={
-                                    regularSelectedRewardId
+                                    birthdaySelectedRewardId
                                   }
                                   userAvailablePoints={
                                     rewardsPointsEarned -
@@ -529,14 +529,14 @@ function Rewards() {
                 {rewards.rewardMenuCategories.map((category) => (
                   <div
                     key={category.id}
-                    className="baseVertFlex !items-start gap-4"
+                    className="baseVertFlex w-full !items-start gap-4"
                   >
                     <p className="text-lg font-semibold underline underline-offset-2">
                       {category.name}
                     </p>
 
                     {/* Items */}
-                    <div className="baseVertFlex">
+                    <div className="baseVertFlex w-full">
                       {category.menuItems
                         .sort((a, b) => a.price - b.price)
                         .map((item, index) => (
@@ -650,9 +650,9 @@ function RewardMenuItem({
     if (currentlySelectedRewardId === null) return false;
 
     if (
+      currentlySelectedRewardId !== menuItem.id ||
       userAvailablePoints < new Decimal(menuItem.price).div(0.005).toNumber() ||
-      !menuItem.available ||
-      currentlySelectedRewardId !== menuItem.id
+      !menuItem.available
     ) {
       return true;
     }
@@ -661,7 +661,7 @@ function RewardMenuItem({
   }
 
   return (
-    <div className="relative w-full max-w-80 text-primary sm:max-w-96">
+    <div className="relative w-full text-primary sm:max-w-96">
       <div className="baseFlex relative size-full !items-start gap-4 rounded-md p-4">
         <Image
           src={sampleImage}
@@ -670,7 +670,7 @@ function RewardMenuItem({
           className="!relative !size-16 rounded-md tablet:!size-24"
         />
 
-        <div className="baseVertFlex h-full w-48 !items-start !justify-between">
+        <div className="baseVertFlex size-full !items-start !justify-between">
           <div className="baseVertFlex !items-start gap-2">
             <p className="text-lg font-medium underline underline-offset-2">
               {menuItem.name}
@@ -694,6 +694,7 @@ function RewardMenuItem({
             )}
           </div>
         </div>
+
         <Button
           variant="outline"
           disabled={isDisabled()}
