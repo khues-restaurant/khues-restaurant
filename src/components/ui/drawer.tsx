@@ -49,16 +49,18 @@ const DrawerContent = React.forwardRef<
       )}
       {...props}
     >
-      {/* TODO: this should be relative so it doesn't follow scrolling w/in the drawer, but wasn't
+      <div className="mx-auto flex w-full max-w-md flex-col overflow-auto p-4">
+        {/* TODO: this should be relative so it doesn't follow scrolling w/in the drawer, but wasn't
       able to easily get it to be nestled in top right for w/e reason */}
-      {/* <DrawerClose className="absolute right-4 top-8 z-10" asChild>
+        {/* <DrawerClose className="absolute right-4 top-8 z-10" asChild>
         <Button variant="underline">Close</Button>
       </DrawerClose> */}
 
-      <div className="baseFlex h-8 w-full shadow-md">
-        <div className="mx-auto my-1 h-2 w-[75px] rounded-full bg-stone-300" />
+        <div className="baseFlex h-8 w-full shadow-md">
+          <div className="mx-auto my-1 h-2 w-[75px] rounded-full bg-stone-300" />
+        </div>
+        {children}
       </div>
-      {children}
     </DrawerPrimitive.Content>
   </DrawerPortal>
 ));
