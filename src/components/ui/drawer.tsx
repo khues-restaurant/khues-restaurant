@@ -49,7 +49,10 @@ const DrawerContent = React.forwardRef<
       )}
       {...props}
     >
-      <div className="mx-auto flex w-full max-w-md flex-col overflow-auto p-4">
+      {/* TODO: determine whether this wrapping div is necessary, and more importantly
+          how to eliminate the white space that lingers if tapping outside of virtual keyboard to close it
+          (currently only tested on ios (chrome). Continue to check for fixes in github as well) */}
+      <div className="mx-auto flex w-full max-w-md flex-col overflow-auto">
         {/* TODO: this should be relative so it doesn't follow scrolling w/in the drawer, but wasn't
       able to easily get it to be nestled in top right for w/e reason */}
         {/* <DrawerClose className="absolute right-4 top-8 z-10" asChild>
