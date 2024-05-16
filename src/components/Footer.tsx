@@ -10,8 +10,8 @@ import { Button } from "~/components/ui/button";
 function Footer() {
   return (
     <footer
-      className="baseVertFlex to-darkPrimary z-20 min-h-10 w-full gap-8 bg-gradient-to-br 
-from-primary p-4 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0"
+      className="baseVertFlex z-20 min-h-10 w-full gap-8 bg-gradient-to-br from-primary 
+to-darkPrimary p-4 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0"
     >
       {/* contact info */}
       <div className="baseVertFlex gap-2 tablet:!items-start tablet:!justify-start tablet:gap-0">
@@ -43,10 +43,7 @@ from-primary p-4 text-offwhite tablet:!flex-row tablet:!justify-between tablet:g
 
       {/* privacy policy */}
       <Button variant={"link"} asChild>
-        <Link
-          href="/privacy-policy"
-          className="order-3 !text-offwhite tablet:order-2"
-        >
+        <Link href="/privacy" className="order-3 !text-offwhite tablet:order-2">
           Privacy Policy
         </Link>
       </Button>
