@@ -165,11 +165,9 @@ function Privacy() {
 
         <h2 className="mb-4 text-2xl font-semibold">7. International Users</h2>
         <p className="mb-4">
-          {/* is this correct? */}
-          Our website is accessible from outside the country. By using our
-          services, you consent to the transfer of your information to our
-          servers located in the United States, which may have different data
-          protection laws than your country.
+          Our website is intended for use only within the country. Access to our
+          website from outside the country is restricted and not permitted. By
+          using our services, you agree to comply with this limitation.
         </p>
 
         <h2 className="mb-4 text-2xl font-semibold">8. User Rights</h2>
