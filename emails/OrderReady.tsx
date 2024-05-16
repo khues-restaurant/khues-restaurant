@@ -105,13 +105,9 @@ function OrderReady({
                 // }}
                 className="w-full rounded-t-lg bg-primary"
               >
-                <Img
-                  src={`${baseUrl}/static/whiteLogo.png`}
-                  width="48"
-                  height="48"
-                  alt="Khue's Logo"
-                  className="py-4 pl-4"
-                />
+                <Text className="py-4 pl-4 text-2xl font-semibold text-offwhite">
+                  Khue&apos;s
+                </Text>
               </div>
 
               <Section className="p-4">
