@@ -192,12 +192,12 @@ function formatReceipt(order: PrintedOrder) {
   // Food items section
   if (order.orderItems.length > 0) {
     receipt += `
-    {width:8,*}
-    ^^^"_Items_"
+    {width:9,*}
+    ^^"_Items_"
     `;
 
     order.orderItems.forEach((orderItem, index) => {
-      receipt += `|^^"${orderItem.quantity}"|"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
+      receipt += `|^^"${orderItem.quantity}"|^^"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
 
       if (orderItem.customizations.length > 0) {
         receipt += ` \n`; // space before \n necessary?
