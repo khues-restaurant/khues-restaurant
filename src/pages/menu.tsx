@@ -347,6 +347,12 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
               Consuming raw or undercooked meats, poultry, seafood, shellfish,
               or eggs may increase your risk of foodborne illness.
             </p>
+            <div className="baseFlex w-full gap-2 text-stone-400 ">
+              <FaWineBottle className="shrink-0 -rotate-45" />
+              <p className="text-xs italic tablet:text-sm">
+                All alcoholic beverages must be purchased on-site.
+              </p>
+            </div>
           </div>
         </motion.div>
 

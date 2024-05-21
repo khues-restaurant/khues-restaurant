@@ -46,6 +46,7 @@ import Head from "next/head";
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";
 import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
+import { FaWineBottle } from "react-icons/fa6";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
@@ -621,6 +622,12 @@ function OrderNow() {
                   shellfish, or eggs may increase your risk of foodborne
                   illness.
                 </p>
+                <div className="baseFlex w-full gap-2 text-stone-400 ">
+                  <FaWineBottle className="shrink-0 -rotate-45" />
+                  <p className="text-xs italic tablet:text-sm">
+                    All alcoholic beverages must be purchased on-site.
+                  </p>
+                </div>
               </div>
             </motion.div>
           ) : (
