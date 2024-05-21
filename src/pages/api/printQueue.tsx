@@ -192,8 +192,8 @@ function formatReceipt(order: PrintedOrder) {
   // Food items section
   if (order.orderItems.length > 0) {
     receipt += `
-    {width:9,*}
-    ^^"_Items_"
+    {width:8,*}
+    "_Items_"
     `;
 
     order.orderItems.forEach((orderItem, index) => {
@@ -204,7 +204,7 @@ function formatReceipt(order: PrintedOrder) {
         const itemCustomizations = orderItem.customizations
           .map(
             (c) =>
-              `||- ${c.customizationCategory.name}: ${c.customizationChoice.name}`,
+              `||"- ${c.customizationCategory.name}: ${c.customizationChoice.name}"`,
           )
           .join(" \n");
         receipt += itemCustomizations;
@@ -212,7 +212,7 @@ function formatReceipt(order: PrintedOrder) {
 
       if (orderItem.specialInstructions) {
         receipt += ` \n`; // space before \n necessary?
-        receipt += `||- \\"${orderItem.specialInstructions}\\"`;
+        receipt += `||"- \\"${orderItem.specialInstructions}\\""`;
       }
 
       if (index < order.orderItems.length - 1) {
