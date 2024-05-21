@@ -1,8 +1,8 @@
-import { SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
+import { useAuth, useClerk } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { IoSettingsOutline } from "react-icons/io5";
 import { FaUserAlt } from "react-icons/fa";
 import { MdAccessTime } from "react-icons/md";
@@ -52,6 +52,7 @@ function MobileHeader() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
   const userId = useGetUserId();
   const { asPath, events } = useRouter();
+  const { openSignUp, openSignIn } = useClerk();
 
   const { data: user } = api.user.get.useQuery(userId, {
     enabled: Boolean(userId && isSignedIn),
@@ -63,9 +64,17 @@ function MobileHeader() {
 
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
 
+  const [hoursAndLocationAccordionOpen, setHoursAndLocationAccordionOpen] =
+    useState(false);
+  const hoursAndLocationAccordionRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const handleRouteChange = () => {
       setSheetIsOpen(false);
+
+      setTimeout(() => {
+        setHoursAndLocationAccordionOpen(false);
+      }, 175);
     };
 
     events.on("routeChangeStart", handleRouteChange);
@@ -89,7 +98,18 @@ function MobileHeader() {
       <div className="baseFlex gap-4">
         <CartButton />
 
-        <Sheet open={sheetIsOpen} onOpenChange={(open) => setSheetIsOpen(open)}>
+        <Sheet
+          open={sheetIsOpen}
+          onOpenChange={(open) => {
+            setSheetIsOpen(open);
+
+            if (open === false) {
+              setTimeout(() => {
+                setHoursAndLocationAccordionOpen(false);
+              }, 175);
+            }
+          }}
+        >
           <SheetTrigger asChild>
             <Button variant="ghost" size={"icon"} className="relative mx-2">
               <span
@@ -110,27 +130,42 @@ function MobileHeader() {
             <div className="baseVertFlex !justify-start gap-4 overflow-y-auto pt-12">
               {!isSignedIn && (
                 <div className="baseFlex gap-4">
-                  {/* how to maybe get colors to match theme + also have an option to specify username? */}
-                  <SignUpButton mode="modal">
-                    <Button
-                      className="px-8"
-                      onClick={() => {
-                        setSheetIsOpen(false);
-                      }}
-                    >
-                      Sign up
-                    </Button>
-                  </SignUpButton>
-                  <SignInButton mode="modal">
-                    <Button
-                      variant={"secondary"}
-                      onClick={() => {
-                        setSheetIsOpen(false);
-                      }}
-                    >
-                      Sign in
-                    </Button>
-                  </SignInButton>
+                  <Button
+                    className="px-8"
+                    onClick={() => {
+                      setSheetIsOpen(false);
+
+                      setTimeout(() => {
+                        setHoursAndLocationAccordionOpen(false);
+                      }, 175);
+
+                      // overflow: hidden would stay stuck on <body>
+                      // unless we wait for the sheet to fully close first
+                      setTimeout(() => {
+                        openSignUp();
+                      }, 350);
+                    }}
+                  >
+                    Sign up
+                  </Button>
+                  <Button
+                    variant={"secondary"}
+                    onClick={() => {
+                      setSheetIsOpen(false);
+
+                      setTimeout(() => {
+                        setHoursAndLocationAccordionOpen(false);
+                      }, 175);
+
+                      // overflow: hidden would stay stuck on <body>
+                      // unless we wait for the sheet to fully close first
+                      setTimeout(() => {
+                        openSignIn();
+                      }, 350);
+                    }}
+                  >
+                    Sign in
+                  </Button>
                 </div>
               )}
 
@@ -292,8 +327,29 @@ function MobileHeader() {
                 </motion.div>
 
                 <motion.div variants={linkVariants} className="w-full">
-                  <Accordion type="single" collapsible className="w-full">
-                    <AccordionItem value="item-1" className="border-none">
+                  <Accordion
+                    value={hoursAndLocationAccordionOpen ? "item-1" : ""}
+                    onValueChange={(value) => {
+                      setHoursAndLocationAccordionOpen(value === "item-1");
+                    }}
+                    type="single"
+                    collapsible
+                    className="w-full"
+                  >
+                    <AccordionItem
+                      ref={hoursAndLocationAccordionRef}
+                      value="item-1"
+                      className="scroll-m-4 border-none"
+                      onClick={() => {
+                        if (hoursAndLocationAccordionOpen) return;
+
+                        setTimeout(() => {
+                          hoursAndLocationAccordionRef.current?.scrollIntoView({
+                            behavior: "smooth",
+                          });
+                        }, 175);
+                      }}
+                    >
                       <AccordionTrigger className="baseFlex py-2 text-xl text-primary !no-underline">
                         Hours & Location
                       </AccordionTrigger>
