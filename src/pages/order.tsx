@@ -1291,6 +1291,8 @@ function PreviousOrder({ order }: PreviousOrder) {
                     pointReward: item.pointReward,
                   })),
                   discountId: null,
+                  tipPercentage: null,
+                  tipValue: 0,
                 },
                 validatingAReorder: true,
               });

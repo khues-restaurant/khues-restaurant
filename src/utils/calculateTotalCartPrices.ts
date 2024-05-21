@@ -1,5 +1,5 @@
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
-import { Decimal } from "decimal.js";
+import Decimal from "decimal.js";
 import { type Discount } from "@prisma/client";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { type Item } from "~/stores/MainStore";
@@ -7,16 +7,20 @@ import { type DBOrderSummaryItem } from "~/server/api/routers/order";
 
 interface CalculateTotalCartPrices {
   items: Item[] | DBOrderSummaryItem[];
+  tipPercentage: number | null;
+  tipValue: number;
   customizationChoices: Record<string, CustomizationChoiceAndCategory>;
   discounts: Record<string, Discount>;
 }
 
 export function calculateTotalCartPrices({
   items,
+  tipPercentage,
+  tipValue,
   customizationChoices,
   discounts,
 }: CalculateTotalCartPrices) {
-  let relativeTotal = new Decimal(
+  const relativeTotal = new Decimal(
     calculateRelativeTotal({
       items,
       customizationChoices,
@@ -25,25 +29,33 @@ export function calculateTotalCartPrices({
   );
 
   // if "Spend X, Save Y" exists, apply it here
-  if (
-    Object.values(discounts).some(
-      (discount) => discount.name === "Spend $35, Save $5",
-    )
-  ) {
-    const spendXSaveY = new Decimal(5);
-    const spendX = new Decimal(35);
+  // if (
+  //   Object.values(discounts).some(
+  //     (discount) => discount.name === "Spend $35, Save $5",
+  //   )
+  // ) {
+  //   const spendXSaveY = new Decimal(5);
+  //   const spendX = new Decimal(35);
 
-    if (relativeTotal.gte(spendX)) {
-      relativeTotal = relativeTotal.sub(spendXSaveY);
-    }
+  //   if (relativeTotal.gte(spendX)) {
+  //     relativeTotal = relativeTotal.sub(spendXSaveY);
+  //   }
+  // }
+
+  let calculatedTipValue = new Decimal(tipValue);
+
+  // if tip is a percentage, calculate it here
+  if (tipPercentage !== null) {
+    calculatedTipValue = relativeTotal.mul(tipPercentage / 100);
   }
 
   const tax = relativeTotal.mul(0.08375);
-  const total = relativeTotal.add(tax);
+  const total = relativeTotal.add(tax).add(calculatedTipValue);
 
   return {
     subtotal: relativeTotal.toNumber(),
     tax: tax.toNumber(),
+    tip: calculatedTipValue.toNumber(),
     total: total.toNumber(),
   };
 }

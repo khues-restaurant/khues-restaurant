@@ -130,9 +130,9 @@ model MenuItem {
 }
 
 model CustomizationCategory {
-    id          String @id @default(uuid())
-    name        String // e.g., "Size", "Toppings"
-    description String // e.g., "Select your drink size"
+    id              String @id @default(uuid())
+    name            String // e.g., "Size", "Toppings"
+    description     String // e.g., "Select your drink size"
     defaultChoiceId String
 
     internalName String @default("") // used for internal distinction purposes, e.g., "Pho sides" vs "Platter sides"
@@ -251,6 +251,12 @@ model Order {
     discount   Discount?   @relation(fields: [discountId], references: [id])
     discountId String?
 
+    subtotal      Float
+    tax           Float
+    tipPercentage Int?
+    tipValue      Float
+    total         Float
+
     prevRewardsPoints   Int
     earnedRewardsPoints Int
     spentRewardsPoints  Int
@@ -261,9 +267,6 @@ model Order {
     rewardsPointsRedeemed  Boolean @default(false)
     userLeftFeedback       Boolean @default(false)
 
-    // could have the userDescription field on here to be populated by chatGPT response to if
-    // the user is noteworthy. Prob want to delay this until order is first created though, just a setTimeout()
-    // in prisma .create method?
     user   User?   @relation(fields: [userId], references: [userId])
     userId String?
 

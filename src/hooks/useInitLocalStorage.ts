@@ -16,7 +16,6 @@ function useInitLocalStorage() {
 
   const {
     cartInitiallyValidated,
-    setOrderDetails,
     setItemNamesRemovedFromCart,
     setCartInitiallyValidated,
     setValidatingCart,
@@ -24,7 +23,6 @@ function useInitLocalStorage() {
     setInitOrderDetailsRetrieved,
   } = useMainStore((state) => ({
     cartInitiallyValidated: state.cartInitiallyValidated,
-    setOrderDetails: state.setOrderDetails,
     setItemNamesRemovedFromCart: state.setItemNamesRemovedFromCart,
     setCartInitiallyValidated: state.setCartInitiallyValidated,
     setValidatingCart: state.setValidatingCart,
@@ -75,6 +73,8 @@ function useInitLocalStorage() {
       datetimeToPickup: getFirstValidMidnightDate(new Date()),
       isASAP: false,
       items: [],
+      tipPercentage: null,
+      tipValue: 0,
       includeNapkinsAndUtensils: false,
       discountId: null,
     } as OrderDetails;
@@ -142,7 +142,6 @@ function useInitLocalStorage() {
     setInitOrderDetailsRetrieved(true);
   }, [
     cartInitiallyValidated,
-    setOrderDetails,
     userId,
     initOrderDetailsRetrieved,
     user,
@@ -166,6 +165,8 @@ function useInitLocalStorage() {
           datetimeToPickup: getFirstValidMidnightDate(new Date()),
           isASAP: false,
           items: [],
+          tipPercentage: null,
+          tipValue: 0,
           includeNapkinsAndUtensils: false,
           discountId: null,
         } as OrderDetails;

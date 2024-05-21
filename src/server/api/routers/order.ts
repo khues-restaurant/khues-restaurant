@@ -12,6 +12,7 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
+import type Decimal from "decimal.js";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -343,20 +344,12 @@ async function queryForOrderDetails(orderId: string) {
 }
 
 interface SendOrderReadyEmail {
-  order: {
-    id: string;
-    datetimeToPickup: Date;
-    firstName: string;
-    lastName: string;
-    email: string;
-    includeNapkinsAndUtensils: boolean;
-  };
+  order: Order;
   orderDetails: DBOrderSummary;
   userIsAMember: boolean;
 }
 
 async function SendOrderReadyEmail({
-  // email,
   order,
   orderDetails,
   userIsAMember,
@@ -410,11 +403,10 @@ async function SendOrderReadyEmail({
       to: "khues.dev@gmail.com", // order.email,
       subject: "Hello world",
       react: OrderReady({
-        id: order.id,
-        datetimeToPickup: order.datetimeToPickup,
-        pickupName: `${order.firstName} ${order.lastName}`,
-        includeNapkinsAndUtensils: order.includeNapkinsAndUtensils,
-        items: orderDetails.orderItems,
+        order: {
+          ...order,
+          orderItems: orderDetails.orderItems,
+        },
         customizationChoices,
         discounts,
         userIsAMember,

@@ -5,7 +5,7 @@ import { api } from "~/utils/api";
 import isEqual from "lodash.isequal";
 import debounce from "lodash.debounce";
 import { useCallback, useEffect, useRef } from "react";
-import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
+// import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
 
 interface UpdateOrder {
   newOrderDetails: OrderDetails;
@@ -26,13 +26,16 @@ function useUpdateOrder() {
   const { isSignedIn } = useAuth();
   const userId = useGetUserId();
 
-  const { setOrderDetails, customizationChoices, discounts, validatingCart } =
-    useMainStore((state) => ({
-      setOrderDetails: state.setOrderDetails,
-      customizationChoices: state.customizationChoices,
-      discounts: state.discounts,
-      validatingCart: state.validatingCart,
-    }));
+  const {
+    setOrderDetails,
+    // customizationChoices, discounts,
+    validatingCart,
+  } = useMainStore((state) => ({
+    setOrderDetails: state.setOrderDetails,
+    // customizationChoices: state.customizationChoices,
+    // discounts: state.discounts,
+    validatingCart: state.validatingCart,
+  }));
 
   const { data: user } = api.user.get.useQuery(userId, {
     enabled: Boolean(userId && isSignedIn),
@@ -104,28 +107,28 @@ function useUpdateOrder() {
         attemptToMergeDuplicateItems(newOrderDetails);
 
       // check if there is a "Spend X, Save Y" discount able to be applied to orderDetails
-      const totalCartPrices = calculateTotalCartPrices({
-        items: sanitizedNewOrderDetails.items,
-        customizationChoices,
-        discounts,
-      });
+      // const totalCartPrices = calculateTotalCartPrices({
+      //   items: sanitizedNewOrderDetails.items,
+      //   customizationChoices,
+      //   discounts,
+      // });
 
-      // if "Spend X, Save Y" exists, apply it here
-      if (isSignedIn) {
-        // loop through discounts to find the "Spend X, Save Y" discount
-        for (const discount of Object.values(discounts)) {
-          if (discount.name !== "Spend $35, Save $5") continue;
+      // // if "Spend X, Save Y" exists, apply it here
+      // if (isSignedIn) {
+      //   // loop through discounts to find the "Spend X, Save Y" discount
+      //   for (const discount of Object.values(discounts)) {
+      //     if (discount.name !== "Spend $35, Save $5") continue;
 
-          const spendXSaveY = 5;
-          const spendX = 35;
+      //     const spendXSaveY = 5;
+      //     const spendX = 35;
 
-          if (totalCartPrices.subtotal >= spendX) {
-            sanitizedNewOrderDetails.discountId = discount.id;
-          } else {
-            sanitizedNewOrderDetails.discountId = null;
-          }
-        }
-      }
+      //     if (totalCartPrices.subtotal >= spendX) {
+      //       sanitizedNewOrderDetails.discountId = discount.id;
+      //     } else {
+      //       sanitizedNewOrderDetails.discountId = null;
+      //     }
+      //   }
+      // }
 
       // setting store state
       setOrderDetails(sanitizedNewOrderDetails);
@@ -155,8 +158,8 @@ function useUpdateOrder() {
       user,
       debouncedUpdateUser,
       setOrderDetails,
-      customizationChoices,
-      discounts,
+      // customizationChoices,
+      // discounts,
       validatingCart,
     ],
   );

@@ -1,4 +1,5 @@
 import { useAuth } from "@clerk/nextjs";
+import Decimal from "decimal.js";
 import { useEffect } from "react";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
@@ -61,10 +62,14 @@ function useKeepOrderDetailsValidated() {
       )
         return;
 
+      console.log("keep order details validated ran");
+
       const defaultCart = {
         datetimeToPickup: getFirstValidMidnightDate(new Date()),
         isASAP: false,
         items: [],
+        tipPercentage: null,
+        tipValue: new Decimal(0),
         includeNapkinsAndUtensils: false,
         discountId: null,
       } as OrderDetails;

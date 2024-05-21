@@ -1,20 +1,12 @@
-import React, { useEffect, useState } from "react";
 import { FaCakeCandles, FaUtensils } from "react-icons/fa6";
 import { type DBOrderSummary } from "~/server/api/routers/order";
 import { motion } from "framer-motion";
 import { useMainStore } from "~/stores/MainStore";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { CiGift } from "react-icons/ci";
-import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
 import { formatPrice } from "~/utils/formatPrice";
 import Decimal from "decimal.js";
 import Image from "next/image";
-
-interface OrderCost {
-  subtotal: number;
-  tax: number;
-  total: number;
-}
 
 interface OrderSummary {
   order: DBOrderSummary;
@@ -24,22 +16,6 @@ function OrderSummary({ order }: OrderSummary) {
     customizationChoices: state.customizationChoices,
     discounts: state.discounts,
   }));
-
-  const [orderCost, setOrderCost] = useState<OrderCost>({
-    subtotal: 0,
-    tax: 0,
-    total: 0,
-  });
-
-  useEffect(() => {
-    setOrderCost(
-      calculateTotalCartPrices({
-        items: order.orderItems,
-        customizationChoices,
-        discounts,
-      }),
-    );
-  }, [order, customizationChoices, discounts]);
 
   const numberOfItems = order.orderItems.reduce(
     (acc, item) => acc + item.quantity,
@@ -195,17 +171,26 @@ function OrderSummary({ order }: OrderSummary) {
         <div className="baseVertFlex w-full border-t border-stone-300 p-4">
           <div className="baseFlex w-full !justify-between gap-2 text-sm">
             <p>Subtotal</p>
-            <p>{formatPrice(orderCost.subtotal)}</p>
+            <p>{formatPrice(order.subtotal)}</p>
           </div>
 
           <div className="baseFlex w-full !justify-between gap-2 text-sm">
             <p>Tax</p>
-            <p>{formatPrice(orderCost.tax)}</p>
+            <p>{formatPrice(order.tax)}</p>
           </div>
+
+          {order.tipValue !== 0 && (
+            <div className="baseFlex w-full !justify-between gap-2 text-sm">
+              <p>
+                {`Tip${order.tipPercentage !== null ? `${order.tipPercentage}%` : ""}`}
+              </p>
+              <p>{formatPrice(order.tipValue)}</p>
+            </div>
+          )}
 
           <div className="baseFlex w-full !justify-between gap-2 text-lg font-semibold">
             <p>Total</p>
-            <p>{formatPrice(orderCost.total)}</p>
+            <p>{formatPrice(order.total)}</p>
           </div>
         </div>
       </div>

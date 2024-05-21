@@ -57,6 +57,7 @@ import noOrders from "/public/menuItems/myOrders.jpg";
 import Head from "next/head";
 import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
+import Decimal from "decimal.js";
 
 function RecentOrders() {
   const userId = useGetUserId();
@@ -405,6 +406,8 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                                 new Date(),
                               ),
                               isASAP: false,
+                              tipPercentage: null,
+                              tipValue: new Decimal(0),
                               includeNapkinsAndUtensils: false,
                               items: order.orderItems.map((item) => ({
                                 id:
@@ -595,6 +598,8 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                               ),
                               includeNapkinsAndUtensils: false,
                               isASAP: false,
+                              tipPercentage: null,
+                              tipValue: new Decimal(0),
                               items: order.orderItems.map((item) => ({
                                 id:
                                   orderDetails.items.length === 0

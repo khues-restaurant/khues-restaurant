@@ -1,6 +1,6 @@
 import { useAuth } from "@clerk/nextjs";
 import { loadStripe, type Stripe } from "@stripe/stripe-js";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import useGetUserId from "~/hooks/useGetUserId";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
@@ -43,9 +43,6 @@ function useInitializeCheckout({
 
   const createCheckout = api.payment.createCheckout.useMutation();
 
-  const { mutateAsync: createTransientOrder, isLoading } =
-    api.transientOrder.create.useMutation();
-
   const { mutate: validateOrder } = api.validateOrder.validate.useMutation({
     onSuccess: async (data) => {
       if (data.changedOrderDetails) {
@@ -63,12 +60,6 @@ function useInitializeCheckout({
         // items in the cart for any reason.
         return;
       }
-
-      await createTransientOrder({
-        userId,
-        details: orderDetails, // TODO: hmm technically shouldn't we have a return variable for the valid order details
-        // that is always returned rather than these conditional returns. Ah I remember but maybe it's still doable
-      });
 
       if (isSignedIn === false) {
         localStorage.setItem("khue's-resetOrderDetails", "true");
@@ -113,7 +104,6 @@ function useInitializeCheckout({
 
   return {
     initializeCheckout,
-    isLoading,
   };
 }
 

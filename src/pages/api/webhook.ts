@@ -2,7 +2,7 @@ import type { NextApiResponse, NextApiRequest } from "next";
 import { buffer } from "micro";
 import { env } from "~/env";
 import Stripe from "stripe";
-import { type Discount, PrismaClient } from "@prisma/client";
+import { type Discount, PrismaClient, type Order } from "@prisma/client";
 import { z } from "zod";
 import { type OrderDetails } from "~/stores/MainStore";
 import { orderDetailsSchema } from "~/stores/MainStore";
@@ -22,7 +22,7 @@ const openai = new OpenAI({
 });
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  apiVersion: "2023-10-16",
+  apiVersion: "2024-04-10",
 });
 
 export const config = {
@@ -163,46 +163,30 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       const prevPoints = user?.rewardsPoints ?? 0;
       let spentPoints = 0;
 
-      // calculate new rewards points from order
-      const totalPrice = payment.amount_total;
+      // also general TODO: look for every opportunity to use Decimal instead of number
+      // for example below you have totalPrice / 5 which certainly could cause float issue no?
 
+      // TODO: not sure whether subtotal/tax/total is in cents or dollars but obv that is necessary info to figure out
+
+      // price is in cents, so divide by 100 to get dollars
+      const subtotal = new Decimal(payment.amount_subtotal ?? 0).div(100);
+
+      // subtract tip from subtotal (if it exists)
+      if (orderDetails.tipValue) {
+        subtotal.minus(orderDetails.tipValue);
+      }
+
+      // calculate new rewards points from order subtotal
       for (const item of orderDetails.items) {
         if (item.pointReward) {
-          const points = new Decimal(item.price).div(0.005).toNumber();
-          spentPoints = points;
+          spentPoints = new Decimal(item.price).div(0.005).toNumber();
         }
       }
 
-      const earnedPoints = Math.floor(totalPrice / 5);
+      const earnedPoints = subtotal.div(5).toNumber();
 
       const lifetimeRewardPoints =
         (user?.lifetimeRewardPoints ?? 0) + earnedPoints;
-
-      // if (user) {
-      //   // create new reward discount if threshold is met
-      //   if (currPoints > 1500) {
-      //     const now = new Date();
-      //     const twoMonthsFromNow = new Date(
-      //       now.getFullYear(),
-      //       now.getMonth() + 2,
-      //       now.getDate(),
-      //     );
-
-      //     // needs to be awaited or no?
-      //     await prisma.discount.create({
-      //       data: {
-      //         name: "Points",
-      //         description: "1500 point free meal reward",
-      //         expirationDate: twoMonthsFromNow,
-      //         active: true,
-      //         userId: user.userId,
-      //       },
-      //     });
-
-      //     showRewardsDiscountNotification = true;
-      //     currPoints = currPoints - 1500;
-      //   }
-      // }
 
       // 3) create order row
       // fyi: prisma already assigns the uuid of the order being created here to orderId field
@@ -234,6 +218,30 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         );
       }
 
+      console.log("tax amount: ", payment.total_details?.amount_tax ?? 0);
+
+      // calculate/retrieve subtotal, tax, tip, total values here
+      // const subtotal = payment.amount_subtotal ?? 0;
+      const tax = new Decimal(payment.total_details?.amount_tax ?? 0);
+      // ^ TODO: investigate this, idk if it just by location
+      //         is doing the sales tax stuff or exactly what's going on there
+
+      const tipPercentage = orderDetails.tipPercentage;
+      const tipValue = orderDetails.tipValue;
+
+      console.log("tip value: ", tipValue, "tip percentage: ", tipPercentage);
+
+      const total = new Decimal(payment.amount_total);
+
+      console.log(
+        "Here!",
+        subtotal.toNumber(),
+        tax.toNumber(),
+        tipPercentage,
+        tipValue,
+        total.toNumber(),
+      );
+
       const orderData = {
         stripeSessionId: payment.id,
         datetimeToPickup: adjustedDatetimeToPickup,
@@ -243,6 +251,11 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         phoneNumber: customerMetadata.phoneNumber ?? null,
         dietaryRestrictions: user?.dietaryRestrictions ?? null,
         includeNapkinsAndUtensils: orderDetails.includeNapkinsAndUtensils,
+        subtotal: subtotal.toNumber(),
+        tax: tax.toNumber(),
+        tipPercentage,
+        tipValue,
+        total: total.toNumber(),
         prevRewardsPoints: prevPoints,
         earnedRewardsPoints: earnedPoints,
         spentRewardsPoints: spentPoints,
@@ -257,17 +270,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         data: orderData,
       });
 
-      // 3.5) set any reward discount to inactive if it was used
-      // if (orderDetails.rewardBeingRedeemed) {
-      //   await prisma.discount.update({
-      //     where: {
-      //       id: orderDetails.rewardBeingRedeemed.reward.id,
-      //     },
-      //     data: {
-      //       active: false,
-      //     },
-      //   });
-      // }
+      // 4) set any reward discount to inactive if it was used
 
       // if a reward item was redeemed:
       // need to get all of user's rewards that are active and not expired, sorted by ascending expiration date
@@ -342,7 +345,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       }
 
-      // 4) if user exists, update user rewards points + reset their currentOrder
+      // 5) if user exists, update user rewards points + reset their currentOrder
       if (user) {
         if (payment.metadata.userId) {
           const currentDate = new Date();
@@ -369,6 +372,8 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
               datetimeToPickup: getFirstValidMidnightDate(new Date()),
               isASAP: false,
               items: [],
+              tipPercentage: null,
+              tipValue: new Decimal(0),
               includeNapkinsAndUtensils: false,
               discountId: null,
             },
@@ -376,7 +381,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         });
       }
 
-      // 5) add order to print queue model in database
+      // 6) add order to print queue model in database
       await prisma.orderPrintQueue.create({
         data: {
           orderId: order.id,
@@ -384,7 +389,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       });
 
       // TODO: uncomment for production
-      // // 6) send email receipt (if allowed) to user
+      // // 7) send email receipt (if allowed) to user
       // if (user?.allowsEmailReceipts) {
       //   await SendEmailReceipt({
       //     // email: customerMetadata.email,
@@ -413,7 +418,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       // }
 
       // TODO: uncomment for production
-      // 7) do chatgpt search for whether or not the user is a notable food critic, news reporter,
+      // 8) do chatgpt search for whether or not the user is a notable food critic, news reporter,
       // writer, or otherwise influential person in the food industry.
 
       // const params: OpenAI.Chat.ChatCompletionCreateParams = {
@@ -423,7 +428,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       //       content: `Given the name ${customerMetadata.firstName} ${customerMetadata.lastName}, provide a brief one-sentence summary indicating if they are a notable food critic, news reporter, writer, influential person related to the food industry, popular on social media, or a 'foodie'. Otherwise, reply with the response: "Person is not notable"`,
       //     },
       //   ],
-      //   model: "gpt-4",
+      //   model: "gpt-4o",
       // };
       // const chatCompletion: OpenAI.Chat.ChatCompletion =
       //   await openai.chat.completions.create(params);
@@ -442,7 +447,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       //   });
       // }
 
-      // 8) cleanup transient order, technically not necessary though right since we just upsert either way?
+      // 9) cleanup transient order, technically not necessary though right since we just upsert either way?
       await prisma.transientOrder.delete({
         where: {
           userId: payment.metadata.userId,
@@ -459,14 +464,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 export default webhook;
 
 interface SendEmailReceipt {
-  order: {
-    id: string;
-    datetimeToPickup: Date;
-    firstName: string;
-    lastName: string;
-    email: string;
-    includeNapkinsAndUtensils: boolean;
-  };
+  order: Order;
   orderDetails: {
     items: {
       id: number;
@@ -545,11 +543,25 @@ async function SendEmailReceipt({
       to: "khues.dev@gmail.com", // order.email,
       subject: "Hello world",
       react: Receipt({
-        id: order.id,
-        datetimeToPickup: order.datetimeToPickup,
-        pickupName: `${order.firstName} ${order.lastName}`,
-        includeNapkinsAndUtensils: order.includeNapkinsAndUtensils,
-        items: orderDetails.items,
+        order: {
+          ...order,
+          orderItems: orderDetails.items.map((item) => ({
+            ...item,
+            id: item.itemId, // not "correct", but the actual id isn't necessary for the email
+            orderId: order.id,
+            menuItemId: item.itemId,
+            customizationChoices: item.customizations
+              ? Object.entries(item.customizations).map(
+                  ([categoryId, choiceId]) => ({
+                    categoryId,
+                    choiceId,
+                    choice: customizationChoices[choiceId],
+                  }),
+                )
+              : [],
+            discount: item.discountId ? discounts[item.discountId]! : null,
+          })),
+        },
         customizationChoices,
         discounts,
         userIsAMember,

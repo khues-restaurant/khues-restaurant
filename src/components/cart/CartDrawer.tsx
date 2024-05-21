@@ -66,6 +66,7 @@ import { Input } from "~/components/ui/input";
 interface OrderCost {
   subtotal: number;
   tax: number;
+  tip: number;
   total: number;
 }
 
@@ -108,6 +109,7 @@ function CartDrawer({
   const [orderCost, setOrderCost] = useState<OrderCost>({
     subtotal: 0,
     tax: 0,
+    tip: 0,
     total: 0,
   });
 
@@ -129,8 +131,7 @@ function CartDrawer({
   const [regularItems, setRegularItems] = useState<Item[]>([]);
   const [rewardItems, setRewardItems] = useState<Item[]>([]);
 
-  const [showOnlyRewardItemsError, setShowOnlyRewardItemsError] =
-    useState(false);
+  const [showCustomTipInput, setShowCustomTipInput] = useState(false);
 
   useEffect(() => {
     const filteredRewardItems = [];
@@ -226,6 +227,40 @@ function CartDrawer({
     }),
   });
 
+  const decimalTipSchema = z
+    .string()
+    .regex(/^\d*\.?\d{0,2}$/, "Invalid tip format") // Allows empty string, digits, and up to two decimal places
+    .refine(
+      (val) => {
+        if (val.trim() === "") return true; // Allow empty input (will be handled separately)
+        const decimalValue = new Decimal(val);
+        return (
+          decimalValue.greaterThanOrEqualTo(0) &&
+          decimalValue.lessThanOrEqualTo(100)
+        );
+      },
+      {
+        message: "Custom tip must be between 0 and 100",
+      },
+    );
+
+  const tipFormSchema = z.object({
+    tipValue: decimalTipSchema.refine(
+      (tipValue) => {
+        if (tipValue.trim() === "") return true; // Allow empty input
+        const decimalValue = new Decimal(tipValue);
+
+        return (
+          decimalValue.greaterThanOrEqualTo(0) &&
+          decimalValue.lessThanOrEqualTo(100)
+        );
+      },
+      {
+        message: "Custom tip must be between 0 and 100",
+      },
+    ),
+  });
+
   const mainForm = useForm<z.infer<typeof mainFormSchema>>({
     resolver: zodResolver(mainFormSchema),
     values: {
@@ -236,6 +271,33 @@ function CartDrawer({
       pickupName,
     },
   });
+
+  const tipForm = useForm<z.infer<typeof tipFormSchema>>({
+    resolver: zodResolver(tipFormSchema),
+    values: {
+      tipValue: getStringifiedTipValue(orderDetails.tipValue),
+    },
+  });
+
+  function getStringifiedTipValue(tipValue: number) {
+    return tipValue.toString();
+  }
+
+  function getNumericTipValue(tipValue: string) {
+    if (tipValue.trim() === "") {
+      return 0; // Return 0 if the input is empty
+    }
+    const parsedResult = decimalTipSchema.safeParse(tipValue);
+    if (!parsedResult.success) {
+      return null; // Return null if validation fails
+    }
+
+    try {
+      return new Decimal(parsedResult.data).toNumber();
+    } catch (error) {
+      return null; // Return null if Decimal throws an error
+    }
+  }
 
   useEffect(() => {
     const subscription = mainForm.watch((value) => {
@@ -307,18 +369,6 @@ function CartDrawer({
   }, [mainForm, setPickupName]);
 
   useEffect(() => {
-    if (showOnlyRewardItemsError) {
-      if (
-        orderDetails.items.some(
-          (item) => !item.pointReward && !item.birthdayReward,
-        )
-      ) {
-        setShowOnlyRewardItemsError(false);
-      }
-    }
-  }, [orderDetails.items, showOnlyRewardItemsError]);
-
-  useEffect(() => {
     // add up all the quantities of the items in the order
     let sum = 0;
     orderDetails.items.forEach((item) => {
@@ -343,31 +393,22 @@ function CartDrawer({
     setOrderCost(
       calculateTotalCartPrices({
         items,
+        tipPercentage: orderDetails.tipPercentage,
+        tipValue: orderDetails.tipValue,
         customizationChoices,
         discounts,
       }),
     );
   }, [
     orderDetails.items,
+    orderDetails.tipPercentage,
+    orderDetails.tipValue,
     orderDetails.rewardBeingRedeemed,
     customizationChoices,
     discounts,
   ]);
 
   async function onMainFormSubmit(values: z.infer<typeof mainFormSchema>) {
-    // check first to see if there are any cart infractions:
-
-    // check if order has only reward items & show error if so
-    if (
-      orderDetails.items.every(
-        (item) => item.birthdayReward || item.pointReward,
-      )
-    ) {
-      console.log("here");
-      setShowOnlyRewardItemsError(true);
-      return;
-    }
-
     setCheckoutButtonText("Loading");
 
     await initializeCheckout(values.pickupName);
@@ -465,7 +506,6 @@ function CartDrawer({
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.2 }}
-                        // className="absolute -bottom-6 left-0 right-0"
                       >
                         <FormMessage />
                       </motion.div>
@@ -518,7 +558,6 @@ function CartDrawer({
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.2 }}
-                        // className="absolute -bottom-6 left-0 right-0"
                       >
                         <FormMessage />
                       </motion.div>
@@ -551,7 +590,6 @@ function CartDrawer({
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.2 }}
-                        // className="absolute -bottom-6 left-0 right-0"
                       >
                         <FormMessage />
                       </motion.div>
@@ -619,51 +657,6 @@ function CartDrawer({
                   className="absolute right-2 top-2 size-6 bg-primary !p-0 text-offwhite"
                   onClick={() => {
                     setItemNamesRemovedFromCart([]);
-                  }}
-                >
-                  <X className="h-4 w-4" />
-                  <span className="sr-only">Close</span>
-                </Button>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {showOnlyRewardItemsError && (
-            <motion.div
-              key={"alcoholicItemsErrorCard"}
-              initial={{
-                opacity: 0,
-                height: 0,
-                paddingTop: 0,
-                paddingBottom: 0,
-              }}
-              animate={{
-                opacity: 1,
-                height: "100px",
-                paddingTop: "0.5rem",
-                paddingBottom: "0.5rem",
-              }}
-              exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-              style={{ overflow: "hidden" }}
-              className="px-8"
-            >
-              <motion.div
-                layout={"position"}
-                className="baseVertFlex relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 pr-16 text-offwhite"
-              >
-                <p className="text-sm font-semibold italic">
-                  * Orders must contain at least one non-reward item.
-                </p>
-
-                <Button
-                  variant={"outline"} // prob diff variant or make a new one
-                  // rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary
-                  className="absolute right-2 top-2 size-6 bg-primary !p-0 text-offwhite"
-                  onClick={() => {
-                    setShowOnlyRewardItemsError(false);
                   }}
                 >
                   <X className="h-4 w-4" />
@@ -1073,90 +1066,270 @@ function CartDrawer({
           </div>
 
           <div
-            className="baseFlex min-h-24 w-full !justify-between gap-4 overflow-hidden border-t
-        bg-gradient-to-br from-stone-200 to-stone-300 p-4 shadow-inner"
+            className="baseVertFlex min-h-24 w-full gap-2 overflow-hidden border-t
+        bg-gradient-to-br from-stone-200 to-stone-300 p-4 py-2 shadow-inner"
           >
-            <div className="baseVertFlex w-1/2">
-              <div className="baseFlex w-full !justify-between text-sm">
-                <p>Subtotal</p>
-                <AnimatedPrice
-                  price={formatPrice(orderCost.subtotal)}
-                  animatePresenceMode={"wait"}
-                />
-              </div>
+            {/* tip form */}
+            <div
+              className={`baseFlex w-full !justify-start gap-4 transition-all
+            ${tipForm.formState.errors.tipValue ? "pb-6" : ""}
+          `}
+            >
+              <span className="font-medium">Tip</span>
 
-              {/* TODO: ask eric if this threshold should apply based on subtotal or total */}
-              {isSignedIn &&
-                orderDetails.discountId &&
-                orderCost.subtotal >= 35 &&
-                discounts[orderDetails.discountId]?.name ===
-                  "Spend $35, Save $5" && (
-                  <div className="baseFlex w-full !justify-between text-sm text-primary">
-                    <p>Spend $35, Save $5</p>
-                    <AnimatedPrice
-                      price={formatPrice(-5)}
-                      animatePresenceMode={"wait"}
-                    />
-                  </div>
+              <div className="baseFlex gap-2">
+                {showCustomTipInput ? (
+                  <Form {...tipForm}>
+                    <form className="baseVertFlex gap-2">
+                      <FormField
+                        control={tipForm.control}
+                        name="tipValue"
+                        render={({
+                          field: { onChange, onBlur, value, ref },
+                          fieldState: { invalid },
+                        }) => (
+                          <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+                            <div className="baseVertFlex relative !items-start gap-2">
+                              {/* TODO: doesn't feel great to comment this out, but not sure of other
+                            best ui option to keep everything low-profile.. */}
+                              {/* <FormLabel className="font-semibold">Tip</FormLabel> */}
+                              <Input
+                                ref={ref}
+                                value={value}
+                                autoFocus={true}
+                                onChange={(e) => {
+                                  const inputValue = e.target.value.replace(
+                                    /[^0-9.]/g,
+                                    "",
+                                  );
+                                  onChange(inputValue);
+
+                                  const numericValue =
+                                    getNumericTipValue(inputValue);
+                                  if (numericValue !== null) {
+                                    updateOrder({
+                                      newOrderDetails: {
+                                        ...orderDetails,
+                                        tipPercentage: null,
+                                        tipValue: numericValue,
+                                      },
+                                    });
+                                  }
+                                }}
+                                onBlur={onBlur}
+                                placeholder="0"
+                                className="w-[77px] pl-5"
+                              />
+                              <div className="absolute bottom-0 left-0 top-0 flex items-center pl-2">
+                                $
+                              </div>
+                            </div>
+                            <AnimatePresence>
+                              {invalid && (
+                                <motion.div
+                                  key={"tipValueError"}
+                                  initial={{ opacity: 0 }}
+                                  animate={{ opacity: 1 }}
+                                  exit={{ opacity: 0 }}
+                                  transition={{ duration: 0.2 }}
+                                  className="absolute -bottom-6 left-0 right-0 w-[262px]"
+                                >
+                                  <FormMessage />
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </FormItem>
+                        )}
+                      />
+                    </form>
+                  </Form>
+                ) : (
+                  <Button
+                    variant={
+                      orderDetails.tipPercentage === null
+                        ? "default"
+                        : "outline"
+                    }
+                    className="text-xs font-semibold"
+                    onClick={() => {
+                      setShowCustomTipInput(true);
+                      updateOrder({
+                        newOrderDetails: {
+                          ...orderDetails,
+                          tipPercentage: null,
+                          tipValue: 0,
+                        },
+                      });
+                    }}
+                    onFocus={() => {
+                      setShowCustomTipInput(true);
+                      updateOrder({
+                        newOrderDetails: {
+                          ...orderDetails,
+                          tipPercentage: null,
+                          tipValue: 0,
+                        },
+                      });
+                    }}
+                  >
+                    Custom
+                  </Button>
                 )}
-
-              <div className="baseFlex w-full !justify-between text-sm">
-                <p>Tax</p>
-                <AnimatedPrice
-                  price={formatPrice(orderCost.tax)}
-                  animatePresenceMode={"wait"}
-                />
-              </div>
-
-              <div className="baseFlex w-full !justify-between gap-2 text-lg font-semibold">
-                <p>Total</p>
-                <AnimatedPrice
-                  price={formatPrice(orderCost.total)}
-                  animatePresenceMode={"wait"}
-                />
+                <Button
+                  variant={
+                    orderDetails.tipPercentage === 10 ? "default" : "outline"
+                  }
+                  className="text-xs font-semibold"
+                  onClick={() => {
+                    setShowCustomTipInput(false);
+                    updateOrder({
+                      newOrderDetails: {
+                        ...orderDetails,
+                        tipPercentage: 10,
+                        tipValue: 0,
+                      },
+                    });
+                  }}
+                >
+                  10%
+                </Button>
+                <Button
+                  variant={
+                    orderDetails.tipPercentage === 15 ? "default" : "outline"
+                  }
+                  className="text-xs font-semibold"
+                  onClick={() => {
+                    setShowCustomTipInput(false);
+                    updateOrder({
+                      newOrderDetails: {
+                        ...orderDetails,
+                        tipPercentage: 15,
+                        tipValue: 0,
+                      },
+                    });
+                  }}
+                >
+                  15%
+                </Button>
+                <Button
+                  variant={
+                    orderDetails.tipPercentage === 20 ? "default" : "outline"
+                  }
+                  className="text-xs font-semibold"
+                  onClick={() => {
+                    setShowCustomTipInput(false);
+                    updateOrder({
+                      newOrderDetails: {
+                        ...orderDetails,
+                        tipPercentage: 20,
+                        tipValue: 0,
+                      },
+                    });
+                  }}
+                >
+                  20%
+                </Button>
               </div>
             </div>
-
             <Separator
-              orientation="vertical"
-              className="h-16 w-[1px] bg-stone-400"
+              orientation="horizontal"
+              className="h-[1px] w-full bg-stone-400"
             />
 
-            <Button
-              variant="default"
-              disabled={
-                checkoutButtonText !== "Proceed to checkout" ||
-                orderDetails.items.length === 0
-              }
-              className="text-xs font-semibold tablet:text-sm"
-              onClick={() => void mainForm.handleSubmit(onMainFormSubmit)()}
-            >
-              <AnimatePresence mode={"popLayout"}>
-                <motion.div
-                  key={`cartSheet-${checkoutButtonText}`}
-                  layout
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  transition={{
-                    duration: 0.25,
-                  }}
-                  // static width to prevent layout shift
-                  className="baseFlex w-[119.48px] gap-2"
-                >
-                  {checkoutButtonText}
-                  {checkoutButtonText === "Loading" && (
-                    <div
-                      className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
-                      role="status"
-                      aria-label="loading"
-                    >
-                      <span className="sr-only">Loading...</span>
+            <div className="baseFlex w-full !justify-between">
+              <div className="baseVertFlex w-1/2">
+                <div className="baseFlex w-full !justify-between text-sm">
+                  <p>Subtotal</p>
+                  <AnimatedPrice
+                    price={formatPrice(orderCost.subtotal)}
+                    animatePresenceMode={"wait"}
+                  />
+                </div>
+
+                {/* TODO: ask eric if this threshold should apply based on subtotal or total */}
+                {/* {isSignedIn &&
+                  orderDetails.discountId &&
+                  orderCost.subtotal >= 35 &&
+                  discounts[orderDetails.discountId]?.name ===
+                    "Spend $35, Save $5" && (
+                    <div className="baseFlex w-full !justify-between text-sm text-primary">
+                      <p>Spend $35, Save $5</p>
+                      <AnimatedPrice
+                        price={formatPrice(-5)}
+                        animatePresenceMode={"wait"}
+                      />
                     </div>
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </Button>
+                  )} */}
+
+                <div className="baseFlex w-full !justify-between text-sm">
+                  <p>Tax</p>
+                  <AnimatedPrice
+                    price={formatPrice(orderCost.tax)}
+                    animatePresenceMode={"wait"}
+                  />
+                </div>
+
+                <div className="baseFlex w-full !justify-between text-sm">
+                  <p>{`Tip${orderDetails.tipPercentage !== null ? ` (${orderDetails.tipPercentage}%)` : ""}`}</p>
+                  <AnimatedPrice price={formatPrice(orderCost.tip)} />
+                </div>
+
+                <div className="baseFlex w-full !justify-between gap-2 text-lg font-semibold">
+                  <p>Total</p>
+                  <AnimatedPrice
+                    price={formatPrice(orderCost.total)}
+                    animatePresenceMode={"wait"}
+                  />
+                </div>
+              </div>
+
+              <Separator
+                orientation="vertical"
+                className="h-16 w-[1px] bg-stone-400"
+              />
+
+              <Button
+                variant="default"
+                disabled={
+                  checkoutButtonText !== "Proceed to checkout" ||
+                  orderDetails.items.length === 0
+                }
+                className="text-xs font-semibold tablet:text-sm"
+                onClick={() => {
+                  void mainForm.handleSubmit((mainFormData) => {
+                    void tipForm.handleSubmit((tipFormData) => {
+                      void onMainFormSubmit(mainFormData);
+                    })();
+                  })();
+                }}
+              >
+                <AnimatePresence mode={"popLayout"}>
+                  <motion.div
+                    key={`cartSheet-${checkoutButtonText}`}
+                    layout
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    transition={{
+                      duration: 0.25,
+                    }}
+                    // static width to prevent layout shift
+                    className="baseFlex w-[119.48px] gap-2"
+                  >
+                    {checkoutButtonText}
+                    {checkoutButtonText === "Loading" && (
+                      <div
+                        className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
+                        role="status"
+                        aria-label="loading"
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              </Button>
+            </div>
           </div>
         </div>
       </div>

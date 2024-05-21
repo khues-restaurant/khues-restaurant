@@ -18,10 +18,12 @@ import {
 import { format } from "date-fns";
 import * as React from "react";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
-import { type DBOrderSummaryItem } from "~/server/api/routers/order";
+import {
+  type DBOrderSummary,
+  type DBOrderSummaryItem,
+} from "~/server/api/routers/order";
 import { type Item } from "~/stores/MainStore";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
-import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
 import { formatPrice } from "~/utils/formatPrice";
 import { getFirstSixNumbers } from "~/utils/getFirstSixNumbers";
 
@@ -33,36 +35,22 @@ const baseUrl = process.env.VERCEL_URL
 // "Manage your email communication preferences" alongside "Unsubscribe from all emails"
 
 interface OrderReady {
-  id: string;
-  datetimeToPickup: Date;
-  pickupName: string;
-  includeNapkinsAndUtensils: boolean;
-  items: Item[] | DBOrderSummaryItem[]; // could just be DBOrderSummaryItem[] for this email template always right?
+  order: DBOrderSummary;
   customizationChoices: Record<string, CustomizationChoiceAndCategory>;
   discounts: Record<string, Discount>;
   userIsAMember: boolean;
   unsubscriptionToken: string;
-  // dietaryRestrictions?: string;
 }
 
+// TODO: probably want to add conditional jsx section "dietaryRestrictions" section
+
 function OrderReady({
-  id,
-  datetimeToPickup,
-  pickupName,
-  includeNapkinsAndUtensils,
-  items,
+  order,
   customizationChoices,
   discounts,
   userIsAMember,
   unsubscriptionToken,
-  // dietaryRestrictions,
 }: OrderReady) {
-  const { subtotal, tax, total } = calculateTotalCartPrices({
-    items,
-    customizationChoices,
-    discounts,
-  });
-
   return (
     <Html>
       <Preview>
@@ -123,7 +111,7 @@ function OrderReady({
                 <Section className="my-8 text-center">
                   <Column align="center">
                     <Text className="text-lg font-semibold underline underline-offset-2">
-                      Order {getFirstSixNumbers(id)}
+                      Order {getFirstSixNumbers(order.id)}
                     </Text>
 
                     <Img
@@ -143,7 +131,7 @@ function OrderReady({
                             Pickup name
                           </Text>
                           <Text className="my-0 text-left text-xs">
-                            {pickupName}
+                            {order.firstName} {order.lastName}
                           </Text>
                         </Column>
                       </Row>
@@ -154,7 +142,7 @@ function OrderReady({
                             Pickup time
                           </Text>
                           <Text className="my-0 text-left text-xs">
-                            {format(datetimeToPickup, "PPPp")}
+                            {format(order.datetimeToPickup, "PPPp")}
                           </Text>
                         </Column>
                       </Row>
@@ -174,10 +162,11 @@ function OrderReady({
                     {/* loop through items to make an order summary section */}
                     <Section className="mt-4 w-80 rounded-md bg-stone-200 p-4 text-left sm:w-[350px]">
                       <Text className="mb-4 mt-0 text-lg font-semibold">
-                        {items.length} {items.length > 1 ? "Items" : "Item"}
+                        {order.orderItems.length}{" "}
+                        {order.orderItems.length > 1 ? "Items" : "Item"}
                       </Text>
 
-                      {items.map((item, index) => (
+                      {order.orderItems.map((item, index) => (
                         <Row key={index} align="center" className="my-2 w-80">
                           <Column className="align-top">
                             <Text className="my-0 text-left font-medium">
@@ -238,7 +227,7 @@ function OrderReady({
                           <Column className="w-28 text-right">
                             <Text className="my-0 text-left text-xs italic text-stone-400">
                               {`Napkins and utensils were ${
-                                includeNapkinsAndUtensils ? "" : "not"
+                                order.includeNapkinsAndUtensils ? "" : "not"
                               } requested.`}
                             </Text>
                           </Column>
@@ -254,7 +243,7 @@ function OrderReady({
                           </Column>
                           <Column>
                             <Text className="my-0 text-right">
-                              {formatPrice(subtotal)}
+                              {formatPrice(order.subtotal)}
                             </Text>
                           </Column>
                         </Row>
@@ -264,10 +253,24 @@ function OrderReady({
                           </Column>
                           <Column>
                             <Text className="my-0 text-right">
-                              {formatPrice(tax)}
+                              {formatPrice(order.tax)}
                             </Text>
                           </Column>
                         </Row>
+                        {order.tipValue !== 0 && (
+                          <Row>
+                            <Column>
+                              <Text className="my-0 text-left">
+                                {`Tip${order.tipPercentage !== null ? `${order.tipPercentage}%` : ""}`}
+                              </Text>
+                            </Column>
+                            <Column>
+                              <Text className="my-0 text-right">
+                                {formatPrice(order.tipValue)}
+                              </Text>
+                            </Column>
+                          </Row>
+                        )}
                         <Row>
                           <Column>
                             <Text className="my-0 text-left text-base font-semibold">
@@ -276,7 +279,7 @@ function OrderReady({
                           </Column>
                           <Column>
                             <Text className="my-0 text-right text-base font-semibold">
-                              {formatPrice(total)}
+                              {formatPrice(order.total)}
                             </Text>
                           </Column>
                         </Row>

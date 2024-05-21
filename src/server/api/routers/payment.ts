@@ -15,7 +15,7 @@ export const config = {
 };
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  apiVersion: "2023-10-16",
+  apiVersion: "2024-04-10",
 });
 
 export const paymentRouter = createTRPCRouter({
@@ -57,19 +57,6 @@ export const paymentRouter = createTRPCRouter({
         },
         {} as Record<string, Discount>,
       );
-
-      // maybe use line_items.price_data.product_data.description to store extra details about
-      // customizations/discounts?
-
-      // general idea: probably keep the items.map idea below, but inside just do call to
-      // calculateRelativeTotal with item and customizationChoices and discounts
-
-      // ^ and then worry about conveying extra details about customizations/discounts to stripe later
-
-      // pretty sure we have to pass quantity of 1 to the calculateRelativeTotal because stripe will
-      // automatically multiply the quantity by the price of the line item, and we need to pass through
-      // the quantity to stripe 100%
-      // ^^^ some extra work is prob needed if BOGO related discounts are involved later on
 
       function createLineItemsFromOrder(
         items: z.infer<typeof orderDetailsSchema>["items"],
@@ -196,30 +183,90 @@ export const paymentRouter = createTRPCRouter({
             unit_amount: priceInCents,
           },
           quantity: 1,
+          // tax_rates: [""], // TODO: replace with production MN/St.Paul sales tax rate
         });
       }
 
-      let discountToApply = {};
+      // let discountToApply = {};
 
-      if (input.orderDetails.discountId) {
-        if (
-          discounts[input.orderDetails.discountId]?.name ===
-          "Spend $35, Save $5"
-        ) {
-          discountToApply = {
-            price_data: {
-              currency: "usd",
-              product_data: {
-                name: "Spend $35, Save $5",
-              },
-              unit_amount: -500,
-            },
-            quantity: 1,
-          };
+      // if (input.orderDetails.discountId) {
+      //   if (
+      //     discounts[input.orderDetails.discountId]?.name ===
+      //     "Spend $35, Save $5"
+      //   ) {
+      //     discountToApply = {
+      //       price_data: {
+      //         currency: "usd",
+      //         product_data: {
+      //           name: "Spend $35, Save $5",
+      //         },
+      //         unit_amount: -500,
+      //       },
+      //       quantity: 1,
+      //     };
+      //   }
+      // }
+
+      // TODO: associate proper 0-tax rate with tips
+      // TODO: verify process and correctness of tip calculation logic
+      let tipValue = new Decimal(input.orderDetails.tipValue);
+
+      if (
+        input.orderDetails.tipPercentage === 10 ||
+        input.orderDetails.tipPercentage === 15 ||
+        input.orderDetails.tipPercentage === 20 ||
+        (input.orderDetails.tipPercentage === null &&
+          input.orderDetails.tipValue !== 0)
+      ) {
+        // calculate subtotal of order to apply tip percentage to
+        if (input.orderDetails.tipPercentage !== null) {
+          const subtotal = lineItems.reduce((acc, item) => {
+            return acc.add(
+              new Decimal(item.price_data.unit_amount)
+                .div(100)
+                .mul(item.quantity),
+            );
+          }, new Decimal(0));
+
+          tipValue = subtotal.mul(input.orderDetails.tipPercentage).div(100);
         }
+
+        lineItems.push({
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: `Tip${input.orderDetails.tipPercentage !== null ? ` (${input.orderDetails.tipPercentage}%)` : ""}`,
+            },
+            unit_amount: tipValue
+              .mul(100)
+              .toDecimalPlaces(0, Decimal.ROUND_HALF_UP)
+              .toNumber(),
+          },
+          quantity: 1,
+          // tax_rates: ["txr_1PIgFbKPndF2uHGQrW0TnYca"], // TODO: replace with production tax-free rate
+        });
       }
 
-      console.dir(lineItems);
+      await ctx.prisma.transientOrder.upsert({
+        where: {
+          userId: input.userId,
+        },
+        create: {
+          userId: input.userId,
+          // @ts-expect-error details is just json object
+          details: {
+            ...input.orderDetails,
+            tipValue: new Decimal(tipValue), // reminder: this is the calculated, final tip value
+          } as unknown as Record<string, unknown>,
+        },
+        update: {
+          // @ts-expect-error details is just json object
+          details: {
+            ...input.orderDetails,
+            tipValue: new Decimal(tipValue), // reminder: this is the calculated, final tip value
+          } as unknown as Record<string, unknown>,
+        },
+      });
 
       let customer = undefined;
 
@@ -238,11 +285,15 @@ export const paymentRouter = createTRPCRouter({
         customer: customer?.id,
 
         line_items: lineItems,
-        discounts: [discountToApply],
+        // discounts: [discountToApply],
 
         phone_number_collection: {
           enabled: true,
         },
+
+        // automatic_tax: {
+        //   enabled: true,
+        // },
 
         metadata: {
           userId: input.userId,
