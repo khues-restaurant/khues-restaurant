@@ -432,582 +432,589 @@ function CartSheet({
         </p>
       </div>
 
-      {/* location + date & time picker  (TODO: why doesn't horizontal margin work here with w-full..) */}
-      <div className="baseFlex my-4 w-[80%] flex-wrap gap-2 rounded-md border border-stone-300 bg-gradient-to-br from-stone-200 to-stone-300/70 p-4 px-8 shadow-sm">
-        <span className="text-sm">
-          Your order will be available for pickup at
-        </span>
+      <div className="baseVertFlex size-full !justify-start overflow-y-auto">
+        {/* location + date & time picker  (TODO: why doesn't horizontal margin work here with w-full..) */}
+        <div className="baseFlex my-4 w-[80%] flex-wrap gap-2 rounded-md border border-stone-300 bg-gradient-to-br from-stone-200 to-stone-300/70 p-4 px-8 shadow-sm">
+          <span className="text-sm">
+            Your order will be available for pickup at
+          </span>
 
-        <div className="baseFlex gap-2">
-          <TbLocation className="text-primary" />
-          <Button variant={"link"} className="h-6" asChild>
-            <Link href="/googleMapsLink" className="!p-0 !text-sm">
-              2100 Snelling Ave Roseville, MN 55113
-            </Link>
-          </Button>
+          <div className="baseFlex gap-2">
+            <TbLocation className="text-primary" />
+            <Button variant={"link"} className="h-6" asChild>
+              <Link href="/googleMapsLink" className="!p-0 !text-sm">
+                2100 Snelling Ave Roseville, MN 55113
+              </Link>
+            </Button>
+          </div>
+
+          <Form {...mainForm}>
+            <form className="baseVertFlex mt-2 !items-start gap-2">
+              <div className="baseFlex !items-start gap-2">
+                <FormField
+                  control={mainForm.control}
+                  name="dateToPickup"
+                  render={({ field, fieldState: { invalid } }) => (
+                    <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+                      <div className="baseVertFlex !items-start gap-2">
+                        <FormLabel className="font-semibold">
+                          Pickup date
+                        </FormLabel>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant={"outline"}
+                                className={cn(
+                                  "w-[200px] justify-start text-left font-normal",
+                                  !field.value && "text-muted-foreground",
+                                )}
+                              >
+                                <CiCalendarDate className="mr-2 h-5 w-5" />
+                                {field.value ? (
+                                  format(field.value, "PPP")
+                                ) : (
+                                  <span>Select a date</span>
+                                )}
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              disabled={getDisabledDates()}
+                              selected={field.value}
+                              onSelect={(e) => {
+                                if (e instanceof Date) {
+                                  field.onChange(e);
+                                }
+                              }}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <AnimatePresence>
+                        {invalid && (
+                          <motion.div
+                            key={"pickupDateError"}
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <FormMessage />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={mainForm.control}
+                  name="timeToPickup"
+                  render={({ field, fieldState: { invalid } }) => (
+                    <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+                      <div className="baseVertFlex !items-start gap-2">
+                        <FormLabel className="font-semibold">
+                          Pickup time
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-max gap-2 pl-4 pr-2">
+                              <FaRegClock />
+                              <SelectValue
+                                placeholder="Select a time"
+                                className="placeholder:!text-muted-foreground"
+                              />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent
+                            side="bottom"
+                            className={`${
+                              selectedDateIsToday(
+                                mainForm.getValues().dateToPickup,
+                              ) &&
+                              mainForm.getValues().dateToPickup.getHours() >= 22
+                                ? ""
+                                : "max-h-[300px]"
+                            }`}
+                          >
+                            <AvailablePickupTimes
+                              selectedDate={mainForm.getValues().dateToPickup}
+                              minPickupTime={minPickupTime?.value}
+                            />
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <AnimatePresence>
+                        {invalid && (
+                          <motion.div
+                            key={"pickupTimeError"}
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.2 }}
+                            // className="absolute -bottom-6 left-0 right-0"
+                          >
+                            <FormMessage />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="baseFlex !items-start gap-2">
+                <FormField
+                  control={mainForm.control}
+                  name="pickupName"
+                  render={({ field, fieldState: { invalid } }) => (
+                    <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+                      <div className="baseVertFlex !items-start gap-2">
+                        <FormLabel className="text-nowrap font-semibold">
+                          Pickup name
+                        </FormLabel>
+                        <Input
+                          {...field}
+                          placeholder="John Smith"
+                          className="w-[200px]"
+                        />
+                      </div>
+                      <AnimatePresence>
+                        {invalid && (
+                          <motion.div
+                            key={"pickupNameError"}
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <FormMessage />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </form>
+          </Form>
         </div>
 
-        <Form {...mainForm}>
-          <form className="baseVertFlex mt-2 !items-start gap-2">
-            <div className="baseFlex !items-start gap-2">
-              <FormField
-                control={mainForm.control}
-                name="dateToPickup"
-                render={({ field, fieldState: { invalid } }) => (
-                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                    <div className="baseVertFlex !items-start gap-2">
-                      <FormLabel className="font-semibold">
-                        Pickup date
-                      </FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
+        <p className="ml-4 !self-start text-lg font-semibold underline underline-offset-2">
+          Items
+        </p>
+
+        <AnimatePresence>
+          {itemNamesRemovedFromCart.length > 0 && (
+            <motion.div
+              key={"cartSheetRemovedItemsCard"}
+              initial={{
+                opacity: 0,
+                height: 0,
+                paddingTop: 0,
+                paddingBottom: 0,
+              }}
+              animate={{
+                opacity: 1,
+                height: `${100 + itemNamesRemovedFromCart.length * 24}px`, // TODO: prob requires tweaking on mobile
+                paddingTop: "1rem",
+                paddingBottom: "1rem",
+              }}
+              exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              style={{ overflow: "hidden" }}
+              className="shrink-0 px-8"
+            >
+              <motion.div
+                layout={"position"}
+                className="baseVertFlex relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 pr-16 text-sm text-offwhite"
+              >
+                <p className="font-semibold underline underline-offset-2">
+                  Your order has been modified.
+                </p>
+
+                <p className="italic">
+                  {itemNamesRemovedFromCart.length > 1
+                    ? "These items are"
+                    : "This item is"}{" "}
+                  not currently available.
+                </p>
+                <ul className="list-disc pl-6">
+                  {itemNamesRemovedFromCart.map((name, idx) => (
+                    <li key={idx} className="italic">
+                      {name}
+                    </li>
+                  ))}
+                </ul>
+
+                <Button
+                  variant={"outline"} // prob diff variant or make a new one
+                  // rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary
+                  className="absolute right-2 top-2 size-6 bg-primary !p-0 text-offwhite"
+                  onClick={() => {
+                    setItemNamesRemovedFromCart([]);
+                  }}
+                >
+                  <X className="h-4 w-4" />
+                  <span className="sr-only">Close</span>
+                </Button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* summary of items in cart */}
+        <AnimatePresence mode={"wait"}>
+          {orderDetails.items.length === 0 ? (
+            <motion.div
+              key={"cartSheetEmptyCartCard"}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="baseVertFlex size-full gap-4 p-4"
+            >
+              <p className="text-lg font-semibold">Your order is empty</p>
+              <p className="w-64 text-center">
+                It looks like you haven&apos;t added anything to your order yet.
+              </p>
+            </motion.div>
+          ) : (
+            <motion.div
+              key={"cartSheetItemsCard"}
+              layout={"position"}
+              initial={{ opacity: 0, paddingBottom: 0 }}
+              animate={{ opacity: 1, paddingBottom: "4rem" }}
+              exit={{ opacity: 0, paddingBottom: 0 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="baseVertFlex size-full !items-start !justify-start gap-2 p-4"
+            >
+              <div className="baseVertFlex w-full !justify-start">
+                <AnimatePresence>
+                  {regularItems.map((item, idx) => (
+                    <motion.div
+                      key={item.id}
+                      animate={{
+                        opacity: 1,
+                        height: "auto",
+                        marginTop: "0.25rem",
+                        marginBottom: "0.25rem",
+                      }}
+                      exit={{
+                        opacity: 0,
+                        height: 0,
+                        marginTop: 0,
+                        marginBottom: 0,
+                      }}
+                      transition={{
+                        opacity: { duration: 0.1 },
+                        height: { duration: 0.25 },
+                        marginTop: { duration: 0.25 },
+                        marginBottom: { duration: 0.25 },
+                      }}
+                      className="baseFlex w-full !items-start gap-4"
+                    >
+                      {/* preview image of item */}
+                      <Image
+                        src={"/menuItems/sampleImage.webp"}
+                        alt={item.name}
+                        width={64}
+                        height={64}
+                        className="rounded-md"
+                      />
+
+                      <div className="baseFlex w-full !items-start !justify-between">
+                        <div className="baseVertFlex !items-start">
+                          {/* item name, dietary restrictions, and edit button */}
+                          <div className="baseFlex gap-2">
+                            <p className="text-lg">{item.name}</p>
+
+                            {item.includeDietaryRestrictions && (
+                              <div className="size-2 shrink-0 rounded-full bg-primary/75" />
+                            )}
+                          </div>
+
+                          {/* quantity adjustment */}
+                          <div className="baseFlex h-8 overflow-hidden rounded-md border-2 border-stone-500">
                             <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-[200px] justify-start text-left font-normal",
-                                !field.value && "text-muted-foreground",
-                              )}
+                              variant="outline"
+                              size="icon"
+                              className="size-7 rounded-none border-none p-0"
+                              onClick={() => {
+                                const newOrderDetails =
+                                  structuredClone(orderDetails);
+
+                                const currentQuantity =
+                                  newOrderDetails.items[idx]?.quantity;
+
+                                if (currentQuantity === undefined) return;
+
+                                if (currentQuantity > 1) {
+                                  newOrderDetails.items[idx]!.quantity -= 1;
+                                } else {
+                                  newOrderDetails.items.splice(idx, 1);
+                                }
+
+                                updateOrder({
+                                  newOrderDetails,
+                                });
+                              }}
                             >
-                              <CiCalendarDate className="mr-2 h-5 w-5" />
-                              {field.value ? (
-                                format(field.value, "PPP")
+                              {item.quantity === 1 ? (
+                                <FaTrashAlt
+                                  className="size-4"
+                                  aria-label="Remove item"
+                                />
                               ) : (
-                                <span>Select a date</span>
+                                <LuMinus className="size-4" />
                               )}
                             </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                          <Calendar
-                            mode="single"
-                            disabled={getDisabledDates()}
-                            selected={field.value}
-                            onSelect={(e) => {
-                              if (e instanceof Date) {
-                                field.onChange(e);
-                              }
-                            }}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                    <AnimatePresence>
-                      {invalid && (
-                        <motion.div
-                          key={"pickupDateError"}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <FormMessage />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={mainForm.control}
-                name="timeToPickup"
-                render={({ field, fieldState: { invalid } }) => (
-                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                    <div className="baseVertFlex !items-start gap-2">
-                      <FormLabel className="font-semibold">
-                        Pickup time
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-max gap-2 pl-4 pr-2">
-                            <FaRegClock />
-                            <SelectValue
-                              placeholder="Select a time"
-                              className="placeholder:!text-muted-foreground"
-                            />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent
-                          side="bottom"
-                          className={`${
-                            selectedDateIsToday(
-                              mainForm.getValues().dateToPickup,
-                            ) &&
-                            mainForm.getValues().dateToPickup.getHours() >= 22
-                              ? ""
-                              : "max-h-[300px]"
-                          }`}
-                        >
-                          <AvailablePickupTimes
-                            selectedDate={mainForm.getValues().dateToPickup}
-                            minPickupTime={minPickupTime?.value}
-                          />
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <AnimatePresence>
-                      {invalid && (
-                        <motion.div
-                          key={"pickupTimeError"}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.2 }}
-                          // className="absolute -bottom-6 left-0 right-0"
-                        >
-                          <FormMessage />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="baseFlex !items-start gap-2">
-              <FormField
-                control={mainForm.control}
-                name="pickupName"
-                render={({ field, fieldState: { invalid } }) => (
-                  <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
-                    <div className="baseVertFlex !items-start gap-2">
-                      <FormLabel className="text-nowrap font-semibold">
-                        Pickup name
-                      </FormLabel>
-                      <Input
-                        {...field}
-                        placeholder="John Smith"
-                        className="w-[200px]"
-                      />
-                    </div>
-                    <AnimatePresence>
-                      {invalid && (
-                        <motion.div
-                          key={"pickupNameError"}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <FormMessage />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </FormItem>
-                )}
-              />
-            </div>
-          </form>
-        </Form>
-      </div>
-
-      <p className="ml-4 !self-start text-lg font-semibold underline underline-offset-2">
-        Items
-      </p>
-
-      <AnimatePresence>
-        {itemNamesRemovedFromCart.length > 0 && (
-          <motion.div
-            key={"cartSheetRemovedItemsCard"}
-            initial={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
-            animate={{
-              opacity: 1,
-              height: `${100 + itemNamesRemovedFromCart.length * 24}px`, // TODO: prob requires tweaking on mobile
-              paddingTop: "1rem",
-              paddingBottom: "1rem",
-            }}
-            exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
-            style={{ overflow: "hidden" }}
-            className="shrink-0 px-8"
-          >
-            <motion.div
-              layout={"position"}
-              className="baseVertFlex relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 pr-16 text-sm text-offwhite"
-            >
-              <p className="font-semibold underline underline-offset-2">
-                Your order has been modified.
-              </p>
-
-              <p className="italic">
-                {itemNamesRemovedFromCart.length > 1
-                  ? "These items are"
-                  : "This item is"}{" "}
-                not currently available.
-              </p>
-              <ul className="list-disc pl-6">
-                {itemNamesRemovedFromCart.map((name, idx) => (
-                  <li key={idx} className="italic">
-                    {name}
-                  </li>
-                ))}
-              </ul>
-
-              <Button
-                variant={"outline"} // prob diff variant or make a new one
-                // rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary
-                className="absolute right-2 top-2 size-6 bg-primary !p-0 text-offwhite"
-                onClick={() => {
-                  setItemNamesRemovedFromCart([]);
-                }}
-              >
-                <X className="h-4 w-4" />
-                <span className="sr-only">Close</span>
-              </Button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* summary of items in cart */}
-      <AnimatePresence mode={"wait"}>
-        {orderDetails.items.length === 0 ? (
-          <motion.div
-            key={"cartSheetEmptyCartCard"}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="baseVertFlex size-full gap-4 p-4"
-          >
-            <p className="text-lg font-semibold">Your order is empty</p>
-            <p className="w-64 text-center">
-              It looks like you haven&apos;t added anything to your order yet.
-            </p>
-          </motion.div>
-        ) : (
-          <motion.div
-            key={"cartSheetItemsCard"}
-            layout={"position"}
-            initial={{ opacity: 0, paddingBottom: 0 }}
-            animate={{ opacity: 1, paddingBottom: "4rem" }}
-            exit={{ opacity: 0, paddingBottom: 0 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="baseVertFlex size-full !items-start !justify-start gap-2 overflow-y-auto p-4"
-          >
-            <div className="baseVertFlex w-full !justify-start">
-              <AnimatePresence>
-                {regularItems.map((item, idx) => (
-                  <motion.div
-                    key={item.id}
-                    animate={{
-                      opacity: 1,
-                      height: "auto",
-                      marginTop: "0.25rem",
-                      marginBottom: "0.25rem",
-                    }}
-                    exit={{
-                      opacity: 0,
-                      height: 0,
-                      marginTop: 0,
-                      marginBottom: 0,
-                    }}
-                    transition={{
-                      opacity: { duration: 0.1 },
-                      height: { duration: 0.25 },
-                      marginTop: { duration: 0.25 },
-                      marginBottom: { duration: 0.25 },
-                    }}
-                    className="baseFlex w-full !items-start gap-4"
-                  >
-                    {/* preview image of item */}
-                    <Image
-                      src={"/menuItems/sampleImage.webp"}
-                      alt={item.name}
-                      width={64}
-                      height={64}
-                      className="rounded-md"
-                    />
-
-                    <div className="baseFlex w-full !items-start !justify-between">
-                      <div className="baseVertFlex !items-start">
-                        {/* item name, dietary restrictions, and edit button */}
-                        <div className="baseFlex gap-2">
-                          <p className="text-lg">{item.name}</p>
-
-                          {item.includeDietaryRestrictions && (
-                            <div className="size-2 shrink-0 rounded-full bg-primary/75" />
-                          )}
-                        </div>
-
-                        {/* quantity adjustment */}
-                        <div className="baseFlex h-8 rounded-md border-2 border-stone-500">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="size-7 rounded-r-none border-none p-0"
-                            onClick={() => {
-                              const newOrderDetails =
-                                structuredClone(orderDetails);
-
-                              const currentQuantity =
-                                newOrderDetails.items[idx]?.quantity;
-
-                              if (currentQuantity === undefined) return;
-
-                              if (currentQuantity > 1) {
-                                newOrderDetails.items[idx]!.quantity -= 1;
-                              } else {
-                                newOrderDetails.items.splice(idx, 1);
-                              }
-
-                              updateOrder({
-                                newOrderDetails,
-                              });
-                            }}
-                          >
-                            {item.quantity === 1 ? (
-                              <FaTrashAlt
-                                className="size-4"
-                                aria-label="Remove item"
-                              />
-                            ) : (
-                              <LuMinus className="size-4" />
-                            )}
-                          </Button>
-                          <div className="baseFlex h-full w-8 bg-offwhite font-semibold">
-                            {item.quantity}
-                          </div>
-                          <Button
-                            variant="outline"
-                            disabled={item.quantity > 99}
-                            className="size-7 rounded-l-none border-none p-0"
-                            onClick={() => {
-                              if (item.quantity > 99) return;
-                              const newOrderDetails =
-                                structuredClone(orderDetails);
-
-                              const currentQuantity =
-                                newOrderDetails.items[idx]?.quantity;
-
-                              if (currentQuantity === undefined) return;
-
-                              newOrderDetails.items[idx]!.quantity += 1;
-
-                              updateOrder({
-                                newOrderDetails,
-                              });
-                            }}
-                          >
-                            <LuPlus className="size-4" />
-                          </Button>
-                        </div>
-
-                        <div className="baseVertFlex mt-2 w-full !items-start text-sm">
-                          {Object.values(item.customizations).map(
-                            (choiceId, idx) => (
-                              <p key={idx}>
-                                -{" "}
-                                {
-                                  customizationChoices[choiceId]
-                                    ?.customizationCategory.name
-                                }
-                                : {customizationChoices[choiceId]?.name}
-                              </p>
-                            ),
-                          )}
-                          {item.specialInstructions && (
-                            <p>- {item.specialInstructions}</p>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="baseVertFlex !items-end">
-                        <div className="baseFlex gap-2">
-                          {item.discountId && (
-                            <div className="baseFlex gap-2 rounded-md bg-primary px-2 py-0.5 text-xs font-semibold text-offwhite">
-                              <p>{discounts[item.discountId]?.name}</p>
+                            <div className="baseFlex h-full w-8 bg-offwhite font-semibold">
+                              {item.quantity}
                             </div>
-                          )}
-                          <AnimatedPrice
-                            price={formatPrice(
-                              calculateRelativeTotal({
-                                items: [item],
-                                customizationChoices,
-                                discounts,
-                              }),
+                            <Button
+                              variant="outline"
+                              disabled={item.quantity > 99}
+                              className="size-7 rounded-none border-none p-0"
+                              onClick={() => {
+                                if (item.quantity > 99) return;
+                                const newOrderDetails =
+                                  structuredClone(orderDetails);
+
+                                const currentQuantity =
+                                  newOrderDetails.items[idx]?.quantity;
+
+                                if (currentQuantity === undefined) return;
+
+                                newOrderDetails.items[idx]!.quantity += 1;
+
+                                updateOrder({
+                                  newOrderDetails,
+                                });
+                              }}
+                            >
+                              <LuPlus className="size-4" />
+                            </Button>
+                          </div>
+
+                          <div className="baseVertFlex mt-2 w-full !items-start text-sm">
+                            {Object.values(item.customizations).map(
+                              (choiceId, idx) => (
+                                <p key={idx}>
+                                  -{" "}
+                                  {
+                                    customizationChoices[choiceId]
+                                      ?.customizationCategory.name
+                                  }
+                                  : {customizationChoices[choiceId]?.name}
+                                </p>
+                              ),
                             )}
-                          />
+                            {item.specialInstructions && (
+                              <p>- {item.specialInstructions}</p>
+                            )}
+                          </div>
                         </div>
 
-                        <Button
-                          variant={"underline"}
-                          size={"underline"}
-                          onClick={() => {
-                            setIsEditingItem(true);
-                            setItemBeingModified(
-                              menuItems[item.itemId] ?? null,
-                            );
-                            setInitialItemState(item);
-                          }}
-                        >
-                          Edit
-                        </Button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-
-                {/* rewards item (if present) */}
-                <AnimatePresence>
-                  {rewardItems.length > 0 && (
-                    <>
-                      {rewardItems.map((item, idx) => (
-                        <motion.div
-                          key={`rewards${item.id}`}
-                          initial={{
-                            opacity: 0,
-                            height: 0,
-                            marginTop: 0,
-                            marginBottom: 0,
-                          }}
-                          animate={{
-                            opacity: 1,
-                            height: "auto",
-                            marginTop: "0.25rem",
-                            marginBottom: "0.25rem",
-                          }}
-                          exit={{
-                            opacity: 0,
-                            height: 0,
-                            marginTop: 0,
-                            marginBottom: 0,
-                          }}
-                          transition={{
-                            opacity: { duration: 0.1 },
-                            height: { duration: 0.25 },
-                            marginTop: { duration: 0.25 },
-                            marginBottom: { duration: 0.25 },
-                          }}
-                          className="baseFlex w-full !items-start gap-4"
-                        >
-                          {/* preview image of item */}
-                          <div className="goldBorder rounded-md p-1">
-                            <Image
-                              src={"/menuItems/sampleImage.webp"}
-                              alt={item.name}
-                              width={64}
-                              height={64}
-                              className="rounded-md"
+                        <div className="baseVertFlex !items-end">
+                          <div className="baseFlex gap-2">
+                            {item.discountId && (
+                              <div className="baseFlex gap-2 rounded-md bg-primary px-2 py-0.5 text-xs font-semibold text-offwhite">
+                                <p>{discounts[item.discountId]?.name}</p>
+                              </div>
+                            )}
+                            <AnimatedPrice
+                              price={formatPrice(
+                                calculateRelativeTotal({
+                                  items: [item],
+                                  customizationChoices,
+                                  discounts,
+                                }),
+                              )}
                             />
                           </div>
 
-                          <div className="baseFlex w-full !items-start !justify-between">
-                            <div className="baseVertFlex !items-start">
-                              {/* item name, dietary restrictions, and edit button */}
-                              <div className="baseFlex gap-2">
-                                <p className="text-lg">{item.name}</p>
+                          <Button
+                            variant={"underline"}
+                            size={"underline"}
+                            onClick={() => {
+                              setIsEditingItem(true);
+                              setItemBeingModified(
+                                menuItems[item.itemId] ?? null,
+                              );
+                              setInitialItemState(item);
+                            }}
+                          >
+                            Edit
+                          </Button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
 
-                                {item.includeDietaryRestrictions && (
-                                  <div className="size-2 shrink-0 rounded-full bg-primary/75" />
-                                )}
-                              </div>
+                  {/* rewards item (if present) */}
+                  <AnimatePresence>
+                    {rewardItems.length > 0 && (
+                      <>
+                        {rewardItems.map((item, idx) => (
+                          <motion.div
+                            key={`rewards${item.id}`}
+                            initial={{
+                              opacity: 0,
+                              height: 0,
+                              marginTop: 0,
+                              marginBottom: 0,
+                            }}
+                            animate={{
+                              opacity: 1,
+                              height: "auto",
+                              marginTop: "0.25rem",
+                              marginBottom: "0.25rem",
+                            }}
+                            exit={{
+                              opacity: 0,
+                              height: 0,
+                              marginTop: 0,
+                              marginBottom: 0,
+                            }}
+                            transition={{
+                              opacity: { duration: 0.1 },
+                              height: { duration: 0.25 },
+                              marginTop: { duration: 0.25 },
+                              marginBottom: { duration: 0.25 },
+                            }}
+                            className="baseFlex w-full !items-start gap-4"
+                          >
+                            {/* preview image of item */}
+                            <div className="goldBorder rounded-md p-1">
+                              <Image
+                                src={"/menuItems/sampleImage.webp"}
+                                alt={item.name}
+                                width={64}
+                                height={64}
+                                className="rounded-md"
+                              />
+                            </div>
 
-                              <div className="my-1 rounded-md border border-primary !px-2 !py-1 text-xs text-primary">
-                                {item.pointReward ? (
-                                  <>
-                                    {new Decimal(item.price)
-                                      .div(0.005)
-                                      .toNumber()}{" "}
-                                    points
-                                  </>
-                                ) : (
-                                  "Birthday reward"
-                                )}
-                              </div>
+                            <div className="baseFlex w-full !items-start !justify-between">
+                              <div className="baseVertFlex !items-start">
+                                {/* item name, dietary restrictions, and edit button */}
+                                <div className="baseFlex gap-2">
+                                  <p className="text-lg">{item.name}</p>
 
-                              <div className="baseVertFlex w-full !items-start text-sm">
-                                {Object.values(item.customizations).map(
-                                  (choiceId, idx) => (
-                                    <p key={idx}>
-                                      -{" "}
-                                      {
-                                        customizationChoices[choiceId]
-                                          ?.customizationCategory.name
+                                  {item.includeDietaryRestrictions && (
+                                    <div className="size-2 shrink-0 rounded-full bg-primary/75" />
+                                  )}
+                                </div>
+
+                                <div className="my-1 rounded-md border border-primary !px-2 !py-1 text-xs text-primary">
+                                  {item.pointReward ? (
+                                    <>
+                                      {new Decimal(item.price)
+                                        .div(0.005)
+                                        .toNumber()}{" "}
+                                      points
+                                    </>
+                                  ) : (
+                                    "Birthday reward"
+                                  )}
+                                </div>
+
+                                <div className="baseVertFlex w-full !items-start text-sm">
+                                  {Object.values(item.customizations).map(
+                                    (choiceId, idx) => (
+                                      <p key={idx}>
+                                        -{" "}
+                                        {
+                                          customizationChoices[choiceId]
+                                            ?.customizationCategory.name
+                                        }
+                                        : {customizationChoices[choiceId]?.name}
+                                      </p>
+                                    ),
+                                  )}
+                                  {item.specialInstructions && (
+                                    <p>- {item.specialInstructions}</p>
+                                  )}
+
+                                  <Button
+                                    variant={"underline"}
+                                    size={"underline"}
+                                    onClick={() => {
+                                      const { items } = orderDetails;
+
+                                      const updatedItems = [];
+
+                                      for (const orderItem of items) {
+                                        // Check if this item should be excluded
+                                        if (
+                                          item.id === orderItem.id &&
+                                          (orderItem.birthdayReward ||
+                                            orderItem.pointReward)
+                                        ) {
+                                          continue;
+                                        }
+
+                                        // If the item doesn't match our criteria for removal, add it to the updatedItems array
+                                        updatedItems.push(orderItem);
                                       }
-                                      : {customizationChoices[choiceId]?.name}
-                                    </p>
-                                  ),
-                                )}
-                                {item.specialInstructions && (
-                                  <p>- {item.specialInstructions}</p>
-                                )}
 
+                                      updateOrder({
+                                        newOrderDetails: {
+                                          ...orderDetails,
+                                          items: updatedItems,
+                                        },
+                                      });
+                                    }}
+                                  >
+                                    Remove
+                                  </Button>
+                                </div>
+                              </div>
+
+                              <div className="baseVertFlex !items-end">
+                                <AnimatedPrice
+                                  price={formatPrice(
+                                    calculateRelativeTotal({
+                                      items: [item],
+                                      customizationChoices,
+                                      discounts,
+                                    }),
+                                  )}
+                                />
                                 <Button
                                   variant={"underline"}
                                   size={"underline"}
                                   onClick={() => {
-                                    const { items } = orderDetails;
-
-                                    const updatedItems = [];
-
-                                    for (const orderItem of items) {
-                                      // Check if this item should be excluded
-                                      if (
-                                        item.id === orderItem.id &&
-                                        (orderItem.birthdayReward ||
-                                          orderItem.pointReward)
-                                      ) {
-                                        continue;
-                                      }
-
-                                      // If the item doesn't match our criteria for removal, add it to the updatedItems array
-                                      updatedItems.push(orderItem);
-                                    }
-
-                                    updateOrder({
-                                      newOrderDetails: {
-                                        ...orderDetails,
-                                        items: updatedItems,
-                                      },
-                                    });
+                                    setIsEditingItem(true);
+                                    setItemBeingModified(
+                                      menuItems[item.itemId] ?? null,
+                                    );
+                                    setInitialItemState(item);
                                   }}
                                 >
-                                  Remove
+                                  Edit
                                 </Button>
                               </div>
                             </div>
-
-                            <div className="baseVertFlex !items-end">
-                              <AnimatedPrice
-                                price={formatPrice(
-                                  calculateRelativeTotal({
-                                    items: [item],
-                                    customizationChoices,
-                                    discounts,
-                                  }),
-                                )}
-                              />
-                              <Button
-                                variant={"underline"}
-                                size={"underline"}
-                                onClick={() => {
-                                  setIsEditingItem(true);
-                                  setItemBeingModified(
-                                    menuItems[item.itemId] ?? null,
-                                  );
-                                  setInitialItemState(item);
-                                }}
-                              >
-                                Edit
-                              </Button>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </>
-                  )}
+                          </motion.div>
+                        ))}
+                      </>
+                    )}
+                  </AnimatePresence>
                 </AnimatePresence>
-              </AnimatePresence>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       <div className="baseVertFlex w-full border-t">
         <div className="baseVertFlex w-full gap-4 p-4">

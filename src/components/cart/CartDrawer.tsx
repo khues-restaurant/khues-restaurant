@@ -439,8 +439,8 @@ function CartDrawer({
 
       {/* location + date & time picker  (TODO: why doesn't horizontal margin work here with w-full..) */}
       <div
-        className="baseVertFlex my-4 w-[95%] max-w-md !justify-start gap-1 rounded-md border border-stone-300 bg-gradient-to-br
-        from-stone-200 to-stone-300/80 p-4 shadow-sm"
+        className="baseVertFlex my-4 max-w-md !justify-start gap-1 rounded-md border border-stone-300 bg-gradient-to-br
+        from-stone-200 to-stone-300/80 px-6 py-4 shadow-sm"
       >
         <span className="text-sm">
           Your order will be available for pickup at
@@ -739,11 +739,11 @@ function CartDrawer({
                           </div>
 
                           {/* quantity adjustment */}
-                          <div className="baseFlex h-8 rounded-md border-2 border-stone-500">
+                          <div className="baseFlex h-8 overflow-hidden rounded-md border-2 border-stone-500">
                             <Button
                               variant="outline"
                               size="icon"
-                              className="size-7 rounded-r-none border-none p-0"
+                              className="size-7 rounded-none border-none p-0"
                               onClick={() => {
                                 const newOrderDetails =
                                   structuredClone(orderDetails);
@@ -779,7 +779,7 @@ function CartDrawer({
                             <Button
                               variant="outline"
                               disabled={item.quantity > 99}
-                              className="size-7 rounded-l-none border-none p-0"
+                              className="size-7 rounded-none border-none p-0"
                               onClick={() => {
                                 if (item.quantity > 99) return;
                                 const newOrderDetails =
