@@ -48,12 +48,7 @@ function CartDrawerWrapper({ pickupName, setPickupName }: CartDrawerWrapper) {
             transition: "height 0.3s ease-in-out",
           }}
           className="baseVertFlex relative h-auto w-full !justify-start"
-          // TODO: currently since this is flex, upon transitioning both the prev and current contianers
-          // will be rendered one on top of each other so it looks like the component is slightly moving
-          // down/up, see if you can't readjust structure to maybe be under same div somehow?
         >
-          {/* idk about height yet, could be flat 85dvh but might look weird on certain viewports */}
-
           <AnimatePresence mode="popLayout" initial={false}>
             {!itemBeingModified && !showRewardsDrawer && (
               <motion.div key="cart" className="baseVertFlex size-full">

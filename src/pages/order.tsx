@@ -647,6 +647,11 @@ function OrderNow() {
 
       {viewportLabel.includes("mobile") ? (
         <Drawer
+          key={
+            isDrawerOpen
+              ? "itemCustomizationDrawerManualRerenderOne"
+              : "itemCustomizationDrawerManualRerenderTwo"
+          }
           open={Boolean(isDrawerOpen && itemToCustomize)}
           onOpenChange={(open) => {
             if (!open) {
@@ -668,6 +673,11 @@ function OrderNow() {
         </Drawer>
       ) : (
         <ItemCustomizationDialog
+          key={
+            isDialogOpen
+              ? "itemCustomizationDialogManualRerenderOne"
+              : "itemCustomizationDialogManualRerenderTwo"
+          }
           isDialogOpen={isDialogOpen}
           setIsDialogOpen={setIsDialogOpen}
           itemToCustomize={itemToCustomize}

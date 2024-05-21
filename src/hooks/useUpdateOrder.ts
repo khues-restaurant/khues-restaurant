@@ -73,7 +73,8 @@ function useUpdateOrder() {
     const newItems = newOrderDetails.items;
 
     const mergedItems = newItems.reduce((acc: Item[], newItem) => {
-      // Find an item that is the same as newItem, excluding the quantity/id
+      // Trying to find an item that is the same as newItem.
+      // excludes quantity and id since they don't change the "uniqueness" of an item
       const existingItemIndex = acc.findIndex((item: Item) =>
         isEqual(
           { ...item, quantity: undefined, id: undefined },

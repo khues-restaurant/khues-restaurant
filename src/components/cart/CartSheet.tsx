@@ -433,8 +433,8 @@ function CartSheet({
       </div>
 
       <div className="baseVertFlex size-full !justify-start overflow-y-auto">
-        {/* location + date & time picker  (TODO: why doesn't horizontal margin work here with w-full..) */}
-        <div className="baseFlex my-4 w-[80%] flex-wrap gap-2 rounded-md border border-stone-300 bg-gradient-to-br from-stone-200 to-stone-300/70 p-4 px-8 shadow-sm">
+        {/* location + date & time picker + pickup name form */}
+        <div className="baseFlex my-4 w-min flex-wrap gap-2 rounded-md border border-stone-300 bg-gradient-to-br from-stone-200 to-stone-300/70 p-4 px-8 shadow-sm">
           <span className="text-sm">
             Your order will be available for pickup at
           </span>
@@ -1014,10 +1014,21 @@ function CartSheet({
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* dietary restrictions legend */}
+        {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
+        {orderDetails.items.some((item) => item.includeDietaryRestrictions) && (
+          <div className="baseFlex mb-2 gap-2 !self-end">
+            <div className="size-2 shrink-0 rounded-full bg-primary/75" />
+            <p className="text-sm">
+              Item will be prepared according to your dietary restrictions
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="baseVertFlex w-full border-t">
-        <div className="baseVertFlex w-full gap-4 p-4">
+        <div className="baseVertFlex w-full gap-4 px-4 py-3">
           <div
             style={{
               justifyContent: isSignedIn ? "space-between" : "flex-start",
@@ -1055,19 +1066,6 @@ function CartSheet({
               </Button>
             )}
           </div>
-
-          {/* dietary restrictions legend */}
-          {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
-          {orderDetails.items.some(
-            (item) => item.includeDietaryRestrictions,
-          ) && (
-            <div className="baseFlex gap-2">
-              <div className="size-2 shrink-0 rounded-full bg-primary/75" />
-              <p className="text-sm">
-                Item will be prepared according to your dietary restrictions
-              </p>
-            </div>
-          )}
         </div>
 
         <div className="baseVertFlex w-full gap-2 rounded-bl-xl border-t bg-gradient-to-br from-stone-200 to-stone-300 p-4 py-2 shadow-inner">

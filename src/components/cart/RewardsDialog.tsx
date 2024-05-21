@@ -288,14 +288,14 @@ function RewardsDialogContent({
               {rewards.rewardMenuCategories.map((category) => (
                 <div
                   key={category.id}
-                  className="baseVertFlex !items-start gap-4"
+                  className="baseVertFlex w-full !items-start gap-4"
                 >
                   <p className="text-lg font-semibold underline underline-offset-2">
                     {category.name}
                   </p>
 
                   {/* Items */}
-                  <div className="baseVertFlex">
+                  <div className="baseVertFlex w-full">
                     {category.menuItems
                       .sort((a, b) => a.price - b.price)
                       .map((item, index) => (

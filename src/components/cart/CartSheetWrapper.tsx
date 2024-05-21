@@ -4,7 +4,7 @@ import RewardsDialog from "~/components/cart/RewardsDialog";
 import ItemCustomizationDialog from "~/components/itemCustomization/ItemCustomizationDialog";
 import { Sheet, SheetContent } from "~/components/ui/sheet";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
-import { useMainStore, type Item } from "~/stores/MainStore";
+import { type Item } from "~/stores/MainStore";
 
 interface CartSheetWrapper {
   showCartSheet: boolean;
@@ -18,10 +18,6 @@ function CartSheetWrapper({
   pickupName,
   setPickupName,
 }: CartSheetWrapper) {
-  const { orderDetails } = useMainStore((state) => ({
-    orderDetails: state.orderDetails,
-  }));
-
   const [isEditingItem, setIsEditingItem] = useState(false);
 
   const [showRewardsDialog, setShowRewardsDialog] = useState(false);
@@ -29,12 +25,6 @@ function CartSheetWrapper({
   const [itemBeingModified, setItemBeingModified] =
     useState<FullMenuItem | null>(null);
   const [initialItemState, setInitialItemState] = useState<Item>();
-
-  // might want to eventually do just a ~50% viewport height if there
-  // are no items in the user's cart
-  function getSheetHeight() {
-    return "100dvh";
-  }
 
   return (
     <>
@@ -50,15 +40,7 @@ function CartSheetWrapper({
         }}
       >
         <SheetContent className="h-screen">
-          <div
-            style={{
-              height: getSheetHeight(),
-              transition: "height 0.3s ease-in-out",
-              justifyContent:
-                orderDetails.items.length === 0 ? "center" : "flex-start",
-            }}
-            className="baseVertFlex relative size-full"
-          >
+          <div className="baseVertFlex relative size-full">
             <CartSheet
               setShowCartSheet={setShowCartSheet}
               setItemBeingModified={setItemBeingModified}
@@ -73,11 +55,21 @@ function CartSheetWrapper({
       </Sheet>
 
       <RewardsDialog
+        key={
+          showRewardsDialog
+            ? "cartSheetRewardDialogManualRerenderOne"
+            : "cartSheetRewardDialogManualRerenderTwo"
+        }
         showRewardsDialog={showRewardsDialog}
         setShowRewardsDialog={setShowRewardsDialog}
       />
 
       <ItemCustomizationDialog
+        key={
+          isEditingItem
+            ? "cartSheetItemCustomizationDialogManualRerenderOne"
+            : "cartSheetItemCustomizationDialogManualRerenderTwo"
+        }
         isDialogOpen={isEditingItem}
         setIsDialogOpen={setIsEditingItem}
         itemToCustomize={itemBeingModified}

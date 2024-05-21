@@ -477,18 +477,14 @@ function ItemCustomizerDialogContent({
 
                   // just need to update the existing item
                   if (forCart) {
-                    const existingItemIndex = newOrderDetails.items.findIndex(
-                      (i) => i.name === itemToCustomize.name,
-                    );
+                    newOrderDetails.items[localItemOrderDetails.id] = {
+                      ...localItemOrderDetails,
 
-                    if (existingItemIndex !== -1) {
-                      newOrderDetails.items[existingItemIndex] = {
-                        ...localItemOrderDetails,
-                        pointReward: itemOrderDetails?.pointReward ?? false,
-                        birthdayReward:
-                          itemOrderDetails?.birthdayReward ?? false,
-                      };
-                    }
+                      // I think these are baked into localItemOrderDetails already,
+                      // but investigate later
+                      pointReward: itemOrderDetails?.pointReward ?? false,
+                      birthdayReward: itemOrderDetails?.birthdayReward ?? false,
+                    };
                   } else {
                     // set prev order details so we can revert if necessary
                     // with toast's undo button

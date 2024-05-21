@@ -688,7 +688,7 @@ function CartDrawer({
               key={"cartDrawerItemsCard"}
               layout
               initial={{ opacity: 0, paddingBottom: 0 }}
-              animate={{ opacity: 1, paddingBottom: "4rem" }}
+              animate={{ opacity: 1, paddingBottom: "8rem" }}
               exit={{ opacity: 0, paddingBottom: 0 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
               className="baseVertFlex w-full !items-start !justify-start gap-2 px-4"
@@ -1010,6 +1010,17 @@ function CartDrawer({
           )}
         </AnimatePresence>
 
+        {/* dietary restrictions legend */}
+        {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
+        {orderDetails.items.some((item) => item.includeDietaryRestrictions) && (
+          <div className="baseFlex mb-2 w-full gap-2">
+            <div className="size-2 shrink-0 rounded-full bg-primary/75" />
+            <p className="text-nowrap text-xs">
+              Item will be prepared according to your dietary restrictions
+            </p>
+          </div>
+        )}
+
         <div className="baseVertFlex mt-auto w-full border-t ">
           <div className="baseVertFlex w-full gap-4 p-4">
             <div
@@ -1051,18 +1062,6 @@ function CartDrawer({
                 </Button>
               )}
             </div>
-
-            {/* dietary restrictions legend */}
-            {orderDetails.items.some(
-              (item) => item.includeDietaryRestrictions,
-            ) && (
-              <div className="baseFlex gap-2">
-                <div className="size-2 shrink-0 rounded-full bg-primary/75" />
-                <p className="text-nowrap text-xs">
-                  Item will be prepared according to your dietary restrictions
-                </p>
-              </div>
-            )}
           </div>
 
           <div
