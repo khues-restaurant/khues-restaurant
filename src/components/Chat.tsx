@@ -150,7 +150,7 @@ function Chat() {
             >
               <AlertDialogTrigger asChild>
                 <Button
-                  className="size-12 rounded-full shadow-md"
+                  className={`size-12 rounded-full shadow-md ${asPath.includes("/menu") ? "opacity-0 tablet:opacity-100" : ""}`}
                   onClick={() => {
                     setShowingAlertDialogChat((prev) => !prev);
                   }}

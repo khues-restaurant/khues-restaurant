@@ -357,7 +357,7 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
               boxShadow:
                 "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
             }}
-            className="baseFlex fixed bottom-5 gap-2 !px-4 !py-6 !text-lg tablet:bottom-10"
+            className="baseFlex fixed bottom-6 gap-2 !px-4 !py-6 !text-lg tablet:bottom-10"
           >
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-offwhite" />
             Order now
