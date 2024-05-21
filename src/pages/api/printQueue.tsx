@@ -165,8 +165,6 @@ type PrintedOrder = Order & {
   orderItems: PrintedOrderItem[];
 };
 
-// standard
-
 function formatReceipt(order: PrintedOrder) {
   const chicagoZonedTime = toZonedTime(
     order.datetimeToPickup,
@@ -195,11 +193,11 @@ function formatReceipt(order: PrintedOrder) {
   if (order.orderItems.length > 0) {
     receipt += `
     {width:8,*}
-    "_Items_"
+    ^^^"_Items_"
     `;
 
     order.orderItems.forEach((orderItem, index) => {
-      receipt += `|"${orderItem.quantity}"|"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
+      receipt += `|^^"${orderItem.quantity}"|"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
 
       if (orderItem.customizations.length > 0) {
         receipt += ` \n`; // space before \n necessary?
@@ -249,181 +247,3 @@ function formatReceipt(order: PrintedOrder) {
 
   return receipt;
 }
-
-// individual borders
-
-// function formatReceipt(order: PrintedOrder) {
-//   const chicagoZonedTime = toZonedTime(
-//     order.datetimeToPickup,
-//     "America/Chicago",
-//   );
-
-//   // Check for dietary restrictions
-//   const atLeastOneDietaryRestriction =
-//     order.dietaryRestrictions &&
-//     order.orderItems.some((item) => item.includeDietaryRestrictions);
-
-//   // Constructing the receipt using template literals
-//   let receipt = `
-//     {width:*}
-//     {border:line; width:50}
-//     ^^^Khue's
-//     799 University Ave W, St Paul, MN 55104
-//     (651) 222-3301
-//     -
-//     Online Order (Pickup)
-//     ^^^${order.firstName} ${order.lastName}
-//     ${format(chicagoZonedTime, "h:mma 'on' MM/dd/yyyy")}
-//     "Order #${getFirstSixNumbers(order.id)}"
-//     {border:space; width:50}`;
-
-//   // Food items section
-//   if (order.orderItems.length > 0) {
-//     receipt += `
-//     {width:8,*}
-//     "_Items_"
-//     {border:line; width:50}
-//     {width:6,50}
-//     `;
-
-//     order.orderItems.forEach((orderItem, index) => {
-//       receipt += `|"${orderItem.quantity}"|"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
-
-//       if (orderItem.customizations.length > 0) {
-//         receipt += ` \n`; // space before \n necessary?
-//         const itemCustomizations = orderItem.customizations
-//           .map(
-//             (c) =>
-//               `||- ${c.customizationCategory.name}: ${c.customizationChoice.name}`,
-//           )
-//           .join(" \n");
-//         receipt += itemCustomizations;
-//       }
-
-//       if (orderItem.specialInstructions) {
-//         receipt += ` \n`; // space before \n necessary?
-//         receipt += `||- \\"${orderItem.specialInstructions}\\"`;
-//       }
-
-//       if (index < order.orderItems.length - 1) {
-//         receipt += ` \n`; // space before \n necessary?
-//       }
-//     });
-
-//     receipt += `
-//     -`;
-//   }
-
-//   receipt += `
-//     {border:space; width:50}
-//     {width:*}
-//     {border:line; width:50}
-
-//   `;
-
-//   // Napkins and utensils request
-//   if (order.includeNapkinsAndUtensils) {
-//     receipt += `Utensils and napkins were requested.`;
-//   }
-
-//   // Dietary preferences
-//   if (atLeastOneDietaryRestriction) {
-//     receipt += `
-
-//     _* Dietary preferences_
-//     \\"${order.dietaryRestrictions}\\"`;
-//   }
-
-//   receipt += `
-
-//   `;
-
-//   return receipt;
-// }
-
-// full borders
-
-// function formatReceipt(order: PrintedOrder) {
-//   const chicagoZonedTime = toZonedTime(
-//     order.datetimeToPickup,
-//     "America/Chicago",
-//   );
-
-//   // Check for dietary restrictions
-//   const atLeastOneDietaryRestriction =
-//     order.dietaryRestrictions &&
-//     order.orderItems.some((item) => item.includeDietaryRestrictions);
-
-//   // Constructing the receipt using template literals
-//   let receipt = `
-//     {width:*}
-//     {border:line; width:50}
-//     ^^^Khue's
-//     799 University Ave W, St Paul, MN 55104
-//     (651) 222-3301
-//     -
-//     Online Order (Pickup)
-//     ^^^${order.firstName} ${order.lastName}
-//     ${format(chicagoZonedTime, "h:mma 'on' MM/dd/yyyy")}
-//     "Order #${getFirstSixNumbers(order.id)}"
-//     -`;
-
-//   // Food items section
-//   if (order.orderItems.length > 0) {
-//     receipt += `
-//     {width:6,*}
-//     ||"_Items_"
-
-//     `;
-
-//     order.orderItems.forEach((orderItem, index) => {
-//       receipt += `|"${orderItem.quantity}"|"${orderItem.menuItem.name}${orderItem.includeDietaryRestrictions ? " *" : ""}"`;
-
-//       if (orderItem.customizations.length > 0) {
-//         receipt += ` \n`; // space before \n necessary?
-//         const itemCustomizations = orderItem.customizations
-//           .map(
-//             (c) =>
-//               `||- ${c.customizationCategory.name}: ${c.customizationChoice.name}`,
-//           )
-//           .join(" \n");
-//         receipt += itemCustomizations;
-//       }
-
-//       if (orderItem.specialInstructions) {
-//         receipt += ` \n`; // space before \n necessary?
-//         receipt += `||- \\"${orderItem.specialInstructions}\\"`;
-//       }
-
-//       if (index < order.orderItems.length - 1) {
-//         receipt += ` \n`; // space before \n necessary?
-//       }
-//     });
-
-//     receipt += `
-//     -`;
-//   }
-
-//   receipt += `
-//     {width:*}
-
-//   `;
-
-//   // Napkins and utensils request
-//   if (order.includeNapkinsAndUtensils) {
-//     receipt += `Utensils and napkins were requested.`;
-//   }
-
-//   // Dietary preferences
-//   if (atLeastOneDietaryRestriction) {
-//     receipt += `
-
-//     _* Dietary preferences_
-//     \\"${order.dietaryRestrictions}\\"`;
-//   }
-
-//   receipt += `
-//   `;
-
-//   return receipt;
-// }
