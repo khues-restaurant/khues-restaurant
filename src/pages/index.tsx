@@ -16,7 +16,11 @@ import {
   type CarouselApi,
   CarouselItem,
 } from "~/components/ui/carousel";
+import { Separator } from "~/components/ui/separator";
+import { IoChatbox } from "react-icons/io5";
+import { FaPhone } from "react-icons/fa6";
 import Head from "next/head";
+
 import mobileHero from "/public/homepage/mobileHero.webp";
 import topLeftTabletHero from "/public/homepage/heroTwo.webp";
 import topRightTabletHero from "/public/homepage/heroOne.jpeg";
@@ -44,9 +48,15 @@ import masonryInteriorTwo from "/public/interior/two.webp";
 import masonryInteriorThree from "/public/interior/three.webp";
 import masonryInteriorFour from "/public/interior/four.webp";
 import masonryInteriorFive from "/public/interior/five.webp";
+import { useMainStore } from "~/stores/MainStore";
 
 export default function Home() {
   const { isLoaded, isSignedIn } = useAuth();
+
+  const { chatIsOpen, setChatIsOpen } = useMainStore((state) => ({
+    chatIsOpen: state.chatIsOpen,
+    setChatIsOpen: state.setChatIsOpen,
+  }));
 
   const [pressReviewsApi, setPressReviewsApi] = useState<CarouselApi>();
   const [pressReviewsSlide, setPressReviewsSlide] = useState(0);
@@ -147,13 +157,13 @@ export default function Home() {
             className="h-[152px] w-[80.5px] drop-shadow-md"
           />
           <div className="baseVertFlex w-[226px] !items-start gap-1 rounded-md">
-          <h1 className="text-2xl font-bold">Welcome to Khue&apos;s</h1>
+            <h1 className="text-2xl font-bold">Welcome to Khue&apos;s</h1>
             <p className="text-lg">
-            A modern take on classic Vietnamese cuisine.
-          </p>
+              A modern take on classic Vietnamese cuisine.
+            </p>
             <Button asChild className="mt-2">
-            <Link href="/order">Order now</Link>
-          </Button>
+              <Link href="/order">Order now</Link>
+            </Button>
           </div>
         </section>
       </div>
@@ -230,13 +240,13 @@ export default function Home() {
               className="h-[228px] w-[120.75px] drop-shadow-md"
             />
             <div className="baseVertFlex !items-start gap-1 rounded-md">
-            <h1 className="text-4xl font-bold">Welcome to Khue&apos;s</h1>
-            <p className="text-2xl">
-              A modern take on classic Vietnamese cuisine.
-            </p>
-            <Button asChild className="mt-4">
-              <Link href="/order">Order now</Link>
-            </Button>
+              <h1 className="text-4xl font-bold">Welcome to Khue&apos;s</h1>
+              <p className="text-2xl">
+                A modern take on classic Vietnamese cuisine.
+              </p>
+              <Button asChild className="mt-4">
+                <Link href="/order">Order now</Link>
+              </Button>
             </div>
           </section>
         </div>
@@ -590,13 +600,30 @@ export default function Home() {
               Planning a birthday dinner or get together with your friends?
             </p>
 
-            <p>Secure your seats ahead of time by placing a reservation.</p>
+            <p>
+              Secure your spot for larger parties. For parties of 4 or less,
+              reservations are usually not needed. However, to guarantee your
+              seats for larger groups, please get in touch with us.
+            </p>
 
-            <Button className="mt-4" asChild>
-              <a href="/resyLink" target="_blank" rel="noreferrer">
-                Place a reservation
-              </a>
-            </Button>
+            <div className="baseVertFlex mt-8 w-full gap-4">
+              <Button
+                className="baseFlex gap-2"
+                onClick={() => setChatIsOpen(!chatIsOpen)}
+              >
+                Send us a message
+                <IoChatbox className="size-5 drop-shadow-md" />
+              </Button>
+
+              <Separator orientation="vertical" className="h-[1px] w-1/2" />
+
+              <Button variant="link" className="h-8 px-1" asChild>
+                <a href="tel:+1234567890" className="baseFlex gap-2">
+                  <FaPhone size={"0.75rem"} />
+                  (234) 567-8900
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -606,13 +633,30 @@ export default function Home() {
               Planning a birthday dinner or get together with your friends?
             </p>
 
-            <p>Secure your seats ahead of time by placing a reservation.</p>
+            <p>
+              Secure your spot for larger parties. For parties of 4 or less,
+              reservations are usually not needed. However, to guarantee your
+              seats for larger groups, please get in touch with us.
+            </p>
 
-            <Button className="mt-4" asChild>
-              <a href="/resyLink" target="_blank" rel="noreferrer">
-                Place a reservation
-              </a>
-            </Button>
+            <div className="baseFlex mt-4 gap-4">
+              <Button
+                className="baseFlex gap-2"
+                onClick={() => setChatIsOpen(!chatIsOpen)}
+              >
+                Send us a message
+                <IoChatbox className="size-5 drop-shadow-md" />
+              </Button>
+
+              <Separator orientation="vertical" className="h-6 w-[1px]" />
+
+              <Button variant="link" className="h-8 px-1" asChild>
+                <a href="tel:+1234567890" className="baseFlex gap-2">
+                  <FaPhone size={"0.75rem"} />
+                  (234) 567-8900
+                </a>
+              </Button>
+            </div>
           </div>
 
           <div className="baseFlex relative size-72">

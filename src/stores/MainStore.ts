@@ -131,6 +131,7 @@ function resetStore() {
     viewportLabel: undefined,
     initViewportLabelSet: false,
     cartDrawerIsOpen: false,
+    chatIsOpen: false,
   };
 }
 
@@ -186,6 +187,9 @@ interface StoreState {
 
   initOrderDetailsRetrieved: boolean;
   setInitOrderDetailsRetrieved: (initOrderDetailsRetrieved: boolean) => void;
+
+  chatIsOpen: boolean;
+  setChatIsOpen: (chatIsOpen: boolean) => void;
 
   resetStore: () => void;
 }
@@ -292,6 +296,11 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
       initOrderDetailsRetrieved: false,
       setInitOrderDetailsRetrieved: (initOrderDetailsRetrieved: boolean) => {
         set({ initOrderDetailsRetrieved });
+      },
+
+      chatIsOpen: false,
+      setChatIsOpen: (chatIsOpen: boolean) => {
+        set({ chatIsOpen });
       },
 
       resetStore: () => {

@@ -85,7 +85,9 @@ function DesktopHeader() {
         </Link>
       </Button>
 
-      <div className={`${classes.mainLinks} baseFlex 2xl:gap-2`}>
+      <div
+        className={`${classes.mainLinks} baseFlex w-full !justify-end 2xl:gap-2`}
+      >
         <Button
           variant={asPath.includes("/menu") ? "activeLink" : "link"}
           asChild

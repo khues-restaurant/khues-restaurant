@@ -27,8 +27,9 @@ function Track() {
   const { asPath, isReady, query } = useRouter();
   const orderId = query.id;
 
-  const { viewportLabel } = useMainStore((state) => ({
+  const { viewportLabel, setChatIsOpen } = useMainStore((state) => ({
     viewportLabel: state.viewportLabel,
+    setChatIsOpen: state.setChatIsOpen,
   }));
 
   // const session = api.payment.getStripeSession.useQuery(
@@ -675,7 +676,11 @@ function Track() {
               <div className="baseFlex tablet:w-[500px]">
                 <OrderSummary order={order} />
               </div>
-              <Button variant={"underline"} className="text-primary">
+              <Button
+                variant={"underline"}
+                className="text-primary"
+                onClick={() => setChatIsOpen(true)}
+              >
                 Need assistance with your order?
               </Button>
             </motion.div>
