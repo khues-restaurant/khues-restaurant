@@ -194,6 +194,7 @@ function formatReceipt(order: PrintedOrder) {
     receipt += `
     {width:8,*}
     "_Items_"
+    
     `;
 
     order.orderItems.forEach((orderItem, index) => {
@@ -225,12 +226,12 @@ function formatReceipt(order: PrintedOrder) {
   }
 
   receipt += `
-  {width:*}
-  `;
+  {width:*}`;
 
   // Napkins and utensils request
   if (order.includeNapkinsAndUtensils) {
-    receipt += `Utensils and napkins were requested.`;
+    receipt += `
+    Utensils and napkins were requested.`;
   }
 
   // Dietary preferences
