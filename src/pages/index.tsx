@@ -23,6 +23,8 @@ import topRightTabletHero from "/public/homepage/heroOne.jpeg";
 import bottomLeftTabletHero from "/public/homepage/heroThree.webp";
 import bottomRightTabletHero from "/public/homepage/heroFour.jpg";
 
+import khuesKitchenLogo from "/public/khuesKitchenLogo.png";
+
 import starTribuneLogo from "/public/media/starTribuneLogo.png";
 import kare11Logo from "/public/media/kare11Logo.png";
 import mprLogo from "/public/media/mprLogo.png";
@@ -135,14 +137,24 @@ export default function Home() {
           />
         </div>
 
-        <section className="baseVertFlex gap-1 p-8">
+        <section className="baseFlex w-full gap-8 rounded-md bg-offwhite py-4 shadow-md">
+          <Image
+            src={khuesKitchenLogo}
+            alt={"TODO: fill in w/ appropriate alt text"}
+            priority
+            // className="h-[228px] w-[120.75px]"
+            // className="h-[205.2px] w-[108.675px]"
+            className="h-[152px] w-[80.5px] drop-shadow-md"
+          />
+          <div className="baseVertFlex w-[226px] !items-start gap-1 rounded-md">
           <h1 className="text-2xl font-bold">Welcome to Khue&apos;s</h1>
-          <p className="text-center text-lg">
+            <p className="text-lg">
             A modern take on classic Vietnamese cuisine.
           </p>
-          <Button asChild className="mt-4">
+            <Button asChild className="mt-2">
             <Link href="/order">Order now</Link>
           </Button>
+          </div>
         </section>
       </div>
 
@@ -209,8 +221,15 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="baseVertFlex absolute top-0 h-full xl:!left-24 tablet:left-8">
-          <section className="baseVertFlex !items-start gap-1 rounded-md bg-offwhite p-8 shadow-md">
+        <div className="baseVertFlex absolute top-0 h-full xl:!left-16 2xl:!left-24 tablet:left-8">
+          <section className="baseFlex gap-8 rounded-md bg-offwhite px-6 py-4 shadow-md">
+            <Image
+              src={khuesKitchenLogo}
+              alt={"TODO: fill in w/ appropriate alt text"}
+              priority
+              className="h-[228px] w-[120.75px] drop-shadow-md"
+            />
+            <div className="baseVertFlex !items-start gap-1 rounded-md">
             <h1 className="text-4xl font-bold">Welcome to Khue&apos;s</h1>
             <p className="text-2xl">
               A modern take on classic Vietnamese cuisine.
@@ -218,6 +237,7 @@ export default function Home() {
             <Button asChild className="mt-4">
               <Link href="/order">Order now</Link>
             </Button>
+            </div>
           </section>
         </div>
       </div>
