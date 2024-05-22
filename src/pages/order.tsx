@@ -647,11 +647,6 @@ function OrderNow() {
 
       {viewportLabel.includes("mobile") ? (
         <Drawer
-          key={
-            isDrawerOpen
-              ? "itemCustomizationDrawerManualRerenderOne"
-              : "itemCustomizationDrawerManualRerenderTwo"
-          }
           open={Boolean(isDrawerOpen && itemToCustomize)}
           onOpenChange={(open) => {
             if (!open) {
@@ -673,11 +668,6 @@ function OrderNow() {
         </Drawer>
       ) : (
         <ItemCustomizationDialog
-          key={
-            isDialogOpen
-              ? "itemCustomizationDialogManualRerenderOne"
-              : "itemCustomizationDialogManualRerenderTwo"
-          }
           isDialogOpen={isDialogOpen}
           setIsDialogOpen={setIsDialogOpen}
           itemToCustomize={itemToCustomize}
@@ -989,7 +979,7 @@ function MenuItemPreviewButton({
             setPrevOrderDetails(orderDetails);
 
             toast({
-              description: `${menuItem.name} added to your order.`,
+              description: `${menuItem.name} was added to your order.`,
               action: (
                 <ToastAction
                   altText={`Undo the addition of ${menuItem.name} to your order.`}
@@ -1139,7 +1129,7 @@ function PreviousOrder({ order }: PreviousOrder) {
         );
 
         toast({
-          description: `${totalValidItems} item${totalValidItems > 1 ? "s" : ""} added to your order.`,
+          description: `${totalValidItems} item${totalValidItems > 1 ? "s" : ""} was added to your order.`,
           action: (
             <ToastAction
               altText={`Undo the addition of ${totalValidItems} item${totalValidItems > 1 ? "s" : ""} to your order.`}

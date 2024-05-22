@@ -17,12 +17,12 @@ function CartDrawerWrapper({ pickupName, setPickupName }: CartDrawerWrapper) {
     setCartDrawerIsOpen: state.setCartDrawerIsOpen,
   }));
 
-  const [itemBeingModified, setItemBeingModified] =
-    useState<FullMenuItem | null>(null);
-
   const [showRewardsDrawer, setShowRewardsDrawer] = useState(false);
 
-  const [initialItemState, setInitialItemState] = useState<Item>();
+  const [itemToCustomize, setItemToCustomize] = useState<FullMenuItem | null>(
+    null,
+  );
+  const [itemOrderDetails, setItemOrderDetails] = useState<Item>();
 
   function getDrawerHeight() {
     return "85dvh";
@@ -35,8 +35,8 @@ function CartDrawerWrapper({ pickupName, setPickupName }: CartDrawerWrapper) {
         setCartDrawerIsOpen(open);
 
         if (!open) {
-          setItemBeingModified(null);
-          setInitialItemState(undefined);
+          setItemToCustomize(null);
+          setItemOrderDetails(undefined);
           setShowRewardsDrawer(false);
         }
       }}
@@ -50,11 +50,11 @@ function CartDrawerWrapper({ pickupName, setPickupName }: CartDrawerWrapper) {
           className="baseVertFlex relative h-auto w-full !justify-start"
         >
           <AnimatePresence mode="popLayout" initial={false}>
-            {!itemBeingModified && !showRewardsDrawer && (
+            {!itemToCustomize && !showRewardsDrawer && (
               <motion.div key="cart" className="baseVertFlex size-full">
                 <CartDrawer
-                  setItemBeingModified={setItemBeingModified}
-                  setInitialItemState={setInitialItemState}
+                  setItemToCustomize={setItemToCustomize}
+                  setItemOrderDetails={setItemOrderDetails}
                   setShowRewardsDrawer={setShowRewardsDrawer}
                   pickupName={pickupName}
                   setPickupName={setPickupName}
@@ -62,12 +62,12 @@ function CartDrawerWrapper({ pickupName, setPickupName }: CartDrawerWrapper) {
               </motion.div>
             )}
 
-            {itemBeingModified && (
+            {itemToCustomize && (
               <motion.div key="customize" className="baseVertFlex size-full">
                 <ItemCustomizationDrawer
-                  itemToCustomize={itemBeingModified}
-                  setItemToCustomize={setItemBeingModified}
-                  itemOrderDetails={initialItemState}
+                  itemToCustomize={itemToCustomize}
+                  setItemToCustomize={setItemToCustomize}
+                  itemOrderDetails={itemOrderDetails}
                   forCart
                 />
               </motion.div>

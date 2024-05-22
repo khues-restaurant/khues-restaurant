@@ -30,6 +30,7 @@ import { FaUtensils } from "react-icons/fa6";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import { Separator } from "~/components/ui/separator";
 import { format } from "date-fns";
+import { useToast } from "~/components/ui/use-toast";
 
 // type FullOrderItems = OrderItem & {
 //   customizations: OrderItemCustomization[];
@@ -313,6 +314,10 @@ function CustomerOrder({ order, view }: CustomerOrder) {
       setAccordionOpen("closed");
       setOpenDialogId(null);
       setOrderIdBeingMutated(null);
+
+      toast({
+        description: `${order.firstName} ${order.lastName}'s order has been started.`,
+      });
     },
   });
   const { mutate: completeOrder } = api.order.completeOrder.useMutation({
@@ -326,8 +331,14 @@ function CustomerOrder({ order, view }: CustomerOrder) {
       setAccordionOpen("closed");
       setOpenDialogId(null);
       setOrderIdBeingMutated(null);
+
+      toast({
+        description: `${order.firstName} ${order.lastName}'s order has been completed.`,
+      });
     },
   });
+
+  const { toast } = useToast();
 
   function sumUpNumberOfItemsInOrder(order: OrderWithItems) {
     return order.orderItems.reduce((acc, item) => acc + item.quantity, 0);
@@ -472,18 +483,6 @@ function CustomerOrder({ order, view }: CustomerOrder) {
                           }}
                         >
                           Confirm
-                          {orderIdBeingMutated === order.id && (
-                            <motion.div
-                              key={`${order.id}Spinner`}
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              className="inline-block size-1 animate-spin rounded-full border-[2px] border-current border-t-transparent text-offwhite"
-                              role="status"
-                              aria-label="loading"
-                            >
-                              <span className="sr-only">Loading...</span>
-                            </motion.div>
-                          )}
                         </Button>
                       </AlertDialogFooter>
                     </AlertDialogContent>

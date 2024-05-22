@@ -71,16 +71,16 @@ interface OrderCost {
 }
 
 interface CartDrawer {
-  setItemBeingModified: Dispatch<SetStateAction<FullMenuItem | null>>;
-  setInitialItemState: Dispatch<SetStateAction<Item | undefined>>;
+  setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
+  setItemOrderDetails: Dispatch<SetStateAction<Item | undefined>>;
   setShowRewardsDrawer: Dispatch<SetStateAction<boolean>>;
   pickupName: string;
   setPickupName: Dispatch<SetStateAction<string>>;
 }
 
 function CartDrawer({
-  setItemBeingModified,
-  setInitialItemState,
+  setItemToCustomize,
+  setItemOrderDetails,
   setShowRewardsDrawer,
   pickupName,
   setPickupName,
@@ -687,11 +687,11 @@ function CartDrawer({
             <motion.div
               key={"cartDrawerItemsCard"}
               layout
-              initial={{ opacity: 0, paddingBottom: 0 }}
-              animate={{ opacity: 1, paddingBottom: "8rem" }}
-              exit={{ opacity: 0, paddingBottom: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="baseVertFlex w-full !items-start !justify-start gap-2 px-4"
+              className="baseVertFlex w-full !items-start !justify-start gap-2 px-4 pb-24"
             >
               <div className="baseVertFlex w-full !justify-start">
                 <AnimatePresence>
@@ -842,10 +842,10 @@ function CartDrawer({
                             variant={"underline"}
                             size={"underline"}
                             onClick={() => {
-                              setItemBeingModified(
+                              setItemToCustomize(
                                 menuItems[item.itemId] ?? null,
                               );
-                              setInitialItemState(item);
+                              setItemOrderDetails(item);
                             }}
                           >
                             Edit
@@ -989,10 +989,10 @@ function CartDrawer({
                                   variant={"underline"}
                                   size={"underline"}
                                   onClick={() => {
-                                    setItemBeingModified(
+                                    setItemToCustomize(
                                       menuItems[item.itemId] ?? null,
                                     );
-                                    setInitialItemState(item);
+                                    setItemOrderDetails(item);
                                   }}
                                 >
                                   Edit

@@ -256,7 +256,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
         );
 
         toast({
-          description: `${totalValidItems} item${totalValidItems > 1 ? "s" : ""} added to your order.`,
+          description: `${totalValidItems} item${totalValidItems > 1 ? "s" : ""} was added to your order.`,
           action: (
             <ToastAction
               altText={`Undo the addition of ${totalValidItems} item${totalValidItems > 1 ? "s" : ""} to your order.`}

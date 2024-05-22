@@ -50,6 +50,7 @@ import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { useMainStore } from "~/stores/MainStore";
 import Head from "next/head";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
+import { useToast } from "~/components/ui/use-toast";
 
 function Preferences() {
   const userId = useGetUserId();
@@ -70,7 +71,13 @@ function Preferences() {
     onSuccess: async () => {
       await ctx.user.invalidate();
 
-      setTimeout(() => setSaveButtonText("Saved"), 2000);
+      setTimeout(() => {
+        setSaveButtonText("Saved");
+
+        toast({
+          description: "Your preferences have been updated.",
+        });
+      }, 2000);
 
       setTimeout(() => {
         setSaveButtonText("Save changes");
@@ -104,6 +111,8 @@ function Preferences() {
 
   const [saveButtonText, setSaveButtonText] = useState("Save changes");
   const [deleteButtonText, setDeleteButtonText] = useState("Delete account");
+
+  const { toast } = useToast();
 
   const formSchema = z.object({
     firstName: z
@@ -250,6 +259,7 @@ function Preferences() {
                     <FormField
                       control={form.control}
                       name="firstName"
+                      disabled={saveButtonText !== "Save changes"}
                       render={({ field, fieldState: { invalid } }) => (
                         <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
                           <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
@@ -278,6 +288,7 @@ function Preferences() {
                     <FormField
                       control={form.control}
                       name="lastName"
+                      disabled={saveButtonText !== "Save changes"}
                       render={({ field, fieldState: { invalid } }) => (
                         <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
                           <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
@@ -306,6 +317,7 @@ function Preferences() {
                     <FormField
                       control={form.control}
                       name="phoneNumber"
+                      disabled={saveButtonText !== "Save changes"}
                       render={({
                         field: { onChange, onBlur, value, ref },
                         fieldState: { invalid },
@@ -410,6 +422,7 @@ function Preferences() {
                   <FormField
                     control={form.control}
                     name="dietaryRestrictions"
+                    disabled={saveButtonText !== "Save changes"}
                     render={({ field, fieldState: { invalid } }) => (
                       <FormItem className="baseVertFlex relative mt-8 w-full max-w-lg !items-start gap-2 space-y-0">
                         <div className="baseVertFlex w-full !items-start gap-2">
@@ -466,6 +479,7 @@ function Preferences() {
                               <Checkbox
                                 id="allowsEmailReceipts"
                                 checked={field.value}
+                                disabled={saveButtonText !== "Save changes"}
                                 onCheckedChange={field.onChange}
                                 className="size-4"
                               />
@@ -490,6 +504,7 @@ function Preferences() {
                             <FormControl>
                               <Checkbox
                                 id="allowsOrderCompleteEmails"
+                                disabled={saveButtonText !== "Save changes"}
                                 checked={field.value}
                                 onCheckedChange={field.onChange}
                                 className="size-4"
@@ -516,6 +531,7 @@ function Preferences() {
                             <FormControl>
                               <Checkbox
                                 id="allowsPromotionalEmails"
+                                disabled={saveButtonText !== "Save changes"}
                                 checked={field.value}
                                 onCheckedChange={field.onChange}
                                 className="size-4"
@@ -542,6 +558,7 @@ function Preferences() {
                             <FormControl>
                               <Checkbox
                                 id="allowsRewardAvailabilityReminderEmails"
+                                disabled={saveButtonText !== "Save changes"}
                                 checked={field.value}
                                 onCheckedChange={field.onChange}
                                 className="size-4"
@@ -658,6 +675,7 @@ function Preferences() {
 
                   <Button
                     variant={"secondary"}
+                    disabled={saveButtonText !== "Save changes"}
                     onClick={() => {
                       // TODO
                     }}
@@ -669,6 +687,7 @@ function Preferences() {
 
                   <Button
                     variant={"secondary"}
+                    disabled={saveButtonText !== "Save changes"}
                     // className="mt-2 h-8"
                     onClick={async () => {
                       await signOut(async () => {
@@ -687,6 +706,7 @@ function Preferences() {
                     <AlertDialogTrigger asChild>
                       <Button
                         variant={"ghost"}
+                        disabled={saveButtonText !== "Save changes"}
                         className="baseFlex gap-2 border-destructive text-destructive"
                         onClick={() => setShowDeleteUserDialog(true)}
                       >

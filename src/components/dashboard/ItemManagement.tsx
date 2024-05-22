@@ -16,6 +16,7 @@ import {
 } from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
+import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/utils/api";
 
 type MenuCategoryWithItems = MenuCategory & { menuItems: MenuItem[] };
@@ -46,7 +47,7 @@ function ItemManagement({
       <p className="mt-8 pb-8 text-xl font-semibold underline underline-offset-2">
         Menu items
       </p>
-      <div className="grid w-full grid-cols-2 gap-4">
+      <div className="grid w-full grid-cols-2 !place-items-start gap-4">
         {menuCategories?.map((category) => (
           <MenuCategoryContainer
             key={category.id}
@@ -61,7 +62,7 @@ function ItemManagement({
       <p className="mt-8 pb-8 text-xl font-semibold underline underline-offset-2">
         Customizations
       </p>
-      <div className="grid w-full grid-cols-2 gap-4">
+      <div className="grid w-full grid-cols-2 !place-items-start gap-4">
         {customizationCategories?.map((category) => (
           <CustomizationCategoryContainer
             key={category.id}
@@ -88,6 +89,9 @@ function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
   const [itemIdBeingMutated, setItemIdBeingMutated] = useState<string | null>(
     null,
   );
+  const [itemNameBeingMutated, setItemNameBeingMutated] = useState<
+    string | null
+  >(null);
 
   const { mutate: toggleAvailability } =
     api.menuItem.changeAvailability.useMutation({
@@ -97,10 +101,18 @@ function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
       },
       onSettled: () => {
         void ctx.menuCategory.getAll.refetch();
+
         setOpenDialogId(null);
         setItemIdBeingMutated(null);
+        setItemNameBeingMutated(null);
+
+        toast({
+          description: `Availability of ${itemNameBeingMutated} has been updated.`,
+        });
       },
     });
+
+  const { toast } = useToast();
 
   return (
     <motion.div
@@ -168,6 +180,7 @@ function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
                     className="baseFlex w-full gap-2"
                     onClick={() => {
                       setItemIdBeingMutated(item.id);
+                      setItemNameBeingMutated(item.name);
                       toggleAvailability({
                         id: item.id,
                         available: !item.available,
@@ -175,18 +188,6 @@ function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
                     }}
                   >
                     Confirm
-                    {itemIdBeingMutated === item.id && (
-                      <motion.div
-                        key={`${item.id}Spinner`}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="inline-block size-4 animate-spin rounded-full border-[2px] border-current border-t-transparent text-offwhite"
-                        role="status"
-                        aria-label="loading"
-                      >
-                        <span className="sr-only">Loading...</span>
-                      </motion.div>
-                    )}
                   </Button>
                 </AlertDialogFooter>
               </AlertDialogContent>

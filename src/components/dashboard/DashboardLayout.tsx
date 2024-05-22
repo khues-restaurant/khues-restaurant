@@ -4,6 +4,7 @@ import CustomerChats from "~/components/dashboard/CustomerChats";
 import ItemManagement from "~/components/dashboard/ItemManagement";
 import OrderManagement from "~/components/dashboard/OrderManagement";
 import DashboardHeaderShell from "~/components/dashboard/headers/DashboardHeaderShell";
+import { Toaster } from "~/components/ui/toaster";
 import { useMainStore, type StoreMenuItems } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 
@@ -106,6 +107,8 @@ function DashboardLayout({ children }: DashboardLayout) {
           {/* TODO: reviews component */}
         </>
       </AnimatePresence>
+
+      <Toaster />
     </main>
   );
 }

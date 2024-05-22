@@ -473,21 +473,23 @@ function ItemCustomizationDrawer({
                 // with toast's undo button
                 setPrevOrderDetails(orderDetails);
 
-                toast({
-                  description: `${localItemOrderDetails.quantity > 1 ? `${localItemOrderDetails.quantity}x` : ""} ${localItemOrderDetails.name} added to your order.`,
-                  action: (
-                    <ToastAction
-                      altText={`Undo the addition of ${localItemOrderDetails.name} to your order.`}
-                      onClick={() => {
-                        updateOrder({
-                          newOrderDetails: getPrevOrderDetails(),
-                        });
-                      }}
-                    >
-                      Undo
-                    </ToastAction>
-                  ),
-                });
+                setTimeout(() => {
+                  toast({
+                    description: `${localItemOrderDetails.quantity > 1 ? `${localItemOrderDetails.quantity}x` : ""} ${localItemOrderDetails.name} was added to your order.`,
+                    action: (
+                      <ToastAction
+                        altText={`Undo the addition of ${localItemOrderDetails.name} to your order.`}
+                        onClick={() => {
+                          updateOrder({
+                            newOrderDetails: getPrevOrderDetails(),
+                          });
+                        }}
+                      >
+                        Undo
+                      </ToastAction>
+                    ),
+                  });
+                }, 650); // bit shorter than duration of the drawer close animation
 
                 newOrderDetails.items.push(localItemOrderDetails);
               }

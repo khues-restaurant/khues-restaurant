@@ -56,6 +56,7 @@ interface ItemCustomizationDialog {
   itemToCustomize: FullMenuItem | null;
   setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
   itemOrderDetails?: Item;
+  setItemOrderDetails?: Dispatch<SetStateAction<Item | undefined>>;
   forCart?: boolean;
 }
 
@@ -65,6 +66,7 @@ function ItemCustomizationDialog({
   itemToCustomize,
   setItemToCustomize,
   itemOrderDetails,
+  setItemOrderDetails,
   forCart,
 }: ItemCustomizationDialog) {
   return (
@@ -73,8 +75,11 @@ function ItemCustomizationDialog({
       onOpenChange={(open) => {
         if (!open) {
           setIsDialogOpen(false);
+
+          // also does same setTimeout inside on update/add to order button click
           setTimeout(() => {
             setItemToCustomize(null);
+            setItemOrderDetails?.(undefined);
           }, 150);
         }
       }}
@@ -84,6 +89,8 @@ function ItemCustomizationDialog({
           itemToCustomize={itemToCustomize}
           setIsDialogOpen={setIsDialogOpen}
           itemOrderDetails={itemOrderDetails}
+          setItemToCustomize={setItemToCustomize}
+          setItemOrderDetails={setItemOrderDetails}
           forCart={forCart}
         />
       )}
@@ -97,6 +104,8 @@ interface ItemCustomizerDialogContent {
   itemToCustomize: FullMenuItem;
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
   itemOrderDetails?: Item;
+  setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
+  setItemOrderDetails?: Dispatch<SetStateAction<Item | undefined>>;
   forCart?: boolean;
 }
 
@@ -104,6 +113,8 @@ function ItemCustomizerDialogContent({
   itemToCustomize,
   setIsDialogOpen,
   itemOrderDetails,
+  setItemToCustomize,
+  setItemOrderDetails,
   forCart,
 }: ItemCustomizerDialogContent) {
   const userId = useGetUserId();
@@ -490,21 +501,23 @@ function ItemCustomizerDialogContent({
                     // with toast's undo button
                     setPrevOrderDetails(orderDetails);
 
-                    toast({
-                      description: `${localItemOrderDetails.quantity > 1 ? `${localItemOrderDetails.quantity}x` : ""} ${localItemOrderDetails.name} added to your order.`,
-                      action: (
-                        <ToastAction
-                          altText={`Undo the addition of ${localItemOrderDetails.name} to your order.`}
-                          onClick={() => {
-                            updateOrder({
-                              newOrderDetails: getPrevOrderDetails(),
-                            });
-                          }}
-                        >
-                          Undo
-                        </ToastAction>
-                      ),
-                    });
+                    setTimeout(() => {
+                      toast({
+                        description: `${localItemOrderDetails.quantity > 1 ? `${localItemOrderDetails.quantity}x` : ""} ${localItemOrderDetails.name} was added to your order.`,
+                        action: (
+                          <ToastAction
+                            altText={`Undo the addition of ${localItemOrderDetails.name} to your order.`}
+                            onClick={() => {
+                              updateOrder({
+                                newOrderDetails: getPrevOrderDetails(),
+                              });
+                            }}
+                          >
+                            Undo
+                          </ToastAction>
+                        ),
+                      });
+                    }, 150); // bit shorter than duration of the dialog close animation
 
                     newOrderDetails.items.push(localItemOrderDetails);
                   }
@@ -514,6 +527,11 @@ function ItemCustomizerDialogContent({
                   });
 
                   setIsDialogOpen?.(false);
+
+                  setTimeout(() => {
+                    setItemToCustomize(null);
+                    setItemOrderDetails?.(undefined);
+                  }, 150);
                 }}
               >
                 <div className="baseFlex gap-2">

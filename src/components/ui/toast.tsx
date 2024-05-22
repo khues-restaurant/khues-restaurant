@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { cn } from "~/utils/shadcnuiUtils";
+import { useMainStore } from "~/stores/MainStore";
 
 const ToastProvider = ToastPrimitives.Provider;
 
@@ -24,7 +25,7 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 const toastVariants = cva(
-  "group pointer-events-auto relative flex gap-2 w-full items-center justify-start space-x-4 overflow-hidden rounded-md border p-4 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-bottom-full data-[state=open]:sm:slide-in-from-bottom-full",
+  "group pointer-events-auto relative flex gap-2 w-full items-center justify-start space-x-4 overflow-hidden rounded-md border p-4 pr-8 shadow-lg transition-[ease-in-out] !duration-300 data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-70",
   {
     variants: {
       variant: {
@@ -45,10 +46,20 @@ const Toast = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
     VariantProps<typeof toastVariants>
 >(({ className, variant, ...props }, ref) => {
+  const { viewportLabel } = useMainStore((state) => ({
+    viewportLabel: state.viewportLabel,
+  }));
+
   return (
     <ToastPrimitives.Root
       ref={ref}
-      className={cn(toastVariants({ variant }), className)}
+      className={cn(
+        toastVariants({ variant }),
+        className,
+        viewportLabel.includes("mobile")
+          ? "data-[swipe=cancel]:translate-y-0 data-[swipe=end]:translate-y-[var(--radix-toast-swipe-end-y)] data-[swipe=move]:translate-y-[var(--radix-toast-swipe-move-y)] data-[state=closed]:slide-out-to-bottom-[130%] data-[state=open]:slide-in-from-bottom-full"
+          : "data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[state=closed]:slide-out-to-right-[110%] data-[state=open]:slide-in-from-right-full",
+      )}
       {...props}
     >
       <motion.svg
@@ -57,7 +68,7 @@ const Toast = React.forwardRef<
         animate={{ scale: 1 }}
         exit={{ scale: 0 }}
         transition={{ duration: 0.3 }}
-        className="size-8 opacity-90"
+        className="size-6 shrink-0 opacity-90"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"

@@ -776,7 +776,7 @@ function RewardMenuItem({
             });
 
             toast({
-              description: `${menuItem.name} added to your order.`,
+              description: `${menuItem.name} was added to your order.`,
             });
           }}
         >

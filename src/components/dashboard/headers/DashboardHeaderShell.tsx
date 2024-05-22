@@ -3,6 +3,7 @@ import DashboardMobileHeader from "~/components/dashboard/headers/DashboardMobil
 import { type Dispatch, type SetStateAction } from "react";
 import Head from "next/head";
 import { useMainStore } from "~/stores/MainStore";
+import useViewportLabelResizeListener from "~/hooks/useViewportLabelResizeListener";
 
 interface DashboardHeaderShell {
   viewState: "orderManagement" | "customerChats" | "itemManagement" | "stats";
@@ -17,13 +18,18 @@ function DashboardHeaderShell({
   viewState,
   setViewState,
 }: DashboardHeaderShell) {
-  const { viewportLabel } = useMainStore((state) => ({
+  const { initViewportLabelSet, viewportLabel } = useMainStore((state) => ({
+    initViewportLabelSet: state.initViewportLabelSet,
     viewportLabel: state.viewportLabel,
   }));
 
   // maybe want to also expose width/height from hook as well?
 
   // TODO: set discounts ActionDialog, link to set discounts and reviews page
+
+  useViewportLabelResizeListener();
+
+  if (initViewportLabelSet === false) return null;
 
   return (
     <>

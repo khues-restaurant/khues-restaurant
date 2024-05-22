@@ -72,8 +72,8 @@ interface OrderCost {
 
 interface CartSheet {
   setShowCartSheet: Dispatch<SetStateAction<boolean>>;
-  setItemBeingModified: Dispatch<SetStateAction<FullMenuItem | null>>;
-  setInitialItemState: Dispatch<SetStateAction<Item | undefined>>;
+  setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
+  setItemOrderDetails: Dispatch<SetStateAction<Item | undefined>>;
   setIsEditingItem: Dispatch<SetStateAction<boolean>>;
   setShowRewardsDialog: Dispatch<SetStateAction<boolean>>;
   pickupName: string;
@@ -82,8 +82,8 @@ interface CartSheet {
 
 function CartSheet({
   setShowCartSheet,
-  setItemBeingModified,
-  setInitialItemState,
+  setItemToCustomize,
+  setItemOrderDetails,
   setIsEditingItem,
   setShowRewardsDialog,
   pickupName,
@@ -690,11 +690,11 @@ function CartSheet({
             <motion.div
               key={"cartSheetItemsCard"}
               layout={"position"}
-              initial={{ opacity: 0, paddingBottom: 0 }}
-              animate={{ opacity: 1, paddingBottom: "4rem" }}
-              exit={{ opacity: 0, paddingBottom: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="baseVertFlex size-full !items-start !justify-start gap-2 p-4"
+              className="baseVertFlex w-full !items-start !justify-start gap-2 p-4 pb-16"
             >
               <div className="baseVertFlex w-full !justify-start">
                 <AnimatePresence>
@@ -846,10 +846,10 @@ function CartSheet({
                             size={"underline"}
                             onClick={() => {
                               setIsEditingItem(true);
-                              setItemBeingModified(
+                              setItemToCustomize(
                                 menuItems[item.itemId] ?? null,
                               );
-                              setInitialItemState(item);
+                              setItemOrderDetails(item);
                             }}
                           >
                             Edit
@@ -994,10 +994,10 @@ function CartSheet({
                                   size={"underline"}
                                   onClick={() => {
                                     setIsEditingItem(true);
-                                    setItemBeingModified(
+                                    setItemToCustomize(
                                       menuItems[item.itemId] ?? null,
                                     );
-                                    setInitialItemState(item);
+                                    setItemOrderDetails(item);
                                   }}
                                 >
                                   Edit
@@ -1018,7 +1018,7 @@ function CartSheet({
         {/* dietary restrictions legend */}
         {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
         {orderDetails.items.some((item) => item.includeDietaryRestrictions) && (
-          <div className="baseFlex mb-2 gap-2 !self-end">
+          <div className="baseFlex mb-2 w-full gap-2 !self-end">
             <div className="size-2 shrink-0 rounded-full bg-primary/75" />
             <p className="text-sm">
               Item will be prepared according to your dietary restrictions

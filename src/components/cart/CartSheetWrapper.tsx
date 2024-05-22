@@ -22,9 +22,10 @@ function CartSheetWrapper({
 
   const [showRewardsDialog, setShowRewardsDialog] = useState(false);
 
-  const [itemBeingModified, setItemBeingModified] =
-    useState<FullMenuItem | null>(null);
-  const [initialItemState, setInitialItemState] = useState<Item>();
+  const [itemToCustomize, setItemToCustomize] = useState<FullMenuItem | null>(
+    null,
+  );
+  const [itemOrderDetails, setItemOrderDetails] = useState<Item>();
 
   return (
     <>
@@ -34,8 +35,8 @@ function CartSheetWrapper({
           setShowCartSheet(open);
 
           if (!open) {
-            setItemBeingModified(null);
-            setInitialItemState(undefined);
+            setItemToCustomize(null);
+            setItemOrderDetails(undefined);
           }
         }}
       >
@@ -43,8 +44,8 @@ function CartSheetWrapper({
           <div className="baseVertFlex relative size-full">
             <CartSheet
               setShowCartSheet={setShowCartSheet}
-              setItemBeingModified={setItemBeingModified}
-              setInitialItemState={setInitialItemState}
+              setItemToCustomize={setItemToCustomize}
+              setItemOrderDetails={setItemOrderDetails}
               setIsEditingItem={setIsEditingItem}
               setShowRewardsDialog={setShowRewardsDialog}
               pickupName={pickupName}
@@ -55,26 +56,17 @@ function CartSheetWrapper({
       </Sheet>
 
       <RewardsDialog
-        key={
-          showRewardsDialog
-            ? "cartSheetRewardDialogManualRerenderOne"
-            : "cartSheetRewardDialogManualRerenderTwo"
-        }
         showRewardsDialog={showRewardsDialog}
         setShowRewardsDialog={setShowRewardsDialog}
       />
 
       <ItemCustomizationDialog
-        key={
-          isEditingItem
-            ? "cartSheetItemCustomizationDialogManualRerenderOne"
-            : "cartSheetItemCustomizationDialogManualRerenderTwo"
-        }
         isDialogOpen={isEditingItem}
         setIsDialogOpen={setIsEditingItem}
-        itemToCustomize={itemBeingModified}
-        setItemToCustomize={setItemBeingModified}
-        itemOrderDetails={initialItemState}
+        itemToCustomize={itemToCustomize}
+        setItemToCustomize={setItemToCustomize}
+        itemOrderDetails={itemOrderDetails}
+        setItemOrderDetails={setItemOrderDetails}
         forCart
       />
     </>

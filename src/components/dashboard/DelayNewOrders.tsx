@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/utils/api";
 import { formatTimeString } from "~/utils/formatTimeString";
 import { getHoursAndMinutesFromDate } from "~/utils/getHoursAndMinutesFromDate";
@@ -48,9 +49,15 @@ function DelayNewOrders() {
     api.minimumOrderPickupTime.get.useQuery();
   const { mutate: setDBValue, isLoading: isUpdatingNewMinOrderPickupTime } =
     api.minimumOrderPickupTime.set.useMutation({
-      onSuccess: () => {
+      onSuccess: (test) => {
         void ctx.minimumOrderPickupTime.get.refetch();
         setShowDialog(false);
+
+        // TODO: fix this to be more specific. get the actual time that was set
+        // or that orders are resumed as normal based on minimumOrderPickupTime return value
+        toast({
+          description: "Successfully updated the minimum order pickup time.",
+        });
       },
       onError: (e) => {
         // toast notification here
@@ -62,6 +69,8 @@ function DelayNewOrders() {
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [minOrderPickupTimeValue, setMinOrderPickupTimeValue] = useState("");
+
+  const { toast } = useToast();
 
   const todayAtMidnight = new Date();
   todayAtMidnight.setHours(0, 0, 0, 0);
@@ -115,13 +124,13 @@ function DelayNewOrders() {
                   </p>
                   <Button
                     variant="destructive"
+                    disabled={isUpdatingNewMinOrderPickupTime}
                     onClick={() => {
                       const todayAtMidnight = new Date();
                       todayAtMidnight.setHours(0, 0, 0, 0);
 
                       setDBValue(todayAtMidnight);
                     }}
-                    disabled={isUpdatingNewMinOrderPickupTime}
                   >
                     Resume online ordering
                   </Button>
@@ -172,35 +181,36 @@ function DelayNewOrders() {
           </div>
         )}
 
-        <AlertDialogFooter>
-          <AlertDialogCancel asChild>
-            <Button variant="secondary" onClick={() => setShowDialog(false)}>
-              Cancel
-            </Button>
-          </AlertDialogCancel>
-          <AlertDialogAction asChild>
-            <Button
-              disabled={
-                minOrderPickupTimeValue === "" ||
-                isUpdatingNewMinOrderPickupTime
-              }
-              onClick={() => {
-                const newMinOrderPickupTime = mergeDateAndTime(
-                  currentDate,
-                  minOrderPickupTimeValue,
-                );
+        <AlertDialogFooter className="mt-4 gap-4">
+          <Button
+            variant="secondary"
+            disabled={isUpdatingNewMinOrderPickupTime}
+            className="w-full"
+            onClick={() => setShowDialog(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            disabled={
+              minOrderPickupTimeValue === "" || isUpdatingNewMinOrderPickupTime
+              // TODO: || minOrderPickupTime === currentDBMinOrderPickupTime
+            }
+            className="w-full"
+            onClick={() => {
+              const newMinOrderPickupTime = mergeDateAndTime(
+                currentDate,
+                minOrderPickupTimeValue,
+              );
 
-                if (!newMinOrderPickupTime) return;
+              if (!newMinOrderPickupTime) return;
 
-                setDBValue(newMinOrderPickupTime);
-              }}
-            >
-              {/* if value is "" then that equates to minOrderPickupTime 
-                  to be at midnight of current dat */}
-              {minOrderPickupTimeValue === "" ? "Pause" : "Update"}
-              {/* TODO: add spinner + checkmark for mutation */}
-            </Button>
-          </AlertDialogAction>
+              setDBValue(newMinOrderPickupTime);
+            }}
+          >
+            {/* if value is "" then that equates to minOrderPickupTime 
+                  to be at midnight of current date */}
+            {minOrderPickupTimeValue === "" ? "Pause" : "Update"}
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
