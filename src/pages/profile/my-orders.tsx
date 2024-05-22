@@ -104,8 +104,8 @@ function RecentOrders() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className={`baseVertFlex relative min-h-[calc(100dvh-6rem-81px)] w-full !justify-start tablet:min-h-0 
-      ${sortedOrders && sortedOrders.length > 0 ? "tablet:mb-16" : ""}
+      className={`baseVertFlex relative min-h-[calc(100dvh-6rem-81px)] w-full tablet:min-h-0 
+      ${sortedOrders && sortedOrders.length > 0 ? "!justify-start tablet:mb-16" : ""}
       ${sortedOrders && sortedOrders.length > 5 ? "mb-16" : ""}
       `}
     >
@@ -187,12 +187,12 @@ function RecentOrders() {
             )}
 
             {sortedOrders && sortedOrders.length === 0 && (
-              <div className="baseVertFlex relative gap-4">
+              <div className="baseVertFlex relative gap-4 p-4">
                 <Image
                   src={noOrders}
                   alt={"TODO: fill in w/ appropriate alt text"}
                   sizes="(max-width: 640px) 80vw, 50vw"
-                  className="!relative !rounded-md !px-4"
+                  className="!relative !rounded-md shadow-md"
                 />
 
                 <div className="baseVertFlex gap-4">
