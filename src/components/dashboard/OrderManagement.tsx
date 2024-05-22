@@ -144,7 +144,7 @@ function OrderManagement({ orders }: OrderManagement) {
           <div className="relative">
             <p
               onClick={() => setSelectedTab("notStarted")}
-              className="text-xl font-medium text-primary"
+              className="text-xl font-semibold text-primary"
             >
               Not started
             </p>
@@ -152,8 +152,8 @@ function OrderManagement({ orders }: OrderManagement) {
             {/* notification count */}
             {notStartedOrders.length > 0 && (
               <div
-                className={`absolute -top-4 rounded-full bg-primary px-2 py-0.5 text-offwhite
-                ${notStartedOrders.length < 10 ? "-right-6" : "-right-8"}
+                className={`absolute -top-3 rounded-full bg-primary px-2 py-0.5 text-offwhite
+                ${notStartedOrders.length < 10 ? "-right-7" : "-right-9"}
               `}
               >
                 <AnimatedNumbers
@@ -168,7 +168,7 @@ function OrderManagement({ orders }: OrderManagement) {
           <div className="relative">
             <p
               onClick={() => setSelectedTab("started")}
-              className="text-xl font-medium text-primary"
+              className="text-xl font-semibold text-primary"
             >
               Started
             </p>
@@ -176,8 +176,8 @@ function OrderManagement({ orders }: OrderManagement) {
             {/* notification count */}
             {startedOrders.length > 0 && (
               <div
-                className={`absolute -top-4 rounded-full bg-primary px-2 py-0.5 text-offwhite
-                ${startedOrders.length < 10 ? "-right-6" : "-right-8"}
+                className={`absolute -top-3 rounded-full bg-primary px-2 py-0.5 text-offwhite
+                ${startedOrders.length < 10 ? "-right-7" : "-right-9"}
               `}
               >
                 <AnimatedNumbers
@@ -366,7 +366,7 @@ function CustomerOrder({ order, view }: CustomerOrder) {
       //   marginTop: { duration: 0.2 },
       //   marginBottom: { duration: 0.2 },
       // }}
-      className={`baseFlex w-full rounded-md border p-4
+      className={`baseFlex w-full max-w-lg rounded-md border p-4
       ${order.notableUserDescription ? "border-yellow-500 bg-gradient-to-br from-amber-200 to-amber-400" : ""}
       `}
     >
@@ -544,12 +544,18 @@ function OrderItems({ order }: OrderItems) {
     },
     onSettled: async () => {
       setOrderBeingReprinted(false);
+
+      toast({
+        description: `${order.firstName} ${order.lastName}'s order has been queued to reprint.`,
+      });
     },
   });
 
+  const { toast } = useToast();
+
   return (
     <div
-      className={`baseVertFlex mt-4 !items-start gap-2 border-t bg-offwhite p-2 pb-0 pt-4
+      className={`baseVertFlex mt-4 !items-start gap-2 border-t p-2 pb-0 pt-4
       ${order.notableUserDescription ? "rounded-md pb-4" : "rounded-b-md"}
     `}
     >
@@ -606,7 +612,7 @@ function OrderItems({ order }: OrderItems) {
         </div>
       ))}
 
-      {order.dietaryRestrictions && (
+      {order.orderItems.some((item) => item.includeDietaryRestrictions) && (
         <div className="baseVertFlex mt-2 w-full gap-2">
           <div className="baseFlex gap-2">
             <div className="size-2 shrink-0 rounded-full bg-primary/75" />
@@ -635,22 +641,9 @@ function OrderItems({ order }: OrderItems) {
         onClick={() => {
           setOrderBeingReprinted(true);
           reprintOrder({ orderId: order.id });
-          // TODO: toast that the order has been reprinted?
         }}
       >
         Reprint
-        {orderBeingReprinted && (
-          <motion.div
-            key={`${order.id}Spinner`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="inline-block size-1 animate-spin rounded-full border-[2px] border-current border-t-transparent text-offwhite"
-            role="status"
-            aria-label="loading"
-          >
-            <span className="sr-only">Loading...</span>
-          </motion.div>
-        )}
       </Button>
     </div>
   );
