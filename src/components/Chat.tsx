@@ -123,7 +123,9 @@ function Chat() {
   return (
     // a little hacky, but somehow both the "X" and chat icon were showing at the same time
     // this just flushes out the component manually on change of chatIsOpen
-    <Fragment key={chatIsOpen ? "refreshChat1" : "refreshChat2"}>
+    // ^ most likely due to zustand updating faster than react's reconciliation process?
+    // could technically debounce but this should be fine
+    <Fragment key={chatIsOpen ? "manualRerenderChat1" : "manualRerenderChat2"}>
       {viewportLabel.includes("mobile") ? (
         <AlertDialog open={chatIsOpen}>
           <AnimatePresence mode="popLayout">
@@ -132,15 +134,12 @@ function Chat() {
                 key="openChat"
                 initial={{
                   opacity: footerIsInView ? 0 : 1,
-                  scale: 0.95,
                 }}
                 animate={{
                   opacity: footerIsInView ? 0 : 1,
-                  scale: 1,
                 }}
                 exit={{
                   opacity: footerIsInView ? 0 : 1,
-                  scale: 0.95,
                 }}
                 transition={{ duration: 0.2 }}
                 style={{
@@ -270,15 +269,12 @@ function Chat() {
             key="openChatContainerTablet"
             initial={{
               opacity: footerIsInView ? 0 : 1,
-              scale: 0.95,
             }}
             animate={{
               opacity: footerIsInView ? 0 : 1,
-              scale: 1,
             }}
             exit={{
               opacity: footerIsInView ? 0 : 1,
-              scale: 0.95,
             }}
             transition={{ duration: 0.2 }}
             style={{
