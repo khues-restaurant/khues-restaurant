@@ -275,18 +275,17 @@ function MobileHeader() {
                 </motion.div>
 
                 <motion.div variants={linkVariants}>
-                  <Button variant={"link"} asChild>
-                    <a
-                      href={"/resylink"}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-xl"
-                    >
+                  <Button
+                    variant={
+                      asPath.includes("/reservations") ? "activeLink" : "link"
+                    }
+                    asChild
+                  >
+                    <Link href={"/reservations"} className="!text-xl">
                       Reservations
-                    </a>
+                    </Link>
                   </Button>
                 </motion.div>
-
                 {isLoaded && !isSignedIn && (
                   <motion.div variants={linkVariants}>
                     <Button

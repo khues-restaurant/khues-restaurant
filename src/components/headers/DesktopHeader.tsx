@@ -106,10 +106,13 @@ function DesktopHeader() {
           </Link>
         </Button>
 
-        <Button variant={"link"} asChild>
-          <a href={"/resylink"} className="!text-xl">
+        <Button
+          variant={asPath.includes("/reservations") ? "activeLink" : "link"}
+          asChild
+        >
+          <Link href={"/reservations"} className="!text-xl">
             Reservations
-          </a>
+          </Link>
         </Button>
 
         {isLoaded && !isSignedIn && (

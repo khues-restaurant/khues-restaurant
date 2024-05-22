@@ -26,8 +26,13 @@
   <priority>0.7</priority>
 </url>
 <url>
-  <loc>https://www.khueskitchen.com/media</loc>
+  <loc>https://www.khueskitchen.com/reservations</loc>
   <lastmod>2024-05-07</lastmod>
   <priority>0.6</priority>
+</url>
+<url>
+  <loc>https://www.khueskitchen.com/media</loc>
+  <lastmod>2024-05-07</lastmod>
+  <priority>0.5</priority>
 </url>    
 </urlset>

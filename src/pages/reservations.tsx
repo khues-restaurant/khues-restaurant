@@ -1,0 +1,111 @@
+import { motion } from "framer-motion";
+import Head from "next/head";
+import Image from "next/image";
+import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
+import { Button } from "~/components/ui/button";
+import { IoChatbox } from "react-icons/io5";
+import { Separator } from "~/components/ui/separator";
+import { FaPhone } from "react-icons/fa6";
+import { useMainStore } from "~/stores/MainStore";
+
+import reservations from "/public/reservations.webp";
+import noOrders from "/public/menuItems/myOrders.jpg";
+
+function Reservations() {
+  const { chatIsOpen, setChatIsOpen } = useMainStore((state) => ({
+    chatIsOpen: state.chatIsOpen,
+    setChatIsOpen: state.setChatIsOpen,
+  }));
+
+  return (
+    <motion.div
+      key={"reservations"}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
+    >
+      <Head>
+        <title>Reservations | Khue&apos;s</title>
+        <meta
+          name="description"
+          content="Secure your reservations at Khue's Kitchen. Learn about our policies for larger parties and how to guarantee your spot for an unforgettable dining experience."
+        />
+        <meta property="og:title" content="Reservations | Khue's"></meta>
+        <meta property="og:url" content="www.khueskitchen.com/reservations" />
+        <meta
+          property="og:description"
+          content="Secure your reservations at Khue's Kitchen. Learn about our policies for larger parties and how to guarantee your spot for an unforgettable dining experience."
+        />
+        <meta property="og:type" content="website" />
+        {/* <meta
+          property="og:image"
+          content="https://www.autostrum.com/opengraphScreenshots/explore.png"
+        ></meta> */}
+        {/* <meta
+          property="og:image:alt"
+          content="TODO: A description of what is in the image (not a caption). If the page specifies an og:image it should specify og:image:alt"
+        ></meta> */}
+      </Head>
+
+      {/* Hero */}
+      <div className="baseFlex relative h-56 w-full overflow-hidden bg-gradient-to-br from-primary to-darkPrimary shadow-md tablet:h-72">
+        <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-lg tablet:!flex">
+          <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
+            <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
+            <h1>Reservations</h1>
+            <SideAccentSwirls className="h-4 fill-primary desktop:h-5" />
+          </div>
+        </div>
+      </div>
+
+      <div className="baseVertFlex my-auto h-full max-w-sm gap-4 p-4 py-16 tablet:max-w-3xl tablet:gap-8">
+        <Image
+          src={reservations}
+          alt={"TODO: fill in w/ appropriate alt text"}
+          width={384}
+          className="!relative !top-0 !size-full rounded-md object-cover tablet:hidden"
+        />
+
+        <Image
+          src={noOrders}
+          alt={"TODO: fill in w/ appropriate alt text"}
+          sizes="(max-width: 640px) 80vw, 50vw"
+          className="!hidden rounded-md shadow-md tablet:!flex"
+        />
+
+        <p className="text-lg font-medium">
+          Planning a birthday dinner or get together with your friends?
+        </p>
+
+        <p className="tablet:text-center">
+          Secure your spot for larger parties. For parties of 4 or less,
+          reservations are usually not needed. However, to guarantee your seats
+          for larger groups, please get in touch with us.
+        </p>
+
+        <div className="baseFlex mt-4 gap-4">
+          <Button
+            className="baseFlex gap-2"
+            onClick={() => setChatIsOpen(!chatIsOpen)}
+          >
+            Send us a message
+            <IoChatbox className="size-5 drop-shadow-md" />
+          </Button>
+
+          <Separator orientation="vertical" className="h-6 w-[1px]" />
+
+          <Button variant="link" className="h-8 px-1" asChild>
+            <a href="tel:+1234567890" className="baseFlex gap-2">
+              <FaPhone size={"0.75rem"} />
+              (234) 567-8900
+            </a>
+          </Button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+export default Reservations;
