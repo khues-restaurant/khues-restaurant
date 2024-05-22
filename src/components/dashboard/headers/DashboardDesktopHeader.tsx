@@ -58,7 +58,7 @@ function DashboardDesktopHeader({
   return (
     <nav
       id="header"
-      className={`baseFlex fixed left-0 top-0 z-50 grid h-24 w-full gap-4 bg-offwhite shadow-md`}
+      className={`baseFlex fixed left-0 top-0 z-50 grid h-24 w-screen gap-4 bg-offwhite shadow-md`}
     >
       <div className={`${classes.mainLinks} baseFlex gap-2`}>
         <div className="relative">
