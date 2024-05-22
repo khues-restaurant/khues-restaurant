@@ -236,7 +236,7 @@ function ItemCustomizationDrawer({
           />
         </div>
 
-        <div className="baseVertFlex size-full gap-12 p-8 pt-4">
+        <div className="baseVertFlex w-full gap-12 p-8 pt-4">
           {/* Description */}
           <div className="baseVertFlex w-full !items-start gap-2">
             <p className="text-lg underline underline-offset-2">Description</p>
