@@ -120,13 +120,22 @@ export const validateOrderRouter = createTRPCRouter({
       // Item validation
       const items = orderDetails.items;
       const removedItemNames = [];
+      const itemIds = items.map((item) => item.itemId);
 
-      for (const item of items) {
-        const dbItem = await ctx.prisma.menuItem.findFirst({
-          where: {
-            id: item.itemId,
-          },
-        });
+      const dbItems = await ctx.prisma.menuItem.findMany({
+        where: {
+          id: { in: itemIds },
+        },
+      });
+
+      const dbItemsMap = new Map(dbItems.map((item) => [item.id, item]));
+
+      for (let i = items.length - 1; i >= 0; i--) {
+        const item = items[i];
+
+        if (item === undefined) continue;
+
+        const dbItem = dbItemsMap.get(item.itemId);
 
         if (
           !dbItem ||
@@ -135,11 +144,9 @@ export const validateOrderRouter = createTRPCRouter({
           dbItem.isAlcoholic ||
           item.quantity <= 0
         ) {
-          // removing item from order
-          items.splice(items.indexOf(item), 1);
-
-          // adding item name to removedItemNames
+          items.splice(i, 1);
           removedItemNames.push(item.name);
+          continue;
         }
 
         // Customizations
