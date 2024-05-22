@@ -620,13 +620,12 @@ function CartDrawer({
               }}
               animate={{
                 opacity: 1,
-                height: "115px",
+                height: `${100 + itemNamesRemovedFromCart.length * 24}px`,
                 paddingTop: "0.5rem",
                 paddingBottom: "0.5rem",
               }}
               exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
-              style={{ overflow: "hidden" }}
               className="w-full px-8"
             >
               <motion.div

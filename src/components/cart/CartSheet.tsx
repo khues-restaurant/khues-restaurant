@@ -623,7 +623,7 @@ function CartSheet({
               }}
               animate={{
                 opacity: 1,
-                height: `${100 + itemNamesRemovedFromCart.length * 24}px`, // TODO: prob requires tweaking on mobile
+                height: `${100 + itemNamesRemovedFromCart.length * 24}px`,
                 paddingTop: "1rem",
                 paddingBottom: "1rem",
               }}
