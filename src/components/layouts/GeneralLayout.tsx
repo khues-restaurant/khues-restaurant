@@ -15,6 +15,7 @@ import useGetUserId from "~/hooks/useGetUserId";
 import useInitLocalStorage from "~/hooks/useInitLocalStorage";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
+import useClearToastsOnRefocus from "~/hooks/useClearToastsOnRefocus";
 
 interface GeneralLayout {
   children: ReactNode;
@@ -68,6 +69,8 @@ function GeneralLayout({ children }: GeneralLayout) {
   useInitLocalStorage();
   useKeepOrderDetailsValidated();
   useInitializeStoreDBQueries();
+
+  useClearToastsOnRefocus();
 
   if (
     initViewportLabelSet === false ||

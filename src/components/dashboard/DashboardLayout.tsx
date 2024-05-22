@@ -5,6 +5,7 @@ import ItemManagement from "~/components/dashboard/ItemManagement";
 import OrderManagement from "~/components/dashboard/OrderManagement";
 import DashboardHeaderShell from "~/components/dashboard/headers/DashboardHeaderShell";
 import { Toaster } from "~/components/ui/toaster";
+import useClearToastsOnRefocus from "~/hooks/useClearToastsOnRefocus";
 import { useMainStore, type StoreMenuItems } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 
@@ -49,6 +50,8 @@ function DashboardLayout({ children }: DashboardLayout) {
   const { data: databaseCustomizationChoices } =
     api.customizationChoice.getAll.useQuery();
   const { data: databaseDiscounts } = api.discount.getAll.useQuery();
+
+  useClearToastsOnRefocus();
 
   useEffect(() => {
     if (
