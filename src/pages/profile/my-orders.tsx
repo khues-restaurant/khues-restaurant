@@ -407,7 +407,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                               ),
                               isASAP: false,
                               tipPercentage: null,
-                              tipValue: new Decimal(0),
+                              tipValue: 0,
                               includeNapkinsAndUtensils: false,
                               items: order.orderItems.map((item) => ({
                                 id:
@@ -599,7 +599,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                               includeNapkinsAndUtensils: false,
                               isASAP: false,
                               tipPercentage: null,
-                              tipValue: new Decimal(0),
+                              tipValue: 0,
                               items: order.orderItems.map((item) => ({
                                 id:
                                   orderDetails.items.length === 0

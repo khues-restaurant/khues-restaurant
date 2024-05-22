@@ -256,14 +256,14 @@ export const paymentRouter = createTRPCRouter({
           // @ts-expect-error details is just json object
           details: {
             ...input.orderDetails,
-            tipValue: new Decimal(tipValue), // reminder: this is the calculated, final tip value
+            tipValue: tipValue.toNumber(), // reminder: this is the calculated, final tip value
           } as unknown as Record<string, unknown>,
         },
         update: {
           // @ts-expect-error details is just json object
           details: {
             ...input.orderDetails,
-            tipValue: new Decimal(tipValue), // reminder: this is the calculated, final tip value
+            tipValue: tipValue.toNumber(), // reminder: this is the calculated, final tip value
           } as unknown as Record<string, unknown>,
         },
       });

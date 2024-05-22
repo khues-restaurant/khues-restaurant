@@ -373,7 +373,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
               isASAP: false,
               items: [],
               tipPercentage: null,
-              tipValue: new Decimal(0),
+              tipValue: 0,
               includeNapkinsAndUtensils: false,
               discountId: null,
             },
