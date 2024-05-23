@@ -269,8 +269,9 @@ export default function Home() {
             loop: true,
           }}
         >
-          <CarouselContent className="mb-8 mt-8 xl:w-[800px] tablet:mb-4">
+          <CarouselContent className="mb-8 mt-6 xl:w-[800px] tablet:mb-4 tablet:mt-8">
             <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md tablet:basis-1/3">
+              <Button variant={"text"} className="!p-0" asChild>
               <a
                 href="https://www.startribune.com/how-these-moms-shaped-the-next-generation-of-great-twin-cities-restaurateurs/600273728/?refresh=true"
                 className="baseFlex"
@@ -278,12 +279,14 @@ export default function Home() {
                 <Image
                   src={starTribuneLogo}
                   alt="Star Tribune Logo"
-                  width={200}
-                  height={85}
+                    width={216}
+                    height={91.8}
                 />
               </a>
+              </Button>
             </CarouselItem>
             <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md tablet:basis-1/3">
+              <Button variant={"text"} className="!p-0" asChild>
               <a
                 href="https://www.kare11.com/article/news/local/mpls-chef-credits-his-mom-for-inspiration/89-0f237053-85cf-48ae-96f7-8cbebb780555"
                 className="baseFlex"
@@ -295,8 +298,10 @@ export default function Home() {
                   height={63.75}
                 />
               </a>
+              </Button>
             </CarouselItem>
             <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md tablet:basis-1/3">
+              <Button variant={"text"} className="!p-0" asChild>
               <a
                 href="https://www.mprnews.org/story/2023/12/27/appetites-looks-back-on-2023-restaurants-vietnamese-meatballs-and-the-secret-to-entertaining"
                 className="baseFlex"
@@ -308,6 +313,7 @@ export default function Home() {
                   height={63.75}
                 />
               </a>
+              </Button>
             </CarouselItem>
           </CarouselContent>
         </Carousel>
