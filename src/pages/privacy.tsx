@@ -147,9 +147,9 @@ function Privacy() {
         <p className="mb-4">
           We do not knowingly collect personal information from children under
           the age of 13. If you are under 13, you are not permitted to create an
-          account or use our services. If we become aware that we have collected
-          personal information from a child under 13, we will take steps to
-          delete such information.
+          account or use our services. If we become aware that we have
+          inadvertently collected personal information from a child under 13, we
+          will take steps to delete such information.
         </p>
 
         <h2 className="mb-4 text-2xl font-semibold">6. Data Security</h2>
