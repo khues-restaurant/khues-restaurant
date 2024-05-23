@@ -13,9 +13,6 @@ import starTribuneLogo from "/public/media/starTribuneLogo.png";
 import mprLogo from "/public/media/mprLogo.png";
 
 function Media() {
-  // don't see why you wouldn't want to have the title of the publication be a link
-  // to their website
-
   return (
     <motion.div
       key={"media"}
@@ -49,7 +46,76 @@ function Media() {
       </Head>
 
       {/* Hero */}
-      <div className="baseFlex relative h-56 w-full overflow-hidden bg-gradient-to-br from-primary to-darkPrimary shadow-md tablet:h-72">
+
+      {/* if doing images in hero, maybe only darkPrimary as singular color w/o a gradient? 
+      
+      bg-gradient-to-br from-darkPrimary  via-primary to-darkPrimary
+      */}
+      <div className="baseFlex relative h-56 w-full overflow-hidden bg-darkPrimary shadow-md tablet:h-72">
+        {/* below: pick one or the other, or neither but they can't work together for sure */}
+
+        <div className="absolute inset-0 grid w-full grid-cols-2 grid-rows-2 tablet:grid-cols-4 tablet:grid-rows-1">
+          <Image
+            src={kare11InTheKitchen}
+            alt="TODO"
+            fill
+            // sizes="(min-width: 1000px) 400px, 320px"
+            className="!relative !size-full object-cover opacity-20"
+          />
+          <Image
+            src={kare11MothersDay}
+            alt="TODO"
+            fill
+            // sizes="(min-width: 1000px) 400px, 320px"
+            className="!relative !size-full object-cover opacity-20"
+          />
+          <Image
+            src={starTribune}
+            alt="TODO"
+            fill
+            // sizes="(min-width: 1000px) 400px, 320px"
+            className="!relative !size-full object-cover opacity-20"
+          />
+          <Image
+            src={mpr}
+            alt="TODO"
+            fill
+            // sizes="(min-width: 1000px) 400px, 320px"
+            className="!relative !size-full object-cover opacity-20"
+          />
+        </div>
+
+        {/* <div className="pointer-events-none absolute inset-0">
+          <div
+            // top left
+            className="absolute left-0 top-0 h-3/4 w-1/6 bg-black opacity-50"
+            style={{
+              clipPath: "polygon(0 0, 100% 0, 0 100%)",
+            }}
+          ></div>
+          <div
+            // top right
+            className="absolute right-0 top-0 h-3/4 w-1/6 bg-black opacity-50"
+            style={{
+              clipPath: "polygon(100% 0, 100% 100%, 0 0)",
+            }}
+          ></div>
+          <div
+            // bottom left
+            className="absolute bottom-0 left-0 h-3/4 w-1/6 bg-black opacity-50"
+            style={{
+              clipPath: "polygon(0 0, 0 100%, 100% 100%)",
+            }}
+          ></div>
+          <div
+            // bottom right
+            className="absolute bottom-0 right-0 h-3/4 w-1/6 bg-black opacity-50"
+            style={{
+              clipPath: "polygon(100% 0, 100% 100%, 0 100%)",
+            }}
+          ></div>
+        </div> */}
+
         <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-lg tablet:!flex">
           <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
@@ -69,23 +135,23 @@ function Media() {
               <Image
                 src={kare11InTheKitchen}
                 alt="TODO"
-                fill
                 sizes="(min-width: 1000px) 400px, 320px"
                 className="!relative rounded-t-sm bg-offwhite transition-all hover:brightness-90 active:brightness-75"
               />
             </a>
           </div>
 
-          <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
-            <a href="https://www.kare11.com/">
-              <Image
-                src={kare11Logo}
-                alt="Kare 11 Logo"
-                width={86}
-                height={40}
-                className="mb-1"
-              />
-            </a>
+          <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4 pt-3">
+            <Button variant={"text"} className="!p-0" asChild>
+              <a href="https://www.kare11.com/">
+                <Image
+                  src={kare11Logo}
+                  alt="Kare 11 Logo"
+                  width={86}
+                  height={40}
+                />
+              </a>
+            </Button>
             <p className="text-lg font-semibold">
               KARE in the Kitchen: Fried chicken sandwiches with Eric Pham from
               Khue&apos;s Kitchen
@@ -113,23 +179,23 @@ function Media() {
               <Image
                 src={kare11MothersDay}
                 alt="TODO"
-                fill
                 sizes="(min-width: 1000px) 400px, 320px"
                 className="!relative rounded-t-sm bg-offwhite transition-all hover:brightness-90 active:brightness-75"
               />
             </a>
           </div>
 
-          <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
-            <a href="https://www.kare11.com/">
-              <Image
-                src={kare11Logo}
-                alt="Kare 11 Logo"
-                width={86}
-                height={40}
-                className="mb-1"
-              />
-            </a>
+          <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4 pt-3">
+            <Button variant={"text"} className="!p-0" asChild>
+              <a href="https://www.kare11.com/">
+                <Image
+                  src={kare11Logo}
+                  alt="Kare 11 Logo"
+                  width={86}
+                  height={40}
+                />
+              </a>
+            </Button>
             <p className="text-lg font-semibold">
               Minneapolis chef credits his mom for inspiration
             </p>
@@ -158,23 +224,24 @@ function Media() {
               <Image
                 src={starTribune}
                 alt="TODO"
-                fill
                 sizes="(min-width: 1000px) 400px, 320px"
                 className="!relative rounded-t-sm bg-offwhite transition-all hover:brightness-90 active:brightness-75"
               />
             </a>
           </div>
 
-          <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
-            <a href="https://www.startribune.com/">
-              <Image
-                src={starTribuneLogo}
-                alt="TODO"
-                width={150}
-                height={35}
-                className="-ml-3 mb-4"
-              />
-            </a>
+          <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4 pt-2">
+            <Button variant={"text"} className="!p-0" asChild>
+              <a href="https://www.startribune.com/">
+                <Image
+                  src={starTribuneLogo}
+                  alt="TODO"
+                  width={150}
+                  height={35}
+                  className="-ml-5"
+                />
+              </a>
+            </Button>
             <p className="text-lg font-semibold">
               These 4 Twin Cities area restaurateurs learned from the best: Mom
             </p>
@@ -205,7 +272,6 @@ function Media() {
               <Image
                 src={mpr}
                 alt="TODO"
-                fill
                 sizes="(min-width: 1000px) 400px, 320px"
                 className="!relative rounded-t-sm bg-offwhite transition-all hover:brightness-90 active:brightness-75"
               />
@@ -213,15 +279,17 @@ function Media() {
           </div>
 
           <div className="baseVertFlex w-full !items-start gap-2 hyphens-auto p-4">
-            <a href="https://www.mprnews.org/">
-              <Image
-                src={mprLogo}
-                alt="TODO"
-                width={110}
-                height={85}
-                className="mb-3"
-              />
-            </a>
+            <Button variant={"text"} className="!p-0" asChild>
+              <a href="https://www.mprnews.org/">
+                <Image
+                  src={mprLogo}
+                  alt="TODO"
+                  width={110}
+                  height={85}
+                  className="mb-3"
+                />
+              </a>
+            </Button>
             <p className="text-lg font-semibold">
               Eric Pham of the Quang Restaurant family
             </p>
