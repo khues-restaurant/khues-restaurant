@@ -609,7 +609,7 @@ export default function Home() {
             <div className="baseVertFlex mt-8 w-full gap-4">
               <Button
                 className="baseFlex gap-2"
-                onClick={() => setChatIsOpen(!chatIsOpen)}
+                onClick={() => setChatIsOpen(true)}
               >
                 Send us a message
                 <IoChatbox className="size-5 drop-shadow-md" />
