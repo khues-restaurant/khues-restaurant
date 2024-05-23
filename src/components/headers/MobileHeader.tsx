@@ -74,7 +74,7 @@ function MobileHeader() {
 
       setTimeout(() => {
         setHoursAndLocationAccordionOpen(false);
-      }, 175);
+      }, 275);
     };
 
     events.on("routeChangeStart", handleRouteChange);
@@ -106,7 +106,7 @@ function MobileHeader() {
             if (open === false) {
               setTimeout(() => {
                 setHoursAndLocationAccordionOpen(false);
-              }, 175);
+              }, 275);
             }
           }}
         >
@@ -137,7 +137,7 @@ function MobileHeader() {
 
                       setTimeout(() => {
                         setHoursAndLocationAccordionOpen(false);
-                      }, 175);
+                      }, 275);
 
                       // overflow: hidden would stay stuck on <body>
                       // unless we wait for the sheet to fully close first
@@ -155,7 +155,7 @@ function MobileHeader() {
 
                       setTimeout(() => {
                         setHoursAndLocationAccordionOpen(false);
-                      }, 175);
+                      }, 275);
 
                       // overflow: hidden would stay stuck on <body>
                       // unless we wait for the sheet to fully close first
@@ -346,7 +346,7 @@ function MobileHeader() {
                           hoursAndLocationAccordionRef.current?.scrollIntoView({
                             behavior: "smooth",
                           });
-                        }, 175);
+                        }, 275);
                       }}
                     >
                       <AccordionTrigger className="baseFlex py-2 text-xl text-primary !no-underline">
