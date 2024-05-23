@@ -8,8 +8,6 @@ import { TfiReceipt } from "react-icons/tfi";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { Separator } from "~/components/ui/separator";
-import useGetVisibleFooterOffset from "~/hooks/useGetVisibleFooterOffset";
-
 interface Layout {
   children: ReactNode;
 }
@@ -17,8 +15,6 @@ interface Layout {
 function TopProfileNavigationLayout({ children }: Layout) {
   const { isSignedIn } = useAuth();
   const { asPath } = useRouter();
-
-  const { visibleFooterOffset } = useGetVisibleFooterOffset();
 
   const finalQueryOfUrl = useMemo(() => {
     if (asPath.includes("/rewards")) return "rewards";
@@ -88,17 +84,12 @@ function TopProfileNavigationLayout({ children }: Layout) {
       </div>
 
       <div
-        className={`mb-32 h-full tablet:mb-16 tablet:rounded-xl tablet:border tablet:shadow-md ${getDynamicWidth()}`}
+        className={`mb-16 h-full tablet:rounded-xl tablet:border tablet:shadow-md ${getDynamicWidth()}`}
       >
         <AnimatePresence mode="popLayout">{children}</AnimatePresence>
       </div>
 
-      <div
-        style={{
-          bottom: visibleFooterOffset,
-        }}
-        className="baseFlex fixed left-0 z-40 h-20 w-full gap-0 border-t border-stone-400 bg-offwhite tablet:hidden"
-      >
+      <div className="baseFlex sticky bottom-0 left-0 z-40 h-20 w-full gap-0 border-t border-stone-400 bg-offwhite tablet:hidden">
         <Button
           variant={
             asPath.includes("/profile/preferences") ? "default" : "secondary"

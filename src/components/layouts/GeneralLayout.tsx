@@ -1,5 +1,5 @@
 import { AnimatePresence } from "framer-motion";
-import { useRef, useEffect, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import HeaderShell from "~/components/headers/HeaderShell";
 import Footer from "~/components/Footer";
 import PostSignUpDialog from "~/components/PostSignUpDialog";

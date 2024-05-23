@@ -116,7 +116,7 @@ export default function Home() {
         observer.unobserve(internalMobileHeroRef);
       }
 
-      // setMobileHeroThresholdInView(false); // was this even necessary?
+      setMobileHeroThresholdInView(false);
     };
   }, [setMobileHeroThresholdInView]);
 
@@ -388,7 +388,7 @@ export default function Home() {
       </div>
 
       {/* wrapping (prob just for padding?) container of promo sections below */}
-      <div className="baseVertFlex w-full gap-16 p-8">
+      <div className="baseVertFlex w-full gap-16 p-8 pb-16">
         {/* masonry of featured food items */}
         <div className="homepageFoodMasonry h-[700px] w-full max-w-sm tablet:h-[450px] tablet:max-w-4xl">
           <div className="firstMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">

@@ -22,7 +22,6 @@ import {
 } from "~/components/ui/alert-dialog";
 import { useMainStore } from "~/stores/MainStore";
 import { useRouter } from "next/router";
-import useGetVisibleFooterOffset from "~/hooks/useGetVisibleFooterOffset";
 
 function Chat() {
   const userId = useGetUserId();
@@ -101,8 +100,6 @@ function Chat() {
 
   const [newMessageContent, setNewMessageContent] = useState("");
 
-  const { visibleFooterOffset } = useGetVisibleFooterOffset();
-
   useEffect(() => {
     if (chatIsOpen && chat?.userHasUnreadMessages) {
       void updateChatReadStatus({ chatId: chat.id, forUser: true });
@@ -114,7 +111,10 @@ function Chat() {
     // this just flushes out the component manually on change of chatIsOpen
     // ^ most likely due to zustand updating faster than react's reconciliation process?
     // could technically debounce but this should be fine
-    <Fragment key={chatIsOpen ? "manualRerenderChat1" : "manualRerenderChat2"}>
+    <div
+      key={chatIsOpen ? "manualRerenderChat1" : "manualRerenderChat2"}
+      className="baseFlex !sticky bottom-0 h-0 w-full !justify-end pr-6 tablet:pr-8"
+    >
       {viewportLabel.includes("mobile") ? (
         <AlertDialog open={chatIsOpen}>
           <AnimatePresence mode="popLayout">
@@ -132,11 +132,9 @@ function Chat() {
                 }}
                 transition={{ duration: 0.2 }}
                 style={{
-                  bottom:
-                    (asPath.includes("/profile") ? 100 : 24) +
-                    visibleFooterOffset,
+                  paddingBottom: asPath.includes("/profile") ? "18rem" : "8rem",
                 }}
-                className="fixed right-6 z-10 size-10 tablet:hidden"
+                className="relative z-10 size-10 tablet:hidden"
               >
                 <AlertDialogTrigger asChild>
                   <Button
@@ -266,10 +264,7 @@ function Chat() {
               opacity: 0,
             }}
             transition={{ duration: 0.2 }}
-            style={{
-              bottom: 32 + visibleFooterOffset,
-            }}
-            className="fixed right-8 z-10 hidden size-14 rounded-full shadow-md tablet:block"
+            className="relative z-10 mb-[120px] hidden size-14 rounded-full shadow-md tablet:block"
           >
             <PopoverTrigger asChild>
               <Button className="size-14 rounded-full shadow-md">
@@ -392,7 +387,7 @@ function Chat() {
           </PopoverContent>
         </Popover>
       )}
-    </Fragment>
+    </div>
   );
 }
 
