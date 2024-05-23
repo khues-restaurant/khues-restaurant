@@ -1108,17 +1108,20 @@ function PreviousOrder({ order }: PreviousOrder) {
     viewportLabel: state.viewportLabel,
   }));
 
-  const { mutate: addItemsFromOrderToCart, isLoading: isValidatingOrder } =
-    api.validateOrder.validate.useMutation({
-      onSuccess: (data) => {
-        if (!data.validItems) {
-          // TODO: show a dialog mostly likely with something along the lines of
-          // "We're sorry, but the items from your previous order are not currently available."
-          // ^ "to be reordered. Please try again later."
+  const {
+    mutate: addItemsFromPreviousOrderToCart,
+    isLoading: isValidatingOrder,
+  } = api.validateOrder.validate.useMutation({
+    onSuccess: (data) => {
+      if (!data.validItems) {
+        // TODO: show a dialog mostly likely with something along the lines of
+        // "We're sorry, but the items from your previous order are not currently available."
+        // ^ "to be reordered. Please try again later."
 
-          return;
-        }
+        return;
+      }
 
+      setTimeout(() => {
         // set prev order details so we can revert if necessary
         // with toast's undo button
         setPrevOrderDetails(orderDetails);
@@ -1129,7 +1132,7 @@ function PreviousOrder({ order }: PreviousOrder) {
         );
 
         toast({
-          description: `${totalValidItems} item${totalValidItems > 1 ? "s" : ""} was added to your order.`,
+          description: `${totalValidItems} item${totalValidItems > 1 ? "s were" : "was"} added to your order.`,
           action: (
             <ToastAction
               altText={`Undo the addition of ${totalValidItems} item${totalValidItems > 1 ? "s" : ""} to your order.`}
@@ -1143,18 +1146,25 @@ function PreviousOrder({ order }: PreviousOrder) {
         });
 
         // directly add to order w/ defaults + trigger toast notification
-        setShowCheckmark(true);
+
+        // need to pre-generate unique ids for each item since
+        // we can't do it dynamically in the map below
+        const largestCurrentItemId =
+          orderDetails.items.length === 0
+            ? 0
+            : orderDetails.items.at(-1)!.id + 1;
+
+        const increasingItemIds = Array.from({
+          length: order.orderItems.length,
+        }).map((_, index) => largestCurrentItemId + index);
 
         updateOrder({
           newOrderDetails: {
             ...orderDetails,
             items: [
               ...orderDetails.items,
-              ...data.validItems.map((item) => ({
-                id:
-                  orderDetails.items.length === 0
-                    ? 0
-                    : orderDetails.items.at(-1)!.id + 1,
+              ...data.validItems.map((item, idx) => ({
+                id: increasingItemIds[idx]!,
                 itemId: item.itemId,
                 name: item.name,
                 customizations: item.customizations,
@@ -1177,29 +1187,28 @@ function PreviousOrder({ order }: PreviousOrder) {
           },
         });
 
-        setTimeout(() => {
-          setShowCheckmark(false);
-        }, 1000);
-
         if (data.removedItemNames && data.removedItemNames.length > 0) {
           setItemNamesRemovedFromCart(data.removedItemNames);
         }
-      },
-      onError: (error) => {
-        console.error("Error adding items from previous order to cart", error);
-      },
-    });
 
-  const [showCheckmark, setShowCheckmark] = useState(false);
+        setKeepSpinnerShowing(false);
+      }, 1000);
+    },
+    onError: (error) => {
+      console.error("Error adding items from previous order to cart", error);
+    },
+  });
 
   const { updateOrder } = useUpdateOrder();
+
+  const [keepSpinnerShowing, setKeepSpinnerShowing] = useState(false);
 
   const { toast } = useToast();
 
   return (
-    <div className="relative h-40 w-full max-w-96">
+    <div className="relative h-40 w-full max-w-96 bg-offwhite">
       <div className="baseFlex size-full gap-4 rounded-md border border-stone-300 px-4 py-6">
-        <div className="grid w-28 grid-cols-2 grid-rows-2 !place-items-center gap-1">
+        <div className="grid w-28 grid-cols-2 grid-rows-2 !place-items-center gap-2">
           <Image
             src={"/menuItems/sampleImage.webp"}
             alt={order.orderItems[0]?.name ?? "First item image"}
@@ -1261,24 +1270,33 @@ function PreviousOrder({ order }: PreviousOrder) {
               )}
             </div>
           </div>
+
           <Button
             size={"sm"}
-            disabled={showCheckmark || isValidatingOrder}
-            className={`absolute bottom-0 right-0 self-end`}
+            disabled={keepSpinnerShowing || isValidatingOrder}
+            className={`absolute bottom-0 right-0 w-20 self-end`}
             onClick={() => {
               // TODO: maybe want to create dialog/modal for the summary of this order
 
-              addItemsFromOrderToCart({
+              // need to pre-generate unique ids for each item since
+              // we can't do it dynamically in the map below
+              const largestCurrentItemId =
+                orderDetails.items.length === 0
+                  ? 0
+                  : orderDetails.items.at(-1)!.id + 1;
+
+              const increasingItemIds = Array.from({
+                length: order.orderItems.length,
+              }).map((_, index) => largestCurrentItemId + index);
+
+              addItemsFromPreviousOrderToCart({
                 userId,
                 orderDetails: {
                   datetimeToPickup: getFirstValidMidnightDate(new Date()),
                   isASAP: orderDetails.isASAP,
                   includeNapkinsAndUtensils: false,
-                  items: order.orderItems.map((item) => ({
-                    id:
-                      orderDetails.items.length === 0
-                        ? 0
-                        : orderDetails.items.at(-1)!.id + 1,
+                  items: order.orderItems.map((item, idx) => ({
+                    id: increasingItemIds[idx]!,
                     itemId: item.menuItemId,
                     name: item.name,
                     customizations: item.customizations,
@@ -1303,63 +1321,39 @@ function PreviousOrder({ order }: PreviousOrder) {
                 },
                 validatingAReorder: true,
               });
+
+              setKeepSpinnerShowing(true);
             }}
           >
-            <AnimatePresence mode="wait">
-              {showCheckmark ? (
-                <motion.svg
-                  key={`reorderCheckmark-${order.id}`}
-                  layout
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="size-6 text-offwhite"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <motion.path
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{
-                      delay: 0.2,
-                      type: "tween",
-                      ease: "easeOut",
-                      duration: 0.3,
-                    }}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </motion.svg>
-              ) : isValidatingOrder ? (
-                <motion.div
-                  key={`reorderValidationSpinner-${order.id}`}
-                  layout
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
-                  role="status"
-                  aria-label="loading"
-                >
-                  <span className="sr-only">Loading...</span>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key={`reorder-${order.id}`}
-                  layout
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  Reorder
-                </motion.div>
-              )}
+            <AnimatePresence mode="popLayout">
+              <motion.div
+                key={
+                  keepSpinnerShowing || isValidatingOrder
+                    ? `reorderValidationSpinner-${order.id}`
+                    : `reorder-${order.id}`
+                }
+                layout
+                // whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{
+                  duration: 0.25,
+                }}
+                className="baseFlex gap-2"
+              >
+                {keepSpinnerShowing || isValidatingOrder ? (
+                  <div
+                    className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
+                    role="status"
+                    aria-label="loading"
+                  >
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                ) : (
+                  <div>Reorder</div>
+                )}
+              </motion.div>
             </AnimatePresence>
           </Button>
         </div>
