@@ -24,7 +24,7 @@ function Rewards() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start gap-8 tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
+      className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start gap-8 pb-24 tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)] tablet:pb-8"
     >
       <Head>
         <title>Rewards | Khue&apos;s</title>
@@ -476,25 +476,25 @@ function Rewards() {
       </div>
 
       {/* 
-      #DAA520 is interesting, #FFECB3 as a top left ? still too bright though,
+            #DAA520 is interesting, #FFECB3 as a top left ? still too bright though,
 
-      #e2c479 - #dbb658
-      
-          background: linear-gradient(to right, #DF9F28, #FDE08D, #DF9F28);
-^ maybe?
-  
-linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, hsl(46 65% 59% / 1) 100%)
-^ this was legit just playing around with numbers
+            #e2c479 - #dbb658
+            
+                background: linear-gradient(to right, #DF9F28, #FDE08D, #DF9F28);
+      ^ maybe?
+        
+      linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, hsl(46 65% 59% / 1) 100%)
+      ^ this was legit just playing around with numbers
 
-maybe lean more towards oklch realm or keep asking chatgpt to refine on
+      maybe lean more towards oklch realm or keep asking chatgpt to refine on
 
-^ maybe have highlight section but usually with gradients it just looks washed out..
- maybe have some kind of texture effect layed over to make up for this/make it look like actual gold?
+      ^ maybe have highlight section but usually with gradients it just looks washed out..
+      maybe have some kind of texture effect layed over to make up for this/make it look like actual gold?
 
-      */}
+            */}
 
       {/* Join */}
-      <div className="baseVertFlex mb-16 mt-8 max-w-xl gap-8 border-y-4 border-b-borderGold border-t-borderGold bg-offwhite !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
+      <div className="baseVertFlex mb-16 mt-16 max-w-xl gap-8 border-y-4 border-b-borderGold border-t-borderGold bg-offwhite !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
         <p className="text-center">
           Joining Khue&apos;s Rewards is easy! Simply create an account with us
           and start earning points with every order. Plus, you&apos;ll receive

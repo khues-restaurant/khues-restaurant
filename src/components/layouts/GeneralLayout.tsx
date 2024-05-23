@@ -29,42 +29,11 @@ function GeneralLayout({ children }: GeneralLayout) {
     enabled: Boolean(userId && isSignedIn),
   });
 
-  const { initViewportLabelSet, setFooterIsInView } = useMainStore((state) => ({
+  const { initViewportLabelSet } = useMainStore((state) => ({
     initViewportLabelSet: state.initViewportLabelSet,
-    setFooterIsInView: state.setFooterIsInView,
   }));
 
   useViewportLabelResizeListener();
-
-  const sentinelRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setFooterIsInView(entry?.isIntersecting ?? false);
-      },
-      {
-        root: null,
-        rootMargin: "0px 0px 0px 0px",
-        threshold: 0,
-      },
-    );
-
-    if (sentinelRef.current) {
-      observer.observe(sentinelRef.current);
-    }
-
-    // to abide by eslint rule
-    const localSentinelRef = sentinelRef.current;
-
-    return () => {
-      if (localSentinelRef) {
-        observer.unobserve(localSentinelRef);
-      }
-
-      setFooterIsInView(false);
-    };
-  }, [setFooterIsInView]);
 
   useInitLocalStorage();
   useKeepOrderDetailsValidated();
@@ -87,13 +56,9 @@ function GeneralLayout({ children }: GeneralLayout) {
         {/* still use mode="wait"? */}
         <AnimatePresence>{children}</AnimatePresence>
 
-        {/* need to have both this and the top profile nav one because otherwise you would have the
-            1px of whitespace (due to this) between mobile fixed bottom nav and footer */}
-        <div ref={sentinelRef} style={{ height: "1px" }}></div>
+        <Chat />
 
         <Footer />
-
-        <Chat />
 
         {/* if you want, extract a bit of the logic within here to this component so you can just wholly
             conditionally render this component */}

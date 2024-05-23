@@ -132,6 +132,7 @@ function resetStore() {
     initViewportLabelSet: false,
     cartDrawerIsOpen: false,
     chatIsOpen: false,
+    mobileHeroThresholdInView: false,
   };
 }
 
@@ -190,6 +191,9 @@ interface StoreState {
 
   chatIsOpen: boolean;
   setChatIsOpen: (chatIsOpen: boolean) => void;
+
+  mobileHeroThresholdInView: boolean;
+  setMobileHeroThresholdInView: (mobileHeroThresholdInView: boolean) => void;
 
   resetStore: () => void;
 }
@@ -301,6 +305,11 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
       chatIsOpen: false,
       setChatIsOpen: (chatIsOpen: boolean) => {
         set({ chatIsOpen });
+      },
+
+      mobileHeroThresholdInView: false,
+      setMobileHeroThresholdInView: (mobileHeroThresholdInView: boolean) => {
+        set({ mobileHeroThresholdInView });
       },
 
       resetStore: () => {

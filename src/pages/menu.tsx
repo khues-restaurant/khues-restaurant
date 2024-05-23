@@ -34,6 +34,7 @@ import {
 import { useMainStore } from "~/stores/MainStore";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { formatPrice } from "~/utils/formatPrice";
+import useGetVisibleFooterOffset from "~/hooks/useGetVisibleFooterOffset";
 import { type GetStaticProps } from "next";
 
 import sampleImage from "/public/menuItems/sampleImage.webp";
@@ -83,6 +84,8 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
     useState(false);
 
   const [stickyCategoriesApi, setStickyCategoriesApi] = useState<CarouselApi>();
+
+  const { visibleFooterOffset } = useGetVisibleFooterOffset();
 
   useEffect(() => {
     const updateScrollProgress = () => {
@@ -187,7 +190,7 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
         </div>
       </div>
 
-      <div className="baseVertFlex relative w-full pb-8 tablet:w-3/4">
+      <div className="baseVertFlex relative w-full pb-24 tablet:w-3/4">
         <motion.div
           key={"menuCategoriesPicker"}
           initial={{ opacity: 0 }}
@@ -356,14 +359,17 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
           </div>
         </motion.div>
 
-        <Button size={"lg"} asChild>
+        <Button size={"lg"} className="!transition-none" asChild>
           <Link
             href="/order"
             style={{
               boxShadow:
                 "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
+              bottom:
+                (viewportLabel.includes("mobile") ? 24 : 40) +
+                visibleFooterOffset,
             }}
-            className="baseFlex fixed bottom-6 gap-2 !px-4 !py-6 !text-lg tablet:bottom-10"
+            className="baseFlex fixed gap-2 !px-4 !py-6 !text-lg !transition-none"
           >
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-offwhite" />
             Order now

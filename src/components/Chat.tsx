@@ -22,18 +22,23 @@ import {
 } from "~/components/ui/alert-dialog";
 import { useMainStore } from "~/stores/MainStore";
 import { useRouter } from "next/router";
+import useGetVisibleFooterOffset from "~/hooks/useGetVisibleFooterOffset";
 
 function Chat() {
   const userId = useGetUserId();
   const { asPath } = useRouter();
 
-  const { viewportLabel, footerIsInView, chatIsOpen, setChatIsOpen } =
-    useMainStore((state) => ({
-      viewportLabel: state.viewportLabel,
-      footerIsInView: state.footerIsInView,
-      chatIsOpen: state.chatIsOpen,
-      setChatIsOpen: state.setChatIsOpen,
-    }));
+  const {
+    viewportLabel,
+    mobileHeroThresholdInView,
+    chatIsOpen,
+    setChatIsOpen,
+  } = useMainStore((state) => ({
+    viewportLabel: state.viewportLabel,
+    mobileHeroThresholdInView: state.mobileHeroThresholdInView,
+    chatIsOpen: state.chatIsOpen,
+    setChatIsOpen: state.setChatIsOpen,
+  }));
 
   const ctx = api.useUtils();
 
@@ -96,29 +101,13 @@ function Chat() {
 
   const [newMessageContent, setNewMessageContent] = useState("");
 
+  const { visibleFooterOffset } = useGetVisibleFooterOffset();
+
   useEffect(() => {
     if (chatIsOpen && chat?.userHasUnreadMessages) {
       void updateChatReadStatus({ chatId: chat.id, forUser: true });
     }
   }, [chatIsOpen, chat, updateChatReadStatus]);
-
-  // maybe hide button until scrolled down a bit on mobile?
-
-  function getDynamicChatButtonBottomValue(forMobile?: boolean) {
-    if (asPath.includes("/profile")) {
-      if (forMobile) {
-        return footerIsInView ? "-2.5rem" : "7rem";
-      } else {
-        return footerIsInView ? "-1.5rem" : "2rem";
-      }
-    }
-
-    if (forMobile) {
-      return footerIsInView ? "-2.5rem" : "1.5rem";
-    } else {
-      return footerIsInView ? "-1.5rem" : "2rem";
-    }
-  }
 
   return (
     // a little hacky, but somehow both the "X" and chat icon were showing at the same time
@@ -133,19 +122,19 @@ function Chat() {
               <motion.div
                 key="openChat"
                 initial={{
-                  opacity: footerIsInView ? 0 : 1,
+                  opacity: 0,
                 }}
                 animate={{
-                  opacity: footerIsInView ? 0 : 1,
+                  opacity: mobileHeroThresholdInView ? 0 : 1,
                 }}
                 exit={{
-                  opacity: footerIsInView ? 0 : 1,
+                  opacity: 0,
                 }}
                 transition={{ duration: 0.2 }}
                 style={{
-                  bottom: getDynamicChatButtonBottomValue(true),
-                  transition:
-                    "bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                  bottom:
+                    (asPath.includes("/profile") ? 100 : 24) +
+                    visibleFooterOffset,
                 }}
                 className="fixed right-6 z-10 size-10 tablet:hidden"
               >
@@ -268,19 +257,17 @@ function Chat() {
           <motion.div
             key="openChatContainerTablet"
             initial={{
-              opacity: footerIsInView ? 0 : 1,
+              opacity: 0,
             }}
             animate={{
-              opacity: footerIsInView ? 0 : 1,
+              opacity: 1,
             }}
             exit={{
-              opacity: footerIsInView ? 0 : 1,
+              opacity: 0,
             }}
             transition={{ duration: 0.2 }}
             style={{
-              bottom: getDynamicChatButtonBottomValue(),
-              transition:
-                "bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              bottom: 32 + visibleFooterOffset,
             }}
             className="fixed right-8 z-10 hidden size-14 rounded-full shadow-md tablet:block"
           >

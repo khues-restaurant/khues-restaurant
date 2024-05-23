@@ -1,14 +1,14 @@
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useRef, type ReactNode } from "react";
+import { useMemo, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CiGift } from "react-icons/ci";
 import { IoSettingsOutline } from "react-icons/io5";
 import { TfiReceipt } from "react-icons/tfi";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
-import { useMainStore } from "~/stores/MainStore";
 import { Separator } from "~/components/ui/separator";
+import useGetVisibleFooterOffset from "~/hooks/useGetVisibleFooterOffset";
 
 interface Layout {
   children: ReactNode;
@@ -18,40 +18,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
   const { isSignedIn } = useAuth();
   const { asPath } = useRouter();
 
-  const { footerIsInView, setFooterIsInView } = useMainStore((state) => ({
-    footerIsInView: state.footerIsInView,
-    setFooterIsInView: state.setFooterIsInView,
-  }));
-
-  const sentinelRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setFooterIsInView(entry?.isIntersecting ?? false);
-      },
-      {
-        root: null,
-        rootMargin: "81px 0px 0px 0px",
-        threshold: 0,
-      },
-    );
-
-    if (sentinelRef.current) {
-      observer.observe(sentinelRef.current);
-    }
-
-    // to abide by eslint rule
-    const localSentinelRef = sentinelRef.current;
-
-    return () => {
-      if (localSentinelRef) {
-        observer.unobserve(localSentinelRef);
-      }
-
-      setFooterIsInView(false);
-    };
-  }, [setFooterIsInView]);
+  const { visibleFooterOffset } = useGetVisibleFooterOffset();
 
   const finalQueryOfUrl = useMemo(() => {
     if (asPath.includes("/rewards")) return "rewards";
@@ -121,17 +88,16 @@ function TopProfileNavigationLayout({ children }: Layout) {
       </div>
 
       <div
-        className={`h-full tablet:mb-16 tablet:rounded-xl tablet:border tablet:shadow-md ${getDynamicWidth()}`}
+        className={`mb-32 h-full tablet:mb-16 tablet:rounded-xl tablet:border tablet:shadow-md ${getDynamicWidth()}`}
       >
-        {/* poplayout here? */}
-        <AnimatePresence mode="wait">{children}</AnimatePresence>
+        <AnimatePresence mode="popLayout">{children}</AnimatePresence>
       </div>
 
-      <div ref={sentinelRef} style={{ height: "1px" }}></div>
-
-      <motion.div
-        layout
-        className={`baseFlex bottom-0 left-0 z-40 h-20 w-full gap-0 border-t border-stone-400 bg-offwhite tablet:hidden ${footerIsInView ? "relative" : "fixed"}`}
+      <div
+        style={{
+          bottom: visibleFooterOffset,
+        }}
+        className="baseFlex fixed left-0 z-40 h-20 w-full gap-0 border-t border-stone-400 bg-offwhite tablet:hidden"
       >
         <Button
           variant={
@@ -181,7 +147,7 @@ function TopProfileNavigationLayout({ children }: Layout) {
             My orders
           </Link>
         </Button>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }

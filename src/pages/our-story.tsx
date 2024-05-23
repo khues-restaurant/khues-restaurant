@@ -186,7 +186,7 @@ function OurStory() {
         </div>
       </div>
 
-      <div className="baseVertFlex relative w-full pb-8 tablet:w-3/4">
+      <div className="baseVertFlex relative w-full pb-24 tablet:w-3/4">
         <div className="baseVertFlex mt-12 gap-4 tablet:!flex-row-reverse">
           <Carousel
             setApi={setCarouselApi}

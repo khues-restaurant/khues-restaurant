@@ -416,7 +416,7 @@ function OrderNow() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="baseVertFlex my-8 size-full gap-8 p-4 pb-8 tablet:mt-0 tablet:p-0 tablet:pb-8"
+              className="baseVertFlex my-8 size-full gap-8 p-4 pb-16 tablet:mt-0 tablet:p-0 tablet:pb-8"
             >
               {/* TODO: add Favorites + Recent orders buttons to sticky list at top.
                   should they just be the words or also have the heart/"redo" icon next to them?

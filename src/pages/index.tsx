@@ -2,7 +2,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "~/components/ui/button";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MdOutlineMoneyOff } from "react-icons/md";
 import { BsSpeedometer2 } from "react-icons/bs";
 import { TfiReceipt } from "react-icons/tfi";
@@ -49,14 +49,19 @@ import masonryInteriorThree from "/public/interior/three.webp";
 import masonryInteriorFour from "/public/interior/four.webp";
 import masonryInteriorFive from "/public/interior/five.webp";
 import { useMainStore } from "~/stores/MainStore";
+import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 
 export default function Home() {
   const { isLoaded, isSignedIn } = useAuth();
 
-  const { chatIsOpen, setChatIsOpen } = useMainStore((state) => ({
-    chatIsOpen: state.chatIsOpen,
-    setChatIsOpen: state.setChatIsOpen,
-  }));
+  const { chatIsOpen, setChatIsOpen, setMobileHeroThresholdInView } =
+    useMainStore((state) => ({
+      chatIsOpen: state.chatIsOpen,
+      setChatIsOpen: state.setChatIsOpen,
+      setMobileHeroThresholdInView: state.setMobileHeroThresholdInView,
+    }));
+
+  const mobileHeroRef = useRef<HTMLDivElement>(null);
 
   const [pressReviewsApi, setPressReviewsApi] = useState<CarouselApi>();
   const [pressReviewsSlide, setPressReviewsSlide] = useState(0);
@@ -87,6 +92,33 @@ export default function Home() {
 
     // eventually add proper cleanup functions here
   }, [pressReviewsApi, chefSpecialsApi]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setMobileHeroThresholdInView(entry?.isIntersecting ?? false);
+      },
+      {
+        root: null,
+        rootMargin: "0px 0px 0px 0px",
+        threshold: 0.5,
+      },
+    );
+
+    if (mobileHeroRef.current) {
+      observer.observe(mobileHeroRef.current);
+    }
+
+    const internalMobileHeroRef = mobileHeroRef.current;
+
+    return () => {
+      if (internalMobileHeroRef) {
+        observer.unobserve(internalMobileHeroRef);
+      }
+
+      // setMobileHeroThresholdInView(false); // was this even necessary?
+    };
+  }, [setMobileHeroThresholdInView]);
 
   return (
     <motion.div
@@ -121,7 +153,7 @@ export default function Home() {
       </Head>
 
       {/* Hero */}
-      <div className="baseVertFlex w-full tablet:!hidden">
+      <div ref={mobileHeroRef} className="baseVertFlex w-full tablet:!hidden">
         {/* <div className="imageFiller baseFlex size-full h-[65dvh]">
           Image of probably three plates of food here arranged in a triangle
           (one on top, two on bottom) on a table, probably with some fancy
@@ -156,13 +188,20 @@ export default function Home() {
             // className="h-[205.2px] w-[108.675px]"
             className="h-[152px] w-[80.5px] drop-shadow-md"
           />
-          <div className="baseVertFlex w-[226px] !items-start gap-1 rounded-md">
+          <div className="baseVertFlex w-[226px] gap-1 rounded-md text-center">
             <h1 className="text-2xl font-bold">Welcome to Khue&apos;s</h1>
             <p className="text-lg">
               A modern take on classic Vietnamese cuisine.
             </p>
-            <Button asChild className="mt-2">
-              <Link href="/order">Order now</Link>
+            <Button size={"lg"} asChild>
+              <Link
+                href="/order"
+                className="baseFlex mt-2 gap-2 !px-4 !text-base shadow-md"
+              >
+                <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
+                Order now
+                <SideAccentSwirls className="h-[14px] fill-offwhite" />
+              </Link>
             </Button>
           </div>
         </section>
@@ -232,7 +271,7 @@ export default function Home() {
         </div>
 
         <div className="baseVertFlex absolute top-0 h-full xl:!left-16 2xl:!left-24 tablet:left-8">
-          <section className="baseFlex gap-8 rounded-md bg-offwhite px-6 py-4 shadow-md">
+          <section className="baseFlex gap-12 rounded-md bg-offwhite py-8 pl-12 pr-16 shadow-md">
             <Image
               src={khuesKitchenLogo}
               alt={"TODO: fill in w/ appropriate alt text"}
@@ -241,11 +280,18 @@ export default function Home() {
             />
             <div className="baseVertFlex !items-start gap-1 rounded-md">
               <h1 className="text-4xl font-bold">Welcome to Khue&apos;s</h1>
-              <p className="text-2xl">
+              <p className="w-72 text-2xl">
                 A modern take on classic Vietnamese cuisine.
               </p>
-              <Button asChild className="mt-4">
-                <Link href="/order">Order now</Link>
+              <Button size={"lg"} asChild>
+                <Link
+                  href="/order"
+                  className="baseFlex mt-6 gap-2 !px-4 !py-6 !text-lg shadow-md "
+                >
+                  <SideAccentSwirls className="h-4 scale-x-[-1] fill-offwhite" />
+                  Order now
+                  <SideAccentSwirls className="h-4 fill-offwhite" />
+                </Link>
               </Button>
             </div>
           </section>
@@ -272,47 +318,47 @@ export default function Home() {
           <CarouselContent className="mb-8 mt-6 xl:w-[800px] tablet:mb-4 tablet:mt-8">
             <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md tablet:basis-1/3">
               <Button variant={"text"} className="!p-0" asChild>
-              <a
-                href="https://www.startribune.com/how-these-moms-shaped-the-next-generation-of-great-twin-cities-restaurateurs/600273728/?refresh=true"
-                className="baseFlex"
-              >
-                <Image
-                  src={starTribuneLogo}
-                  alt="Star Tribune Logo"
+                <a
+                  href="https://www.startribune.com/how-these-moms-shaped-the-next-generation-of-great-twin-cities-restaurateurs/600273728/?refresh=true"
+                  className="baseFlex"
+                >
+                  <Image
+                    src={starTribuneLogo}
+                    alt="Star Tribune Logo"
                     width={216}
                     height={91.8}
-                />
-              </a>
+                  />
+                </a>
               </Button>
             </CarouselItem>
             <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md tablet:basis-1/3">
               <Button variant={"text"} className="!p-0" asChild>
-              <a
-                href="https://www.kare11.com/article/news/local/mpls-chef-credits-his-mom-for-inspiration/89-0f237053-85cf-48ae-96f7-8cbebb780555"
-                className="baseFlex"
-              >
-                <Image
-                  src={kare11Logo}
-                  alt="Kare 11 Logo"
-                  width={150}
-                  height={63.75}
-                />
-              </a>
+                <a
+                  href="https://www.kare11.com/article/news/local/mpls-chef-credits-his-mom-for-inspiration/89-0f237053-85cf-48ae-96f7-8cbebb780555"
+                  className="baseFlex"
+                >
+                  <Image
+                    src={kare11Logo}
+                    alt="Kare 11 Logo"
+                    width={150}
+                    height={63.75}
+                  />
+                </a>
               </Button>
             </CarouselItem>
             <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md tablet:basis-1/3">
               <Button variant={"text"} className="!p-0" asChild>
-              <a
-                href="https://www.mprnews.org/story/2023/12/27/appetites-looks-back-on-2023-restaurants-vietnamese-meatballs-and-the-secret-to-entertaining"
-                className="baseFlex"
-              >
-                <Image
-                  src={mprLogo}
-                  alt="MPR Logo"
-                  width={150}
-                  height={63.75}
-                />
-              </a>
+                <a
+                  href="https://www.mprnews.org/story/2023/12/27/appetites-looks-back-on-2023-restaurants-vietnamese-meatballs-and-the-secret-to-entertaining"
+                  className="baseFlex"
+                >
+                  <Image
+                    src={mprLogo}
+                    alt="MPR Logo"
+                    width={150}
+                    height={63.75}
+                  />
+                </a>
               </Button>
             </CarouselItem>
           </CarouselContent>
@@ -437,9 +483,14 @@ export default function Home() {
               </div>
             </div>
 
-            <Button asChild>
-              <Link href="/order" className="my-4">
+            <Button size={"lg"} asChild>
+              <Link
+                href="/order"
+                className="baseFlex mt-2 gap-2 !px-4 !text-base shadow-md"
+              >
+                <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
                 Order now
+                <SideAccentSwirls className="h-[14px] fill-offwhite" />
               </Link>
             </Button>
           </div>
@@ -470,9 +521,14 @@ export default function Home() {
               </div>
             </div>
 
-            <Button asChild>
-              <Link href="/order" className="mt-4 self-center">
+            <Button size={"lg"} asChild>
+              <Link
+                href="/order"
+                className="baseFlex mt-2 gap-2 !px-4 !text-base shadow-md"
+              >
+                <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
                 Order now
+                <SideAccentSwirls className="h-[14px] fill-offwhite" />
               </Link>
             </Button>
           </div>
