@@ -51,6 +51,8 @@ import { useMainStore } from "~/stores/MainStore";
 import Head from "next/head";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import { useToast } from "~/components/ui/use-toast";
+import { AlertDialogTitle } from "@radix-ui/react-alert-dialog";
+import Link from "next/link";
 
 function Preferences() {
   const userId = useGetUserId();
@@ -716,87 +718,110 @@ function Preferences() {
                     </AlertDialogTrigger>
 
                     <AlertDialogContent>
-                      <AlertDialogDescription>
-                        Are you sure you want to delete your account? This
-                        action is
-                        <span className="font-semibold italic">
-                          {" "}
-                          irreversible
-                        </span>{" "}
-                        and all of your data will be lost.
+                      <AlertDialogTitle className="font-semibold">
+                        Delete account
+                      </AlertDialogTitle>
+
+                      <AlertDialogDescription className="baseVertFlex mb-8 gap-4">
+                        <p>
+                          Are you sure you want to delete your account? This
+                          action is
+                          <span className="font-semibold italic">
+                            {" "}
+                            irreversible
+                          </span>{" "}
+                          and all of your data will be lost.*
+                        </p>
+
+                        <p className="italic">
+                          *For financial and historical purposes, we will retain
+                          records of your orders. However, all personal
+                          information will be anonymized to protect your
+                          privacy. Anonymization means that any data that could
+                          identify you will be removed or altered so that you
+                          cannot be identified.
+                        </p>
+
+                        <p>
+                          If you would like to read more about what will happen
+                          to your account data upon account deletion, please
+                          refer to our
+                          <Button variant={"link"} asChild>
+                            <Link href="/privacy" className="h-6 !p-0 !px-2">
+                              Privacy Policy
+                            </Link>
+                          </Button>
+                          .
+                        </p>
                       </AlertDialogDescription>
 
                       <AlertDialogFooter>
-                        <AlertDialogCancel asChild>
-                          <Button
-                            variant="secondary"
-                            onClick={() => setShowDeleteUserDialog(false)}
-                          >
-                            Cancel
-                          </Button>
-                        </AlertDialogCancel>
-                        <AlertDialogAction asChild>
-                          <Button
-                            variant={"destructive"}
-                            disabled={deleteButtonText !== "Delete account"}
-                            onClick={() => {
-                              setDeleteButtonText("Deleting account");
-                              deleteUser(userId);
-                            }}
-                          >
-                            <AnimatePresence mode={"popLayout"}>
-                              <motion.div
-                                key={deleteButtonText}
-                                layout
-                                // whileTap={{ scale: 0.95 }}
-                                initial={{ opacity: 0, y: -20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: 20 }}
-                                transition={{
-                                  duration: 0.25,
-                                }}
-                                className="baseFlex gap-2"
-                              >
-                                <FaTrashAlt />
+                        <Button
+                          variant="outline"
+                          onClick={() => setShowDeleteUserDialog(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          variant={"destructive"}
+                          disabled={deleteButtonText !== "Delete account"}
+                          onClick={() => {
+                            setDeleteButtonText("Deleting account");
+                            deleteUser(userId);
+                          }}
+                        >
+                          <AnimatePresence mode={"popLayout"}>
+                            <motion.div
+                              key={deleteButtonText}
+                              layout
+                              // whileTap={{ scale: 0.95 }}
+                              initial={{ opacity: 0, y: -20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: 20 }}
+                              transition={{
+                                duration: 0.25,
+                              }}
+                              className="baseFlex gap-2"
+                            >
+                              <FaTrashAlt />
 
-                                {deleteButtonText}
+                              {deleteButtonText}
 
-                                {deleteButtonText === "Deleting account" && (
-                                  <div
-                                    className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
-                                    role="status"
-                                    aria-label="loading"
-                                  >
-                                    <span className="sr-only">Loading...</span>
-                                  </div>
-                                )}
-                                {deleteButtonText === "Account deleted" && (
-                                  <svg
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    strokeWidth={2}
-                                    className="size-4 text-offwhite"
-                                  >
-                                    <motion.path
-                                      initial={{ pathLength: 0 }}
-                                      animate={{ pathLength: 1 }}
-                                      transition={{
-                                        delay: 0.2,
-                                        type: "tween",
-                                        ease: "easeOut",
-                                        duration: 0.3,
-                                      }}
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      d="M5 13l4 4L19 7"
-                                    />
-                                  </svg>
-                                )}
-                              </motion.div>
-                            </AnimatePresence>
-                          </Button>
-                        </AlertDialogAction>
+                              {deleteButtonText === "Deleting account" && (
+                                <div
+                                  className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
+                                  role="status"
+                                  aria-label="loading"
+                                >
+                                  <span className="sr-only">Loading...</span>
+                                </div>
+                              )}
+                              {deleteButtonText === "Account deleted" && (
+                                <svg
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                  strokeWidth={2}
+                                  className="size-4 text-offwhite"
+                                >
+                                  <motion.path
+                                    initial={{ pathLength: 0 }}
+                                    animate={{ pathLength: 1 }}
+                                    transition={{
+                                      delay: 0.2,
+                                      type: "tween",
+                                      ease: "easeOut",
+                                      duration: 0.3,
+                                    }}
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                              )}
+                            </motion.div>
+                          </AnimatePresence>
+                        </Button>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
