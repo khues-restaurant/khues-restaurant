@@ -21,16 +21,16 @@ const config = {
         md: "768px",
         lg: "1024px",
         xl: "1280px",
-        "2xl": "1400px",
-        "3xl": "1600px",
+        "2xl": "1536px",
+        "3xl": "1700px",
       },
     },
     extend: {
       screens: {
         mobileLarge: { raw: "(min-height: 667px)" },
         tablet: { raw: "(min-height: 600px) and (min-width: 1000px)" },
-        desktop: { raw: "(min-height: 600px) and (min-width: 1500px)" },
-        "3xl": "1600px",
+        desktop: { raw: "(min-height: 600px) and (min-width: 1536px)" },
+        "3xl": "1700px",
       },
       boxShadow: {
         heavyInner: "inset 0px 2px 4px 0px rgba(0 0 0 / 0.35)",

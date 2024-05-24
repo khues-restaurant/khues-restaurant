@@ -1,16 +1,10 @@
 import { PrismaClient, type Discount } from "@prisma/client";
 import { format } from "date-fns";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  useEffect,
-  useRef,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { IoIosWine } from "react-icons/io";
 import { FaWineBottle } from "react-icons/fa";
 import { LuVegan } from "react-icons/lu";
@@ -79,10 +73,130 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const [currentlyInViewCategory, setCurrentlyInViewCategory] = useState("");
+  const [categoryScrollYValues, setCategoryScrollYValues] = useState<
+    Record<string, number>
+  >({});
   const [programmaticallyScrolling, setProgrammaticallyScrolling] =
     useState(false);
 
   const [stickyCategoriesApi, setStickyCategoriesApi] = useState<CarouselApi>();
+
+  // Effect to set category scroll Y values
+  useEffect(() => {
+    if (!menuCategoryIndicies) return;
+
+    function getCategoryScrollYValues() {
+      const scrollYValues = Object.keys(menuCategoryIndicies).map(
+        (categoryName) => {
+          const categoryContainer = document.getElementById(
+            `${categoryName}Container`,
+          );
+          return categoryContainer?.offsetTop ?? 0;
+        },
+      );
+
+      const categoryScrollYValues: Record<string, number> = {};
+      Object.keys(menuCategoryIndicies).forEach((categoryName, index) => {
+        categoryScrollYValues[categoryName] = scrollYValues[index] ?? 0;
+      });
+
+      setCategoryScrollYValues(categoryScrollYValues);
+    }
+
+    getCategoryScrollYValues();
+    window.addEventListener("resize", getCategoryScrollYValues);
+
+    return () => {
+      window.removeEventListener("resize", getCategoryScrollYValues);
+    };
+  }, [menuCategoryIndicies]);
+
+  // Effect to dynamically set currently in view category
+  useEffect(() => {
+    if (Object.keys(categoryScrollYValues).length === 0) return;
+
+    function dynamicallySetCurrentlyInViewCategory() {
+      const scrollPosition = window.scrollY;
+      const categoryNames = Object.keys(categoryScrollYValues);
+      let categoryNameInView = categoryNames[0];
+
+      for (const categoryName of categoryNames) {
+        const categoryScrollYValue = categoryScrollYValues[categoryName];
+
+        if (categoryScrollYValue === undefined) continue;
+
+        if (scrollPosition >= categoryScrollYValue) {
+          categoryNameInView = categoryName;
+        } else {
+          break;
+        }
+      }
+
+      if (
+        categoryNameInView &&
+        categoryNameInView !== currentlyInViewCategory
+      ) {
+        setCurrentlyInViewCategory(categoryNameInView);
+      }
+    }
+
+    dynamicallySetCurrentlyInViewCategory();
+
+    window.addEventListener("scroll", dynamicallySetCurrentlyInViewCategory);
+    window.addEventListener("resize", dynamicallySetCurrentlyInViewCategory);
+
+    return () => {
+      window.removeEventListener(
+        "scroll",
+        dynamicallySetCurrentlyInViewCategory,
+      );
+      window.removeEventListener(
+        "resize",
+        dynamicallySetCurrentlyInViewCategory,
+      );
+    };
+  }, [categoryScrollYValues, currentlyInViewCategory]);
+
+  const [cartDrawerIsOpeningOrClosing, setCartDrawerIsOpeningOrClosing] =
+    useState(false);
+
+  useEffect(() => {
+    if (cartDrawerIsOpen) {
+      setCartDrawerIsOpeningOrClosing(true);
+    } else {
+      setTimeout(() => {
+        setCartDrawerIsOpeningOrClosing(false);
+      }, 700);
+    }
+  }, [cartDrawerIsOpen]);
+
+  useEffect(() => {
+    if (
+      // needed to prevent scrolling to category when drawer is opening/closing
+      // (page scrolls to top when <Drawer> is open, so this is the workaround
+      cartDrawerIsOpeningOrClosing ||
+      programmaticallyScrolling ||
+      currentlyInViewCategory === ""
+    )
+      return;
+
+    const currentlyInViewCategoryListOrderIndex =
+      menuCategoryIndicies[currentlyInViewCategory];
+
+    if (currentlyInViewCategoryListOrderIndex === undefined) return;
+
+    console.log("scrolling to category", currentlyInViewCategory);
+
+    setTimeout(() => {
+      stickyCategoriesApi?.scrollTo(currentlyInViewCategoryListOrderIndex);
+    }, 0);
+  }, [
+    cartDrawerIsOpeningOrClosing,
+    currentlyInViewCategory,
+    menuCategoryIndicies,
+    programmaticallyScrolling,
+    stickyCategoriesApi,
+  ]);
 
   useEffect(() => {
     const updateScrollProgress = () => {
@@ -237,7 +351,6 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
                             setProgrammaticallyScrolling={
                               setProgrammaticallyScrolling
                             }
-                            stickyCategoriesApi={stickyCategoriesApi}
                           />
                         </CarouselItem>
                       </div>
@@ -256,7 +369,6 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
                         setProgrammaticallyScrolling={
                           setProgrammaticallyScrolling
                         }
-                        stickyCategoriesApi={stickyCategoriesApi}
                       />
                     </CarouselItem>
                   );
@@ -268,17 +380,12 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
                     listOrder={menuCategoryIndicies["Mixed Drinks"]!}
                     currentlyInViewCategory={currentlyInViewCategory}
                     setProgrammaticallyScrolling={setProgrammaticallyScrolling}
-                    stickyCategoriesApi={stickyCategoriesApi}
                   />
                 </CarouselItem>
               </CarouselContent>
             </Carousel>
 
             {/* Custom scrollbar indicating scroll progress */}
-
-            {/* ah we want relative + -b-4 when not sticky
-                    and then absolute -b-0 or w/e when sticky */}
-
             <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-200">
               <div
                 style={{ width: `${scrollProgress}%` }}
@@ -303,10 +410,6 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
               activeDiscount={category.activeDiscount}
               menuItems={category.menuItems}
               listOrder={menuCategoryIndicies[category.name]!}
-              currentlyInViewCategory={currentlyInViewCategory}
-              setCurrentlyInViewCategory={setCurrentlyInViewCategory}
-              programmaticallyScrolling={programmaticallyScrolling}
-              stickyCategoriesApi={stickyCategoriesApi}
             />
           ))}
 
@@ -314,10 +417,6 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
             name={"Mixed Drinks"}
             menuItems={mixedDrinkItems}
             listOrder={menuCategoryIndicies["Mixed Drinks"]!}
-            currentlyInViewCategory={currentlyInViewCategory}
-            setCurrentlyInViewCategory={setCurrentlyInViewCategory}
-            programmaticallyScrolling={programmaticallyScrolling}
-            stickyCategoriesApi={stickyCategoriesApi}
           />
 
           <div className="baseVertFlex order-[999] mt-8 w-full gap-4 px-4 ">
@@ -451,7 +550,6 @@ interface MenuCategoryButton {
   name: string;
   listOrder: number;
   setProgrammaticallyScrolling: Dispatch<SetStateAction<boolean>>;
-  stickyCategoriesApi: CarouselApi;
 }
 
 function MenuCategoryButton({
@@ -459,7 +557,6 @@ function MenuCategoryButton({
   name,
   listOrder,
   setProgrammaticallyScrolling,
-  stickyCategoriesApi,
 }: MenuCategoryButton) {
   return (
     <motion.div
@@ -477,7 +574,6 @@ function MenuCategoryButton({
         if (categoryContainer) {
           setProgrammaticallyScrolling(true);
 
-          stickyCategoriesApi?.scrollTo(listOrder);
           categoryContainer.scrollIntoView({ behavior: "smooth" });
 
           setTimeout(() => {
@@ -502,10 +598,6 @@ interface MenuCategory {
   activeDiscount: Discount | null;
   menuItems: FullMenuItem[];
   listOrder: number;
-  currentlyInViewCategory: string;
-  setCurrentlyInViewCategory: Dispatch<SetStateAction<string>>;
-  programmaticallyScrolling: boolean;
-  stickyCategoriesApi: CarouselApi;
 }
 
 function MenuCategory({
@@ -513,38 +605,9 @@ function MenuCategory({
   activeDiscount,
   menuItems,
   listOrder,
-  currentlyInViewCategory,
-  setCurrentlyInViewCategory,
-  programmaticallyScrolling,
-  stickyCategoriesApi,
 }: MenuCategory) {
-  const menuCategoryRef = useRef(null);
-  const isInView = useInView(menuCategoryRef, {
-    amount: 0.5,
-    // margin: "192px 0px 0px 0px"
-  });
-
-  useEffect(() => {
-    if (!isInView || programmaticallyScrolling) return;
-
-    setCurrentlyInViewCategory(name);
-
-    setTimeout(() => {
-      stickyCategoriesApi?.scrollTo(listOrder);
-    }, 0);
-  }, [
-    isInView,
-    name,
-    setCurrentlyInViewCategory,
-    currentlyInViewCategory,
-    programmaticallyScrolling,
-    stickyCategoriesApi,
-    listOrder,
-  ]);
-
   return (
     <motion.div
-      ref={menuCategoryRef}
       key={`${name}MenuCategory`}
       id={`${name}Container`}
       initial={{ opacity: 0 }}
@@ -579,7 +642,7 @@ function MenuCategory({
       </div>
 
       {/* wrapping container for each food item in the category */}
-      <div className="sm:place-items-start sm:grid-cols-2 sm:gap-8 xl:grid-cols-3 grid w-full grid-cols-1 place-items-center p-1 3xl:grid-cols-4">
+      <div className="grid w-full grid-cols-1 place-items-center p-1 sm:grid-cols-2 sm:place-items-start sm:gap-8 xl:grid-cols-3 3xl:grid-cols-4">
         {menuItems.map((item) => (
           <MenuItemPreview
             key={item.id}
@@ -598,48 +661,15 @@ interface NotInDatabaseCategory {
   name: string;
   menuItems: string[];
   listOrder: number;
-  currentlyInViewCategory: string;
-  setCurrentlyInViewCategory: Dispatch<SetStateAction<string>>;
-  programmaticallyScrolling: boolean;
-  stickyCategoriesApi: CarouselApi;
 }
 
 function NotInDatabaseCategory({
   name,
   menuItems,
   listOrder,
-  currentlyInViewCategory,
-  setCurrentlyInViewCategory,
-  programmaticallyScrolling,
-  stickyCategoriesApi,
 }: NotInDatabaseCategory) {
-  const menuCategoryRef = useRef(null);
-  const isInView = useInView(menuCategoryRef, {
-    amount: 0.5,
-    // margin: "192px 0px 0px 0px"
-  });
-
-  useEffect(() => {
-    if (!isInView || programmaticallyScrolling) return;
-
-    setCurrentlyInViewCategory(name);
-
-    setTimeout(() => {
-      stickyCategoriesApi?.scrollTo(listOrder);
-    }, 0);
-  }, [
-    isInView,
-    name,
-    setCurrentlyInViewCategory,
-    currentlyInViewCategory,
-    programmaticallyScrolling,
-    stickyCategoriesApi,
-    listOrder,
-  ]);
-
   return (
     <motion.div
-      ref={menuCategoryRef}
       key={`${name}MenuCategory`}
       id={`${name}Container`}
       initial={{ opacity: 0 }}
@@ -674,7 +704,7 @@ function NotInDatabaseCategory({
       </div>
 
       {/* wrapping container for each food item in the category */}
-      <div className="sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 grid w-full grid-cols-2 gap-4 p-2 text-sm tablet:gap-8">
+      <div className="grid w-full grid-cols-2 gap-4 p-2 text-sm sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 tablet:gap-8">
         {menuItems.slice(0, 10).map((item) => (
           <p key={item}>{item}</p>
         ))}

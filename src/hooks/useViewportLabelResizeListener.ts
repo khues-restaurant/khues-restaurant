@@ -31,7 +31,7 @@ function useViewportLabelResizeListener() {
         localViewportLabel = "tablet";
       }
 
-      if (window.innerWidth > 1500 && window.innerHeight > 600) {
+      if (window.innerWidth > 1536 && window.innerHeight > 600) {
         localViewportLabel = "desktop";
       }
 

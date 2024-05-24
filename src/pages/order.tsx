@@ -1,9 +1,8 @@
 import { useAuth } from "@clerk/nextjs";
 import { type Discount } from "@prisma/client";
-import { AnimatePresence, motion, useInView } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   useEffect,
-  useRef,
   useState,
   type Dispatch,
   type SetStateAction,
@@ -55,17 +54,18 @@ function OrderNow() {
   const { isLoaded, isSignedIn } = useAuth();
   const userId = useGetUserId();
 
-  const { menuItems, userFavoriteItemIds, viewportLabel, cartDrawerIsOpen } =
-    useMainStore((state) => ({
-      menuItems: state.menuItems,
+  const { userFavoriteItemIds, viewportLabel, cartDrawerIsOpen } = useMainStore(
+    (state) => ({
       userFavoriteItemIds: state.userFavoriteItemIds,
       viewportLabel: state.viewportLabel,
       cartDrawerIsOpen: state.cartDrawerIsOpen,
-    }));
+    }),
+  );
 
   const { data: menuCategories } = api.menuCategory.getAll.useQuery({
     onlyOnlineOrderable: true,
   });
+
   const { data: userRecentOrders } = api.order.getUsersOrders.useQuery(
     { userId, limitToFirstSix: true },
     {
@@ -74,8 +74,10 @@ function OrderNow() {
   );
 
   const [scrollProgress, setScrollProgress] = useState(0);
-
-  const [currentlyInViewCategory, setCurrentlyInViewCategory] = useState(""); //TODO: dynamically have this be set to either Favorites or Recent orders if applicable or w/e the first category is otherwise
+  const [currentlyInViewCategory, setCurrentlyInViewCategory] = useState("");
+  const [categoryScrollYValues, setCategoryScrollYValues] = useState<
+    Record<string, number>
+  >({});
   const [programmaticallyScrolling, setProgrammaticallyScrolling] =
     useState(false);
 
@@ -90,8 +92,9 @@ function OrderNow() {
     Record<string, number> | undefined
   >();
 
+  // Effect to set menu category indices
   useEffect(() => {
-    if (menuCategories === undefined) return;
+    if (!menuCategories || menuCategoryIndicies !== undefined) return;
 
     const categoryIndicies: Record<string, number> = {};
     let currentIndex = 0;
@@ -112,21 +115,96 @@ function OrderNow() {
     });
 
     setMenuCategoryIndicies(categoryIndicies);
-  }, [menuCategories, userFavoriteItemIds.length, userRecentOrders]);
+  }, [
+    menuCategories,
+    userFavoriteItemIds.length,
+    userRecentOrders,
+    currentlyInViewCategory,
+    menuCategoryIndicies,
+  ]);
+
+  // Effect to set category scroll Y values
+  useEffect(() => {
+    if (!menuCategoryIndicies) return;
+
+    function getCategoryScrollYValues() {
+      const scrollYValues = Object.keys(menuCategoryIndicies!).map(
+        (categoryName) => {
+          const categoryContainer = document.getElementById(
+            `${categoryName}Container`,
+          );
+          return categoryContainer?.offsetTop ?? 0;
+        },
+      );
+
+      const categoryScrollYValues: Record<string, number> = {};
+      Object.keys(menuCategoryIndicies!).forEach((categoryName, index) => {
+        categoryScrollYValues[categoryName] = scrollYValues[index] ?? 0;
+      });
+
+      setCategoryScrollYValues(categoryScrollYValues);
+    }
+
+    getCategoryScrollYValues();
+    window.addEventListener("resize", getCategoryScrollYValues);
+
+    return () => {
+      window.removeEventListener("resize", getCategoryScrollYValues);
+    };
+  }, [menuCategoryIndicies]);
+
+  // Effect to dynamically set currently in view category
+  useEffect(() => {
+    if (Object.keys(categoryScrollYValues).length === 0) return;
+
+    function dynamicallySetCurrentlyInViewCategory() {
+      const scrollPosition = window.scrollY;
+      const categoryNames = Object.keys(categoryScrollYValues);
+      let categoryNameInView = categoryNames[0];
+
+      for (const categoryName of categoryNames) {
+        const categoryScrollYValue = categoryScrollYValues[categoryName];
+
+        if (categoryScrollYValue === undefined) continue;
+
+        if (scrollPosition >= categoryScrollYValue) {
+          categoryNameInView = categoryName;
+        } else {
+          break;
+        }
+      }
+
+      if (
+        categoryNameInView &&
+        categoryNameInView !== currentlyInViewCategory
+      ) {
+        setCurrentlyInViewCategory(categoryNameInView);
+      }
+    }
+
+    dynamicallySetCurrentlyInViewCategory();
+
+    window.addEventListener("scroll", dynamicallySetCurrentlyInViewCategory);
+    window.addEventListener("resize", dynamicallySetCurrentlyInViewCategory);
+
+    return () => {
+      window.removeEventListener(
+        "scroll",
+        dynamicallySetCurrentlyInViewCategory,
+      );
+      window.removeEventListener(
+        "resize",
+        dynamicallySetCurrentlyInViewCategory,
+      );
+    };
+  }, [categoryScrollYValues, currentlyInViewCategory]);
 
   const [stickyCategoriesApi, setStickyCategoriesApi] = useState<CarouselApi>();
-
-  const [favoriteItemsApi, setFavoriteItemsApi] = useState<CarouselApi>();
-  const [favoriteItemsSlide, setFavoriteItemsSlide] = useState(0);
-
-  const [recentOrdersApi, setRecentOrdersApi] = useState<CarouselApi>();
-  const [recentOrdersSlide, setRecentOrdersSlide] = useState(0);
-
   const [itemsPerSlide, setItemsPerSlide] = useState(1);
 
   useEffect(() => {
     function handleResize() {
-      if (window.innerWidth >= 1536) {
+      if (window.innerWidth >= 1700) {
         setItemsPerSlide(4);
       } else if (window.innerWidth >= 1280) {
         setItemsPerSlide(3);
@@ -147,48 +225,6 @@ function OrderNow() {
   }, []);
 
   useEffect(() => {
-    if (!favoriteItemsApi) {
-      return;
-    }
-
-    setFavoriteItemsSlide(favoriteItemsApi.selectedScrollSnap());
-
-    favoriteItemsApi.on("select", () => {
-      setFavoriteItemsSlide(favoriteItemsApi.selectedScrollSnap());
-    });
-
-    favoriteItemsApi.on("resize", () => {
-      setFavoriteItemsSlide(0);
-      favoriteItemsApi.scrollTo(0);
-    });
-
-    // eventually add proper cleanup functions here
-  }, [favoriteItemsApi]);
-
-  useEffect(() => {
-    if (
-      !userRecentOrders ||
-      userRecentOrders.length === 0 ||
-      !recentOrdersApi
-    ) {
-      return;
-    }
-
-    setRecentOrdersSlide(recentOrdersApi.selectedScrollSnap());
-
-    recentOrdersApi.on("select", () => {
-      setRecentOrdersSlide(recentOrdersApi.selectedScrollSnap());
-    });
-
-    recentOrdersApi.on("resize", () => {
-      setRecentOrdersSlide(0);
-      recentOrdersApi.scrollTo(0);
-    });
-
-    // eventually add proper cleanup functions here
-  }, [userRecentOrders, recentOrdersApi]);
-
-  useEffect(() => {
     const updateScrollProgress = () => {
       const scrollPosition = window.scrollY;
       const windowHeight = window.innerHeight;
@@ -206,6 +242,47 @@ function OrderNow() {
     };
   }, []);
 
+  const [aDrawerIsOpeningOrClosing, setADrawerIsOpeningOrClosing] =
+    useState(false);
+
+  useEffect(() => {
+    if (isDrawerOpen || cartDrawerIsOpen) {
+      setADrawerIsOpeningOrClosing(true);
+    } else {
+      setTimeout(() => {
+        setADrawerIsOpeningOrClosing(false);
+      }, 700);
+    }
+  }, [isDrawerOpen, cartDrawerIsOpen]);
+
+  useEffect(() => {
+    if (
+      // needed to prevent scrolling to category when drawer is opening/closing
+      // (page scrolls to top when <Drawer> is open, so this is the workaround
+      aDrawerIsOpeningOrClosing ||
+      programmaticallyScrolling ||
+      currentlyInViewCategory === ""
+    )
+      return;
+
+    const currentlyInViewCategoryListOrderIndex =
+      menuCategoryIndicies![currentlyInViewCategory];
+
+    if (currentlyInViewCategoryListOrderIndex === undefined) return;
+
+    console.log("scrolling to category", currentlyInViewCategory);
+
+    setTimeout(() => {
+      stickyCategoriesApi?.scrollTo(currentlyInViewCategoryListOrderIndex);
+    }, 0);
+  }, [
+    aDrawerIsOpeningOrClosing,
+    currentlyInViewCategory,
+    menuCategoryIndicies,
+    programmaticallyScrolling,
+    stickyCategoriesApi,
+  ]);
+
   function ableToRenderMainContent() {
     return (
       menuCategories &&
@@ -214,9 +291,6 @@ function OrderNow() {
       // of whether user is signed in or not
     );
   }
-
-  // TODO: decide whether you want to try and use <MenuCategory> for favorites and recent orders
-  // or make a very similar separate component for them in regards to getting the useInView tech
 
   return (
     <motion.div
@@ -347,7 +421,7 @@ function OrderNow() {
                         setProgrammaticallyScrolling={
                           setProgrammaticallyScrolling
                         }
-                        stickyCategoriesApi={stickyCategoriesApi}
+                        programmaticallyScrolling={programmaticallyScrolling}
                       />
                     </CarouselItem>
                   )}
@@ -361,7 +435,7 @@ function OrderNow() {
                         setProgrammaticallyScrolling={
                           setProgrammaticallyScrolling
                         }
-                        stickyCategoriesApi={stickyCategoriesApi}
+                        programmaticallyScrolling={programmaticallyScrolling}
                       />
                     </CarouselItem>
                   )}
@@ -386,7 +460,7 @@ function OrderNow() {
                         setProgrammaticallyScrolling={
                           setProgrammaticallyScrolling
                         }
-                        stickyCategoriesApi={stickyCategoriesApi}
+                        programmaticallyScrolling={programmaticallyScrolling}
                       />
                     </CarouselItem>
                   ))}
@@ -394,10 +468,6 @@ function OrderNow() {
               </Carousel>
 
               {/* Custom scrollbar indicating scroll progress */}
-
-              {/* ah we want relative + -b-4 when not sticky
-                    and then absolute -b-0 or w/e when sticky */}
-
               <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-200">
                 <div
                   style={{ width: `${scrollProgress}%` }}
@@ -418,163 +488,20 @@ function OrderNow() {
               transition={{ duration: 0.5 }}
               className="baseVertFlex my-8 size-full gap-8 p-4 pb-16 tablet:mt-0 tablet:p-0 tablet:pb-8"
             >
-              {/* TODO: add Favorites + Recent orders buttons to sticky list at top.
-                  should they just be the words or also have the heart/"redo" icon next to them?
-                  ^^
-                  also decide whether you want to make their own component similar to <MenuCategory />
-                  to get the useInView() logic in there or try and adjust <MenuCategory /> to accomodate */}
-
               {userFavoriteItemIds.length > 0 && (
-                <div
-                  id={"FavoritesContainer"}
-                  className="baseVertFlex mt-4 w-full scroll-m-48 !items-start gap-2"
-                >
-                  <div className="baseFlex gap-3 pl-4 text-xl font-medium underline underline-offset-2">
-                    <IoMdHeart />
-                    <p>Favorites</p>
-                  </div>
-
-                  <div className="baseVertFlex w-full gap-4">
-                    <Carousel
-                      setApi={setFavoriteItemsApi}
-                      opts={{
-                        breakpoints: {
-                          "(min-width: 640px)": {
-                            slidesToScroll: 2,
-                            active: userFavoriteItemIds.length > itemsPerSlide,
-                          },
-                          "(min-width: 1280px)": {
-                            slidesToScroll: 3,
-                            active: userFavoriteItemIds.length > itemsPerSlide,
-                          },
-                          "(min-width: 1536px)": {
-                            slidesToScroll: 4,
-                            active: userFavoriteItemIds.length > itemsPerSlide,
-                          },
-                        },
-                        // skipSnaps: true, play around with this
-                      }}
-                      className="baseFlex w-full !justify-start"
-                    >
-                      <CarouselContent>
-                        {userFavoriteItemIds.map((itemId, index) => (
-                          <Fragment key={itemId}>
-                            {menuItems[itemId] && (
-                              <CarouselItem className="md:basis-1/2 xl:basis-1/3 2xl:basis-1/4 basis-full">
-                                <MenuItemPreviewButton
-                                  menuItem={menuItems[itemId]!}
-                                  // TODO: going to prob remove this in big teardown of old system of discounts
-                                  activeDiscount={
-                                    menuItems[itemId]?.activeDiscount ?? null
-                                  }
-                                  listOrder={index}
-                                  setIsDialogOpen={setIsDialogOpen}
-                                  setIsDrawerOpen={setIsDrawerOpen}
-                                  setItemToCustomize={setItemToCustomize}
-                                />
-                              </CarouselItem>
-                            )}
-                          </Fragment>
-                        ))}
-                      </CarouselContent>
-                    </Carousel>
-
-                    {userFavoriteItemIds.length > itemsPerSlide && (
-                      <div className="baseFlex gap-2">
-                        <>
-                          {Array.from({
-                            length: Math.ceil(
-                              userFavoriteItemIds.length / itemsPerSlide,
-                            ),
-                          }).map((_, index) => (
-                            <Button key={index} asChild>
-                              <div
-                                className={`!size-2 cursor-pointer rounded-full !p-0 ${
-                                  favoriteItemsSlide === index
-                                    ? "!bg-primary"
-                                    : "!bg-stone-300"
-                                }`}
-                                onClick={() =>
-                                  favoriteItemsApi?.scrollTo(index)
-                                }
-                              />
-                            </Button>
-                          ))}
-                        </>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <FavoriteItems
+                  setIsDrawerOpen={setIsDrawerOpen}
+                  setIsDialogOpen={setIsDialogOpen}
+                  setItemToCustomize={setItemToCustomize}
+                  itemsPerSlide={itemsPerSlide}
+                />
               )}
 
               {userRecentOrders && userRecentOrders.length > 0 && (
-                <div
-                  id={"Recent ordersContainer"}
-                  className="baseVertFlex mt-4 w-full scroll-m-48 !items-start gap-2"
-                >
-                  <div className="baseFlex gap-3 pl-4 text-xl font-medium underline underline-offset-2">
-                    <FaRedo className="size-4" />
-                    <p>Recent orders</p>
-                  </div>
-
-                  <div className="baseVertFlex w-full gap-4">
-                    <Carousel
-                      setApi={setRecentOrdersApi}
-                      opts={{
-                        breakpoints: {
-                          "(min-width: 640px)": {
-                            slidesToScroll: 2,
-                            active: userRecentOrders.length > itemsPerSlide,
-                          },
-                          "(min-width: 1280px)": {
-                            slidesToScroll: 3,
-                            active: userRecentOrders.length > itemsPerSlide,
-                          },
-                          "(min-width: 1536px)": {
-                            slidesToScroll: 4,
-                            active: userRecentOrders.length > itemsPerSlide,
-                          },
-                        },
-                        // skipSnaps: true, play around with this
-                      }}
-                      className="baseFlex w-full !justify-start"
-                    >
-                      <CarouselContent>
-                        {userRecentOrders.map((order) => (
-                          <CarouselItem
-                            key={order.id}
-                            className="md:basis-1/2 xl:basis-1/3 2xl:basis-1/4 basis-full"
-                          >
-                            <PreviousOrder order={order} />
-                          </CarouselItem>
-                        ))}
-                      </CarouselContent>
-                    </Carousel>
-
-                    {userRecentOrders.length > itemsPerSlide && (
-                      <div className="baseFlex gap-2">
-                        <>
-                          {Array.from({
-                            length: Math.ceil(
-                              userRecentOrders.length / itemsPerSlide,
-                            ),
-                          }).map((_, index) => (
-                            <Button key={index} asChild>
-                              <div
-                                className={`!size-2 cursor-pointer rounded-full !p-0 ${
-                                  recentOrdersSlide === index
-                                    ? "!bg-primary"
-                                    : "!bg-stone-300"
-                                }`}
-                                onClick={() => recentOrdersApi?.scrollTo(index)}
-                              />
-                            </Button>
-                          ))}
-                        </>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <RecentOrders
+                  userRecentOrders={userRecentOrders}
+                  itemsPerSlide={itemsPerSlide}
+                />
               )}
 
               {menuCategories?.map((category) => (
@@ -584,13 +511,9 @@ function OrderNow() {
                   activeDiscount={category.activeDiscount}
                   menuItems={category.menuItems}
                   listOrder={menuCategoryIndicies![category.name]!}
-                  currentlyInViewCategory={currentlyInViewCategory}
-                  setCurrentlyInViewCategory={setCurrentlyInViewCategory}
-                  programmaticallyScrolling={programmaticallyScrolling}
                   setIsDrawerOpen={setIsDrawerOpen}
                   setIsDialogOpen={setIsDialogOpen}
                   setItemToCustomize={setItemToCustomize}
-                  stickyCategoriesApi={stickyCategoriesApi}
                 />
               ))}
 
@@ -685,7 +608,7 @@ interface MenuCategoryButton {
   name: string;
   listOrder: number;
   setProgrammaticallyScrolling: Dispatch<SetStateAction<boolean>>;
-  stickyCategoriesApi: CarouselApi;
+  programmaticallyScrolling: boolean;
 }
 
 function MenuCategoryButton({
@@ -693,22 +616,30 @@ function MenuCategoryButton({
   name,
   listOrder,
   setProgrammaticallyScrolling,
-  stickyCategoriesApi,
+  programmaticallyScrolling,
 }: MenuCategoryButton) {
   return (
     <Button
       // key={`${name}CategoryButton`}
       id={`${name}Button`}
-      variant={currentlyInViewCategory === name ? "default" : "outline"}
+      variant={
+        programmaticallyScrolling
+          ? "outline"
+          : currentlyInViewCategory === name
+            ? "default"
+            : "outline"
+      }
       size="sm"
-      className="border" // not ideal, but keeps same height for all buttons
+      style={{
+        order: listOrder,
+      }}
+      className="baseFlex gap-2 border" // not ideal, but keeps same height for all buttons
       onClick={() => {
         const categoryContainer = document.getElementById(`${name}Container`);
 
         if (categoryContainer) {
           setProgrammaticallyScrolling(true);
 
-          stickyCategoriesApi?.scrollTo(listOrder);
           categoryContainer.scrollIntoView({ behavior: "smooth" });
 
           setTimeout(() => {
@@ -717,6 +648,8 @@ function MenuCategoryButton({
         }
       }}
     >
+      {name === "Favorites" && <IoMdHeart className="size-3" />}
+      {name === "Recent orders" && <FaRedo className="size-3" />}
       {name}
     </Button>
   );
@@ -727,13 +660,9 @@ interface MenuCategory {
   activeDiscount: Discount | null;
   menuItems: FullMenuItem[];
   listOrder: number;
-  currentlyInViewCategory: string;
-  setCurrentlyInViewCategory: Dispatch<SetStateAction<string>>;
-  programmaticallyScrolling: boolean;
   setIsDrawerOpen: Dispatch<SetStateAction<boolean>>;
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
   setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
-  stickyCategoriesApi: CarouselApi;
 }
 
 function MenuCategory({
@@ -741,41 +670,12 @@ function MenuCategory({
   activeDiscount,
   menuItems,
   listOrder,
-  currentlyInViewCategory,
-  setCurrentlyInViewCategory,
-  programmaticallyScrolling,
   setIsDrawerOpen,
   setIsDialogOpen,
   setItemToCustomize,
-  stickyCategoriesApi,
 }: MenuCategory) {
-  const menuCategoryRef = useRef(null);
-  const isInView = useInView(menuCategoryRef, {
-    amount: 0.5,
-    // margin: "192px 0px 0px 0px"
-  });
-
-  useEffect(() => {
-    if (!isInView || programmaticallyScrolling || !stickyCategoriesApi) return;
-
-    setCurrentlyInViewCategory(name);
-
-    setTimeout(() => {
-      stickyCategoriesApi.scrollTo(listOrder);
-    }, 0);
-  }, [
-    isInView,
-    name,
-    setCurrentlyInViewCategory,
-    currentlyInViewCategory,
-    programmaticallyScrolling,
-    stickyCategoriesApi,
-    listOrder,
-  ]);
-
   return (
     <motion.div
-      ref={menuCategoryRef}
       key={`${name}Category`}
       id={`${name}Container`}
       initial={{ opacity: 0 }}
@@ -810,7 +710,7 @@ function MenuCategory({
       </div>
 
       {/* wrapping container for each food item in the category */}
-      <div className="sm:grid-cols-2 xl:grid-cols-3 sm:place-items-start grid w-full grid-cols-1 place-items-center gap-4 3xl:grid-cols-4">
+      <div className="grid w-full grid-cols-1 place-items-center gap-4 sm:grid-cols-2 sm:place-items-start xl:grid-cols-3 3xl:grid-cols-4">
         {menuItems.map((item) => (
           <MenuItemPreviewButton
             key={item.id}
@@ -900,9 +800,7 @@ function MenuItemPreviewButton({
           />
 
           <div className="baseVertFlex h-full w-48 !items-start">
-            <div
-              className={`baseVertFlex !items-start gap-2 ${!menuItem.available ? "mt-4" : ""}`}
-            >
+            <div className="baseVertFlex !items-start gap-2">
               <div className="baseVertFlex !items-start gap-1">
                 <p className="max-w-36 text-wrap text-left text-lg font-medium underline underline-offset-2">
                   {menuItem.name}
@@ -927,47 +825,58 @@ function MenuItemPreviewButton({
           </div>
         </div>
 
-        <p
-          // TODO: idk about either the goldBorder or rewardsGoldBorder here...
-          className={`self-end text-base ${activeDiscount ? "goldBorder rounded-md !py-0.5 px-4 text-offwhite" : ""}`}
+        <div
+          className={`baseFlex w-full gap-4 
+          ${!menuItem.available ? "!justify-between" : "!justify-end"}
+        `}
         >
-          {formatPrice(
-            calculateRelativeTotal({
-              items: [
-                {
-                  price: menuItem.price,
-                  quantity: 1,
-                  discountId: activeDiscount?.id ?? null,
-
-                  // only necessary to fit Item shape
-                  id:
-                    orderDetails.items.length === 0
-                      ? 0
-                      : orderDetails.items.at(-1)!.id + 1,
-                  itemId: menuItem.id,
-                  customizations: {}, // not necessary since all default choices are already included in price
-                  includeDietaryRestrictions: false,
-                  name: menuItem.name,
-                  specialInstructions: "",
-                  isChefsChoice: menuItem.isChefsChoice,
-                  isAlcoholic: menuItem.isAlcoholic,
-                  isVegetarian: menuItem.isVegetarian,
-                  isVegan: menuItem.isVegan,
-                  isGlutenFree: menuItem.isGlutenFree,
-                  showUndercookedOrRawDisclaimer:
-                    menuItem.showUndercookedOrRawDisclaimer,
-                  birthdayReward: false,
-                  pointReward: false,
-                },
-              ],
-              customizationChoices,
-              discounts,
-            }),
+          {!menuItem.available && (
+            <div className="rounded-md bg-stone-200 px-2 py-0.5 text-stone-600">
+              <p className="text-xs italic">Currently unavailable</p>
+            </div>
           )}
-        </p>
+          <p
+            // TODO: idk about either the goldBorder or rewardsGoldBorder here...
+            className={`text-base ${activeDiscount ? "goldBorder rounded-md !py-0.5 px-4 text-offwhite" : ""}`}
+          >
+            {formatPrice(
+              calculateRelativeTotal({
+                items: [
+                  {
+                    price: menuItem.price,
+                    quantity: 1,
+                    discountId: activeDiscount?.id ?? null,
+
+                    // only necessary to fit Item shape
+                    id:
+                      orderDetails.items.length === 0
+                        ? 0
+                        : orderDetails.items.at(-1)!.id + 1,
+                    itemId: menuItem.id,
+                    customizations: {}, // not necessary since all default choices are already included in price
+                    includeDietaryRestrictions: false,
+                    name: menuItem.name,
+                    specialInstructions: "",
+                    isChefsChoice: menuItem.isChefsChoice,
+                    isAlcoholic: menuItem.isAlcoholic,
+                    isVegetarian: menuItem.isVegetarian,
+                    isVegan: menuItem.isVegan,
+                    isGlutenFree: menuItem.isGlutenFree,
+                    showUndercookedOrRawDisclaimer:
+                      menuItem.showUndercookedOrRawDisclaimer,
+                    birthdayReward: false,
+                    pointReward: false,
+                  },
+                ],
+                customizationChoices,
+                discounts,
+              }),
+            )}
+          </p>
+        </div>
       </Button>
 
-      {menuItem.available ? (
+      {menuItem.available && (
         <Button
           variant={"outline"}
           size={"icon"}
@@ -1074,11 +983,226 @@ function MenuItemPreviewButton({
             )}
           </AnimatePresence>
         </Button>
-      ) : (
-        <div className="absolute right-2 top-2 rounded-md bg-stone-100 px-2 py-0.5 text-stone-400">
-          <p className="text-xs italic">Currently unavailable</p>
-        </div>
       )}
+    </div>
+  );
+}
+
+interface FavoriteItems {
+  setIsDrawerOpen: Dispatch<SetStateAction<boolean>>;
+  setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
+  setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
+  itemsPerSlide: number;
+}
+
+function FavoriteItems({
+  setIsDrawerOpen,
+  setIsDialogOpen,
+  setItemToCustomize,
+  itemsPerSlide,
+}: FavoriteItems) {
+  const { menuItems, userFavoriteItemIds } = useMainStore((state) => ({
+    menuItems: state.menuItems,
+    userFavoriteItemIds: state.userFavoriteItemIds,
+  }));
+
+  const [favoriteItemsApi, setFavoriteItemsApi] = useState<CarouselApi>();
+  const [favoriteItemsSlide, setFavoriteItemsSlide] = useState(0);
+
+  useEffect(() => {
+    if (!favoriteItemsApi) {
+      return;
+    }
+
+    setFavoriteItemsSlide(favoriteItemsApi.selectedScrollSnap());
+
+    favoriteItemsApi.on("select", () => {
+      setFavoriteItemsSlide(favoriteItemsApi.selectedScrollSnap());
+    });
+
+    favoriteItemsApi.on("resize", () => {
+      setFavoriteItemsSlide(0);
+      favoriteItemsApi.scrollTo(0);
+    });
+
+    // eventually add proper cleanup functions here
+  }, [favoriteItemsApi]);
+
+  return (
+    <div
+      id={"FavoritesContainer"}
+      className="baseVertFlex mt-4 w-full scroll-m-48 !items-start gap-2"
+    >
+      <div className="baseFlex gap-3 pl-4 text-xl font-medium underline underline-offset-2">
+        <IoMdHeart />
+        <p>Favorites</p>
+      </div>
+
+      <div className="baseVertFlex w-full gap-4">
+        <Carousel
+          setApi={setFavoriteItemsApi}
+          opts={{
+            breakpoints: {
+              "(min-width: 640px)": {
+                slidesToScroll: 2,
+                active: userFavoriteItemIds.length > itemsPerSlide,
+              },
+              "(min-width: 1280px)": {
+                slidesToScroll: 3,
+                active: userFavoriteItemIds.length > itemsPerSlide,
+              },
+              "(min-width: 1700px)": {
+                slidesToScroll: 4,
+                active: userFavoriteItemIds.length > itemsPerSlide,
+              },
+            },
+            // skipSnaps: true, play around with this
+          }}
+          className="baseFlex w-full !justify-start"
+        >
+          <CarouselContent>
+            {userFavoriteItemIds.map((itemId, index) => (
+              <Fragment key={itemId}>
+                {menuItems[itemId] && (
+                  <CarouselItem className="basis-full md:basis-1/2 xl:basis-1/3 3xl:basis-1/4">
+                    <MenuItemPreviewButton
+                      menuItem={menuItems[itemId]!}
+                      // TODO: going to prob remove this in big teardown of old system of discounts
+                      activeDiscount={menuItems[itemId]?.activeDiscount ?? null}
+                      listOrder={index}
+                      setIsDialogOpen={setIsDialogOpen}
+                      setIsDrawerOpen={setIsDrawerOpen}
+                      setItemToCustomize={setItemToCustomize}
+                    />
+                  </CarouselItem>
+                )}
+              </Fragment>
+            ))}
+          </CarouselContent>
+        </Carousel>
+
+        {userFavoriteItemIds.length > itemsPerSlide && (
+          <div className="baseFlex gap-2">
+            <>
+              {Array.from({
+                length: Math.ceil(userFavoriteItemIds.length / itemsPerSlide),
+              }).map((_, index) => (
+                <Button key={index} asChild>
+                  <div
+                    className={`!size-2 cursor-pointer rounded-full !p-0 ${
+                      favoriteItemsSlide === index
+                        ? "!bg-primary"
+                        : "!bg-stone-300"
+                    }`}
+                    onClick={() => favoriteItemsApi?.scrollTo(index)}
+                  />
+                </Button>
+              ))}
+            </>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+interface RecentOrders {
+  userRecentOrders: DBOrderSummary[];
+  itemsPerSlide: number;
+}
+
+function RecentOrders({ userRecentOrders, itemsPerSlide }: RecentOrders) {
+  const [recentOrdersApi, setRecentOrdersApi] = useState<CarouselApi>();
+  const [recentOrdersSlide, setRecentOrdersSlide] = useState(0);
+
+  useEffect(() => {
+    if (
+      !userRecentOrders ||
+      userRecentOrders.length === 0 ||
+      !recentOrdersApi
+    ) {
+      return;
+    }
+
+    setRecentOrdersSlide(recentOrdersApi.selectedScrollSnap());
+
+    recentOrdersApi.on("select", () => {
+      setRecentOrdersSlide(recentOrdersApi.selectedScrollSnap());
+    });
+
+    recentOrdersApi.on("resize", () => {
+      setRecentOrdersSlide(0);
+      recentOrdersApi.scrollTo(0);
+    });
+
+    // eventually add proper cleanup functions here
+  }, [userRecentOrders, recentOrdersApi]);
+
+  return (
+    <div
+      id={"Recent ordersContainer"}
+      className="baseVertFlex mt-4 w-full scroll-m-48 !items-start gap-2"
+    >
+      <div className="baseFlex gap-3 pl-4 text-xl font-medium underline underline-offset-2">
+        <FaRedo className="size-4" />
+        <p>Recent orders</p>
+      </div>
+
+      <div className="baseVertFlex w-full gap-4">
+        <Carousel
+          setApi={setRecentOrdersApi}
+          opts={{
+            breakpoints: {
+              "(min-width: 640px)": {
+                slidesToScroll: 2,
+                active: userRecentOrders.length > itemsPerSlide,
+              },
+              "(min-width: 1280px)": {
+                slidesToScroll: 3,
+                active: userRecentOrders.length > itemsPerSlide,
+              },
+              "(min-width: 1700px)": {
+                slidesToScroll: 4,
+                active: userRecentOrders.length > itemsPerSlide,
+              },
+            },
+            // skipSnaps: true, play around with this
+          }}
+          className="baseFlex w-full !justify-start"
+        >
+          <CarouselContent>
+            {userRecentOrders.map((order) => (
+              <CarouselItem
+                key={order.id}
+                className="basis-full md:basis-1/2 xl:basis-1/3 2xl:basis-1/4"
+              >
+                <PreviousOrder order={order} />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+
+        {userRecentOrders.length > itemsPerSlide && (
+          <div className="baseFlex gap-2">
+            <>
+              {Array.from({
+                length: Math.ceil(userRecentOrders.length / itemsPerSlide),
+              }).map((_, index) => (
+                <Button key={index} asChild>
+                  <div
+                    className={`!size-2 cursor-pointer rounded-full !p-0 ${
+                      recentOrdersSlide === index
+                        ? "!bg-primary"
+                        : "!bg-stone-300"
+                    }`}
+                    onClick={() => recentOrdersApi?.scrollTo(index)}
+                  />
+                </Button>
+              ))}
+            </>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
