@@ -223,7 +223,9 @@ function PostSignUpDialog() {
           }}
           className="baseVertFlex relative overflow-hidden"
         >
-          <p className="text-center font-semibold">Account setup</p>
+          <p className="text-center font-semibold tablet:text-lg">
+            Account setup
+          </p>
           <div className="baseFlex mt-4 w-full !justify-between p-0 pb-8 pt-2 tablet:mt-0 tablet:p-8">
             <div className="baseVertFlex relative gap-2 pl-4 pr-4 tablet:pl-8">
               <Step step={1} currentStep={step} />
@@ -310,7 +312,7 @@ function PostSignUpDialog() {
             </div>
           </div>
 
-          <AnimatePresence mode="popLayout">
+          <AnimatePresence mode="wait">
             {step === 1 && (
               <motion.div
                 key={"personalInfo"}
@@ -322,7 +324,7 @@ function PostSignUpDialog() {
               >
                 <Form {...mainForm}>
                   <form className="baseVertFlex mt-8 w-full p-1">
-                    <div className="baseVertFlex w-full gap-4 tablet:gap-16">
+                    <div className="baseVertFlex w-full gap-4 tablet:gap-8">
                       <div className="grid grid-cols-2 !items-start gap-4 tablet:gap-8">
                         <FormField
                           control={mainForm.control}
@@ -532,7 +534,7 @@ function PostSignUpDialog() {
                     backgroundImage:
                       "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
                   }}
-                  className="baseFlex relative h-48 w-full overflow-hidden rounded-md shadow-md"
+                  className="baseFlex relative h-48 w-full overflow-hidden rounded-md shadow-md tablet:w-[75%]"
                 >
                   <motion.div
                     key={"rewardsHeroMobileImageOne"}
@@ -644,11 +646,11 @@ function PostSignUpDialog() {
                   </motion.div>
                 </div>
 
-                <p className="mt-8 text-center">
+                <p className="mt-8 text-center font-medium">
                   Congratulations! You have successfully created your account.
                 </p>
 
-                <p className="mt-8 max-w-96 text-sm text-neutral-500">
+                <p className="sm:max-w-96 mt-4 max-w-72 text-sm text-neutral-500">
                   As a token of our appreciation, enjoy a head start of 500 free
                   rewards points. Visit your rewards page in your profile to
                   browse meals you can redeem your points for.
@@ -657,7 +659,7 @@ function PostSignUpDialog() {
             )}
           </AnimatePresence>
 
-          <div className="baseFlex mt-4 w-full !justify-between p-1 tablet:mt-16">
+          <div className="baseFlex mt-4 w-full !justify-between p-1 tablet:mt-8 desktop:mt-16">
             <Button
               variant={"text"}
               onClick={() => setStep(step - 1)}

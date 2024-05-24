@@ -186,11 +186,7 @@ function ItemCustomizerDialogContent({
 
   return (
     <DialogContent className="max-w-4xl">
-      <div
-        className={`baseVertFlex relative w-full !justify-start overflow-y-auto pr-4 pt-4 tablet:h-[600px] 
-        ${itemToCustomize.customizationCategories.length > 0 ? "desktop:h-[700px]" : "desktop:h-[600px]"}
-      `}
-      >
+      <div className="baseVertFlex relative w-full !justify-start overflow-y-auto pr-4 pt-4 tablet:max-h-[75vh]">
         <div className="baseFlex relative h-72 w-full !justify-end rounded-md bg-offwhite shadow-md">
           {/* primary diagonal bg */}
           <div
@@ -408,26 +404,18 @@ function ItemCustomizerDialogContent({
             </AccordionItem>
           </Accordion>
 
-          <div className="baseVertFlex w-full gap-2">
-            {itemToCustomize.isAlcoholic && (
-              <p className="text-center text-xs italic text-stone-400">
-                * Orders that contain alcoholic beverages must include at least
-                one food item.
-              </p>
-            )}
-
-            {itemToCustomize.showUndercookedOrRawDisclaimer && (
-              <p className="text-center text-xs italic text-stone-400">
-                * Consuming raw or undercooked meats, poultry, seafood,
-                shellfish, or eggs may increase your risk of foodborne illness.
-              </p>
-            )}
-          </div>
+          {itemToCustomize.showUndercookedOrRawDisclaimer && (
+            <p className="text-center text-xs italic text-stone-400">
+              * Consuming raw or undercooked meats, poultry, seafood, shellfish,
+              or eggs may increase your risk of foodborne illness.
+            </p>
+          )}
 
           {/* Reviews */}
           {/* <div className="baseVertFlex w-full gap-2">
           </div> */}
         </div>
+
         <DialogFooter>
           <div
             className="baseFlex bottom-0 left-0 w-full !justify-end bg-gradient-to-br from-stone-200 

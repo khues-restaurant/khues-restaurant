@@ -149,7 +149,7 @@ function RewardsDialogContent({
       extraBottomSpacer={false}
       className="w-[800px] max-w-[800px]"
     >
-      <div className="baseVertFlex relative w-full !justify-start gap-2">
+      <div className="baseVertFlex relative max-h-[85vh] w-full !justify-start gap-2">
         <div
           style={{
             backgroundImage:

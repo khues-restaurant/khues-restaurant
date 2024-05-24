@@ -852,7 +852,7 @@ function RateDialog({ userId, orderId }: RateDialog) {
                 control={feedbackForm.control}
                 name="allowedToBePublic"
                 render={({ field }) => (
-                  <FormItem className="baseFlex gap-2 space-y-0">
+                  <FormItem className="baseFlex mt-2 gap-2 space-y-0">
                     <Switch
                       id="allowedToBePublic"
                       checked={feedbackForm.getValues("allowedToBePublic")}
@@ -860,10 +860,7 @@ function RateDialog({ userId, orderId }: RateDialog) {
                         feedbackForm.setValue("allowedToBePublic", value)
                       }
                     />
-                    <FormLabel
-                      htmlFor="allowedToBePublic"
-                      className="font-semibold"
-                    >
+                    <FormLabel htmlFor="allowedToBePublic">
                       Allow us to anonymously show your feedback on our website.
                     </FormLabel>
                   </FormItem>

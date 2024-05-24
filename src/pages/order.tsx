@@ -460,7 +460,7 @@ function OrderNow() {
                         {userFavoriteItemIds.map((itemId, index) => (
                           <Fragment key={itemId}>
                             {menuItems[itemId] && (
-                              <CarouselItem className="basis-full md:basis-1/2 xl:basis-1/3 2xl:basis-1/4">
+                              <CarouselItem className="md:basis-1/2 xl:basis-1/3 2xl:basis-1/4 basis-full">
                                 <MenuItemPreviewButton
                                   menuItem={menuItems[itemId]!}
                                   // TODO: going to prob remove this in big teardown of old system of discounts
@@ -543,7 +543,7 @@ function OrderNow() {
                         {userRecentOrders.map((order) => (
                           <CarouselItem
                             key={order.id}
-                            className="basis-full md:basis-1/2 xl:basis-1/3 2xl:basis-1/4"
+                            className="md:basis-1/2 xl:basis-1/3 2xl:basis-1/4 basis-full"
                           >
                             <PreviousOrder order={order} />
                           </CarouselItem>
@@ -810,7 +810,7 @@ function MenuCategory({
       </div>
 
       {/* wrapping container for each food item in the category */}
-      <div className="grid w-full grid-cols-1 place-items-start gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+      <div className="sm:grid-cols-2 xl:grid-cols-3 sm:place-items-start grid w-full grid-cols-1 place-items-center gap-4 3xl:grid-cols-4">
         {menuItems.map((item) => (
           <MenuItemPreviewButton
             key={item.id}
@@ -890,7 +890,7 @@ function MenuItemPreviewButton({
           }
         }}
       >
-        <div className="baseFlex mt-4 w-full gap-4 tablet:mt-0">
+        <div className="baseFlex mt-4 w-full !justify-around gap-4 tablet:mt-0">
           <Image
             src={"/menuItems/sampleImage.webp"}
             alt={menuItem.name}
@@ -904,7 +904,7 @@ function MenuItemPreviewButton({
               className={`baseVertFlex !items-start gap-2 ${!menuItem.available ? "mt-4" : ""}`}
             >
               <div className="baseVertFlex !items-start gap-1">
-                <p className="max-w-40 text-wrap text-left text-lg font-medium underline underline-offset-2">
+                <p className="max-w-36 text-wrap text-left text-lg font-medium underline underline-offset-2">
                   {menuItem.name}
                 </p>
 
