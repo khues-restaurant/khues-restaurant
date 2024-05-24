@@ -101,6 +101,7 @@ function PostSignUpDialog() {
   const { isSignedIn } = useAuth();
   const { user } = useUser();
   const userId = useGetUserId();
+  const ctx = api.useUtils();
 
   const { orderDetails, viewportLabel } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
@@ -111,15 +112,13 @@ function PostSignUpDialog() {
     enabled: Boolean(userId && isSignedIn),
   });
 
-  // TODO: probably if you are going with the storing of the orderId in a "redeemedOrders" model
-  // in the database, you would have a query here checking whether the redeemedOrder is available to
-  // be redeemed still? I think there's no other way really besides storing this id inside of a new
-  // variable in localStorage. def low priority atm though.
-
   const { mutate: createUser, isLoading: isSaving } =
     api.user.create.useMutation({
       onSuccess: () => {
-        setTimeout(() => setSaveButtonText("Saved"), 2000);
+        setTimeout(() => {
+          setSaveButtonText("Saved");
+          void ctx.user.invalidate();
+        }, 2000);
 
         setTimeout(() => {
           setIsOpen(false);
@@ -193,7 +192,6 @@ function PostSignUpDialog() {
 
   function getDynamicWidth() {
     if (step === 3) {
-      if (saveButtonText !== "Save") return "75px";
       return "100px";
     } else if (step === 2) {
       if (dietaryRestrictionsForm.formState.isDirty) return "175px";
@@ -210,6 +208,10 @@ function PostSignUpDialog() {
   }, []);
 
   if (!mounted) return <></>;
+
+  // TODO: probably need to make a getDynamicHeight() function so that
+  // there isn't jerky animation of the dialog container esp between steps
+  // 2 and 3.
 
   // TODO: you can add a phone/calendar icon inside on left side of the input to make it look nicer
   // ^ FaPhone and CiCalendarDate
@@ -650,7 +652,7 @@ function PostSignUpDialog() {
                   Congratulations! You have successfully created your account.
                 </p>
 
-                <p className="sm:max-w-96 mt-4 max-w-72 text-sm text-neutral-500">
+                <p className="mt-4 max-w-72 text-sm text-neutral-500 sm:max-w-96">
                   As a token of our appreciation, enjoy a head start of 500 free
                   rewards points. Visit your rewards page in your profile to
                   browse meals you can redeem your points for.
@@ -706,7 +708,6 @@ function PostSignUpDialog() {
                     <AnimatePresence mode={"popLayout"}>
                       <motion.div
                         key={saveButtonText}
-                        layout
                         // whileTap={{ scale: 0.95 }}
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
