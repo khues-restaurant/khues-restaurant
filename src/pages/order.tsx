@@ -41,11 +41,11 @@ import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 import Head from "next/head";
+import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
+import { FaWineBottle } from "react-icons/fa6";
 
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";
-import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
-import { FaWineBottle } from "react-icons/fa6";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
@@ -269,8 +269,6 @@ function OrderNow() {
       menuCategoryIndicies![currentlyInViewCategory];
 
     if (currentlyInViewCategoryListOrderIndex === undefined) return;
-
-    console.log("scrolling to category", currentlyInViewCategory);
 
     setTimeout(() => {
       stickyCategoriesApi?.scrollTo(currentlyInViewCategoryListOrderIndex);

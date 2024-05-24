@@ -185,8 +185,6 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
 
     if (currentlyInViewCategoryListOrderIndex === undefined) return;
 
-    console.log("scrolling to category", currentlyInViewCategory);
-
     setTimeout(() => {
       stickyCategoriesApi?.scrollTo(currentlyInViewCategoryListOrderIndex);
     }, 0);
