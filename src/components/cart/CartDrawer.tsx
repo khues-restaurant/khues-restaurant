@@ -608,10 +608,10 @@ function CartDrawer({
           Items
         </p>
 
-        <AnimatePresence mode={"wait"}>
+        <AnimatePresence>
           {itemNamesRemovedFromCart.length > 0 && (
             <motion.div
-              key={"cartSheetRemovedItemsCard"}
+              key={"cartDrawerRemovedItemsCard"}
               initial={{
                 opacity: 0,
                 height: 0,
@@ -625,11 +625,15 @@ function CartDrawer({
                 paddingBottom: "0.5rem",
               }}
               exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-              className="w-full px-8"
+              transition={{
+                duration: 0.5,
+                ease: "easeInOut",
+              }}
+              style={{ overflow: "hidden" }}
+              className="w-full shrink-0 px-8"
             >
               <motion.div
-                layout
+                layout={"position"}
                 className="baseVertFlex relative w-full !items-start !justify-start gap-2 rounded-md bg-primary p-4 text-sm text-offwhite"
               >
                 <p className="font-semibold underline underline-offset-2">
@@ -1020,7 +1024,7 @@ function CartDrawer({
           </div>
         )}
 
-        <div className="baseVertFlex mt-auto w-full border-t ">
+        <div className="baseVertFlex mt-auto w-full border-t">
           <div className="baseVertFlex w-full gap-4 p-4">
             <div
               style={{
@@ -1238,10 +1242,7 @@ function CartDrawer({
               <div className="baseVertFlex w-1/2">
                 <div className="baseFlex w-full !justify-between text-sm">
                   <p>Subtotal</p>
-                  <AnimatedPrice
-                    price={formatPrice(orderCost.subtotal)}
-                    animatePresenceMode={"wait"}
-                  />
+                  <AnimatedPrice price={formatPrice(orderCost.subtotal)} />
                 </div>
 
                 {/* TODO: ask eric if this threshold should apply based on subtotal or total */}
@@ -1254,17 +1255,13 @@ function CartDrawer({
                       <p>Spend $35, Save $5</p>
                       <AnimatedPrice
                         price={formatPrice(-5)}
-                        animatePresenceMode={"wait"}
                       />
                     </div>
                   )} */}
 
                 <div className="baseFlex w-full !justify-between text-sm">
                   <p>Tax</p>
-                  <AnimatedPrice
-                    price={formatPrice(orderCost.tax)}
-                    animatePresenceMode={"wait"}
-                  />
+                  <AnimatedPrice price={formatPrice(orderCost.tax)} />
                 </div>
 
                 <div className="baseFlex w-full !justify-between text-sm">
@@ -1274,10 +1271,7 @@ function CartDrawer({
 
                 <div className="baseFlex w-full !justify-between gap-2 text-lg font-semibold">
                   <p>Total</p>
-                  <AnimatedPrice
-                    price={formatPrice(orderCost.total)}
-                    animatePresenceMode={"wait"}
-                  />
+                  <AnimatedPrice price={formatPrice(orderCost.total)} />
                 </div>
               </div>
 
@@ -1303,8 +1297,8 @@ function CartDrawer({
               >
                 <AnimatePresence mode={"popLayout"}>
                   <motion.div
-                    key={`cartSheet-${checkoutButtonText}`}
-                    layout
+                    key={`cartDrawer-${checkoutButtonText}`}
+                    // layout
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}

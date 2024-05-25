@@ -3,15 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 
 interface AnimatedPrice {
   price: string;
-  animatePresenceMode?: "popLayout" | "wait";
 }
 
-// fyi: this still doesn't work on the inflection point
+// TODO: this still doesn't work on the inflection point
 
-function AnimatedPrice({
-  price,
-  animatePresenceMode = "popLayout",
-}: AnimatedPrice) {
+function AnimatedPrice({ price }: AnimatedPrice) {
   const [currentPrice, setCurrentPrice] = useState(price);
   const [animationDirection, setAnimationDirection] = useState<"up" | "down">();
 
@@ -28,7 +24,7 @@ function AnimatedPrice({
   }, [price, currentPrice]);
 
   return (
-    <AnimatePresence mode={animatePresenceMode}>
+    <AnimatePresence mode={"popLayout"}>
       <motion.div
         key={currentPrice}
         initial={{
