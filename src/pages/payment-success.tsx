@@ -73,7 +73,7 @@ function PaymentSuccess({
       </Head>
 
       <div className="baseVertFlex max-w-80 gap-6 p-4 tablet:max-w-2xl tablet:gap-8 tablet:p-8">
-        <AnimatedLotus className="size-24 fill-primary" />
+        <AnimatedLotus className="size-16 fill-primary tablet:size-24" />
 
         <p className="mt-8 text-center text-lg font-semibold">
           Thank you! Your order has been successfully placed.

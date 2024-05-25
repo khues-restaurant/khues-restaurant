@@ -560,7 +560,7 @@ function OrderNow() {
               transition={{ duration: 0.5 }}
               className="baseVertFlex h-[calc(100dvh-6rem-14rem)] w-full tablet:h-[calc(100dvh-7rem-18rem)]"
             >
-              <AnimatedLotus className="size-20 fill-primary tablet:size-24" />
+              <AnimatedLotus className="size-16 fill-primary tablet:size-24" />
             </motion.div>
           )}
         </AnimatePresence>

@@ -692,7 +692,7 @@ function Track() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <AnimatedLotus className="size-24 fill-primary" />
+              <AnimatedLotus className="size-16 fill-primary tablet:size-24" />
             </motion.div>
           )}
         </AnimatePresence>

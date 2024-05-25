@@ -159,7 +159,7 @@ function Rewards() {
             transition={{ duration: 0.5 }}
             className="baseVertFlex h-full min-h-[calc(100dvh-6rem-63px)] w-full items-center justify-center tablet:min-h-[calc(100dvh-7rem-120px)] "
           >
-            <AnimatedLotus className="size-20 fill-primary tablet:size-24" />
+            <AnimatedLotus className="size-16 fill-primary tablet:size-24" />
           </motion.div>
         ) : (
           <motion.div
