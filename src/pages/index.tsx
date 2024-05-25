@@ -439,6 +439,8 @@ export default function Home() {
             <Parallax speed={-3} className="!absolute !top-0">
               <Image
                 src={masonryFoodFive}
+                priority // I feel like this shouldn't be necessary, but the image wasn't auto-loading
+                // when it came into the viewport otherwise
                 alt={"TODO: fill in w/ appropriate alt text"}
                 sizes="(max-width: 1000px) 384px, 500px"
                 className="!relative !size-full rounded-md object-cover"
