@@ -486,7 +486,7 @@ export default function Home() {
             <Button size={"lg"} asChild>
               <Link
                 href="/order"
-                className="baseFlex mt-2 gap-2 !px-4 !text-base shadow-md"
+                className="baseFlex my-2 gap-2 !px-4 !text-base shadow-md"
               >
                 <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
                 Order now
@@ -497,7 +497,7 @@ export default function Home() {
         </div>
 
         <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
-          <div className="baseVertFlex !items-start gap-4 p-4">
+          <div className="baseVertFlex mt-6 !items-start gap-4 rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
             <p className="text-lg font-medium">
               Enjoy exclusive benefits when you order direct
             </p>
@@ -524,7 +524,7 @@ export default function Home() {
             <Button size={"lg"} asChild>
               <Link
                 href="/order"
-                className="baseFlex mt-2 gap-2 !px-4 !text-base shadow-md"
+                className="baseFlex mt-4 gap-2 self-center !px-4 !text-base shadow-md"
               >
                 <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
                 Order now
@@ -571,7 +571,7 @@ export default function Home() {
         </div>
 
         {/* Meet the Chef promo section */}
-        <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md  tablet:hidden">
+        <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md tablet:hidden">
           <div className="relative h-60 w-full overflow-hidden rounded-t-md">
             <Image
               src={eric}
@@ -631,7 +631,7 @@ export default function Home() {
             ></motion.div>
           </div>
 
-          <div className="baseVertFlex max-w-3xl !items-start gap-4 p-4">
+          <div className="baseVertFlex mt-4 max-w-3xl !items-start gap-4 rounded-md border bg-gradient-to-bl from-offwhite to-primary/10 p-6 shadow-md">
             <p className="text-lg font-medium">Meet the chef</p>
 
             <p className="max-w-lg xl:max-w-full">
@@ -690,7 +690,7 @@ export default function Home() {
         </div>
 
         <div className="baseFlex !hidden w-full gap-16 py-8  tablet:!flex">
-          <div className="baseVertFlex max-w-3xl gap-2 p-4">
+          <div className="baseVertFlex mt-4 max-w-3xl gap-2 rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
             <p className="text-lg font-medium">
               Planning a birthday dinner or get together with your friends?
             </p>
@@ -859,7 +859,7 @@ export default function Home() {
                 // dragFree: true,
                 // skipSnaps: true, play around with this
               }}
-              className="baseFlex w-full rounded-md border"
+              className="baseFlex w-full rounded-md border shadow-sm"
             >
               <CarouselContent>
                 <CarouselItem className="baseVertFlex relative basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">

@@ -141,13 +141,13 @@ function OurStory() {
         <title>Our story | Khue&apos;s</title>
         <meta
           name="description"
-          content="Discover the inspiring story behind Khue's Kitchen, where Chef Eric Pham honors his mother's legacy through modern Vietnamese cuisine, blending tradition with innovation."
+          content="Discover the inspiring story behind Khue's, where Chef Eric Pham honors his mother's legacy through modern Vietnamese cuisine, blending tradition with innovation."
         />
         <meta property="og:title" content="Our story | Khue's"></meta>
         <meta property="og:url" content="www.khueskitchen.com/our-story" />
         <meta
           property="og:description"
-          content="Discover the inspiring story behind Khue's Kitchen, where Chef Eric Pham honors his mother's legacy through modern Vietnamese cuisine, blending tradition with innovation."
+          content="Discover the inspiring story behind Khue's, where Chef Eric Pham honors his mother's legacy through modern Vietnamese cuisine, blending tradition with innovation."
         />
         <meta property="og:type" content="website" />
         {/* <meta
@@ -187,7 +187,7 @@ function OurStory() {
       </div>
 
       <div className="baseVertFlex relative w-full pb-24 tablet:w-3/4">
-        <div className="baseVertFlex mt-12 gap-4 tablet:!flex-row-reverse">
+        <div className="baseVertFlex mt-12 gap-4 tablet:!flex-row-reverse tablet:!items-start">
           <Carousel
             setApi={setCarouselApi}
             // this was just not working at all for us on the first attempt, seems to be fine as is
@@ -207,7 +207,7 @@ function OurStory() {
               loop: true,
               // skipSnaps: true, play around with this
             }}
-            className="baseFlex rounded-md tablet:!flex-col tablet:p-0"
+            className="baseFlex rounded-md tablet:-mt-2 tablet:!flex-col tablet:p-0"
           >
             {/* touch-pan-x tablet:touch-pan-y*/}
 
@@ -251,7 +251,7 @@ function OurStory() {
                 src={test}
                 alt={"Quang's"}
                 sizes="(max-width: 1000px) 80px, 96px"
-                className="!relative !size-full rounded-md"
+                className="!relative !size-full rounded-md object-cover"
                 onClick={() => carouselApi?.scrollTo(0)}
               />
             </Button>
@@ -263,7 +263,7 @@ function OurStory() {
                 src={test}
                 alt={"Quang's"}
                 sizes="(max-width: 1000px) 80px, 96px"
-                className="!relative !size-full rounded-md"
+                className="!relative !size-full rounded-md object-cover"
                 onClick={() => carouselApi?.scrollTo(1)}
               />
             </Button>
@@ -275,7 +275,7 @@ function OurStory() {
                 src={test}
                 alt={"Quang's"}
                 sizes="(max-width: 1000px) 80px, 96px"
-                className="!relative !size-full rounded-md"
+                className="!relative !size-full rounded-md object-cover"
                 onClick={() => carouselApi?.scrollTo(2)}
               />
             </Button>
@@ -287,7 +287,7 @@ function OurStory() {
                 src={test}
                 alt={"Quang's"}
                 sizes="(max-width: 1000px) 80px, 96px"
-                className="!relative !size-full rounded-md"
+                className="!relative !size-full rounded-md object-cover"
                 onClick={() => carouselApi?.scrollTo(3)}
               />
             </Button>
@@ -419,7 +419,7 @@ function RestaurantAndBackstory({ name, backstory }: RestaurantAndBackstory) {
         src={test}
         alt="Khue's"
         sizes="(max-width: 400px) 320px, (max-width: 640px) 384px, (max-width: 1000px) 600px, 33vw"
-        className="!relative !w-80 rounded-t-md object-cover sm:!w-96 tablet:!h-[450px] tablet:!w-[600px] tablet:rounded-md"
+        className="!relative !w-80 rounded-t-md object-cover shadow-sm sm:!w-96 tablet:!h-[450px] tablet:!w-[600px] tablet:rounded-md"
       />
 
       <div className="baseVertFlex w-full max-w-80 gap-2 rounded-b-md p-4 sm:max-w-md tablet:absolute tablet:bottom-0 tablet:left-0 tablet:!items-start tablet:rounded-br-none tablet:rounded-tr-md tablet:bg-gradient-to-tr tablet:from-black tablet:to-black/50 tablet:text-offwhite">

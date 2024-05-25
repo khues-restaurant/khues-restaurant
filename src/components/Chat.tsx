@@ -113,7 +113,7 @@ function Chat() {
     // could technically debounce but this should be fine
     <div
       key={chatIsOpen ? "manualRerenderChat1" : "manualRerenderChat2"}
-      className="baseFlex !sticky bottom-0 h-0 w-full !justify-end pr-6 tablet:pr-8"
+      className="baseFlex !sticky bottom-0 z-20 h-0 w-full !justify-end pr-6 tablet:pr-8"
     >
       {viewportLabel.includes("mobile") ? (
         <AlertDialog open={chatIsOpen}>
@@ -134,7 +134,7 @@ function Chat() {
                 style={{
                   paddingBottom: asPath.includes("/profile") ? "18rem" : "8rem",
                 }}
-                className="relative z-10 size-10 tablet:hidden"
+                className="relative z-20 size-10 tablet:hidden"
               >
                 <AlertDialogTrigger asChild>
                   <Button
@@ -264,7 +264,7 @@ function Chat() {
               opacity: 0,
             }}
             transition={{ duration: 0.2 }}
-            className="relative z-10 mb-[120px] hidden size-14 rounded-full shadow-md tablet:block"
+            className="relative z-20 mb-[120px] hidden size-14 rounded-full shadow-md tablet:block"
           >
             <PopoverTrigger asChild>
               <Button className="size-14 rounded-full shadow-md">

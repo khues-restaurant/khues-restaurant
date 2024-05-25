@@ -165,7 +165,7 @@ function Track() {
         <meta property="og:type" content="website" />
       </Head>
 
-      <div className="baseVertFlex w-full gap-4 px-0 py-4 tablet:max-w-2xl tablet:p-8">
+      <div className="baseVertFlex mb-8 w-full gap-4 px-0 py-4 tablet:max-w-2xl tablet:p-8">
         <AnimatePresence mode="popLayout">
           {order && minTimeoutElapsed ? (
             <motion.div
@@ -174,7 +174,7 @@ function Track() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="baseVertFlex size-full !justify-start gap-8 p-4"
+              className="baseVertFlex size-full !justify-start gap-8 p-2 sm:p-4"
             >
               <div className="baseVertFlex w-full gap-2">
                 {/* animated progress bar */}
@@ -673,7 +673,7 @@ function Track() {
                   </div>
                 )}
               </div>
-              <div className="baseFlex tablet:w-[500px]">
+              <div className="baseFlex w-full max-w-[400px] sm:max-w-[500px]">
                 <OrderSummary order={order} />
               </div>
               <Button
