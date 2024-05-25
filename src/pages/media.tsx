@@ -125,7 +125,7 @@ function Media() {
         </div>
       </div>
 
-      <div className="relative grid w-80 grid-cols-1 gap-8 py-16 pb-24 tablet:w-[900px] tablet:grid-cols-2 tablet:gap-16">
+      <div className="relative grid w-80 grid-cols-1 gap-8 py-16 pb-24 tablet:w-[900px] tablet:grid-cols-2 tablet:gap-16 desktop:w-[1200px] desktop:grid-cols-3">
         <div className="baseVertFlex h-min w-full !justify-start rounded-md border-2 border-primary shadow-md">
           <div className="baseVertFlex relative w-full bg-primary shadow-md">
             <a
