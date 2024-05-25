@@ -54,34 +54,34 @@ function Media() {
       <div className="baseFlex relative h-56 w-full overflow-hidden bg-darkPrimary shadow-md tablet:h-72">
         {/* below: pick one or the other, or neither but they can't work together for sure */}
 
-        <div className="absolute inset-0 grid w-full grid-cols-2 grid-rows-2 tablet:grid-cols-4 tablet:grid-rows-1">
+        <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1 tablet:h-72">
           <Image
             src={kare11InTheKitchen}
             alt="TODO"
             fill
             // sizes="(min-width: 1000px) 400px, 320px"
-            className="!relative !size-full object-cover opacity-20"
+            className="!relative !size-full object-cover object-top opacity-20"
           />
           <Image
             src={kare11MothersDay}
             alt="TODO"
             fill
             // sizes="(min-width: 1000px) 400px, 320px"
-            className="!relative !size-full object-cover opacity-20"
+            className="!relative !size-full object-cover object-top opacity-20"
           />
           <Image
             src={starTribune}
             alt="TODO"
             fill
             // sizes="(min-width: 1000px) 400px, 320px"
-            className="!relative !size-full object-cover opacity-20"
+            className="!relative !size-full object-cover object-top opacity-20"
           />
           <Image
             src={mpr}
             alt="TODO"
             fill
             // sizes="(min-width: 1000px) 400px, 320px"
-            className="!relative !size-full object-cover opacity-20"
+            className="!relative !size-full object-cover object-top opacity-20"
           />
         </div>
 
