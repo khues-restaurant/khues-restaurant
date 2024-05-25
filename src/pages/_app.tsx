@@ -21,17 +21,20 @@ function MyApp({ Component, pageProps }: ComponentWithPageLayout) {
 
   // trying to fix weird mobile scroll issue when navigating between (maybe just
   // pages with nested layouts?) where the page would not scroll to the top when loaded
-  useEffect(() => {
-    const handleRouteChange = () => {
-      window.scrollTo(0, 0);
-    };
+  // useEffect(() => {
+  //   const handleRouteChange = () => {
+  //     setTimeout(() => {
+  //       console.log("hi");
+  //       window.scrollTo(0, 0);
+  //     }, 50);
+  //   };
 
-    events.on("routeChangeComplete", handleRouteChange);
+  //   events.on("routeChangeComplete", handleRouteChange);
 
-    return () => {
-      events.off("routeChangeComplete", handleRouteChange);
-    };
-  }, [events]);
+  //   return () => {
+  //     events.off("routeChangeComplete", handleRouteChange);
+  //   };
+  // }, [events]);
 
   return (
     <ClerkProvider

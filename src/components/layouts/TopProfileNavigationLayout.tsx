@@ -1,6 +1,6 @@
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
-import { useMemo, type ReactNode } from "react";
+import { useEffect, useMemo, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CiGift } from "react-icons/ci";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -15,6 +15,12 @@ interface Layout {
 function TopProfileNavigationLayout({ children }: Layout) {
   const { isSignedIn } = useAuth();
   const { asPath } = useRouter();
+
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 50);
+  }, []);
 
   const finalQueryOfUrl = useMemo(() => {
     if (asPath.includes("/rewards")) return "rewards";
