@@ -192,8 +192,7 @@ function ItemCustomizerDialogContent({
           <div
             className="absolute left-0 top-0 size-full rounded-md bg-primary"
             style={{
-              maskImage:
-                "linear-gradient(to bottom right, black 60%, transparent 50%)",
+              clipPath: "polygon(100% 0, 100% 24%, 32% 100%, 0 100%, 0 0)",
             }}
           ></div>
 
@@ -205,10 +204,8 @@ function ItemCustomizerDialogContent({
             className="z-10 my-4 mr-16 rounded-md"
           />
 
-          <div className="baseFlex absolute bottom-0 left-4 gap-4 rounded-t-md bg-offwhite px-4 py-2 text-xl font-semibold">
+          <div className="baseFlex absolute bottom-0 left-4 gap-4 rounded-t-md border border-b-0 bg-offwhite px-4 py-2 text-xl font-semibold">
             <div className="baseFlex gap-2">{itemToCustomize.name}</div>
-
-            {/* TODO: wrap the like button in a Popover to show "Only rewards members can favorite items" */}
 
             {isSignedIn && (
               <AnimatePresence>
