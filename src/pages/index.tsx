@@ -193,7 +193,7 @@ export default function Home() {
           />
           <div className="baseVertFlex w-[226px] gap-1 rounded-md text-center">
             <h1 className="text-2xl font-bold">Welcome to Khue&apos;s</h1>
-            <p className="text-base leading-5">
+            <p className="text-base leading-5 text-stone-500">
               A modern take on classic Vietnamese cuisine.
             </p>
             <Button size={"lg"} asChild>
