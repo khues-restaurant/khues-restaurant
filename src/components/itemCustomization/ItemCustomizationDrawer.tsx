@@ -161,14 +161,12 @@ function ItemCustomizationDrawer({
         <div
           className={`baseVertFlex relative w-full gap-2 ${forCart ? "mt-12" : "mt-8"}`}
         >
-          <div className="baseFlex relative w-full !justify-between px-8">
+          <div className="baseFlex relative w-full !items-start !justify-between px-8">
             <div className="baseFlex gap-2">
               <p className="text-xl font-semibold underline underline-offset-2">
                 {itemToCustomize.name}
               </p>
             </div>
-
-            {/* TODO: wrap the like button in a Popover to show "Only rewards members can favorite items" */}
 
             {isSignedIn && (
               <AnimatePresence>
