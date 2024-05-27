@@ -179,6 +179,9 @@ export default function Home() {
           />
         </div>
 
+        {/* bg-gradient-to-br from-offwhite to-primary/10
+        ^ should be fine to include this if you can move the media carousel down
+        the page somehow. Just not sure of where exactly it should move to yet */}
         <section className="baseFlex w-full gap-8 rounded-md bg-offwhite py-4 shadow-md">
           <Image
             src={khuesKitchenLogo}
@@ -190,13 +193,13 @@ export default function Home() {
           />
           <div className="baseVertFlex w-[226px] gap-1 rounded-md text-center">
             <h1 className="text-2xl font-bold">Welcome to Khue&apos;s</h1>
-            <p className="text-lg">
+            <p className="text-base leading-5">
               A modern take on classic Vietnamese cuisine.
             </p>
             <Button size={"lg"} asChild>
               <Link
                 href="/order"
-                className="baseFlex mt-2 gap-2 !px-4 !text-base shadow-md"
+                className="baseFlex mt-4 gap-2 !px-4 !text-base shadow-md"
               >
                 <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
                 Order now
@@ -271,7 +274,7 @@ export default function Home() {
         </div>
 
         <div className="baseVertFlex absolute top-0 h-full xl:!left-16 2xl:!left-24 tablet:left-8">
-          <section className="baseFlex gap-12 rounded-md bg-offwhite py-8 pl-12 pr-16 shadow-md">
+          <section className="baseFlex gap-12 rounded-md border bg-offwhite bg-gradient-to-br from-offwhite to-primary/10 py-8 pl-12 pr-16 shadow-xl">
             <Image
               src={khuesKitchenLogo}
               alt={"TODO: fill in w/ appropriate alt text"}
@@ -280,7 +283,7 @@ export default function Home() {
             />
             <div className="baseVertFlex !items-start gap-1 rounded-md">
               <h1 className="text-4xl font-bold">Welcome to Khue&apos;s</h1>
-              <p className="w-72 text-2xl">
+              <p className="w-72 text-2xl text-stone-500">
                 A modern take on classic Vietnamese cuisine.
               </p>
               <Button size={"lg"} asChild>
