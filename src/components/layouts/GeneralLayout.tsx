@@ -50,7 +50,7 @@ function GeneralLayout({ children }: GeneralLayout) {
 
   return (
     <>
-      <main className="baseVertFlex relative min-h-dvh !justify-between">
+      <main className="baseVertFlex bg-body relative min-h-dvh !justify-between">
         <HeaderShell />
 
         {/* still use mode="wait"? */}

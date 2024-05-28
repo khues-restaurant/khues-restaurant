@@ -74,6 +74,7 @@ const config = {
         gold: "hsl(var(--gold))",
         borderGold: "hsl(var(--borderGold))",
         darkPrimary: "hsl(var(--darkPrimary))",
+        body: "hsl(var(--body))",
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -306,14 +306,15 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="baseFlex z-10 size-full bg-offwhite shadow-lg tablet:shadow-none"
+          // bg is background color of the <body>, 1% off from what bg-offwhite is
+          className="baseFlex bg-body z-10 size-full shadow-lg tablet:shadow-none"
         >
           <Sticky
             top={viewportLabel.includes("mobile") ? 95 : 112}
-            activeClass="bg-offwhite h-12"
-            innerActiveClass="bg-offwhite baseFlex px-2 py-1 h-16 shadow-lg tablet:shadow-none"
-            innerClass="bg-offwhite w-full h-12"
-            className="baseFlex w-full bg-offwhite p-2"
+            activeClass="bg-inherit h-12"
+            innerActiveClass="bg-inherit baseFlex px-2 py-1 h-16 shadow-lg tablet:shadow-none"
+            innerClass="bg-inherit w-full h-12"
+            className="baseFlex w-full bg-inherit p-2"
             shouldFreeze={() => {
               return cartDrawerIsOpen;
             }}
