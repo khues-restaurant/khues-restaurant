@@ -4,6 +4,7 @@ import CartDrawer from "~/components/cart/CartDrawer";
 import RewardsDrawer from "~/components/cart/RewardsDrawer";
 import ItemCustomizationDrawer from "~/components/itemCustomization/ItemCustomizationDrawer";
 import { Drawer, DrawerContent } from "~/components/ui/drawer";
+import { Sheet, SheetContent } from "~/components/ui/sheet";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { useMainStore, type Item } from "~/stores/MainStore";
 
@@ -29,7 +30,7 @@ function CartDrawerWrapper({ pickupName, setPickupName }: CartDrawerWrapper) {
   }
 
   return (
-    <Drawer
+    <Sheet
       open={cartDrawerIsOpen}
       onOpenChange={(open) => {
         setCartDrawerIsOpen(open);
@@ -41,7 +42,7 @@ function CartDrawerWrapper({ pickupName, setPickupName }: CartDrawerWrapper) {
         }
       }}
     >
-      <DrawerContent>
+      <SheetContent side={"bottom"}>
         <div
           style={{
             height: getDrawerHeight(),
@@ -83,8 +84,8 @@ function CartDrawerWrapper({ pickupName, setPickupName }: CartDrawerWrapper) {
             )}
           </AnimatePresence>
         </div>
-      </DrawerContent>
-    </Drawer>
+      </SheetContent>
+    </Sheet>
   );
 }
 

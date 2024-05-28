@@ -182,7 +182,8 @@ interface StoreState {
   initViewportLabelSet: boolean;
   setInitViewportLabelSet: (initViewportLabelSet: boolean) => void;
 
-  // just to let <Sticky> know whether to freeze itself or not
+  // kind of deprecated: can just use one state for both cartSheets since we aren't
+  // using <Drawer> anymore
   cartDrawerIsOpen: boolean;
   setCartDrawerIsOpen: (cartDrawerIsOpen: boolean) => void;
 

@@ -63,6 +63,18 @@ import { TbLocation } from "react-icons/tb";
 import { Separator } from "~/components/ui/separator";
 import { Input } from "~/components/ui/input";
 
+function getSafeAreaInsetBottom() {
+  // Create a temporary element to get the CSS variable
+  const testElement = document.createElement("div");
+  testElement.style.cssText = "padding-bottom: env(safe-area-inset-bottom, 0);";
+  document.body.appendChild(testElement);
+  const safeAreaInsetBottom = parseFloat(
+    getComputedStyle(testElement).paddingBottom,
+  );
+  document.body.removeChild(testElement);
+  return safeAreaInsetBottom;
+}
+
 interface OrderCost {
   subtotal: number;
   tax: number;
@@ -408,6 +420,18 @@ function CartDrawer({
     discounts,
   ]);
 
+  const [paddingBottom, setPaddingBottom] = useState("0.75rem");
+
+  useEffect(() => {
+    const safeAreaInsetBottom = getSafeAreaInsetBottom();
+
+    if (safeAreaInsetBottom > 0) {
+      setPaddingBottom(`${safeAreaInsetBottom}px`);
+    } else {
+      setPaddingBottom("0.75rem");
+    }
+  }, []);
+
   async function onMainFormSubmit(values: z.infer<typeof mainFormSchema>) {
     setCheckoutButtonText("Loading");
 
@@ -425,12 +449,12 @@ function CartDrawer({
       }}
       className="baseVertFlex relative size-full !justify-start overflow-y-auto"
     >
-      <div className="baseVertFlex w-full !items-start gap-1 border-b-2 p-4">
+      <div className="baseVertFlex w-full !items-start gap-1 border-b p-4">
         <div className="baseFlex !items-start gap-1">
           <LiaShoppingBagSolid className="h-6 w-6" />
           <p className="text-lg font-medium">Your order</p>
         </div>
-        <p className="baseFlex ml-1 h-4 gap-1.5">
+        <p className="baseFlex ml-1 h-4 gap-1.5 text-stone-600">
           <AnimatedNumbers value={numberOfItems} fontSize={16} padding={0} />
 
           {`item${numberOfItems === 1 ? "" : "s"}`}
@@ -1068,6 +1092,9 @@ function CartDrawer({
           </div>
 
           <div
+            style={{
+              paddingBottom,
+            }}
             className="baseVertFlex min-h-24 w-full gap-2 overflow-hidden border-t
         bg-gradient-to-br from-stone-200 to-stone-300 p-4 py-2 shadow-inner"
           >

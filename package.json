@@ -62,7 +62,6 @@
     "react-hook-form": "^7.50.1",
     "react-icons": "^5.0.1",
     "react-scroll-parallax": "^3.4.5",
-    "react-stickynode": "^4.1.1",
     "receiptline": "^1.16.1",
     "resend": "^3.2.0",
     "stripe": "^15.7.0",

@@ -17,6 +17,7 @@ import { LuMinus, LuPlus, LuVegan } from "react-icons/lu";
 import AnimatedPrice from "~/components/AnimatedPrice";
 import { Button } from "~/components/ui/button";
 import { DrawerFooter } from "~/components/ui/drawer";
+import { SheetFooter } from "~/components/ui/sheet";
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Switch } from "~/components/ui/switch";
@@ -49,6 +50,18 @@ import { useAuth } from "@clerk/nextjs";
 import { ToastAction } from "~/components/ui/toast";
 import { useToast } from "~/components/ui/use-toast";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
+
+function getSafeAreaInsetBottom() {
+  // Create a temporary element to get the CSS variable
+  const testElement = document.createElement("div");
+  testElement.style.cssText = "padding-bottom: env(safe-area-inset-bottom, 0);";
+  document.body.appendChild(testElement);
+  const safeAreaInsetBottom = parseFloat(
+    getComputedStyle(testElement).paddingBottom,
+  );
+  document.body.removeChild(testElement);
+  return safeAreaInsetBottom;
+}
 
 interface ItemCustomizationDrawer {
   setIsDrawerOpen?: Dispatch<SetStateAction<boolean>>;
@@ -132,6 +145,18 @@ function ItemCustomizationDrawer({
 
   const { toast } = useToast();
 
+  const [paddingBottom, setPaddingBottom] = useState("0.75rem");
+
+  useEffect(() => {
+    const safeAreaInsetBottom = getSafeAreaInsetBottom();
+
+    if (safeAreaInsetBottom > 0) {
+      setPaddingBottom(`${safeAreaInsetBottom}px`);
+    } else {
+      setPaddingBottom("0.75rem");
+    }
+  }, []);
+
   return (
     <motion.div
       key={itemToCustomize.name}
@@ -142,9 +167,9 @@ function ItemCustomizationDrawer({
         duration: 0.35,
         ease: "easeInOut",
       }}
-      className="baseVertFlex h-full max-h-[85dvh] w-full !justify-start"
+      className="baseVertFlex h-[85dvh] w-full !justify-start"
     >
-      <div className="baseVertFlex relative w-full max-w-xl !justify-start overflow-y-auto">
+      <div className="baseVertFlex relative h-full w-full max-w-xl !justify-start overflow-y-auto pb-16">
         {forCart && (
           <Button
             variant="underline"
@@ -163,7 +188,7 @@ function ItemCustomizationDrawer({
         >
           <div className="baseFlex relative w-full !items-start !justify-between px-8">
             <div className="baseFlex gap-2">
-              <p className="text-xl font-semibold underline underline-offset-2">
+              <p className="max-w-52 text-xl font-semibold underline underline-offset-2">
                 {itemToCustomize.name}
               </p>
             </div>
@@ -230,7 +255,7 @@ function ItemCustomizationDrawer({
             alt={itemToCustomize.name}
             width={180}
             height={180}
-            className="rounded-md"
+            className="my-4 rounded-md"
           />
         </div>
 
@@ -395,10 +420,13 @@ function ItemCustomizationDrawer({
         </div>
       </div>
 
-      <DrawerFooter>
+      <SheetFooter>
         <div
+          style={{
+            paddingBottom,
+          }}
           className={`baseFlex w-full bg-gradient-to-br from-stone-200 
-        to-stone-300/80 px-4 py-3 shadow-inner ${
+        to-stone-300 px-4 py-3 shadow-inner ${
           itemOrderDetails?.birthdayReward || itemOrderDetails?.pointReward
             ? "!justify-end"
             : "!justify-between"
@@ -516,7 +544,7 @@ function ItemCustomizationDrawer({
             </div>
           </Button>
         </div>
-      </DrawerFooter>
+      </SheetFooter>
     </motion.div>
   );
 }

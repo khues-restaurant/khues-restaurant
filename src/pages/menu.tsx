@@ -9,7 +9,6 @@ import { IoIosWine } from "react-icons/io";
 import { FaWineBottle } from "react-icons/fa";
 import { LuVegan } from "react-icons/lu";
 import { SiLeaflet } from "react-icons/si";
-import Sticky from "react-stickynode";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
 import {
@@ -157,28 +156,8 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
     };
   }, [categoryScrollYValues, currentlyInViewCategory]);
 
-  const [cartDrawerIsOpeningOrClosing, setCartDrawerIsOpeningOrClosing] =
-    useState(false);
-
   useEffect(() => {
-    if (cartDrawerIsOpen) {
-      setCartDrawerIsOpeningOrClosing(true);
-    } else {
-      setTimeout(() => {
-        setCartDrawerIsOpeningOrClosing(false);
-      }, 700);
-    }
-  }, [cartDrawerIsOpen]);
-
-  useEffect(() => {
-    if (
-      // needed to prevent scrolling to category when drawer is opening/closing
-      // (page scrolls to top when <Drawer> is open, so this is the workaround
-      cartDrawerIsOpeningOrClosing ||
-      programmaticallyScrolling ||
-      currentlyInViewCategory === ""
-    )
-      return;
+    if (programmaticallyScrolling || currentlyInViewCategory === "") return;
 
     const currentlyInViewCategoryListOrderIndex =
       menuCategoryIndicies[currentlyInViewCategory];
@@ -189,7 +168,6 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
       stickyCategoriesApi?.scrollTo(currentlyInViewCategoryListOrderIndex);
     }, 0);
   }, [
-    cartDrawerIsOpeningOrClosing,
     currentlyInViewCategory,
     menuCategoryIndicies,
     programmaticallyScrolling,
@@ -248,7 +226,7 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
 
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72">
-        <div className="baseFlex absolute left-0 top-0 size-full border-b-2 bg-gradient-to-br from-primary to-darkPrimary tablet:gap-8 desktop:gap-16">
+        <div className="baseFlex absolute left-0 top-0 size-full bg-gradient-to-br from-primary to-darkPrimary tablet:gap-8 desktop:gap-16">
           <Image
             src={sampleImage}
             alt={"TODO: fill in w/ appropriate alt text"}
@@ -299,101 +277,83 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
         </div>
       </div>
 
-      <div className="baseVertFlex relative w-full pb-8 tablet:w-3/4">
-        <motion.div
-          key={"menuCategoriesPicker"}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-          // bg is background color of the <body>, 1% off from what bg-offwhite is
-          className="baseFlex bg-body z-10 size-full shadow-lg tablet:shadow-none"
+      <div
+        // bg is background color of the <body>, 1% off from what bg-offwhite is
+        className="baseFlex bg-body sticky left-0 top-24 z-10 size-full h-16 w-full shadow-lg tablet:top-28 tablet:h-16 tablet:w-3/4 tablet:shadow-none"
+      >
+        <Carousel
+          setApi={setStickyCategoriesApi}
+          opts={{
+            breakpoints: {
+              "(min-width: 1000px)": {
+                active: false,
+              },
+            },
+            dragFree: true,
+            align: "start",
+          }}
+          className="baseFlex w-full"
         >
-          <Sticky
-            top={viewportLabel.includes("mobile") ? 95 : 112}
-            activeClass="bg-inherit h-12"
-            innerActiveClass="bg-inherit baseFlex px-2 py-1 h-16 shadow-lg tablet:shadow-none"
-            innerClass="bg-inherit w-full h-12"
-            className="baseFlex w-full bg-inherit p-2"
-            shouldFreeze={() => {
-              return cartDrawerIsOpen;
-            }}
-          >
-            <Carousel
-              setApi={setStickyCategoriesApi}
-              opts={{
-                breakpoints: {
-                  "(min-width: 1000px)": {
-                    active: false,
-                  },
-                },
-                dragFree: true,
-                align: "start",
-              }}
-              className="baseFlex w-full"
-            >
-              <CarouselContent>
-                {menuCategories?.map((category) => {
-                  if (category.name === "Beer") {
-                    return (
-                      <div key={category.id} className="baseFlex gap-2">
-                        <Separator
-                          orientation="vertical"
-                          className="ml-4 mr-2 h-full w-[2px]"
-                        />
-                        <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
-                          <MenuCategoryButton
-                            key={category.id}
-                            name={category.name}
-                            listOrder={menuCategoryIndicies.Beer!}
-                            currentlyInViewCategory={currentlyInViewCategory}
-                            setProgrammaticallyScrolling={
-                              setProgrammaticallyScrolling
-                            }
-                          />
-                        </CarouselItem>
-                      </div>
-                    );
-                  }
-
-                  return (
-                    <CarouselItem
-                      className="baseFlex basis-1/5 tablet:basis-auto"
-                      key={category.id}
-                    >
+          <CarouselContent>
+            {menuCategories?.map((category) => {
+              if (category.name === "Beer") {
+                return (
+                  <div key={category.id} className="baseFlex gap-2">
+                    <Separator
+                      orientation="vertical"
+                      className="ml-4 mr-2 h-full w-[2px]"
+                    />
+                    <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
                       <MenuCategoryButton
+                        key={category.id}
                         name={category.name}
-                        listOrder={menuCategoryIndicies[category.name] ?? 0}
+                        listOrder={menuCategoryIndicies.Beer!}
                         currentlyInViewCategory={currentlyInViewCategory}
                         setProgrammaticallyScrolling={
                           setProgrammaticallyScrolling
                         }
                       />
                     </CarouselItem>
-                  );
-                })}
+                  </div>
+                );
+              }
 
-                <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
+              return (
+                <CarouselItem
+                  className="baseFlex basis-1/5 tablet:basis-auto"
+                  key={category.id}
+                >
                   <MenuCategoryButton
-                    name={"Mixed Drinks"}
-                    listOrder={menuCategoryIndicies["Mixed Drinks"]!}
+                    name={category.name}
+                    listOrder={menuCategoryIndicies[category.name] ?? 0}
                     currentlyInViewCategory={currentlyInViewCategory}
                     setProgrammaticallyScrolling={setProgrammaticallyScrolling}
                   />
                 </CarouselItem>
-              </CarouselContent>
-            </Carousel>
+              );
+            })}
 
-            {/* Custom scrollbar indicating scroll progress */}
-            <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-200">
-              <div
-                style={{ width: `${scrollProgress}%` }}
-                className="h-1 bg-primary"
-              ></div>
-            </div>
-          </Sticky>
-        </motion.div>
+            <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
+              <MenuCategoryButton
+                name={"Mixed Drinks"}
+                listOrder={menuCategoryIndicies["Mixed Drinks"]!}
+                currentlyInViewCategory={currentlyInViewCategory}
+                setProgrammaticallyScrolling={setProgrammaticallyScrolling}
+              />
+            </CarouselItem>
+          </CarouselContent>
+        </Carousel>
 
+        {/* Custom scrollbar indicating scroll progress */}
+        <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-200">
+          <div
+            style={{ width: `${scrollProgress}%` }}
+            className="h-1 bg-primary"
+          ></div>
+        </div>
+      </div>
+
+      <div className="baseVertFlex relative w-full pb-8 tablet:w-3/4">
         <motion.div
           key={"menuContent"}
           initial={{ opacity: 0 }}

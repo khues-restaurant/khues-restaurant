@@ -416,7 +416,7 @@ function ItemCustomizerDialogContent({
         <DialogFooter>
           <div
             className="baseFlex bottom-0 left-0 w-full !justify-end bg-gradient-to-br from-stone-200 
-        to-stone-300/80 px-4 py-3 shadow-inner tablet:rounded-b-md"
+        to-stone-300 px-4 py-3 shadow-inner tablet:rounded-b-md"
           >
             <div className="baseFlex w-75 !justify-end gap-2 tablet:w-96 tablet:gap-6">
               {!itemOrderDetails?.birthdayReward &&

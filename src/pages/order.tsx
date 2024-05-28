@@ -9,11 +9,10 @@ import {
   Fragment,
 } from "react";
 import { LuPlus } from "react-icons/lu";
-import Sticky from "react-stickynode";
 import ItemCustomizationDialog from "~/components/itemCustomization/ItemCustomizationDialog";
 import ItemCustomizationDrawer from "~/components/itemCustomization/ItemCustomizationDrawer";
 import { Button } from "~/components/ui/button";
-import { Drawer, DrawerContent } from "~/components/ui/drawer";
+import { Sheet, SheetContent } from "~/components/ui/sheet";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { useMainStore } from "~/stores/MainStore";
@@ -242,28 +241,8 @@ function OrderNow() {
     };
   }, []);
 
-  const [aDrawerIsOpeningOrClosing, setADrawerIsOpeningOrClosing] =
-    useState(false);
-
   useEffect(() => {
-    if (isDrawerOpen || cartDrawerIsOpen) {
-      setADrawerIsOpeningOrClosing(true);
-    } else {
-      setTimeout(() => {
-        setADrawerIsOpeningOrClosing(false);
-      }, 700);
-    }
-  }, [isDrawerOpen, cartDrawerIsOpen]);
-
-  useEffect(() => {
-    if (
-      // needed to prevent scrolling to category when drawer is opening/closing
-      // (page scrolls to top when <Drawer> is open, so this is the workaround
-      aDrawerIsOpeningOrClosing ||
-      programmaticallyScrolling ||
-      currentlyInViewCategory === ""
-    )
-      return;
+    if (programmaticallyScrolling || currentlyInViewCategory === "") return;
 
     const currentlyInViewCategoryListOrderIndex =
       menuCategoryIndicies![currentlyInViewCategory];
@@ -274,7 +253,6 @@ function OrderNow() {
       stickyCategoriesApi?.scrollTo(currentlyInViewCategoryListOrderIndex);
     }, 0);
   }, [
-    aDrawerIsOpeningOrClosing,
     currentlyInViewCategory,
     menuCategoryIndicies,
     programmaticallyScrolling,
@@ -282,12 +260,21 @@ function OrderNow() {
   ]);
 
   function ableToRenderMainContent() {
-    return (
-      menuCategories &&
-      menuCategoryIndicies &&
-      (isLoaded || isSignedIn !== undefined) // ensuring that clerk state is loaded fully, regardless
-      // of whether user is signed in or not
-    );
+    if (menuCategories === undefined || menuCategoryIndicies === undefined) {
+      return false;
+    }
+
+    if (userId !== "" && isSignedIn) {
+      if (userRecentOrders === undefined) {
+        return false;
+      }
+    }
+
+    if (!isSignedIn && !isLoaded) {
+      return false;
+    }
+
+    return true;
   }
 
   return (
@@ -383,100 +370,82 @@ function OrderNow() {
         </div>
       </div>
 
-      <div className="baseVertFlex relative size-full tablet:w-3/4">
-        {ableToRenderMainContent() && (
+      {ableToRenderMainContent() && (
+        <div
           // bg is background color of the <body>, 1% off from what bg-offwhite is
-          <div className="baseFlex bg-body z-10 h-12 w-full shadow-lg tablet:h-16 tablet:shadow-none">
-            <Sticky
-              top={viewportLabel.includes("mobile") ? 95 : 112}
-              activeClass="bg-inherit h-12"
-              innerActiveClass="bg-inherit baseFlex px-2 py-1 h-16 shadow-lg tablet:shadow-none"
-              innerClass="bg-inherit w-full h-12"
-              className="baseFlex w-full bg-inherit p-2"
-              shouldFreeze={() => {
-                return isDrawerOpen || cartDrawerIsOpen;
-              }}
-            >
-              <Carousel
-                setApi={setStickyCategoriesApi}
-                opts={{
-                  breakpoints: {
-                    "(min-width: 1000px)": {
-                      active: false,
-                    },
-                  },
-                  dragFree: true,
-                  align: "start",
-                }}
-                className="baseFlex w-full"
-              >
-                <CarouselContent>
-                  {userFavoriteItemIds.length > 0 && (
-                    <CarouselItem className="baseFlex basis-auto">
-                      <MenuCategoryButton
-                        name={"Favorites"}
-                        listOrder={menuCategoryIndicies!.Favorites!}
-                        currentlyInViewCategory={currentlyInViewCategory}
-                        setProgrammaticallyScrolling={
-                          setProgrammaticallyScrolling
-                        }
-                        programmaticallyScrolling={programmaticallyScrolling}
-                      />
-                    </CarouselItem>
-                  )}
+          className="baseFlex bg-body sticky left-0 top-24 z-10 size-full h-16 w-full shadow-lg tablet:top-28 tablet:h-16 tablet:w-3/4 tablet:shadow-none"
+        >
+          <Carousel
+            setApi={setStickyCategoriesApi}
+            opts={{
+              breakpoints: {
+                "(min-width: 1000px)": {
+                  active: false,
+                },
+              },
+              dragFree: true,
+              align: "start",
+            }}
+            className="baseFlex w-full"
+          >
+            <CarouselContent>
+              {userFavoriteItemIds.length > 0 && (
+                <CarouselItem className="baseFlex basis-auto">
+                  <MenuCategoryButton
+                    name={"Favorites"}
+                    listOrder={menuCategoryIndicies!.Favorites!}
+                    currentlyInViewCategory={currentlyInViewCategory}
+                    setProgrammaticallyScrolling={setProgrammaticallyScrolling}
+                    programmaticallyScrolling={programmaticallyScrolling}
+                  />
+                </CarouselItem>
+              )}
 
-                  {userRecentOrders && userRecentOrders.length > 0 && (
-                    <CarouselItem className="baseFlex basis-auto">
-                      <MenuCategoryButton
-                        name={"Recent orders"}
-                        listOrder={menuCategoryIndicies!["Recent orders"]!}
-                        currentlyInViewCategory={currentlyInViewCategory}
-                        setProgrammaticallyScrolling={
-                          setProgrammaticallyScrolling
-                        }
-                        programmaticallyScrolling={programmaticallyScrolling}
-                      />
-                    </CarouselItem>
-                  )}
+              {userRecentOrders && userRecentOrders.length > 0 && (
+                <CarouselItem className="baseFlex basis-auto">
+                  <MenuCategoryButton
+                    name={"Recent orders"}
+                    listOrder={menuCategoryIndicies!["Recent orders"]!}
+                    currentlyInViewCategory={currentlyInViewCategory}
+                    setProgrammaticallyScrolling={setProgrammaticallyScrolling}
+                    programmaticallyScrolling={programmaticallyScrolling}
+                  />
+                </CarouselItem>
+              )}
 
-                  {(userFavoriteItemIds.length > 0 ||
-                    (userRecentOrders && userRecentOrders.length > 0)) && (
-                    <Separator
-                      orientation="vertical"
-                      className="mx-2 h-[35px] w-[2px]"
-                    />
-                  )}
+              {(userFavoriteItemIds.length > 0 ||
+                (userRecentOrders && userRecentOrders.length > 0)) && (
+                <Separator
+                  orientation="vertical"
+                  className="mx-2 h-[35px] w-[2px]"
+                />
+              )}
 
-                  {menuCategories?.map((category) => (
-                    <CarouselItem
-                      className="baseFlex basis-auto"
-                      key={category.id}
-                    >
-                      <MenuCategoryButton
-                        name={category.name}
-                        listOrder={menuCategoryIndicies![category.name] ?? 0}
-                        currentlyInViewCategory={currentlyInViewCategory}
-                        setProgrammaticallyScrolling={
-                          setProgrammaticallyScrolling
-                        }
-                        programmaticallyScrolling={programmaticallyScrolling}
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-              </Carousel>
+              {menuCategories?.map((category) => (
+                <CarouselItem className="baseFlex basis-auto" key={category.id}>
+                  <MenuCategoryButton
+                    name={category.name}
+                    listOrder={menuCategoryIndicies![category.name] ?? 0}
+                    currentlyInViewCategory={currentlyInViewCategory}
+                    setProgrammaticallyScrolling={setProgrammaticallyScrolling}
+                    programmaticallyScrolling={programmaticallyScrolling}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
 
-              {/* Custom scrollbar indicating scroll progress */}
-              <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-200">
-                <div
-                  style={{ width: `${scrollProgress}%` }}
-                  className="h-1 bg-primary"
-                ></div>
-              </div>
-            </Sticky>
+          {/* Custom scrollbar indicating scroll progress */}
+          <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-200">
+            <div
+              style={{ width: `${scrollProgress}%` }}
+              className="h-1 bg-primary"
+            ></div>
           </div>
-        )}
+        </div>
+      )}
 
+      <div className="baseVertFlex relative size-full tablet:w-3/4">
         <AnimatePresence mode="popLayout">
           {ableToRenderMainContent() ? (
             <motion.div
@@ -568,7 +537,7 @@ function OrderNow() {
       </div>
 
       {viewportLabel.includes("mobile") ? (
-        <Drawer
+        <Sheet
           open={Boolean(isDrawerOpen && itemToCustomize)}
           onOpenChange={(open) => {
             if (!open) {
@@ -577,7 +546,7 @@ function OrderNow() {
             }
           }}
         >
-          <DrawerContent>
+          <SheetContent side={"bottom"}>
             <AnimatePresence>
               {itemToCustomize && (
                 <ItemCustomizationDrawer
@@ -586,8 +555,8 @@ function OrderNow() {
                 />
               )}
             </AnimatePresence>
-          </DrawerContent>
-        </Drawer>
+          </SheetContent>
+        </Sheet>
       ) : (
         <ItemCustomizationDialog
           isDialogOpen={isDialogOpen}
