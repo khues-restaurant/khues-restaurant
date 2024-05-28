@@ -365,3 +365,7 @@ body {
 .fifthMasonryInterior {
   grid-area: fifthInterior;
 }
+
+.cl-modalBackdrop {
+  height: 100dvh !important;
+}
