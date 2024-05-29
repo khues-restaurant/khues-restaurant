@@ -4,7 +4,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState, type ComponentProps } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ComponentProps,
+} from "react";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { PiCookingPotBold } from "react-icons/pi";
 import { TfiReceipt } from "react-icons/tfi";
@@ -84,7 +90,7 @@ function Track() {
     { top: 0, left: 0 },
   ]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     function updatePositions() {
       if (!order || !minTimeoutElapsed) return;
 
@@ -160,13 +166,6 @@ function Track() {
     setRewardsPointsTimerSet(true);
   }, [order, rewardsPointsTimerSet]);
 
-  // need maybe a decent bit of extra logic if you want to have each icon shake as the progress bar
-  // reaches their respective checkpoints rather than how it is now, which is just the current icon
-  // shakes since it's the current state.
-
-  // be wary: there's a decent chance that the easings won't update as you expect them to for when
-  // you are already on the page and the order status changes. Test this out to confirm/chatgpt
-
   return (
     <motion.div
       key={"tracking"}
@@ -205,6 +204,7 @@ function Track() {
                     {/* pre-first checkpoint */}
                     <div className="relative h-full w-[24%] tablet:w-[20%]">
                       <motion.div
+                        key={orderStatus}
                         initial={{ scaleX: "0%" }}
                         animate={{ scaleX: "100%" }}
                         transition={{
@@ -213,7 +213,7 @@ function Track() {
                             orderStatus === "orderPlaced"
                               ? "easeOut"
                               : "linear",
-                          delay: 1,
+                          delay: 1, // TODO: eventually try and use the indiv. function based on prevOrderStatus to make these dynamic?
                         }}
                         className="absolute left-0 top-0 size-full origin-left bg-primary"
                       ></motion.div>
@@ -237,6 +237,7 @@ function Track() {
                       {(orderStatus === "inProgress" ||
                         orderStatus === "readyForPickup") && (
                         <motion.div
+                          key={orderStatus}
                           initial={{ scaleX: "0%" }}
                           animate={{ scaleX: "100%" }}
                           transition={{
@@ -245,7 +246,7 @@ function Track() {
                               orderStatus === "inProgress"
                                 ? "easeOut"
                                 : "linear",
-                            delay: 2,
+                            delay: 2, // TODO: eventually try and use the indiv. function based on prevOrderStatus to make these dynamic?
                           }}
                           className="absolute left-0 top-0 size-full origin-left bg-primary"
                         ></motion.div>
@@ -274,12 +275,13 @@ function Track() {
                     <div className="relative h-full w-[40%] tablet:w-[46%]">
                       {orderStatus === "readyForPickup" && (
                         <motion.div
+                          key={orderStatus}
                           initial={{ scaleX: "0%" }}
                           animate={{ scaleX: "100%" }}
                           transition={{
                             duration: 1,
                             ease: "easeOut",
-                            delay: 3,
+                            delay: 3, // TODO: eventually try and use the indiv. function based on prevOrderStatus to make these dynamic?
                           }}
                           className="absolute left-0 top-0 size-full origin-left bg-primary"
                         ></motion.div>
@@ -406,7 +408,6 @@ function Track() {
                   </motion.div>
                 </div>
               </div>
-
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -746,15 +747,22 @@ function Step({
   const [statusBeingShown, setStatusBeingShown] = useState("notStarted");
 
   useEffect(() => {
+    let timeoutId = null;
+
     if (status === "completed" && forInProgressCheckpoint) {
       setStatusBeingShown("completed");
     } else {
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setStatusBeingShown(status);
       }, delay * 1000);
     }
 
     // do you need to clear timeout here inside of cleanup function?
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [status, delay, forInProgressCheckpoint]);
 
   return (
@@ -803,7 +811,7 @@ function Step({
             >
               <span
                 style={{
-                  animationDuration: "3s",
+                  animationDuration: "2.5s",
                 }}
                 className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75"
               ></span>
