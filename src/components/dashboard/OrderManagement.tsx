@@ -32,6 +32,7 @@ import { Separator } from "~/components/ui/separator";
 import { format } from "date-fns";
 import { useToast } from "~/components/ui/use-toast";
 import { type Socket } from "socket.io-client";
+import { toZonedTime } from "date-fns-tz";
 
 // type FullOrderItems = OrderItem & {
 //   customizations: OrderItemCustomization[];
@@ -418,9 +419,21 @@ function CustomerOrder({ order, view }: CustomerOrder) {
               <p className="baseFlex gap-2 text-lg font-semibold">
                 <>
                   {view === "completed" && order.orderCompletedAt ? (
-                    <>Completed at {format(order.orderCompletedAt, "h:mm a")}</>
+                    <>
+                      Completed at{" "}
+                      {format(
+                        toZonedTime(order.orderCompletedAt, "America/Chicago"),
+                        "h:mm a",
+                      )}
+                    </>
                   ) : (
-                    <>Due at {format(order.datetimeToPickup, "h:mm a")}</>
+                    <>
+                      Due at{" "}
+                      {format(
+                        toZonedTime(order.datetimeToPickup, "America/Chicago"),
+                        "h:mm a",
+                      )}
+                    </>
                   )}
                 </>
               </p>

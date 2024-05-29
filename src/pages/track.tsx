@@ -19,6 +19,7 @@ import { api } from "~/utils/api";
 import { getFirstSixNumbers } from "~/utils/getFirstSixNumbers";
 import { io } from "socket.io-client";
 import { env } from "~/env";
+import { toZonedTime } from "date-fns-tz";
 
 function Track() {
   const { isSignedIn } = useAuth();
@@ -473,7 +474,10 @@ function Track() {
                       Pickup time
                     </p>
                     <p className="text-sm">
-                      {format(order.datetimeToPickup, "PPPp")}
+                      {format(
+                        toZonedTime(order.datetimeToPickup, "America/Chicago"),
+                        "PPPp",
+                      )}
                     </p>
                   </div>
 
@@ -528,7 +532,13 @@ function Track() {
                         Pickup time
                       </p>
                       <p className="text-sm">
-                        {format(order.datetimeToPickup, "PPPp")}
+                        {format(
+                          toZonedTime(
+                            order.datetimeToPickup,
+                            "America/Chicago",
+                          ),
+                          "PPPp",
+                        )}
                       </p>
                     </div>
 

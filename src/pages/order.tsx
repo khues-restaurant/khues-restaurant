@@ -45,6 +45,7 @@ import { FaWineBottle } from "react-icons/fa6";
 
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";
+import { toZonedTime } from "date-fns-tz";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
@@ -373,7 +374,7 @@ function OrderNow() {
       {ableToRenderMainContent() && (
         <div
           // bg is background color of the <body>, 1% off from what bg-offwhite is
-          className="baseFlex bg-body sticky left-0 top-24 z-10 size-full h-16 w-full shadow-lg tablet:top-28 tablet:h-16 tablet:w-3/4 tablet:shadow-none"
+          className="baseFlex sticky left-0 top-24 z-10 size-full h-16 w-full bg-body shadow-lg tablet:top-28 tablet:h-16 tablet:w-3/4 tablet:shadow-none"
         >
           <Carousel
             setApi={setStickyCategoriesApi}
@@ -1337,7 +1338,10 @@ function PreviousOrder({ order }: PreviousOrder) {
         <div className="baseFlex relative size-full !items-start gap-4">
           <div className="baseVertFlex w-full !items-start gap-2">
             <p className="w-full !text-nowrap font-medium underline underline-offset-2">
-              {format(order.datetimeToPickup, "EEEE, MMMM do")}
+              {format(
+                toZonedTime(order.datetimeToPickup, "America/Chicago"),
+                "EEEE, MMMM do",
+              )}
             </p>
 
             <div className="baseVertFlex w-full !items-start text-xs text-stone-400">
@@ -1384,7 +1388,7 @@ function PreviousOrder({ order }: PreviousOrder) {
               addItemsFromPreviousOrderToCart({
                 userId,
                 orderDetails: {
-                  datetimeToPickup: getFirstValidMidnightDate(new Date()),
+                  datetimeToPickup: getFirstValidMidnightDate(),
                   isASAP: orderDetails.isASAP,
                   includeNapkinsAndUtensils: false,
                   items: order.orderItems.map((item, idx) => ({

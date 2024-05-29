@@ -17,6 +17,7 @@ import {
   Text,
 } from "@react-email/components";
 import { format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import * as React from "react";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import {
@@ -147,7 +148,13 @@ function Receipt({
                             Pickup time
                           </Text>
                           <Text className="my-0 text-left text-xs">
-                            {format(order.datetimeToPickup, "PPPp")}
+                            {format(
+                              toZonedTime(
+                                order.datetimeToPickup,
+                                "America/Chicago",
+                              ),
+                              "PPPp",
+                            )}
                           </Text>
                         </Column>
                       </Row>

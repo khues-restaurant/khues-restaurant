@@ -102,7 +102,7 @@ export interface OrderDetails {
 function resetStore() {
   return {
     orderDetails: {
-      datetimeToPickup: getFirstValidMidnightDate(new Date()),
+      datetimeToPickup: getFirstValidMidnightDate(),
       isASAP: false,
       items: [],
       tipPercentage: null,
@@ -111,7 +111,7 @@ function resetStore() {
       discountId: null,
     },
     prevOrderDetails: {
-      datetimeToPickup: getFirstValidMidnightDate(new Date()),
+      datetimeToPickup: getFirstValidMidnightDate(),
       isASAP: false,
       items: [],
       tipPercentage: null,
@@ -203,7 +203,7 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
   devtools(
     (set, get) => ({
       orderDetails: {
-        datetimeToPickup: getFirstValidMidnightDate(new Date()),
+        datetimeToPickup: getFirstValidMidnightDate(),
         isASAP: false,
         items: [],
         tipPercentage: null,
@@ -216,7 +216,7 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
       },
 
       prevOrderDetails: {
-        datetimeToPickup: getFirstValidMidnightDate(new Date()),
+        datetimeToPickup: getFirstValidMidnightDate(),
         isASAP: false,
         items: [],
         tipPercentage: null,

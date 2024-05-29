@@ -6,19 +6,20 @@ import { getMidnightDate } from "~/utils/getMidnightDate";
 import { isAbleToRenderASAPTimeSlot } from "~/utils/isAbleToRenderASAPTimeSlot";
 import { is30MinsFromDatetime } from "~/utils/is30MinsFromDatetime";
 import Decimal from "decimal.js";
+import { toZonedTime } from "date-fns-tz";
 import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
 
 function validateTimeToPickup(
   orderDetails: OrderDetails,
   minOrderPickupDatetime: Date,
 ) {
-  const now = new Date();
+  const now = toZonedTime(new Date(), "America/Chicago");
   const datetimeToPickup = orderDetails.datetimeToPickup;
 
   // ASAP time slot validation
   if (
     orderDetails.isASAP &&
-    isAbleToRenderASAPTimeSlot(new Date()) &&
+    isAbleToRenderASAPTimeSlot(now) &&
     now >= minOrderPickupDatetime
   ) {
     return;
@@ -28,7 +29,7 @@ function validateTimeToPickup(
   if (
     datetimeToPickup > now &&
     datetimeToPickup > minOrderPickupDatetime &&
-    is30MinsFromDatetime(datetimeToPickup, new Date())
+    is30MinsFromDatetime(datetimeToPickup, now)
   ) {
     return;
   }
@@ -228,11 +229,13 @@ export const validateOrderRouter = createTRPCRouter({
 
         // Discount
         if (item.discountId) {
+          const now = toZonedTime(new Date(), "America/Chicago");
+
           const dbDiscount = await ctx.prisma.discount.findFirst({
             where: {
               id: item.discountId,
               expirationDate: {
-                gt: new Date(),
+                gt: now,
               },
               active: true,
             },

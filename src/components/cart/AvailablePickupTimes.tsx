@@ -1,7 +1,9 @@
+import { toZonedTime } from "date-fns-tz";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { SelectGroup, SelectItem, SelectLabel } from "~/components/ui/select";
 import { formatTimeString } from "~/utils/formatTimeString";
+import { getMidnightDate } from "~/utils/getMidnightDate";
 import { is30MinsFromDatetime } from "~/utils/is30MinsFromDatetime";
 import { isAbleToRenderASAPTimeSlot } from "~/utils/isAbleToRenderASAPTimeSlot";
 import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
@@ -56,17 +58,17 @@ function AvailablePickupTimes({
       // intentially excluding last 30 mins slot to not stress kitchen at end of night.
     ];
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const now = toZonedTime(new Date(), "America/Chicago");
+    const todayAtMidnight = getMidnightDate(now);
 
     // if selectedDate is today, then we need to check if the current time
     // is past the minimum pickup time
-    if (selectedDate.getTime() === today.getTime() && minPickupTime) {
+    if (selectedDate.getTime() === todayAtMidnight.getTime() && minPickupTime) {
       basePickupTimes = basePickupTimes.filter((time, index) => {
         if (
           time === "ASAP (~20 mins)" &&
-          isAbleToRenderASAPTimeSlot(new Date()) &&
-          new Date() >= minPickupTime
+          isAbleToRenderASAPTimeSlot(now) &&
+          now >= minPickupTime
         ) {
           return true;
         }
@@ -77,10 +79,7 @@ function AvailablePickupTimes({
 
         // Time is 30+ mins from now to allow kitchen to prepare on time, and
         // also after the minPickupTime.
-        if (
-          is30MinsFromDatetime(datetime, new Date()) &&
-          datetime >= minPickupTime
-        ) {
+        if (is30MinsFromDatetime(datetime, now) && datetime >= minPickupTime) {
           return true;
         }
       });
@@ -91,15 +90,18 @@ function AvailablePickupTimes({
     setAvailablePickupTimes(basePickupTimes);
   }, [selectedDate, minPickupTime]);
 
+  // TODO: see if you can use the getMidnightDate function here, I know there were
+  // issues with rerendering too many times/infinitely before but I think it should
+  // be doable.
   const todayAtMidnight = useMemo(() => {
-    const today = new Date();
+    const today = toZonedTime(new Date(), "America/Chicago");
     today.setHours(0, 0, 0, 0);
 
     return today;
   }, []);
 
   const orderingIsNotAvailable = useMemo(() => {
-    const now = new Date();
+    const now = toZonedTime(new Date(), "America/Chicago");
 
     return (
       selectedDate.getTime() === todayAtMidnight.getTime() &&
@@ -114,8 +116,9 @@ function AvailablePickupTimes({
       <div className="baseVertFlex w-64 !items-start gap-2 p-4">
         <p className="font-semibold underline underline-offset-2">Notice:</p>
         <p className="text-sm">
-          We are not accepting any new orders for the night. Sorry for the
-          inconvenience.
+          We are currently not accepting new orders for the night. Please select
+          a future date for your pickup. We apologize for any inconvenience this
+          may cause.
         </p>
       </div>
     );

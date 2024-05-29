@@ -370,7 +370,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
             rewardsPoints: prevPoints + earnedPoints - spentPoints,
             lifetimeRewardPoints,
             currentOrder: {
-              datetimeToPickup: getFirstValidMidnightDate(new Date()),
+              datetimeToPickup: getFirstValidMidnightDate(),
               isASAP: false,
               items: [],
               tipPercentage: null,

@@ -58,6 +58,7 @@ import Head from "next/head";
 import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import Decimal from "decimal.js";
+import { toZonedTime } from "date-fns-tz";
 
 function RecentOrders() {
   const userId = useGetUserId();
@@ -428,9 +429,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                           addItemsFromPreviousOrderToCart({
                             userId,
                             orderDetails: {
-                              datetimeToPickup: getFirstValidMidnightDate(
-                                new Date(),
-                              ),
+                              datetimeToPickup: getFirstValidMidnightDate(),
                               isASAP: orderDetails.isASAP,
                               includeNapkinsAndUtensils: false,
                               items: order.orderItems.map((item, idx) => ({
@@ -536,7 +535,10 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
             <div className="baseFlex w-full !justify-between">
               <div className="baseVertFlex !items-start gap-4">
                 <div className="text-nowrap">
-                  {format(new Date(order.datetimeToPickup), "PPP")}
+                  {format(
+                    toZonedTime(order.datetimeToPickup, "America/Chicago"),
+                    "PPP",
+                  )}
                 </div>
                 {/* item image previews + (date + item names) */}
                 <div className="baseFlex relative w-full !justify-start gap-2">
@@ -606,9 +608,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                           addItemsFromPreviousOrderToCart({
                             userId,
                             orderDetails: {
-                              datetimeToPickup: getFirstValidMidnightDate(
-                                new Date(),
-                              ),
+                              datetimeToPickup: getFirstValidMidnightDate(),
                               isASAP: orderDetails.isASAP,
                               includeNapkinsAndUtensils: false,
                               items: order.orderItems.map((item, idx) => ({
