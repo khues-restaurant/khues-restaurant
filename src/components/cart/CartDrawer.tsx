@@ -1084,7 +1084,7 @@ function CartDrawer({
                     setShowRewardsDrawer(true);
                   }}
                 >
-                  <CiGift className="size-5" />
+                  <CiGift className="size-[22px] drop-shadow-[0_1px_4px_rgb(0_0_0_/_20%)]" />
                   My rewards
                 </Button>
               )}

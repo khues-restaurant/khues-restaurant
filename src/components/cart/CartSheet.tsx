@@ -1055,13 +1055,13 @@ function CartSheet({
 
             {isSignedIn && (
               <Button
-                variant="rewards"
+                variant={"rewards"}
                 className="baseFlex gap-2 font-semibold"
                 onClick={() => {
                   setShowRewardsDialog(true);
                 }}
               >
-                <CiGift className="size-6" />
+                <CiGift className="size-6 drop-shadow-[0_1px_4px_rgb(0_0_0_/_20%)]" />
                 My rewards
               </Button>
             )}

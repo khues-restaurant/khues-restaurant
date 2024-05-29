@@ -27,7 +27,7 @@ const buttonVariants = cva(
         activeLink: "activeUnderline text-primary font-semibold",
         underline: "text-primary underline underline-offset-2",
         text: "text-neutral-400",
-        rewards: "text-offwhite",
+        rewards: "text-offwhite [text-shadow:_0_1px_4px_rgb(0_0_0_/_20%)]",
       },
       size: {
         default: "h-10 px-4 py-2",
