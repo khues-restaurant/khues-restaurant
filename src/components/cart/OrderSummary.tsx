@@ -31,7 +31,7 @@ function OrderSummary({ order }: OrderSummary) {
       className="baseVertFlex w-full !items-start gap-4 rounded-md border-2 bg-gradient-to-br from-stone-100  
     to-stone-200/80 p-4"
     >
-      <div className="baseFlex gap-1 text-lg">
+      <div className="baseFlex gap-1 text-base font-medium">
         <span>{numberOfItems}</span>
         <span>Items</span>
       </div>
@@ -65,7 +65,7 @@ function OrderSummary({ order }: OrderSummary) {
               <div className="baseFlex w-full !items-start !justify-between">
                 <div className="baseVertFlex max-w-40 !items-start sm:max-w-80">
                   {/* item quantity, name, dietary restrictions */}
-                  <div className="baseFlex !items-start gap-2 text-base">
+                  <div className="baseFlex !items-start gap-2 text-base font-medium">
                     <p>{item.quantity}</p>
                     <p>{item.name}</p>
 
