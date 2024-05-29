@@ -69,7 +69,7 @@ export const chatRouter = createTRPCRouter({
       // Update the updatedAt timestamp of the Chat when a new message is added
       await ctx.prisma.chat.update({
         where: {
-          id: input.chatId,
+          id: chat.id,
         },
         data: {
           updatedAt: new Date(),

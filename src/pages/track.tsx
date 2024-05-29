@@ -17,10 +17,8 @@ import { Separator } from "~/components/ui/separator";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getFirstSixNumbers } from "~/utils/getFirstSixNumbers";
-
-// stretch, but if you really wanted to have the order "number" but just numbers,
-// you could just have a function that takes in whole id and returns first 6 numbers,
-// I don't think it would have drastic effects elsewhere
+import { io } from "socket.io-client";
+import { env } from "~/env";
 
 function Track() {
   const { isSignedIn } = useAuth();
@@ -47,6 +45,29 @@ function Track() {
   );
 
   const [minTimeoutElapsed, setMinTimeoutElapsed] = useState(false);
+
+  useEffect(() => {
+    if (order === null || order === undefined || order.status === "completed")
+      return;
+
+    console.log("connecting to socket.io server");
+
+    const socket = io(env.NEXT_PUBLIC_SOCKET_IO_URL, {
+      query: {
+        userId: order.id,
+      },
+      secure: env.NEXT_PUBLIC_SOCKET_IO_URL.includes("https") ? true : false,
+    });
+
+    socket.on(`orderStatusUpdate`, () => {
+      void refetch();
+    });
+
+    return () => {
+      console.log("disconnecting from socket.io server");
+      socket.disconnect();
+    };
+  }, [order, refetch]);
 
   useEffect(() => {
     setTimeout(() => {

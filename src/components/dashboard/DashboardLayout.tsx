@@ -8,6 +8,15 @@ import { Toaster } from "~/components/ui/toaster";
 import useClearToastsOnRefocus from "~/hooks/useClearToastsOnRefocus";
 import { useMainStore, type StoreMenuItems } from "~/stores/MainStore";
 import { api } from "~/utils/api";
+import { io } from "socket.io-client";
+import { env } from "~/env";
+
+const socket = io(env.NEXT_PUBLIC_SOCKET_IO_URL, {
+  query: {
+    userId: "dashboard",
+  },
+  secure: env.NEXT_PUBLIC_SOCKET_IO_URL.includes("https") ? true : false,
+});
 
 interface DashboardLayout {
   children: ReactNode;
@@ -94,10 +103,10 @@ function DashboardLayout({ children }: DashboardLayout) {
       <AnimatePresence>
         <>
           {viewState === "orderManagement" && orders && (
-            <OrderManagement orders={orders} />
+            <OrderManagement orders={orders} socket={socket} />
           )}
 
-          {viewState === "customerChats" && <CustomerChats />}
+          {viewState === "customerChats" && <CustomerChats socket={socket} />}
           {viewState === "itemManagement" &&
             menuCategories &&
             customizationCategories && (

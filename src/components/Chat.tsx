@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { IoChatbox } from "react-icons/io5";
 import { X } from "lucide-react";
@@ -8,13 +8,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-
 import { Button } from "~/components/ui/button";
 import { AnimatePresence, motion } from "framer-motion";
 import useGetUserId from "~/hooks/useGetUserId";
 import { Textarea } from "~/components/ui/textarea";
 import Image from "next/image";
 import { format } from "date-fns";
+import { env } from "~/env";
+import { type Socket, io } from "socket.io-client";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -22,6 +23,13 @@ import {
 } from "~/components/ui/alert-dialog";
 import { useMainStore } from "~/stores/MainStore";
 import { useRouter } from "next/router";
+
+// FYI: when we made this we were aware that it is conservative by nature, and is only
+// connecting to the socket.io server once the Chat has been opened for the first time.
+
+// ^ a small qol bump would maybe be to connect if the last message sent in the message chain
+// was by the user, and of course the most "ideal" (but also highest server load) would be
+// to have a persistent connection to the server at all times that the user is on the site.
 
 function Chat() {
   const userId = useGetUserId();
@@ -82,6 +90,14 @@ function Chat() {
     onError(err) {
       console.error(err);
     },
+    onSuccess(newMessage) {
+      console.log("message sent", newMessage);
+
+      socket?.emit("userSentNewMessage", {
+        userId: newMessage.recipientId,
+        message: newMessage.content,
+      });
+    },
     // After mutation is resolved, refetch the messages
     onSettled() {
       setNewMessageContent("");
@@ -97,6 +113,32 @@ function Chat() {
         void refetch();
       },
     });
+
+  const [chatHasBeenInitiallyOpened, setChatHasBeenInitiallyOpened] =
+    useState(false);
+  const [socket, setSocket] = useState<Socket | null>(null);
+
+  useEffect(() => {
+    if (!chatIsOpen || chatHasBeenInitiallyOpened || userId === "") return;
+    setChatHasBeenInitiallyOpened(true);
+    void refetch();
+
+    console.log("connecting to socket.io server");
+
+    const socket = io(env.NEXT_PUBLIC_SOCKET_IO_URL, {
+      query: {
+        userId,
+      },
+      secure: env.NEXT_PUBLIC_SOCKET_IO_URL.includes("https") ? true : false,
+    });
+
+    socket.on(`newUserMessage`, (message) => {
+      console.log("received message from server", message);
+      void refetch();
+    });
+
+    setSocket(socket);
+  }, [chatIsOpen, chatHasBeenInitiallyOpened, userId, refetch]);
 
   const [newMessageContent, setNewMessageContent] = useState("");
 

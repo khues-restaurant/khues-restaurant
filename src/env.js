@@ -23,6 +23,7 @@ export const env = createEnv({
     STRIPE_WEBHOOK_SECRET: z.string(),
     RESEND_API_KEY: z.string(),
     OPEN_AI_KEY: z.string(),
+    SOCKET_IO_URL: z.string().url(),
   },
 
   /**
@@ -32,6 +33,7 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string(),
+    NEXT_PUBLIC_SOCKET_IO_URL: z.string().url(),
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
   },
 
@@ -50,6 +52,8 @@ export const env = createEnv({
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     OPEN_AI_KEY: process.env.OPEN_AI_KEY,
+    SOCKET_IO_URL: process.env.SOCKET_IO_URL,
+    NEXT_PUBLIC_SOCKET_IO_URL: process.env.NEXT_PUBLIC_SOCKET_IO_URL,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

@@ -119,7 +119,9 @@ function DashboardDesktopHeader({
           Item management
         </Button>
 
-        <DelayNewOrders />
+        {/* TODO: explore wher the unique key prop error is coming from in
+            this component */}
+        {/* <DelayNewOrders /> */}
 
         <Popover>
           <PopoverTrigger asChild>

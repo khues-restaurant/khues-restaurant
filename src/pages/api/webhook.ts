@@ -14,6 +14,7 @@ import Receipt from "emails/Receipt";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { prisma } from "~/server/db";
 import OpenAI from "openai";
+import { io } from "socket.io-client";
 import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
 
 const resend = new Resend(env.RESEND_API_KEY);
@@ -388,8 +389,26 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
+      // 7) send socket emit to socket.io server to notify dashboard of new order
+      const socket = io(env.SOCKET_IO_URL, {
+        query: {
+          userId: "webhook", // this shouldn't actually be necessary, can probably remove later
+        },
+        secure: env.NODE_ENV === "production" ? true : false,
+      });
+
+      socket.on("connect", () => {
+        console.log("Connected to socket.io server from webhook");
+
+        socket.emit("newOrderPlaced", {
+          orderId: order.id,
+        });
+
+        socket.close();
+      });
+
       // TODO: uncomment for production
-      // // 7) send email receipt (if allowed) to user
+      // // 8) send email receipt (if allowed) to user
       // if (user?.allowsEmailReceipts) {
       //   await SendEmailReceipt({
       //     // email: customerMetadata.email,
@@ -418,7 +437,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       // }
 
       // TODO: uncomment for production
-      // 8) do chatgpt search for whether or not the user is a notable food critic, news reporter,
+      // 9) do chatgpt search for whether or not the user is a notable food critic, news reporter,
       // writer, or otherwise influential person in the food industry.
 
       // const params: OpenAI.Chat.ChatCompletionCreateParams = {
@@ -447,7 +466,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       //   });
       // }
 
-      // 9) cleanup transient order, technically not necessary though right since we just upsert either way?
+      // 10) cleanup transient order, technically not necessary though right since we just upsert either way?
       await prisma.transientOrder.delete({
         where: {
           userId: payment.metadata.userId,

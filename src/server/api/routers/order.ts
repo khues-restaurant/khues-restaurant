@@ -6,6 +6,7 @@ import { z } from "zod";
 import { env } from "~/env";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { type Discount as DBDiscount } from "@prisma/client";
+import { io } from "socket.io-client";
 import {
   createTRPCRouter,
   publicProcedure,
@@ -229,6 +230,23 @@ export const orderRouter = createTRPCRouter({
           orderStartedAt: new Date(),
         },
       });
+
+      const socket = io(env.SOCKET_IO_URL, {
+        query: {
+          userId: "startOrder", // this shouldn't actually be necessary, can probably remove later
+        },
+        secure: env.NODE_ENV === "production" ? true : false,
+      });
+
+      socket.on("connect", () => {
+        console.log("Connected to socket.io server from webhook");
+
+        socket.emit("orderStatusChanged", {
+          orderId: input.id,
+        });
+
+        socket.close();
+      });
     }),
   completeOrder: protectedProcedure
     .input(
@@ -246,6 +264,23 @@ export const orderRouter = createTRPCRouter({
         data: {
           orderCompletedAt: new Date(),
         },
+      });
+
+      const socket = io(env.SOCKET_IO_URL, {
+        query: {
+          userId: "completeOrder", // this shouldn't actually be necessary, can probably remove later
+        },
+        secure: env.NODE_ENV === "production" ? true : false,
+      });
+
+      socket.on("connect", () => {
+        console.log("Connected to socket.io server from webhook");
+
+        socket.emit("orderStatusChanged", {
+          orderId: input.id,
+        });
+
+        socket.close();
       });
 
       // TODO: uncomment for production

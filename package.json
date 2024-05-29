@@ -64,6 +64,8 @@
     "react-scroll-parallax": "^3.4.5",
     "receiptline": "^1.16.1",
     "resend": "^3.2.0",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
     "stripe": "^15.7.0",
     "superjson": "^2.2.1",
     "tailwind-merge": "^2.2.1",

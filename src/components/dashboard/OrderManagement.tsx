@@ -31,6 +31,7 @@ import AnimatedNumbers from "~/components/AnimatedNumbers";
 import { Separator } from "~/components/ui/separator";
 import { format } from "date-fns";
 import { useToast } from "~/components/ui/use-toast";
+import { type Socket } from "socket.io-client";
 
 // type FullOrderItems = OrderItem & {
 //   customizations: OrderItemCustomization[];
@@ -49,9 +50,12 @@ type OrderWithItems = Order & {
 
 interface OrderManagement {
   orders: OrderWithItems[];
+  socket: Socket;
 }
 
-function OrderManagement({ orders }: OrderManagement) {
+function OrderManagement({ orders, socket }: OrderManagement) {
+  const { refetch: refetchOrders } = api.order.getTodaysOrders.useQuery();
+
   const [notStartedOrders, setNotStartedOrders] = useState<OrderWithItems[]>(
     [],
   );
@@ -65,6 +69,17 @@ function OrderManagement({ orders }: OrderManagement) {
   // TODO/FYI: if not already stated, do NOT want to ever clear the "notification" numbers
   // on the not started/in progress tabs, since they are strictly the number of current orders
   // in their respective states.
+
+  useEffect(() => {
+    socket.on("newOrderWasPlaced", () => {
+      console.log("refetching new order");
+      void refetchOrders();
+    });
+
+    return () => {
+      socket.off("newOrderWasPlaced");
+    };
+  }, [socket, refetchOrders]);
 
   useEffect(() => {
     const notStarted = [];
@@ -97,8 +112,6 @@ function OrderManagement({ orders }: OrderManagement) {
     setStartedOrders(started);
     setCompletedOrders(completed);
   }, [orders]);
-
-  // const { data: orders, refetch: refetchOrders } = api.order.getAll.useQuery();
 
   return (
     <motion.div

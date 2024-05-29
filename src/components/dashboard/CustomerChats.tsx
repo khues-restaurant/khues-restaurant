@@ -16,10 +16,15 @@ import Image from "next/image";
 import { format } from "date-fns";
 import { type Chat, type ChatMessage } from "@prisma/client";
 import { useMainStore } from "~/stores/MainStore";
+import { type Socket } from "socket.io-client";
 
 // TODO: still have to implement the total # of unread chat messages
 
-function CustomerChats() {
+interface CustomerChats {
+  socket: Socket;
+}
+
+function CustomerChats({ socket }: CustomerChats) {
   const userId = useGetUserId();
   const ctx = api.useUtils();
 
@@ -65,6 +70,14 @@ function CustomerChats() {
     },
     onError(err) {
       console.error(err);
+    },
+    onSuccess(newMessage) {
+      console.log("newMessage", newMessage);
+
+      socket.emit("dashboardSentNewMessage", {
+        userId: newMessage.recipientId,
+        message: newMessage.content,
+      });
     },
     // After mutation is resolved, refetch the messages
     onSettled() {
@@ -140,6 +153,16 @@ function CustomerChats() {
       }
     }
   }, [selectedUserId, databaseChats, updateChatReadStatus]);
+
+  useEffect(() => {
+    console.log("listener ran on customerChats");
+
+    socket.on("newDashboardMessage", (data) => {
+      console.log("newDashboardMessage", data);
+
+      void refetch();
+    });
+  }, [socket, refetch]);
 
   // vv obv improve this vv
   if (!chats) return <p>Loading...</p>;
