@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState, type ComponentProps } from "react";
 import { useForm } from "react-hook-form";
 import { CiGift } from "react-icons/ci";
+import { FaPhone } from "react-icons/fa6";
 import { z } from "zod";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
@@ -24,6 +25,7 @@ import { Textarea } from "~/components/ui/textarea";
 import useGetUserId from "~/hooks/useGetUserId";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
+import { CiCalendarDate } from "react-icons/ci";
 import { formatPhoneNumber } from "~/utils/formatPhoneNumber";
 
 const mainFormSchema = z.object({
@@ -112,6 +114,13 @@ function PostSignUpDialog() {
     enabled: Boolean(userId && isSignedIn),
   });
 
+  const { data: order } = api.order.getById.useQuery(
+    localStorage.getItem("khue's-orderIdToRedeem") ?? "",
+    {
+      enabled: localStorage.getItem("khue's-orderIdToRedeem") !== null,
+    },
+  );
+
   const { mutate: createUser, isLoading: isSaving } =
     api.user.create.useMutation({
       onSuccess: () => {
@@ -123,6 +132,8 @@ function PostSignUpDialog() {
         setTimeout(() => {
           setIsOpen(false);
         }, 750);
+
+        localStorage.removeItem("khue's-orderIdToRedeem");
       },
       onError: (error) => {
         console.error("Error creating user", error); // toast error here
@@ -137,7 +148,7 @@ function PostSignUpDialog() {
   const [mainFormValues, setMainFormValues] = useState<z.infer<
     typeof mainFormSchema
   > | null>(null);
-  const [dietaryRestrictionsValues, setdietaryRestrictionsValues] =
+  const [dietaryRestrictionsValues, setDietaryRestrictionsValues] =
     useState<z.infer<typeof dietaryRestrictionsSchema> | null>(null);
 
   useEffect(() => {
@@ -173,22 +184,21 @@ function PostSignUpDialog() {
   function onDietaryRestrictionsFormSubmit(
     values: z.infer<typeof dietaryRestrictionsSchema>,
   ) {
-    setdietaryRestrictionsValues(values);
+    setDietaryRestrictionsValues(values);
     setStep(3);
   }
 
-  // TODO: technically need to have left/right sliding content transitions respect which
-  // direction the user is going in, but this is a low priority atm
-
   useEffect(() => {
     if (step === 3) {
+      const pointsBeingRedeemed = 500 + (order?.earnedRewardsPoints ?? 0);
+
       setTimeout(() => {
-        setInitialRewardsPoints(500);
+        setInitialRewardsPoints(pointsBeingRedeemed);
       }, 500);
     }
 
     setInitialRewardsPoints(0);
-  }, [step]);
+  }, [step, order]);
 
   function getDynamicWidth() {
     if (step === 3) {
@@ -201,6 +211,21 @@ function PostSignUpDialog() {
     return "150px";
   }
 
+  function handleInputChange(
+    event: React.ChangeEvent<HTMLInputElement>,
+    onChange: (value: string) => void,
+  ) {
+    const value = event.target.value.replace(/\D/g, ""); // Remove all non-digit characters
+
+    let formattedValue = value;
+    if (value.length > 2 && value.length <= 4) {
+      formattedValue = `${value.slice(0, 2)}/${value.slice(2)}`;
+    } else if (value.length > 4) {
+      formattedValue = `${value.slice(0, 2)}/${value.slice(2, 4)}/${value.slice(4)}`;
+    }
+
+    onChange(formattedValue);
+  }
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -209,18 +234,17 @@ function PostSignUpDialog() {
 
   if (!mounted) return <></>;
 
-  // TODO: probably need to make a getDynamicHeight() function so that
-  // there isn't jerky animation of the dialog container esp between steps
-  // 2 and 3.
-
-  // TODO: you can add a phone/calendar icon inside on left side of the input to make it look nicer
-  // ^ FaPhone and CiCalendarDate
-
   return (
     <AlertDialog open={isOpen}>
       <AlertDialogContent className="max-w-screen-md">
         <div
           style={{
+            height:
+              step === 3
+                ? viewportLabel.includes("mobile")
+                  ? "575px"
+                  : "625px"
+                : "515px",
             transition: "height 0.2s ease-in-out",
           }}
           className="baseVertFlex relative overflow-hidden"
@@ -314,19 +338,23 @@ function PostSignUpDialog() {
             </div>
           </div>
 
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="popLayout">
             {step === 1 && (
               <motion.div
                 key={"personalInfo"}
-                initial={{ opacity: 0, translateX: "-100%" }}
+                initial={{ opacity: 0, translateX: "-50%" }}
                 animate={{ opacity: 1, translateX: 0 }}
-                exit={{ opacity: 0, translateX: "-100%" }}
-                transition={{ duration: 0.35 }}
-                className="baseVertFlex min-h-48 w-full"
+                exit={{ opacity: 0, translateX: "-50%" }}
+                transition={{
+                  opacity: { duration: 0.1 },
+                  translateX: { duration: 0.5 },
+                  ease: "easeInOut",
+                }}
+                className="baseVertFlex h-full min-h-48 w-full overflow-hidden"
               >
                 <Form {...mainForm}>
                   <form className="baseVertFlex mt-8 w-full p-1">
-                    <div className="baseVertFlex w-full gap-4 tablet:gap-8">
+                    <div className="baseVertFlex w-full gap-8">
                       <div className="grid grid-cols-2 !items-start gap-4 tablet:gap-8">
                         <FormField
                           control={mainForm.control}
@@ -406,21 +434,29 @@ function PostSignUpDialog() {
                             fieldState: { invalid },
                           }) => (
                             <FormItem className="relative">
-                              <FormLabel className="font-semibold">
+                              <FormLabel className="baseFlex !justify-start gap-2 font-semibold">
+                                <FaPhone
+                                  className={`size-3 ${invalid ? "text-red-500" : "black"}`}
+                                />
                                 Phone number
                               </FormLabel>
                               <FormControl>
-                                <Input
-                                  ref={ref}
-                                  value={formatPhoneNumber(value)}
-                                  onChange={(e) =>
-                                    onChange(formatPhoneNumber(e.target.value))
-                                  }
-                                  onBlur={onBlur}
-                                  placeholder="(012) 345-6789"
-                                  type={"tel"}
-                                  className="w-full"
-                                />
+                                <div className="relative">
+                                  <Input
+                                    ref={ref}
+                                    value={formatPhoneNumber(value)}
+                                    onChange={(e) =>
+                                      onChange(
+                                        formatPhoneNumber(e.target.value),
+                                      )
+                                    }
+                                    onBlur={onBlur}
+                                    placeholder="(012) 345-6789"
+                                    type={"tel"}
+                                    className="w-full"
+                                  />
+                                  {/* <FaPhone className="absolute left-3 top-4 size-3 text-stone-500" /> */}
+                                </div>
                               </FormControl>
                               <AnimatePresence>
                                 {invalid && (
@@ -445,16 +481,25 @@ function PostSignUpDialog() {
                           name="birthday"
                           render={({ field, fieldState: { invalid } }) => (
                             <FormItem className="relative">
-                              <FormLabel className="font-semibold">
+                              <FormLabel className="baseFlex !justify-start gap-2 font-semibold">
+                                <CiCalendarDate
+                                  className={`${invalid ? "text-red-500" : "text-black"}`}
+                                />
                                 Birthday
                               </FormLabel>
                               <FormControl>
-                                <Input
-                                  type="date"
-                                  placeholder="mm/dd/yyyy"
-                                  className="w-full"
-                                  {...field}
-                                />
+                                <div className="relative">
+                                  <Input
+                                    type={"tel"}
+                                    placeholder="mm/dd/yyyy"
+                                    className="w-full"
+                                    maxLength={10} // Ensure the input doesn't exceed the format length
+                                    {...field}
+                                    onChange={(e) =>
+                                      handleInputChange(e, field.onChange)
+                                    }
+                                  />
+                                </div>
                               </FormControl>
                               <AnimatePresence>
                                 {invalid && (
@@ -483,11 +528,15 @@ function PostSignUpDialog() {
             {step === 2 && (
               <motion.div
                 key={"allergiesAndDietaryRestrictions"}
-                initial={{ opacity: 0, translateX: "100%" }}
+                initial={{ opacity: 0, translateX: "50%" }}
                 animate={{ opacity: 1, translateX: 0 }}
-                exit={{ opacity: 0, translateX: "-100%" }}
-                transition={{ duration: 0.35 }}
-                className="baseVertFlex mt-8 min-h-48 w-full"
+                exit={{ opacity: 0, translateX: "-50%" }}
+                transition={{
+                  opacity: { duration: 0.1 },
+                  translateX: { duration: 0.5 },
+                  ease: "easeInOut",
+                }}
+                className="baseVertFlex mt-8 h-full min-h-48 w-full overflow-hidden"
               >
                 <Form {...dietaryRestrictionsForm}>
                   <form className="baseVertFlex w-full gap-16">
@@ -525,18 +574,22 @@ function PostSignUpDialog() {
             {step === 3 && (
               <motion.div
                 key={"finish"}
-                initial={{ opacity: 0, translateX: "100%" }}
+                initial={{ opacity: 0, translateX: "50%" }}
                 animate={{ opacity: 1, translateX: 0 }}
-                exit={{ opacity: 0, translateX: "100%" }}
-                transition={{ duration: 0.2 }}
-                className="baseVertFlex mt-8 min-h-48 w-full"
+                exit={{ opacity: 0, translateX: "50%" }}
+                transition={{
+                  opacity: { duration: 0.1 },
+                  translateX: { duration: 0.5 },
+                  ease: "easeInOut",
+                }}
+                className="baseVertFlex mt-8 min-h-48 w-full !justify-start overflow-y-auto overflow-x-hidden"
               >
                 <div
                   style={{
                     backgroundImage:
                       "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
                   }}
-                  className="baseFlex relative h-48 w-full overflow-hidden rounded-md shadow-md tablet:w-[75%]"
+                  className="baseFlex relative h-48 w-full shrink-0 overflow-hidden rounded-md shadow-md tablet:w-[75%]"
                 >
                   <motion.div
                     key={"rewardsHeroMobileImageOne"}
@@ -653,9 +706,10 @@ function PostSignUpDialog() {
                 </p>
 
                 <p className="mt-4 max-w-72 text-sm text-neutral-500 sm:max-w-96">
-                  As a token of our appreciation, enjoy a head start of 500 free
-                  rewards points. Visit your rewards page in your profile to
-                  browse meals you can redeem your points for.
+                  As a token of our appreciation, enjoy a head start of{" "}
+                  {initialRewardsPoints} free rewards points. Visit your rewards
+                  page in your profile to browse meals you can redeem your
+                  points for.
                 </p>
               </motion.div>
             )}
@@ -697,6 +751,7 @@ function PostSignUpDialog() {
                     ...dietaryRestrictionsValues!,
                     birthday: new Date(mainFormValues!.birthday),
                     currentOrder: orderDetails,
+                    initialRewardsPoints,
                   });
                 }
               }}
@@ -829,9 +884,6 @@ function Step({ step, currentStep }: { step: number; currentStep: number }) {
             backgroundColor: "#fffcf5", // offwhite
             borderColor: "#14522d", //  bg-primary
             color: "#14522d", //  bg-primary
-            transition: {
-              delay: 2,
-            },
           },
           complete: {
             backgroundColor: "#14522d", //  bg-primary

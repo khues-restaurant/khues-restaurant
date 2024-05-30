@@ -50,6 +50,8 @@ export const userRouter = createTRPCRouter({
         birthday: z.date(),
         dietaryRestrictions: z.string().max(100),
         currentOrder: orderDetailsSchema,
+        initialRewardsPoints: z.number().int().default(500),
+        orderIdBeingRedeemed: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -64,9 +66,21 @@ export const userRouter = createTRPCRouter({
         data: {
           userId: input.userId,
           expiresAt: addMonths(new Date(), 6),
-          value: 500,
+          value: input.initialRewardsPoints,
         },
       });
+
+      // if applicable, set orderIdBeingRedeemed's "rewardsPointsRedeemed" to true
+      if (input.orderIdBeingRedeemed) {
+        await ctx.prisma.order.update({
+          where: {
+            id: input.orderIdBeingRedeemed,
+          },
+          data: {
+            rewardsPointsRedeemed: true,
+          },
+        });
+      }
 
       // create email unsubscription token + send welcome email
       const unsubscriptionToken =
@@ -127,7 +141,16 @@ export const userRouter = createTRPCRouter({
         data: {
           stripeUserId: customer.id,
           ...initialEmailPreferences,
-          ...input,
+          userId: input.userId,
+          email: input.email,
+          firstName: input.firstName,
+          lastName: input.lastName,
+          phoneNumber: input.phoneNumber,
+          birthday: input.birthday,
+          dietaryRestrictions: input.dietaryRestrictions,
+          currentOrder: input.currentOrder,
+          rewardsPoints: input.initialRewardsPoints,
+          lifetimeRewardPoints: input.initialRewardsPoints,
         },
       });
     }),

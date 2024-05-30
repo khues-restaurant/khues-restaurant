@@ -558,156 +558,157 @@ function Track() {
                   </div>
                 </div>
 
-                {/* TODO: eventually implement the point transfer ability if not logged in */}
-                {isSignedIn && (
-                  <div
-                    style={{
-                      backgroundImage:
-                        "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
+                <div
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
+                  }}
+                  className="baseFlex relative w-full overflow-hidden rounded-md py-6 shadow-md"
+                >
+                  <motion.div
+                    key={"rewardsHeroMobileImageOne"}
+                    initial={{ opacity: 0, y: -125, x: -125 }}
+                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    transition={{
+                      opacity: { duration: 0.2 },
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 20,
+                      delay: 0.5,
                     }}
-                    className="baseFlex relative w-full overflow-hidden rounded-md py-6 shadow-md"
+                    className="absolute -left-10 -top-10"
                   >
-                    <motion.div
-                      key={"rewardsHeroMobileImageOne"}
-                      initial={{ opacity: 0, y: -125, x: -125 }}
-                      animate={{ opacity: 1, y: 0, x: 0 }}
-                      transition={{
-                        opacity: { duration: 0.2 },
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 20,
-                        delay: 0.5,
-                      }}
-                      className="absolute -left-10 -top-10"
-                    >
-                      <Image
-                        src={"/menuItems/sampleImage.webp"}
-                        alt={"TODO: replace with proper alt tag text"}
-                        width={96}
-                        height={96}
-                        className="!relative"
-                      />
-                    </motion.div>
+                    <Image
+                      src={"/menuItems/sampleImage.webp"}
+                      alt={"TODO: replace with proper alt tag text"}
+                      width={96}
+                      height={96}
+                      className="!relative"
+                    />
+                  </motion.div>
 
-                    <motion.div
-                      key={"rewardsHeroMobileImageTwo"}
-                      initial={{ opacity: 0, y: 125, x: -125 }}
-                      animate={{ opacity: 1, y: 0, x: 0 }}
-                      transition={{
-                        opacity: { duration: 0.2 },
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 20,
-                        delay: 0.75,
-                      }}
-                      className="absolute -bottom-10 -left-10"
-                    >
-                      <Image
-                        src={"/menuItems/sampleImage.webp"}
-                        alt={"TODO: replace with proper alt tag text"}
-                        width={96}
-                        height={96}
-                        className="!relative"
-                      />
-                    </motion.div>
+                  <motion.div
+                    key={"rewardsHeroMobileImageTwo"}
+                    initial={{ opacity: 0, y: 125, x: -125 }}
+                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    transition={{
+                      opacity: { duration: 0.2 },
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 20,
+                      delay: 0.75,
+                    }}
+                    className="absolute -bottom-10 -left-10"
+                  >
+                    <Image
+                      src={"/menuItems/sampleImage.webp"}
+                      alt={"TODO: replace with proper alt tag text"}
+                      width={96}
+                      height={96}
+                      className="!relative"
+                    />
+                  </motion.div>
 
-                    <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite p-4 text-primary shadow-lg tablet:px-8 tablet:py-4">
-                      <div className="text-center text-lg font-semibold">
-                        Khue&apos;s Rewards
-                      </div>
-
-                      <div className="baseFlex gap-4 font-bold tracking-wider">
-                        <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary tablet:h-6" />
-                        <div className="baseVertFlex">
-                          <AnimatedNumbers
-                            value={rewardsPointsEarned}
-                            fontSize={
-                              viewportLabel.includes("mobile") ? 22 : 28
-                            }
-                            padding={0}
-                          />
-                          <p className="font-semibold tracking-normal">
-                            points
-                          </p>
-                        </div>
-                        <SideAccentSwirls className="h-5 fill-primary tablet:h-6" />
-                      </div>
-
-                      <div
-                        className={`baseVertFlex w-full text-sm text-primary`}
-                      >
-                        {isSignedIn ? (
-                          <>
-                            <div className="baseFlex gap-1">
-                              You earned
-                              <div className="font-bold">
-                                <AnimatedNumbers
-                                  value={order.earnedRewardsPoints}
-                                  fontSize={
-                                    viewportLabel.includes("mobile") ? 14 : 16
-                                  }
-                                  padding={0}
-                                />
-                              </div>
-                              points for this order.
-                            </div>
-                          </>
-                        ) : (
-                          <div className="baseVertFlex mt-2 gap-4">
-                            <SignInButton mode="modal">
-                              <Button variant={"rewards"}>Sign in</Button>
-                            </SignInButton>
-                            to redeem your points for this order.
-                          </div>
-                        )}
-                      </div>
+                  <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite p-4 text-primary shadow-lg tablet:px-8 tablet:py-4">
+                    <div className="text-center text-lg font-semibold">
+                      Khue&apos;s Rewards
                     </div>
 
-                    <motion.div
-                      key={"rewardsHeroMobileImageThree"}
-                      initial={{ opacity: 0, y: -125, x: 125 }}
-                      animate={{ opacity: 1, y: 0, x: 0 }}
-                      transition={{
-                        opacity: { duration: 0.2 },
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 20,
-                        delay: 0.95,
-                      }}
-                      className="absolute -right-10 -top-10"
-                    >
-                      <Image
-                        src={"/menuItems/sampleImage.webp"}
-                        alt={"TODO: replace with proper alt tag text"}
-                        width={96}
-                        height={96}
-                        className="!relative"
-                      />
-                    </motion.div>
+                    <div className="baseFlex gap-4 font-bold tracking-wider">
+                      <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary tablet:h-6" />
+                      <div className="baseVertFlex">
+                        <AnimatedNumbers
+                          value={rewardsPointsEarned}
+                          fontSize={viewportLabel.includes("mobile") ? 22 : 28}
+                          padding={0}
+                        />
+                        <p className="font-semibold tracking-normal">points</p>
+                      </div>
+                      <SideAccentSwirls className="h-5 fill-primary tablet:h-6" />
+                    </div>
 
-                    <motion.div
-                      key={"rewardsHeroMobileImageFour"}
-                      initial={{ opacity: 0, y: 125, x: 125 }}
-                      animate={{ opacity: 1, y: 0, x: 0 }}
-                      transition={{
-                        opacity: { duration: 0.2 },
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 20,
-                        delay: 0.6,
-                      }}
-                      className="absolute -bottom-10 -right-10"
-                    >
-                      <Image
-                        src={"/menuItems/sampleImage.webp"}
-                        alt={"TODO: replace with proper alt tag text"}
-                        width={96}
-                        height={96}
-                        className="!relative"
-                      />
-                    </motion.div>
+                    <div className={`baseVertFlex w-full text-sm text-primary`}>
+                      {isSignedIn ? (
+                        <>
+                          <div className="baseFlex gap-1">
+                            You earned
+                            <div className="font-bold">
+                              <AnimatedNumbers
+                                value={order.earnedRewardsPoints}
+                                fontSize={
+                                  viewportLabel.includes("mobile") ? 14 : 16
+                                }
+                                padding={0}
+                              />
+                            </div>
+                            points for this order.
+                          </div>
+                        </>
+                      ) : (
+                        <div className="baseVertFlex mt-2 gap-4">
+                          <SignInButton mode="modal">
+                            <Button
+                              variant={"rewards"}
+                              onClick={() => {
+                                localStorage.setItem(
+                                  "khue's-orderIdToRedeem",
+                                  order.id,
+                                );
+                              }}
+                            >
+                              Sign in
+                            </Button>
+                          </SignInButton>
+                          to redeem your points for this order.
+                        </div>
+                      )}
+                    </div>
                   </div>
-                )}
+
+                  <motion.div
+                    key={"rewardsHeroMobileImageThree"}
+                    initial={{ opacity: 0, y: -125, x: 125 }}
+                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    transition={{
+                      opacity: { duration: 0.2 },
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 20,
+                      delay: 0.95,
+                    }}
+                    className="absolute -right-10 -top-10"
+                  >
+                    <Image
+                      src={"/menuItems/sampleImage.webp"}
+                      alt={"TODO: replace with proper alt tag text"}
+                      width={96}
+                      height={96}
+                      className="!relative"
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    key={"rewardsHeroMobileImageFour"}
+                    initial={{ opacity: 0, y: 125, x: 125 }}
+                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    transition={{
+                      opacity: { duration: 0.2 },
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 20,
+                      delay: 0.6,
+                    }}
+                    className="absolute -bottom-10 -right-10"
+                  >
+                    <Image
+                      src={"/menuItems/sampleImage.webp"}
+                      alt={"TODO: replace with proper alt tag text"}
+                      width={96}
+                      height={96}
+                      className="!relative"
+                    />
+                  </motion.div>
+                </div>
               </div>
               <div className="baseFlex w-full max-w-[400px] sm:max-w-[500px]">
                 <OrderSummary order={order} />
