@@ -94,7 +94,10 @@ function Reservations() {
             <IoChatbox className="size-5 drop-shadow-md" />
           </Button>
 
-          <Separator orientation="vertical" className="h-6 w-[1px]" />
+          <Separator
+            orientation="vertical"
+            className="h-6 w-[1px] bg-stone-400"
+          />
 
           <Button variant="link" className="h-8 px-1" asChild>
             <a href="tel:+1234567890" className="baseFlex gap-2">

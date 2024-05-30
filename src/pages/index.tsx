@@ -468,7 +468,7 @@ export default function Home() {
             <p className="text-lg font-medium">
               Enjoy exclusive benefits when you order direct
             </p>
-            <div className="baseVertFlex !items-start gap-4 pl-4">
+            <div className="baseVertFlex mt-2 !items-start gap-4 pl-4">
               <div className="baseFlex !items-start gap-4">
                 <MdOutlineMoneyOff className="size-6 shrink-0" />
                 <p>Shop our lowest menu prices</p>
@@ -491,7 +491,7 @@ export default function Home() {
             <Button size={"lg"} asChild>
               <Link
                 href="/order"
-                className="baseFlex my-2 gap-2 !px-4 !text-base shadow-md"
+                className="baseFlex my-2 mt-4 gap-2 !px-4 !text-base shadow-md"
               >
                 <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
                 Order now
@@ -506,7 +506,7 @@ export default function Home() {
             <p className="text-lg font-medium">
               Enjoy exclusive benefits when you order direct
             </p>
-            <div className="baseVertFlex !items-start gap-4">
+            <div className="baseVertFlex mt-2 !items-start gap-4">
               <div className="baseFlex gap-4">
                 <MdOutlineMoneyOff className="size-6 shrink-0" />
                 <p>Shop our lowest menu prices</p>
@@ -669,7 +669,7 @@ export default function Home() {
               Planning a birthday dinner or get together with your friends?
             </p>
 
-            <p>
+            <p className="mt-4">
               Secure your spot for larger parties. For parties of 4 or less,
               reservations are usually not needed. However, to guarantee your
               seats for larger groups, please get in touch with us.
@@ -684,7 +684,10 @@ export default function Home() {
                 <IoChatbox className="size-5 drop-shadow-md" />
               </Button>
 
-              <Separator orientation="vertical" className="h-[1px] w-1/2" />
+              <Separator
+                orientation="vertical"
+                className="mt-2 h-[1px] w-1/2 bg-stone-400"
+              />
 
               <Button variant="link" className="h-8 px-1" asChild>
                 <a href="tel:+1234567890" className="baseFlex gap-2">
@@ -697,12 +700,12 @@ export default function Home() {
         </div>
 
         <div className="baseFlex !hidden w-full gap-16 py-8  tablet:!flex">
-          <div className="baseVertFlex mt-4 max-w-3xl gap-2 rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
+          <div className="baseVertFlex mt-4 max-w-2xl gap-2 rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
             <p className="text-lg font-medium">
               Planning a birthday dinner or get together with your friends?
             </p>
 
-            <p>
+            <p className="mt-2">
               Secure your spot for larger parties. For parties of 4 or less,
               reservations are usually not needed. However, to guarantee your
               seats for larger groups, please get in touch with us.
@@ -717,7 +720,10 @@ export default function Home() {
                 <IoChatbox className="size-5 drop-shadow-md" />
               </Button>
 
-              <Separator orientation="vertical" className="h-6 w-[1px]" />
+              <Separator
+                orientation="vertical"
+                className="h-6 w-[1px] bg-stone-400"
+              />
 
               <Button variant="link" className="h-8 px-1" asChild>
                 <a href="tel:+1234567890" className="baseFlex gap-2">
