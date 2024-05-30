@@ -149,7 +149,7 @@ function MobileHeader() {
                     Sign up
                   </Button>
                   <Button
-                    variant={"secondary"}
+                    variant={"outline"}
                     onClick={() => {
                       setSheetIsOpen(false);
 
