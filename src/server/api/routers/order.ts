@@ -67,7 +67,6 @@ export interface DashboardOrder {
   orderCompletedAt: Date | null;
   datetimeToPickup: Date;
 
-  status: string; // better types?
   firstName: string;
   lastName: string;
   email: string;

@@ -238,8 +238,6 @@ model Order {
     orderCompletedAt DateTime?
     datetimeToPickup DateTime
 
-    // TODO: remove status, just infer from orderStartedAt and orderCompletedAt
-    status                    String  @default("received") // "received", "inProgress", "completed" (maybe "cancelled" too?)
     firstName                 String
     lastName                  String
     email                     String

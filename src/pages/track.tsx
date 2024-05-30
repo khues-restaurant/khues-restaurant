@@ -54,7 +54,11 @@ function Track() {
   const [minTimeoutElapsed, setMinTimeoutElapsed] = useState(false);
 
   useEffect(() => {
-    if (order === null || order === undefined || order.status === "completed")
+    if (
+      order === null ||
+      order === undefined ||
+      order.orderCompletedAt !== null
+    )
       return;
 
     console.log("connecting to socket.io server");
