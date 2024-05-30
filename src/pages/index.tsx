@@ -539,6 +539,19 @@ export default function Home() {
           </div>
 
           <div className="baseFlex relative size-72">
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{
+                opacity: { duration: 0.2 },
+                type: "spring",
+                stiffness: 100,
+                damping: 15,
+              }}
+              viewport={{ once: true, amount: 0.5 }}
+              className="absolute right-4 top-4 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
+            ></motion.div>
+
             {/* maybe have stock image of person holding a phone and you would have a proportionally
                 tilted screenshot of the order page showing on their phone? think about it */}
             <motion.div
@@ -560,18 +573,6 @@ export default function Home() {
                 className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-8"
               />
             </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{
-                opacity: { duration: 0.2 },
-                type: "spring",
-                stiffness: 100,
-                damping: 15,
-              }}
-              viewport={{ once: true, amount: 0.5 }}
-              className="absolute right-4 top-4 z-[-1] size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
-            ></motion.div>
           </div>
         </div>
 
@@ -604,6 +605,19 @@ export default function Home() {
         <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
           <div className="baseFlex relative size-72">
             <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{
+                opacity: { duration: 0.2 },
+                type: "spring",
+                stiffness: 100,
+                damping: 15,
+              }}
+              viewport={{ once: true, amount: 0.5 }}
+              className="absolute left-4 top-4 size-full rounded-md bg-gradient-to-bl from-primary to-darkPrimary"
+            ></motion.div>
+
+            <motion.div
               initial={{ opacity: 0, y: -50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{
@@ -622,18 +636,6 @@ export default function Home() {
                 className="!relative !top-0 !size-full !h-96 rounded-md object-cover object-top"
               />
             </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{
-                opacity: { duration: 0.2 },
-                type: "spring",
-                stiffness: 100,
-                damping: 15,
-              }}
-              viewport={{ once: true, amount: 0.5 }}
-              className="absolute left-4 top-4 z-[-1] size-full rounded-md bg-gradient-to-bl from-primary to-darkPrimary"
-            ></motion.div>
           </div>
 
           <div className="baseVertFlex mt-4 max-w-3xl !items-start gap-4 rounded-md border bg-gradient-to-bl from-offwhite to-primary/10 p-6 shadow-md">
@@ -728,6 +730,19 @@ export default function Home() {
 
           <div className="baseFlex relative size-72">
             <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{
+                opacity: { duration: 0.2 },
+                type: "spring",
+                stiffness: 100,
+                damping: 15,
+              }}
+              viewport={{ once: true, amount: 0.5 }}
+              className="absolute right-4 top-4 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
+            ></motion.div>
+
+            <motion.div
               initial={{ opacity: 0, y: -50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{
@@ -746,18 +761,6 @@ export default function Home() {
                 className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-16"
               />
             </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{
-                opacity: { duration: 0.2 },
-                type: "spring",
-                stiffness: 100,
-                damping: 15,
-              }}
-              viewport={{ once: true, amount: 0.5 }}
-              className="absolute right-4 top-4 z-[-1] size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
-            ></motion.div>
           </div>
         </div>
 
@@ -822,7 +825,7 @@ export default function Home() {
         {/* Rewards program promo section */}
         {isLoaded && !isSignedIn && (
           <div className="baseVertFlex mb-16 mt-8 w-screen max-w-xl gap-8 border-y-4 border-y-gold !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
-            <span className="w-64 text-center font-semibold">
+            <span className="w-64 text-center font-semibold sm:w-auto">
               Join Khue&apos;s Rewards and unlock exclusive benefits!
             </span>
             <span className="text-center text-sm tablet:text-base">
