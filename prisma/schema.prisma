@@ -264,7 +264,7 @@ model Order {
     stripeSessionId String @unique // used for tracking the order in Stripe
 
     notableUserDescription String?
-    rewardsPointsRedeemed  Boolean @default(false)
+    rewardsPointsRedeemed  Boolean @default(false) // primarily used to check whether an unregistered user has redeemed a specific order's points upon signup
     userLeftFeedback       Boolean @default(false)
 
     user   User?   @relation(fields: [userId], references: [userId])
