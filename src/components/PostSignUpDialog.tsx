@@ -247,8 +247,8 @@ function PostSignUpDialog() {
               step === 3
                 ? viewportLabel.includes("mobile")
                   ? "575px"
-                  : "625px"
-                : "515px",
+                  : "600px"
+                : "575px",
             transition: "height 0.2s ease-in-out",
           }}
           className="baseVertFlex relative overflow-hidden"
@@ -358,7 +358,7 @@ function PostSignUpDialog() {
               >
                 <Form {...mainForm}>
                   <form className="baseVertFlex mt-8 w-full p-1">
-                    <div className="baseVertFlex w-full gap-8">
+                    <div className="baseVertFlex w-full gap-16 tablet:gap-8">
                       <div className="grid grid-cols-2 !items-start gap-4 tablet:gap-8">
                         <FormField
                           control={mainForm.control}
@@ -540,7 +540,7 @@ function PostSignUpDialog() {
                   translateX: { duration: 0.5 },
                   ease: "easeInOut",
                 }}
-                className="baseVertFlex mt-8 h-full min-h-48 w-full gap-4 overflow-hidden"
+                className="baseVertFlex h-full min-h-48 w-full gap-4 overflow-hidden tablet:mt-8"
               >
                 <Form {...dietaryRestrictionsForm}>
                   <form className="baseVertFlex w-full gap-16">
@@ -749,7 +749,7 @@ function PostSignUpDialog() {
                   Congratulations! You have successfully created your account.
                 </p>
 
-                <p className="mt-4 max-w-72 text-sm text-neutral-500 sm:max-w-96">
+                <p className="mb-16 mt-4 max-w-72 text-sm text-neutral-500 sm:max-w-96 tablet:mb-0">
                   As a token of our appreciation, enjoy a head start of{" "}
                   {initialRewardsPoints} free rewards points. Visit your rewards
                   page in your profile to browse meals you can redeem your
