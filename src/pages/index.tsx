@@ -50,6 +50,7 @@ import masonryInteriorFour from "/public/interior/four.webp";
 import masonryInteriorFive from "/public/interior/five.webp";
 import { useMainStore } from "~/stores/MainStore";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
+import useHomepageIntersectionObserver from "~/hooks/useHomepageIntersectionObserver";
 
 export default function Home() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -119,6 +120,60 @@ export default function Home() {
       setMobileHeroThresholdInView(false);
     };
   }, [setMobileHeroThresholdInView]);
+
+  const [scrollDir, setScrollDir] = useState<"up" | "down">("down");
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const updateScrollDir = () => {
+      const scrollY = window.scrollY;
+      if (scrollY > lastScrollY) {
+        setScrollDir("down");
+      } else {
+        setScrollDir("up");
+      }
+      lastScrollY = scrollY > 0 ? scrollY : 0;
+    };
+
+    window.addEventListener("scroll", updateScrollDir);
+    return () => window.removeEventListener("scroll", updateScrollDir);
+  }, []);
+
+  // Not my favorite approach, ideally would like to have a single hook that can be used for all
+  // and leverage arrays but the typing seemed to get messed up with this approach.
+  const firstBackdropAnimation = useHomepageIntersectionObserver({
+    threshold: 0.53,
+    axis: "x",
+    scrollDir,
+  });
+  const firstPromoImageAnimation = useHomepageIntersectionObserver({
+    threshold: 0.75,
+    axis: "y",
+    scrollDir,
+  });
+
+  const secondBackdropAnimation = useHomepageIntersectionObserver({
+    threshold: 0.53,
+    axis: "x",
+    scrollDir,
+  });
+  const secondPromoImageAnimation = useHomepageIntersectionObserver({
+    threshold: 0.75,
+    axis: "y",
+    scrollDir,
+  });
+
+  const thirdBackdropAnimation = useHomepageIntersectionObserver({
+    threshold: 0.53,
+    axis: "x",
+    scrollDir,
+  });
+  const thirdPromoImageAnimation = useHomepageIntersectionObserver({
+    threshold: 0.75,
+    axis: "y",
+    scrollDir,
+  });
 
   return (
     <motion.div
@@ -540,30 +595,30 @@ export default function Home() {
 
           <div className="baseFlex relative size-72">
             <motion.div
+              ref={firstBackdropAnimation.elementRef}
               initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              animate={firstBackdropAnimation.controls}
               transition={{
                 opacity: { duration: 0.2 },
                 type: "spring",
                 stiffness: 100,
                 damping: 15,
               }}
-              viewport={{ once: true, amount: 0.5 }}
               className="absolute right-4 top-4 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
             ></motion.div>
 
             {/* maybe have stock image of person holding a phone and you would have a proportionally
                 tilted screenshot of the order page showing on their phone? think about it */}
             <motion.div
+              ref={firstPromoImageAnimation.elementRef}
               initial={{ opacity: 0, y: -50 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              animate={firstPromoImageAnimation.controls}
               transition={{
                 opacity: { duration: 0.2 },
                 type: "spring",
                 stiffness: 100,
                 damping: 15,
               }}
-              viewport={{ once: true, amount: 0.75 }}
               className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
             >
               <Image
@@ -605,28 +660,28 @@ export default function Home() {
         <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
           <div className="baseFlex relative size-72">
             <motion.div
+              ref={secondBackdropAnimation.elementRef}
               initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              animate={secondBackdropAnimation.controls}
               transition={{
                 opacity: { duration: 0.2 },
                 type: "spring",
                 stiffness: 100,
                 damping: 15,
               }}
-              viewport={{ once: true, amount: 0.5 }}
               className="absolute left-4 top-4 size-full rounded-md bg-gradient-to-bl from-primary to-darkPrimary"
             ></motion.div>
 
             <motion.div
+              ref={secondPromoImageAnimation.elementRef}
               initial={{ opacity: 0, y: -50 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              animate={secondPromoImageAnimation.controls}
               transition={{
                 opacity: { duration: 0.2 },
                 type: "spring",
                 stiffness: 100,
                 damping: 15,
               }}
-              viewport={{ once: true, amount: 0.75 }}
               className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
             >
               <Image
@@ -736,28 +791,28 @@ export default function Home() {
 
           <div className="baseFlex relative size-72">
             <motion.div
+              ref={thirdBackdropAnimation.elementRef}
               initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              animate={thirdBackdropAnimation.controls}
               transition={{
                 opacity: { duration: 0.2 },
                 type: "spring",
                 stiffness: 100,
                 damping: 15,
               }}
-              viewport={{ once: true, amount: 0.5 }}
               className="absolute right-4 top-4 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
             ></motion.div>
 
             <motion.div
+              ref={thirdPromoImageAnimation.elementRef}
               initial={{ opacity: 0, y: -50 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              animate={thirdPromoImageAnimation.controls}
               transition={{
                 opacity: { duration: 0.2 },
                 type: "spring",
                 stiffness: 100,
                 damping: 15,
               }}
-              viewport={{ once: true, amount: 0.75 }}
               className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
             >
               <Image
