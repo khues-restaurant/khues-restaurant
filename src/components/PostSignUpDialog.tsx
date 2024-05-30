@@ -27,6 +27,10 @@ import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { CiCalendarDate } from "react-icons/ci";
 import { formatPhoneNumber } from "~/utils/formatPhoneNumber";
+import { Switch } from "~/components/ui/switch";
+import { Label } from "~/components/ui/label";
+import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
+import { Separator } from "~/components/ui/separator";
 
 const mainFormSchema = z.object({
   firstName: z
@@ -536,7 +540,7 @@ function PostSignUpDialog() {
                   translateX: { duration: 0.5 },
                   ease: "easeInOut",
                 }}
-                className="baseVertFlex mt-8 h-full min-h-48 w-full overflow-hidden"
+                className="baseVertFlex mt-8 h-full min-h-48 w-full gap-4 overflow-hidden"
               >
                 <Form {...dietaryRestrictionsForm}>
                   <form className="baseVertFlex w-full gap-16">
@@ -568,6 +572,46 @@ function PostSignUpDialog() {
                     </div>
                   </form>
                 </Form>
+
+                <Separator className="my-2 h-[1px] max-w-sm" />
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant={"underline"}
+                      className="text-sm sm:text-base"
+                    >
+                      How to add dietary restrictions
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent
+                    extraBottomSpacer={false}
+                    className="baseVertFlex gap-8 text-sm sm:text-base"
+                  >
+                    <p>
+                      To add these restrictions while adding an item to your
+                      cart, simply toggle on the below switch:
+                    </p>
+                    <div className="baseFlex w-full gap-2 text-sm">
+                      <Switch
+                        id="allergySwitch"
+                        disabled={true}
+                        checked={true}
+                      />
+                      <Label
+                        htmlFor="allergySwitch"
+                        className="text-xs sm:text-sm"
+                      >
+                        Include your account&apos;s dietary preferences.
+                      </Label>
+                    </div>
+                    <p>
+                      which can be found under the item&apos;s{" "}
+                      <span className="font-medium">Special instructions</span>{" "}
+                      menu.
+                    </p>
+                  </DialogContent>
+                </Dialog>
               </motion.div>
             )}
 
