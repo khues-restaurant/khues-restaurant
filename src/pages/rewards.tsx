@@ -469,7 +469,7 @@ function Rewards() {
           <div className="baseVertFlex max-w-72 gap-2 rounded-sm border-y-4 border-y-borderGold bg-offwhite !p-4 shadow-lg tablet:h-36 tablet:w-96">
             <IoToggle className="size-9 text-primary" />
             <div className="text-center text-sm text-primary sm:text-base tablet:max-w-64">
-              Easily add your profile&apos;s dietary preferences to your orders.
+              Easily add your account&apos;s dietary preferences to your orders.
             </div>
           </div>
         </div>
