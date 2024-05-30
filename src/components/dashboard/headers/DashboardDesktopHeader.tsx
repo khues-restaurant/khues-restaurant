@@ -19,6 +19,7 @@ import DiscountManagement from "~/components/dashboard/DiscountManagement";
 import DelayNewOrders from "~/components/dashboard/DelayNewOrders";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
+import { type Socket } from "socket.io-client";
 
 interface DashboardDesktopHeader {
   viewState: "orderManagement" | "customerChats" | "itemManagement" | "stats";
@@ -27,11 +28,13 @@ interface DashboardDesktopHeader {
       "orderManagement" | "customerChats" | "itemManagement" | "stats"
     >
   >;
+  socket: Socket;
 }
 
 function DashboardDesktopHeader({
   viewState,
   setViewState,
+  socket,
 }: DashboardDesktopHeader) {
   const { isSignedIn, signOut } = useAuth();
   const { asPath, push } = useRouter();
@@ -42,8 +45,11 @@ function DashboardDesktopHeader({
   });
 
   const { data: todaysOrders } = api.order.getTodaysOrders.useQuery();
+  const { data: databaseChats, refetch: refetchChats } =
+    api.chat.getAllMessages.useQuery();
 
   const [numberOfActiveOrders, setNumberOfActiveOrders] = useState(0);
+  const [numberOfUnreadMessages, setNumberOfUnreadMessages] = useState(0);
 
   useEffect(() => {
     if (!todaysOrders) return;
@@ -54,6 +60,26 @@ function DashboardDesktopHeader({
 
     setNumberOfActiveOrders(activeOrders.length);
   }, [todaysOrders]);
+
+  useEffect(() => {
+    if (!databaseChats) return;
+
+    const unreadMessages = databaseChats.filter(
+      (chat) => chat.dashboardHasUnreadMessages,
+    );
+
+    setNumberOfUnreadMessages(unreadMessages.length);
+  }, [databaseChats]);
+
+  useEffect(() => {
+    console.log("listener ran on customerChats");
+
+    socket.on("newDashboardMessage", (data) => {
+      console.log("newDashboardMessage", data);
+
+      void refetchChats();
+    });
+  }, [socket, refetchChats]);
 
   return (
     <nav
@@ -95,15 +121,14 @@ function DashboardDesktopHeader({
             Customer chats
           </Button>
 
-          {/* unreadMessages > 0 && */}
-          {false && (
+          {numberOfUnreadMessages > 0 && (
             <div
               className={`absolute -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite
-                ${numberOfActiveOrders < 10 ? "-right-2" : "-right-4"}
+                ${numberOfUnreadMessages < 10 ? "-right-2" : "-right-4"}
               `}
             >
               <AnimatedNumbers
-                value={numberOfActiveOrders}
+                value={numberOfUnreadMessages}
                 fontSize={14}
                 padding={6}
               />

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { api } from "~/utils/api";
 import { IoChatbox } from "react-icons/io5";
 import { X } from "lucide-react";
@@ -13,7 +13,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import useGetUserId from "~/hooks/useGetUserId";
 import { Textarea } from "~/components/ui/textarea";
 import Image from "next/image";
-import { format } from "date-fns";
+import { format, isSameDay } from "date-fns";
 import { env } from "~/env";
 import { type Socket, io } from "socket.io-client";
 import {
@@ -24,12 +24,26 @@ import {
 import { useMainStore } from "~/stores/MainStore";
 import { useRouter } from "next/router";
 
+import khuesKitchenLogo from "/public/khuesKitchenLogo.png";
+
 // FYI: when we made this we were aware that it is conservative by nature, and is only
 // connecting to the socket.io server once the Chat has been opened for the first time.
 
 // ^ a small qol bump would maybe be to connect if the last message sent in the message chain
 // was by the user, and of course the most "ideal" (but also highest server load) would be
 // to have a persistent connection to the server at all times that the user is on the site.
+
+type CombinedMessagesAndDateLabels = (
+  | Date
+  | {
+      id: string;
+      type: "message";
+      content: string;
+      createdAt: Date;
+      senderId: string;
+      recipientId: string;
+    }
+)[];
 
 function Chat() {
   const userId = useGetUserId();
@@ -118,6 +132,8 @@ function Chat() {
     useState(false);
   const [socket, setSocket] = useState<Socket | null>(null);
 
+  const scrollableChatContainerRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     if (!chatIsOpen || chatHasBeenInitiallyOpened || userId === "") return;
     setChatHasBeenInitiallyOpened(true);
@@ -141,6 +157,8 @@ function Chat() {
   }, [chatIsOpen, chatHasBeenInitiallyOpened, userId, refetch]);
 
   const [newMessageContent, setNewMessageContent] = useState("");
+  const [dateLabeledMessages, setDateLabeledMessages] =
+    useState<CombinedMessagesAndDateLabels>([]);
 
   useEffect(() => {
     if (chatIsOpen && chat?.userHasUnreadMessages) {
@@ -148,13 +166,43 @@ function Chat() {
     }
   }, [chatIsOpen, chat, updateChatReadStatus]);
 
+  // autoscroll to bottom of chat when chat is opened
+  useLayoutEffect(() => {
+    if (chatIsOpen) {
+      setTimeout(() => {
+        if (scrollableChatContainerRef.current) {
+          scrollableChatContainerRef.current.scrollTop =
+            scrollableChatContainerRef.current.scrollHeight;
+        }
+      }, 0);
+    }
+  }, [chatIsOpen]);
+
+  useEffect(() => {
+    if (chat?.messages) {
+      const transformedMessages: CombinedMessagesAndDateLabels = [];
+      let lastDate: Date | null = null;
+
+      chat.messages.forEach((message) => {
+        const messageDate = new Date(message.createdAt);
+        if (!lastDate || !isSameDay(lastDate, messageDate)) {
+          transformedMessages.push(messageDate);
+          lastDate = messageDate;
+        }
+        transformedMessages.push({ ...message, type: "message" });
+      });
+
+      setDateLabeledMessages(transformedMessages);
+    }
+  }, [chat?.messages]);
+
   return (
     // a little hacky, but somehow both the "X" and chat icon were showing at the same time
     // this just flushes out the component manually on change of chatIsOpen
     // ^ most likely due to zustand updating faster than react's reconciliation process?
     // could technically debounce but this should be fine
     <div
-      key={chatIsOpen ? "manualRerenderChat1" : "manualRerenderChat2"}
+      // key={chatIsOpen ? "manualRerenderChat1" : "manualRerenderChat2"}
       className="baseFlex !sticky bottom-0 z-20 h-0 w-full !justify-end pr-6 tablet:pr-8"
     >
       {viewportLabel.includes("mobile") ? (
@@ -190,7 +238,9 @@ function Chat() {
                         animationDuration: "2s",
                       }}
                       className={`absolute left-1 top-1 z-[-1] size-8 rounded-full bg-primary ${
-                        chat?.userHasUnreadMessages ? "animate-ping" : ""
+                        !chatIsOpen && chat?.userHasUnreadMessages
+                          ? "animate-ping"
+                          : ""
                       }`}
                     ></div>
 
@@ -201,16 +251,25 @@ function Chat() {
             )}
           </AnimatePresence>
 
-          <AlertDialogContent className="baseVertFlex h-[70dvh] w-[90vw] rounded-lg border-none !p-0 shadow-xl sm:mr-4">
+          <AlertDialogContent className="baseVertFlex h-[90dvh] max-h-[750px] w-[90vw] rounded-lg border-none !p-0 shadow-xl">
             {/* header */}
-            <div className="baseVertFlex relative !items-start gap-2 rounded-t-lg bg-primary p-4">
-              <p className="text-lg font-medium text-offwhite">
-                Have a question?
-              </p>
-              <p className="text-sm text-stone-200">
-                Send a message directly to our team and we will respond as soon
-                as possible.
-              </p>
+            <div className="baseFlex relative w-full gap-4 rounded-t-lg bg-primary p-4">
+              <Image
+                src={khuesKitchenLogo}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                priority
+                className="h-[101.33px] w-[53.67px] drop-shadow-md"
+              />
+
+              <div className="baseVertFlex w-full !items-start gap-2">
+                <p className="text-lg font-medium text-offwhite">
+                  Have a question?
+                </p>
+                <p className="max-w-72 text-sm text-stone-200">
+                  Send a message directly to our team and we will respond as
+                  soon as possible.
+                </p>
+              </div>
 
               <Button
                 variant={"text"}
@@ -222,40 +281,44 @@ function Chat() {
             </div>
 
             {/* scroll-y-auto messages container */}
-            <div className="baseVertFlex relative !h-[500px] w-full !justify-start gap-2 overflow-y-auto bg-background p-2 sm:h-96 ">
-              <Image
-                src="/logo.svg"
-                alt="Khue's header logo"
-                width={85}
-                height={85}
-                priority
-                // idk why the 47.5% was necessary to center the image... investigate later
-                className="fixed left-[47.5%] top-1/2 !size-[85px] -translate-x-1/2 -translate-y-1/2 transform opacity-15 "
-              />
-
-              {chat?.messages?.map((message) => (
-                <div
-                  key={message.id}
-                  className={`baseVertFlex w-full
-              ${message.senderId === userId ? "!items-end" : "!items-start"}
-              `}
-                >
-                  <p
-                    className={`text-xs text-stone-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
-                  >
-                    {format(message.createdAt, "h:mm a")}
-                  </p>
-                  <div
-                    className={`z-10 rounded-full px-4 py-2 ${message.senderId === userId ? "bg-primary text-offwhite" : "bg-secondary"}`}
-                  >
-                    <p className="text-sm">{message.content}</p>
-                  </div>
-                </div>
+            <div
+              ref={scrollableChatContainerRef}
+              className="baseVertFlex relative !h-full w-full !justify-start gap-2 overflow-y-auto bg-background p-2 sm:h-96 "
+            >
+              {dateLabeledMessages.map((message) => (
+                <>
+                  {message instanceof Date ? (
+                    <p
+                      key={message.toString()}
+                      className="text-center text-xs text-stone-400"
+                    >
+                      {format(message, "EEEE, MMMM do")}
+                    </p>
+                  ) : (
+                    <div
+                      key={message.id}
+                      className={`baseVertFlex w-full
+                                  ${message.senderId === userId ? "!items-end" : "!items-start"}
+                               `}
+                    >
+                      <p
+                        className={`text-xs text-stone-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
+                      >
+                        {format(message.createdAt, "h:mm a")}
+                      </p>
+                      <div
+                        className={`z-10 rounded-full px-4 py-2 ${message.senderId === userId ? "bg-primary text-offwhite" : "bg-secondary"}`}
+                      >
+                        <p className="text-sm">{message.content}</p>
+                      </div>
+                    </div>
+                  )}
+                </>
               ))}
             </div>
 
             {/* input */}
-            <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-stone-200 to-stone-300 p-2 px-4">
+            <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-stone-200 to-stone-300 p-2 px-4 shadow-inner">
               <Textarea
                 placeholder="Enter your message here"
                 value={newMessageContent}
@@ -315,31 +378,30 @@ function Chat() {
                     animationDuration: "2s",
                   }}
                   className={`absolute left-0 top-0 z-[-1] size-14 rounded-full bg-primary ${
-                    chat?.userHasUnreadMessages ? "animate-ping" : ""
+                    !chatIsOpen && chat?.userHasUnreadMessages
+                      ? "animate-ping"
+                      : ""
                   }`}
                 ></div>
-                <AnimatePresence mode="popLayout">
-                  {chatIsOpen ? (
-                    <motion.div
-                      key="closeChat"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.15 }}
-                    >
-                      <X className="size-6 drop-shadow-md" />
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="openChatTablet+"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.15 }}
-                    >
-                      <IoChatbox className="size-6 drop-shadow-md" />
-                    </motion.div>
-                  )}
+                <AnimatePresence>
+                  <motion.div
+                    key="chatContainer"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    {/* not my favorite approach, but couldn't fully get rid of bug with both icons
+                    rendering at once when we had two motion.div containers that we were rapidly switching
+                    between for some reason */}
+                    <>
+                      {chatIsOpen ? (
+                        <X className="size-6 drop-shadow-md" />
+                      ) : (
+                        <IoChatbox className="size-6 drop-shadow-md" />
+                      )}
+                    </>
+                  </motion.div>
                 </AnimatePresence>
               </Button>
             </PopoverTrigger>
@@ -352,51 +414,66 @@ function Chat() {
             className="baseVertFlex w-full rounded-lg border-none !p-0 shadow-xl sm:mr-4 sm:max-w-sm"
           >
             {/* header */}
-            <div className="baseVertFlex !items-start gap-2 rounded-t-lg bg-primary p-4">
-              <p className="text-lg font-medium text-offwhite">
-                Have a question?
-              </p>
-              <p className="text-sm text-stone-200">
-                Send a message directly to our team and we will respond as soon
-                as possible.
-              </p>
+            <div className="baseFlex gap-4 rounded-t-lg bg-primary p-4">
+              <Image
+                src={khuesKitchenLogo}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                priority
+                // className="h-[228px] w-[120.75px]"
+                // className="h-[205.2px] w-[108.675px]"
+                className="h-[101.33px] w-[53.67px] drop-shadow-md"
+              />
+
+              <div className="baseVertFlex !items-start gap-2">
+                <p className="text-lg font-medium text-offwhite">
+                  Have a question?
+                </p>
+                <p className="text-sm text-stone-200">
+                  Send a message directly to our team and we will respond as
+                  soon as possible.
+                </p>
+              </div>
             </div>
 
             {/* scroll-y-auto messages container */}
-            <div className="baseVertFlex relative size-full !flex-col-reverse !justify-start gap-2 overflow-y-auto overscroll-y-contain bg-background p-2 sm:h-96 ">
-              <Image
-                src="/logo.svg"
-                alt="Khue's header logo"
-                width={85}
-                height={85}
-                priority
-                // idk why the 47.5% was necessary to center the image... investigate later
-                className="fixed left-[47.5%] top-1/2 !size-[85px] -translate-x-1/2 -translate-y-1/2 transform opacity-15 "
-              />
-
-              {chat?.messages?.map((message) => (
-                <div
-                  key={message.id}
-                  className={`baseVertFlex w-full
-              ${message.senderId === userId ? "!items-end" : "!items-start"}
-              `}
-                >
-                  <p
-                    className={`text-xs text-stone-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
-                  >
-                    {format(message.createdAt, "h:mm a")}
-                  </p>
-                  <div
-                    className={`z-10 rounded-full px-4 py-2 ${message.senderId === userId ? "bg-primary text-offwhite" : "bg-secondary"}`}
-                  >
-                    <p className="text-sm">{message.content}</p>
-                  </div>
-                </div>
+            <div
+              ref={scrollableChatContainerRef}
+              className="baseVertFlex relative size-full !justify-start gap-2 overflow-y-auto overscroll-y-contain bg-background p-2 shadow-inner sm:h-96 "
+            >
+              {dateLabeledMessages.map((message) => (
+                <>
+                  {message instanceof Date ? (
+                    <p
+                      key={message.toString()}
+                      className="text-center text-xs text-stone-400"
+                    >
+                      {format(message, "EEEE, MMMM do")}
+                    </p>
+                  ) : (
+                    <div
+                      key={message.id}
+                      className={`baseVertFlex w-full
+                                  ${message.senderId === userId ? "!items-end" : "!items-start"}
+                               `}
+                    >
+                      <p
+                        className={`text-xs text-stone-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
+                      >
+                        {format(message.createdAt, "h:mm a")}
+                      </p>
+                      <div
+                        className={`z-10 rounded-full px-4 py-2 ${message.senderId === userId ? "bg-primary text-offwhite" : "bg-secondary"}`}
+                      >
+                        <p className="text-sm">{message.content}</p>
+                      </div>
+                    </div>
+                  )}
+                </>
               ))}
             </div>
 
             {/* input */}
-            <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-stone-200 to-stone-300 p-2 px-4">
+            <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-stone-200 to-stone-300 p-2 px-4 shadow-inner">
               <Textarea
                 placeholder="Enter your message here"
                 value={newMessageContent}
@@ -411,7 +488,7 @@ function Chat() {
                     });
                   }
                 }}
-                className="max-h-12 flex-grow border-2 border-stone-500 bg-transparent placeholder-stone-400"
+                className="max-h-12 flex-grow border border-stone-500 bg-transparent placeholder-stone-400"
               />
               <Button
                 className="!p-2"

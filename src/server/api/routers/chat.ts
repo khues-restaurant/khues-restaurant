@@ -33,28 +33,41 @@ export const chatRouter = createTRPCRouter({
 
       // If no chat exists, create a new one
       if (!chat) {
+        // check if the userId is associated with a current user, if so fetch that user's
+        // first and last name to add to the chat
+        const user = await ctx.prisma.user.findUnique({
+          where: {
+            userId: input.senderUserId,
+          },
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        });
+
         chat = await ctx.prisma.chat.create({
           data: {
             userId: input.senderUserId, // Assuming the sender initializes the chat
+            userFullName: user
+              ? `${user.firstName} ${user.lastName}`
+              : "Customer",
             // Other default fields like userHasUnreadMessages can be set here
           },
         });
       }
 
-      // update chat's unread messages status
+      // update the opposite party's unread messages status to true
       const updatedReadStatus =
-        input.recipientUserId !== "dashboard"
-          ? { userHasUnreadMessages: true }
-          : { dashboardHasUnreadMessages: true };
+        input.recipientUserId === "dashboard"
+          ? { dashboardHasUnreadMessages: true }
+          : { userHasUnreadMessages: true };
 
-      if (input.recipientUserId !== "dashboard") {
-        await ctx.prisma.chat.update({
-          where: {
-            id: chat.id,
-          },
-          data: updatedReadStatus,
-        });
-      }
+      await ctx.prisma.chat.update({
+        where: {
+          id: chat.id,
+        },
+        data: updatedReadStatus,
+      });
 
       // Create a message in the existing or new chat
       const message = await ctx.prisma.chatMessage.create({
@@ -105,7 +118,7 @@ export const chatRouter = createTRPCRouter({
         include: {
           messages: {
             orderBy: {
-              createdAt: "desc",
+              createdAt: "asc",
             },
           },
         },
@@ -117,7 +130,7 @@ export const chatRouter = createTRPCRouter({
       include: {
         messages: {
           orderBy: {
-            createdAt: "desc",
+            createdAt: "asc",
           },
         },
       },

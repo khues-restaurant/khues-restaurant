@@ -4,6 +4,7 @@ import { type Dispatch, type SetStateAction } from "react";
 import Head from "next/head";
 import { useMainStore } from "~/stores/MainStore";
 import useViewportLabelResizeListener from "~/hooks/useViewportLabelResizeListener";
+import { type Socket } from "socket.io-client";
 
 interface DashboardHeaderShell {
   viewState: "orderManagement" | "customerChats" | "itemManagement" | "stats";
@@ -12,11 +13,13 @@ interface DashboardHeaderShell {
       "orderManagement" | "customerChats" | "itemManagement" | "stats"
     >
   >;
+  socket: Socket;
 }
 
 function DashboardHeaderShell({
   viewState,
   setViewState,
+  socket,
 }: DashboardHeaderShell) {
   const { initViewportLabelSet, viewportLabel } = useMainStore((state) => ({
     initViewportLabelSet: state.initViewportLabelSet,
@@ -47,6 +50,7 @@ function DashboardHeaderShell({
         <DashboardDesktopHeader
           viewState={viewState}
           setViewState={setViewState}
+          socket={socket}
         />
       )}
     </>

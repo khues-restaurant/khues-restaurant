@@ -97,8 +97,12 @@ function DashboardLayout({ children }: DashboardLayout) {
   }, [menuCategories, setMenuItems]);
 
   return (
-    <main className="baseVertFlex relative min-h-[100dvh] w-full !justify-between">
-      <DashboardHeaderShell viewState={viewState} setViewState={setViewState} />
+    <main className="baseVertFlex relative min-h-[100dvh] w-full !justify-between bg-body">
+      <DashboardHeaderShell
+        viewState={viewState}
+        setViewState={setViewState}
+        socket={socket}
+      />
 
       <AnimatePresence>
         <>

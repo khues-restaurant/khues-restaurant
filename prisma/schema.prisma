@@ -32,6 +32,8 @@ model Chat {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    userFullName String @default("Customer")
+
     userHasUnreadMessages      Boolean @default(false)
     dashboardHasUnreadMessages Boolean @default(false)
 
