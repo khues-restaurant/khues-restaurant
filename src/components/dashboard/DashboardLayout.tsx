@@ -16,6 +16,7 @@ const socket = io(env.NEXT_PUBLIC_SOCKET_IO_URL, {
     userId: "dashboard",
   },
   secure: env.NEXT_PUBLIC_SOCKET_IO_URL.includes("https") ? true : false,
+  retries: 3,
 });
 
 interface DashboardLayout {

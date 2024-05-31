@@ -146,6 +146,7 @@ function Chat() {
         userId,
       },
       secure: env.NEXT_PUBLIC_SOCKET_IO_URL.includes("https") ? true : false,
+      retries: 3,
     });
 
     socket.on(`newUserMessage`, (message) => {

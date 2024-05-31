@@ -235,6 +235,7 @@ export const orderRouter = createTRPCRouter({
           userId: "startOrder", // this shouldn't actually be necessary, can probably remove later
         },
         secure: env.NODE_ENV === "production" ? true : false,
+        retries: 3,
       });
 
       socket.on("connect", () => {
@@ -270,6 +271,7 @@ export const orderRouter = createTRPCRouter({
           userId: "completeOrder", // this shouldn't actually be necessary, can probably remove later
         },
         secure: env.NODE_ENV === "production" ? true : false,
+        retries: 3,
       });
 
       socket.on("connect", () => {

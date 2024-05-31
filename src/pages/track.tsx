@@ -61,6 +61,7 @@ function Track() {
         userId: order.id,
       },
       secure: env.NEXT_PUBLIC_SOCKET_IO_URL.includes("https") ? true : false,
+      retries: 3,
     });
 
     socket.on(`orderStatusUpdate`, () => {
