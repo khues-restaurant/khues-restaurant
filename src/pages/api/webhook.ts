@@ -16,6 +16,7 @@ import { prisma } from "~/server/db";
 import OpenAI from "openai";
 import { io } from "socket.io-client";
 import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
+import { toZonedTime } from "date-fns-tz";
 
 const resend = new Resend(env.RESEND_API_KEY);
 const openai = new OpenAI({
@@ -51,8 +52,6 @@ interface PaymentMetadata {
 // TODO: clean up all of the early returns and try to maybe consolidate them a bit?
 
 const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
-  console.log("webhook hit");
-
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     res.status(405).end("Method Not Allowed");
@@ -76,15 +75,11 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
     case "checkout.session.completed":
       const payment = event.data.object;
 
-      console.dir(payment);
-
       if (payment.metadata === null || payment.amount_total === null) {
-        console.log("returning early 1");
+        console.log("returning early, metadata or amount_total is null");
         res.json({ received: true });
         return;
       }
-
-      console.log("details are: ", payment.customer_details);
 
       let customerMetadata: PaymentMetadata | undefined = undefined;
 
@@ -104,11 +99,11 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         // This will throw an error if the object does not match the schema
         customerMetadata = PaymentMetadataSchema.parse(customerDetails);
       } catch (error) {
-        console.error("Validation failed:", error);
+        console.error("Validation failed on customerDetails:", error);
       }
 
       if (customerMetadata === undefined) {
-        console.log("returning early 2");
+        console.log("returning early, customerMetadata is undefined");
         res.json({ received: true });
         return;
       }
@@ -122,7 +117,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
-      // falling back to db first and last name if not provided/able to be extracted
+      // falling back to db first/last name if not provided/able to be extracted
       // by splitting the name
       if (
         user &&
@@ -156,42 +151,42 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       if (orderDetails === undefined) {
-        console.log("returning early 3");
+        console.log("returning early, orderDetails is undefined");
         res.json({ received: true });
         return;
       }
 
-      const prevPoints = user?.rewardsPoints ?? 0;
-      let spentPoints = 0;
+      // point conversion: one dollar spent rewards the user with 5 points
 
-      // also general TODO: look for every opportunity to use Decimal instead of number
-      // for example below you have totalPrice / 5 which certainly could cause float issue no?
+      const prevPoints = new Decimal(user?.rewardsPoints ?? 0);
+      let spentPoints = new Decimal(0);
 
-      // TODO: not sure whether subtotal/tax/total is in cents or dollars but obv that is necessary info to figure out
-
-      // price is in cents, so divide by 100 to get dollars
-      const subtotal = new Decimal(payment.amount_subtotal ?? 0).div(100);
+      // stripe subtotal is in cents, so divide by 100 to get dollars
+      let subtotal = new Decimal(payment.amount_subtotal ?? 0).div(100);
 
       // subtract tip from subtotal (if it exists)
       if (orderDetails.tipValue) {
-        subtotal.minus(orderDetails.tipValue);
+        subtotal = subtotal.minus(new Decimal(orderDetails.tipValue));
       }
 
-      // calculate new rewards points from order subtotal
+      // check if any item in order has a point-based reward that was redeemed
       for (const item of orderDetails.items) {
         if (item.pointReward) {
-          spentPoints = new Decimal(item.price).div(0.005).toNumber();
+          spentPoints = new Decimal(item.price).times(5);
         }
       }
 
-      const earnedPoints = subtotal.div(5).toNumber();
+      const earnedPoints = subtotal.times(5);
 
-      const lifetimeRewardPoints =
-        (user?.lifetimeRewardPoints ?? 0) + earnedPoints;
+      const lifetimeRewardPoints = new Decimal(
+        user?.lifetimeRewardPoints ?? 0,
+      ).add(earnedPoints);
 
       // 3) create order row
       // fyi: prisma already assigns the uuid of the order being created here to orderId field
 
+      // expected shape is almost there, just need to convert customizations to the correct format
+      // and add the menuItemId field
       const orderItemsData = orderDetails.items.map(
         ({ itemId, id, customizations, ...rest }) => ({
           ...rest,
@@ -207,32 +202,26 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         }),
       );
 
-      console.log(orderItemsData);
-
       let adjustedDatetimeToPickup = new Date(orderDetails.datetimeToPickup);
 
       // add 15 minutes to current time if order is ASAP
       if (orderDetails.isASAP) {
-        adjustedDatetimeToPickup = new Date();
+        adjustedDatetimeToPickup = toZonedTime(new Date(), "America/Chicago");
         adjustedDatetimeToPickup.setMinutes(
           adjustedDatetimeToPickup.getMinutes() + 15,
         );
       }
 
-      console.log("tax amount: ", payment.total_details?.amount_tax ?? 0);
-
-      // calculate/retrieve subtotal, tax, tip, total values here
-      // const subtotal = payment.amount_subtotal ?? 0;
-      const tax = new Decimal(payment.total_details?.amount_tax ?? 0);
-      // ^ TODO: investigate this, idk if it just by location
-      //         is doing the sales tax stuff or exactly what's going on there
+      // calculate/retrieve subtotal, tax, tip, total values here:
+      const tax = new Decimal(payment.total_details?.amount_tax ?? 0).div(100);
+      // ^ TODO: thouroughly test this once Stripe tax information is all set up
+      // ideally we would just rely on stripe's calculation of tax and not have to
+      // calculate it ourselves
 
       const tipPercentage = orderDetails.tipPercentage;
       const tipValue = orderDetails.tipValue;
 
-      console.log("tip value: ", tipValue, "tip percentage: ", tipPercentage);
-
-      const total = new Decimal(payment.amount_total);
+      const total = new Decimal(payment.amount_total).div(100);
 
       console.log(
         "Here!",
@@ -257,9 +246,9 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         tipPercentage,
         tipValue,
         total: total.toNumber(),
-        prevRewardsPoints: prevPoints,
-        earnedRewardsPoints: earnedPoints,
-        spentRewardsPoints: spentPoints,
+        prevRewardsPoints: prevPoints.toNumber(),
+        earnedRewardsPoints: earnedPoints.toNumber(),
+        spentRewardsPoints: spentPoints.toNumber(),
         rewardsPointsRedeemed: user ? true : false,
         userId: user ? user.userId : null,
         orderItems: {
@@ -271,23 +260,14 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         data: orderData,
       });
 
-      // 4) set any reward discount to inactive if it was used
+      // 4) set any reward(s) to inactive/partially redeemed as applicable
 
       // if a reward item was redeemed:
       // need to get all of user's rewards that are active and not expired, sorted by ascending expiration date
       // and then loop over adding their values until we get to the rewards item's value. While doing this we
-      // would save the ids that were totally used up to then set to active: false, and the last one most likely
-      // would just have it's value subtracted (need to specifically update this row's value) based on how much
-      // was left to reach the reward item's value.
-      let rewardItemPointValue = 0;
-
-      for (const item of orderDetails.items) {
-        if (item.pointReward) {
-          rewardItemPointValue = new Decimal(item.price).div(0.005).toNumber();
-        }
-      }
-
-      if (rewardItemPointValue > 0) {
+      // save the ids that were totally used up to then set to active: false, and the last one most likely
+      // would have it's value field subtracted based on how much was left to reach the reward item's value.
+      if (spentPoints.greaterThan(0)) {
         const rewards = await prisma.reward.findMany({
           where: {
             userId: payment.metadata.userId,
@@ -301,26 +281,26 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
           },
         });
 
-        let totalValue = 0;
+        const totalValue = new Decimal(0);
         const rewardIdsToDeactivate: string[] = [];
 
         for (const reward of rewards) {
-          totalValue += reward.value;
+          totalValue.add(reward.value);
 
-          if (totalValue >= rewardItemPointValue) {
+          if (totalValue >= spentPoints) {
             // this reward is the last one to be used up
-            if (totalValue === rewardItemPointValue) {
+            if (totalValue === spentPoints) {
               rewardIdsToDeactivate.push(reward.id);
             } else {
-              // this reward is partially used up
-              const remainingValue = totalValue - rewardItemPointValue;
+              // this reward is now partially used up
+              const remainingValue = totalValue.sub(spentPoints);
 
               await prisma.reward.update({
                 where: {
                   id: reward.id,
                 },
                 data: {
-                  value: remainingValue,
+                  value: remainingValue.toNumber(),
                   partiallyRedeemed: true,
                 },
               });
@@ -346,7 +326,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       }
 
-      // 5) if user exists, update user rewards points + reset their currentOrder
+      // 5) if user exists, update their rewards points + reset their currentOrder
       if (user) {
         if (payment.metadata.userId) {
           const currentDate = new Date();
@@ -356,19 +336,23 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
             data: {
               userId: payment.metadata.userId,
               expiresAt: sixMonthsLater,
-              value: earnedPoints,
+              value: earnedPoints.toNumber(),
               orderId: order.id,
             },
           });
         }
+
+        const currentRewardsPoints = prevPoints
+          .add(earnedPoints)
+          .sub(spentPoints);
 
         await prisma.user.update({
           where: {
             userId: payment.metadata.userId,
           },
           data: {
-            rewardsPoints: prevPoints + earnedPoints - spentPoints,
-            lifetimeRewardPoints,
+            rewardsPoints: currentRewardsPoints.toNumber(),
+            lifetimeRewardPoints: lifetimeRewardPoints.toNumber(),
             currentOrder: {
               datetimeToPickup: getFirstValidMidnightDate(),
               isASAP: false,
