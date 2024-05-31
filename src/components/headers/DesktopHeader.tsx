@@ -81,7 +81,15 @@ function DesktopHeader() {
     >
       <Button variant="text" asChild>
         <Link href={"/"} className={`${classes.logo ?? ""}`}>
-          <p className="text-3xl font-semibold text-primary">Khue&apos;s</p>
+          {/* <p className="text-3xl font-semibold text-primary">Khue&apos;s</p> */}
+          <Image
+            src={"/logo.svg"}
+            alt={"TODO: fill in w/ appropriate alt text"}
+            priority
+            width={55}
+            height={55}
+            className="!size-[55px]"
+          />
         </Link>
       </Button>
 

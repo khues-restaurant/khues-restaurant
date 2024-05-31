@@ -91,7 +91,15 @@ function MobileHeader() {
     >
       <Button variant="text" asChild>
         <Link href={"/"}>
-          <p className="text-2xl font-semibold text-primary">Khue&apos;s</p>
+          {/* <p className="text-2xl font-semibold text-primary">Khue&apos;s</p> */}
+          <Image
+            src={"/logo.svg"}
+            alt={"TODO: fill in w/ appropriate alt text"}
+            priority
+            width={45}
+            height={45}
+            className="!size-[45px]"
+          />
         </Link>
       </Button>
 
