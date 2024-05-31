@@ -70,6 +70,11 @@ function PaymentSuccess({
           content={`www.khueskitchen.com/payment-sucess?session_id=${sessionId}&userId=${userId}`}
         />
         <meta property="og:type" content="website" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: 'history.scrollRestoration = "manual"',
+          }}
+        />
       </Head>
 
       <div className="baseVertFlex max-w-80 gap-6 p-4 tablet:max-w-2xl tablet:gap-8 tablet:p-8">

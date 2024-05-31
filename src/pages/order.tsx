@@ -46,6 +46,7 @@ import { FaWineBottle } from "react-icons/fa6";
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";
 import { toZonedTime } from "date-fns-tz";
+import Script from "next/script";
 
 // - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
 //   <Drawer> components and have them only conditionally be rendered based on dimensions
@@ -308,6 +309,11 @@ function OrderNow() {
           property="og:image:alt"
           content="TODO: A description of what is in the image (not a caption). If the page specifies an og:image it should specify og:image:alt"
         ></meta> */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: 'history.scrollRestoration = "manual"',
+          }}
+        />
       </Head>
 
       {/* Hero */}

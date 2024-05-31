@@ -223,6 +223,11 @@ function Preferences() {
           content="www.khueskitchen.com/profile/preferences"
         />
         <meta property="og:type" content="website" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: 'history.scrollRestoration = "manual"',
+          }}
+        />
       </Head>
 
       <AnimatePresence mode="wait">

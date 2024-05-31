@@ -113,6 +113,11 @@ function RecentOrders() {
           content="www.khueskitchen.com/profile/my-orders"
         />
         <meta property="og:type" content="website" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: 'history.scrollRestoration = "manual"',
+          }}
+        />
       </Head>
 
       <AnimatePresence mode="wait">

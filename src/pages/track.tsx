@@ -304,6 +304,11 @@ function Track() {
           content={`www.khueskitchen.com/track?id=${typeof orderId === "string" ? orderId ?? "" : ""}`}
         />
         <meta property="og:type" content="website" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: 'history.scrollRestoration = "manual"',
+          }}
+        />
       </Head>
 
       <div className="baseVertFlex mb-8 w-full gap-4 px-0 py-4 tablet:max-w-2xl tablet:p-8">

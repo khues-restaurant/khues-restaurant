@@ -7,7 +7,6 @@ import GeneralLayout from "~/components/layouts/GeneralLayout";
 import { useRouter } from "next/router";
 import DashboardLayout from "~/components/dashboard/DashboardLayout";
 import { ParallaxProvider } from "react-scroll-parallax";
-import { useEffect } from "react";
 
 // might in some way mess with t3 bootstrapping, be wary
 type ComponentWithPageLayout = AppProps & {
@@ -17,24 +16,7 @@ type ComponentWithPageLayout = AppProps & {
 };
 
 function MyApp({ Component, pageProps }: ComponentWithPageLayout) {
-  const { asPath, events } = useRouter();
-
-  // trying to fix weird mobile scroll issue when navigating between (maybe just
-  // pages with nested layouts?) where the page would not scroll to the top when loaded
-  // useEffect(() => {
-  //   const handleRouteChange = () => {
-  //     setTimeout(() => {
-  //       console.log("hi");
-  //       window.scrollTo(0, 0);
-  //     }, 50);
-  //   };
-
-  //   events.on("routeChangeComplete", handleRouteChange);
-
-  //   return () => {
-  //     events.off("routeChangeComplete", handleRouteChange);
-  //   };
-  // }, [events]);
+  const { asPath } = useRouter();
 
   return (
     <ClerkProvider

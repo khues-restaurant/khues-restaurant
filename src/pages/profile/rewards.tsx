@@ -145,6 +145,11 @@ function Rewards() {
           content="www.khueskitchen.com/profile/rewards"
         />
         <meta property="og:type" content="website" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: 'history.scrollRestoration = "manual"',
+          }}
+        />
       </Head>
 
       <AnimatePresence mode="wait">
