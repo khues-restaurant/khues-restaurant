@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TopProfileNavigationLayout from "~/components/layouts/TopProfileNavigationLayout";
 import { AnimatePresence, motion } from "framer-motion";
 import { z } from "zod";
@@ -160,6 +160,15 @@ function Preferences() {
     birthday: z.date(),
   });
 
+  useEffect(() => {
+    setTimeout(() => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: "instant",
+      });
+    }, 100);
+  }, []);
   // should be able to remove ?. and ?? from these now since we are using getServerSideProps
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

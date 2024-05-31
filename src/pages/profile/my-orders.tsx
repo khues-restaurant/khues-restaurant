@@ -65,13 +65,13 @@ function RecentOrders() {
     },
   );
 
-  const [sortedOrders, setSortedOrders] = useState<DBOrderSummary[] | null>(
-    null,
-  );
+  const [sortedOrders, setSortedOrders] = useState<
+    DBOrderSummary[] | null | undefined
+  >();
   const [sortDirection, setSortDirection] = useState("desc");
 
   useEffect(() => {
-    if (orders === null && sortedOrders === null) {
+    if (orders === null && sortedOrders === undefined) {
       setSortedOrders([]);
       return;
     }
@@ -89,8 +89,17 @@ function RecentOrders() {
     setSortedOrders(localSortedOrders);
   }, [orders, sortedOrders, sortDirection]);
 
-  // dang, there is still seemingly the flash of layout on the initial render, investigate.
-  // could it be due to the type errors in above effect?
+  useEffect(() => {
+    setTimeout(() => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: "instant",
+      });
+    }, 100);
+  }, []);
+
+  // TODO: there is still seemingly the flash of layout on the initial render, investigate.
 
   return (
     <motion.div
@@ -121,7 +130,7 @@ function RecentOrders() {
       </Head>
 
       <AnimatePresence mode="wait">
-        {orders === undefined ? (
+        {orders === undefined || sortedOrders === undefined ? (
           <motion.div
             key={"my-ordersLoadingContent"}
             initial={{ opacity: 0 }}

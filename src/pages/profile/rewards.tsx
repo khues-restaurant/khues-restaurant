@@ -118,6 +118,16 @@ function Rewards() {
     }
   }, [orderDetails.items, toBeDeductedRewardsPoints]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: "instant",
+      });
+    }, 100);
+  }, []);
+
   // need to extract the categories/items from menuItems,
   // and make a separate component below for rendering each menu item w/ it's "Select/Unselect" button + content
 
