@@ -193,7 +193,13 @@ function PostSignUpDialog() {
 
   useEffect(() => {
     if (step === 3) {
-      const pointsBeingRedeemed = 500 + (order?.earnedRewardsPoints ?? 0);
+      const pointsBeingRedeemedFromPreviousOrder = order
+        ? order.userId === null
+          ? order.earnedRewardsPoints
+          : 0
+        : 0;
+
+      const pointsBeingRedeemed = 500 + pointsBeingRedeemedFromPreviousOrder;
 
       setTimeout(() => {
         setInitialRewardsPoints(pointsBeingRedeemed);
