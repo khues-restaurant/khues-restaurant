@@ -268,7 +268,7 @@ function OrderReady({
                           <Row>
                             <Column>
                               <Text className="my-0 text-left">
-                                {`Tip${order.tipPercentage !== null ? `${order.tipPercentage}%` : ""}`}
+                                {`Tip${order.tipPercentage !== null ? ` (${order.tipPercentage}%)` : ""}`}
                               </Text>
                             </Column>
                             <Column>

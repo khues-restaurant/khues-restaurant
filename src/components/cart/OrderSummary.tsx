@@ -182,7 +182,7 @@ function OrderSummary({ order }: OrderSummary) {
           {order.tipValue !== 0 && (
             <div className="baseFlex w-full !justify-between gap-2 text-sm">
               <p>
-                {`Tip${order.tipPercentage !== null ? `${order.tipPercentage}%` : ""}`}
+                {`Tip${order.tipPercentage !== null ? ` (${order.tipPercentage}%)` : ""}`}
               </p>
               <p>{formatPrice(order.tipValue)}</p>
             </div>
