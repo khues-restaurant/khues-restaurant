@@ -29,20 +29,13 @@ import { toZonedTime } from "date-fns-tz";
 
 function Track() {
   const { isSignedIn } = useAuth();
-  const { asPath, isReady, query } = useRouter();
+  const { isReady, query } = useRouter();
   const orderId = query.id;
 
   const { viewportLabel, setChatIsOpen } = useMainStore((state) => ({
     viewportLabel: state.viewportLabel,
     setChatIsOpen: state.setChatIsOpen,
   }));
-
-  // const session = api.payment.getStripeSession.useQuery(
-  //   { orderId },
-  //   {
-  //     enabled: router.isReady,
-  //   },
-  // );
 
   const { data: order, refetch } = api.order.getById.useQuery(
     orderId as string,
@@ -94,6 +87,16 @@ function Track() {
     { top: 0, left: 0 },
   ]);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const progressBarRef = useRef<HTMLDivElement>(null);
+
+  const [passedOrderPlacedCheckpoint, setPassedOrderPlacedCheckpoint] =
+    useState(false);
+  const [passedInProgressCheckpoint, setPassedInProgressCheckpoint] =
+    useState(false);
+  const [passedReadyForPickupCheckpoint, setPassedReadyForPickupCheckpoint] =
+    useState(false);
+
   useLayoutEffect(() => {
     function updatePositions() {
       if (!order || !minTimeoutElapsed) return;
@@ -127,8 +130,10 @@ function Track() {
     return () => window.removeEventListener("resize", updatePositions);
   }, [order, minTimeoutElapsed]);
 
-  // need the undefined state here so that we can transition the orderPlaced checkpoint.
-  // Otherwise it would immediately show the completed state w/o any animation.
+  const [prevOrderStatus, setPrevOrderStatus] = useState<
+    undefined | "orderPlaced" | "inProgress" | "readyForPickup"
+  >();
+
   const [orderStatus, setOrderStatus] = useState<
     undefined | "orderPlaced" | "inProgress" | "readyForPickup"
   >();
@@ -136,18 +141,21 @@ function Track() {
   useEffect(() => {
     if (!order || !minTimeoutElapsed) return;
 
-    if (order.orderCompletedAt) {
+    if (order.orderCompletedAt && orderStatus !== "readyForPickup") {
+      setPrevOrderStatus(orderStatus);
       setOrderStatus("readyForPickup");
       return;
-    } else if (order.orderStartedAt) {
+    } else if (order.orderStartedAt && orderStatus !== "inProgress") {
+      setPrevOrderStatus(orderStatus);
       setOrderStatus("inProgress");
       return;
     }
 
+    if (orderStatus === "orderPlaced") return;
     setTimeout(() => {
       setOrderStatus("orderPlaced");
-    }, 50); // allowing for undefined state/ui to render first, then quickly aligning w/ proper state
-  }, [order, minTimeoutElapsed]);
+    }, 500); // allowing for undefined state/ui to render first, then quickly aligning w/ proper state
+  }, [order, minTimeoutElapsed, orderStatus]);
 
   const [rewardsPointsEarned, setRewardsPointsEarned] = useState(0);
   const [rewardsPointsTimerSet, setRewardsPointsTimerSet] = useState(false);
@@ -169,6 +177,113 @@ function Track() {
 
     setRewardsPointsTimerSet(true);
   }, [order, rewardsPointsTimerSet]);
+
+  useLayoutEffect(() => {
+    const progressBar = progressBarRef.current;
+
+    if (!progressBar) return;
+
+    const handleResize = () => {
+      const container = containerRef.current;
+
+      const orderPlacedAnchor = targetRefs.current[0];
+      const inProgressAnchor = targetRefs.current[1];
+      const readyForPickupAnchor = targetRefs.current[2];
+
+      if (
+        orderStatus === undefined ||
+        !progressBar ||
+        !container ||
+        !orderPlacedAnchor ||
+        !inProgressAnchor ||
+        !readyForPickupAnchor
+      )
+        return;
+
+      const transform = getComputedStyle(progressBar).width;
+      const rawFloatWidthString = transform.slice(0, transform.length - 2);
+
+      if (rawFloatWidthString) {
+        const progressBarWidth = parseFloat(rawFloatWidthString);
+
+        const orderPlacedCheckpointPosition =
+          orderPlacedAnchor.getBoundingClientRect().left -
+          container.getBoundingClientRect().left;
+        const inProgressCheckpointPosition =
+          inProgressAnchor.getBoundingClientRect().left -
+          container.getBoundingClientRect().left;
+        const readyForPickupCheckpointPosition =
+          readyForPickupAnchor.getBoundingClientRect().left -
+          container.getBoundingClientRect().left;
+
+        if (progressBarWidth >= orderPlacedCheckpointPosition) {
+          setPassedOrderPlacedCheckpoint(true);
+        }
+
+        if (progressBarWidth >= inProgressCheckpointPosition) {
+          setPassedInProgressCheckpoint(true);
+        }
+
+        if (progressBarWidth >= readyForPickupCheckpointPosition) {
+          setPassedReadyForPickupCheckpoint(true);
+        }
+      }
+    };
+
+    const resizeObserver = new ResizeObserver(handleResize);
+
+    resizeObserver.observe(progressBar);
+
+    handleResize();
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [orderStatus]);
+
+  function getProgressBarWidth() {
+    if (viewportLabel.includes("mobile")) {
+      if (orderStatus === "orderPlaced") {
+        return "25%";
+      } else if (orderStatus === "inProgress") {
+        return "58%";
+      } else if (orderStatus === "readyForPickup") {
+        return "100%";
+      }
+
+      return "0%";
+    } else {
+      if (orderStatus === "orderPlaced") {
+        return "20%";
+      } else if (orderStatus === "inProgress") {
+        return "54%";
+      } else if (orderStatus === "readyForPickup") {
+        return "100%";
+      }
+
+      return "0%";
+    }
+  }
+
+  function getProgressBarDuration() {
+    if (orderStatus === "readyForPickup") {
+      if (prevOrderStatus === "inProgress") {
+        return "1s";
+      } else if (prevOrderStatus === "orderPlaced") {
+        return "2s";
+      }
+      return "3s";
+    } else if (orderStatus === "inProgress") {
+      if (prevOrderStatus === "orderPlaced") {
+        return "1s";
+      }
+      return "2s";
+    } else if (orderStatus === "orderPlaced") {
+      return "1s";
+    }
+
+    return "1.5s"; // not sure about this default
+  }
 
   return (
     <motion.div
@@ -204,110 +319,68 @@ function Track() {
               <div className="baseVertFlex w-full gap-2">
                 {/* animated progress bar */}
                 <div className="relative h-10 w-full overflow-hidden rounded-full border-2 border-primary shadow-md ">
-                  <div className="baseFlex absolute left-0 top-0 size-full">
-                    {/* pre-first checkpoint */}
-                    <div className="relative h-full w-[24%] tablet:w-[20%]">
-                      <motion.div
-                        key={orderStatus}
-                        initial={{ scaleX: "0%" }}
-                        animate={{ scaleX: "100%" }}
-                        transition={{
-                          duration: 1,
-                          ease:
-                            orderStatus === "orderPlaced"
-                              ? "easeOut"
-                              : "linear",
-                          delay: 1, // TODO: eventually try and use the indiv. function based on prevOrderStatus to make these dynamic?
-                        }}
-                        className="absolute left-0 top-0 size-full origin-left bg-primary"
-                      ></motion.div>
-                    </div>
+                  <div
+                    ref={containerRef}
+                    className="baseFlex absolute left-0 top-0 size-full"
+                  >
+                    {/* progress bar */}
+                    <div
+                      ref={progressBarRef}
+                      style={{
+                        width: getProgressBarWidth(),
+                        transition: `width ${getProgressBarDuration()} ease-out`,
+                      }}
+                      // will-change-auto if necessary
+                      className="absolute left-0 top-0 h-full origin-left bg-primary "
+                    ></div>
 
-                    {/* first checkpoint w/ animated checkmark */}
+                    {/* orderPlaced checkpoint w/ animated checkmark */}
                     <div
                       ref={(el) => (targetRefs.current[0] = el)}
                       className="absolute left-[11%] top-1 z-10"
                     >
                       <Step
                         status={
-                          orderStatus === undefined ? "notStarted" : "completed"
+                          passedOrderPlacedCheckpoint
+                            ? "completed"
+                            : "notStarted"
                         }
-                        delay={1.75}
                       />
                     </div>
 
-                    {/* pre-second checkpoint */}
-                    <div className="relative h-full w-[37%] tablet:w-[35%]">
-                      {(orderStatus === "inProgress" ||
-                        orderStatus === "readyForPickup") && (
-                        <motion.div
-                          key={orderStatus}
-                          initial={{ scaleX: "0%" }}
-                          animate={{ scaleX: "100%" }}
-                          transition={{
-                            duration: 1,
-                            ease:
-                              orderStatus === "inProgress"
-                                ? "easeOut"
-                                : "linear",
-                            delay: 2, // TODO: eventually try and use the indiv. function based on prevOrderStatus to make these dynamic?
-                          }}
-                          className="absolute left-0 top-0 size-full origin-left bg-primary"
-                        ></motion.div>
-                      )}
-                    </div>
-
-                    {/* second checkpoint w/ animated checkmark */}
+                    {/* inProgress checkpoint w/ animated checkmark */}
                     <div
                       ref={(el) => (targetRefs.current[1] = el)}
                       className="absolute left-[45%] top-1 z-10"
                     >
                       <Step
                         status={
-                          orderStatus === "readyForPickup"
-                            ? "completed"
-                            : orderStatus === "inProgress"
-                              ? "inProgress"
-                              : "notStarted"
+                          passedInProgressCheckpoint
+                            ? orderStatus === "readyForPickup"
+                              ? "completed"
+                              : "inProgress"
+                            : "notStarted"
                         }
-                        delay={2.75}
-                        forInProgressCheckpoint
                       />
                     </div>
 
-                    {/* pre + post third checkpoint */}
-                    <div className="relative h-full w-[40%] tablet:w-[46%]">
-                      {orderStatus === "readyForPickup" && (
-                        <motion.div
-                          key={orderStatus}
-                          initial={{ scaleX: "0%" }}
-                          animate={{ scaleX: "100%" }}
-                          transition={{
-                            duration: 1,
-                            ease: "easeOut",
-                            delay: 3, // TODO: eventually try and use the indiv. function based on prevOrderStatus to make these dynamic?
-                          }}
-                          className="absolute left-0 top-0 size-full origin-left bg-primary"
-                        ></motion.div>
-                      )}
-                    </div>
-
-                    {/* third checkpoint w/ animated checkmark */}
+                    {/* readyForPickup checkpoint w/ animated checkmark */}
                     <div
                       ref={(el) => (targetRefs.current[2] = el)}
                       className="absolute left-[80%] top-1 z-10"
                     >
                       <Step
                         status={
-                          orderStatus === "readyForPickup"
+                          passedReadyForPickupCheckpoint
                             ? "completed"
                             : "notStarted"
                         }
-                        delay={3.75}
                       />
                     </div>
                   </div>
                 </div>
+
+                {/* floating checkpoint icons + labels */}
                 <div className="h-11 w-full text-xs">
                   <motion.div
                     ref={(el) => (floatingRefs.current[0] = el)}
@@ -323,18 +396,14 @@ function Track() {
                   >
                     <div
                       style={{
-                        opacity: orderStatus === undefined ? 0.5 : 1,
+                        opacity: passedOrderPlacedCheckpoint ? 1 : 0.5,
                         transition: "opacity 0.2s ease-out",
-                        transitionDelay: "1s",
                       }}
                       className="baseVertFlex gap-1"
                     >
                       <TfiReceipt
-                        style={{
-                          animationDelay: "1.75s",
-                        }}
                         className={`h-6 w-6 text-primary ${
-                          orderStatus === "orderPlaced" ? "shake" : ""
+                          passedOrderPlacedCheckpoint ? "shake" : ""
                         }`}
                       />
                       <p className="text-nowrap text-primary">Order placed</p>
@@ -355,22 +424,14 @@ function Track() {
                   >
                     <div
                       style={{
-                        opacity:
-                          orderStatus === "inProgress" ||
-                          orderStatus === "readyForPickup"
-                            ? 1
-                            : 0.5,
+                        opacity: passedInProgressCheckpoint ? 1 : 0.5,
                         transition: "opacity 0.2s ease-out",
-                        transitionDelay: "2.75s",
                       }}
                       className="baseVertFlex gap-1"
                     >
                       <PiCookingPotBold
-                        style={{
-                          animationDelay: "2s",
-                        }}
                         className={`h-6 w-6 text-primary  ${
-                          orderStatus === "inProgress" ? "shake" : ""
+                          passedInProgressCheckpoint ? "shake" : ""
                         }`}
                       />
                       <p className="text-primary">In progress</p>
@@ -391,18 +452,14 @@ function Track() {
                   >
                     <div
                       style={{
-                        opacity: orderStatus === "readyForPickup" ? 1 : 0.5,
+                        opacity: passedReadyForPickupCheckpoint ? 1 : 0.5,
                         transition: "opacity 0.2s ease-out",
-                        transitionDelay: "3s",
                       }}
                       className="baseVertFlex gap-1"
                     >
                       <LiaShoppingBagSolid
-                        style={{
-                          animationDelay: "3.75s",
-                        }}
                         className={`h-6 w-6 text-primary ${
-                          orderStatus === "readyForPickup" ? "shake" : ""
+                          passedReadyForPickupCheckpoint ? "shake" : ""
                         }`}
                       />
                       <p className="text-nowrap text-primary">
@@ -416,47 +473,50 @@ function Track() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1, delay: 1.5 }}
-                className="baseFlex w-full gap-4 overflow-x-hidden"
+                className="baseFlex h-6 w-full gap-4 overflow-x-hidden tablet:h-7"
               >
                 <AnimatePresence mode="popLayout">
-                  {orderStatus === "orderPlaced" && (
-                    <motion.p
-                      key={"orderPlacedText"}
-                      initial={{ x: "100%", opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      exit={{ x: "-100%", opacity: 0 }}
-                      transition={{ duration: 0.5, ease: "easeOut" }}
-                      className="font-medium tablet:text-lg"
-                    >
-                      Your order has been received
-                    </motion.p>
-                  )}
+                  {orderStatus === "orderPlaced" &&
+                    passedOrderPlacedCheckpoint && (
+                      <motion.p
+                        key={"orderPlacedText"}
+                        initial={{ x: "75%", opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: "-75%", opacity: 0 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        className="font-medium tablet:text-lg"
+                      >
+                        Your order has been received
+                      </motion.p>
+                    )}
 
-                  {orderStatus === "inProgress" && (
-                    <motion.p
-                      key={"inProgressText"}
-                      initial={{ x: "100%", opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      exit={{ x: "-100%", opacity: 0 }}
-                      transition={{ duration: 0.5, ease: "easeOut" }}
-                      className="font-medium tablet:text-lg"
-                    >
-                      Your order is being prepared
-                    </motion.p>
-                  )}
+                  {orderStatus === "inProgress" &&
+                    passedInProgressCheckpoint && (
+                      <motion.p
+                        key={"inProgressText"}
+                        initial={{ x: "75%", opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: "-75%", opacity: 0 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        className="font-medium tablet:text-lg"
+                      >
+                        Your order is being prepared
+                      </motion.p>
+                    )}
 
-                  {orderStatus === "readyForPickup" && (
-                    <motion.p
-                      key={"readyForPickupText"}
-                      initial={{ x: "100%", opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      exit={{ x: "-100%", opacity: 0 }}
-                      transition={{ duration: 0.5, ease: "easeOut" }}
-                      className="font-medium tablet:text-lg"
-                    >
-                      Your order is ready to be picked up!
-                    </motion.p>
-                  )}
+                  {orderStatus === "readyForPickup" &&
+                    passedReadyForPickupCheckpoint && (
+                      <motion.p
+                        key={"readyForPickupText"}
+                        initial={{ x: "75%", opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: "-75%", opacity: 0 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        className="font-medium tablet:text-lg"
+                      >
+                        Your order is ready to be picked up!
+                      </motion.p>
+                    )}
                 </AnimatePresence>
               </motion.div>
 
@@ -742,34 +802,9 @@ export default Track;
 
 function Step({
   status,
-  delay,
-  forInProgressCheckpoint,
 }: {
   status: "notStarted" | "inProgress" | "completed";
-  delay: number;
-  forInProgressCheckpoint?: boolean;
 }) {
-  const [statusBeingShown, setStatusBeingShown] = useState("notStarted");
-
-  useEffect(() => {
-    let timeoutId = null;
-
-    if (status === "completed" && forInProgressCheckpoint) {
-      setStatusBeingShown("completed");
-    } else {
-      timeoutId = setTimeout(() => {
-        setStatusBeingShown(status);
-      }, delay * 1000);
-    }
-
-    // do you need to clear timeout here inside of cleanup function?
-    return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
-  }, [status, delay, forInProgressCheckpoint]);
-
   return (
     <motion.div animate={status} className="relative">
       <motion.div
@@ -784,9 +819,6 @@ function Step({
             backgroundColor: "#fffcf5", // offwhite
             borderColor: "#14522d", //  bg-primary
             color: "#14522d", //  bg-primary
-            transition: {
-              delay: 2,
-            },
           },
           completed: {
             backgroundColor: "#14522d", //  bg-primary
@@ -794,11 +826,11 @@ function Step({
             color: "#14522d", //  bg-primary
           },
         }}
-        transition={{ duration: 0.2, delay, ease: "easeOut" }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
         className="relative flex size-7 items-center justify-center rounded-full border-2 font-semibold"
       >
         <AnimatePresence mode="wait">
-          {statusBeingShown === "completed" ? (
+          {status === "completed" ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -807,7 +839,7 @@ function Step({
             >
               <CheckIcon className="h-6 w-6 text-offwhite" />
             </motion.div>
-          ) : statusBeingShown === "inProgress" ? (
+          ) : status === "inProgress" ? (
             <motion.span
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
