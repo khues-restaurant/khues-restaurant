@@ -1029,7 +1029,7 @@ function FavoriteItems({
           }}
           className="baseFlex w-full !justify-start"
         >
-          <CarouselContent>
+          <CarouselContent className="w-full">
             {userFavoriteItemIds.map((itemId, index) => (
               <Fragment key={itemId}>
                 {menuItems[itemId] && (
@@ -1139,7 +1139,7 @@ function RecentOrders({ userRecentOrders, itemsPerSlide }: RecentOrders) {
           }}
           className="baseFlex w-full !justify-start"
         >
-          <CarouselContent>
+          <CarouselContent className="w-full">
             {userRecentOrders.map((order) => (
               <CarouselItem
                 key={order.id}

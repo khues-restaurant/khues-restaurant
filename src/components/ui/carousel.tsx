@@ -157,7 +157,7 @@ const CarouselContent = React.forwardRef<
   return (
     <div
       ref={carouselRef}
-      className="overflow-hidden" // safe to add these here or does it need to be conditional? cursor-grab active:cursor-grabbing
+      className={cn("overflow-hidden", className)} // safe to add these here or does it need to be conditional? cursor-grab active:cursor-grabbing
     >
       <div
         ref={ref}
