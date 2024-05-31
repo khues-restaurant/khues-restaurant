@@ -17,6 +17,8 @@ import { format, isSameDay } from "date-fns";
 import { type Chat, type ChatMessage } from "@prisma/client";
 import { useMainStore } from "~/stores/MainStore";
 import { type Socket } from "socket.io-client";
+import { FaRedo } from "react-icons/fa";
+import { useToast } from "~/components/ui/use-toast";
 
 type CombinedMessagesAndDateLabels = (
   | Date
@@ -42,7 +44,8 @@ function CustomerChats({ socket }: CustomerChats) {
     viewportLabel: state.viewportLabel,
   }));
 
-  const { data: databaseChats, refetch } = api.chat.getAllMessages.useQuery();
+  const { data: databaseChats, refetch: refetchChats } =
+    api.chat.getAllMessages.useQuery();
 
   const { mutate: sendMessage } = api.chat.sendMessage.useMutation({
     // When mutation is initiated, perform an optimistic update
@@ -116,6 +119,8 @@ function CustomerChats({ socket }: CustomerChats) {
   const [dateLabeledMessages, setDateLabeledMessages] =
     useState<CombinedMessagesAndDateLabels>([]);
 
+  const [manuallyRefreshingChats, setManuallyRefreshingChats] = useState(false);
+
   const scrollableChatContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -174,6 +179,8 @@ function CustomerChats({ socket }: CustomerChats) {
     }
   }, [selectedUserId]);
 
+  const { toast } = useToast();
+
   // vv obv improve this vv
   if (!chats) return <p>Loading...</p>;
 
@@ -184,12 +191,12 @@ function CustomerChats({ socket }: CustomerChats) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseFlex mt-24 w-full border-t-0 tablet:mt-28"
+      className="baseVertFlex mt-24 w-full gap-4 border-t-0 tablet:mt-28"
     >
       <div className="baseFlex rounded-lg border border-t-0">
         {((viewportLabel.includes("mobile") && !selectedUserId) ||
           !viewportLabel.includes("mobile")) && (
-          <div className="baseVertFlex h-[557px] w-full bg-offwhite tablet:!w-[500px] tablet:border-r tablet:border-stone-600">
+          <div className="baseVertFlex h-[557px] w-full rounded-bl-lg bg-offwhite tablet:!w-[500px] tablet:border-r tablet:border-stone-600">
             <div className="w-full rounded-tl-lg border-b border-stone-600 bg-stone-200 p-4 text-center text-lg font-semibold">
               Chats
             </div>
@@ -344,6 +351,28 @@ function CustomerChats({ socket }: CustomerChats) {
           </div>
         )}
       </div>
+
+      <Button
+        variant="outline"
+        disabled={manuallyRefreshingChats}
+        className="baseFlex gap-2"
+        onClick={() => {
+          setManuallyRefreshingChats(true);
+
+          void refetchChats().then((e) => {
+            if (e.isSuccess) {
+              toast({
+                description: "Customer chats have been refreshed.",
+              });
+
+              setManuallyRefreshingChats(false);
+            }
+          });
+        }}
+      >
+        <FaRedo className="size-4" />
+        Refresh Chats
+      </Button>
     </motion.div>
   );
 }

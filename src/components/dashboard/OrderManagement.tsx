@@ -33,6 +33,7 @@ import { format } from "date-fns";
 import { useToast } from "~/components/ui/use-toast";
 import { type Socket } from "socket.io-client";
 import { toZonedTime } from "date-fns-tz";
+import { FaRedo } from "react-icons/fa";
 
 // type FullOrderItems = OrderItem & {
 //   customizations: OrderItemCustomization[];
@@ -67,6 +68,9 @@ function OrderManagement({ orders, socket }: OrderManagement) {
     "notStarted" | "started" | "completed" | "future"
   >("notStarted");
 
+  const [manuallyRefreshingOrders, setManuallyRefreshingOrders] =
+    useState(false);
+
   // TODO/FYI: if not already stated, do NOT want to ever clear the "notification" numbers
   // on the not started/in progress tabs, since they are strictly the number of current orders
   // in their respective states.
@@ -74,7 +78,9 @@ function OrderManagement({ orders, socket }: OrderManagement) {
   useEffect(() => {
     socket.on("newOrderWasPlaced", () => {
       console.log("refetching new order");
-      void refetchOrders();
+      void refetchOrders().then((e) => {
+        e.isSuccess;
+      });
     });
 
     return () => {
@@ -114,6 +120,8 @@ function OrderManagement({ orders, socket }: OrderManagement) {
     setCompletedOrders(completed);
   }, [orders]);
 
+  const { toast } = useToast();
+
   return (
     <motion.div
       key={"orderManagement"}
@@ -150,6 +158,28 @@ function OrderManagement({ orders, socket }: OrderManagement) {
           onClick={() => setSelectedTab("future")}
         >
           Future
+        </Button>
+
+        <Button
+          variant="outline"
+          disabled={manuallyRefreshingOrders}
+          className="baseFlex absolute right-4 gap-2"
+          onClick={() => {
+            setManuallyRefreshingOrders(true);
+
+            void refetchOrders().then((e) => {
+              if (e.isSuccess) {
+                toast({
+                  description: "Orders have been refreshed.",
+                });
+
+                setManuallyRefreshingOrders(false);
+              }
+            });
+          }}
+        >
+          <FaRedo className="size-4" />
+          Refresh orders
         </Button>
       </div>
 
