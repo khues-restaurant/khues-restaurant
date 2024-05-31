@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import Head from "next/head";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -15,7 +15,7 @@ import {
 import ourStoryHero from "/public/interior/seven.webp";
 import test from "/public/test.webp";
 
-const TWEEN_FACTOR_BASE = 0.2;
+// const TWEEN_FACTOR_BASE = 0.2;
 
 const restaurantNamesAndBackstories = [
   {
@@ -43,6 +43,85 @@ const restaurantNamesAndBackstories = [
 function OurStory() {
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [carouselSlide, setCarouselSlide] = useState(0);
+
+  const ericImageControls = useAnimation();
+  const ericBackdropControls = useAnimation();
+
+  const ericImageRef = useRef<HTMLImageElement>(null);
+  const ericBackdropRef = useRef<HTMLDivElement>(null);
+
+  const [scrollDir, setScrollDir] = useState<"up" | "down">("down");
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const updateScrollDir = () => {
+      const scrollY = window.scrollY;
+      if (scrollY > lastScrollY) {
+        setScrollDir("down");
+      } else {
+        setScrollDir("up");
+      }
+      lastScrollY = scrollY > 0 ? scrollY : 0;
+    };
+
+    window.addEventListener("scroll", updateScrollDir);
+    return () => window.removeEventListener("scroll", updateScrollDir);
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && scrollDir === "down") {
+            void ericImageControls.start({ opacity: 1, y: 0 });
+          } else if (entry.boundingClientRect.top < 0 && scrollDir === "up") {
+            void ericImageControls.start({ opacity: 1, y: 0 });
+          }
+        });
+      },
+      { threshold: 0.75 },
+    );
+
+    if (ericImageRef.current) {
+      observer.observe(ericImageRef.current);
+    }
+
+    const internalEricImageRef = ericImageRef.current;
+
+    return () => {
+      if (internalEricImageRef) {
+        observer.unobserve(internalEricImageRef);
+      }
+    };
+  }, [ericImageControls, scrollDir]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && scrollDir === "down") {
+            void ericBackdropControls.start({ opacity: 1, y: 0 });
+          } else if (entry.boundingClientRect.top < 0 && scrollDir === "up") {
+            void ericBackdropControls.start({ opacity: 1, y: 0 });
+          }
+        });
+      },
+      { threshold: 0.33 },
+    );
+
+    if (ericBackdropRef.current) {
+      observer.observe(ericBackdropRef.current);
+    }
+
+    const internalEricBackdropRef = ericBackdropRef.current;
+
+    return () => {
+      if (internalEricBackdropRef) {
+        observer.unobserve(internalEricBackdropRef);
+      }
+    };
+  }, [ericBackdropControls, scrollDir]);
 
   // const tweenFactor = useRef(0);
   // const tweenNodes = useRef<HTMLElement[]>([]);
@@ -125,8 +204,6 @@ function OurStory() {
     carouselApi,
     // , tweenParallax, setTweenFactor, setTweenNodes
   ]);
-
-  console.log("carousel", carouselApi?.scrollSnapList());
 
   return (
     <motion.div
@@ -317,8 +394,10 @@ function OurStory() {
         </div>
         <div className="baseFlex relative w-full px-4 pb-8 pt-16 tablet:max-w-4xl">
           <motion.div
-            initial={{ opacity: 0, y: -75 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            ref={ericBackdropRef}
+            initial={{ opacity: 0, y: 50 }}
+            // whileInView={{ opacity: 1, y: 0 }}
+            animate={ericBackdropControls}
             transition={{
               opacity: { duration: 0.2 },
               type: "spring",
@@ -326,25 +405,27 @@ function OurStory() {
               damping: 20,
               mass: 0.75,
             }}
-            viewport={{ once: true, amount: 0.75 }}
+            // viewport={{ once: true, amount: 0.35 }}
+            className="absolute bottom-0 left-0 h-3/4 w-full bg-gradient-to-br from-primary to-darkPrimary tablet:rounded-md"
+          ></motion.div>
+
+          <motion.div
+            ref={ericImageRef}
+            initial={{ opacity: 0, y: -75 }}
+            animate={ericImageControls}
+            // whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              opacity: { duration: 0.2 },
+              type: "spring",
+              stiffness: 100,
+              damping: 20,
+              mass: 0.75,
+            }}
+            // viewport={{ once: true, amount: 0.75 }}
             className="relative h-[425px] w-[300px] rounded-md tablet:h-[525px] tablet:w-[350px]"
           >
             <Image src="/eric.webp" alt="Eric" fill className="rounded-md" />
           </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{
-              opacity: { duration: 0.2 },
-              type: "spring",
-              stiffness: 100,
-              damping: 20,
-              mass: 0.75,
-            }}
-            viewport={{ once: true, amount: 0.35 }}
-            className="absolute bottom-0 left-0 z-[-1] h-3/4 w-full bg-gradient-to-br from-primary to-darkPrimary tablet:rounded-md"
-          ></motion.div>
         </div>
         {/* Q&A w/ Eric */}
         <div className="mt-16 text-lg italic">
