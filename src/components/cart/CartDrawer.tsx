@@ -23,7 +23,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "~/components/ui/form";
 import {
   Popover,
@@ -484,8 +483,8 @@ function CartDrawer({
             <FormField
               control={mainForm.control}
               name="dateToPickup"
-              render={({ field, fieldState: { invalid } }) => (
-                <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+              render={({ field, fieldState: { invalid, error } }) => (
+                <FormItem className="baseVertFlex relative !items-start space-y-0">
                   <div className="baseFlex gap-4">
                     <FormLabel className="font-semibold">Pickup date</FormLabel>
                     <Popover>
@@ -526,12 +525,17 @@ function CartDrawer({
                     {invalid && (
                       <motion.div
                         key={"pickupDateError"}
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
+                        initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                        animate={{
+                          opacity: 1,
+                          height: "auto",
+                          marginTop: "0.5rem",
+                        }}
+                        exit={{ opacity: 0, height: 0, marginTop: 0 }}
                         transition={{ duration: 0.2 }}
+                        className="text-sm font-medium text-red-500"
                       >
-                        <FormMessage />
+                        {error?.message}
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -542,8 +546,8 @@ function CartDrawer({
             <FormField
               control={mainForm.control}
               name="timeToPickup"
-              render={({ field, fieldState: { invalid } }) => (
-                <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+              render={({ field, fieldState: { invalid, error } }) => (
+                <FormItem className="baseVertFlex relative !items-start space-y-0">
                   <div className="baseFlex gap-4">
                     <FormLabel className="font-semibold">Pickup time</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
@@ -578,12 +582,17 @@ function CartDrawer({
                     {invalid && (
                       <motion.div
                         key={"pickupTimeError"}
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
+                        initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                        animate={{
+                          opacity: 1,
+                          height: "auto",
+                          marginTop: "0.5rem",
+                        }}
+                        exit={{ opacity: 0, height: 0, marginTop: 0 }}
                         transition={{ duration: 0.2 }}
+                        className="text-sm font-medium text-red-500"
                       >
-                        <FormMessage />
+                        {error?.message}
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -594,8 +603,8 @@ function CartDrawer({
             <FormField
               control={mainForm.control}
               name="pickupName"
-              render={({ field, fieldState: { invalid } }) => (
-                <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+              render={({ field, fieldState: { invalid, error } }) => (
+                <FormItem className="baseVertFlex relative !items-start space-y-0">
                   <div className="baseFlex gap-2">
                     <FormLabel className="text-nowrap font-semibold">
                       Pickup name
@@ -610,12 +619,17 @@ function CartDrawer({
                     {invalid && (
                       <motion.div
                         key={"pickupNameError"}
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
+                        initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                        animate={{
+                          opacity: 1,
+                          height: "auto",
+                          marginTop: "0.5rem",
+                        }}
+                        exit={{ opacity: 0, height: 0, marginTop: 0 }}
                         transition={{ duration: 0.2 }}
+                        className="text-sm font-medium text-red-500"
                       >
-                        <FormMessage />
+                        {error?.message}
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -1115,9 +1129,9 @@ function CartDrawer({
                         name="tipValue"
                         render={({
                           field: { onChange, onBlur, value, ref },
-                          fieldState: { invalid },
+                          fieldState: { invalid, error },
                         }) => (
-                          <FormItem className="baseVertFlex relative !items-start gap-2 space-y-0">
+                          <FormItem className="baseVertFlex relative !items-start space-y-0">
                             <div className="baseVertFlex relative !items-start gap-2">
                               {/* TODO: doesn't feel great to comment this out, but not sure of other
                             best ui option to keep everything low-profile.. */}
@@ -1157,13 +1171,15 @@ function CartDrawer({
                               {invalid && (
                                 <motion.div
                                   key={"tipValueError"}
+                                  // due to being absolute, not copy pasting the
+                                  // animation states w/ marginTop/height changes
                                   initial={{ opacity: 0 }}
                                   animate={{ opacity: 1 }}
                                   exit={{ opacity: 0 }}
                                   transition={{ duration: 0.2 }}
-                                  className="absolute -bottom-6 left-0 right-0 w-[262px]"
+                                  className="absolute -bottom-6 left-0 right-0 w-[262px] text-sm font-medium text-red-500"
                                 >
-                                  <FormMessage />
+                                  {error?.message}
                                 </motion.div>
                               )}
                             </AnimatePresence>

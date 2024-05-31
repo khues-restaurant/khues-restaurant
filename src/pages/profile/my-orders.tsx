@@ -25,13 +25,7 @@ import {
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "~/components/ui/form";
+import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { Label } from "~/components/ui/label";
 import {
   Select,
@@ -815,8 +809,8 @@ function RateDialog({ userId, orderId }: RateDialog) {
               <FormField
                 control={feedbackForm.control}
                 name="feedback"
-                render={({ field, fieldState: { invalid } }) => (
-                  <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
+                render={({ field, fieldState: { invalid, error } }) => (
+                  <FormItem className="baseVertFlex relative w-full !items-start space-y-0">
                     <div className="baseVertFlex w-full !items-start gap-2">
                       <FormLabel className="font-semibold">Feedback</FormLabel>
                       <Textarea
@@ -834,13 +828,17 @@ function RateDialog({ userId, orderId }: RateDialog) {
                       {invalid && (
                         <motion.div
                           key={"feedbackError"}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
+                          initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                          animate={{
+                            opacity: 1,
+                            height: "auto",
+                            marginTop: "0.5rem",
+                          }}
+                          exit={{ opacity: 0, height: 0, marginTop: 0 }}
                           transition={{ duration: 0.2 }}
-                          // className="absolute -bottom-6 left-0 right-0"
+                          className="text-sm font-medium text-red-500"
                         >
-                          <FormMessage />
+                          {error?.message}
                         </motion.div>
                       )}
                     </AnimatePresence>

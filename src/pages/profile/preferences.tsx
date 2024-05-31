@@ -28,7 +28,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "~/components/ui/form";
 import {
   Accordion,
@@ -262,8 +261,8 @@ function Preferences() {
                       control={form.control}
                       name="firstName"
                       disabled={saveButtonText !== "Save changes"}
-                      render={({ field, fieldState: { invalid } }) => (
-                        <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
+                      render={({ field, fieldState: { invalid, error } }) => (
+                        <FormItem className="baseVertFlex relative w-full !items-start space-y-0">
                           <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
                             <FormLabel className="font-semibold">
                               First name
@@ -274,12 +273,21 @@ function Preferences() {
                             {invalid && (
                               <motion.div
                                 key={"firstNameError"}
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
+                                initial={{
+                                  opacity: 0,
+                                  height: 0,
+                                  marginTop: 0,
+                                }}
+                                animate={{
+                                  opacity: 1,
+                                  height: "auto",
+                                  marginTop: "0.5rem",
+                                }}
+                                exit={{ opacity: 0, height: 0, marginTop: 0 }}
                                 transition={{ duration: 0.2 }}
+                                className="text-sm font-medium text-red-500"
                               >
-                                <FormMessage />
+                                {error?.message}
                               </motion.div>
                             )}
                           </AnimatePresence>
@@ -291,8 +299,8 @@ function Preferences() {
                       control={form.control}
                       name="lastName"
                       disabled={saveButtonText !== "Save changes"}
-                      render={({ field, fieldState: { invalid } }) => (
-                        <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
+                      render={({ field, fieldState: { invalid, error } }) => (
+                        <FormItem className="baseVertFlex relative w-full !items-start space-y-0">
                           <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
                             <FormLabel className="font-semibold">
                               Last name
@@ -303,12 +311,21 @@ function Preferences() {
                             {invalid && (
                               <motion.div
                                 key={"lastNameError"}
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
+                                initial={{
+                                  opacity: 0,
+                                  height: 0,
+                                  marginTop: 0,
+                                }}
+                                animate={{
+                                  opacity: 1,
+                                  height: "auto",
+                                  marginTop: "0.5rem",
+                                }}
+                                exit={{ opacity: 0, height: 0, marginTop: 0 }}
                                 transition={{ duration: 0.2 }}
+                                className="text-sm font-medium text-red-500"
                               >
-                                <FormMessage />
+                                {error?.message}
                               </motion.div>
                             )}
                           </AnimatePresence>
@@ -322,9 +339,9 @@ function Preferences() {
                       disabled={saveButtonText !== "Save changes"}
                       render={({
                         field: { onChange, onBlur, value, ref },
-                        fieldState: { invalid },
+                        fieldState: { invalid, error },
                       }) => (
-                        <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
+                        <FormItem className="baseVertFlex relative w-full !items-start space-y-0">
                           <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
                             <FormLabel className="font-semibold">
                               Phone number
@@ -344,12 +361,21 @@ function Preferences() {
                             {invalid && (
                               <motion.div
                                 key={"phoneNumberError"}
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
+                                initial={{
+                                  opacity: 0,
+                                  height: 0,
+                                  marginTop: 0,
+                                }}
+                                animate={{
+                                  opacity: 1,
+                                  height: "auto",
+                                  marginTop: "0.5rem",
+                                }}
+                                exit={{ opacity: 0, height: 0, marginTop: 0 }}
                                 transition={{ duration: 0.2 }}
+                                className="text-sm font-medium text-red-500"
                               >
-                                <FormMessage />
+                                {error?.message}
                               </motion.div>
                             )}
                           </AnimatePresence>
@@ -360,7 +386,7 @@ function Preferences() {
                     <FormField
                       control={form.control}
                       name="email"
-                      render={({ field, fieldState: { invalid } }) => (
+                      render={({ field, fieldState: { invalid, error } }) => (
                         <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
                           <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
                             <FormLabel className="font-semibold">
@@ -373,12 +399,21 @@ function Preferences() {
                             {invalid && (
                               <motion.div
                                 key={"emailError"}
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
+                                initial={{
+                                  opacity: 0,
+                                  height: 0,
+                                  marginTop: 0,
+                                }}
+                                animate={{
+                                  opacity: 1,
+                                  height: "auto",
+                                  marginTop: "0.5rem",
+                                }}
+                                exit={{ opacity: 0, height: 0, marginTop: 0 }}
                                 transition={{ duration: 0.2 }}
+                                className="text-sm font-medium text-red-500"
                               >
-                                <FormMessage />
+                                {error?.message}
                               </motion.div>
                             )}
                           </AnimatePresence>
@@ -389,7 +424,7 @@ function Preferences() {
                     <FormField
                       control={form.control}
                       name="birthday"
-                      render={({ field, fieldState: { invalid } }) => (
+                      render={({ field, fieldState: { invalid, error } }) => (
                         <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
                           <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
                             <FormLabel className="font-semibold">
@@ -406,12 +441,21 @@ function Preferences() {
                             {invalid && (
                               <motion.div
                                 key={"birthdayError"}
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
+                                initial={{
+                                  opacity: 0,
+                                  height: 0,
+                                  marginTop: 0,
+                                }}
+                                animate={{
+                                  opacity: 1,
+                                  height: "auto",
+                                  marginTop: "0.5rem",
+                                }}
+                                exit={{ opacity: 0, height: 0, marginTop: 0 }}
                                 transition={{ duration: 0.2 }}
+                                className="text-sm font-medium text-red-500"
                               >
-                                <FormMessage />
+                                {error?.message}
                               </motion.div>
                             )}
                           </AnimatePresence>
@@ -425,8 +469,8 @@ function Preferences() {
                     control={form.control}
                     name="dietaryRestrictions"
                     disabled={saveButtonText !== "Save changes"}
-                    render={({ field, fieldState: { invalid } }) => (
-                      <FormItem className="baseVertFlex relative mt-8 w-full max-w-lg !items-start gap-2 space-y-0">
+                    render={({ field, fieldState: { invalid, error } }) => (
+                      <FormItem className="baseVertFlex relative mt-8 w-full max-w-lg !items-start space-y-0">
                         <div className="baseVertFlex w-full !items-start gap-2">
                           <FormLabel className="font-semibold">
                             Dietary preferences
@@ -452,12 +496,17 @@ function Preferences() {
                           {invalid && (
                             <motion.div
                               key={"dietaryRestrictionsError"}
-                              initial={{ opacity: 0, height: 0 }}
-                              animate={{ opacity: 1, height: "auto" }}
-                              exit={{ opacity: 0, height: 0 }}
+                              initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                              animate={{
+                                opacity: 1,
+                                height: "auto",
+                                marginTop: "0.5rem",
+                              }}
+                              exit={{ opacity: 0, height: 0, marginTop: 0 }}
                               transition={{ duration: 0.2 }}
+                              className="text-sm font-medium text-red-500"
                             >
-                              <FormMessage />
+                              {error?.message}
                             </motion.div>
                           )}
                         </AnimatePresence>

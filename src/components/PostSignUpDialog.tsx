@@ -18,7 +18,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
@@ -363,7 +362,10 @@ function PostSignUpDialog() {
                         <FormField
                           control={mainForm.control}
                           name="firstName"
-                          render={({ field, fieldState: { invalid } }) => (
+                          render={({
+                            field,
+                            fieldState: { invalid, error },
+                          }) => (
                             <FormItem className="relative">
                               <FormLabel className="font-semibold">
                                 First name
@@ -380,13 +382,25 @@ function PostSignUpDialog() {
                                 {invalid && (
                                   <motion.div
                                     key={"firstNameError"}
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: "auto" }}
-                                    exit={{ opacity: 0, height: 0 }}
+                                    initial={{
+                                      opacity: 0,
+                                      height: 0,
+                                      marginTop: 0,
+                                    }}
+                                    animate={{
+                                      opacity: 1,
+                                      height: "auto",
+                                      marginTop: "0.5rem",
+                                    }}
+                                    exit={{
+                                      opacity: 0,
+                                      height: 0,
+                                      marginTop: 0,
+                                    }}
                                     transition={{ duration: 0.2 }}
-                                    className="max-w-48"
+                                    className="max-w-48 text-sm font-medium text-red-500"
                                   >
-                                    <FormMessage />
+                                    {error?.message}
                                   </motion.div>
                                 )}
                               </AnimatePresence>
@@ -397,7 +411,10 @@ function PostSignUpDialog() {
                         <FormField
                           control={mainForm.control}
                           name="lastName"
-                          render={({ field, fieldState: { invalid } }) => (
+                          render={({
+                            field,
+                            fieldState: { invalid, error },
+                          }) => (
                             <FormItem className="relative">
                               <FormLabel className="font-semibold">
                                 Last name
@@ -414,13 +431,25 @@ function PostSignUpDialog() {
                                 {invalid && (
                                   <motion.div
                                     key={"lastNameError"}
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: "auto" }}
-                                    exit={{ opacity: 0, height: 0 }}
+                                    initial={{
+                                      opacity: 0,
+                                      height: 0,
+                                      marginTop: 0,
+                                    }}
+                                    animate={{
+                                      opacity: 1,
+                                      height: "auto",
+                                      marginTop: "0.5rem",
+                                    }}
+                                    exit={{
+                                      opacity: 0,
+                                      height: 0,
+                                      marginTop: 0,
+                                    }}
                                     transition={{ duration: 0.2 }}
-                                    className="max-w-48"
+                                    className="max-w-48 text-sm font-medium text-red-500"
                                   >
-                                    <FormMessage />
+                                    {error?.message}
                                   </motion.div>
                                 )}
                               </AnimatePresence>
@@ -435,7 +464,7 @@ function PostSignUpDialog() {
                           name="phoneNumber"
                           render={({
                             field: { onChange, onBlur, value, ref },
-                            fieldState: { invalid },
+                            fieldState: { invalid, error },
                           }) => (
                             <FormItem className="relative">
                               <FormLabel className="baseFlex !justify-start gap-2 font-semibold">
@@ -466,13 +495,25 @@ function PostSignUpDialog() {
                                 {invalid && (
                                   <motion.div
                                     key={"phoneNumberError"}
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: "auto" }}
-                                    exit={{ opacity: 0, height: 0 }}
+                                    initial={{
+                                      opacity: 0,
+                                      height: 0,
+                                      marginTop: 0,
+                                    }}
+                                    animate={{
+                                      opacity: 1,
+                                      height: "auto",
+                                      marginTop: "0.5rem",
+                                    }}
+                                    exit={{
+                                      opacity: 0,
+                                      height: 0,
+                                      marginTop: 0,
+                                    }}
                                     transition={{ duration: 0.2 }}
-                                    className="max-w-48"
+                                    className="max-w-48 text-sm font-medium text-red-500"
                                   >
-                                    <FormMessage />
+                                    {error?.message}
                                   </motion.div>
                                 )}
                               </AnimatePresence>
@@ -483,7 +524,10 @@ function PostSignUpDialog() {
                         <FormField
                           control={mainForm.control}
                           name="birthday"
-                          render={({ field, fieldState: { invalid } }) => (
+                          render={({
+                            field,
+                            fieldState: { invalid, error },
+                          }) => (
                             <FormItem className="relative">
                               <FormLabel className="baseFlex !justify-start gap-2 font-semibold">
                                 <CiCalendarDate
@@ -509,13 +553,25 @@ function PostSignUpDialog() {
                                 {invalid && (
                                   <motion.div
                                     key={"birthdayError"}
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: "auto" }}
-                                    exit={{ opacity: 0, height: 0 }}
+                                    initial={{
+                                      opacity: 0,
+                                      height: 0,
+                                      marginTop: 0,
+                                    }}
+                                    animate={{
+                                      opacity: 1,
+                                      height: "auto",
+                                      marginTop: "0.5rem",
+                                    }}
+                                    exit={{
+                                      opacity: 0,
+                                      height: 0,
+                                      marginTop: 0,
+                                    }}
                                     transition={{ duration: 0.2 }}
-                                    className="max-w-48"
+                                    className="max-w-48 text-sm font-medium text-red-500"
                                   >
-                                    <FormMessage />
+                                    {error?.message}
                                   </motion.div>
                                 )}
                               </AnimatePresence>
@@ -548,7 +604,7 @@ function PostSignUpDialog() {
                       <FormField
                         control={dietaryRestrictionsForm.control}
                         name="dietaryRestrictions"
-                        render={({ field }) => (
+                        render={({ field, fieldState: { invalid, error } }) => (
                           <FormItem className="px-2 tablet:w-[500px]">
                             <FormLabel className="font-semibold">
                               Dietary preferences
@@ -565,7 +621,29 @@ function PostSignUpDialog() {
                                 {...field}
                               />
                             </FormControl>
-                            <FormMessage />
+
+                            <AnimatePresence>
+                              {invalid && (
+                                <motion.div
+                                  key={"birthdayError"}
+                                  initial={{
+                                    opacity: 0,
+                                    height: 0,
+                                    marginTop: 0,
+                                  }}
+                                  animate={{
+                                    opacity: 1,
+                                    height: "auto",
+                                    marginTop: "0.5rem",
+                                  }}
+                                  exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                                  transition={{ duration: 0.2 }}
+                                  className="max-w-48 text-sm font-medium text-red-500"
+                                >
+                                  {error?.message}
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
                           </FormItem>
                         )}
                       />
