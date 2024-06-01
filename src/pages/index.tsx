@@ -248,7 +248,7 @@ export default function Home() {
           />
           <div className="baseVertFlex w-[226px] gap-1 rounded-md text-center">
             <motion.h1
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 1, ease: "easeOut" }}
               className="overflow-hidden text-nowrap text-2xl font-bold"
@@ -256,7 +256,7 @@ export default function Home() {
               <AnimatedText text="Welcome to Khue's" delay={0.25} />
             </motion.h1>
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, duration: 1, ease: "easeOut" }}
               className="text-base leading-5 text-stone-500"
@@ -268,7 +268,7 @@ export default function Home() {
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 2.15, duration: 1, ease: "easeOut" }}
               className="baseFlex overflow-hidden"
