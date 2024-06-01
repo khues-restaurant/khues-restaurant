@@ -247,20 +247,43 @@ export default function Home() {
             className="h-[152px] w-[80.5px] drop-shadow-md"
           />
           <div className="baseVertFlex w-[226px] gap-1 rounded-md text-center">
-            <h1 className="text-2xl font-bold">Welcome to Khue&apos;s</h1>
-            <p className="text-base leading-5 text-stone-500">
-              A modern take on classic Vietnamese cuisine.
-            </p>
-            <Button size={"lg"} asChild>
-              <Link
-                href="/order"
-                className="baseFlex mt-4 gap-2 !px-4 !text-base shadow-md"
-              >
-                <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
-                Order now
-                <SideAccentSwirls className="h-[14px] fill-offwhite" />
-              </Link>
-            </Button>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25, duration: 1, ease: "easeOut" }}
+              className="overflow-hidden text-nowrap text-2xl font-bold"
+            >
+              <AnimatedText text="Welcome to Khue's" delay={0.25} />
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1, duration: 1, ease: "easeOut" }}
+              className="text-base leading-5 text-stone-500"
+            >
+              <AnimatedText
+                text="A modern take on classic Vietnamese cuisine."
+                delay={1}
+              />
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2.15, duration: 1, ease: "easeOut" }}
+              className="baseFlex overflow-hidden"
+            >
+              <Button size={"lg"} asChild>
+                <Link
+                  href="/order"
+                  className="baseFlex mt-4 gap-2 !px-4 !text-base shadow-md"
+                >
+                  <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
+                  Order now
+                  <SideAccentSwirls className="h-[14px] fill-offwhite" />
+                </Link>
+              </Button>
+            </motion.div>
           </div>
         </section>
       </div>
@@ -268,7 +291,12 @@ export default function Home() {
       <div className="baseFlex relative !hidden w-full p-4 tablet:!flex tablet:h-[calc(100dvh-7rem)]">
         <div className="relative grid size-full grid-cols-3 grid-rows-3 gap-4">
           {/* top left */}
-          <div className="relative col-span-1 row-span-2 size-full overflow-hidden rounded-md shadow-md">
+          <motion.div
+            initial={{ filter: "blur(5px)" }}
+            animate={{ filter: "blur(0px)" }}
+            transition={{ duration: 0.7 }}
+            className="relative col-span-1 row-span-2 size-full overflow-hidden rounded-md shadow-md"
+          >
             <Parallax speed={-10} className="!absolute !top-0 !size-full">
               <Image
                 src={topLeftTabletHero}
@@ -278,10 +306,15 @@ export default function Home() {
                 className="!relative !size-full rounded-md object-cover"
               />
             </Parallax>
-          </div>
+          </motion.div>
 
           {/* top right */}
-          <div className="relative col-span-2 row-span-2 size-full overflow-hidden rounded-md shadow-md">
+          <motion.div
+            initial={{ filter: "blur(5px)" }}
+            animate={{ filter: "blur(0px)" }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="relative col-span-2 row-span-2 size-full overflow-hidden rounded-md shadow-md"
+          >
             <Parallax speed={-10} className="!absolute !top-0 !size-full">
               <Image
                 src={topRightTabletHero}
@@ -291,10 +324,15 @@ export default function Home() {
                 className="!relative !size-full rounded-md object-cover"
               />
             </Parallax>
-          </div>
+          </motion.div>
 
           {/* bottom left */}
-          <div className="relative !top-0 col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md">
+          <motion.div
+            initial={{ filter: "blur(5px)" }}
+            animate={{ filter: "blur(0px)" }}
+            transition={{ duration: 0.7, delay: 0.4 }}
+            className="relative !top-0 col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
+          >
             <Parallax
               speed={-10}
               className="!absolute !top-0 !h-[150%] !w-full"
@@ -308,10 +346,15 @@ export default function Home() {
                 className="!relative !size-full rounded-md object-cover !pb-16"
               />
             </Parallax>
-          </div>
+          </motion.div>
 
           {/* bottom right */}
-          <div className="relative !top-0 col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md">
+          <motion.div
+            initial={{ filter: "blur(5px)" }}
+            animate={{ filter: "blur(0px)" }}
+            transition={{ duration: 0.7, delay: 0.6 }}
+            className="relative !top-0 col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
+          >
             <Parallax
               speed={-10}
               className="!absolute !top-0 !h-[150%] !w-full"
@@ -325,7 +368,7 @@ export default function Home() {
                 className="!relative !size-full rounded-md object-cover"
               />
             </Parallax>
-          </div>
+          </motion.div>
         </div>
 
         <div className="baseVertFlex absolute top-0 h-full xl:!left-16 2xl:!left-24 tablet:left-8">
@@ -337,20 +380,43 @@ export default function Home() {
               className="h-[228px] w-[120.75px] drop-shadow-md"
             />
             <div className="baseVertFlex !items-start gap-1 rounded-md">
-              <h1 className="text-4xl font-bold">Welcome to Khue&apos;s</h1>
-              <p className="w-72 text-2xl text-stone-500">
-                A modern take on classic Vietnamese cuisine.
-              </p>
-              <Button size={"lg"} asChild>
-                <Link
-                  href="/order"
-                  className="baseFlex mt-6 gap-2 !px-4 !py-6 !text-lg shadow-md "
-                >
-                  <SideAccentSwirls className="h-4 scale-x-[-1] fill-offwhite" />
-                  Order now
-                  <SideAccentSwirls className="h-4 fill-offwhite" />
-                </Link>
-              </Button>
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25, duration: 1, ease: "easeOut" }}
+                className="overflow-hidden text-4xl font-bold"
+              >
+                <AnimatedText text="Welcome to Khue's" delay={0.25} />
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, duration: 1, ease: "easeOut" }}
+                className="w-72 overflow-hidden text-2xl text-stone-500"
+              >
+                <AnimatedText
+                  text="A modern take on classic Vietnamese cuisine."
+                  delay={1}
+                />
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 2.15, duration: 1, ease: "easeOut" }}
+                className="baseFlex overflow-hidden"
+              >
+                <Button size={"lg"} asChild>
+                  <Link
+                    href="/order"
+                    className="baseFlex mt-6 gap-2 !px-4 !py-6 !text-lg shadow-md "
+                  >
+                    <SideAccentSwirls className="h-4 scale-x-[-1] fill-offwhite" />
+                    Order now
+                    <SideAccentSwirls className="h-4 fill-offwhite" />
+                  </Link>
+                </Button>
+              </motion.div>
             </div>
           </section>
         </div>
@@ -1062,5 +1128,54 @@ export default function Home() {
         {/* maybe a gallary/slideshow section? Prob not though */}
       </div>
     </motion.div>
+  );
+}
+
+const letterAnimation = {
+  hidden: { opacity: 0 },
+  visible: (i: number) => ({
+    opacity: 1,
+    transition: {
+      delay: i * 0.025,
+      ease: "easeOut",
+    },
+  }),
+};
+
+interface AnimatedText {
+  text: string;
+  delay?: number;
+}
+
+function AnimatedText({ text, delay = 0 }: AnimatedText) {
+  const [startAnimation, setStartAnimation] = useState(false);
+
+  useEffect(() => {
+    if (startAnimation) return;
+
+    setTimeout(() => {
+      setStartAnimation(true);
+    }, delay * 1000);
+  }, [startAnimation, delay]);
+
+  return (
+    <motion.span
+      initial="hidden"
+      animate={startAnimation ? "visible" : "hidden"}
+      variants={{
+        visible: {
+          transition: {
+            staggerChildren: 0.01,
+            ease: "easeOut",
+          },
+        },
+      }}
+    >
+      {text.split("").map((letter, index) => (
+        <motion.span key={index} custom={index} variants={letterAnimation}>
+          {letter}
+        </motion.span>
+      ))}
+    </motion.span>
   );
 }
