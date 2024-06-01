@@ -8,14 +8,7 @@ import { useRouter } from "next/router";
 import DashboardLayout from "~/components/dashboard/DashboardLayout";
 import { ParallaxProvider } from "react-scroll-parallax";
 
-// might in some way mess with t3 bootstrapping, be wary
-type ComponentWithPageLayout = AppProps & {
-  Component: AppProps["Component"] & {
-    PageLayout?: React.ComponentType;
-  };
-};
-
-function MyApp({ Component, pageProps }: ComponentWithPageLayout) {
+function MyApp({ Component, pageProps }: AppProps) {
   const { asPath } = useRouter();
 
   return (
@@ -44,14 +37,7 @@ function MyApp({ Component, pageProps }: ComponentWithPageLayout) {
           </DashboardLayout>
         ) : (
           <GeneralLayout>
-            {Component.PageLayout ? (
-              // @ts-expect-error TODO: fix this type error later
-              <Component.PageLayout>
-                <Component {...pageProps} />
-              </Component.PageLayout>
-            ) : (
-              <Component {...pageProps} />
-            )}
+            <Component {...pageProps} />
           </GeneralLayout>
         )}
       </ParallaxProvider>

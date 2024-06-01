@@ -3,11 +3,10 @@ import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import OrderSummary from "~/components/cart/OrderSummary";
-import TopProfileNavigationLayout from "~/components/layouts/TopProfileNavigationLayout";
 import {
   Accordion,
   AccordionContent,
@@ -54,10 +53,16 @@ import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import Decimal from "decimal.js";
 import { toZonedTime } from "date-fns-tz";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
+import { CiGift } from "react-icons/ci";
+import { IoSettingsOutline } from "react-icons/io5";
+import { TfiReceipt } from "react-icons/tfi";
+import { useRouter } from "next/router";
+import { Separator } from "~/components/ui/separator";
 
 function RecentOrders() {
   const userId = useGetUserId();
   const { isSignedIn } = useAuth();
+  const { asPath } = useRouter();
 
   const { data: orders } = api.order.getUsersOrders.useQuery(
     { userId },
@@ -90,14 +95,14 @@ function RecentOrders() {
     setSortedOrders(localSortedOrders);
   }, [orders, sortedOrders, sortDirection]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setTimeout(() => {
       window.scroll({
         top: 0,
         left: 0,
         behavior: "instant",
       });
-    }, 100);
+    }, 10);
   }, []);
 
   // TODO: there is still seemingly the flash of layout on the initial render, investigate.
@@ -109,9 +114,13 @@ function RecentOrders() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className={`baseVertFlex relative min-h-[calc(100dvh-6rem-81px)] w-full tablet:min-h-0 
-      ${sortedOrders && sortedOrders.length > 0 ? "!justify-start tablet:mb-16" : ""}
-      ${sortedOrders && sortedOrders.length > 5 ? "mb-16" : ""}
+      // className={`baseVertFlex relative min-h-[calc(100dvh-6rem-81px)] w-full tablet:min-h-0
+      // ${sortedOrders && sortedOrders.length > 0 ? "!justify-start tablet:mb-16" : ""}
+      // ${sortedOrders && sortedOrders.length > 5 ? "mb-16" : ""}
+      // `}
+      className={`baseVertFlex baseVertFlex relative mt-24
+      h-full min-h-[calc(100dvh-6rem-81px)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem-120px)]
+        ${sortedOrders && sortedOrders.length > 0 ? "!justify-start" : ""}
       `}
     >
       <Head>
@@ -130,6 +139,44 @@ function RecentOrders() {
         />
       </Head>
 
+      <div className="baseFlex my-12 !hidden gap-4 rounded-lg border border-stone-400 bg-offwhite p-1 tablet:!flex">
+        <Button
+          variant={
+            asPath.includes("/profile/preferences") ? "default" : "ghost"
+          }
+          asChild
+        >
+          <Link href="/profile/preferences" className="baseFlex w-full gap-2">
+            <IoSettingsOutline className="size-5" />
+            Preferences
+          </Link>
+        </Button>
+
+        <Separator className="h-5 w-[1px] bg-stone-400" />
+
+        <Button
+          variant={asPath.includes("/profile/rewards") ? "default" : "ghost"}
+          asChild
+        >
+          <Link href="/profile/rewards" className="baseFlex w-full gap-2">
+            <CiGift className="size-6" />
+            Rewards
+          </Link>
+        </Button>
+
+        <Separator className="h-5 w-[1px] bg-stone-400" />
+
+        <Button
+          variant={asPath.includes("/profile/my-orders") ? "default" : "ghost"}
+          asChild
+        >
+          <Link href="/profile/my-orders" className="baseFlex w-full gap-2">
+            <TfiReceipt className="size-5" />
+            My orders
+          </Link>
+        </Button>
+      </div>
+
       <AnimatePresence mode="wait">
         {orders === undefined || sortedOrders === undefined ? (
           <motion.div
@@ -138,7 +185,7 @@ function RecentOrders() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseVertFlex h-full min-h-[calc(100dvh-6rem-63px)] w-full items-center justify-center tablet:min-h-[calc(100dvh-7rem-120px)] "
+            className="baseVertFlex h-full min-h-[calc(100dvh-6rem-81px)] w-full items-center justify-center tablet:min-h-[calc(100dvh-7rem-120px)] "
           >
             <AnimatedLotus className="size-16 fill-primary tablet:size-24" />
           </motion.div>
@@ -149,7 +196,7 @@ function RecentOrders() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseVertFlex relative my-8 w-full p-0 transition-all tablet:p-8"
+            className="baseVertFlex relative my-8 mb-32 mt-16 w-full !justify-start p-0 transition-all lg:w-[775px] tablet:mt-0 tablet:rounded-xl tablet:border tablet:p-8 tablet:shadow-md"
           >
             {/* fyi: don't think it makes sense to have these two be under an <AnimatePresence /> since
             it should (rarely) ever change between 0 orders and some orders */}
@@ -184,7 +231,7 @@ function RecentOrders() {
                   </div>
                 </div>
 
-                <div className="baseVertFlex gap-4">
+                <div className="baseVertFlex mb-16 gap-4">
                   {sortedOrders.map((order) => (
                     <OrderAccordion
                       key={order.id}
@@ -226,11 +273,60 @@ function RecentOrders() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <div className="baseFlex sticky bottom-0 left-0 z-40 h-20 w-full gap-0 border-t border-stone-400 bg-offwhite tablet:hidden">
+        <Button
+          variant={
+            asPath.includes("/profile/preferences") ? "default" : "secondary"
+          }
+          asChild
+        >
+          <Link
+            href="/profile/preferences"
+            className="baseVertFlex h-20 w-full gap-2 !rounded-none text-xs"
+          >
+            <IoSettingsOutline className="size-5" />
+            Preferences
+          </Link>
+        </Button>
+
+        <Separator className="h-20 w-[1px] bg-stone-400" />
+
+        <Button
+          variant={
+            asPath.includes("/profile/rewards") ? "default" : "secondary"
+          }
+          asChild
+        >
+          <Link
+            href="/profile/rewards"
+            className="baseVertFlex h-20 w-full gap-2 !rounded-none text-xs"
+          >
+            <CiGift className="size-6" />
+            <span className="pb-0.5">Rewards</span>
+          </Link>
+        </Button>
+
+        <Separator className="h-20 w-[1px] bg-stone-400" />
+
+        <Button
+          variant={
+            asPath.includes("/profile/my-orders") ? "default" : "secondary"
+          }
+          asChild
+        >
+          <Link
+            href="/profile/my-orders"
+            className="baseVertFlex h-20 w-full gap-2 !rounded-none text-xs"
+          >
+            <TfiReceipt className="size-5" />
+            My orders
+          </Link>
+        </Button>
+      </div>
     </motion.div>
   );
 }
-
-RecentOrders.PageLayout = TopProfileNavigationLayout;
 
 export default RecentOrders;
 

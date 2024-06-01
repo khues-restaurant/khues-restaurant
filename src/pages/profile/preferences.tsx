@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import TopProfileNavigationLayout from "~/components/layouts/TopProfileNavigationLayout";
+import { useLayoutEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -52,12 +51,15 @@ import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import { useToast } from "~/components/ui/use-toast";
 import { AlertDialogTitle } from "@radix-ui/react-alert-dialog";
 import Link from "next/link";
+import { CiGift } from "react-icons/ci";
+import { IoSettingsOutline } from "react-icons/io5";
+import { TfiReceipt } from "react-icons/tfi";
 
 function Preferences() {
   const userId = useGetUserId();
   const { isSignedIn, signOut } = useAuth();
   const ctx = api.useUtils();
-  const { push } = useRouter();
+  const { asPath, push } = useRouter();
 
   const { resetStore, viewportLabel } = useMainStore((state) => ({
     resetStore: state.resetStore,
@@ -160,15 +162,6 @@ function Preferences() {
     birthday: z.date(),
   });
 
-  useEffect(() => {
-    setTimeout(() => {
-      window.scroll({
-        top: 0,
-        left: 0,
-        behavior: "instant",
-      });
-    }, 100);
-  }, []);
   // should be able to remove ?. and ?? from these now since we are using getServerSideProps
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -214,6 +207,16 @@ function Preferences() {
     });
   }
 
+  useLayoutEffect(() => {
+    setTimeout(() => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: "instant",
+      });
+    }, 10);
+  }, []);
+
   return (
     <motion.div
       key={"profile-preferences"}
@@ -221,7 +224,9 @@ function Preferences() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex relative my-8 w-full tablet:mt-0"
+      className="baseVertFlex baseVertFlex relative mt-24
+      h-full min-h-[calc(100dvh-6rem-81px)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem-120px)]
+      "
     >
       <Head>
         <title>Preferences | Khue&apos;s</title>
@@ -239,6 +244,44 @@ function Preferences() {
         />
       </Head>
 
+      <div className="baseFlex my-12 !hidden gap-4 rounded-lg border border-stone-400 bg-offwhite p-1 tablet:!flex">
+        <Button
+          variant={
+            asPath.includes("/profile/preferences") ? "default" : "ghost"
+          }
+          asChild
+        >
+          <Link href="/profile/preferences" className="baseFlex w-full gap-2">
+            <IoSettingsOutline className="size-5" />
+            Preferences
+          </Link>
+        </Button>
+
+        <Separator className="h-5 w-[1px] bg-stone-400" />
+
+        <Button
+          variant={asPath.includes("/profile/rewards") ? "default" : "ghost"}
+          asChild
+        >
+          <Link href="/profile/rewards" className="baseFlex w-full gap-2">
+            <CiGift className="size-6" />
+            Rewards
+          </Link>
+        </Button>
+
+        <Separator className="h-5 w-[1px] bg-stone-400" />
+
+        <Button
+          variant={asPath.includes("/profile/my-orders") ? "default" : "ghost"}
+          asChild
+        >
+          <Link href="/profile/my-orders" className="baseFlex w-full gap-2">
+            <TfiReceipt className="size-5" />
+            My orders
+          </Link>
+        </Button>
+      </div>
+
       <AnimatePresence mode="wait">
         {user === undefined ? (
           <motion.div
@@ -247,7 +290,7 @@ function Preferences() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseVertFlex h-full min-h-[calc(100dvh-6rem-63px)] w-full items-center justify-center tablet:min-h-[calc(100dvh-7rem-120px)] "
+            className="baseVertFlex h-full min-h-[calc(100dvh-6rem-81px)] w-full items-center justify-center tablet:min-h-[calc(100dvh-7rem-120px)]"
           >
             <AnimatedLotus className="size-16 fill-primary tablet:size-24" />
           </motion.div>
@@ -258,7 +301,7 @@ function Preferences() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseVertFlex w-full"
+            className="baseVertFlex relative mb-32 mt-8 size-full lg:w-[775px] tablet:mt-0 tablet:rounded-xl tablet:border tablet:shadow-md"
           >
             <div className="baseVertFlex relative w-full !items-start p-8 transition-all tablet:my-8 tablet:p-16 tablet:pb-0">
               {/* Personal Information */}
@@ -970,10 +1013,59 @@ function Preferences() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <div className="baseFlex sticky bottom-0 left-0 z-40 h-20 w-full gap-0 border-t border-stone-400 bg-offwhite tablet:hidden">
+        <Button
+          variant={
+            asPath.includes("/profile/preferences") ? "default" : "secondary"
+          }
+          asChild
+        >
+          <Link
+            href="/profile/preferences"
+            className="baseVertFlex h-20 w-full gap-2 !rounded-none text-xs"
+          >
+            <IoSettingsOutline className="size-5" />
+            Preferences
+          </Link>
+        </Button>
+
+        <Separator className="h-20 w-[1px] bg-stone-400" />
+
+        <Button
+          variant={
+            asPath.includes("/profile/rewards") ? "default" : "secondary"
+          }
+          asChild
+        >
+          <Link
+            href="/profile/rewards"
+            className="baseVertFlex h-20 w-full gap-2 !rounded-none text-xs"
+          >
+            <CiGift className="size-6" />
+            <span className="pb-0.5">Rewards</span>
+          </Link>
+        </Button>
+
+        <Separator className="h-20 w-[1px] bg-stone-400" />
+
+        <Button
+          variant={
+            asPath.includes("/profile/my-orders") ? "default" : "secondary"
+          }
+          asChild
+        >
+          <Link
+            href="/profile/my-orders"
+            className="baseVertFlex h-20 w-full gap-2 !rounded-none text-xs"
+          >
+            <TfiReceipt className="size-5" />
+            My orders
+          </Link>
+        </Button>
+      </div>
     </motion.div>
   );
 }
-
-Preferences.PageLayout = TopProfileNavigationLayout;
 
 export default Preferences;

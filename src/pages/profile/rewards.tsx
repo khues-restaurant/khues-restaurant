@@ -2,12 +2,11 @@ import { useAuth } from "@clerk/nextjs";
 import Decimal from "decimal.js";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useLayoutEffect, useState } from "react";
 import { CiGift } from "react-icons/ci";
 import { FaCakeCandles } from "react-icons/fa6";
 import { LuCalendarClock } from "react-icons/lu";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
-import TopProfileNavigationLayout from "~/components/layouts/TopProfileNavigationLayout";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
@@ -20,16 +19,21 @@ import { api } from "~/utils/api";
 import { getRewardsPointCost } from "~/utils/getRewardsPointCost";
 import { isEligibleForBirthdayReward } from "~/utils/isEligibleForBirthdayReward";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
-
-import sampleImage from "/public/menuItems/sampleImage.webp";
+import { IoSettingsOutline } from "react-icons/io5";
+import { TfiReceipt } from "react-icons/tfi";
+import { useRouter } from "next/router";
 import Head from "next/head";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
+
+import sampleImage from "/public/menuItems/sampleImage.webp";
+import Link from "next/link";
 
 // TODO: honestly the logic within here is very hit or miss, comb through this for sure
 
 function Rewards() {
   const userId = useGetUserId();
   const { isSignedIn } = useAuth();
+  const { asPath } = useRouter();
 
   const { data: user } = api.user.get.useQuery(userId, {
     enabled: Boolean(userId && isSignedIn),
@@ -118,14 +122,14 @@ function Rewards() {
     }
   }, [orderDetails.items, toBeDeductedRewardsPoints]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setTimeout(() => {
       window.scroll({
         top: 0,
         left: 0,
         behavior: "instant",
       });
-    }, 100);
+    }, 10);
   }, []);
 
   // need to extract the categories/items from menuItems,
@@ -144,7 +148,8 @@ function Rewards() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex relative mb-16 w-full"
+      className="baseVertFlex baseVertFlex relative mt-24
+      h-full min-h-[calc(100dvh-6rem-81px)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem-120px)]"
     >
       <Head>
         <title>Rewards | Khue&apos;s</title>
@@ -162,6 +167,44 @@ function Rewards() {
         />
       </Head>
 
+      <div className="baseFlex my-12 !hidden gap-4 rounded-lg border border-stone-400 bg-offwhite p-1 tablet:!flex">
+        <Button
+          variant={
+            asPath.includes("/profile/preferences") ? "default" : "ghost"
+          }
+          asChild
+        >
+          <Link href="/profile/preferences" className="baseFlex w-full gap-2">
+            <IoSettingsOutline className="size-5" />
+            Preferences
+          </Link>
+        </Button>
+
+        <Separator className="h-5 w-[1px] bg-stone-400" />
+
+        <Button
+          variant={asPath.includes("/profile/rewards") ? "default" : "ghost"}
+          asChild
+        >
+          <Link href="/profile/rewards" className="baseFlex w-full gap-2">
+            <CiGift className="size-6" />
+            Rewards
+          </Link>
+        </Button>
+
+        <Separator className="h-5 w-[1px] bg-stone-400" />
+
+        <Button
+          variant={asPath.includes("/profile/my-orders") ? "default" : "ghost"}
+          asChild
+        >
+          <Link href="/profile/my-orders" className="baseFlex w-full gap-2">
+            <TfiReceipt className="size-5" />
+            My orders
+          </Link>
+        </Button>
+      </div>
+
       <AnimatePresence mode="wait">
         {rewards === undefined ||
         user === undefined ||
@@ -172,7 +215,7 @@ function Rewards() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseVertFlex h-full min-h-[calc(100dvh-6rem-63px)] w-full items-center justify-center tablet:min-h-[calc(100dvh-7rem-120px)] "
+            className="baseVertFlex h-full min-h-[calc(100dvh-6rem-81px)] w-full items-center justify-center tablet:min-h-[calc(100dvh-7rem-120px)] "
           >
             <AnimatedLotus className="size-16 fill-primary tablet:size-24" />
           </motion.div>
@@ -183,7 +226,7 @@ function Rewards() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseVertFlex relative w-full gap-8 transition-all"
+            className="baseVertFlex relative mb-24 w-full gap-8 transition-all md:w-3/4 tablet:mb-32 tablet:mt-0 tablet:rounded-xl tablet:border tablet:shadow-md"
           >
             <div
               style={{
@@ -590,7 +633,7 @@ function Rewards() {
                 <SideAccentSwirls className="h-4 fill-primary sm:h-[18px]" />
               </div>
 
-              <div className="baseVertFlex gap-8 xl:!flex-row">
+              <div className="baseVertFlex mb-24 gap-8 xl:!flex-row">
                 <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
                   <CiGift className="ml-2 size-16 h-20 text-primary" />
                   <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
@@ -629,11 +672,60 @@ function Rewards() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <div className="baseFlex sticky bottom-0 left-0 z-40 h-20 w-full gap-0 border-t border-stone-400 bg-offwhite tablet:hidden">
+        <Button
+          variant={
+            asPath.includes("/profile/preferences") ? "default" : "secondary"
+          }
+          asChild
+        >
+          <Link
+            href="/profile/preferences"
+            className="baseVertFlex h-20 w-full gap-2 !rounded-none text-xs"
+          >
+            <IoSettingsOutline className="size-5" />
+            Preferences
+          </Link>
+        </Button>
+
+        <Separator className="h-20 w-[1px] bg-stone-400" />
+
+        <Button
+          variant={
+            asPath.includes("/profile/rewards") ? "default" : "secondary"
+          }
+          asChild
+        >
+          <Link
+            href="/profile/rewards"
+            className="baseVertFlex h-20 w-full gap-2 !rounded-none text-xs"
+          >
+            <CiGift className="size-6" />
+            <span className="pb-0.5">Rewards</span>
+          </Link>
+        </Button>
+
+        <Separator className="h-20 w-[1px] bg-stone-400" />
+
+        <Button
+          variant={
+            asPath.includes("/profile/my-orders") ? "default" : "secondary"
+          }
+          asChild
+        >
+          <Link
+            href="/profile/my-orders"
+            className="baseVertFlex h-20 w-full gap-2 !rounded-none text-xs"
+          >
+            <TfiReceipt className="size-5" />
+            My orders
+          </Link>
+        </Button>
+      </div>
     </motion.div>
   );
 }
-
-Rewards.PageLayout = TopProfileNavigationLayout;
 
 export default Rewards;
 
