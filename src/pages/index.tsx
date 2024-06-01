@@ -278,9 +278,15 @@ export default function Home() {
                   href="/order"
                   className="baseFlex mt-4 gap-2 !px-4 !text-base shadow-md"
                 >
-                  <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
+                  <SideAccentSwirls
+                    delay={2.15}
+                    className="h-[14px] scale-x-[-1] fill-offwhite"
+                  />
                   Order now
-                  <SideAccentSwirls className="h-[14px] fill-offwhite" />
+                  <SideAccentSwirls
+                    delay={2.15}
+                    className="h-[14px] fill-offwhite"
+                  />
                 </Link>
               </Button>
             </motion.div>
@@ -411,9 +417,15 @@ export default function Home() {
                     href="/order"
                     className="baseFlex mt-6 gap-2 !px-4 !py-6 !text-lg shadow-md "
                   >
-                    <SideAccentSwirls className="h-4 scale-x-[-1] fill-offwhite" />
+                    <SideAccentSwirls
+                      delay={2.15}
+                      className="h-4 scale-x-[-1] fill-offwhite"
+                    />
                     Order now
-                    <SideAccentSwirls className="h-4 fill-offwhite" />
+                    <SideAccentSwirls
+                      delay={2.15}
+                      className="h-4 fill-offwhite"
+                    />
                   </Link>
                 </Button>
               </motion.div>
