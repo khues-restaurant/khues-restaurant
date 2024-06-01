@@ -53,6 +53,7 @@ import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import Decimal from "decimal.js";
 import { toZonedTime } from "date-fns-tz";
+import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 
 function RecentOrders() {
   const userId = useGetUserId();
@@ -209,7 +210,14 @@ function RecentOrders() {
                     It looks like you haven&apos;t placed an order yet.
                   </p>
                   <Button asChild>
-                    <Link href="/order">Get started</Link>
+                    <Link
+                      href="/order"
+                      className="baseFlex gap-2 !px-4 !text-base shadow-md"
+                    >
+                      <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
+                      Get started
+                      <SideAccentSwirls className="h-[14px] fill-offwhite" />
+                    </Link>
                   </Button>
                   with your first order today!
                 </div>
