@@ -253,7 +253,7 @@ function PostSignUpDialog() {
                 ? viewportLabel.includes("mobile")
                   ? "575px"
                   : "600px"
-                : "575px",
+                : "525px",
             transition: "height 0.2s ease-in-out",
           }}
           className="baseVertFlex relative overflow-hidden"
@@ -347,7 +347,7 @@ function PostSignUpDialog() {
             </div>
           </div>
 
-          <AnimatePresence mode="popLayout">
+          <AnimatePresence initial={false} mode="popLayout">
             {step === 1 && (
               <motion.div
                 key={"personalInfo"}
@@ -363,8 +363,8 @@ function PostSignUpDialog() {
               >
                 <Form {...mainForm}>
                   <form className="baseVertFlex mt-8 w-full p-1">
-                    <div className="baseVertFlex w-full gap-16 tablet:gap-8">
-                      <div className="grid grid-cols-2 !items-start gap-4 tablet:gap-8">
+                    <div className="baseVertFlex w-full gap-16 tablet:gap-16">
+                      <div className="grid grid-cols-2 !items-start gap-4 tablet:gap-16">
                         <FormField
                           control={mainForm.control}
                           name="firstName"
@@ -464,7 +464,7 @@ function PostSignUpDialog() {
                         />
                       </div>
 
-                      <div className="grid grid-cols-2 !items-start gap-4 tablet:gap-8">
+                      <div className="grid grid-cols-2 !items-start gap-4 tablet:gap-16">
                         <FormField
                           control={mainForm.control}
                           name="phoneNumber"
@@ -848,7 +848,7 @@ function PostSignUpDialog() {
               variant={"text"}
               onClick={() => setStep(step - 1)}
               className={`${
-                step === 1 || isSaving
+                step === 1 || saveButtonText === "Saving"
                   ? "pointer-events-none opacity-50"
                   : "text-stone-500"
               }`}
@@ -856,6 +856,7 @@ function PostSignUpDialog() {
               Back
             </Button>
             <Button
+              disabled={saveButtonText === "Saving"}
               style={{
                 width: getDynamicWidth(),
               }}
