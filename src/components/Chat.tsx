@@ -412,7 +412,7 @@ function Chat() {
             side={"top"}
             sideOffset={16}
             showArrow={false}
-            className="baseVertFlex w-full rounded-lg border-none !p-0 shadow-xl sm:mr-4 sm:max-w-sm"
+            className="baseVertFlex w-full !rounded-xl border-none !p-0 shadow-xl sm:mr-4 sm:max-w-sm"
           >
             {/* header */}
             <div className="baseFlex z-20 gap-4 rounded-t-lg bg-primary p-4 shadow-md">
