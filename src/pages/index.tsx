@@ -217,7 +217,8 @@ export default function Home() {
           this approach
         </div> */}
 
-        <div className="baseFlex relative size-full h-[65svh]">
+        {/* making sure that the "Welcome to Khue's" container is always visible on first page load */}
+        <div className="baseFlex relative size-full h-[calc(100svh-6rem-184px)]">
           <Image
             src={mobileHero}
             alt={"TODO: fill in w/ appropriate alt text"}
@@ -268,8 +269,8 @@ export default function Home() {
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{ delay: 2.15, duration: 1, ease: "easeOut" }}
               className="baseFlex overflow-hidden"
             >
@@ -407,8 +408,8 @@ export default function Home() {
               </motion.p>
 
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ delay: 2.15, duration: 1, ease: "easeOut" }}
                 className="baseFlex overflow-hidden"
               >
