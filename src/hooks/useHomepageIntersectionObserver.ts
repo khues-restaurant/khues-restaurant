@@ -20,9 +20,9 @@ function useHomepageIntersectionObserver({
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && scrollDir === "down") {
-            void controls.start({ opacity: 1, [axis]: 0 });
+            void controls.start({ opacity: 1, [axis]: 0, filter: "blur(0px)" });
           } else if (entry.boundingClientRect.top < 0 && scrollDir === "up") {
-            void controls.start({ opacity: 1, [axis]: 0 });
+            void controls.start({ opacity: 1, [axis]: 0, filter: "blur(0px)" });
           }
         });
       },

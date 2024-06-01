@@ -373,7 +373,7 @@ export default function Home() {
             loop: true,
           }}
         >
-          <CarouselContent className="mb-8 mt-6 xl:w-[800px] tablet:mb-4 tablet:mt-8">
+          <CarouselContent className="mb-5 mt-3 xl:w-[800px] tablet:mb-4 tablet:mt-8">
             <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md tablet:basis-1/3">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
@@ -611,7 +611,7 @@ export default function Home() {
                 tilted screenshot of the order page showing on their phone? think about it */}
             <motion.div
               ref={firstPromoImageAnimation.elementRef}
-              initial={{ opacity: 0, y: -50 }}
+              initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
               animate={firstPromoImageAnimation.controls}
               transition={{
                 opacity: { duration: 0.2 },
@@ -674,7 +674,7 @@ export default function Home() {
 
             <motion.div
               ref={secondPromoImageAnimation.elementRef}
-              initial={{ opacity: 0, y: -50 }}
+              initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
               animate={secondPromoImageAnimation.controls}
               transition={{
                 opacity: { duration: 0.2 },
@@ -805,7 +805,7 @@ export default function Home() {
 
             <motion.div
               ref={thirdPromoImageAnimation.elementRef}
-              initial={{ opacity: 0, y: -50 }}
+              initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
               animate={thirdPromoImageAnimation.controls}
               transition={{
                 opacity: { duration: 0.2 },

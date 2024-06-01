@@ -74,9 +74,17 @@ function OurStory() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && scrollDir === "down") {
-            void ericImageControls.start({ opacity: 1, y: 0 });
+            void ericImageControls.start({
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+            });
           } else if (entry.boundingClientRect.top < 0 && scrollDir === "up") {
-            void ericImageControls.start({ opacity: 1, y: 0 });
+            void ericImageControls.start({
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+            });
           }
         });
       },
@@ -411,7 +419,7 @@ function OurStory() {
 
           <motion.div
             ref={ericImageRef}
-            initial={{ opacity: 0, y: -75 }}
+            initial={{ opacity: 0, y: -75, filter: "blur(3px)" }}
             animate={ericImageControls}
             // whileInView={{ opacity: 1, y: 0 }}
             transition={{
