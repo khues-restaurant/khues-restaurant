@@ -279,7 +279,7 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
 
       <div
         // bg is background color of the <body>, 1% off from what bg-offwhite is
-        className="baseFlex bg-body sticky left-0 top-24 z-10 size-full h-16 w-full shadow-lg tablet:top-28 tablet:h-16 tablet:w-3/4 tablet:shadow-none"
+        className="baseFlex sticky left-0 top-24 z-10 size-full h-16 w-full bg-body shadow-lg tablet:top-28 tablet:h-16 tablet:w-3/4 tablet:shadow-none"
       >
         <Carousel
           setApi={setStickyCategoriesApi}
@@ -292,7 +292,7 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
             dragFree: true,
             align: "start",
           }}
-          className="baseFlex w-full"
+          className="baseFlex mb-1 w-full"
         >
           <CarouselContent>
             {menuCategories?.map((category) => {
@@ -303,7 +303,7 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
                       orientation="vertical"
                       className="ml-4 mr-2 h-full w-[2px]"
                     />
-                    <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
+                    <CarouselItem className="baseFlex basis-1/5 first:ml-2 last:mr-2 tablet:basis-auto">
                       <MenuCategoryButton
                         key={category.id}
                         name={category.name}
@@ -320,7 +320,7 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
 
               return (
                 <CarouselItem
-                  className="baseFlex basis-1/5 tablet:basis-auto"
+                  className="baseFlex basis-1/5 first:ml-2 last:mr-2 tablet:basis-auto"
                   key={category.id}
                 >
                   <MenuCategoryButton
@@ -333,7 +333,7 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
               );
             })}
 
-            <CarouselItem className="baseFlex basis-1/5 tablet:basis-auto">
+            <CarouselItem className="baseFlex basis-1/5 first:ml-2 last:mr-2 tablet:basis-auto">
               <MenuCategoryButton
                 name={"Mixed Drinks"}
                 listOrder={menuCategoryIndicies["Mixed Drinks"]!}

@@ -393,11 +393,11 @@ function OrderNow() {
               dragFree: true,
               align: "start",
             }}
-            className="baseFlex w-full"
+            className="baseFlex mb-1 w-full"
           >
             <CarouselContent>
               {userFavoriteItemIds.length > 0 && (
-                <CarouselItem className="baseFlex basis-auto">
+                <CarouselItem className="baseFlex basis-auto first:ml-2">
                   <MenuCategoryButton
                     name={"Favorites"}
                     listOrder={menuCategoryIndicies!.Favorites!}
@@ -409,7 +409,7 @@ function OrderNow() {
               )}
 
               {userRecentOrders && userRecentOrders.length > 0 && (
-                <CarouselItem className="baseFlex basis-auto">
+                <CarouselItem className="baseFlex basis-auto first:ml-2">
                   <MenuCategoryButton
                     name={"Recent orders"}
                     listOrder={menuCategoryIndicies!["Recent orders"]!}
@@ -429,7 +429,10 @@ function OrderNow() {
               )}
 
               {menuCategories?.map((category) => (
-                <CarouselItem className="baseFlex basis-auto" key={category.id}>
+                <CarouselItem
+                  className="baseFlex basis-auto first:ml-2 last:mr-2"
+                  key={category.id}
+                >
                   <MenuCategoryButton
                     name={category.name}
                     listOrder={menuCategoryIndicies![category.name] ?? 0}
