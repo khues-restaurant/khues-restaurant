@@ -80,7 +80,7 @@ function DesktopHeader() {
       `}
     >
       <Button variant="text" asChild>
-        <Link href={"/"} className={`${classes.logo ?? ""}`}>
+        <Link href={"/"} className={`${classes.logo ?? ""} justify-self-start`}>
           {/* <p className="text-3xl font-semibold text-primary">Khue&apos;s</p> */}
           <Image
             src={"/logo.svg"}
