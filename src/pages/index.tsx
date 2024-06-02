@@ -208,99 +208,159 @@ export default function Home() {
       </Head>
 
       {/* Hero */}
-      <div ref={mobileHeroRef} className="baseVertFlex w-full tablet:!hidden">
-        {/* <div className="imageFiller baseFlex size-full h-[65dvh]">
-          Image of probably three plates of food here arranged in a triangle
-          (one on top, two on bottom) on a table, probably with some fancy
-          lighting going on too. alternatively we could do one dish in main area
-          here, and have an image selector below, but not as big of a fan of
-          this approach
-        </div> */}
+      <div className="baseVertFlex relative h-[calc(100svh-6rem)] w-full gap-4 p-4 md:!hidden tablet:h-[calc(100svh-7rem)]">
+        <div className="relative grid size-full grid-cols-3 grid-rows-1 gap-4">
+          {/* top left */}
+          <motion.div
+            initial={{ filter: "blur(5px)", opacity: 0 }}
+            animate={{ filter: "blur(0px)", opacity: 1 }}
+            transition={{ duration: 0.7 }}
+            className="relative col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
+          >
+            <Parallax speed={0} className="!absolute !top-0 !size-full">
+              <Image
+                src={topLeftTabletHero}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                priority
+                sizes="33vw"
+                className="!relative !size-full rounded-md object-cover"
+              />
+            </Parallax>
+          </motion.div>
 
-        {/* making sure that the "Welcome to Khue's" container is always visible on first page load */}
-        <div className="baseFlex relative size-full h-[calc(100svh-6rem-184px)]">
-          <Image
-            src={mobileHero}
-            alt={"TODO: fill in w/ appropriate alt text"}
-            priority
-            // this below is assuming you don't want to keep the relative sizing throughout all
-            // viewport sizes, otherwise I think you should keep the "{number}vw" sizing. do the
-            // desktop hero images next to get a better idea.
-            // ^ also the parallax images should not be object-fit cover right? just static always
-            // (scale up a bit for tablet+ though maybe just to break up the monotony of the
-            // design?
-
-            sizes={"(max-width: 640px) 100vw, 500px"}
-            className="!relative !size-full object-cover sm:mt-4 sm:!w-[500px] sm:rounded-md"
-          />
+          {/* top right */}
+          <motion.div
+            initial={{ filter: "blur(5px)", opacity: 0 }}
+            animate={{ filter: "blur(0px)", opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="relative col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
+          >
+            <Parallax speed={0} className="!absolute !top-0 !size-full">
+              <Image
+                src={topRightTabletHero}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                priority
+                sizes="66vw"
+                className="!relative !size-full rounded-md object-cover"
+              />
+            </Parallax>
+          </motion.div>
         </div>
 
-        {/* bg-gradient-to-br from-offwhite to-primary/10
-        ^ should be fine to include this if you can move the media carousel down
-        the page somehow. Just not sure of where exactly it should move to yet */}
-        <section className="baseFlex w-full gap-8 rounded-md bg-offwhite py-4 shadow-md">
-          <Image
-            src={khuesKitchenLogo}
-            alt={"TODO: fill in w/ appropriate alt text"}
-            priority
-            // className="h-[228px] w-[120.75px]"
-            // className="h-[205.2px] w-[108.675px]"
-            className="h-[152px] w-[80.5px] drop-shadow-md"
-          />
-          <div className="baseVertFlex w-[226px] gap-1 rounded-md text-center">
-            <motion.h1
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25, duration: 1, ease: "easeOut" }}
-              className="overflow-hidden text-nowrap text-2xl font-bold"
-            >
-              <AnimatedText text="Welcome to Khue's" delay={0.25} />
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1, duration: 1, ease: "easeOut" }}
-              className="text-base leading-5 text-stone-500"
-            >
-              <AnimatedText
-                text="A modern take on classic Vietnamese cuisine."
-                delay={1}
-              />
-            </motion.p>
+        <motion.div
+          initial={{ opacity: 0, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
+          className="baseVertFlex w-full"
+        >
+          <section className="baseFlex w-full rounded-md border bg-gradient-to-br from-offwhite to-primary/10 py-4 pl-2 shadow-sm ">
+            <Image
+              src={khuesKitchenLogo}
+              alt={"TODO: fill in w/ appropriate alt text"}
+              priority
+              className="h-[152px] w-[80.5px] drop-shadow-md sm:h-[190px] sm:w-[100.625px]"
+            />
+            <div className="baseVertFlex gap-1 rounded-md">
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25, duration: 1, ease: "easeOut" }}
+                className="overflow-hidden text-center text-xl font-bold sm:text-2xl"
+              >
+                <AnimatedText text="Welcome to Khue's" delay={0.25} />
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, duration: 1, ease: "easeOut" }}
+                className="w-64 overflow-hidden text-center text-base leading-5 text-stone-500 sm:w-72 sm:text-lg sm:leading-6"
+              >
+                <AnimatedText
+                  text="A modern take on classic Vietnamese cuisine."
+                  delay={1}
+                />
+              </motion.p>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2.15, duration: 1, ease: "easeOut" }}
-              className="baseFlex overflow-hidden"
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 2.15, duration: 1, ease: "easeOut" }}
+                className="baseFlex overflow-hidden"
+              >
+                <Button size={"lg"} asChild>
+                  <Link
+                    href="/order"
+                    className="baseFlex mt-4 gap-2 !px-4 shadow-md"
+                  >
+                    <SideAccentSwirls
+                      delay={2.15}
+                      className="h-[14px] scale-x-[-1] fill-offwhite"
+                    />
+                    Order now
+                    <SideAccentSwirls
+                      delay={2.15}
+                      className="h-[14px] fill-offwhite"
+                    />
+                  </Link>
+                </Button>
+              </motion.div>
+            </div>
+          </section>
+        </motion.div>
+
+        <div className="relative grid size-full grid-cols-3 grid-rows-1 gap-4">
+          {/* bottom left */}
+          <motion.div
+            initial={{ filter: "blur(5px)", opacity: 0 }}
+            animate={{ filter: "blur(0px)", opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.6 }}
+            className="relative !top-0 col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
+          >
+            <Parallax
+              speed={0}
+              className="!absolute !top-0 !h-[150%] !w-full"
+              // TODO: this one is off by a bit in the other direction
             >
-              <Button size={"lg"} asChild>
-                <Link
-                  href="/order"
-                  className="baseFlex mt-4 gap-2 !px-4 !text-base shadow-md"
-                >
-                  <SideAccentSwirls
-                    delay={2.15}
-                    className="h-[14px] scale-x-[-1] fill-offwhite"
-                  />
-                  Order now
-                  <SideAccentSwirls
-                    delay={2.15}
-                    className="h-[14px] fill-offwhite"
-                  />
-                </Link>
-              </Button>
-            </motion.div>
-          </div>
-        </section>
+              <Image
+                src={bottomLeftTabletHero}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                priority
+                sizes="66vw"
+                className="!relative !size-full rounded-md object-cover"
+              />
+            </Parallax>
+          </motion.div>
+
+          {/* bottom right */}
+          <motion.div
+            initial={{ filter: "blur(5px)", opacity: 0 }}
+            animate={{ filter: "blur(0px)", opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.8 }}
+            className="relative !top-0 col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
+          >
+            <Parallax
+              speed={0}
+              className="!absolute !top-0 !h-[150%] !w-full"
+              // TODO: this one is off by a bit
+            >
+              <Image
+                src={bottomRightTabletHero}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                priority
+                sizes="33vw"
+                className="!relative !size-full rounded-md object-cover !pb-16"
+              />
+            </Parallax>
+          </motion.div>
+        </div>
       </div>
 
-      <div className="baseFlex relative !hidden w-full p-4 tablet:!flex tablet:h-[calc(100dvh-7rem)]">
+      <div className="baseFlex relative !hidden h-[calc(100svh-6rem)] w-full p-4 md:!flex tablet:h-[calc(100svh-7rem)]">
         <div className="relative grid size-full grid-cols-3 grid-rows-3 gap-4">
           {/* top left */}
           <motion.div
-            initial={{ filter: "blur(5px)" }}
-            animate={{ filter: "blur(0px)" }}
+            initial={{ filter: "blur(5px)", opacity: 0 }}
+            animate={{ filter: "blur(0px)", opacity: 1 }}
             transition={{ duration: 0.7 }}
             className="relative col-span-1 row-span-2 size-full overflow-hidden rounded-md shadow-md"
           >
@@ -317,8 +377,8 @@ export default function Home() {
 
           {/* top right */}
           <motion.div
-            initial={{ filter: "blur(5px)" }}
-            animate={{ filter: "blur(0px)" }}
+            initial={{ filter: "blur(5px)", opacity: 0 }}
+            animate={{ filter: "blur(0px)", opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
             className="relative col-span-2 row-span-2 size-full overflow-hidden rounded-md shadow-md"
           >
@@ -335,8 +395,8 @@ export default function Home() {
 
           {/* bottom left */}
           <motion.div
-            initial={{ filter: "blur(5px)" }}
-            animate={{ filter: "blur(0px)" }}
+            initial={{ filter: "blur(5px)", opacity: 0 }}
+            animate={{ filter: "blur(0px)", opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.4 }}
             className="relative !top-0 col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
@@ -357,8 +417,8 @@ export default function Home() {
 
           {/* bottom right */}
           <motion.div
-            initial={{ filter: "blur(5px)" }}
-            animate={{ filter: "blur(0px)" }}
+            initial={{ filter: "blur(5px)", opacity: 0 }}
+            animate={{ filter: "blur(0px)", opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.6 }}
             className="relative !top-0 col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
@@ -378,7 +438,7 @@ export default function Home() {
           </motion.div>
         </div>
 
-        <div className="baseVertFlex absolute top-0 h-full xl:!left-16 2xl:!left-24 tablet:left-8">
+        <div className="baseVertFlex absolute top-0 h-full md:left-8 xl:!left-16 2xl:!left-24">
           <section className="baseFlex gap-12 rounded-md border bg-offwhite bg-gradient-to-br from-offwhite to-primary/10 py-8 pl-12 pr-16 shadow-xl">
             <Image
               src={khuesKitchenLogo}
@@ -391,7 +451,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25, duration: 1, ease: "easeOut" }}
-                className="overflow-hidden text-4xl font-bold"
+                className="overflow-hidden text-3xl font-bold tablet:text-4xl"
               >
                 <AnimatedText text="Welcome to Khue's" delay={0.25} />
               </motion.h1>
@@ -399,7 +459,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1, duration: 1, ease: "easeOut" }}
-                className="w-72 overflow-hidden text-2xl text-stone-500"
+                className="w-72 overflow-hidden text-xl text-stone-500 tablet:text-2xl"
               >
                 <AnimatedText
                   text="A modern take on classic Vietnamese cuisine."
