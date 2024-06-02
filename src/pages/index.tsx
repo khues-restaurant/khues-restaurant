@@ -209,7 +209,10 @@ export default function Home() {
       </Head>
 
       {/* Hero */}
-      <div className="baseVertFlex relative h-[calc(100svh-6rem)] w-full gap-4 p-4 md:!hidden tablet:h-[calc(100svh-7rem)]">
+      <div
+        ref={mobileHeroRef}
+        className="baseVertFlex relative h-[calc(100svh-6rem)] w-full gap-4 p-4 md:!hidden tablet:h-[calc(100svh-7rem)]"
+      >
         <div className="relative grid size-full grid-cols-3 grid-rows-1 gap-4">
           {/* top left */}
           <motion.div
@@ -254,7 +257,7 @@ export default function Home() {
           transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
           className="baseVertFlex w-full"
         >
-          <section className="baseFlex w-full rounded-md border bg-gradient-to-br from-offwhite to-primary/10 py-4 pl-2 shadow-sm ">
+          <section className="baseFlex w-full rounded-md border bg-gradient-to-br from-offwhite to-primary/10 py-4 pl-6 shadow-sm ">
             <Image
               src={khuesKitchenLogo}
               alt={"TODO: fill in w/ appropriate alt text"}
@@ -497,9 +500,9 @@ export default function Home() {
       </div>
 
       {/* Press Reviews */}
-      <div className="baseVertFlex relative w-full border-y-[1px] bg-gradient-to-br from-offwhite to-primary/10 pb-4">
-        <StaticLotus className="absolute right-[5%] top-0 w-[15%] max-w-[200px] rotate-[-180deg] fill-primary/50 sm:w-[10%]" />
-        <StaticLotus className="absolute bottom-0 left-[5%] w-[15%] max-w-[200px] fill-primary/50 sm:w-[10%]" />
+      <div className="baseVertFlex relative w-full overflow-hidden border-y-[1px] bg-gradient-to-br from-offwhite to-primary/10 pb-4">
+        <StaticLotus className="absolute -right-8 -top-8 size-24 rotate-[-135deg] fill-primary/50 " />
+        <StaticLotus className="absolute -bottom-8 -left-8 size-24 rotate-[45deg] fill-primary/50 " />
 
         {/* <StaticLotus className="absolute bottom-8 right-[5%] w-[8%] fill-primary/50" />
         <StaticLotus className="absolute bottom-8 left-[5%] w-[8%] fill-primary/50" /> */}
