@@ -51,6 +51,7 @@ import masonryInteriorFive from "/public/interior/five.webp";
 import { useMainStore } from "~/stores/MainStore";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import useHomepageIntersectionObserver from "~/hooks/useHomepageIntersectionObserver";
+import StaticLotus from "~/components/ui/StaticLotus";
 
 export default function Home() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -496,8 +497,16 @@ export default function Home() {
       </div>
 
       {/* Press Reviews */}
-      <div className="baseVertFlex w-full border-y-[1px] bg-gradient-to-br from-offwhite to-primary/10 pb-4">
-        <div className="baseFlex gap-3 rounded-md rounded-t-none border border-t-0 p-2 px-8 font-medium shadow-sm tablet:text-xl ">
+      <div className="baseVertFlex relative w-full border-y-[1px] bg-gradient-to-br from-offwhite to-primary/10 pb-4">
+        <StaticLotus className="absolute right-[5%] top-0 w-[15%] max-w-[200px] rotate-[-180deg] fill-primary/50 sm:w-[10%]" />
+        <StaticLotus className="absolute bottom-0 left-[5%] w-[15%] max-w-[200px] fill-primary/50 sm:w-[10%]" />
+
+        {/* <StaticLotus className="absolute bottom-8 right-[5%] w-[8%] fill-primary/50" />
+        <StaticLotus className="absolute bottom-8 left-[5%] w-[8%] fill-primary/50" /> */}
+
+        {/* maybe somehow do an alternating pattern (reg, 180deg, reg) as the background? */}
+
+        <div className="baseFlex gap-3 rounded-md rounded-t-none border border-t-0 p-2 px-8 font-medium shadow-sm tablet:text-xl">
           <HiOutlineNewspaper />
           Find us on
         </div>
@@ -512,7 +521,7 @@ export default function Home() {
             loop: true,
           }}
         >
-          <CarouselContent className="mb-5 mt-3 xl:w-[800px] tablet:mb-4 tablet:mt-8">
+          <CarouselContent className="mb-5 mt-3 xl:w-[800px] tablet:mb-4 tablet:mt-4">
             <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md tablet:basis-1/3">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
@@ -658,7 +667,10 @@ export default function Home() {
               className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-32"
             />
           </div>
-          <div className="baseVertFlex gap-4 bg-gradient-to-br from-offwhite to-primary/10 p-4">
+          <div className="baseVertFlex relative gap-4 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4">
+            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+
             <p className="text-lg font-medium">
               Enjoy exclusive benefits when you order direct
             </p>
@@ -696,7 +708,10 @@ export default function Home() {
         </div>
 
         <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
-          <div className="baseVertFlex mt-6 !items-start gap-4 rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
+          <div className="baseVertFlex relative mt-6 !items-start gap-4 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
+            <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
+
             <p className="text-lg font-medium">
               Enjoy exclusive benefits when you order direct
             </p>
@@ -780,7 +795,10 @@ export default function Home() {
               className="!relative !top-0 !size-full !h-96 rounded-md object-cover !object-top !pb-16"
             />
           </div>
-          <div className="baseVertFlex !items-start gap-4 bg-gradient-to-br from-offwhite to-primary/10 p-4">
+          <div className="baseVertFlex relative !items-start gap-4 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
+            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+
             <p className="text-lg font-medium">Meet the Chef</p>
 
             <p>
@@ -832,7 +850,10 @@ export default function Home() {
             </motion.div>
           </div>
 
-          <div className="baseVertFlex mt-4 max-w-3xl !items-start gap-4 rounded-md border bg-gradient-to-bl from-offwhite to-primary/10 p-6 shadow-md">
+          <div className="baseVertFlex relative mt-4 max-w-3xl !items-start gap-4 overflow-hidden rounded-md border bg-gradient-to-bl from-offwhite to-primary/10 p-6 shadow-md">
+            <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+
             <p className="text-lg font-medium">Meet the chef</p>
 
             <p className="max-w-lg xl:max-w-full">
@@ -858,7 +879,10 @@ export default function Home() {
               className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-24"
             />
           </div>
-          <div className="baseVertFlex !items-start gap-2 bg-gradient-to-br from-offwhite to-primary/10 p-4">
+          <div className="baseVertFlex relative !items-start gap-2 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4">
+            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+
             <p className="text-lg font-medium leading-6">
               Planning a birthday dinner or get together with your friends?
             </p>
@@ -894,7 +918,10 @@ export default function Home() {
         </div>
 
         <div className="baseFlex !hidden w-full gap-16 py-8  tablet:!flex">
-          <div className="baseVertFlex mt-4 max-w-2xl gap-2 rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
+          <div className="baseVertFlex relative mt-4 max-w-2xl gap-2 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
+            <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
+
             <p className="text-lg font-medium">
               Planning a birthday dinner or get together with your friends?
             </p>
@@ -1024,7 +1051,12 @@ export default function Home() {
 
         {/* Rewards program promo section */}
         {isLoaded && !isSignedIn && (
-          <div className="baseVertFlex mb-16 mt-8 w-screen max-w-xl gap-8 border-y-4 border-y-gold !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
+          <div className="baseVertFlex relative mb-16 mt-8 w-screen max-w-xl gap-8 overflow-hidden border-y-4 border-y-gold !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
+            <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-gold/80" />
+            <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-gold/80" />
+            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-gold/80" />
+            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-gold/80" />
+
             <span className="w-64 text-center font-semibold sm:w-auto">
               Join Khue&apos;s Rewards and unlock exclusive benefits!
             </span>
