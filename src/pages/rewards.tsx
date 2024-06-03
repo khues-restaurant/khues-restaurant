@@ -15,6 +15,7 @@ import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import Head from "next/head";
 
 import sampleImage from "/public/menuItems/sampleImage.webp";
+import StaticLotus from "~/components/ui/StaticLotus";
 
 function Rewards() {
   return (
@@ -360,7 +361,10 @@ function Rewards() {
         </div>
 
         <div className="baseVertFlex gap-8 xl:!flex-row">
-          <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+          <div className="baseVertFlex relative m-4 w-72 !items-start gap-2 overflow-hidden rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+            {/* <StaticLotus className="absolute -right-24 -top-10 size-48 rotate-[0deg] fill-gold/80" /> */}
+            <StaticLotus className="absolute -right-16 -top-16 size-48 rotate-[-135deg] fill-gold/80" />
+
             <CiGift className="ml-2 size-16 h-20 text-primary" />
             <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
             <div className="hyphens-auto p-4 text-left text-primary">
@@ -371,7 +375,9 @@ function Rewards() {
             </div>
           </div>
 
-          <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+          <div className="baseVertFlex relative m-4 w-72 !items-start gap-2 overflow-hidden rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+            <StaticLotus className="absolute -right-24 -top-10 size-48 rotate-[0deg] fill-gold/80" />
+
             <FaCakeCandles className="ml-4 size-10 h-20 text-primary" />
             <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
             <div className="hyphens-auto p-4 text-left text-primary">
@@ -382,7 +388,9 @@ function Rewards() {
             </div>
           </div>
 
-          <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+          <div className="baseVertFlex relative m-4 w-72 !items-start gap-2 overflow-hidden rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+            <StaticLotus className="absolute -right-24 -top-16 size-48 rotate-[180deg] fill-gold/80" />
+
             <LuCalendarClock className="ml-2 size-12 h-20 shrink-0 text-primary" />
             <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
             <div className="hyphens-auto p-4 text-left text-primary">
@@ -452,21 +460,30 @@ function Rewards() {
         </div>
 
         <div className="baseVertFlex gap-8 tablet:!flex-row">
-          <div className="baseVertFlex max-w-72 gap-4 rounded-sm border-y-4 border-y-borderGold bg-offwhite !p-4 shadow-lg tablet:h-36 tablet:w-96">
+          <div className="baseVertFlex relative max-w-72 gap-4 overflow-hidden rounded-sm border-y-4 border-y-borderGold bg-offwhite !p-4 shadow-lg tablet:h-36 tablet:w-96">
+            <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-gold/80" />
+            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-gold/80" />
+
             <FaRedo className="size-6 text-primary" />
             <div className="text-center text-sm text-primary sm:text-base">
               Effortless one-tap reordering of your previous orders.
             </div>
           </div>
 
-          <div className="baseVertFlex max-w-72 gap-2 rounded-sm border-y-4 border-y-borderGold bg-offwhite !p-4 shadow-lg tablet:h-36 tablet:w-96">
+          <div className="baseVertFlex relative max-w-72 gap-2 overflow-hidden rounded-sm border-y-4 border-y-borderGold bg-offwhite !p-4 shadow-lg tablet:h-36 tablet:w-96">
+            <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-gold/80" />
+            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-gold/80" />
+
             <IoMdHeart className="size-8 text-primary" />
             <div className="text-center text-sm text-primary sm:text-base tablet:max-w-64">
               Favorite your most loved dishes for quick and easy access.
             </div>
           </div>
 
-          <div className="baseVertFlex max-w-72 gap-2 rounded-sm border-y-4 border-y-borderGold bg-offwhite !p-4 shadow-lg tablet:h-36 tablet:w-96">
+          <div className="baseVertFlex relative max-w-72 gap-2 overflow-hidden rounded-sm border-y-4 border-y-borderGold bg-offwhite !p-4 shadow-lg tablet:h-36 tablet:w-96">
+            <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-gold/80" />
+            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-gold/80" />
+
             <IoToggle className="size-9 text-primary" />
             <div className="text-center text-sm text-primary sm:text-base tablet:max-w-64">
               Easily add your account&apos;s dietary preferences to your orders.
@@ -494,7 +511,12 @@ function Rewards() {
             */}
 
       {/* Join */}
-      <div className="baseVertFlex mb-16 mt-16 max-w-xl gap-8 border-y-4 border-b-borderGold border-t-borderGold bg-offwhite !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
+      <div className="baseVertFlex relative mb-16 mt-16 max-w-xl gap-8 overflow-hidden border-y-4 border-b-borderGold border-t-borderGold bg-offwhite !p-6 text-primary shadow-md sm:rounded-sm sm:!p-8">
+        <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-gold/80" />
+        <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-gold/80" />
+        <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-gold/80" />
+        <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-gold/80" />
+
         <p className="text-center">
           Joining Khue&apos;s Rewards is easy! Simply create an account with us
           and start earning points with every order. Plus, you&apos;ll receive
@@ -511,7 +533,7 @@ function Rewards() {
           </Button>
         </SignUpButton>
 
-        <WideFancySwirls className="h-16 fill-primary" />
+        <WideFancySwirls className="h-14 fill-primary sm:h-16" />
       </div>
     </motion.div>
   );
