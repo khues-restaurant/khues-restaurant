@@ -216,9 +216,17 @@ export default function Home() {
         <div className="relative grid size-full grid-cols-3 grid-rows-1 gap-4">
           {/* top left */}
           <motion.div
-            initial={{ filter: "blur(5px)", opacity: 0 }}
-            animate={{ filter: "blur(0px)", opacity: 1 }}
-            transition={{ duration: 0.7 }}
+            initial={{ filter: "blur(5px)", opacity: 0, scale: 0.75 }}
+            animate={{ filter: "blur(0px)", opacity: 1, scale: 1 }}
+            transition={{
+              ease: "easeOut",
+              delay: 0.2,
+              duration: 0.7,
+              scale: {
+                type: "spring",
+                duration: 0.7,
+              },
+            }}
             className="relative col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Parallax speed={0} className="!absolute !top-0 !size-full">
@@ -234,9 +242,17 @@ export default function Home() {
 
           {/* top right */}
           <motion.div
-            initial={{ filter: "blur(5px)", opacity: 0 }}
-            animate={{ filter: "blur(0px)", opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+            initial={{ filter: "blur(5px)", opacity: 0, scale: 0.75 }}
+            animate={{ filter: "blur(0px)", opacity: 1, scale: 1 }}
+            transition={{
+              ease: "easeOut",
+              duration: 0.7,
+              delay: 0.5,
+              scale: {
+                type: "spring",
+                duration: 0.7,
+              },
+            }}
             className="relative col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Parallax speed={0} className="!absolute !top-0 !size-full">
@@ -252,9 +268,17 @@ export default function Home() {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 0 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
+          initial={{ filter: "blur(5px)", opacity: 0, scale: 0.75 }}
+          animate={{ filter: "blur(0px)", opacity: 1, scale: 1 }}
+          transition={{
+            ease: "easeOut",
+            duration: 0.7,
+            delay: 0.8,
+            scale: {
+              type: "spring",
+              duration: 0.7,
+            },
+          }}
           className="baseVertFlex w-full"
         >
           <section className="baseFlex w-full rounded-md border bg-gradient-to-br from-offwhite to-primary/10 py-4 pl-6 shadow-sm ">
@@ -265,49 +289,29 @@ export default function Home() {
               className="h-[152px] w-[80.5px] drop-shadow-md sm:h-[190px] sm:w-[100.625px]"
             />
             <div className="baseVertFlex gap-1 rounded-md">
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25, duration: 1, ease: "easeOut" }}
-                className="overflow-hidden text-center text-xl font-bold sm:text-2xl"
-              >
-                <AnimatedText text="Welcome to Khue's" delay={0.25} />
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1, duration: 1, ease: "easeOut" }}
-                className="w-64 overflow-hidden text-center text-base leading-5 text-stone-500 sm:w-72 sm:text-lg sm:leading-6"
-              >
-                <AnimatedText
-                  text="A modern take on classic Vietnamese cuisine."
-                  delay={1}
-                />
-              </motion.p>
+              <h1 className="text-center text-xl font-bold sm:text-2xl">
+                Welcome to Khue&apos;s
+              </h1>
+              <p className="w-64 text-center text-base leading-5 text-stone-500 sm:w-72 sm:text-lg sm:leading-6">
+                A modern take on classic Vietnamese cuisine.
+              </p>
 
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 2.15, duration: 1, ease: "easeOut" }}
-                className="baseFlex overflow-hidden"
-              >
-                <Button size={"lg"} asChild>
-                  <Link
-                    href="/order"
-                    className="baseFlex mt-4 gap-2 !px-4 shadow-md"
-                  >
-                    <SideAccentSwirls
-                      delay={2.15}
-                      className="h-[14px] scale-x-[-1] fill-offwhite"
-                    />
-                    Order now
-                    <SideAccentSwirls
-                      delay={2.15}
-                      className="h-[14px] fill-offwhite"
-                    />
-                  </Link>
-                </Button>
-              </motion.div>
+              <Button size={"lg"} asChild>
+                <Link
+                  href="/order"
+                  className="baseFlex mt-4 gap-2 !px-4 shadow-md"
+                >
+                  <SideAccentSwirls
+                    delay={1.75}
+                    className="h-[14px] scale-x-[-1] fill-offwhite"
+                  />
+                  Order now
+                  <SideAccentSwirls
+                    delay={1.75}
+                    className="h-[14px] fill-offwhite"
+                  />
+                </Link>
+              </Button>
             </div>
           </section>
         </motion.div>
@@ -315,9 +319,17 @@ export default function Home() {
         <div className="relative grid size-full grid-cols-3 grid-rows-1 gap-4">
           {/* bottom left */}
           <motion.div
-            initial={{ filter: "blur(5px)", opacity: 0 }}
-            animate={{ filter: "blur(0px)", opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
+            initial={{ filter: "blur(5px)", opacity: 0, scale: 0.75 }}
+            animate={{ filter: "blur(0px)", opacity: 1, scale: 1 }}
+            transition={{
+              ease: "easeOut",
+              duration: 0.7,
+              delay: 1.1,
+              scale: {
+                type: "spring",
+                duration: 0.7,
+              },
+            }}
             className="relative !top-0 col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Parallax
@@ -337,9 +349,17 @@ export default function Home() {
 
           {/* bottom right */}
           <motion.div
-            initial={{ filter: "blur(5px)", opacity: 0 }}
-            animate={{ filter: "blur(0px)", opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.8 }}
+            initial={{ filter: "blur(5px)", opacity: 0, scale: 0.75 }}
+            animate={{ filter: "blur(0px)", opacity: 1, scale: 1 }}
+            transition={{
+              ease: "easeOut",
+              duration: 0.7,
+              delay: 1.4,
+              scale: {
+                type: "spring",
+                duration: 0.7,
+              },
+            }}
             className="relative !top-0 col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Parallax
@@ -363,12 +383,20 @@ export default function Home() {
         <div className="relative grid size-full grid-cols-3 grid-rows-3 gap-4">
           {/* top left */}
           <motion.div
-            initial={{ filter: "blur(5px)", opacity: 0 }}
-            animate={{ filter: "blur(0px)", opacity: 1 }}
-            transition={{ duration: 0.7 }}
+            initial={{ filter: "blur(5px)", opacity: 0, scale: 0.75 }}
+            animate={{ filter: "blur(0px)", opacity: 1, scale: 1 }}
+            transition={{
+              ease: "easeOut",
+              delay: 0.2,
+              duration: 0.7,
+              scale: {
+                type: "spring",
+                duration: 0.7,
+              },
+            }}
             className="relative col-span-1 row-span-2 size-full overflow-hidden rounded-md shadow-md"
           >
-            <Parallax speed={-10} className="!absolute !top-0 !size-full">
+            <Parallax speed={0} className="!absolute !top-0 !size-full">
               <Image
                 src={topLeftTabletHero}
                 alt={"TODO: fill in w/ appropriate alt text"}
@@ -381,12 +409,20 @@ export default function Home() {
 
           {/* top right */}
           <motion.div
-            initial={{ filter: "blur(5px)", opacity: 0 }}
-            animate={{ filter: "blur(0px)", opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+            initial={{ filter: "blur(5px)", opacity: 0, scale: 0.75 }}
+            animate={{ filter: "blur(0px)", opacity: 1, scale: 1 }}
+            transition={{
+              ease: "easeOut",
+              duration: 0.7,
+              delay: 0.5,
+              scale: {
+                type: "spring",
+                duration: 0.7,
+              },
+            }}
             className="relative col-span-2 row-span-2 size-full overflow-hidden rounded-md shadow-md"
           >
-            <Parallax speed={-10} className="!absolute !top-0 !size-full">
+            <Parallax speed={0} className="!absolute !top-0 !size-full">
               <Image
                 src={topRightTabletHero}
                 alt={"TODO: fill in w/ appropriate alt text"}
@@ -397,15 +433,72 @@ export default function Home() {
             </Parallax>
           </motion.div>
 
+          <motion.div
+            initial={{ filter: "blur(5px)", opacity: 0, scale: 0.75 }}
+            animate={{ filter: "blur(0px)", opacity: 1, scale: 1 }}
+            transition={{
+              ease: "easeOut",
+              duration: 0.7,
+              delay: 0.8,
+              scale: {
+                type: "spring",
+                duration: 0.7,
+              },
+            }}
+            className="baseVertFlex absolute top-0 z-10 h-full md:left-8 xl:!left-16 2xl:!left-24"
+          >
+            <section className="baseFlex gap-12 rounded-md border bg-offwhite bg-gradient-to-br from-offwhite to-primary/10 py-8 pl-12 pr-16 shadow-xl">
+              <Image
+                src={khuesKitchenLogo}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                priority
+                className="h-[228px] w-[120.75px] drop-shadow-md"
+              />
+              <div className="baseVertFlex !items-start gap-1 rounded-md">
+                <h1 className="text-3xl font-bold tablet:text-4xl">
+                  Welcome to Khue&apos;s
+                </h1>
+                <p className="w-72 text-xl text-stone-500 tablet:text-2xl">
+                  A modern take on classic Vietnamese cuisine.
+                </p>
+
+                <Button size={"lg"} asChild>
+                  <Link
+                    href="/order"
+                    className="baseFlex mt-6 gap-2 !px-4 !py-6 !text-lg shadow-md "
+                  >
+                    <SideAccentSwirls
+                      delay={1.75}
+                      className="h-4 scale-x-[-1] fill-offwhite"
+                    />
+                    Order now
+                    <SideAccentSwirls
+                      delay={1.75}
+                      className="h-4 fill-offwhite"
+                    />
+                  </Link>
+                </Button>
+              </div>
+            </section>
+          </motion.div>
+
           {/* bottom left */}
           <motion.div
-            initial={{ filter: "blur(5px)", opacity: 0 }}
-            animate={{ filter: "blur(0px)", opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
+            initial={{ filter: "blur(5px)", opacity: 0, scale: 0.75 }}
+            animate={{ filter: "blur(0px)", opacity: 1, scale: 1 }}
+            transition={{
+              ease: "easeOut",
+              duration: 0.7,
+              delay: 1.1,
+              scale: {
+                type: "spring",
+                duration: 0.7,
+              },
+            }}
             className="relative !top-0 col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Parallax
-              speed={-10}
+              speed={0}
               className="!absolute !top-0 !h-[150%] !w-full"
               // TODO: this one is off by a bit
             >
@@ -421,13 +514,21 @@ export default function Home() {
 
           {/* bottom right */}
           <motion.div
-            initial={{ filter: "blur(5px)", opacity: 0 }}
-            animate={{ filter: "blur(0px)", opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
+            initial={{ filter: "blur(5px)", opacity: 0, scale: 0.75 }}
+            animate={{ filter: "blur(0px)", opacity: 1, scale: 1 }}
+            transition={{
+              ease: "easeOut",
+              duration: 0.7,
+              delay: 1.4,
+              scale: {
+                type: "spring",
+                duration: 0.7,
+              },
+            }}
             className="relative !top-0 col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Parallax
-              speed={-10}
+              speed={0}
               className="!absolute !top-0 !h-[150%] !w-full"
               // TODO: this one is off by a bit in the other direction
             >
@@ -440,62 +541,6 @@ export default function Home() {
               />
             </Parallax>
           </motion.div>
-        </div>
-
-        <div className="baseVertFlex absolute top-0 h-full md:left-8 xl:!left-16 2xl:!left-24">
-          <section className="baseFlex gap-12 rounded-md border bg-offwhite bg-gradient-to-br from-offwhite to-primary/10 py-8 pl-12 pr-16 shadow-xl">
-            <Image
-              src={khuesKitchenLogo}
-              alt={"TODO: fill in w/ appropriate alt text"}
-              priority
-              className="h-[228px] w-[120.75px] drop-shadow-md"
-            />
-            <div className="baseVertFlex !items-start gap-1 rounded-md">
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25, duration: 1, ease: "easeOut" }}
-                className="overflow-hidden text-3xl font-bold tablet:text-4xl"
-              >
-                <AnimatedText text="Welcome to Khue's" delay={0.25} />
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1, duration: 1, ease: "easeOut" }}
-                className="w-72 overflow-hidden text-xl text-stone-500 tablet:text-2xl"
-              >
-                <AnimatedText
-                  text="A modern take on classic Vietnamese cuisine."
-                  delay={1}
-                />
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 2.15, duration: 1, ease: "easeOut" }}
-                className="baseFlex overflow-hidden"
-              >
-                <Button size={"lg"} asChild>
-                  <Link
-                    href="/order"
-                    className="baseFlex mt-6 gap-2 !px-4 !py-6 !text-lg shadow-md "
-                  >
-                    <SideAccentSwirls
-                      delay={2.15}
-                      className="h-4 scale-x-[-1] fill-offwhite"
-                    />
-                    Order now
-                    <SideAccentSwirls
-                      delay={2.15}
-                      className="h-4 fill-offwhite"
-                    />
-                  </Link>
-                </Button>
-              </motion.div>
-            </div>
-          </section>
         </div>
       </div>
 
@@ -670,7 +715,7 @@ export default function Home() {
               className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-32"
             />
           </div>
-          <div className="baseVertFlex relative gap-4 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4">
+          <div className="baseVertFlex relative gap-4 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
             <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
             <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
 
@@ -798,7 +843,7 @@ export default function Home() {
               className="!relative !top-0 !size-full !h-96 rounded-md object-cover !object-top !pb-16"
             />
           </div>
-          <div className="baseVertFlex relative !items-start gap-4 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
+          <div className="baseVertFlex relative !items-start gap-4 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-12">
             <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
             <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
 
@@ -853,7 +898,7 @@ export default function Home() {
             </motion.div>
           </div>
 
-          <div className="baseVertFlex relative mt-4 max-w-3xl !items-start gap-4 overflow-hidden rounded-md border bg-gradient-to-bl from-offwhite to-primary/10 p-6 shadow-md">
+          <div className="baseVertFlex relative mt-4 max-w-3xl !items-start gap-4 overflow-hidden rounded-md border bg-gradient-to-bl from-offwhite to-primary/10 p-6 pl-8 shadow-md">
             <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-primary/50" />
             <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
 
@@ -873,7 +918,7 @@ export default function Home() {
         </div>
 
         {/* Reservation promo section */}
-        <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md  tablet:hidden">
+        <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md tablet:hidden">
           <div className="relative h-60 w-full overflow-hidden rounded-t-md">
             <Image
               src={reservations}
@@ -882,7 +927,7 @@ export default function Home() {
               className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-24"
             />
           </div>
-          <div className="baseVertFlex relative !items-start gap-2 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4">
+          <div className="baseVertFlex relative !items-start gap-2 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
             <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
             <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
 
@@ -1054,7 +1099,7 @@ export default function Home() {
 
         {/* Rewards program promo section */}
         {isLoaded && !isSignedIn && (
-          <div className="baseVertFlex relative mb-16 mt-8 w-screen max-w-xl gap-8 overflow-hidden border-y-4 border-y-gold !p-6 text-primary shadow-md sm:!p-8 tablet:rounded-sm">
+          <div className="baseVertFlex relative mb-16 mt-8 w-screen max-w-xl gap-8 overflow-hidden border-y-4 border-y-gold bg-offwhite !p-6 text-primary shadow-md sm:rounded-sm sm:!p-8">
             <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-gold/80" />
             <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-gold/80" />
             <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-gold/80" />
@@ -1079,7 +1124,7 @@ export default function Home() {
               </Button>
             </SignUpButton>
 
-            <WideFancySwirls className="h-16 fill-primary" />
+            <WideFancySwirls className="h-14 fill-primary sm:h-16" />
           </div>
         )}
 
