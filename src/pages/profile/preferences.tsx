@@ -224,8 +224,8 @@ function Preferences() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex baseVertFlex relative mt-24
-      h-full min-h-[calc(100dvh-6rem-81px)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem-120px)]
+      className="baseVertFlex baseVertFlex relative mt-24 h-full min-h-[calc(100dvh-6rem-81px)]
+      w-full !justify-start bg-offwhite lg:bg-body tablet:mt-28 tablet:min-h-[calc(100dvh-7rem-120px)]
       "
     >
       <Head>
@@ -301,7 +301,7 @@ function Preferences() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseVertFlex relative mb-32 mt-8 size-full lg:w-[775px] tablet:mt-0 tablet:rounded-xl tablet:border tablet:shadow-md"
+            className="baseVertFlex relative mb-32 mt-8 size-full bg-offwhite lg:w-[775px] tablet:mt-0 tablet:rounded-xl tablet:border tablet:shadow-md"
           >
             <div className="baseVertFlex relative w-full !items-start p-8 transition-all tablet:my-8 tablet:p-16 tablet:pb-0">
               {/* Personal Information */}

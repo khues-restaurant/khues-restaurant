@@ -226,7 +226,7 @@ function Rewards() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseVertFlex relative mb-24 w-full gap-8 transition-all md:w-3/4 tablet:mb-32 tablet:mt-0 tablet:rounded-xl tablet:border tablet:shadow-md"
+            className="baseVertFlex relative mb-24 w-full gap-8 bg-offwhite transition-all md:w-3/4 tablet:mb-32 tablet:mt-0 tablet:rounded-xl tablet:border tablet:shadow-md"
           >
             <div
               style={{

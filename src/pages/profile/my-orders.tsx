@@ -196,7 +196,7 @@ function RecentOrders() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseVertFlex relative my-8 mb-32 mt-16 w-full !justify-start p-0 transition-all lg:w-[775px] tablet:mt-0 tablet:rounded-xl tablet:border tablet:p-8 tablet:shadow-md"
+            className="baseVertFlex relative my-8 mb-32 mt-16 w-full !justify-start bg-offwhite p-0 transition-all lg:w-[775px] tablet:mt-0 tablet:rounded-xl tablet:border tablet:p-8 tablet:shadow-md"
           >
             {/* fyi: don't think it makes sense to have these two be under an <AnimatePresence /> since
             it should (rarely) ever change between 0 orders and some orders */}
@@ -462,7 +462,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
     >
       <AccordionItem
         value={"open"}
-        className="w-full rounded-md border shadow-md"
+        className="w-full rounded-md border bg-offwhite shadow-md"
         data-state={accordionOpen}
       >
         <div className="baseFlex relative w-full gap-2 p-4 tablet:w-[650px]">
@@ -923,7 +923,10 @@ function RateDialog({ userId, orderId }: RateDialog) {
           </AlertDialogHeader>
 
           <Form {...feedbackForm}>
-            <form className="baseVertFlex w-full !items-start gap-2">
+            <form
+              onSubmit={feedbackForm.handleSubmit(onFormSubmit)}
+              className="baseVertFlex w-full !items-start gap-2"
+            >
               <FormField
                 control={feedbackForm.control}
                 name="feedback"
