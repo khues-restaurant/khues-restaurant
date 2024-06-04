@@ -54,13 +54,13 @@ import { formatPrice } from "~/utils/formatPrice";
 import { getDisabledDates } from "~/utils/getDisabledPickupDates";
 import { getHoursAndMinutesFromDate } from "~/utils/getHoursAndMinutesFromDate";
 import { getMidnightDate } from "~/utils/getMidnightDate";
-import { is30MinsFromDatetime } from "~/utils/is30MinsFromDatetime";
-import { isAbleToRenderASAPTimeSlot } from "~/utils/isAbleToRenderASAPTimeSlot";
+import { isSelectedTimeSlotValid } from "~/utils/isSelectedTimeSlotValid";
 import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
 import { selectedDateIsToday } from "~/utils/selectedDateIsToday";
 import { cn } from "~/utils/shadcnuiUtils";
 import { Separator } from "~/components/ui/separator";
 import { Input } from "~/components/ui/input";
+import { loopToFindFirstOpenDay } from "~/utils/loopToFindFirstOpenDay";
 
 interface OrderCost {
   subtotal: number;
@@ -197,28 +197,19 @@ function CartSheet({
 
           const minOrderPickupDatetime = minPickupTime.value;
           const now = new Date();
+          const selectedDate = mainForm.getValues().dateToPickup;
 
-          // ASAP time slot validation
-          if (orderDetails.isASAP) {
-            return (
-              isAbleToRenderASAPTimeSlot(new Date()) &&
-              now >= minOrderPickupDatetime
-            );
+          if (
+            isSelectedTimeSlotValid({
+              isASAP: orderDetails.isASAP,
+              datetimeToPickup: orderDetails.isASAP
+                ? now
+                : mergeDateAndTime(selectedDate, time) || now,
+              minPickupDatetime: minOrderPickupDatetime,
+            })
+          ) {
+            return true;
           }
-
-          const datetimeToPickup = mergeDateAndTime(
-            mainForm.getValues().dateToPickup,
-            time,
-          );
-
-          if (!datetimeToPickup) return false;
-
-          // Regular pickup time validation
-          return (
-            datetimeToPickup > now &&
-            datetimeToPickup > minOrderPickupDatetime &&
-            is30MinsFromDatetime(datetimeToPickup, new Date())
-          );
         },
         {
           message:
@@ -267,7 +258,7 @@ function CartSheet({
   const mainForm = useForm<z.infer<typeof mainFormSchema>>({
     resolver: zodResolver(mainFormSchema),
     values: {
-      dateToPickup: getMidnightDate(orderDetails.datetimeToPickup),
+      dateToPickup: loopToFindFirstOpenDay(orderDetails.datetimeToPickup),
       timeToPickup: orderDetails.isASAP
         ? "ASAP (~20 mins)"
         : getHoursAndMinutesFromDate(orderDetails.datetimeToPickup),

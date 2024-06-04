@@ -1,27 +1,10 @@
 import { toZonedTime } from "date-fns-tz";
 import { getMidnightDate } from "~/utils/getMidnightDate";
-
-const holidays = [
-  new Date("2024-12-25"),
-  new Date("2024-12-26"),
-  new Date("2025-01-01"),
-];
-
-function isSundayOrMonday(date: Date) {
-  const dayOfWeek = date.getDay();
-  return dayOfWeek === 0 || dayOfWeek === 1;
-}
-
-function isHoliday(date: Date, holidays: Date[]) {
-  const dateString = date.toISOString().split("T")[0]; // Converts date to YYYY-MM-DD format
-  return holidays.some(
-    (holiday) => holiday.toISOString().split("T")[0] === dateString,
-  );
-}
+import { loopToFindFirstOpenDay } from "~/utils/loopToFindFirstOpenDay";
 
 export function getFirstValidMidnightDate(orderDatetimeToPickup?: Date) {
   // currently, every use of this function is to just get the (next) first
-  // valid midnight date, however if orderDatetimeToPickup is passed in,
+  // valid midnight _day_, however if orderDatetimeToPickup is passed in,
   // it will be used instead to check if the current order's datetimeToPickup
   // is valid. When reordering, we explicitly do *NOT* send over the previous
   // order's datetimeToPickup since we always want the user to explicitly choose
@@ -39,13 +22,7 @@ export function getFirstValidMidnightDate(orderDatetimeToPickup?: Date) {
     datetimeToPickup = now;
   }
 
-  // Check and adjust for Sundays, Mondays, and Holidays
-  while (
-    isSundayOrMonday(datetimeToPickup) ||
-    isHoliday(datetimeToPickup, holidays)
-  ) {
-    datetimeToPickup.setDate(datetimeToPickup.getDate() + 1); // Move to the next day
-  }
+  datetimeToPickup = loopToFindFirstOpenDay(datetimeToPickup);
 
   return datetimeToPickup;
 }

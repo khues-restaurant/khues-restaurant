@@ -4,8 +4,7 @@ import { useLayoutEffect, useMemo, useState } from "react";
 import { SelectGroup, SelectItem, SelectLabel } from "~/components/ui/select";
 import { formatTimeString } from "~/utils/formatTimeString";
 import { getMidnightDate } from "~/utils/getMidnightDate";
-import { is30MinsFromDatetime } from "~/utils/is30MinsFromDatetime";
-import { isAbleToRenderASAPTimeSlot } from "~/utils/isAbleToRenderASAPTimeSlot";
+import { isSelectedTimeSlotValid } from "~/utils/isSelectedTimeSlotValid";
 import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
 
 interface AvailablePickupTimes {
@@ -64,22 +63,17 @@ function AvailablePickupTimes({
     // if selectedDate is today, then we need to check if the current time
     // is past the minimum pickup time
     if (selectedDate.getTime() === todayAtMidnight.getTime() && minPickupTime) {
-      basePickupTimes = basePickupTimes.filter((time, index) => {
+      basePickupTimes = basePickupTimes.filter((time) => {
         if (
-          time === "ASAP (~20 mins)" &&
-          isAbleToRenderASAPTimeSlot(now) &&
-          now >= minPickupTime
+          isSelectedTimeSlotValid({
+            isASAP: time === "ASAP (~20 mins)",
+            datetimeToPickup:
+              time === "ASAP (~20 mins)"
+                ? now
+                : mergeDateAndTime(selectedDate, time) || now,
+            minPickupDatetime: minPickupTime,
+          })
         ) {
-          return true;
-        }
-
-        const datetime = mergeDateAndTime(selectedDate, time);
-
-        if (!datetime) return false;
-
-        // Time is 30+ mins from now to allow kitchen to prepare on time, and
-        // also after the minPickupTime.
-        if (is30MinsFromDatetime(datetime, now) && datetime >= minPickupTime) {
           return true;
         }
       });

@@ -2,39 +2,37 @@ import { z } from "zod";
 import { type OrderDetails, orderDetailsSchema } from "~/stores/MainStore";
 import isEqual from "lodash.isequal";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { getMidnightDate } from "~/utils/getMidnightDate";
-import { isAbleToRenderASAPTimeSlot } from "~/utils/isAbleToRenderASAPTimeSlot";
-import { is30MinsFromDatetime } from "~/utils/is30MinsFromDatetime";
 import Decimal from "decimal.js";
 import { toZonedTime } from "date-fns-tz";
 import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
+import { isSelectedTimeSlotValid } from "~/utils/isSelectedTimeSlotValid";
+import { loopToFindFirstOpenDay } from "~/utils/loopToFindFirstOpenDay";
 
 function validateTimeToPickup(
   orderDetails: OrderDetails,
   minOrderPickupDatetime: Date,
 ) {
   const now = toZonedTime(new Date(), "America/Chicago");
-  const datetimeToPickup = orderDetails.datetimeToPickup;
+  const datetimeToPickup = toZonedTime(
+    orderDetails.datetimeToPickup,
+    "America/Chicago",
+  );
+  const minPickupDatetime = toZonedTime(
+    minOrderPickupDatetime,
+    "America/Chicago",
+  );
 
-  // ASAP time slot validation
   if (
-    orderDetails.isASAP &&
-    isAbleToRenderASAPTimeSlot(now) &&
-    now >= minOrderPickupDatetime
+    isSelectedTimeSlotValid({
+      isASAP: orderDetails.isASAP,
+      datetimeToPickup,
+      minPickupDatetime,
+    })
   ) {
     return;
   }
 
-  // Regular pickup time validation
-  if (
-    datetimeToPickup > now &&
-    datetimeToPickup > minOrderPickupDatetime &&
-    is30MinsFromDatetime(datetimeToPickup, now)
-  ) {
-    return;
-  }
-
-  orderDetails.datetimeToPickup = getMidnightDate(now);
+  orderDetails.datetimeToPickup = loopToFindFirstOpenDay(now);
 }
 
 export const validateOrderRouter = createTRPCRouter({

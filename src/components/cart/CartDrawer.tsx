@@ -49,18 +49,17 @@ import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
-import { is30MinsFromDatetime } from "~/utils/is30MinsFromDatetime";
 import { getHoursAndMinutesFromDate } from "~/utils/getHoursAndMinutesFromDate";
-import { getMidnightDate } from "~/utils/getMidnightDate";
 import { selectedDateIsToday } from "~/utils/selectedDateIsToday";
 import { X } from "lucide-react";
 import isEqual from "lodash.isequal";
 import Decimal from "decimal.js";
-import { isAbleToRenderASAPTimeSlot } from "~/utils/isAbleToRenderASAPTimeSlot";
+import { isSelectedTimeSlotValid } from "~/utils/isSelectedTimeSlotValid";
 import Image from "next/image";
 import { TbLocation } from "react-icons/tb";
 import { Separator } from "~/components/ui/separator";
 import { Input } from "~/components/ui/input";
+import { loopToFindFirstOpenDay } from "~/utils/loopToFindFirstOpenDay";
 
 function getSafeAreaInsetBottom() {
   // Create a temporary element to get the CSS variable
@@ -205,28 +204,19 @@ function CartDrawer({
 
           const minOrderPickupDatetime = minPickupTime.value;
           const now = new Date();
+          const selectedDate = mainForm.getValues().dateToPickup;
 
-          // ASAP time slot validation
-          if (orderDetails.isASAP) {
-            return (
-              isAbleToRenderASAPTimeSlot(new Date()) &&
-              now >= minOrderPickupDatetime
-            );
+          if (
+            isSelectedTimeSlotValid({
+              isASAP: orderDetails.isASAP,
+              datetimeToPickup: orderDetails.isASAP
+                ? now
+                : mergeDateAndTime(selectedDate, time) || now,
+              minPickupDatetime: minOrderPickupDatetime,
+            })
+          ) {
+            return true;
           }
-
-          const datetimeToPickup = mergeDateAndTime(
-            mainForm.getValues().dateToPickup,
-            time,
-          );
-
-          if (!datetimeToPickup) return false;
-
-          // Regular pickup time validation
-          return (
-            datetimeToPickup > now &&
-            datetimeToPickup > minOrderPickupDatetime &&
-            is30MinsFromDatetime(datetimeToPickup, new Date())
-          );
         },
         {
           message:
@@ -275,7 +265,7 @@ function CartDrawer({
   const mainForm = useForm<z.infer<typeof mainFormSchema>>({
     resolver: zodResolver(mainFormSchema),
     values: {
-      dateToPickup: getMidnightDate(orderDetails.datetimeToPickup),
+      dateToPickup: loopToFindFirstOpenDay(orderDetails.datetimeToPickup),
       timeToPickup: orderDetails.isASAP
         ? "ASAP (~20 mins)"
         : getHoursAndMinutesFromDate(orderDetails.datetimeToPickup),
