@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { SelectGroup, SelectItem, SelectLabel } from "~/components/ui/select";
 import { formatTimeString } from "~/utils/formatTimeString";
-import { getMidnightDate } from "~/utils/getMidnightDate";
 import { isSelectedTimeSlotValid } from "~/utils/isSelectedTimeSlotValid";
 import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
 
@@ -11,6 +10,7 @@ interface AvailablePickupTimes {
   selectedDate: Date;
   minPickupTime: Date | null | undefined;
 }
+
 function AvailablePickupTimes({
   selectedDate,
   minPickupTime,
@@ -18,18 +18,31 @@ function AvailablePickupTimes({
   const [availablePickupTimes, setAvailablePickupTimes] = useState<string[]>([
     "ASAP (~20 mins)",
     "15:00",
+    "15:15",
     "15:30",
+    "15:45",
     "16:00",
+    "16:15",
     "16:30",
+    "16:45",
     "17:00",
+    "17:15",
     "17:30",
+    "17:45",
     "18:00",
+    "18:15",
     "18:30",
+    "18:45",
     "19:00",
+    "19:15",
     "19:30",
+    "19:45",
     "20:00",
+    "20:15",
     "20:30",
+    "20:45",
     "21:00",
+    "21:15",
     "21:30",
     // intentially excluding last 30 mins slot to not stress kitchen at end of night.
   ]);
@@ -41,28 +54,40 @@ function AvailablePickupTimes({
     let basePickupTimes = [
       "ASAP (~20 mins)",
       "15:00",
+      "15:15",
       "15:30",
+      "15:45",
       "16:00",
+      "16:15",
       "16:30",
+      "16:45",
       "17:00",
+      "17:15",
       "17:30",
+      "17:45",
       "18:00",
+      "18:15",
       "18:30",
+      "18:45",
       "19:00",
+      "19:15",
       "19:30",
+      "19:45",
       "20:00",
+      "20:15",
       "20:30",
+      "20:45",
       "21:00",
+      "21:15",
       "21:30",
       // intentially excluding last 30 mins slot to not stress kitchen at end of night.
     ];
 
     const now = toZonedTime(new Date(), "America/Chicago");
-    const todayAtMidnight = getMidnightDate(now);
 
     // if selectedDate is today, then we need to check if the current time
     // is past the minimum pickup time
-    if (selectedDate.getTime() === todayAtMidnight.getTime() && minPickupTime) {
+    if (selectedDate.getDay() === now.getDay() && minPickupTime) {
       basePickupTimes = basePickupTimes.filter((time) => {
         if (
           isSelectedTimeSlotValid({
