@@ -167,7 +167,7 @@ function CartSheet({
   const mainFormSchema = z.object({
     dateToPickup: z
       .date({
-        required_error: "Pickup date must be specified",
+        required_error: "Invalid pickup date",
       })
       .refine(
         (date) => {
@@ -178,16 +178,16 @@ function CartSheet({
           return date >= now;
         },
         {
-          message: "The pickup date cannot be in the past.",
+          message: "Invalid pickup date",
         },
       ),
     timeToPickup: z
       .string({
-        required_error: "Pickup time must be specified",
+        required_error: "Invalid pickup time",
       })
       .refine((val) => val.trim().length > 0, {
         // Ensures the string is not just whitespace
-        message: "Pickup time must be specified",
+        message: "Invalid pickup time",
       })
       .refine(
         (time) => {
@@ -217,7 +217,7 @@ function CartSheet({
         },
       ),
     pickupName: z.string().min(1, {
-      message: "Pickup name must be specified",
+      message: "Pickup name is required",
     }),
   });
 
