@@ -410,7 +410,7 @@ function PostSignUpDialog() {
                                       marginTop: 0,
                                     }}
                                     transition={{ duration: 0.2 }}
-                                    className="max-w-48 text-sm font-medium text-red-500"
+                                    className="ml-1 max-w-48 text-sm font-medium text-red-500"
                                   >
                                     {error?.message}
                                   </motion.div>
@@ -459,7 +459,7 @@ function PostSignUpDialog() {
                                       marginTop: 0,
                                     }}
                                     transition={{ duration: 0.2 }}
-                                    className="max-w-48 text-sm font-medium text-red-500"
+                                    className="ml-1 max-w-48 text-sm font-medium text-red-500"
                                   >
                                     {error?.message}
                                   </motion.div>
@@ -527,7 +527,7 @@ function PostSignUpDialog() {
                                       marginTop: 0,
                                     }}
                                     transition={{ duration: 0.2 }}
-                                    className="max-w-48 text-sm font-medium text-red-500"
+                                    className="ml-1 max-w-48 text-sm font-medium text-red-500"
                                   >
                                     {error?.message}
                                   </motion.div>
@@ -589,7 +589,7 @@ function PostSignUpDialog() {
                                       marginTop: 0,
                                     }}
                                     transition={{ duration: 0.2 }}
-                                    className="max-w-48 text-sm font-medium text-red-500"
+                                    className="ml-1 max-w-48 text-sm font-medium text-red-500"
                                   >
                                     {error?.message}
                                   </motion.div>
@@ -663,7 +663,7 @@ function PostSignUpDialog() {
                                   }}
                                   exit={{ opacity: 0, height: 0, marginTop: 0 }}
                                   transition={{ duration: 0.2 }}
-                                  className="max-w-48 text-sm font-medium text-red-500"
+                                  className="ml-1 max-w-48 text-sm font-medium text-red-500"
                                 >
                                   {error?.message}
                                 </motion.div>

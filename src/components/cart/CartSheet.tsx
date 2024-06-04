@@ -506,7 +506,7 @@ function CartSheet({
                             }}
                             exit={{ opacity: 0, height: 0, marginTop: 0 }}
                             transition={{ duration: 0.2 }}
-                            className="text-sm font-medium text-red-500"
+                            className="ml-1 text-sm font-medium text-red-500"
                           >
                             {error?.message}
                           </motion.div>
@@ -578,7 +578,7 @@ function CartSheet({
                             }}
                             exit={{ opacity: 0, height: 0, marginTop: 0 }}
                             transition={{ duration: 0.2 }}
-                            className="text-sm font-medium text-red-500"
+                            className="ml-1 text-sm font-medium text-red-500"
                           >
                             {error?.message}
                           </motion.div>
@@ -617,7 +617,7 @@ function CartSheet({
                             }}
                             exit={{ opacity: 0, height: 0, marginTop: 0 }}
                             transition={{ duration: 0.2 }}
-                            className="text-sm font-medium text-red-500"
+                            className="ml-1 text-sm font-medium text-red-500"
                           >
                             {error?.message}
                           </motion.div>
@@ -1169,7 +1169,7 @@ function CartSheet({
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 transition={{ duration: 0.2 }}
-                                className="absolute -bottom-6 left-0 right-0 w-[280px] text-sm font-medium text-red-500"
+                                className="absolute -bottom-6 left-0 right-0 ml-1 w-[280px] text-sm font-medium text-red-500"
                               >
                                 {error?.message}
                               </motion.div>
