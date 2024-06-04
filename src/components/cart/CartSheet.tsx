@@ -520,7 +520,17 @@ function CartSheet({
                   control={mainForm.control}
                   name="timeToPickup"
                   render={({ field, fieldState: { invalid, error } }) => (
-                    <FormItem className="baseVertFlex relative !items-start space-y-0">
+                    <FormItem
+                      style={{
+                        width:
+                          field.value === ""
+                            ? "156px"
+                            : field.value === "ASAP (~20 mins)"
+                              ? "176px"
+                              : `${field.value.length * 25}px`,
+                      }}
+                      className="baseVertFlex relative !items-start space-y-0 transition-[width]"
+                    >
                       <div className="baseVertFlex !items-start gap-2">
                         <FormLabel className="font-semibold">
                           Pickup time
