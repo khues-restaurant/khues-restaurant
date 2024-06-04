@@ -382,14 +382,14 @@ function OurStory() {
         {/* Small opening statement */}
         <div className="mt-16 h-[1px] w-48 rounded-md bg-primary tablet:w-72"></div>
         <p className="mt-16 max-w-72 text-sm tracking-wide sm:max-w-lg tablet:max-w-xl tablet:text-base">
-          Khue&apos;s Kitchen is a lifelong project dedicated to and inspired by
-          Khue Pham&apos;s legacy. For the last 30 years, Khue&apos;s devotion
-          to flavor, creativity and tradition has touched the lives of friends,
+          Khue&apos;s is a lifelong project dedicated to and inspired by Khue
+          Pham&apos;s legacy. For the last 30 years, Khue&apos;s devotion to
+          flavor, creativity and tradition has touched the lives of friends,
           family and eaters across the Midwest. Today, her son, chef/owner Eric
           Pham is honoring the memories and experiences of his mom&apos;s
-          artistry through Khue&apos;s Kitchen. Using bold Vietnamese flavors,
-          Eric blends influential and traditional dishes from his childhood with
-          a modern perspective to reimagine Vietnamese cuisine.
+          artistry through Khue&apos;s. Using bold Vietnamese flavors, Eric
+          blends influential and traditional dishes from his childhood with a
+          modern perspective to reimagine Vietnamese cuisine.
         </p>
         {/* Centerpiece of Eric */}
         <div className="mt-16 h-[1px] w-48 rounded-md bg-primary tablet:w-72"></div>
