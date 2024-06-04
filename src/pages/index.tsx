@@ -289,7 +289,8 @@ export default function Home() {
               className="h-[152px] w-[80.5px] drop-shadow-md sm:h-[190px] sm:w-[100.625px]"
             />
             <div className="baseVertFlex gap-1 rounded-md">
-              <h1 className="text-center text-xl font-bold sm:text-2xl">
+              {/* experimenting with stone-800 instead of black */}
+              <h1 className="text-center text-xl font-bold text-stone-800 sm:text-2xl">
                 Welcome to Khue&apos;s
               </h1>
               <p className="w-64 text-center text-base leading-5 text-stone-500 sm:w-72 sm:text-lg sm:leading-6">
@@ -455,7 +456,8 @@ export default function Home() {
                 className="h-[228px] w-[120.75px] drop-shadow-md"
               />
               <div className="baseVertFlex !items-start gap-1 rounded-md">
-                <h1 className="text-3xl font-bold tablet:text-4xl">
+                {/* experimenting with stone-800 instead of black */}
+                <h1 className="text-3xl font-bold text-stone-800 tablet:text-4xl">
                   Welcome to Khue&apos;s
                 </h1>
                 <p className="w-72 text-xl text-stone-500 tablet:text-2xl">
@@ -850,10 +852,13 @@ export default function Home() {
             <p className="text-lg font-medium">Meet the Chef</p>
 
             <p>
-              Eric Pham is Lorem ipsum dolor sit amet, consectetur adipiscing
-              elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris nisi ut aliquip ex ea commodo consequat.
+              Eric Pham, chef and owner of Khue&apos;s, carries forward the
+              culinary legacy of his mother, Khue Pham, by reimagining
+              Vietnamese cuisine with bold, traditional flavors and modern
+              techniques. Shaped by his early experiences at his family&apos;s
+              restaurant and rigorous training at Spoon and Stable, Eric is
+              dedicated to honoring his cultural heritage and sharing it with a
+              new generation of diners.
             </p>
 
             <Button variant={"link"} className="h-8 !p-0" asChild>
@@ -905,10 +910,13 @@ export default function Home() {
             <p className="text-lg font-medium">Meet the chef</p>
 
             <p className="max-w-lg xl:max-w-full">
-              Eric Pham is Lorem ipsum dolor sit amet, consectetur adipiscing
-              elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris nisi ut aliquip ex ea commodo consequat.
+              Eric Pham, chef and owner of Khue&apos;s, carries forward the
+              culinary legacy of his mother, Khue Pham, by reimagining
+              Vietnamese cuisine with bold, traditional flavors and modern
+              techniques. Shaped by his early experiences at his family&apos;s
+              restaurant and rigorous training at Spoon and Stable, Eric is
+              dedicated to honoring his cultural heritage and sharing it with a
+              new generation of diners.
             </p>
 
             <Button variant={"link"} className="h-8 !p-0" asChild>
@@ -966,7 +974,7 @@ export default function Home() {
         </div>
 
         <div className="baseFlex !hidden w-full gap-16 py-8  tablet:!flex">
-          <div className="baseVertFlex relative mt-4 max-w-2xl gap-2 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
+          <div className="baseVertFlex relative mt-4 max-w-[600px] gap-2 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 pr-8 shadow-md">
             <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
             <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
 
@@ -974,13 +982,13 @@ export default function Home() {
               Planning a birthday dinner or get together with your friends?
             </p>
 
-            <p className="mt-2">
+            <p className="mt-2 text-center">
               Secure your spot for larger parties. For parties of 4 or less,
               reservations are usually not needed. However, to guarantee your
               seats for larger groups, please get in touch with us.
             </p>
 
-            <div className="baseFlex mt-4 gap-4">
+            <div className="baseFlex mt-8 gap-4">
               <Button
                 className="baseFlex gap-2"
                 onClick={() => setChatIsOpen(!chatIsOpen)}
