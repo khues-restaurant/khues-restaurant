@@ -71,28 +71,25 @@ const mainFormSchema = z.object({
     )
     .refine(
       (birthday) => {
-        const year = new Date(birthday).getFullYear();
-        const currentYear = new Date().getFullYear();
+        const date = new Date(birthday);
+        const now = new Date();
+        const age = now.getFullYear() - date.getFullYear();
+        const monthDiff = now.getMonth() - date.getMonth();
+        const dayDiff = now.getDate() - date.getDate();
 
-        return currentYear - year >= 13;
+        return (
+          age > 13 ||
+          (age === 13 && (monthDiff > 0 || (monthDiff === 0 && dayDiff >= 0)))
+        );
       },
       { message: "Users must be at least 13 years old to sign up." },
     )
     .refine(
       (birthday) => {
         const date = new Date(birthday);
-        const now = new Date();
-        const age = now.getFullYear() - date.getFullYear();
-        const isOldEnoughToSignup =
-          age > 13 ||
-          (age === 13 && now.getMonth() > date.getMonth()) ||
-          (age === 13 &&
-            now.getMonth() === date.getMonth() &&
-            now.getDate() >= date.getDate());
-
-        return isOldEnoughToSignup;
+        return date <= new Date();
       },
-      { message: "Year must not be in the future" },
+      { message: "Date must not be in the future" },
     ),
 });
 
@@ -163,6 +160,12 @@ function PostSignUpDialog() {
   const mainForm = useForm<z.infer<typeof mainFormSchema>>({
     resolver: zodResolver(mainFormSchema),
     defaultValues: {
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      birthday: "",
+    },
+    values: mainFormValues ?? {
       firstName: "",
       lastName: "",
       phoneNumber: "",
@@ -362,8 +365,11 @@ function PostSignUpDialog() {
                 className="baseVertFlex h-full min-h-48 w-full overflow-hidden"
               >
                 <Form {...mainForm}>
-                  <form className="baseVertFlex mt-8 w-full p-1">
-                    <div className="baseVertFlex w-full gap-16 tablet:gap-16">
+                  <form
+                    onSubmit={mainForm.handleSubmit(onMainFormSubmit)}
+                    className="baseVertFlex w-full p-1 tablet:mt-8"
+                  >
+                    <div className="baseVertFlex w-full gap-16 tablet:gap-12">
                       <div className="grid grid-cols-2 !items-start gap-4 tablet:gap-16">
                         <FormField
                           control={mainForm.control}
@@ -473,9 +479,12 @@ function PostSignUpDialog() {
                             fieldState: { invalid, error },
                           }) => (
                             <FormItem className="relative">
-                              <FormLabel className="baseFlex !justify-start gap-2 font-semibold">
+                              <FormLabel
+                                htmlFor="phoneNumber"
+                                className="baseFlex !justify-start gap-2 font-semibold"
+                              >
                                 <FaPhone
-                                  className={`size-3 ${invalid ? "text-red-500" : "black"}`}
+                                  className={`size-3 ${invalid ? "text-red-500" : "black"} h-[17px]`}
                                 />
                                 Phone number
                               </FormLabel>
@@ -483,6 +492,7 @@ function PostSignUpDialog() {
                                 <div className="relative">
                                   <Input
                                     ref={ref}
+                                    id={"phoneNumber"}
                                     value={formatPhoneNumber(value)}
                                     onChange={(e) =>
                                       onChange(
@@ -535,15 +545,19 @@ function PostSignUpDialog() {
                             fieldState: { invalid, error },
                           }) => (
                             <FormItem className="relative">
-                              <FormLabel className="baseFlex !justify-start gap-2 font-semibold">
+                              <FormLabel
+                                htmlFor="birthday"
+                                className="baseFlex !justify-start gap-2 font-semibold"
+                              >
                                 <CiCalendarDate
-                                  className={`${invalid ? "text-red-500" : "text-black"}`}
+                                  className={`${invalid ? "text-red-500" : "text-black"} size-[17px]`}
                                 />
                                 Birthday
                               </FormLabel>
                               <FormControl>
                                 <div className="relative">
                                   <Input
+                                    id="birthday"
                                     type={"tel"}
                                     placeholder="mm/dd/yyyy"
                                     className="w-full"
@@ -605,7 +619,12 @@ function PostSignUpDialog() {
                 className="baseVertFlex h-full min-h-48 w-full gap-4 overflow-hidden tablet:mt-8"
               >
                 <Form {...dietaryRestrictionsForm}>
-                  <form className="baseVertFlex w-full gap-16">
+                  <form
+                    onSubmit={dietaryRestrictionsForm.handleSubmit(
+                      onDietaryRestrictionsFormSubmit,
+                    )}
+                    className="baseVertFlex w-full gap-16"
+                  >
                     <div className="baseVertFlex">
                       <FormField
                         control={dietaryRestrictionsForm.control}

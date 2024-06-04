@@ -312,7 +312,10 @@ function Preferences() {
               </div>
 
               <Form {...form}>
-                <form className="baseVertFlex mt-8 w-full !items-start gap-2">
+                <form
+                  onSubmit={form.handleSubmit(onFormSubmit)}
+                  className="baseVertFlex mt-8 w-full !items-start gap-2"
+                >
                   <div className="baseVertFlex w-full !items-start gap-8 tablet:!grid tablet:grid-cols-2 tablet:gap-x-16">
                     <FormField
                       control={form.control}

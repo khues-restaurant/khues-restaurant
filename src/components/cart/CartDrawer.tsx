@@ -241,7 +241,7 @@ function CartDrawer({
         );
       },
       {
-        message: "Custom tip must be between 0 and 100",
+        message: "Custom tip must be between $0 and $100",
       },
     );
 
@@ -257,7 +257,7 @@ function CartDrawer({
         );
       },
       {
-        message: "Custom tip must be between 0 and 100",
+        message: "Custom tip must be between $0 and $100",
       },
     ),
   });
@@ -469,7 +469,17 @@ function CartDrawer({
         </div>
 
         <Form {...mainForm}>
-          <form className="baseVertFlex mt-4 !items-start gap-2">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              void mainForm.handleSubmit((mainFormData) => {
+                void tipForm.handleSubmit((tipFormData) => {
+                  void onMainFormSubmit(mainFormData);
+                })();
+              })();
+            }}
+            className="baseVertFlex mt-4 !items-start gap-2"
+          >
             <FormField
               control={mainForm.control}
               name="dateToPickup"
@@ -1113,7 +1123,17 @@ function CartDrawer({
               <div className="baseFlex gap-2">
                 {showCustomTipInput ? (
                   <Form {...tipForm}>
-                    <form className="baseVertFlex gap-2">
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        void mainForm.handleSubmit((mainFormData) => {
+                          void tipForm.handleSubmit((tipFormData) => {
+                            void onMainFormSubmit(mainFormData);
+                          })();
+                        })();
+                      }}
+                      className="baseVertFlex gap-2"
+                    >
                       <FormField
                         control={tipForm.control}
                         name="tipValue"
@@ -1129,6 +1149,7 @@ function CartDrawer({
                               <Input
                                 ref={ref}
                                 value={value}
+                                type={"tel"}
                                 autoFocus={true}
                                 onChange={(e) => {
                                   const inputValue = e.target.value.replace(
@@ -1167,7 +1188,7 @@ function CartDrawer({
                                   animate={{ opacity: 1 }}
                                   exit={{ opacity: 0 }}
                                   transition={{ duration: 0.2 }}
-                                  className="absolute -bottom-6 left-0 right-0 w-[262px] text-sm font-medium text-red-500"
+                                  className="absolute -bottom-6 left-0 right-0 w-[280px] text-sm font-medium text-red-500"
                                 >
                                   {error?.message}
                                 </motion.div>
