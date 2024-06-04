@@ -8,7 +8,7 @@ const holidays = [
 
 function isSundayOrMonday(date: Date) {
   const dayOfWeek = date.getDay();
-  return dayOfWeek === 0 || dayOfWeek === 1 || dayOfWeek === 2;
+  return dayOfWeek === 0 || dayOfWeek === 1;
 }
 
 function isHoliday(date: Date, holidays: Date[]) {
@@ -23,6 +23,14 @@ export function loopToFindFirstOpenDay(datetimeToPickup: Date) {
     datetimeToPickup,
     "America/Chicago",
   );
+
+  // returning early if the date is already on a valid day
+  if (
+    !isSundayOrMonday(localDatetimeToPickup) &&
+    !isHoliday(localDatetimeToPickup, holidays)
+  ) {
+    return localDatetimeToPickup;
+  }
 
   localDatetimeToPickup.setHours(0, 0, 0, 0); // Normalize to midnight for consistent comparison
 
