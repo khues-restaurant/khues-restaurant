@@ -41,7 +41,7 @@ function Unsubscribe({ email }: { email?: string }) {
         <meta property="og:type" content="website" />
       </Head>
 
-      <div className="baseVertFlex max-w-80 gap-6 p-4 tablet:max-w-2xl tablet:gap-8 tablet:p-8">
+      <div className="baseVertFlex mb-24 max-w-80 gap-6 rounded-md border bg-offwhite p-4 tablet:max-w-3xl tablet:gap-8 tablet:p-8">
         <p className="text-center text-xl font-semibold">
           Unsubscribe from all emails
         </p>
@@ -118,7 +118,7 @@ function Unsubscribe({ email }: { email?: string }) {
           </div>
         ) : (
           <div className="baseVertFlex gap-4">
-            <p className="mt-4 max-w-72 text-center font-medium">
+            <p className="mt-4 max-w-72 text-center font-medium sm:max-w-max">
               We were unable to authenticate your request for unsubscribing from
               our email list.
             </p>
@@ -126,14 +126,14 @@ function Unsubscribe({ email }: { email?: string }) {
             <p className="mt-4 underline underline-offset-2">
               Troubleshooting tips:
             </p>
-            <ul className="baseVertFlex mt-2 max-w-96 text-start text-sm">
+            <ul className="baseVertFlex mt-2 max-w-96 pl-4 text-start text-sm">
               <li className="my-1 list-disc">
                 Please ensure your URL doesn&apos;t have any typos and matches
                 the unsubscription link provided in your last email from us.
               </li>
               <li className="my-1 list-disc">
                 Make sure the unsubscription link you clicked hasn&apos;t
-                expired. Our links are only valid for 3 months.
+                expired. Links are only valid for 3 months.
               </li>
               <li className="my-1 list-disc">
                 If you are still having trouble, please feel free to reach out
