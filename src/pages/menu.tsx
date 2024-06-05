@@ -4,7 +4,13 @@ import { motion } from "framer-motion";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { IoIosWine } from "react-icons/io";
 import { FaWineBottle } from "react-icons/fa";
 import { LuVegan } from "react-icons/lu";
@@ -79,6 +85,37 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
     useState(false);
 
   const [stickyCategoriesApi, setStickyCategoriesApi] = useState<CarouselApi>();
+
+  const [ableToShowOrderNowButton, setAbleToShowOrderNowButton] =
+    useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setAbleToShowOrderNowButton(!entry?.isIntersecting ?? false);
+      },
+      {
+        root: null,
+        rootMargin: "0px 0px 0px 0px",
+        threshold: 0.5,
+      },
+    );
+
+    if (heroRef.current) {
+      observer.observe(heroRef.current);
+    }
+
+    const internalHeroRef = heroRef.current;
+
+    return () => {
+      if (internalHeroRef) {
+        observer.unobserve(internalHeroRef);
+      }
+
+      setAbleToShowOrderNowButton(false);
+    };
+  }, []);
 
   // Effect to set category scroll Y values
   useEffect(() => {
@@ -225,7 +262,10 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
       </Head>
 
       {/* Hero */}
-      <div className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72">
+      <div
+        ref={heroRef}
+        className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72"
+      >
         <div className="baseFlex absolute left-0 top-0 size-full bg-gradient-to-br from-primary to-darkPrimary tablet:gap-8 desktop:gap-16">
           <Image
             src={sampleImage}
@@ -418,10 +458,11 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
           <Link
             href="/order"
             style={{
+              opacity: ableToShowOrderNowButton ? 1 : 0,
               boxShadow:
                 "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
             }}
-            className="baseFlex !sticky bottom-8 gap-2 !px-4 !py-6 !text-lg tablet:bottom-10 tablet:!mb-2"
+            className="baseFlex !sticky bottom-8 gap-2 !px-4 !py-6 !text-lg transition-all tablet:bottom-10 tablet:!mb-2"
           >
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-offwhite" />
             Order now
