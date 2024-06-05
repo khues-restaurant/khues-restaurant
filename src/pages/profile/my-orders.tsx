@@ -82,11 +82,14 @@ function RecentOrders() {
       return;
     }
 
+    // this logic is reversed from what you'd expect because the list is rendered
+    // with the first item in the array being rendered first. So to sort by the newest
+    // orders, we need to sort in descending order actually.
     const localSortedOrders = orders?.sort((a, b) => {
       if (sortDirection === "desc") {
-        return b.datetimeToPickup.getTime() - a.datetimeToPickup.getTime();
-      } else {
         return a.datetimeToPickup.getTime() - b.datetimeToPickup.getTime();
+      } else {
+        return b.datetimeToPickup.getTime() - a.datetimeToPickup.getTime();
       }
     });
 
