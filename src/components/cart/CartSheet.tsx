@@ -1113,7 +1113,7 @@ function CartSheet({
           </div>
         </div>
 
-        <div className="baseVertFlex w-full gap-2 rounded-bl-xl border-t bg-gradient-to-br from-stone-200 to-stone-300 p-4 py-2 shadow-inner">
+        <div className="baseVertFlex w-full gap-2 rounded-bl-xl border-t bg-gradient-to-br from-stone-200 to-stone-300 p-4 pt-2 shadow-inner">
           {/* tip form */}
           <div
             className={`baseFlex w-full !justify-start gap-4 transition-all
