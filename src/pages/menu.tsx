@@ -319,7 +319,7 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
 
       <div
         // bg is background color of the <body>, 1% off from what bg-offwhite is
-        className="baseFlex sticky left-0 top-24 z-10 size-full h-16 w-full bg-body shadow-lg tablet:top-28 tablet:h-16 tablet:w-3/4 tablet:shadow-none"
+        className="baseFlex sticky left-0 top-24 z-10 size-full h-16 w-full overflow-x-hidden bg-body shadow-lg tablet:top-28 tablet:h-16 tablet:w-3/4 tablet:shadow-none"
       >
         <Carousel
           setApi={setStickyCategoriesApi}
@@ -341,9 +341,9 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
                   <div key={category.id} className="baseFlex gap-2">
                     <Separator
                       orientation="vertical"
-                      className="ml-4 mr-2 h-full w-[2px]"
+                      className="ml-2 h-full w-[2px]"
                     />
-                    <CarouselItem className="baseFlex basis-1/5 first:ml-2 last:mr-2 tablet:basis-auto">
+                    <CarouselItem className="baseFlex basis-auto first:ml-2">
                       <MenuCategoryButton
                         key={category.id}
                         name={category.name}
@@ -360,7 +360,7 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
 
               return (
                 <CarouselItem
-                  className="baseFlex basis-1/5 first:ml-2 last:mr-2 tablet:basis-auto"
+                  className="baseFlex basis-auto first:ml-2 last:mr-2"
                   key={category.id}
                 >
                   <MenuCategoryButton
@@ -373,7 +373,7 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
               );
             })}
 
-            <CarouselItem className="baseFlex basis-1/5 first:ml-2 last:mr-2 tablet:basis-auto">
+            <CarouselItem className="baseFlex basis-auto first:ml-2 last:mr-2">
               <MenuCategoryButton
                 name={"Mixed Drinks"}
                 listOrder={menuCategoryIndicies["Mixed Drinks"]!}

@@ -380,7 +380,7 @@ function OrderNow() {
       {ableToRenderMainContent() && (
         <div
           // bg is background color of the <body>, 1% off from what bg-offwhite is
-          className="baseFlex sticky left-0 top-24 z-10 size-full h-16 w-full bg-body shadow-lg tablet:top-28 tablet:h-16 tablet:w-3/4 tablet:shadow-none"
+          className="baseFlex sticky left-0 top-24 z-10 size-full h-16 w-full overflow-x-hidden bg-body shadow-lg tablet:top-28 tablet:h-16 tablet:w-3/4 tablet:shadow-none"
         >
           <Carousel
             setApi={setStickyCategoriesApi}
