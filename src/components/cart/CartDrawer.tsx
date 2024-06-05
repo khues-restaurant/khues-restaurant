@@ -438,7 +438,7 @@ function CartDrawer({
     if (safeAreaInsetBottom > 0) {
       setPaddingBottom(`${safeAreaInsetBottom}px`);
     } else {
-      setPaddingBottom("0.75rem");
+      setPaddingBottom("1rem");
     }
   }, []);
 
@@ -471,9 +471,9 @@ function CartDrawer({
         </p>
       </div>
 
-      {/* location + date & time picker  (TODO: why doesn't horizontal margin work here with w-full..) */}
+      {/* location + date & time picker */}
       <div
-        className="baseVertFlex my-4 max-w-md !justify-start gap-1 rounded-md border border-stone-300 bg-gradient-to-br
+        className="baseVertFlex my-4 max-w-lg !justify-start gap-1 rounded-md border border-stone-300 bg-gradient-to-br
         from-stone-200 to-stone-300/80 px-6 py-4 shadow-sm"
       >
         <span className="text-sm">
@@ -662,7 +662,7 @@ function CartDrawer({
       </div>
 
       {/* summary of items in cart */}
-      <div className="baseVertFlex size-full max-w-md !items-start !justify-start gap-2">
+      <div className="baseVertFlex size-full max-w-lg !items-start !justify-start gap-2">
         <p className="px-4 text-lg font-semibold underline underline-offset-2">
           Items
         </p>
@@ -1130,18 +1130,17 @@ function CartDrawer({
             style={{
               paddingBottom,
             }}
-            className="baseVertFlex min-h-24 w-full gap-2 overflow-hidden border-t
-        bg-gradient-to-br from-stone-200 to-stone-300 p-4 py-2 shadow-inner"
+            className="baseVertFlex min-h-24 w-full gap-2 overflow-hidden border-t bg-gradient-to-br from-stone-200 to-stone-300 pt-2 shadow-inner xs:p-4 xs:pt-2"
           >
             {/* tip form */}
             <div
-              className={`baseFlex w-full !justify-start gap-4 transition-all
+              className={`baseFlex w-full !justify-start gap-4 px-4 transition-all xs:px-0
             ${tipForm.formState.errors.tipValue ? "pb-6" : ""}
           `}
             >
               <span className="font-medium">Tip</span>
 
-              <div className="baseFlex gap-2">
+              <div className="baseFlex w-full gap-2 xs:w-auto">
                 {showCustomTipInput ? (
                   <Form {...tipForm}>
                     <form
@@ -1153,7 +1152,7 @@ function CartDrawer({
                           })();
                         })();
                       }}
-                      className="baseVertFlex gap-2"
+                      className="baseVertFlex w-full gap-2 xs:w-auto"
                     >
                       <FormField
                         control={tipForm.control}
@@ -1162,7 +1161,7 @@ function CartDrawer({
                           field: { onChange, onBlur, value, ref },
                           fieldState: { invalid, error },
                         }) => (
-                          <FormItem className="baseVertFlex relative !items-start space-y-0">
+                          <FormItem className="baseVertFlex relative w-full !items-start space-y-0 xs:w-auto">
                             <div className="baseVertFlex relative !items-start gap-2">
                               {/* TODO: doesn't feel great to comment this out, but not sure of other
                             best ui option to keep everything low-profile.. */}
@@ -1227,7 +1226,7 @@ function CartDrawer({
                         ? "default"
                         : "outline"
                     }
-                    className="text-xs font-semibold"
+                    className="w-full text-xs font-semibold xs:w-auto"
                     onClick={() => {
                       setShowCustomTipInput(true);
                       updateOrder({
@@ -1256,7 +1255,7 @@ function CartDrawer({
                   variant={
                     orderDetails.tipPercentage === 10 ? "default" : "outline"
                   }
-                  className="text-xs font-semibold"
+                  className="w-full text-xs font-semibold xs:w-auto"
                   onClick={() => {
                     setShowCustomTipInput(false);
                     updateOrder({
@@ -1274,7 +1273,7 @@ function CartDrawer({
                   variant={
                     orderDetails.tipPercentage === 15 ? "default" : "outline"
                   }
-                  className="text-xs font-semibold"
+                  className="w-full text-xs font-semibold xs:w-auto"
                   onClick={() => {
                     setShowCustomTipInput(false);
                     updateOrder({
@@ -1292,7 +1291,7 @@ function CartDrawer({
                   variant={
                     orderDetails.tipPercentage === 20 ? "default" : "outline"
                   }
-                  className="text-xs font-semibold"
+                  className="w-full text-xs font-semibold xs:w-auto"
                   onClick={() => {
                     setShowCustomTipInput(false);
                     updateOrder({
@@ -1308,13 +1307,14 @@ function CartDrawer({
                 </Button>
               </div>
             </div>
+
             <Separator
               orientation="horizontal"
               className="h-[1px] w-full bg-stone-400"
             />
 
-            <div className="baseFlex w-full !justify-between">
-              <div className="baseVertFlex w-1/2">
+            <div className="baseVertFlex w-full !justify-between gap-2 xs:!flex-row xs:gap-4">
+              <div className="baseVertFlex w-full px-8 xs:w-1/2 xs:px-0">
                 <div className="baseFlex w-full !justify-between text-sm">
                   <p>Subtotal</p>
                   <AnimatedPrice price={formatPrice(orderCost.subtotal)} />
@@ -1351,51 +1351,53 @@ function CartDrawer({
               </div>
 
               <Separator
-                orientation="vertical"
-                className="h-16 w-[1px] bg-stone-400"
+                // orientation="vertical"
+                className="hidden h-[1px] w-full bg-stone-400 xs:block xs:h-16 xs:w-[1px]"
               />
 
-              <Button
-                variant="default"
-                disabled={
-                  checkoutButtonText !== "Proceed to checkout" ||
-                  orderDetails.items.length === 0
-                }
-                className="text-xs font-semibold tablet:text-sm"
-                onClick={() => {
-                  void mainForm.handleSubmit((mainFormData) => {
-                    void tipForm.handleSubmit((tipFormData) => {
-                      void onMainFormSubmit(mainFormData);
+              <div className="w-full px-8 xs:w-1/2 xs:px-0">
+                <Button
+                  variant="default"
+                  disabled={
+                    checkoutButtonText !== "Proceed to checkout" ||
+                    orderDetails.items.length === 0
+                  }
+                  className="!w-full text-xs font-semibold tablet:text-sm"
+                  onClick={() => {
+                    void mainForm.handleSubmit((mainFormData) => {
+                      void tipForm.handleSubmit((tipFormData) => {
+                        void onMainFormSubmit(mainFormData);
+                      })();
                     })();
-                  })();
-                }}
-              >
-                <AnimatePresence mode={"popLayout"}>
-                  <motion.div
-                    key={`cartDrawer-${checkoutButtonText}`}
-                    // layout
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
-                    transition={{
-                      duration: 0.25,
-                    }}
-                    // static width to prevent layout shift
-                    className="baseFlex w-[119.48px] gap-2"
-                  >
-                    {checkoutButtonText}
-                    {checkoutButtonText === "Loading" && (
-                      <div
-                        className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
-                        role="status"
-                        aria-label="loading"
-                      >
-                        <span className="sr-only">Loading...</span>
-                      </div>
-                    )}
-                  </motion.div>
-                </AnimatePresence>
-              </Button>
+                  }}
+                >
+                  <AnimatePresence mode={"popLayout"}>
+                    <motion.div
+                      key={`cartDrawer-${checkoutButtonText}`}
+                      // layout
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      transition={{
+                        duration: 0.25,
+                      }}
+                      // static width to prevent layout shift
+                      className="baseFlex !w-full gap-2"
+                    >
+                      {checkoutButtonText}
+                      {checkoutButtonText === "Loading" && (
+                        <div
+                          className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
+                          role="status"
+                          aria-label="loading"
+                        >
+                          <span className="sr-only">Loading...</span>
+                        </div>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
