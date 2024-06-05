@@ -867,7 +867,7 @@ function MenuItemPreview({
             alt={menuItem.name}
             width={96}
             height={96}
-            className="rounded-md"
+            className="mt-2 !self-start rounded-md"
           />
 
           <div className="baseVertFlex size-full !items-start">
