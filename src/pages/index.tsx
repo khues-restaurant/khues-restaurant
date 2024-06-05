@@ -52,8 +52,19 @@ import { useMainStore } from "~/stores/MainStore";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import useHomepageIntersectionObserver from "~/hooks/useHomepageIntersectionObserver";
 import StaticLotus from "~/components/ui/StaticLotus";
+import useUpdateOrder from "~/hooks/useUpdateOrder";
+import { useToast } from "~/components/ui/use-toast";
+import { PrismaClient } from "@prisma/client";
+import { ToastAction } from "~/components/ui/toast";
+import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
+import { type FullMenuItem } from "~/server/api/routers/menuCategory";
+import { type GetStaticProps } from "next";
 
-export default function Home() {
+interface Home {
+  ourFavoriteMenuItems: FullMenuItem[];
+}
+
+export default function Home({ ourFavoriteMenuItems }: Home) {
   const { isLoaded, isSignedIn } = useAuth();
 
   const { chatIsOpen, setChatIsOpen, setMobileHeroThresholdInView } =
@@ -1158,90 +1169,14 @@ export default function Home() {
               className="baseFlex w-full rounded-md border shadow-sm"
             >
               <CarouselContent>
-                <CarouselItem className="baseVertFlex relative basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
-                  <Image
-                    src={"/menuItems/sampleImage.webp"}
-                    alt={"TODO: Fix later"}
-                    width={144}
-                    height={144}
-                    className="self-center rounded-md"
-                  />
-                  <p className="font-semibold">Appetizer One</p>
-                  <p className="line-clamp-3 text-sm">
-                    Silky ricotta, signature red sauce, Italian sausage,
-                    mozzarella & parmesan cheeses.
-                  </p>
-                </CarouselItem>
-                <CarouselItem className="baseVertFlex relative basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
-                  <Image
-                    src={"/menuItems/sampleImage.webp"}
-                    alt={"TODO: Fix later"}
-                    width={144}
-                    height={144}
-                    className="self-center rounded-md"
-                  />
-                  <p className="font-semibold">Appetizer Two</p>
-                  <p className="line-clamp-3 text-sm">
-                    Silky ricotta, signature red sauce, Italian sausage,
-                    mozzarella & parmesan cheeses.
-                  </p>
-                </CarouselItem>
-                <CarouselItem className="baseVertFlex relative basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
-                  <Image
-                    src={"/menuItems/sampleImage.webp"}
-                    alt={"TODO: Fix later"}
-                    width={144}
-                    height={144}
-                    className="self-center rounded-md"
-                  />
-                  <p className="font-semibold">Appetizer Three</p>
-                  <p className="line-clamp-3 text-sm">
-                    Silky ricotta, signature red sauce, Italian sausage,
-                    mozzarella & parmesan cheeses.
-                  </p>
-                </CarouselItem>
-                <CarouselItem className="baseVertFlex relative basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
-                  <Image
-                    src={"/menuItems/sampleImage.webp"}
-                    alt={"TODO: Fix later"}
-                    width={144}
-                    height={144}
-                    className="self-center rounded-md"
-                  />
-                  <p className="font-semibold">Appetizer Four</p>
-                  <p className="line-clamp-3 text-sm">
-                    Silky ricotta, signature red sauce, Italian sausage,
-                    mozzarella & parmesan cheeses.
-                  </p>
-                </CarouselItem>
-                <CarouselItem className="baseVertFlex relative basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
-                  <Image
-                    src={"/menuItems/sampleImage.webp"}
-                    alt={"TODO: Fix later"}
-                    width={144}
-                    height={144}
-                    className="self-center rounded-md"
-                  />
-                  <p className="font-semibold">Appetizer Five</p>
-                  <p className="line-clamp-3 text-sm">
-                    Silky ricotta, signature red sauce, Italian sausage,
-                    mozzarella & parmesan cheeses.
-                  </p>
-                </CarouselItem>
-                <CarouselItem className="baseVertFlex relative basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4">
-                  <Image
-                    src={"/menuItems/sampleImage.webp"}
-                    alt={"TODO: Fix later"}
-                    width={144}
-                    height={144}
-                    className="self-center rounded-md"
-                  />
-                  <p className="font-semibold">Appetizer Six</p>
-                  <p className="line-clamp-3 text-sm">
-                    Silky ricotta, signature red sauce, Italian sausage,
-                    mozzarella & parmesan cheeses.
-                  </p>
-                </CarouselItem>
+                {ourFavoriteMenuItems?.map((menuItem) => (
+                  <CarouselItem
+                    key={menuItem.id}
+                    className="baseVertFlex relative basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4"
+                  >
+                    <OurFavoriteMenuItemCard menuItem={menuItem} />
+                  </CarouselItem>
+                ))}
               </CarouselContent>
             </Carousel>
 
@@ -1292,51 +1227,127 @@ export default function Home() {
   );
 }
 
-const letterAnimation = {
-  hidden: { opacity: 0 },
-  visible: (i: number) => ({
-    opacity: 1,
-    transition: {
-      delay: i * 0.025,
-      ease: "easeOut",
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const prisma = new PrismaClient();
+
+  const ourFavoriteMenuItems = await prisma.menuItem.findMany({
+    where: {
+      isChefsChoice: true,
     },
-  }),
-};
-
-interface AnimatedText {
-  text: string;
-  delay?: number;
-}
-
-function AnimatedText({ text, delay = 0 }: AnimatedText) {
-  const [startAnimation, setStartAnimation] = useState(false);
-
-  useEffect(() => {
-    if (startAnimation) return;
-
-    setTimeout(() => {
-      setStartAnimation(true);
-    }, delay * 1000);
-  }, [startAnimation, delay]);
-
-  return (
-    <motion.span
-      initial="hidden"
-      animate={startAnimation ? "visible" : "hidden"}
-      variants={{
-        visible: {
-          transition: {
-            staggerChildren: 0.01,
-            ease: "easeOut",
+    include: {
+      activeDiscount: true,
+      customizationCategories: {
+        include: {
+          customizationCategory: {
+            include: {
+              customizationChoices: {
+                orderBy: {
+                  listOrder: "asc",
+                },
+              },
+            },
           },
         },
-      }}
-    >
-      {text.split("").map((letter, index) => (
-        <motion.span key={index} custom={index} variants={letterAnimation}>
-          {letter}
-        </motion.span>
-      ))}
-    </motion.span>
+      },
+    },
+    orderBy: {
+      listOrder: "asc",
+    },
+  });
+
+  return {
+    props: {
+      ourFavoriteMenuItems,
+    },
+  };
+};
+
+interface OurFavoriteMenuItemCard {
+  menuItem: FullMenuItem;
+}
+
+function OurFavoriteMenuItemCard({ menuItem }: OurFavoriteMenuItemCard) {
+  const { orderDetails, getPrevOrderDetails, setPrevOrderDetails } =
+    useMainStore((state) => ({
+      orderDetails: state.orderDetails,
+      getPrevOrderDetails: state.getPrevOrderDetails,
+      setPrevOrderDetails: state.setPrevOrderDetails,
+    }));
+
+  const { updateOrder } = useUpdateOrder();
+
+  const { toast, dismiss: dismissToasts } = useToast();
+
+  return (
+    <>
+      <Image
+        src={"/menuItems/sampleImage.webp"}
+        alt={"TODO: Fix later"}
+        width={160}
+        height={160}
+        className="self-center rounded-md"
+      />
+      <p className="font-semibold">{menuItem.name}</p>
+      <p className="line-clamp-3 text-sm">{menuItem.description}</p>
+      <Button
+        onClick={() => {
+          // set prev order details so we can revert if necessary
+          // with toast's undo button
+          setPrevOrderDetails(orderDetails);
+
+          toast({
+            description: `${menuItem.name} was added to your order.`,
+            action: (
+              <ToastAction
+                altText={`Undo the addition of ${menuItem.name} to your order.`}
+                onClick={() => {
+                  updateOrder({
+                    newOrderDetails: getPrevOrderDetails(),
+                  });
+                }}
+              >
+                Undo
+              </ToastAction>
+            ),
+          });
+
+          // directly add to order w/ defaults + trigger toast notification
+
+          updateOrder({
+            newOrderDetails: {
+              ...orderDetails,
+              items: [
+                ...orderDetails.items,
+                {
+                  id:
+                    orderDetails.items.length === 0
+                      ? 0
+                      : orderDetails.items.at(-1)!.id + 1,
+                  itemId: menuItem.id,
+                  name: menuItem.name,
+                  customizations: getDefaultCustomizationChoices(menuItem),
+                  specialInstructions: "",
+                  includeDietaryRestrictions: false,
+                  quantity: 1,
+                  price: menuItem.price,
+                  isChefsChoice: menuItem.isChefsChoice,
+                  isAlcoholic: menuItem.isAlcoholic,
+                  isVegetarian: menuItem.isVegetarian,
+                  isVegan: menuItem.isVegan,
+                  isGlutenFree: menuItem.isGlutenFree,
+                  showUndercookedOrRawDisclaimer:
+                    menuItem.showUndercookedOrRawDisclaimer,
+                  discountId: menuItem.activeDiscount?.id ?? null,
+                  birthdayReward: false,
+                  pointReward: false,
+                },
+              ],
+            },
+          });
+        }}
+      >
+        Add to order
+      </Button>
+    </>
   );
 }
