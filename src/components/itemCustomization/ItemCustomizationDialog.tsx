@@ -683,20 +683,16 @@ function CustomizationOption({
           </div>
         )}
 
-        <AnimatePresence>
-          {!isSelected && (
-            <motion.p
-              key={choice.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="absolute bottom-2 right-4"
-            >
-              {formatPrice(relativePrice)}
-            </motion.p>
-          )}
-        </AnimatePresence>
+        <div className="absolute bottom-2 right-4">
+          <AnimatePresence>
+            {!isSelected && (
+              <AnimatedPrice
+                price={formatPrice(relativePrice)}
+                excludeAnimatePresence={true}
+              />
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );

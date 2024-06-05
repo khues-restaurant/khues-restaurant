@@ -3,11 +3,12 @@ import { motion, AnimatePresence } from "framer-motion";
 
 interface AnimatedPrice {
   price: string;
+  excludeAnimatePresence?: boolean;
 }
 
 // TODO: this still doesn't work on the inflection point
 
-function AnimatedPrice({ price }: AnimatedPrice) {
+function AnimatedPrice({ price, excludeAnimatePresence }: AnimatedPrice) {
   const [currentPrice, setCurrentPrice] = useState(price);
   const [animationDirection, setAnimationDirection] = useState<"up" | "down">();
 
@@ -23,35 +24,39 @@ function AnimatedPrice({ price }: AnimatedPrice) {
     setCurrentPrice(price);
   }, [price, currentPrice]);
 
-  return (
-    <AnimatePresence mode={"popLayout"}>
-      <motion.div
-        key={currentPrice}
-        initial={{
-          opacity: 0,
-          y:
-            animationDirection === "up"
-              ? 10
-              : animationDirection === "down"
-                ? -10
-                : 0,
-        }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{
-          opacity: 0,
-          y:
-            animationDirection === "up"
+  const content = (
+    <motion.div
+      key={currentPrice}
+      initial={{
+        opacity: 0,
+        y:
+          animationDirection === "up"
+            ? 10
+            : animationDirection === "down"
               ? -10
-              : animationDirection === "down"
-                ? 10
-                : 0,
-        }}
-        transition={{ duration: 0.25 }}
-        className="overflow-hidden"
-      >
-        {currentPrice}
-      </motion.div>
-    </AnimatePresence>
+              : 0,
+      }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{
+        opacity: 0,
+        y:
+          animationDirection === "up"
+            ? -10
+            : animationDirection === "down"
+              ? 10
+              : 0,
+      }}
+      transition={{ duration: 0.25 }}
+      className="overflow-hidden"
+    >
+      {currentPrice}
+    </motion.div>
+  );
+
+  return excludeAnimatePresence ? (
+    content
+  ) : (
+    <AnimatePresence mode={"popLayout"}>{content}</AnimatePresence>
   );
 }
 
