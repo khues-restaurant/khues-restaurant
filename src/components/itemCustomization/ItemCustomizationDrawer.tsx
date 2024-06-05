@@ -460,10 +460,10 @@ function ItemCustomizationDrawer({
 
                   <Button
                     variant="outline"
-                    disabled={localItemOrderDetails.quantity > 99}
+                    disabled={localItemOrderDetails.quantity > 20}
                     className="size-7 rounded-l-none border-none p-0"
                     onClick={() => {
-                      if (localItemOrderDetails.quantity > 99) return;
+                      if (localItemOrderDetails.quantity > 20) return;
 
                       setLocalItemOrderDetails((prev) => ({
                         ...prev,

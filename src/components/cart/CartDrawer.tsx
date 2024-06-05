@@ -840,10 +840,10 @@ function CartDrawer({
                             </div>
                             <Button
                               variant="outline"
-                              disabled={item.quantity > 99}
+                              disabled={item.quantity > 20}
                               className="size-7 rounded-none border-none p-0"
                               onClick={() => {
-                                if (item.quantity > 99) return;
+                                if (item.quantity > 20) return;
                                 const newOrderDetails =
                                   structuredClone(orderDetails);
 
