@@ -292,7 +292,7 @@ function CustomerChats({ socket }: CustomerChats) {
                       {message instanceof Date ? (
                         <p
                           key={message.toString()}
-                          className="text-center text-xs text-stone-400"
+                          className="pt-4 text-center text-xs text-stone-400"
                         >
                           {format(message, "EEEE, MMMM do")}
                         </p>
