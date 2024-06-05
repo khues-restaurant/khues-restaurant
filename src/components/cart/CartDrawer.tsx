@@ -554,7 +554,7 @@ function CartDrawer({
                         }}
                         exit={{ opacity: 0, height: 0, marginTop: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="ml-1 text-sm font-medium text-red-500"
+                        className="text-sm font-medium text-red-500"
                       >
                         {error?.message}
                       </motion.div>
@@ -611,7 +611,7 @@ function CartDrawer({
                         }}
                         exit={{ opacity: 0, height: 0, marginTop: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="ml-1 text-sm font-medium text-red-500"
+                        className="text-sm font-medium text-red-500"
                       >
                         {error?.message}
                       </motion.div>
@@ -648,7 +648,7 @@ function CartDrawer({
                         }}
                         exit={{ opacity: 0, height: 0, marginTop: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="ml-1 text-sm font-medium text-red-500"
+                        className="text-sm font-medium text-red-500"
                       >
                         {error?.message}
                       </motion.div>
