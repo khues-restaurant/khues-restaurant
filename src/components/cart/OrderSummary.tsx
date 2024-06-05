@@ -1,4 +1,4 @@
-import { FaCakeCandles, FaUtensils } from "react-icons/fa6";
+import { FaUtensils } from "react-icons/fa6";
 import { type DBOrderSummary } from "~/server/api/routers/order";
 import { motion } from "framer-motion";
 import { useMainStore } from "~/stores/MainStore";
@@ -7,6 +7,7 @@ import { CiGift } from "react-icons/ci";
 import { formatPrice } from "~/utils/formatPrice";
 import Decimal from "decimal.js";
 import Image from "next/image";
+import { LuCakeSlice } from "react-icons/lu";
 
 interface OrderSummary {
   order: DBOrderSummary;
@@ -95,7 +96,7 @@ function OrderSummary({ order }: OrderSummary) {
                         {item.pointReward ? (
                           <CiGift className="size-5" />
                         ) : (
-                          <FaCakeCandles className="size-5" />
+                          <LuCakeSlice className="size-5 stroke-[1.5px]" />
                         )}
                         <p>
                           {item.pointReward ? (
@@ -129,7 +130,7 @@ function OrderSummary({ order }: OrderSummary) {
                       )}{" "}
                       {discounts[item.discountId]?.name.includes(
                         "Birthday",
-                      ) && <FaCakeCandles className="size-5" />}
+                      ) && <LuCakeSlice className="size-5 stroke-[1.5px]" />}
                       <p>{discounts[item.discountId]?.name}</p>
                     </div>
                   )}

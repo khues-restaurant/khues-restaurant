@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { Fragment, useEffect, useLayoutEffect, useState } from "react";
 import { CiGift } from "react-icons/ci";
-import { FaCakeCandles } from "react-icons/fa6";
+import { LuCakeSlice } from "react-icons/lu";
 import { LuCalendarClock } from "react-icons/lu";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
@@ -238,8 +238,20 @@ function Rewards() {
               {/* mobile images */}
               <motion.div
                 key={"rewardsHeroMobileImageOne"}
-                initial={{ opacity: 0, y: -125, x: -125 }}
-                animate={{ opacity: 1, y: 0, x: 0 }}
+                initial={{
+                  filter: "blur(5px)",
+                  rotate: "90deg",
+                  opacity: 0,
+                  y: -125,
+                  x: -125,
+                }}
+                animate={{
+                  filter: "blur(0px)",
+                  rotate: "0deg",
+                  opacity: 1,
+                  y: 0,
+                  x: 0,
+                }}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -260,8 +272,20 @@ function Rewards() {
 
               <motion.div
                 key={"rewardsHeroMobileImageTwo"}
-                initial={{ opacity: 0, y: 125, x: -125 }}
-                animate={{ opacity: 1, y: 0, x: 0 }}
+                initial={{
+                  filter: "blur(5px)",
+                  rotate: "90deg",
+                  opacity: 0,
+                  y: 125,
+                  x: -125,
+                }}
+                animate={{
+                  filter: "blur(0px)",
+                  rotate: "0deg",
+                  opacity: 1,
+                  y: 0,
+                  x: 0,
+                }}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -282,9 +306,19 @@ function Rewards() {
 
               {/* tablet+ images */}
               <motion.div
-                key={"rewardsTabletHeroImageOne"}
-                initial={{ opacity: 0, y: -150 }}
-                animate={{ opacity: 1, y: 0 }}
+                key={"rewardsHeroImageOne"}
+                initial={{
+                  filter: "blur(5px)",
+                  rotate: "90deg",
+                  opacity: 0,
+                  y: -150,
+                }}
+                animate={{
+                  filter: "blur(0px)",
+                  rotate: "0deg",
+                  opacity: 1,
+                  y: 0,
+                }}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -304,9 +338,19 @@ function Rewards() {
               </motion.div>
 
               <motion.div
-                key={"rewardsTabletHeroImageTwo"}
-                initial={{ opacity: 0, x: -125 }}
-                animate={{ opacity: 1, x: 0 }}
+                key={"rewardsHeroImageTwo"}
+                initial={{
+                  filter: "blur(5px)",
+                  rotate: "90deg",
+                  opacity: 0,
+                  x: -125,
+                }}
+                animate={{
+                  filter: "blur(0px)",
+                  rotate: "0deg",
+                  opacity: 1,
+                  x: 0,
+                }}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -326,9 +370,19 @@ function Rewards() {
               </motion.div>
 
               <motion.div
-                key={"rewardsTabletHeroImageThree"}
-                initial={{ opacity: 0, y: 125 }}
-                animate={{ opacity: 1, y: 0 }}
+                key={"rewardsHeroImageThree"}
+                initial={{
+                  filter: "blur(5px)",
+                  rotate: "90deg",
+                  opacity: 0,
+                  y: 125,
+                }}
+                animate={{
+                  filter: "blur(0px)",
+                  rotate: "0deg",
+                  opacity: 1,
+                  y: 0,
+                }}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -348,9 +402,19 @@ function Rewards() {
               </motion.div>
 
               <motion.div
-                key={"rewardsTabletHeroImageFour"}
-                initial={{ opacity: 0, y: -200 }}
-                animate={{ opacity: 1, y: 0 }}
+                key={"rewardsHeroImageFour"}
+                initial={{
+                  filter: "blur(5px)",
+                  rotate: "90deg",
+                  opacity: 0,
+                  y: -200,
+                }}
+                animate={{
+                  filter: "blur(0px)",
+                  rotate: "0deg",
+                  opacity: 1,
+                  y: 0,
+                }}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -392,8 +456,20 @@ function Rewards() {
               {/* mobile images */}
               <motion.div
                 key={"rewardsHeroMobileImageThree"}
-                initial={{ opacity: 0, y: -125, x: 125 }}
-                animate={{ opacity: 1, y: 0, x: 0 }}
+                initial={{
+                  filter: "blur(5px)",
+                  rotate: "90deg",
+                  opacity: 0,
+                  y: -125,
+                  x: 125,
+                }}
+                animate={{
+                  filter: "blur(0px)",
+                  rotate: "0deg",
+                  opacity: 1,
+                  y: 0,
+                  x: 0,
+                }}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -414,8 +490,20 @@ function Rewards() {
 
               <motion.div
                 key={"rewardsHeroMobileImageFour"}
-                initial={{ opacity: 0, y: 125, x: 125 }}
-                animate={{ opacity: 1, y: 0, x: 0 }}
+                initial={{
+                  filter: "blur(5px)",
+                  rotate: "90deg",
+                  opacity: 0,
+                  y: 125,
+                  x: 125,
+                }}
+                animate={{
+                  filter: "blur(0px)",
+                  rotate: "0deg",
+                  opacity: 1,
+                  y: 0,
+                  x: 0,
+                }}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -436,9 +524,19 @@ function Rewards() {
 
               {/* tablet+ images */}
               <motion.div
-                key={"rewardsHeroImageOne"}
-                initial={{ opacity: 0, y: -150 }}
-                animate={{ opacity: 1, y: 0 }}
+                key={"rewardsTabletHeroImageOne"}
+                initial={{
+                  filter: "blur(5px)",
+                  rotate: "90deg",
+                  opacity: 0,
+                  y: -150,
+                }}
+                animate={{
+                  filter: "blur(0px)",
+                  rotate: "0deg",
+                  opacity: 1,
+                  y: 0,
+                }}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -458,9 +556,19 @@ function Rewards() {
               </motion.div>
 
               <motion.div
-                key={"rewardsHeroImageTwo"}
-                initial={{ opacity: 0, x: 125 }}
-                animate={{ opacity: 1, x: 0 }}
+                key={"rewardsTabletHeroImageTwo"}
+                initial={{
+                  filter: "blur(5px)",
+                  rotate: "90deg",
+                  opacity: 0,
+                  x: 125,
+                }}
+                animate={{
+                  filter: "blur(0px)",
+                  rotate: "0deg",
+                  opacity: 1,
+                  x: 0,
+                }}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -480,9 +588,19 @@ function Rewards() {
               </motion.div>
 
               <motion.div
-                key={"rewardsHeroImageThree"}
-                initial={{ opacity: 0, y: 125 }}
-                animate={{ opacity: 1, y: 0 }}
+                key={"rewardsTabletHeroImageThree"}
+                initial={{
+                  filter: "blur(5px)",
+                  rotate: "90deg",
+                  opacity: 0,
+                  y: 125,
+                }}
+                animate={{
+                  filter: "blur(0px)",
+                  rotate: "0deg",
+                  opacity: 1,
+                  y: 0,
+                }}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -502,9 +620,19 @@ function Rewards() {
               </motion.div>
 
               <motion.div
-                key={"rewardsHeroImageFour"}
-                initial={{ opacity: 0, y: -200 }}
-                animate={{ opacity: 1, y: 0 }}
+                key={"rewardsTabletHeroImageFour"}
+                initial={{
+                  filter: "blur(5px)",
+                  rotate: "90deg",
+                  opacity: 0,
+                  y: -200,
+                }}
+                animate={{
+                  filter: "blur(0px)",
+                  rotate: "0deg",
+                  opacity: 1,
+                  y: 0,
+                }}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -646,7 +774,7 @@ function Rewards() {
                 </div>
 
                 <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
-                  <FaCakeCandles className="ml-4 size-10 h-20 text-primary" />
+                  <LuCakeSlice className="ml-4 h-20 w-[50px] stroke-[1.5px] text-primary" />
                   <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
                   <div className="hyphens-auto p-4 text-left text-primary">
                     Celebrate your birthday with a complimentary treat from us,
@@ -657,7 +785,7 @@ function Rewards() {
                 </div>
 
                 <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
-                  <LuCalendarClock className="ml-2 size-12 h-20 shrink-0 text-primary" />
+                  <LuCalendarClock className="ml-2 size-12 h-20 shrink-0 stroke-[1.75px] text-primary" />
                   <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
                   <div className="hyphens-auto p-4 text-left text-primary">
                     As a member, you&apos;re first in line to experience our

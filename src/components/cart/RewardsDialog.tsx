@@ -159,8 +159,20 @@ function RewardsDialogContent({
         >
           <motion.div
             key={"rewardsHeroMobileImageOne"}
-            initial={{ opacity: 0, y: -125, x: -125 }}
-            animate={{ opacity: 1, y: 0, x: 0 }}
+            initial={{
+              filter: "blur(5px)",
+              rotate: "90deg",
+              opacity: 0,
+              y: -125,
+              x: -125,
+            }}
+            animate={{
+              filter: "blur(0px)",
+              rotate: "0deg",
+              opacity: 1,
+              y: 0,
+              x: 0,
+            }}
             transition={{
               opacity: { duration: 0.2 },
               type: "spring",
@@ -181,8 +193,20 @@ function RewardsDialogContent({
 
           <motion.div
             key={"rewardsHeroMobileImageTwo"}
-            initial={{ opacity: 0, y: 125, x: -125 }}
-            animate={{ opacity: 1, y: 0, x: 0 }}
+            initial={{
+              filter: "blur(5px)",
+              rotate: "90deg",
+              opacity: 0,
+              y: 125,
+              x: -125,
+            }}
+            animate={{
+              filter: "blur(0px)",
+              rotate: "0deg",
+              opacity: 1,
+              y: 0,
+              x: 0,
+            }}
             transition={{
               opacity: { duration: 0.2 },
               type: "spring",
@@ -223,8 +247,20 @@ function RewardsDialogContent({
 
           <motion.div
             key={"rewardsHeroMobileImageThree"}
-            initial={{ opacity: 0, y: -125, x: 125 }}
-            animate={{ opacity: 1, y: 0, x: 0 }}
+            initial={{
+              filter: "blur(5px)",
+              rotate: "90deg",
+              opacity: 0,
+              y: -125,
+              x: 125,
+            }}
+            animate={{
+              filter: "blur(0px)",
+              rotate: "0deg",
+              opacity: 1,
+              y: 0,
+              x: 0,
+            }}
             transition={{
               opacity: { duration: 0.2 },
               type: "spring",
@@ -245,8 +281,20 @@ function RewardsDialogContent({
 
           <motion.div
             key={"rewardsHeroMobileImageFour"}
-            initial={{ opacity: 0, y: 125, x: 125 }}
-            animate={{ opacity: 1, y: 0, x: 0 }}
+            initial={{
+              filter: "blur(5px)",
+              rotate: "90deg",
+              opacity: 0,
+              y: 125,
+              x: 125,
+            }}
+            animate={{
+              filter: "blur(0px)",
+              rotate: "0deg",
+              opacity: 1,
+              y: 0,
+              x: 0,
+            }}
             transition={{
               opacity: { duration: 0.2 },
               type: "spring",
