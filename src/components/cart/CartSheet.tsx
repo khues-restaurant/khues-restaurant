@@ -216,9 +216,27 @@ function CartSheet({
             "Available pickup times have changed. Please select a new time.",
         },
       ),
-    pickupName: z.string().min(1, {
-      message: "Pickup name is required",
-    }),
+    pickupName: z
+      .string()
+      .min(1, {
+        message: "Pickup name is required",
+      })
+      // 61 here since valid first and last name are 30 characters each
+      // and allowing a space in between
+      .max(61, {
+        message: "Invalid pickup name length",
+      })
+      .refine((value) => /^[A-Za-z\s'-]+$/.test(value), {
+        message: "Invalid characters found",
+      })
+      .refine((value) => !/[^\u0000-\u007F]/.test(value), {
+        message: "Invalid characters found",
+      })
+      .refine((value) => !/[\p{Emoji}]/u.test(value), {
+        message: "Invalid characters found",
+      })
+      .transform((value) => value.trim()) // Remove leading and trailing whitespace
+      .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,
   });
 
   const decimalTipSchema = z

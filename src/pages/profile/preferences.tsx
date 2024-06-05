@@ -123,14 +123,37 @@ function Preferences() {
         required_error: "First name cannot be empty",
       })
       .min(1, { message: "Must be at least 1 character" })
-      .max(30, { message: "Must be at most 30 characters" }),
-
+      .max(30, { message: "Must be at most 30 characters" })
+      .refine((value) => /^[A-Za-z'-]+$/.test(value), {
+        message:
+          "Only English characters, hyphens, and apostrophes are allowed",
+      })
+      .refine((value) => !/[^\u0000-\u007F]/.test(value), {
+        message: "No non-ASCII characters are allowed",
+      })
+      .refine((value) => !/[\p{Emoji}]/u.test(value), {
+        message: "No emojis are allowed",
+      })
+      .transform((value) => value.trim()) // Remove leading and trailing whitespace
+      .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,
     lastName: z
       .string({
         required_error: "Last name cannot be empty",
       })
       .min(1, { message: "Must be at least 1 character" })
-      .max(30, { message: "Must be at most 30 characters" }),
+      .max(30, { message: "Must be at most 30 characters" })
+      .refine((value) => /^[A-Za-z'-]+$/.test(value), {
+        message:
+          "Only English characters, hyphens, and apostrophes are allowed",
+      })
+      .refine((value) => !/[^\u0000-\u007F]/.test(value), {
+        message: "No non-ASCII characters are allowed",
+      })
+      .refine((value) => !/[\p{Emoji}]/u.test(value), {
+        message: "No emojis are allowed",
+      })
+      .transform((value) => value.trim()) // Remove leading and trailing whitespace
+      .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,
     phoneNumber: z
       .string({
         required_error: "Phone number cannot be empty",
@@ -150,7 +173,18 @@ function Preferences() {
 
     dietaryRestrictions: z
       .string()
-      .max(100, { message: "Must be at most 100 characters" }),
+      .max(100, { message: "Must be at most 100 characters" })
+      .refine(
+        (value) => /^[A-Za-z0-9\s\-';.,!?:"(){}\[\]/\\_@]*$/.test(value),
+        {
+          message: "Invalid characters were found",
+        },
+      )
+      .refine((value) => !/[^\u0000-\u007F]/.test(value), {
+        message: "No non-ASCII characters are allowed",
+      })
+      .transform((value) => value.trim()) // Remove leading and trailing whitespace
+      .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,,
 
     allowsEmailReceipts: z.boolean(),
     allowsOrderCompleteEmails: z.boolean(),
