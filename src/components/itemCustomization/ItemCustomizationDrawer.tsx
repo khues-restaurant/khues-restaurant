@@ -581,8 +581,8 @@ function CustomizationGroup({
 
   return (
     <div key={category.id} className="baseVertFlex w-full !items-start">
-      <p className="text-lg font-semibold">{category.name}</p>
-      <p className="text-stone-400">{category.description}</p>
+      <p className="font-medium">{category.name}</p>
+      <p className="text-sm text-stone-400">{category.description}</p>
       <div className="baseFlex mt-2 w-full !justify-start gap-2">
         <RadioGroup
           value={localItemOrderDetails.customizations[category.id]}
@@ -683,7 +683,7 @@ function CustomizationOption({
       />
       <div
         className={`baseVertFlex size-full gap-2
-        ${!choice.isAvailable ? "opacity-50" : ""}
+        ${!choice.isAvailable ? "opacity-55" : ""}
       `}
       >
         <Label htmlFor={choice.id} className="self-start">
@@ -692,7 +692,7 @@ function CustomizationOption({
         <p className="self-start text-stone-400">{choice.description}</p>
 
         {!choice.isAvailable && (
-          <div className="absolute right-4 top-2 rounded-md bg-stone-100 px-2 py-0.5 text-stone-400">
+          <div className="absolute right-4 top-2 rounded-md bg-stone-200 px-2 py-0.5 text-stone-600">
             <p className="text-xs italic">Currently unavailable</p>
           </div>
         )}

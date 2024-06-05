@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 const config = {
   darkMode: ["class"],
@@ -17,19 +18,20 @@ const config = {
       center: true,
       padding: "2rem",
       screens: {
-        sm: "640px",
-        md: "768px",
-        lg: "1024px",
-        xl: "1280px",
-        "2xl": "1536px",
-        "3xl": "1700px",
+        xs: "450px",
+        ...defaultTheme.screens,
       },
+    },
+    screens: {
+      xs: "450px",
+      ...defaultTheme.screens,
     },
     extend: {
       screens: {
         mobileLarge: { raw: "(min-height: 667px)" },
         tablet: { raw: "(min-height: 600px) and (min-width: 1000px)" },
         desktop: { raw: "(min-height: 600px) and (min-width: 1536px)" },
+        "2xl": "1536px",
         "3xl": "1700px",
       },
       boxShadow: {
