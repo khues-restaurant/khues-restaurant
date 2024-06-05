@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/crons/resetDBMinPickupTime",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/crons/bulkExpireRewards",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/crons/bulkRemoveExpiredEmailUnsubscribeTokens",
+      "schedule": "0 6 1 * *"
+    }
+  ]
+}
