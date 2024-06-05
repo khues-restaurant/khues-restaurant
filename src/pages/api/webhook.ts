@@ -8,7 +8,7 @@ import { type OrderDetails } from "~/stores/MainStore";
 import { orderDetailsSchema } from "~/stores/MainStore";
 import Decimal from "decimal.js";
 import { splitFullName } from "~/utils/splitFullName";
-import { addMonths } from "date-fns";
+import { addMinutes, addMonths } from "date-fns";
 import { Resend } from "resend";
 import Receipt from "emails/Receipt";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
@@ -206,10 +206,8 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       // add 15 minutes to current time if order is ASAP
       if (orderDetails.isASAP) {
-        adjustedDatetimeToPickup = toZonedTime(new Date(), "America/Chicago");
-        adjustedDatetimeToPickup.setMinutes(
-          adjustedDatetimeToPickup.getMinutes() + 15,
-        );
+        const zonedCurrentDatetime = toZonedTime(new Date(), "America/Chicago");
+        adjustedDatetimeToPickup = addMinutes(zonedCurrentDatetime, 15);
       }
 
       // calculate/retrieve subtotal, tax, tip, total values here:
