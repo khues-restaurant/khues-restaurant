@@ -384,7 +384,7 @@ function DesktopHeader() {
                 onClick={() => setShowUserPopoverLinks(true)}
               >
                 <FaUserAlt />
-                {user.firstName}
+                <span className="max-w-[105px] truncate">{user.firstName}</span>
               </Button>
             </PopoverTrigger>
             <PopoverContent side="bottom" align="end" className="w-64">

@@ -182,7 +182,9 @@ function MobileHeader() {
                   <AccordionItem value="item-1" className="border-none">
                     <AccordionTrigger className="baseFlex gap-4 py-2 text-xl font-semibold text-primary !no-underline">
                       <FaUserAlt className="!rotate-0" />
-                      {user?.firstName}
+                      <span className="max-w-[60%] truncate">
+                        {user?.firstName}
+                      </span>
                     </AccordionTrigger>
                     <AccordionContent className="pb-0 pt-2">
                       <div className="baseVertFlex gap-2">
