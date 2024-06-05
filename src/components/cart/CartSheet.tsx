@@ -316,6 +316,9 @@ function CartSheet({
       ) {
         newDate.setHours(0, 0, 0, 0);
       } else if (value.timeToPickup === "ASAP (~20 mins)") {
+        // normalizing datetime to midnight
+        newDate.setHours(0, 0, 0, 0);
+
         const newOrderDetails = structuredClone(orderDetails);
         newOrderDetails.datetimeToPickup = newDate;
         newOrderDetails.isASAP = true;
