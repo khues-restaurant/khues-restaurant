@@ -37,6 +37,23 @@ const config = {
     ],
   },
 
+  crons: [
+    // Daily at midnight CST (including offset for DST)
+    {
+      path: "/api/crons/resetDBMinPickupTime",
+      schedule: "0 6 * * *",
+    },
+    {
+      path: "/api/crons/bulkExpireRewards",
+      schedule: "0 6 * * *",
+    },
+    // Monthly at 6:00 AM CST (including offset for DST)
+    {
+      path: "/api/crons/bulkRemoveExpiredEmailUnsubscribeTokens",
+      schedule: "0 6 1 * *",
+    },
+  ],
+
   // TODO: remove these out before actual production
   eslint: {
     ignoreDuringBuilds: true,
