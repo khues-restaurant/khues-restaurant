@@ -28,6 +28,7 @@ import { ChevronDown } from "lucide-react";
 import { DashboardOrder } from "~/server/api/routers/order";
 import { FaUtensils } from "react-icons/fa6";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
+import { getFirstSixNumbers } from "~/utils/getFirstSixNumbers";
 import { Separator } from "~/components/ui/separator";
 import { format } from "date-fns";
 import { useToast } from "~/components/ui/use-toast";
@@ -131,7 +132,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
       transition={{ duration: 0.5 }}
       className="baseVertFlex mt-32 size-full tablet:mt-28"
     >
-      <div className="baseFlex !justify-end rounded-lg border p-1">
+      <div className="baseFlex !justify-end rounded-lg border bg-offwhite p-1">
         <Button
           variant={
             selectedTab === "notStarted" || selectedTab === "started"
@@ -184,7 +185,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
       </div>
 
       {(selectedTab === "notStarted" || selectedTab === "started") && (
-        <div className="baseFlex my-6 w-full !justify-around border-b-2 border-stone-300">
+        <div className="baseFlex my-6 w-full !justify-around border-b-2 border-stone-300 pb-2">
           <div className="relative">
             <p
               onClick={() => setSelectedTab("notStarted")}
@@ -265,7 +266,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
               </AnimatePresence>
             </motion.div>
 
-            <Separator orientation="vertical" className="h-[70dvh] " />
+            <Separator orientation="vertical" className="h-[70dvh] w-[2px] " />
 
             <motion.div
               key={"started"}
@@ -410,7 +411,7 @@ function CustomerOrder({ order, view }: CustomerOrder) {
       //   marginTop: { duration: 0.2 },
       //   marginBottom: { duration: 0.2 },
       // }}
-      className={`baseFlex w-full max-w-lg rounded-md border p-4
+      className={`baseFlex w-full max-w-lg rounded-md border bg-offwhite p-4
       ${order.notableUserDescription ? "border-yellow-500 bg-gradient-to-br from-amber-200 to-amber-400" : ""}
       `}
     >
@@ -689,18 +690,24 @@ function OrderItems({ order }: OrderItems) {
         </div>
       )}
 
-      <Button
-        variant={"secondary"}
-        disabled={orderBeingReprinted}
-        size={"sm"}
-        className="mt-4 !self-center text-sm"
-        onClick={() => {
-          setOrderBeingReprinted(true);
-          reprintOrder({ orderId: order.id });
-        }}
-      >
-        Reprint
-      </Button>
+      <Separator className="mt-2 h-[1px] w-full" />
+
+      <div className="baseFlex w-full gap-8">
+        <p>Order #{getFirstSixNumbers(order.id)}</p>
+
+        <Button
+          variant={"secondary"}
+          disabled={orderBeingReprinted}
+          size={"sm"}
+          className="!self-center text-sm"
+          onClick={() => {
+            setOrderBeingReprinted(true);
+            reprintOrder({ orderId: order.id });
+          }}
+        >
+          Reprint ticket
+        </Button>
+      </div>
     </div>
   );
 }

@@ -13,23 +13,17 @@ export const chatRouter = createTRPCRouter({
         senderUserId: z.string(),
         recipientUserId: z.string(),
         message: z.string(),
-        chatId: z.string().optional(), // Optional chatId input
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const { senderUserId, recipientUserId, message } = input;
+
       // Check if a chatId is provided or find an existing chat
-      let chat = input.chatId
-        ? await ctx.prisma.chat.findUnique({
-            where: { id: input.chatId },
-          })
-        : await ctx.prisma.chat.findFirst({
-            where: {
-              OR: [
-                { userId: input.senderUserId },
-                { userId: input.recipientUserId },
-              ],
-            },
-          });
+      let chat = await ctx.prisma.chat.findFirst({
+        where: {
+          userId: senderUserId === "dashboard" ? recipientUserId : senderUserId,
+        },
+      });
 
       // If no chat exists, create a new one
       if (!chat) {
@@ -37,7 +31,7 @@ export const chatRouter = createTRPCRouter({
         // first and last name to add to the chat
         const user = await ctx.prisma.user.findUnique({
           where: {
-            userId: input.senderUserId,
+            userId: senderUserId,
           },
           select: {
             firstName: true,
@@ -47,7 +41,7 @@ export const chatRouter = createTRPCRouter({
 
         chat = await ctx.prisma.chat.create({
           data: {
-            userId: input.senderUserId, // Assuming the sender initializes the chat
+            userId: senderUserId, // Assuming the sender initializes the chat
             userFullName: user
               ? `${user.firstName} ${user.lastName}`
               : "Customer",
@@ -58,7 +52,7 @@ export const chatRouter = createTRPCRouter({
 
       // update the opposite party's unread messages status to true
       const updatedReadStatus =
-        input.recipientUserId === "dashboard"
+        recipientUserId === "dashboard"
           ? { dashboardHasUnreadMessages: true }
           : { userHasUnreadMessages: true };
 
@@ -70,11 +64,11 @@ export const chatRouter = createTRPCRouter({
       });
 
       // Create a message in the existing or new chat
-      const message = await ctx.prisma.chatMessage.create({
+      const newMessage = await ctx.prisma.chatMessage.create({
         data: {
-          senderId: input.senderUserId,
-          recipientId: input.recipientUserId,
-          content: input.message,
+          senderId: senderUserId,
+          recipientId: recipientUserId,
+          content: message,
           chatId: chat.id, // Use the found or newly created chat ID
         },
       });
@@ -89,7 +83,7 @@ export const chatRouter = createTRPCRouter({
         },
       });
 
-      return message;
+      return newMessage;
     }),
 
   updateChatReadStatus: publicProcedure

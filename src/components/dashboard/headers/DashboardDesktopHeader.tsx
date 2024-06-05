@@ -86,7 +86,7 @@ function DashboardDesktopHeader({
       id="header"
       className={`baseFlex fixed left-0 top-0 z-50 grid h-24 w-screen gap-4 bg-offwhite shadow-md`}
     >
-      <div className={`${classes.mainLinks} baseFlex gap-2`}>
+      <div className={`${classes.mainLinks} baseFlex gap-4`}>
         <div className="relative">
           <Button
             variant={viewState === "orderManagement" ? "activeLink" : "link"}

@@ -26,6 +26,11 @@ import { useRouter } from "next/router";
 
 import khuesKitchenLogo from "/public/khuesKitchenLogo.png";
 
+function containsLetterOrNumber(str: string) {
+  const regex = /[a-zA-Z0-9]/;
+  return regex.test(str);
+}
+
 // FYI: when we made this we were aware that it is conservative by nature, and is only
 // connecting to the socket.io server once the Chat has been opened for the first time.
 
@@ -67,59 +72,60 @@ function Chat() {
     enabled: userId.length > 0,
   });
 
-  const { mutate: sendMessage } = api.chat.sendMessage.useMutation({
-    // When mutation is initiated, perform an optimistic update
-    onMutate: async (newMessage) => {
-      // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-      // await ctx.chatMessage.getMessagesPerUser.cancel();
-      // // Get the data from the queryCache
-      // const prevMessages = ctx.chatMessage.getMessagesPerUser.getData();
-      // // Optimistically update the data with our new message
-      // ctx.chatMessage.getMessagesPerUser.setData(
-      //   ctx.chatMessage.getMessagesPerUser,
-      //   (
-      //     old:
-      //       | {
-      //           id: string;
-      //           createdAt: Date;
-      //           senderId: string;
-      //           recipientId: string;
-      //           content: string;
-      //         }[]
-      //       | undefined,
-      //   ) => [
-      //     ...(old ?? []),
-      //     {
-      //       id: Date.now(),
-      //       createdAt: Date.now(),
-      //       senderId: userId,
-      //       recipientId: "dashboard",
-      //       content: newMessage.message,
-      //     },
-      //   ],
-      // );
-      // // Return the previous data so we can revert if something goes wrong
-      // return { prevMessages };
-    },
-    onError(err) {
-      console.error(err);
-    },
-    onSuccess(newMessage) {
-      console.log("message sent", newMessage);
+  const { mutate: sendMessage, isLoading: isSendingMessage } =
+    api.chat.sendMessage.useMutation({
+      // When mutation is initiated, perform an optimistic update
+      onMutate: async (newMessage) => {
+        // Cancel outgoing fetches (so they don't overwrite our optimistic update)
+        // await ctx.chatMessage.getMessagesPerUser.cancel();
+        // // Get the data from the queryCache
+        // const prevMessages = ctx.chatMessage.getMessagesPerUser.getData();
+        // // Optimistically update the data with our new message
+        // ctx.chatMessage.getMessagesPerUser.setData(
+        //   ctx.chatMessage.getMessagesPerUser,
+        //   (
+        //     old:
+        //       | {
+        //           id: string;
+        //           createdAt: Date;
+        //           senderId: string;
+        //           recipientId: string;
+        //           content: string;
+        //         }[]
+        //       | undefined,
+        //   ) => [
+        //     ...(old ?? []),
+        //     {
+        //       id: Date.now(),
+        //       createdAt: Date.now(),
+        //       senderId: userId,
+        //       recipientId: "dashboard",
+        //       content: newMessage.message,
+        //     },
+        //   ],
+        // );
+        // // Return the previous data so we can revert if something goes wrong
+        // return { prevMessages };
+      },
+      onError(err) {
+        console.error(err);
+      },
+      onSuccess(newMessage) {
+        console.log("message sent", newMessage);
 
-      socket?.emit("userSentNewMessage", {
-        userId: newMessage.recipientId,
-        message: newMessage.content,
-      });
-    },
-    // After mutation is resolved, refetch the messages
-    onSettled() {
-      setNewMessageContent("");
-
-      // Sync with server once mutation has settled
-      void ctx.chat.getMessagesPerUser.invalidate();
-    },
-  });
+        socket?.emit("userSentNewMessage", {
+          userId: newMessage.recipientId,
+          message: newMessage.content,
+        });
+      },
+      // After mutation is resolved, refetch the messages
+      onSettled() {
+        setNewMessageContent("");
+        setLocalMessageIsBeingSent(false);
+        // Sync with server once mutation has settled
+        void ctx.chat.getMessagesPerUser.invalidate();
+      },
+    });
 
   const { mutate: updateChatReadStatus } =
     api.chat.updateChatReadStatus.useMutation({
@@ -128,6 +134,7 @@ function Chat() {
       },
     });
 
+  const [localMessageIsBeingSent, setLocalMessageIsBeingSent] = useState(false);
   const [chatHasBeenInitiallyOpened, setChatHasBeenInitiallyOpened] =
     useState(false);
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -322,10 +329,18 @@ function Chat() {
             <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-stone-200 to-stone-300 p-2 px-4 shadow-inner">
               <Textarea
                 placeholder="Enter your message here"
+                minLength={1}
+                maxLength={500}
                 value={newMessageContent}
                 onChange={(e) => setNewMessageContent(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
+                  if (
+                    e.key === "Enter" &&
+                    !e.shiftKey &&
+                    !localMessageIsBeingSent &&
+                    containsLetterOrNumber(newMessageContent)
+                  ) {
+                    setLocalMessageIsBeingSent(true);
                     e.preventDefault();
                     sendMessage({
                       senderUserId: userId,
@@ -337,6 +352,9 @@ function Chat() {
                 className="max-h-12 flex-grow border-2 border-stone-500 bg-transparent placeholder-stone-400"
               />
               <Button
+                disabled={
+                  !containsLetterOrNumber(newMessageContent) || isSendingMessage
+                }
                 className="!p-2"
                 onClick={() => {
                   sendMessage({
@@ -477,10 +495,18 @@ function Chat() {
             <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-stone-200 to-stone-300 p-2 px-4 shadow-inner">
               <Textarea
                 placeholder="Enter your message here"
+                minLength={1}
+                maxLength={500}
                 value={newMessageContent}
                 onChange={(e) => setNewMessageContent(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
+                  if (
+                    e.key === "Enter" &&
+                    !e.shiftKey &&
+                    !localMessageIsBeingSent &&
+                    containsLetterOrNumber(newMessageContent)
+                  ) {
+                    setLocalMessageIsBeingSent(true);
                     e.preventDefault();
                     sendMessage({
                       senderUserId: userId,
@@ -492,6 +518,9 @@ function Chat() {
                 className="max-h-12 flex-grow border border-stone-500 bg-transparent placeholder-stone-400"
               />
               <Button
+                disabled={
+                  !containsLetterOrNumber(newMessageContent) || isSendingMessage
+                }
                 className="!p-2"
                 onClick={() => {
                   sendMessage({

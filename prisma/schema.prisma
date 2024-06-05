@@ -39,7 +39,6 @@ model Chat {
 
     messages ChatMessage[]
 
-    user   User?  @relation(fields: [userId], references: [userId])
     userId String @unique
 }
 
@@ -358,7 +357,6 @@ model User {
     favoriteItems FavoriteItem[]
     discounts     Discount[]
     reviews       Review[]
-    chat          Chat?
 
     @@index([userId])
 }

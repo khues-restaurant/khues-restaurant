@@ -20,6 +20,11 @@ import { type Socket } from "socket.io-client";
 import { FaRedo } from "react-icons/fa";
 import { useToast } from "~/components/ui/use-toast";
 
+function containsLetterOrNumber(str: string) {
+  const regex = /[a-zA-Z0-9]/;
+  return regex.test(str);
+}
+
 type CombinedMessagesAndDateLabels = (
   | Date
   | {
@@ -47,59 +52,61 @@ function CustomerChats({ socket }: CustomerChats) {
   const { data: databaseChats, refetch: refetchChats } =
     api.chat.getAllMessages.useQuery();
 
-  const { mutate: sendMessage } = api.chat.sendMessage.useMutation({
-    // When mutation is initiated, perform an optimistic update
-    onMutate: async (newMessage) => {
-      // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-      // await ctx.chatMessage.getMessagesPerUser.cancel();
-      // // Get the data from the queryCache
-      // const prevMessages = ctx.chatMessage.getMessagesPerUser.getData();
-      // // Optimistically update the data with our new message
-      // ctx.chatMessage.getMessagesPerUser.setData(
-      //   ctx.chatMessage.getMessagesPerUser,
-      //   (
-      //     old:
-      //       | {
-      //           id: string;
-      //           createdAt: Date;
-      //           senderId: string;
-      //           recipientId: string;
-      //           content: string;
-      //         }[]
-      //       | undefined,
-      //   ) => [
-      //     ...(old ?? []),
-      //     {
-      //       id: Date.now(),
-      //       createdAt: Date.now(),
-      //       senderId: userId,
-      //       recipientId: "dashboard",
-      //       content: newMessage.message,
-      //     },
-      //   ],
-      // );
-      // // Return the previous data so we can revert if something goes wrong
-      // return { prevMessages };
-    },
-    onError(err) {
-      console.error(err);
-    },
-    onSuccess(newMessage) {
-      console.log("newMessage", newMessage);
+  const { mutate: sendMessage, isLoading: isSendingMessage } =
+    api.chat.sendMessage.useMutation({
+      // When mutation is initiated, perform an optimistic update
+      onMutate: async (newMessage) => {
+        // Cancel outgoing fetches (so they don't overwrite our optimistic update)
+        // await ctx.chatMessage.getMessagesPerUser.cancel();
+        // // Get the data from the queryCache
+        // const prevMessages = ctx.chatMessage.getMessagesPerUser.getData();
+        // // Optimistically update the data with our new message
+        // ctx.chatMessage.getMessagesPerUser.setData(
+        //   ctx.chatMessage.getMessagesPerUser,
+        //   (
+        //     old:
+        //       | {
+        //           id: string;
+        //           createdAt: Date;
+        //           senderId: string;
+        //           recipientId: string;
+        //           content: string;
+        //         }[]
+        //       | undefined,
+        //   ) => [
+        //     ...(old ?? []),
+        //     {
+        //       id: Date.now(),
+        //       createdAt: Date.now(),
+        //       senderId: userId,
+        //       recipientId: "dashboard",
+        //       content: newMessage.message,
+        //     },
+        //   ],
+        // );
+        // // Return the previous data so we can revert if something goes wrong
+        // return { prevMessages };
+      },
+      onError(err) {
+        console.error(err);
+      },
+      onSuccess(newMessage) {
+        console.log("newMessage", newMessage);
 
-      socket.emit("dashboardSentNewMessage", {
-        userId: newMessage.recipientId,
-        message: newMessage.content,
-      });
-    },
-    // After mutation is resolved, refetch the messages
-    onSettled() {
-      setNewMessageContent("");
+        socket.emit("dashboardSentNewMessage", {
+          userId: newMessage.recipientId,
+          message: newMessage.content,
+        });
+      },
+      // After mutation is resolved, refetch the messages
+      onSettled() {
+        setNewMessageContent("");
+        setLocalMessageIsBeingSent(false);
 
-      // Sync with server once mutation has settled
-      void ctx.chat.getAllMessages.invalidate();
-    },
-  });
+        // Sync with server once mutation has settled
+        void ctx.chat.getAllMessages.invalidate();
+      },
+    });
 
   const { mutate: updateChatReadStatus } =
     api.chat.updateChatReadStatus.useMutation({
@@ -119,6 +126,7 @@ function CustomerChats({ socket }: CustomerChats) {
   const [dateLabeledMessages, setDateLabeledMessages] =
     useState<CombinedMessagesAndDateLabels>([]);
 
+  const [localMessageIsBeingSent, setLocalMessageIsBeingSent] = useState(false);
   const [manuallyRefreshingChats, setManuallyRefreshingChats] = useState(false);
 
   const scrollableChatContainerRef = useRef<HTMLDivElement | null>(null);
@@ -181,6 +189,8 @@ function CustomerChats({ socket }: CustomerChats) {
 
   const { toast } = useToast();
 
+  console.log(selectedUserId);
+
   // vv obv improve this vv
   if (!chats) return <p>Loading...</p>;
 
@@ -207,32 +217,32 @@ function CustomerChats({ socket }: CustomerChats) {
 
                 return (
                   <Button
-                    key={userId}
+                    key={chat.userId}
                     variant={
-                      userId === selectedUserId ? "default" : "secondary"
+                      chat.userId === selectedUserId ? "default" : "secondary"
                     }
-                    className="baseFlex !h-auto w-full !justify-between rounded-none !px-4 !py-2"
+                    className="baseFlex !h-auto w-full !justify-between rounded-none border-b border-stone-400 !px-4 !py-2"
                     onClick={() => {
-                      setSelectedUserId(userId);
+                      setSelectedUserId(chat.userId);
                       setNewMessageContent("");
                     }}
                   >
                     <div className="baseVertFlex !items-start gap-2">
                       <p
-                        className={`font-semibold ${userId === selectedUserId ? "text-offwhite" : "text-stone-500"}`}
+                        className={`font-semibold ${chat.userId === selectedUserId ? "text-offwhite" : "text-stone-500"}`}
                       >
                         {chat.userFullName}
                       </p>
 
                       <div
                         className={`baseFlex line-clamp-1 text-xs
-                      ${userId === selectedUserId ? "text-offwhite" : "text-stone-400"}`}
+                      ${chat.userId === selectedUserId ? "text-offwhite" : "text-stone-400"}`}
                       >
                         Sent at{" "}
                         {lastMessage
                           ? format(lastMessage.createdAt, "h:mm a")
                           : "N/A"}
-                        <p className="ml-1">
+                        <p className="ml-1 max-w-40 truncate">
                           - &ldquo;{lastMessage?.content}&rdquo;
                         </p>
                       </div>
@@ -320,10 +330,18 @@ function CustomerChats({ socket }: CustomerChats) {
             <div className="baseFlex w-full gap-4 rounded-br-lg bg-gradient-to-br from-stone-200 to-stone-300 p-4 shadow-inner">
               <Textarea
                 placeholder="Enter your message here"
+                minLength={1}
+                maxLength={500}
                 value={newMessageContent}
                 onChange={(e) => setNewMessageContent(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
+                  if (
+                    e.key === "Enter" &&
+                    !e.shiftKey &&
+                    !localMessageIsBeingSent &&
+                    containsLetterOrNumber(newMessageContent)
+                  ) {
+                    setLocalMessageIsBeingSent(true);
                     e.preventDefault();
                     sendMessage({
                       senderUserId: "dashboard",
@@ -336,7 +354,11 @@ function CustomerChats({ socket }: CustomerChats) {
               />
               <Button
                 className="!p-2"
-                disabled={!newMessageContent || !selectedUserId}
+                disabled={
+                  !containsLetterOrNumber(newMessageContent) ||
+                  isSendingMessage ||
+                  !selectedUserId
+                }
                 onClick={() => {
                   sendMessage({
                     senderUserId: "dashboard",
