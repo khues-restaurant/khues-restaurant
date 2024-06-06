@@ -361,7 +361,9 @@ function Preferences() {
                             <FormLabel className="font-semibold">
                               First name
                             </FormLabel>
+                            <FormControl>
                             <Input placeholder="First name" {...field} />
+                            </FormControl>
                           </div>
                           <AnimatePresence>
                             {invalid && (
@@ -399,7 +401,9 @@ function Preferences() {
                             <FormLabel className="font-semibold">
                               Last name
                             </FormLabel>
+                            <FormControl>
                             <Input placeholder="Last name" {...field} />
+                            </FormControl>
                           </div>
                           <AnimatePresence>
                             {invalid && (
@@ -440,6 +444,7 @@ function Preferences() {
                             <FormLabel className="font-semibold">
                               Phone number
                             </FormLabel>
+                            <FormControl>
                             <Input
                               ref={ref}
                               value={formatPhoneNumber(value)}
@@ -450,6 +455,7 @@ function Preferences() {
                               placeholder="(123) 456-7890"
                               type={"tel"}
                             />
+                            </FormControl>
                           </div>
                           <AnimatePresence>
                             {invalid && (
@@ -486,7 +492,9 @@ function Preferences() {
                             <FormLabel className="font-semibold">
                               Email
                             </FormLabel>
+                            <FormControl>
                             <Input placeholder="Email" {...field} disabled />
+                            </FormControl>
                             <FaLock className="absolute bottom-3 right-2 size-3.5 text-stone-300" />
                           </div>
                           <AnimatePresence>
@@ -524,11 +532,14 @@ function Preferences() {
                             <FormLabel className="font-semibold">
                               Birthday
                             </FormLabel>
+                            <FormControl>
                             <Input
                               {...field}
                               value={format(field.value, "PPP")}
                               disabled
                             />
+                            </FormControl>
+
                             <FaLock className="absolute bottom-3 right-2 size-3.5 text-stone-300" />
                           </div>
                           <AnimatePresence>
@@ -622,19 +633,15 @@ function Preferences() {
                           <div className="baseFlex ml-1 gap-[1.15rem]">
                             <FormControl>
                               <Checkbox
-                                id="allowsEmailReceipts"
                                 checked={field.value}
                                 disabled={saveButtonText !== "Save changes"}
                                 onCheckedChange={field.onChange}
                                 className="size-4"
                               />
                             </FormControl>
-                            <Label
-                              htmlFor="allowsEmailReceipts"
-                              className="leading-4"
-                            >
+                            <FormLabel className="leading-4">
                               Receive email receipts for your orders.
-                            </Label>
+                            </FormLabel>
                           </div>
                         </FormItem>
                       )}
@@ -648,20 +655,16 @@ function Preferences() {
                           <div className="baseFlex ml-1 gap-[1.15rem]">
                             <FormControl>
                               <Checkbox
-                                id="allowsOrderCompleteEmails"
                                 disabled={saveButtonText !== "Save changes"}
                                 checked={field.value}
                                 onCheckedChange={field.onChange}
                                 className="size-4"
                               />
                             </FormControl>
-                            <Label
-                              htmlFor="allowsOrderCompleteEmails"
-                              className="leading-4"
-                            >
+                            <FormLabel className="leading-4">
                               Receive an email when your order is ready to be
                               picked up.
-                            </Label>
+                            </FormLabel>
                           </div>
                         </FormItem>
                       )}
@@ -675,20 +678,16 @@ function Preferences() {
                           <div className="baseFlex ml-1 gap-[1.15rem]">
                             <FormControl>
                               <Checkbox
-                                id="allowsPromotionalEmails"
                                 disabled={saveButtonText !== "Save changes"}
                                 checked={field.value}
                                 onCheckedChange={field.onChange}
                                 className="size-4"
                               />
                             </FormControl>
-                            <Label
-                              htmlFor="allowsPromotionalEmails"
-                              className="leading-4"
-                            >
+                            <FormLabel className="leading-4">
                               Receive promotional content and special menu
                               offers.
-                            </Label>
+                            </FormLabel>
                           </div>
                         </FormItem>
                       )}
@@ -702,20 +701,16 @@ function Preferences() {
                           <div className="baseFlex ml-1 gap-[1.15rem]">
                             <FormControl>
                               <Checkbox
-                                id="allowsRewardAvailabilityReminderEmails"
                                 disabled={saveButtonText !== "Save changes"}
                                 checked={field.value}
                                 onCheckedChange={field.onChange}
                                 className="size-4"
                               />
                             </FormControl>
-                            <Label
-                              htmlFor="allowsRewardAvailabilityReminderEmails"
-                              className="leading-4"
-                            >
+                            <FormLabel className="leading-4">
                               Receive reminders about the availability of your
                               rewards.
-                            </Label>
+                            </FormLabel>
                           </div>
                         </FormItem>
                       )}
