@@ -1148,8 +1148,10 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
         )}
 
         {/* Explore Our Favorites section */}
-        <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-5xl tablet:max-w-2xl">
-          <p className="text-lg font-medium">Explore Our Favorites</p>
+        <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-6xl tablet:max-w-2xl">
+          <p className="text-lg font-medium tablet:text-xl">
+            Explore Our Favorites
+          </p>
 
           <div className="baseVertFlex w-full gap-4">
             <Carousel
@@ -1172,7 +1174,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                 {ourFavoriteMenuItems?.map((menuItem) => (
                   <CarouselItem
                     key={menuItem.id}
-                    className="baseVertFlex relative basis-full !items-start gap-4 rounded-md p-4 md:basis-1/2 xl:basis-1/4"
+                    className="baseVertFlex relative basis-full gap-4 rounded-md p-4 px-6 md:basis-1/2 xl:basis-1/4"
                   >
                     <OurFavoriteMenuItemCard menuItem={menuItem} />
                   </CarouselItem>
@@ -1288,7 +1290,7 @@ function OurFavoriteMenuItemCard({ menuItem }: OurFavoriteMenuItemCard) {
         className="self-center rounded-md"
       />
       <p className="font-semibold">{menuItem.name}</p>
-      <p className="line-clamp-3 text-sm">{menuItem.description}</p>
+      <p className="line-clamp-3 text-center text-sm">{menuItem.description}</p>
       <Button
         disabled={!menuItem.available}
         className="w-full"
