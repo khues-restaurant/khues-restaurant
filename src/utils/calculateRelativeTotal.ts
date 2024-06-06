@@ -29,6 +29,7 @@ export function calculateRelativeTotal({
         const priceAdjustment = customizationChoices[choiceId]?.priceAdjustment;
         if (priceAdjustment) {
           // only want to add the price adjustment if it's greater than 0 for rewards
+          // (otherwise it would show a negative price for the reward item which isn't allowed)
           if (
             (item.pointReward || item.birthdayReward) &&
             priceAdjustment <= 0
@@ -41,30 +42,30 @@ export function calculateRelativeTotal({
       }
     }
 
-    if (item.discountId) {
-      const discount = discounts[item.discountId];
-      if (discount) {
-        // Points/Birthday free rewards
-        if (
-          discount.name.includes("Points") ||
-          discount.name.includes("Birthday")
-        ) {
-          continue;
-        }
+    // if (item.discountId) {
+    //   const discount = discounts[item.discountId];
+    //   if (discount) {
+    //     // Points/Birthday free rewards
+    //     if (
+    //       discount.name.includes("Points") ||
+    //       discount.name.includes("Birthday")
+    //     ) {
+    //       continue;
+    //     }
 
-        if (discount.name === "10% off") {
-          price = price.mul(0.9);
-        } else if (discount.name === "20% off") {
-          price = price.mul(0.8);
-        }
-        // Add additional discount logic as needed
-      }
-    }
+    //     if (discount.name === "10% off") {
+    //       price = price.mul(0.9);
+    //     } else if (discount.name === "20% off") {
+    //       price = price.mul(0.8);
+    //     }
+    //     // Add additional discount logic as needed
+    //   }
+    // }
 
     price = price.mul(item.quantity);
 
     total = total.add(price);
   }
 
-  return total.toNumber(); // Converts the Decimal total to a JavaScript number
+  return total.toNumber();
 }

@@ -156,27 +156,30 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         return;
       }
 
-      // point conversion: one dollar spent rewards the user with 5 points
+      // - earning point conversion: one dollar spent rewards the user with 10 points
+      // - spending point conversion: item reward price is the cent value multiplied by 2
+      // - all prices are in cents
 
       const prevPoints = new Decimal(user?.rewardsPoints ?? 0);
       let spentPoints = new Decimal(0);
 
-      // stripe subtotal is in cents, so divide by 100 to get dollars
-      let subtotal = new Decimal(payment.amount_subtotal ?? 0).div(100);
+      let subtotal = new Decimal(payment.amount_subtotal ?? 0);
 
       // subtract tip from subtotal (if it exists)
-      if (orderDetails.tipValue) {
+      if (orderDetails.tipValue > 0) {
         subtotal = subtotal.minus(new Decimal(orderDetails.tipValue));
       }
 
       // check if any item in order has a point-based reward that was redeemed
       for (const item of orderDetails.items) {
         if (item.pointReward) {
-          spentPoints = new Decimal(item.price).times(5);
+          // leaving price in cents, then multiplying by 2 to get the spending point conversion
+          spentPoints = new Decimal(item.price).times(2);
         }
       }
 
-      const earnedPoints = subtotal.times(5);
+      // converting cents to dollars first, then multiplying by 10 to get the reward point conversion
+      const earnedPoints = subtotal.div(100).times(10);
 
       const lifetimeRewardPoints = new Decimal(
         user?.lifetimeRewardPoints ?? 0,
@@ -211,15 +214,16 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       // calculate/retrieve subtotal, tax, tip, total values here:
-      const tax = new Decimal(payment.total_details?.amount_tax ?? 0).div(100);
+      const tax = new Decimal(payment.total_details?.amount_tax ?? 0);
       // ^ TODO: thouroughly test this once Stripe tax information is all set up
       // ideally we would just rely on stripe's calculation of tax and not have to
-      // calculate it ourselves
+      // calculate it ourselves. Otherwise we would need to calculate it at
+      // this step.
 
       const tipPercentage = orderDetails.tipPercentage;
       const tipValue = orderDetails.tipValue;
 
-      const total = new Decimal(payment.amount_total).div(100);
+      const total = new Decimal(payment.amount_total);
 
       console.log(
         "Here!",

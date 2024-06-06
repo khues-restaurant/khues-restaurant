@@ -93,7 +93,7 @@ export const paymentRouter = createTRPCRouter({
             description += `${Object.values(item.customizations).length > 0 ? " | " : ""}${new Decimal(
               item.price,
             )
-              .div(0.005)
+              .mul(2) // item price (in cents) multiplied by 2
               .toNumber()} Point reward`;
           }
 
@@ -101,16 +101,15 @@ export const paymentRouter = createTRPCRouter({
             description += `${Object.values(item.customizations).length > 0 ? " | " : ""}Birthday reward`;
           }
 
-          if (item.discountId) {
-            const discount = discounts[item.discountId];
-            if (discount) {
-              description += `\n ${Object.values(item.customizations).length > 0 ? " | " : ""}Discount: ${discount.name}`;
-            }
-          }
+          // if (item.discountId) {
+          //   const discount = discounts[item.discountId];
+          //   if (discount) {
+          //     description += `\n ${Object.values(item.customizations).length > 0 ? " | " : ""}Discount: ${discount.name}`;
+          //   }
+          // }
 
-          const priceInCents = new Decimal(price)
-            .mul(100)
-            .toDecimalPlaces(0, Decimal.ROUND_HALF_UP)
+          const safePriceInCents = new Decimal(price)
+            .toDecimalPlaces(0, Decimal.ROUND_HALF_UP) // I don't think this is necessary, keeping as a precaution
             .toNumber();
 
           return {
@@ -121,7 +120,7 @@ export const paymentRouter = createTRPCRouter({
                 // stripe doesn't like empty strings for the description
                 ...(description.length > 0 && { description }),
               },
-              unit_amount: priceInCents,
+              unit_amount: safePriceInCents,
             },
             quantity: item.quantity,
           };
@@ -130,63 +129,65 @@ export const paymentRouter = createTRPCRouter({
 
       const lineItems = createLineItemsFromOrder(input.orderDetails.items);
 
-      if (input.orderDetails.rewardBeingRedeemed) {
-        const item = input.orderDetails.rewardBeingRedeemed.item;
+      // strongly suspect that this block is referencing an older system we used
+      // if (input.orderDetails.rewardBeingRedeemed) {
+      //   const item = input.orderDetails.rewardBeingRedeemed.item;
 
-        const price = calculateRelativeTotal({
-          items: [
-            {
-              ...item,
-              quantity: 1,
-            },
-          ],
-          customizationChoices,
-          discounts,
-        });
+      //   const price = calculateRelativeTotal({
+      //     items: [
+      //       {
+      //         ...item,
+      //         quantity: 1,
+      //       },
+      //     ],
+      //     customizationChoices,
+      //     discounts,
+      //   });
 
-        let description = "";
+      //   let description = "";
 
-        if (Object.values(item.customizations).length > 0) {
-          description += "Customizations: ";
-          for (const choiceId of Object.values(item.customizations)) {
-            const customizationCategory =
-              customizationChoices[choiceId]?.customizationCategory;
+      //   if (Object.values(item.customizations).length > 0) {
+      //     description += "Customizations: ";
+      //     for (const choiceId of Object.values(item.customizations)) {
+      //       const customizationCategory =
+      //         customizationChoices[choiceId]?.customizationCategory;
 
-            const customizationChoice = customizationChoices[choiceId]?.name;
+      //       const customizationChoice = customizationChoices[choiceId]?.name;
 
-            if (customizationCategory && customizationChoice) {
-              description += `${customizationCategory.name} - ${customizationChoice}`;
-            }
-          }
-        }
+      //       if (customizationCategory && customizationChoice) {
+      //         description += `${customizationCategory.name} - ${customizationChoice}`;
+      //       }
+      //     }
+      //   }
 
-        if (item.discountId) {
-          const discount = discounts[item.discountId];
-          if (discount) {
-            description += `${Object.values(item.customizations).length > 0 ? " | " : ""}Discount: ${discount.name}`;
-          }
-        }
+      //   // if (item.discountId) {
+      //   //   const discount = discounts[item.discountId];
+      //   //   if (discount) {
+      //   //     description += `${Object.values(item.customizations).length > 0 ? " | " : ""}Discount: ${discount.name}`;
+      //   //   }
+      //   // }
 
-        const priceInCents = new Decimal(price)
-          .mul(100)
-          .toDecimalPlaces(0, Decimal.ROUND_HALF_UP)
-          .toNumber();
+      //   const priceInCents = new Decimal(price)
+      //     .mul(100)
+      //     .toDecimalPlaces(0, Decimal.ROUND_HALF_UP)
+      //     .toNumber();
 
-        lineItems.push({
-          price_data: {
-            currency: "usd",
-            product_data: {
-              name: item.name,
-              // stripe doesn't like empty strings for the description
-              ...(description.length > 0 && { description }),
-            },
-            unit_amount: priceInCents,
-          },
-          quantity: 1,
-          // tax_rates: [""], // TODO: replace with production MN/St.Paul sales tax rate
-        });
-      }
+      //   lineItems.push({
+      //     price_data: {
+      //       currency: "usd",
+      //       product_data: {
+      //         name: item.name,
+      //         // stripe doesn't like empty strings for the description
+      //         ...(description.length > 0 && { description }),
+      //       },
+      //       unit_amount: priceInCents,
+      //     },
+      //     quantity: 1,
+      //     // tax_rates: [""], // TODO: replace with production MN/St.Paul sales tax rate
+      //   });
+      // }
 
+      // discounts: not currently being used
       // let discountToApply = {};
 
       // if (input.orderDetails.discountId) {
@@ -209,7 +210,10 @@ export const paymentRouter = createTRPCRouter({
 
       // TODO: associate proper 0-tax rate with tips
       // TODO: verify process and correctness of tip calculation logic
-      let tipValue = new Decimal(input.orderDetails.tipValue);
+      // Convert initial tip value from dollars to cents
+      let tipValue = new Decimal(input.orderDetails.tipValue)
+        .mul(100)
+        .toDecimalPlaces(0, Decimal.ROUND_HALF_UP);
 
       if (
         input.orderDetails.tipPercentage === 10 ||
@@ -218,29 +222,29 @@ export const paymentRouter = createTRPCRouter({
         (input.orderDetails.tipPercentage === null &&
           input.orderDetails.tipValue !== 0)
       ) {
-        // calculate subtotal of order to apply tip percentage to
-        if (input.orderDetails.tipPercentage !== null) {
-          const subtotal = lineItems.reduce((acc, item) => {
-            return acc.add(
-              new Decimal(item.price_data.unit_amount)
-                .div(100)
-                .mul(item.quantity),
-            );
-          }, new Decimal(0));
+        // Calculate subtotal of order in cents
+        const subtotalInCents = lineItems.reduce((acc, item) => {
+          return acc.add(
+            new Decimal(item.price_data.unit_amount).mul(item.quantity),
+          );
+        }, new Decimal(0));
 
-          tipValue = subtotal.mul(input.orderDetails.tipPercentage).div(100);
+        // If tip percentage is provided, calculate tip value in cents
+        if (input.orderDetails.tipPercentage !== null) {
+          tipValue = subtotalInCents
+            .mul(input.orderDetails.tipPercentage)
+            .div(100)
+            .toDecimalPlaces(0, Decimal.ROUND_HALF_UP);
         }
 
+        // Prepare the tip line item
         lineItems.push({
           price_data: {
             currency: "usd",
             product_data: {
               name: `Tip${input.orderDetails.tipPercentage !== null ? ` (${input.orderDetails.tipPercentage}%)` : ""}`,
             },
-            unit_amount: tipValue
-              .mul(100)
-              .toDecimalPlaces(0, Decimal.ROUND_HALF_UP)
-              .toNumber(),
+            unit_amount: tipValue.toNumber(), // `tipValue` is now in cents
           },
           quantity: 1,
           // tax_rates: ["txr_1PIgFbKPndF2uHGQrW0TnYca"], // TODO: replace with production tax-free rate
@@ -256,14 +260,14 @@ export const paymentRouter = createTRPCRouter({
           // @ts-expect-error details is just json object
           details: {
             ...input.orderDetails,
-            tipValue: tipValue.toNumber(), // reminder: this is the calculated, final tip value
+            tipValue: tipValue.toNumber(), // reminder: this is the calculated, final tip value in cents
           } as unknown as Record<string, unknown>,
         },
         update: {
           // @ts-expect-error details is just json object
           details: {
             ...input.orderDetails,
-            tipValue: tipValue.toNumber(), // reminder: this is the calculated, final tip value
+            tipValue: tipValue.toNumber(), // reminder: this is the calculated, final tip value in cents
           } as unknown as Record<string, unknown>,
         },
       });

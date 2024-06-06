@@ -80,6 +80,7 @@ export const validateOrderRouter = createTRPCRouter({
       //    - if an item is a point reward, it should be checked if the user has enough points to
       //      redeem the reward. If they aren't a user, remove the item from the order. If they don't
       //      have enough points, remove the pointReward flag from the item.
+      //    - redeeming a reward conversion ratio: item price (in cents) multiplied by 2
       //    - if validatingAReorder is true, the item should be kept in the order, but it's pointReward
       //      and birthdayReward should be set to false
 
@@ -226,30 +227,30 @@ export const validateOrderRouter = createTRPCRouter({
         }
 
         // Discount
-        if (item.discountId) {
-          const now = toZonedTime(new Date(), "America/Chicago");
+        // if (item.discountId) {
+        //   const now = toZonedTime(new Date(), "America/Chicago");
 
-          const dbDiscount = await ctx.prisma.discount.findFirst({
-            where: {
-              id: item.discountId,
-              expirationDate: {
-                gt: now,
-              },
-              active: true,
-            },
-          });
+        //   const dbDiscount = await ctx.prisma.discount.findFirst({
+        //     where: {
+        //       id: item.discountId,
+        //       expirationDate: {
+        //         gt: now,
+        //       },
+        //       active: true,
+        //     },
+        //   });
 
-          if (!dbDiscount) {
-            item.discountId = null;
-          } else if (
-            dbDiscount.name.includes("Points") ||
-            dbDiscount.name.includes("Birthday")
-          ) {
-            if (dbDiscount.userId !== userId) {
-              item.discountId = null;
-            }
-          }
-        }
+        //   if (!dbDiscount) {
+        //     item.discountId = null;
+        //   } else if (
+        //     dbDiscount.name.includes("Points") ||
+        //     dbDiscount.name.includes("Birthday")
+        //   ) {
+        //     if (dbDiscount.userId !== userId) {
+        //       item.discountId = null;
+        //     }
+        //   }
+        // }
 
         // If an item was a point reward or birthday reward, we (tentatively) are going to
         // still keep it in the order, but set it's values of pointReward and birthdayReward to false
@@ -262,7 +263,7 @@ export const validateOrderRouter = createTRPCRouter({
             // check if the user has enough points to redeem the point reward
             if (item.pointReward) {
               const itemRewardPoints = new Decimal(item.price)
-                .div(0.005)
+                .mul(2) // item price (in cents) multiplied by 2
                 .toNumber();
 
               const user = await ctx.prisma.user.findFirst({

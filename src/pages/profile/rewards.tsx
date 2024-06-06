@@ -886,7 +886,8 @@ function RewardMenuItem({
 
     if (
       currentlySelectedRewardId !== menuItem.id ||
-      userAvailablePoints < new Decimal(menuItem.price).div(0.005).toNumber() ||
+      // conversion: item price (in cents) multiplied by 2
+      userAvailablePoints < new Decimal(menuItem.price).mul(2).toNumber() ||
       !menuItem.available
     ) {
       return true;
@@ -918,7 +919,10 @@ function RewardMenuItem({
               </p>
             ) : (
               <p className="max-w-48 text-wrap text-left text-stone-400">
-                {new Decimal(menuItem.price).div(0.005).toNumber()} points
+                {new Decimal(menuItem.price)
+                  .mul(2) // item price (in cents) multiplied by 2
+                  .toNumber()}{" "}
+                points
               </p>
             )}
 
@@ -965,10 +969,13 @@ function RewardMenuItem({
               return;
             }
 
+            const rewardItemPointsCost = new Decimal(menuItem.price)
+              .mul(2) // item price (in cents) multiplied by 2
+              .toNumber();
+
             if (
               !forBirthdayReward &&
-              userAvailablePoints <
-                new Decimal(menuItem.price).div(0.005).toNumber()
+              userAvailablePoints < rewardItemPointsCost
             ) {
               toast({
                 variant: "default",

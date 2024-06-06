@@ -964,7 +964,7 @@ function CartSheet({
                                   {item.pointReward ? (
                                     <>
                                       {new Decimal(item.price)
-                                        .div(0.005)
+                                        .mul(2) // item price (in cents) multiplied by 2
                                         .toNumber()}{" "}
                                       points
                                     </>
@@ -1313,7 +1313,7 @@ function CartSheet({
                 )} */}
 
               <div className="baseFlex w-full !justify-between text-sm">
-                <p>Tax</p>
+                <p>Est. tax</p>
                 <AnimatedPrice price={formatPrice(orderCost.tax)} />
               </div>
 

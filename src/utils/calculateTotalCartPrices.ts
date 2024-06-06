@@ -20,7 +20,7 @@ export function calculateTotalCartPrices({
   customizationChoices,
   discounts,
 }: CalculateTotalCartPrices) {
-  const relativeTotal = new Decimal(
+  const subtotal = new Decimal(
     calculateRelativeTotal({
       items,
       customizationChoices,
@@ -37,8 +37,8 @@ export function calculateTotalCartPrices({
   //   const spendXSaveY = new Decimal(5);
   //   const spendX = new Decimal(35);
 
-  //   if (relativeTotal.gte(spendX)) {
-  //     relativeTotal = relativeTotal.sub(spendXSaveY);
+  //   if (subtotal.gte(spendX)) {
+  //     subtotal = subtotal.sub(spendXSaveY);
   //   }
   // }
 
@@ -46,14 +46,16 @@ export function calculateTotalCartPrices({
 
   // if tip is a percentage, calculate it here
   if (tipPercentage !== null) {
-    calculatedTipValue = relativeTotal.mul(tipPercentage / 100);
+    const decimalTipPercentage = new Decimal(tipPercentage).div(100);
+
+    calculatedTipValue = subtotal.mul(decimalTipPercentage);
   }
 
-  const tax = relativeTotal.mul(0.08375);
-  const total = relativeTotal.add(tax).add(calculatedTipValue);
+  const tax = subtotal.mul(0.08375);
+  const total = subtotal.add(tax).add(calculatedTipValue);
 
   return {
-    subtotal: relativeTotal.toNumber(),
+    subtotal: subtotal.toNumber(),
     tax: tax.toNumber(),
     tip: calculatedTipValue.toNumber(),
     total: total.toNumber(),

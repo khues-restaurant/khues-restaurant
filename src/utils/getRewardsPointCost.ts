@@ -15,7 +15,7 @@ export function getRewardsPointCost({ items }: GetRewardsPointCost) {
   if (rewardItem) {
     const price = new Decimal(rewardItem.price);
 
-    const points = price.div(0.005);
+    const points = price.mul(2); // item price (in cents) multiplied by 2
 
     return points.toNumber();
   }

@@ -391,7 +391,8 @@ function RewardMenuItem({
     if (currentlySelectedRewardId === null) return false;
 
     if (
-      userAvailablePoints < new Decimal(menuItem.price).div(0.005).toNumber() ||
+      // conversion: item price (in cents) multiplied by 2
+      userAvailablePoints < new Decimal(menuItem.price).mul(2).toNumber() ||
       !menuItem.available ||
       currentlySelectedRewardId !== menuItem.id
     ) {
@@ -421,7 +422,10 @@ function RewardMenuItem({
             {/* Point cost for item */}
             {!forBirthdayReward && (
               <p className="max-w-48 text-wrap text-left text-stone-400">
-                {new Decimal(menuItem.price).div(0.005).toNumber()} points
+                {new Decimal(menuItem.price)
+                  .mul(2) // item price (in cents) multiplied by 2
+                  .toNumber()}{" "}
+                points
               </p>
             )}
 
@@ -465,10 +469,11 @@ function RewardMenuItem({
               return;
             }
 
-            if (
-              userAvailablePoints <
-              new Decimal(menuItem.price).div(0.005).toNumber()
-            ) {
+            const rewardItemPointsCost = new Decimal(menuItem.price)
+              .mul(2) // item price (in cents) multiplied by 2
+              .toNumber();
+
+            if (userAvailablePoints < rewardItemPointsCost) {
               toast({
                 variant: "default",
                 description: `You don't have enough points to redeem this item.`,

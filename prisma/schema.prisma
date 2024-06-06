@@ -7,6 +7,8 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+// FYI: all prices/finacial fields are stored in cents to avoid floating point errors
+
 model BlacklistedEmail {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
@@ -102,8 +104,8 @@ model MenuItem {
     name         String
     description  String
     imageUrl     String
-    price        Float
-    altPrice     Float? // used for singular glass pricing of wine/beer
+    price        Int
+    altPrice     Int? // used for singular glass pricing of wine/beer
     available    Boolean @default(true) // whether item is able to be ordered (86'd or not)
     discontinued Boolean @default(false) // whether item is no longer on the menu
     listOrder    Int     @default(autoincrement())
@@ -145,7 +147,7 @@ model CustomizationChoice {
     id              String  @id @default(uuid())
     name            String // e.g., "Small", "Medium", "Large" for Size
     description     String // e.g., "12 oz", "16 oz", "20 oz" for Size, or description of side dish if applicable
-    priceAdjustment Float // Additional cost for this choice, can be negative
+    priceAdjustment Int // Additional cost for this choice, can be negative
     isAvailable     Boolean @default(true)
     listOrder       Int     @default(autoincrement())
 
@@ -189,7 +191,7 @@ model OrderItem {
     specialInstructions        String
     includeDietaryRestrictions Boolean
     quantity                   Int
-    price                      Float
+    price                      Int
 
     order      Order    @relation(fields: [orderId], references: [id])
     orderId    String
@@ -248,11 +250,11 @@ model Order {
     discount   Discount?   @relation(fields: [discountId], references: [id])
     discountId String?
 
-    subtotal      Float
-    tax           Float
+    subtotal      Int
+    tax           Int
     tipPercentage Int?
-    tipValue      Float
-    total         Float
+    tipValue      Int
+    total         Int
 
     prevRewardsPoints   Int
     earnedRewardsPoints Int
