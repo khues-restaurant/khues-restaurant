@@ -1153,7 +1153,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             Explore Our Favorites
           </p>
 
-          <div className="baseVertFlex w-full gap-4">
+          <div className="baseVertFlex relative w-full gap-4 overflow-hidden rounded-md">
             <Carousel
               setApi={setChefSpecialsApi}
               opts={{
@@ -1168,7 +1168,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                 // dragFree: true,
                 // skipSnaps: true, play around with this
               }}
-              className="baseFlex w-full rounded-md border shadow-sm"
+              className="baseFlex w-full rounded-md border bg-gradient-to-br from-offwhite to-primary/10 shadow-md"
             >
               <CarouselContent>
                 {ourFavoriteMenuItems?.map((menuItem) => (
@@ -1181,6 +1181,9 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                 ))}
               </CarouselContent>
             </Carousel>
+
+            <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
+            <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-primary/50" />
 
             <div className="baseFlex gap-2">
               <Button asChild>
