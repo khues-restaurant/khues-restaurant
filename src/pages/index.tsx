@@ -1290,6 +1290,8 @@ function OurFavoriteMenuItemCard({ menuItem }: OurFavoriteMenuItemCard) {
       <p className="font-semibold">{menuItem.name}</p>
       <p className="line-clamp-3 text-sm">{menuItem.description}</p>
       <Button
+        disabled={!menuItem.available}
+        className="w-full"
         onClick={() => {
           // set prev order details so we can revert if necessary
           // with toast's undo button
