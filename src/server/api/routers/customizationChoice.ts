@@ -7,7 +7,7 @@ import { z } from "zod";
 import {
   createTRPCRouter,
   publicProcedure,
-  protectedProcedure,
+  adminProcedure,
 } from "~/server/api/trpc";
 
 export type CustomizationChoiceAndCategory = CustomizationChoice & {
@@ -33,7 +33,7 @@ export const customizationChoiceRouter = createTRPCRouter({
     return formattedCustomizationChoices;
   }),
 
-  changeAvailability: protectedProcedure
+  changeAvailability: adminProcedure
     .input(z.object({ id: z.string(), isAvailable: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       const menuCategories = await ctx.prisma.customizationChoice.update({

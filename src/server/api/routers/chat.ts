@@ -4,6 +4,7 @@ import {
   createTRPCRouter,
   publicProcedure,
   protectedProcedure,
+  adminProcedure,
 } from "~/server/api/trpc";
 
 export const chatRouter = createTRPCRouter({
@@ -101,6 +102,9 @@ export const chatRouter = createTRPCRouter({
       });
     }),
 
+  // revisit whether this should throw an error if userId doesn't match
+  // ctx.auth.userId, unsure of if it would potentially cause issues with a
+  // optimistic UI refactor later
   getMessagesPerUser: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input: userId }) => {
@@ -119,7 +123,7 @@ export const chatRouter = createTRPCRouter({
       });
     }),
 
-  getAllMessages: protectedProcedure.query(async ({ ctx }) => {
+  getAllMessages: adminProcedure.query(async ({ ctx }) => {
     return ctx.prisma.chat.findMany({
       include: {
         messages: {

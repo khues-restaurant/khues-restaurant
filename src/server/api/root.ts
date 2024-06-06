@@ -26,13 +26,14 @@ export const appRouter = createTRPCRouter({
   minimumOrderPickupTime: minimumOrderPickupTimeRouter,
   customizationCategory: customizationCategoryRouter,
   customizationChoice: customizationChoiceRouter,
-  discount: discountRouter,
   validateOrder: validateOrderRouter,
   review: reviewRouter,
   favorite: favoriteRouter,
   chat: chatRouter,
   blacklistedEmail: blacklistedEmailRouter,
   orderPrintQueue: orderPrintQueueRouter,
+
+  discount: discountRouter, // currently not being used
 });
 
 // export type definition of API

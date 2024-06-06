@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "~/server/api/trpc";
 
 export const reviewRouter = createTRPCRouter({
   create: protectedProcedure
@@ -13,6 +17,10 @@ export const reviewRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      if (input.userId !== ctx.auth.userId) {
+        throw new Error("Unauthorized");
+      }
+
       return ctx.prisma.review.create({
         data: {
           userId: input.userId,
@@ -23,7 +31,7 @@ export const reviewRouter = createTRPCRouter({
       });
     }),
 
-  getAll: protectedProcedure.query(async ({ ctx }) => {
+  getAll: adminProcedure.query(async ({ ctx }) => {
     return ctx.prisma.review.findMany({
       include: {
         order: true, // TODO: prob need the customizations here too but not right now

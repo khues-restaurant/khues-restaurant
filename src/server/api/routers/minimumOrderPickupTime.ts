@@ -3,7 +3,7 @@ import { z } from "zod";
 import {
   createTRPCRouter,
   publicProcedure,
-  protectedProcedure,
+  adminProcedure,
 } from "~/server/api/trpc";
 
 export const minimumOrderPickupTimeRouter = createTRPCRouter({
@@ -14,7 +14,7 @@ export const minimumOrderPickupTimeRouter = createTRPCRouter({
       },
     });
   }),
-  set: protectedProcedure.input(z.date()).mutation(async ({ ctx, input }) => {
+  set: adminProcedure.input(z.date()).mutation(async ({ ctx, input }) => {
     return ctx.prisma.minimumOrderPickupTime.update({
       where: {
         id: 1,

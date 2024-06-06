@@ -28,7 +28,7 @@ export const userRouter = createTRPCRouter({
           userId,
         },
         select: {
-          userId: true, // could have selected anything, just want easy reduction of payload
+          userId: true, // prisma throws runtime error if select is empty
         },
       });
 
@@ -194,20 +194,115 @@ export const userRouter = createTRPCRouter({
       return rewards?.discounts;
     }),
 
-  update: protectedProcedure
+  updateOrder: protectedProcedure
     .input(
       z.object({
         userId: z.string().min(1).max(100),
-        email: z.string().email(),
-        firstName: z.string().min(1).max(100),
-        lastName: z.string().min(1).max(100),
-        phoneNumber: z.string().regex(/^\(\d{3}\) \d{3}-\d{4}$/),
-        birthday: z.date(),
-        dietaryRestrictions: z.string().max(100),
         currentOrder: orderDetailsSchema,
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      if (input.userId !== ctx.auth.userId) {
+        throw new Error("Unauthorized");
+      }
+
+      return ctx.prisma.user.update({
+        where: {
+          userId: input.userId,
+        },
+        data: {
+          currentOrder: input.currentOrder,
+        },
+      });
+    }),
+
+  updatePreferences: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string().min(1).max(100),
+        firstName: z
+          .string({
+            required_error: "First name cannot be empty",
+          })
+          .min(1, { message: "Must be at least 1 character" })
+          .max(30, { message: "Must be at most 30 characters" })
+          .refine((value) => /^[A-Za-z'-]+$/.test(value), {
+            message:
+              "Only English characters, hyphens, and apostrophes are allowed",
+          })
+          .refine((value) => !/[^\u0000-\u007F]/.test(value), {
+            message: "No non-ASCII characters are allowed",
+          })
+          .refine((value) => !/[\p{Emoji}]/u.test(value), {
+            message: "No emojis are allowed",
+          })
+          .transform((value) => value.trim()) // Remove leading and trailing whitespace
+          .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,
+        lastName: z
+          .string({
+            required_error: "Last name cannot be empty",
+          })
+          .min(1, { message: "Must be at least 1 character" })
+          .max(30, { message: "Must be at most 30 characters" })
+          .refine((value) => /^[A-Za-z'-]+$/.test(value), {
+            message:
+              "Only English characters, hyphens, and apostrophes are allowed",
+          })
+          .refine((value) => !/[^\u0000-\u007F]/.test(value), {
+            message: "No non-ASCII characters are allowed",
+          })
+          .refine((value) => !/[\p{Emoji}]/u.test(value), {
+            message: "No emojis are allowed",
+          })
+          .transform((value) => value.trim()) // Remove leading and trailing whitespace
+          .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,
+        phoneNumber: z
+          .string({
+            required_error: "Phone number cannot be empty",
+          })
+          .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Invalid phone number format")
+          .refine(
+            async (phoneNumber) => {
+              // TODO: do this later, but should be very possible to query users model to see if phone number is unique. I don't think any special authentication logic is desired/needed here
+
+              const isUnique = true; // Replace with actual check
+              return isUnique;
+            },
+            {
+              message: "Phone number must be unique",
+            },
+          ),
+
+        dietaryRestrictions: z
+          .string()
+          .max(100, { message: "Must be at most 100 characters" })
+          .refine(
+            (value) => /^[A-Za-z0-9\s\-';.,!?:"(){}\[\]/\\_@]*$/.test(value),
+            {
+              message: "Invalid characters were found",
+            },
+          )
+          .refine((value) => !/[^\u0000-\u007F]/.test(value), {
+            message: "No non-ASCII characters are allowed",
+          })
+          .transform((value) => value.trim()) // Remove leading and trailing whitespace
+          .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,,
+
+        allowsEmailReceipts: z.boolean(),
+        allowsOrderCompleteEmails: z.boolean(),
+        allowsPromotionalEmails: z.boolean(),
+        allowsRewardAvailabilityReminderEmails: z.boolean(),
+
+        // these fields will be disabled but just to be safe
+        email: z.string().email(),
+        birthday: z.date(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.userId !== ctx.auth.userId) {
+        throw new Error("Unauthorized");
+      }
+
       return ctx.prisma.user.update({
         where: {
           userId: input.userId,
@@ -218,34 +313,13 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
-  // prob refactor this, just didn't want to send over the current order through this
-  // just wanted it to be localized
-  updatePreferences: protectedProcedure
-    .input(
-      z.object({
-        userId: z.string().min(1).max(100),
-        email: z.string().email(),
-        firstName: z.string().min(1).max(100),
-        lastName: z.string().min(1).max(100),
-        phoneNumber: z.string().regex(/^\(\d{3}\) \d{3}-\d{4}$/),
-        birthday: z.date(),
-        dietaryRestrictions: z.string().max(100),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.user.update({
-        where: {
-          userId: input.userId,
-        },
-        data: {
-          dietaryRestrictions: input.dietaryRestrictions,
-        },
-      });
-    }),
-
   delete: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input: userId }) => {
+      if (userId !== ctx.auth.userId) {
+        throw new Error("Unauthorized");
+      }
+
       await clerkClient.users.deleteUser(userId);
 
       return ctx.prisma.user.delete({

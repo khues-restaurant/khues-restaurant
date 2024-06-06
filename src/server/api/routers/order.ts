@@ -11,6 +11,7 @@ import {
   createTRPCRouter,
   publicProcedure,
   protectedProcedure,
+  adminProcedure,
 } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
 import type Decimal from "decimal.js";
@@ -144,6 +145,10 @@ export const orderRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
+      if (input.userId !== ctx.auth.userId) {
+        throw new Error("Unauthorized");
+      }
+
       const recentOrders = await ctx.prisma.order.findMany({
         where: {
           userId: input.userId,
@@ -200,7 +205,7 @@ export const orderRouter = createTRPCRouter({
       });
     }),
 
-  getTodaysOrders: protectedProcedure.query(async ({ ctx }) => {
+  getTodaysOrders: adminProcedure.query(async ({ ctx }) => {
     return ctx.prisma.order.findMany({
       // Uncomment and adjust according to your requirements
       // where: {
@@ -218,7 +223,7 @@ export const orderRouter = createTRPCRouter({
       },
     });
   }),
-  startOrder: protectedProcedure
+  startOrder: adminProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.order.update({
@@ -248,7 +253,7 @@ export const orderRouter = createTRPCRouter({
         socket.close();
       });
     }),
-  completeOrder: protectedProcedure
+  completeOrder: adminProcedure
     .input(
       z.object({
         id: z.string(),

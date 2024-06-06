@@ -17,6 +17,11 @@
 import { getAuth } from "@clerk/nextjs/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { prisma } from "~/server/db";
+import { clerkClient } from "@clerk/nextjs/server";
+import { initTRPC, TRPCError } from "@trpc/server";
+import superjson from "superjson";
+import { ZodError } from "zod";
+
 interface AuthContext {
   auth: ReturnType<typeof getAuth>;
 }
@@ -55,9 +60,6 @@ export const createTRPCContext = (opts: CreateNextContextOptions) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-import { initTRPC, TRPCError } from "@trpc/server";
-import superjson from "superjson";
-import { ZodError } from "zod";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -85,6 +87,32 @@ const isAuthed = t.middleware(({ next, ctx }) => {
     },
   });
 });
+
+// check if the user is an admin, otherwise throw an UNAUTHORIZED CODE
+const isAdmin = t.middleware(async ({ next, ctx }) => {
+  const userId = ctx.auth.userId;
+
+  if (!userId) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  const user = await clerkClient.users.getUser(userId);
+
+  if (!user.privateMetadata) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  if (user.privateMetadata.role !== "admin") {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  return next({
+    ctx: {
+      auth: ctx.auth,
+    },
+  });
+});
+
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
  *
@@ -108,3 +136,4 @@ export const createTRPCRouter = t.router;
  */
 export const publicProcedure = t.procedure;
 export const protectedProcedure = t.procedure.use(isAuthed);
+export const adminProcedure = t.procedure.use(isAdmin);

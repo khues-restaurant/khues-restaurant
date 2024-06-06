@@ -11,14 +11,8 @@ interface UpdateOrder {
   newOrderDetails: OrderDetails;
 }
 
-interface UpdateUserData {
+interface UpdateUserOrderDetails {
   userId: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  birthday: Date;
-  dietaryRestrictions: string;
   currentOrder: OrderDetails;
 }
 
@@ -40,13 +34,13 @@ function useUpdateOrder() {
   const { data: user } = api.user.get.useQuery(userId, {
     enabled: Boolean(userId && isSignedIn),
   });
-  const { mutate: updateUser } = api.user.update.useMutation();
+  const { mutate: updateUser } = api.user.updateOrder.useMutation();
 
   const updateQueue = useRef<OrderDetails[]>([]);
 
   const debouncedUpdateUser = useRef(
-    debounce((updatedUserData: UpdateUserData) => {
-      updateUser(updatedUserData);
+    debounce((newOrderDetails: UpdateUserOrderDetails) => {
+      updateUser(newOrderDetails);
     }, 3000),
   ).current;
 
@@ -56,7 +50,7 @@ function useUpdateOrder() {
 
       if (user && orderDetails) {
         debouncedUpdateUser({
-          ...user,
+          userId: user.userId,
           currentOrder: orderDetails,
         });
       }

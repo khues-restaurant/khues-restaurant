@@ -236,7 +236,7 @@ function Preferences() {
     setSaveButtonText("Saving");
 
     updateUser({
-      ...user,
+      userId: user.userId,
       ...values,
     });
   }
@@ -362,7 +362,7 @@ function Preferences() {
                               First name
                             </FormLabel>
                             <FormControl>
-                            <Input placeholder="First name" {...field} />
+                              <Input placeholder="First name" {...field} />
                             </FormControl>
                           </div>
                           <AnimatePresence>
@@ -402,7 +402,7 @@ function Preferences() {
                               Last name
                             </FormLabel>
                             <FormControl>
-                            <Input placeholder="Last name" {...field} />
+                              <Input placeholder="Last name" {...field} />
                             </FormControl>
                           </div>
                           <AnimatePresence>
@@ -445,16 +445,16 @@ function Preferences() {
                               Phone number
                             </FormLabel>
                             <FormControl>
-                            <Input
-                              ref={ref}
-                              value={formatPhoneNumber(value)}
-                              onChange={(e) =>
-                                onChange(formatPhoneNumber(e.target.value))
-                              }
-                              onBlur={onBlur}
-                              placeholder="(123) 456-7890"
-                              type={"tel"}
-                            />
+                              <Input
+                                ref={ref}
+                                value={formatPhoneNumber(value)}
+                                onChange={(e) =>
+                                  onChange(formatPhoneNumber(e.target.value))
+                                }
+                                onBlur={onBlur}
+                                placeholder="(123) 456-7890"
+                                type={"tel"}
+                              />
                             </FormControl>
                           </div>
                           <AnimatePresence>
@@ -493,7 +493,7 @@ function Preferences() {
                               Email
                             </FormLabel>
                             <FormControl>
-                            <Input placeholder="Email" {...field} disabled />
+                              <Input placeholder="Email" {...field} disabled />
                             </FormControl>
                             <FaLock className="absolute bottom-3 right-2 size-3.5 text-stone-300" />
                           </div>
@@ -533,11 +533,11 @@ function Preferences() {
                               Birthday
                             </FormLabel>
                             <FormControl>
-                            <Input
-                              {...field}
-                              value={format(field.value, "PPP")}
-                              disabled
-                            />
+                              <Input
+                                {...field}
+                                value={format(field.value, "PPP")}
+                                disabled
+                              />
                             </FormControl>
 
                             <FaLock className="absolute bottom-3 right-2 size-3.5 text-stone-300" />

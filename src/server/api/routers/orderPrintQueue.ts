@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, adminProcedure } from "~/server/api/trpc";
 
 export const orderPrintQueueRouter = createTRPCRouter({
-  create: protectedProcedure
+  create: adminProcedure
     .input(
       z.object({
         orderId: z.string(),

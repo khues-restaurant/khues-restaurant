@@ -1,10 +1,6 @@
 import { z } from "zod";
 
-import {
-  createTRPCRouter,
-  publicProcedure,
-  protectedProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const transientOrderRouter = createTRPCRouter({
   create: publicProcedure
@@ -35,16 +31,6 @@ export const transientOrderRouter = createTRPCRouter({
     .input(z.string())
     .query(async ({ ctx, input: userId }) => {
       return ctx.prisma.transientOrder.findFirst({
-        where: {
-          userId,
-        },
-      });
-    }),
-
-  delete: protectedProcedure
-    .input(z.string())
-    .mutation(async ({ ctx, input: userId }) => {
-      return ctx.prisma.transientOrder.delete({
         where: {
           userId,
         },
