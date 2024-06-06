@@ -320,6 +320,58 @@ export const userRouter = createTRPCRouter({
         throw new Error("Unauthorized");
       }
 
+      // Delete user's favorite items
+      await ctx.prisma.favoriteItem.deleteMany({
+        where: {
+          userId,
+        },
+      });
+
+      // Delete user's chat messages
+      await ctx.prisma.chatMessage.deleteMany({
+        where: {
+          senderId: userId,
+        },
+      });
+
+      // Delete user's transient order
+      await ctx.prisma.transientOrder.delete({
+        where: {
+          userId,
+        },
+      });
+
+      // Anonymize user's personal information in each of their orders
+      await ctx.prisma.order.updateMany({
+        where: {
+          userId,
+        },
+        data: {
+          userId: null,
+          email: "Anonymous",
+          firstName: "Anonymous",
+          lastName: "Anonymous",
+          phoneNumber: "Anonymous",
+        },
+      });
+
+      // Delete user's rewards
+      await ctx.prisma.reward.deleteMany({
+        where: {
+          userId,
+        },
+      });
+
+      // discounts aren't currently part of the prod plan, so omitting here
+
+      const user = await ctx.prisma.user.findFirst({
+        where: {
+          userId,
+        },
+      });
+
+      if (user) await stripe.customers.del(user.stripeUserId);
+
       await clerkClient.users.deleteUser(userId);
 
       return ctx.prisma.user.delete({
