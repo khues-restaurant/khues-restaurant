@@ -620,11 +620,13 @@ function CartSheet({
                         <FormLabel className="text-nowrap font-semibold">
                           Pickup name
                         </FormLabel>
-                        <Input
-                          {...field}
-                          placeholder="John Smith"
-                          className="w-[200px]"
-                        />
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="John Smith"
+                            className="w-[200px]"
+                          />
+                        </FormControl>
                       </div>
                       <AnimatePresence>
                         {invalid && (
@@ -724,7 +726,7 @@ function CartSheet({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="baseVertFlex size-full gap-4 p-4"
+              className="baseVertFlex size-full gap-4 px-4 py-24"
             >
               <p className="text-lg font-semibold">Your order is empty</p>
               <p className="w-64 text-center">
@@ -734,7 +736,6 @@ function CartSheet({
           ) : (
             <motion.div
               key={"cartSheetItemsCard"}
-              layout={"position"}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -869,7 +870,7 @@ function CartSheet({
                         </div>
 
                         <div className="baseVertFlex !items-end">
-                          <div className="baseFlex gap-2">
+                          <div className="baseFlex gap-2 leading-8">
                             {item.discountId && (
                               <div className="baseFlex gap-2 rounded-md bg-primary px-2 py-0.5 text-xs font-semibold text-offwhite">
                                 <p>{discounts[item.discountId]?.name}</p>
@@ -1369,7 +1370,6 @@ function CartSheet({
               <AnimatePresence mode={"popLayout"}>
                 <motion.div
                   key={`cartSheet-${checkoutButtonText}`}
-                  layout
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}

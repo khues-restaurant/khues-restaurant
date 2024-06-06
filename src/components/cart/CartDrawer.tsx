@@ -506,7 +506,7 @@ function CartDrawer({
               name="dateToPickup"
               render={({ field, fieldState: { invalid, error } }) => (
                 <FormItem className="baseVertFlex relative !items-start space-y-0">
-                  <div className="baseFlex gap-4">
+                  <div className="baseFlex gap-6">
                     <FormLabel className="font-semibold">Pickup date</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
@@ -527,7 +527,7 @@ function CartDrawer({
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
+                      <PopoverContent className="mr-6 w-auto p-0">
                         <Calendar
                           mode="single"
                           disabled={getDisabledDates()}
@@ -569,7 +569,7 @@ function CartDrawer({
               name="timeToPickup"
               render={({ field, fieldState: { invalid, error } }) => (
                 <FormItem className="baseVertFlex relative !items-start space-y-0">
-                  <div className="baseFlex gap-4">
+                  <div className="baseFlex gap-6">
                     <FormLabel className="font-semibold">Pickup time</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
@@ -626,15 +626,17 @@ function CartDrawer({
               name="pickupName"
               render={({ field, fieldState: { invalid, error } }) => (
                 <FormItem className="baseVertFlex relative !items-start space-y-0">
-                  <div className="baseFlex gap-2">
+                  <div className="baseFlex gap-4">
                     <FormLabel className="text-nowrap font-semibold">
                       Pickup name
                     </FormLabel>
-                    <Input
-                      {...field}
-                      placeholder="John Smith"
-                      className="w-[200px]"
-                    />
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="John Smith"
+                        className="w-[200px]"
+                      />
+                    </FormControl>
                   </div>
                   <AnimatePresence>
                     {invalid && (
@@ -738,7 +740,7 @@ function CartDrawer({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="baseVertFlex my-8 w-full gap-4 p-4"
+              className="baseVertFlex my-8 w-full gap-4 px-4 py-16"
             >
               <p className="text-lg font-semibold">Your order is empty</p>
               <p className="w-64 text-center">
@@ -748,12 +750,11 @@ function CartDrawer({
           ) : (
             <motion.div
               key={"cartDrawerItemsCard"}
-              layout
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="baseVertFlex w-full !items-start !justify-start gap-2 px-4 pb-24"
+              className="baseVertFlex w-full !items-start !justify-start gap-2 px-4 pb-36"
             >
               <div className="baseVertFlex w-full !justify-start">
                 <AnimatePresence>
@@ -883,7 +884,7 @@ function CartDrawer({
                         </div>
 
                         <div className="baseVertFlex !items-end">
-                          <div className="baseFlex gap-2">
+                          <div className="baseFlex gap-2 leading-8">
                             {item.discountId && (
                               <div className="baseFlex gap-2 rounded-md bg-primary px-2 py-0.5 text-xs font-semibold text-offwhite">
                                 <p>{discounts[item.discountId]?.name}</p>
