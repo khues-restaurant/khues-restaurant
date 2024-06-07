@@ -348,9 +348,9 @@ function ItemCustomizationDrawer({
               </AccordionTrigger>
 
               <AccordionContent>
-                <div className="baseVertFlex relative mt-4 w-full !items-start gap-2 p-1">
+                <div className="baseVertFlex relative w-full !items-start gap-2 p-1">
                   {user && user.dietaryRestrictions.length > 0 && (
-                    <div className="baseFlex gap-2 !self-start">
+                    <div className="baseFlex mt-4 gap-2 !self-start">
                       <Switch
                         id="allergySwitch"
                         checked={
@@ -363,7 +363,10 @@ function ItemCustomizationDrawer({
                           }))
                         }
                       />
-                      <Label htmlFor="allergySwitch" className="text-xs">
+                      <Label
+                        htmlFor="allergySwitch"
+                        className="text-xs font-normal"
+                      >
                         Include your account&apos;s dietary preferences.
                       </Label>
                     </div>
