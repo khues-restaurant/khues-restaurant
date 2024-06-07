@@ -46,7 +46,7 @@ function AnimatedPrice({ price, excludeAnimatePresence }: AnimatedPrice) {
               ? 10
               : 0,
       }}
-      transition={{ duration: 0.25 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
       className="overflow-hidden"
     >
       {currentPrice}
