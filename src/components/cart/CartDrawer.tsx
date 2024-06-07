@@ -456,11 +456,11 @@ function CartDrawer({
           <LiaShoppingBagSolid className="h-6 w-6" />
           <p className="text-lg font-medium">Your order</p>
         </div>
-        <p className="baseFlex ml-1 h-4 gap-1.5 text-stone-600">
+        <span className="baseFlex ml-1 h-4 gap-1.5 text-stone-600">
           <AnimatedNumbers value={numberOfItems} fontSize={16} padding={0} />
 
           {`item${numberOfItems === 1 ? "" : "s"}`}
-        </p>
+        </span>
       </div>
 
       {/* location + date & time picker */}
