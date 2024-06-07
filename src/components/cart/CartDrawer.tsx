@@ -1068,7 +1068,7 @@ function CartDrawer({
         {/* dietary restrictions legend */}
         {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
         {orderDetails.items.some((item) => item.includeDietaryRestrictions) && (
-          <div className="baseFlex mb-2 w-full gap-2">
+          <div className="baseFlex mb-2 mt-auto w-full gap-2">
             <div className="size-2 shrink-0 rounded-full bg-primary/75" />
             <p className="text-nowrap text-xs">
               Item will be prepared according to your dietary restrictions
@@ -1123,7 +1123,7 @@ function CartDrawer({
             style={{
               paddingBottom,
             }}
-            className="baseVertFlex min-h-24 w-full gap-2 overflow-hidden border-t bg-gradient-to-br from-stone-200 to-stone-300 pt-2 shadow-inner xs:p-4 xs:pt-2"
+            className="baseVertFlex min-h-24 w-full gap-2 overflow-hidden border-t bg-gradient-to-br from-stone-200 to-stone-300 pt-2 shadow-inner xs:px-4 xs:pb-3"
           >
             {/* tip form */}
             <div
@@ -1307,7 +1307,7 @@ function CartDrawer({
             />
 
             <div className="baseVertFlex w-full !justify-between gap-2 xs:!flex-row xs:gap-4">
-              <div className="baseVertFlex w-full px-8 xs:w-1/2 xs:px-0">
+              <div className="baseVertFlex mt-1 w-full px-8 xs:w-1/2 xs:px-0">
                 <div className="baseFlex w-full !justify-between text-sm">
                   <p>Subtotal</p>
                   <AnimatedPrice price={formatPrice(orderCost.subtotal)} />

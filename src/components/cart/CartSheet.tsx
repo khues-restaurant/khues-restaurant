@@ -1057,7 +1057,7 @@ function CartSheet({
         {/* dietary restrictions legend */}
         {/* is only rendered if there is an item with "includeDietaryRestrictions" */}
         {orderDetails.items.some((item) => item.includeDietaryRestrictions) && (
-          <div className="baseFlex mb-2 w-full gap-2 !self-end">
+          <div className="baseFlex mb-2 mt-auto w-full gap-2 !self-end">
             <div className="size-2 shrink-0 rounded-full bg-primary/75" />
             <p className="text-sm">
               Item will be prepared according to your dietary restrictions
@@ -1107,7 +1107,7 @@ function CartSheet({
           </div>
         </div>
 
-        <div className="baseVertFlex w-full gap-2 rounded-bl-xl border-t bg-gradient-to-br from-stone-200 to-stone-300 p-4 pt-2 shadow-inner">
+        <div className="baseVertFlex w-full gap-2 rounded-bl-xl border-t bg-gradient-to-br from-stone-200 to-stone-300 px-4 pb-3 pt-2 shadow-inner">
           {/* tip form */}
           <div
             className={`baseFlex w-full !justify-start gap-4 transition-all
@@ -1288,7 +1288,7 @@ function CartSheet({
 
           <div className="baseFlex w-full !justify-between">
             <div className="baseVertFlex w-1/2">
-              <div className="baseFlex w-full !justify-between text-sm">
+              <div className="baseFlex mt-1 w-full !justify-between text-sm">
                 <p>Subtotal</p>
                 <AnimatedPrice price={formatPrice(orderCost.subtotal)} />
               </div>
