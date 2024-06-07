@@ -31,6 +31,8 @@ const toastVariants = cva(
       variant: {
         default:
           "border bg-gradient-to-br from-primary to-darkPrimary text-offwhite",
+        neutral:
+          "border bg-gradient-to-br from-stone-400 to-stone-500 text-offwhite/90",
         destructive:
           "destructive group border-destructive bg-destructive text-destructive-foreground",
       },
@@ -62,32 +64,35 @@ const Toast = React.forwardRef<
       )}
       {...props}
     >
-      <motion.svg
-        key={`quickAddToOrderCheckmark`}
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        exit={{ scale: 0 }}
-        transition={{ duration: 0.3 }}
-        className="size-6 shrink-0 opacity-90"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={2}
-      >
-        <motion.path
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{
-            delay: 0.2,
-            type: "tween",
-            ease: "easeOut",
-            duration: 0.3,
-          }}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M5 13l4 4L19 7"
-        />
-      </motion.svg>
+      {variant === "default" && (
+        <motion.svg
+          key={`quickAddToOrderCheckmark`}
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          exit={{ scale: 0 }}
+          transition={{ duration: 0.3 }}
+          className="size-6 shrink-0 opacity-90"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <motion.path
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{
+              delay: 0.2,
+              type: "tween",
+              ease: "easeOut",
+              duration: 0.3,
+            }}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M5 13l4 4L19 7"
+          />
+        </motion.svg>
+      )}
+
       {props.children}
     </ToastPrimitives.Root>
   );
