@@ -8,6 +8,7 @@ export default async function handler(
 ) {
   try {
     const startOfDayInChicago = fromZonedTime(new Date(), "America/Chicago");
+    startOfDayInChicago.setHours(0, 0, 0, 0);
 
     await prisma.minimumOrderPickupTime.update({
       where: {
