@@ -39,7 +39,7 @@ function PaymentSuccess({
       setOrderHasBeenAcknowledged(true);
 
       setTimeout(() => {
-        // push(`/track?id=${order.id}`).catch(console.error);
+        push(`/track?id=${order.id}`).catch(console.error);
       }, 3000);
     }
   }, [
