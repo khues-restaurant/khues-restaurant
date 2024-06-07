@@ -64,7 +64,7 @@ const Toast = React.forwardRef<
       )}
       {...props}
     >
-      {variant === "default" && (
+      {(variant === "default" || variant === undefined) && (
         <motion.svg
           key={`quickAddToOrderCheckmark`}
           initial={{ scale: 0 }}
