@@ -378,7 +378,12 @@ function OrderNow() {
       </div>
 
       {ableToRenderMainContent() && (
-        <div
+        <motion.div
+          key={"orderStickyHeader"}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
           // bg is background color of the <body>, 1% off from what bg-offwhite is
           className="baseFlex sticky left-0 top-24 z-10 size-full h-16 w-full overflow-x-hidden bg-body shadow-lg tablet:top-28 tablet:h-16 tablet:w-3/4 tablet:shadow-none"
         >
@@ -452,14 +457,14 @@ function OrderNow() {
               className="h-1 bg-primary"
             ></div>
           </div>
-        </div>
+        </motion.div>
       )}
 
       <div className="baseVertFlex relative size-full tablet:w-3/4">
         <AnimatePresence mode="popLayout">
           {ableToRenderMainContent() ? (
             <motion.div
-              key={"menuContent"}
+              key={"orderContent"}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
