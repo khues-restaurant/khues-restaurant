@@ -7,6 +7,7 @@ import { toZonedTime } from "date-fns-tz";
 import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
 import { isSelectedTimeSlotValid } from "~/utils/isSelectedTimeSlotValid";
 import { loopToFindFirstOpenDay } from "~/utils/loopToFindFirstOpenDay";
+import { isEligibleForBirthdayReward } from "~/utils/isEligibleForBirthdayReward";
 
 function validateTimeToPickup(
   orderDetails: OrderDetails,
@@ -252,9 +253,11 @@ export const validateOrderRouter = createTRPCRouter({
         //   }
         // }
 
-        // If an item was a point reward or birthday reward, we (tentatively) are going to
+        // If a reordered item was a point reward or birthday reward, we (tentatively) are going to
         // still keep it in the order, but set it's values of pointReward and birthdayReward to false
 
+        // fyi: probably only need to set pointReward/birthdayReward to false respectively, but just
+        // being cautious here
         if (item.pointReward) {
           if (validatingAReorder) {
             item.pointReward = false;
@@ -272,30 +275,41 @@ export const validateOrderRouter = createTRPCRouter({
                 },
               });
 
-              if (!user) {
-                // removing item from order
-                items.splice(items.indexOf(item), 1);
-
-                // adding item name to removedItemNames
-                removedItemNames.push(item.name);
-              } else if (user.rewardsPoints < itemRewardPoints) {
-                item.pointReward = false; // choosing to leave item in order, but treat it as a regular
-                // item instead of a point reward
+              if (!user || user.rewardsPoints < itemRewardPoints) {
+                // item is not allowed to be redeemed as a reward,
+                // but choosing to leave item in order and treat it as a regular item
+                item.pointReward = false;
+                item.birthdayReward = false;
               }
             }
           }
         }
 
-        // TODO: validate logic for birthday reward
-        // if (item.birthdayReward) {
-        //   if (validatingAReorder) {
-        //     item.pointReward = false;
-        //     item.birthdayReward = false;
-        //   } else {
-        //     // check if the user has a birthday reward available
-        //     // if not, set birthdayReward to false
-        //   }
-        // }
+        if (item.birthdayReward) {
+          if (validatingAReorder) {
+            item.pointReward = false;
+            item.birthdayReward = false;
+          } else {
+            const user = await ctx.prisma.user.findFirst({
+              where: {
+                userId,
+              },
+            });
+
+            if (
+              !user ||
+              !isEligibleForBirthdayReward(
+                new Date(user.birthday),
+                user.lastBirthdayRewardRedemptionYear,
+              )
+            ) {
+              // item is not allowed to be redeemed as a reward,
+              // but choosing to leave item in order and treat it as a regular item
+              item.pointReward = false;
+              item.birthdayReward = false;
+            }
+          }
+        }
       }
 
       if (validatingAReorder) {
