@@ -166,6 +166,10 @@ type PrintedOrder = Order & {
 };
 
 function formatReceipt(order: PrintedOrder) {
+  const sanitizedPickupName = validateAndTransformPickupName(
+    `${order.firstName} ${order.lastName}`,
+  );
+
   const chicagoZonedTime = toZonedTime(
     order.datetimeToPickup,
     "America/Chicago",
@@ -184,7 +188,7 @@ function formatReceipt(order: PrintedOrder) {
     (651) 222-3301
     -
     Online Order (Pickup)
-    ^^^${order.firstName} ${order.lastName}
+    ^^^${sanitizedPickupName}
     ${format(chicagoZonedTime, "h:mma 'on' MM/dd/yyyy")}
     "Order #${getFirstSixNumbers(order.id)}"
     -`;
@@ -247,4 +251,25 @@ function formatReceipt(order: PrintedOrder) {
   `;
 
   return receipt;
+}
+
+function validateAndTransformPickupName(input: string): string {
+  // Step 1: Remove leading and trailing whitespace
+  let transformedValue = input.trim();
+
+  // Step 2: Remove invalid characters
+  transformedValue = transformedValue.replace(/[^A-Za-z\s'-]/g, "");
+
+  // Step 3: Ensure the string does not contain any emojis
+  transformedValue = transformedValue.replace(/[\p{Emoji}]/gu, "");
+
+  // Step 4: Replace consecutive spaces with a single space
+  transformedValue = transformedValue.replace(/\s+/g, " ");
+
+  // Step 5: Ensure the string does not exceed 61 characters
+  if (transformedValue.length > 61) {
+    transformedValue = transformedValue.slice(0, 61);
+  }
+
+  return transformedValue;
 }
