@@ -563,14 +563,14 @@ function Track() {
                     </p>
                   </div>
 
-                  <p className="baseVertFlex !items-start gap-2 text-sm">
+                  <div className="baseVertFlex !items-start gap-2 text-sm">
                     <p className="font-semibold underline underline-offset-2">
                       Address
                     </p>
                     <Button variant={"link"} className="h-4 !p-0">
                       1234 Lorem Ipsum Dr. Roseville, MN 12345
                     </Button>
-                  </p>
+                  </div>
                 </div>
 
                 {/* tablet+ */}
@@ -585,7 +585,7 @@ function Track() {
                       </p>
                     </div>
 
-                    <p className="baseVertFlex !items-start gap-2 text-sm tablet:!items-end">
+                    <div className="baseVertFlex !items-start gap-2 text-sm tablet:!items-end">
                       <p className="font-semibold underline underline-offset-2">
                         Order #
                       </p>
@@ -594,7 +594,7 @@ function Track() {
                           ? getFirstSixNumbers(orderId)
                           : ""}
                       </p>
-                    </p>
+                    </div>
                   </div>
 
                   <div className="baseFlex w-full !justify-between">
@@ -613,14 +613,14 @@ function Track() {
                       </p>
                     </div>
 
-                    <p className="baseVertFlex !items-start gap-2 text-sm tablet:!items-end">
+                    <div className="baseVertFlex !items-start gap-2 text-sm tablet:!items-end">
                       <p className="font-semibold underline underline-offset-2">
                         Address
                       </p>
                       <Button variant={"link"} className="h-4 !p-0">
                         1234 Lorem Ipsum Dr. Roseville, MN 12345
                       </Button>
-                    </p>
+                    </div>
                   </div>
                 </div>
 
