@@ -98,7 +98,7 @@ function OrderSummary({ order }: OrderSummary) {
                         ) : (
                           <LuCakeSlice className="size-5 stroke-[1.5px]" />
                         )}
-                        <p>
+                        <p className="font-medium">
                           {item.pointReward ? (
                             <>
                               {new Decimal(item.price)

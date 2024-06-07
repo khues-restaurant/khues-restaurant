@@ -13,7 +13,7 @@ import { CiCalendarDate, CiGift, CiLocationOn } from "react-icons/ci";
 import { FaRegClock, FaTrashAlt } from "react-icons/fa";
 import { FaCakeCandles } from "react-icons/fa6";
 import { LiaShoppingBagSolid } from "react-icons/lia";
-import { LuMinus, LuPlus } from "react-icons/lu";
+import { LuCakeSlice, LuMinus, LuPlus } from "react-icons/lu";
 import { z } from "zod";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import AnimatedPrice from "~/components/AnimatedPrice";
@@ -953,17 +953,24 @@ function CartSheet({
                                   )}
                                 </div>
 
-                                <div className="my-1 rounded-md border border-primary !px-2 !py-1 text-xs text-primary">
+                                <div className="baseFlex my-1 gap-2 rounded-md border border-primary !px-2 !py-0.5 text-xs text-primary">
                                   {item.pointReward ? (
-                                    <>
-                                      {new Decimal(item.price)
-                                        .mul(2) // item price (in cents) multiplied by 2
-                                        .toNumber()}{" "}
-                                      points
-                                    </>
+                                    <CiGift className="size-5" />
                                   ) : (
-                                    "Birthday reward"
+                                    <LuCakeSlice className="size-5 stroke-[1.5px]" />
                                   )}
+                                  <p className="font-medium">
+                                    {item.pointReward ? (
+                                      <>
+                                        {new Decimal(item.price)
+                                          .mul(2) // item price (in cents) multiplied by 2
+                                          .toNumber()}{" "}
+                                        point reward
+                                      </>
+                                    ) : (
+                                      "Birthday reward"
+                                    )}
+                                  </p>
                                 </div>
 
                                 <div className="baseVertFlex w-full !items-start text-sm">
