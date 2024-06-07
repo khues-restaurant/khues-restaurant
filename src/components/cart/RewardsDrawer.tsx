@@ -344,6 +344,9 @@ function RewardsDrawer({
             </div>
           </div>
         </div>
+        <p className="baseFlex fixed bottom-0 left-0 w-full bg-offwhite py-3 text-center text-sm italic text-stone-400">
+          Only one reward is able to be redeemed per order.*
+        </p>
       </div>
 
       <Button
