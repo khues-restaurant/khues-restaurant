@@ -15,6 +15,16 @@ export function isSelectedTimeSlotValid({
   const tzDatetimeToPickup = toZonedTime(datetimeToPickup, "America/Chicago");
   const tzMinPickupDatetime = toZonedTime(minPickupDatetime, "America/Chicago");
 
+  // TODO: keep an eye on this check, might have unintended side effects
+  // if tzDatetimeToPickup is midnight, return true
+  if (
+    tzDatetimeToPickup.getHours() === 0 &&
+    tzDatetimeToPickup.getMinutes() === 0 &&
+    tzDatetimeToPickup.getSeconds() === 0
+  ) {
+    return true;
+  }
+
   // if currentDate hours is earlier than opening time, return false
   if (tzDatetimeToPickup.getHours() < 12) {
     return false;

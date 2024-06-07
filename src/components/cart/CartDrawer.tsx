@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { CiCalendarDate, CiGift, CiLocationOn } from "react-icons/ci";
 import { FaTrashAlt } from "react-icons/fa";
 import { FaCakeCandles, FaRegClock } from "react-icons/fa6";
@@ -59,7 +59,6 @@ import Image from "next/image";
 import { TbLocation } from "react-icons/tb";
 import { Separator } from "~/components/ui/separator";
 import { Input } from "~/components/ui/input";
-import { loopToFindFirstOpenDay } from "~/utils/loopToFindFirstOpenDay";
 
 function getSafeAreaInsetBottom() {
   // Create a temporary element to get the CSS variable
@@ -283,7 +282,7 @@ function CartDrawer({
   const mainForm = useForm<z.infer<typeof mainFormSchema>>({
     resolver: zodResolver(mainFormSchema),
     values: {
-      dateToPickup: loopToFindFirstOpenDay(orderDetails.datetimeToPickup),
+      dateToPickup: orderDetails.datetimeToPickup,
       timeToPickup: orderDetails.isASAP
         ? "ASAP (~20 mins)"
         : getHoursAndMinutesFromDate(orderDetails.datetimeToPickup),
@@ -318,6 +317,7 @@ function CartDrawer({
     }
   }
 
+  // dynamically updating datetimeToPickup based on changes to date/time inputs
   useEffect(() => {
     const subscription = mainForm.watch((value) => {
       if (value.dateToPickup === undefined || value.timeToPickup === undefined)
@@ -328,9 +328,14 @@ function CartDrawer({
           ? value.dateToPickup
           : mergeDateAndTime(value.dateToPickup, value.timeToPickup);
 
-      if (newDate === undefined) return;
+      // make sure that the new date isn't the same as the current orderDetails.datetimeToPickup
+      if (
+        newDate === undefined ||
+        newDate.getTime() === orderDetails.datetimeToPickup.getTime()
+      )
+        return;
 
-      // if the date was changed then just set the time to be midnight of w/e the new date is
+      // if the day was changed then just set the time to be midnight of w/e the new day is
       if (
         value.dateToPickup.getDate() !==
           orderDetails.datetimeToPickup.getDate() ||
@@ -348,8 +353,6 @@ function CartDrawer({
         newOrderDetails.datetimeToPickup = newDate;
         newOrderDetails.isASAP = true;
 
-        console.log("updating");
-
         updateOrder({
           newOrderDetails,
         });
@@ -357,14 +360,9 @@ function CartDrawer({
         return;
       }
 
-      // make sure that the new date isn't the same as the current orderDetails.datetimeToPickup
-      if (newDate.getTime() === orderDetails.datetimeToPickup.getTime()) return;
-
       const newOrderDetails = structuredClone(orderDetails);
       newOrderDetails.datetimeToPickup = newDate;
       newOrderDetails.isASAP = false;
-
-      console.log("updating");
 
       updateOrder({
         newOrderDetails,
@@ -375,20 +373,14 @@ function CartDrawer({
       subscription.unsubscribe();
     };
   }, [mainForm, orderDetails, updateOrder]);
+  const formPickupNameValue = useWatch({
+    name: "pickupName",
+    control: mainForm.control,
+  });
 
-  // pickupName form field
   useEffect(() => {
-    // technically don't want/need to be watching the whole form for this
-    const subscription = mainForm.watch((value) => {
-      if (typeof value.pickupName !== "string") return;
-
-      setPickupName(value.pickupName);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [mainForm, setPickupName]);
+    setPickupName(formPickupNameValue);
+  }, [formPickupNameValue, setPickupName]);
 
   useEffect(() => {
     // add up all the quantities of the items in the order

@@ -24,14 +24,6 @@ export function loopToFindFirstOpenDay(datetimeToPickup: Date) {
     "America/Chicago",
   );
 
-  // returning early if the date is already on a valid day
-  if (
-    !isSundayOrMonday(localDatetimeToPickup) &&
-    !isHoliday(localDatetimeToPickup, holidays)
-  ) {
-    return localDatetimeToPickup;
-  }
-
   localDatetimeToPickup.setHours(0, 0, 0, 0); // Normalize to midnight for consistent comparison
 
   // Check and adjust for Sundays, Mondays, and Holidays
