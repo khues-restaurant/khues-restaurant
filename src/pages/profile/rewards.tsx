@@ -233,7 +233,7 @@ function Rewards() {
                 backgroundImage:
                   "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
               }}
-              className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72 tablet:overflow-x-hidden tablet:rounded-t-lg"
+              className="baseFlex relative h-56 w-full overflow-hidden shadow-md tablet:h-72 tablet:overflow-x-hidden tablet:rounded-t-lg"
             >
               {/* mobile images */}
               <motion.div
@@ -978,7 +978,7 @@ function RewardMenuItem({
               userAvailablePoints < rewardItemPointsCost
             ) {
               toast({
-                variant: "default",
+                variant: "neutral",
                 description: `You don't have enough points to redeem this item.`,
               });
 
