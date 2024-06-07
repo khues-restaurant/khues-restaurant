@@ -58,6 +58,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { TfiReceipt } from "react-icons/tfi";
 import { useRouter } from "next/router";
 import { Separator } from "~/components/ui/separator";
+import isEqual from "lodash.isequal";
 
 function RecentOrders() {
   const userId = useGetUserId();
@@ -94,7 +95,10 @@ function RecentOrders() {
       }
     });
 
-    if (localSortedOrders !== undefined) {
+    if (
+      localSortedOrders !== undefined &&
+      !isEqual(localSortedOrders, sortedOrders)
+    ) {
       setSortedOrders(localSortedOrders);
     }
   }, [orders, sortedOrders, sortDirection]);
