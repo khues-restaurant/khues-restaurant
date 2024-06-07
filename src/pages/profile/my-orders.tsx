@@ -85,17 +85,18 @@ function RecentOrders() {
     // this logic is reversed from what you'd expect because the list is rendered
     // with the first item in the array being rendered first. So to sort by the newest
     // orders, we need to sort in descending order actually.
-    const localSortedOrders = orders?.sort((a, b) => {
-      if (sortDirection === "desc") {
+    // (uses slice to avoid mutating the original array)
+    const localSortedOrders = orders?.slice().sort((a, b) => {
+      if (sortDirection === "asc") {
         return a.datetimeToPickup.getTime() - b.datetimeToPickup.getTime();
       } else {
         return b.datetimeToPickup.getTime() - a.datetimeToPickup.getTime();
       }
     });
 
-    if (localSortedOrders === undefined) return;
-
-    setSortedOrders(localSortedOrders);
+    if (localSortedOrders !== undefined) {
+      setSortedOrders(localSortedOrders);
+    }
   }, [orders, sortedOrders, sortDirection]);
 
   useLayoutEffect(() => {
