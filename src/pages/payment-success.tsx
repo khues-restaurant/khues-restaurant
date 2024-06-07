@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { MdOutlineMail } from "react-icons/md";
 import Stripe from "stripe";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
+import StaticLotus from "~/components/ui/StaticLotus";
 import { env } from "~/env";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { api } from "~/utils/api";
@@ -38,7 +39,7 @@ function PaymentSuccess({
       setOrderHasBeenAcknowledged(true);
 
       setTimeout(() => {
-        push(`/track?id=${order.id}`).catch(console.error);
+        // push(`/track?id=${order.id}`).catch(console.error);
       }, 3000);
     }
   }, [
@@ -77,7 +78,9 @@ function PaymentSuccess({
         />
       </Head>
 
-      <div className="baseVertFlex max-w-80 gap-6 p-4 tablet:max-w-2xl tablet:gap-8 tablet:p-8">
+      <div className="baseVertFlex relative max-w-80 gap-4 overflow-hidden rounded-lg border bg-gradient-to-br from-offwhite to-primary/10 px-6 py-8 tablet:max-w-2xl tablet:gap-8 tablet:p-12">
+        <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
+        <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
         <AnimatedLotus className="size-16 fill-primary tablet:size-24" />
 
         <p className="mt-8 text-center text-lg font-semibold">
@@ -86,8 +89,8 @@ function PaymentSuccess({
 
         <div className="baseVertFlex gap-6 tablet:gap-8">
           {emailReceiptsAllowed && (
-            <div className="baseFlex mt-4 gap-4 rounded-md border p-4 text-sm">
-              <MdOutlineMail className="size-6" />
+            <div className="baseFlex mt-4 gap-4 rounded-md border bg-offwhite/80 p-4 text-sm shadow-inner">
+              <MdOutlineMail className="size-5 shrink-0 tablet:size-6" />
               Your email receipt has been sent and should arrive shortly.
             </div>
           )}
@@ -95,18 +98,6 @@ function PaymentSuccess({
           <p className="text-center">
             Please wait while your order is sent to our kitchen.
           </p>
-
-          {/* <motion.div
-            key={"paymentSuccessSpinner"}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 3.5 }}
-            className="inline-block size-8 animate-spin rounded-full border-[4px] border-current border-t-transparent text-primary"
-            role="status"
-            aria-label="loading"
-          >
-            <span className="sr-only">Loading...</span>
-          </motion.div> */}
         </div>
       </div>
     </motion.div>
