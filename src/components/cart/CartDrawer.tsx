@@ -1364,7 +1364,7 @@ function CartDrawer({
                     })();
                   }}
                 >
-                  <AnimatePresence mode={"popLayout"}>
+                  <AnimatePresence mode={"popLayout"} initial={false}>
                     <motion.div
                       key={`cartDrawer-${checkoutButtonText}`}
                       // layout

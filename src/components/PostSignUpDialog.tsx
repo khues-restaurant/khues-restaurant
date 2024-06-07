@@ -986,7 +986,7 @@ function PostSignUpDialog() {
                 {step !== 2 ||
                 (step === 2 && dietaryRestrictionsForm.formState.isDirty) ? (
                   step === 3 ? (
-                    <AnimatePresence mode={"popLayout"}>
+                    <AnimatePresence mode={"popLayout"} initial={false}>
                       <motion.div
                         key={saveButtonText}
                         // whileTap={{ scale: 0.95 }}

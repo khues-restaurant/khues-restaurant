@@ -1310,25 +1310,6 @@ function CartSheet({
                 <AnimatedPrice price={formatPrice(orderCost.tax)} />
               </div>
 
-              {/* <AnimatePresence mode="popLayout">
-                {orderCost.tip > 0 && (
-                  <motion.div
-                    key={"cartSheetTip"}
-                    layout
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
-                    transition={{
-                      duration: 0.25,
-                    }}
-                    className="baseFlex w-full !justify-between text-sm"
-                  >
-                    <p>{`Tip${orderDetails.tipPercentage !== null ? `${orderDetails.tipPercentage}%` : ""}`}</p>
-                    <AnimatedPrice price={formatPrice(orderCost.tip)} />
-                  </motion.div>
-                )}
-              </AnimatePresence> */}
-
               <div className="baseFlex w-full !justify-between text-sm">
                 <p>{`Tip${orderDetails.tipPercentage !== null ? ` (${orderDetails.tipPercentage}%)` : ""}`}</p>
                 <AnimatedPrice price={formatPrice(orderCost.tip)} />
@@ -1360,7 +1341,7 @@ function CartSheet({
                 })();
               }}
             >
-              <AnimatePresence mode={"popLayout"}>
+              <AnimatePresence mode={"popLayout"} initial={false}>
                 <motion.div
                   key={`cartSheet-${checkoutButtonText}`}
                   initial={{ opacity: 0, y: -20 }}

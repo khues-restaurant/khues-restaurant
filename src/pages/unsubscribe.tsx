@@ -66,7 +66,7 @@ function Unsubscribe({ email }: { email?: string }) {
                 unsubscribeUser({ emailAddress: email });
               }}
             >
-              <AnimatePresence mode={"popLayout"}>
+              <AnimatePresence mode={"popLayout"} initial={false}>
                 <motion.div
                   key={unsubscribeButtonText}
                   layout

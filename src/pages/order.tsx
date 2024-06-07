@@ -1430,7 +1430,7 @@ function PreviousOrder({ order }: PreviousOrder) {
               setKeepSpinnerShowing(true);
             }}
           >
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence mode="popLayout" initial={false}>
               <motion.div
                 key={
                   keepSpinnerShowing || isValidatingOrder

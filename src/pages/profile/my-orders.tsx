@@ -576,7 +576,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                           });
                         }}
                       >
-                        <AnimatePresence mode="popLayout">
+                        <AnimatePresence mode="popLayout" initial={false}>
                           <motion.div
                             key={
                               keepSpinnerShowing || isValidatingOrder
@@ -755,7 +755,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                           });
                         }}
                       >
-                        <AnimatePresence mode="popLayout">
+                        <AnimatePresence mode="popLayout" initial={false}>
                           <motion.div
                             key={
                               keepSpinnerShowing || isValidatingOrder

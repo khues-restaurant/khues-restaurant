@@ -745,7 +745,7 @@ function Preferences() {
                   void form.handleSubmit(onFormSubmit)();
                 }}
               >
-                <AnimatePresence mode={"popLayout"}>
+                <AnimatePresence mode={"popLayout"} initial={false}>
                   <motion.div
                     key={saveButtonText}
                     layout
@@ -908,7 +908,7 @@ function Preferences() {
                             deleteUser(userId);
                           }}
                         >
-                          <AnimatePresence mode={"popLayout"}>
+                          <AnimatePresence mode={"popLayout"} initial={false}>
                             <motion.div
                               key={deleteButtonText}
                               layout
@@ -991,7 +991,7 @@ function Preferences() {
                     void form.handleSubmit(onFormSubmit)();
                   }}
                 >
-                  <AnimatePresence mode={"popLayout"}>
+                  <AnimatePresence mode={"popLayout"} initial={false}>
                     <motion.div
                       key={saveButtonText}
                       layout
