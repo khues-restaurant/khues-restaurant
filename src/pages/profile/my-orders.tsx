@@ -462,7 +462,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
       key={order.id}
       type="single"
       collapsible
-      className="w-full min-w-[340px]"
+      className="w-full min-w-[340px] xs:min-w-[400px]"
       value={accordionOpen}
       onValueChange={(value) => {
         setAccordionOpen(value === "open" ? value : "closed");

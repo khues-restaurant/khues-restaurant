@@ -64,7 +64,7 @@ function OrderSummary({ order }: OrderSummary) {
               />
 
               <div className="baseFlex w-full !items-start !justify-between">
-                <div className="baseVertFlex max-w-40 !items-start sm:max-w-80">
+                <div className="baseVertFlex max-w-40 !items-start xs:max-w-80">
                   {/* item quantity, name, dietary restrictions */}
                   <div className="baseFlex !items-start gap-2 text-base font-medium">
                     <p>{item.quantity}</p>
@@ -75,7 +75,7 @@ function OrderSummary({ order }: OrderSummary) {
                     )}
                   </div>
 
-                  <div className="baseVertFlex w-full !items-start text-xs">
+                  <div className="baseVertFlex ml-4 w-full !items-start text-xs">
                     {Object.values(item.customizations).map((choiceId, idx) => (
                       <p key={idx}>
                         -{" "}
