@@ -849,7 +849,7 @@ function CartSheet({
                             </Button>
                           </div>
 
-                          <div className="baseVertFlex mt-2 w-full !items-start text-sm">
+                          <div className="baseVertFlex ml-1 mt-2 w-full !items-start text-sm">
                             {Object.values(item.customizations).map(
                               (choiceId, idx) => (
                                 <p key={idx}>
@@ -863,7 +863,9 @@ function CartSheet({
                               ),
                             )}
                             {item.specialInstructions && (
-                              <p>- {item.specialInstructions}</p>
+                              <p className="max-w-72 break-all">
+                                - {item.specialInstructions}
+                              </p>
                             )}
                           </div>
                         </div>
@@ -875,15 +877,22 @@ function CartSheet({
                                 <p>{discounts[item.discountId]?.name}</p>
                               </div>
                             )}
-                            <AnimatedPrice
-                              price={formatPrice(
-                                calculateRelativeTotal({
-                                  items: [item],
-                                  customizationChoices,
-                                  discounts,
-                                }),
-                              )}
-                            />
+
+                            {/* completely unsure as to why this is necessary to wrap like this,
+                                but otherwise caused extremely odd overflow issues with animating out
+                                text... */}
+                            <AnimatePresence mode={"popLayout"}>
+                              <AnimatedPrice
+                                price={formatPrice(
+                                  calculateRelativeTotal({
+                                    items: [item],
+                                    customizationChoices,
+                                    discounts,
+                                  }),
+                                )}
+                                excludeAnimatePresence={true}
+                              />
+                            </AnimatePresence>
                           </div>
 
                           <Button
@@ -979,7 +988,7 @@ function CartSheet({
                                   </p>
                                 </div>
 
-                                <div className="baseVertFlex w-full !items-start text-sm">
+                                <div className="baseVertFlex ml-1 w-full !items-start text-sm">
                                   {Object.values(item.customizations).map(
                                     (choiceId, idx) => (
                                       <p key={idx}>
@@ -993,7 +1002,9 @@ function CartSheet({
                                     ),
                                   )}
                                   {item.specialInstructions && (
-                                    <p>- {item.specialInstructions}</p>
+                                    <p className="max-w-72 break-all">
+                                      - {item.specialInstructions}
+                                    </p>
                                   )}
 
                                   <Button
@@ -1032,15 +1043,22 @@ function CartSheet({
                               </div>
 
                               <div className="baseVertFlex !items-end">
-                                <AnimatedPrice
-                                  price={formatPrice(
-                                    calculateRelativeTotal({
-                                      items: [item],
-                                      customizationChoices,
-                                      discounts,
-                                    }),
-                                  )}
-                                />
+                                {/* completely unsure as to why this is necessary to wrap like this,
+                                but otherwise caused extremely odd overflow issues with animating out
+                                text... */}
+                                <AnimatePresence mode={"popLayout"}>
+                                  <AnimatedPrice
+                                    price={formatPrice(
+                                      calculateRelativeTotal({
+                                        items: [item],
+                                        customizationChoices,
+                                        discounts,
+                                      }),
+                                    )}
+                                    excludeAnimatePresence={true}
+                                  />
+                                </AnimatePresence>
+
                                 <Button
                                   variant={"underline"}
                                   size={"underline"}
