@@ -42,7 +42,7 @@ export function calculateTotalCartPrices({
   //   }
   // }
 
-  let calculatedTipValue = new Decimal(tipValue);
+  let calculatedTipValue = new Decimal(tipValue).mul(100); // convert to cents
 
   // if tip is a percentage, calculate it here
   if (tipPercentage !== null) {
