@@ -567,7 +567,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
 
         {/* maybe somehow do an alternating pattern (reg, 180deg, reg) as the background? */}
 
-        <div className="baseFlex gap-3 rounded-md rounded-t-none border border-t-0 p-2 px-8 font-medium shadow-sm tablet:text-xl">
+        <div className="baseFlex gap-3 rounded-md rounded-t-none border border-t-0 bg-offwhite/40 p-2 px-8 font-medium shadow-sm tablet:text-xl">
           <HiOutlineNewspaper />
           Find us on
         </div>
