@@ -60,7 +60,7 @@ function Reservations() {
         </div>
       </div>
 
-      <div className="baseVertFlex my-auto h-full max-w-sm gap-4 p-4 py-16 pb-24 tablet:max-w-3xl tablet:gap-8">
+      <div className="baseVertFlex my-auto h-full max-w-sm gap-4 p-4 py-16 pb-32 tablet:max-w-3xl tablet:gap-8 tablet:pb-24">
         <Image
           src={reservations}
           alt={"TODO: fill in w/ appropriate alt text"}
