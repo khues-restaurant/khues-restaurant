@@ -1144,7 +1144,7 @@ function CartSheet({
                         field: { onChange, onBlur, value, ref },
                         fieldState: { invalid, error },
                       }) => (
-                        <FormItem className="baseVertFlex relative !items-start space-y-0">
+                        <FormItem className="baseVertFlex relative !items-start space-y-0 rounded-md outline outline-2 outline-primary">
                           <div className="baseVertFlex relative !items-start gap-2">
                             {/* TODO: doesn't feel great to comment this out, but not sure of other
                             best ui option to keep everything low-profile.. */}

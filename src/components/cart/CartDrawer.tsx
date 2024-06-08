@@ -1161,7 +1161,7 @@ function CartDrawer({
                           field: { onChange, onBlur, value, ref },
                           fieldState: { invalid, error },
                         }) => (
-                          <FormItem className="baseVertFlex relative w-full !items-start space-y-0 xs:w-auto">
+                          <FormItem className="baseVertFlex relative w-full !items-start space-y-0 rounded-md outline outline-2 outline-primary xs:w-auto">
                             <div className="baseVertFlex relative !items-start gap-2">
                               {/* TODO: doesn't feel great to comment this out, but not sure of other
                             best ui option to keep everything low-profile.. */}
