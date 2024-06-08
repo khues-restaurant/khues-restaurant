@@ -134,6 +134,24 @@ function Chat() {
       },
     });
 
+  const [prevTotalChatMessages, setPrevTotalChatMessages] = useState(0);
+
+  // autoscroll to bottom of chat when new message is sent/received
+  useEffect(() => {
+    if (chat?.messages) {
+      if (chat.messages.length !== prevTotalChatMessages) {
+        setTimeout(() => {
+          if (scrollableChatContainerRef.current) {
+            scrollableChatContainerRef.current.scrollTop =
+              scrollableChatContainerRef.current.scrollHeight;
+          }
+        }, 150); // kind of arbitrary, play around with this more
+      }
+
+      setPrevTotalChatMessages(chat.messages.length);
+    }
+  }, [chat?.messages, prevTotalChatMessages]);
+
   const [localMessageIsBeingSent, setLocalMessageIsBeingSent] = useState(false);
   const [chatHasBeenInitiallyOpened, setChatHasBeenInitiallyOpened] =
     useState(false);
@@ -158,7 +176,13 @@ function Chat() {
 
     socket.on(`newUserMessage`, (message) => {
       console.log("received message from server", message);
+
       void refetch();
+
+      if (scrollableChatContainerRef.current) {
+        scrollableChatContainerRef.current.scrollTop =
+          scrollableChatContainerRef.current.scrollHeight;
+      }
     });
 
     setSocket(socket);
