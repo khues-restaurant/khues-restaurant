@@ -3,7 +3,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { CiCalendarDate, CiGift, CiLocationOn } from "react-icons/ci";
 import { FaTrashAlt } from "react-icons/fa";
@@ -140,7 +146,7 @@ function CartDrawer({
   const [regularItems, setRegularItems] = useState<Item[]>([]);
   const [rewardItems, setRewardItems] = useState<Item[]>([]);
 
-  const [showCustomTipInput, setShowCustomTipInput] = useState(false);
+  const customTipInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const filteredRewardItems = [];
@@ -1141,7 +1147,7 @@ function CartDrawer({
               <span className="font-medium">Tip</span>
 
               <div className="baseFlex w-full gap-2 xs:w-auto">
-                {showCustomTipInput ? (
+                {orderDetails.tipPercentage === null ? (
                   <Form {...tipForm}>
                     <form
                       onSubmit={(e) => {
@@ -1158,7 +1164,7 @@ function CartDrawer({
                         control={tipForm.control}
                         name="tipValue"
                         render={({
-                          field: { onChange, onBlur, value, ref },
+                          field: { onChange, onBlur, value },
                           fieldState: { invalid, error },
                         }) => (
                           <FormItem className="baseVertFlex relative w-full !items-start space-y-0 rounded-md outline outline-2 outline-primary xs:w-auto">
@@ -1167,10 +1173,9 @@ function CartDrawer({
                             best ui option to keep everything low-profile.. */}
                               {/* <FormLabel className="font-semibold">Tip</FormLabel> */}
                               <Input
-                                ref={ref}
+                                ref={customTipInputRef}
                                 value={value}
                                 type={"tel"}
-                                autoFocus={true}
                                 onChange={(e) => {
                                   const inputValue = e.target.value.replace(
                                     /[^0-9.]/g,
@@ -1228,24 +1233,34 @@ function CartDrawer({
                     }
                     className="w-full text-xs font-semibold xs:w-auto"
                     onClick={() => {
-                      setShowCustomTipInput(true);
-                      updateOrder({
-                        newOrderDetails: {
-                          ...orderDetails,
-                          tipPercentage: null,
-                          tipValue: 0,
-                        },
-                      });
+                      setTimeout(() => {
+                        customTipInputRef.current?.focus();
+                      }, 0);
+
+                      if (orderDetails.tipPercentage !== null) {
+                        updateOrder({
+                          newOrderDetails: {
+                            ...orderDetails,
+                            tipPercentage: null,
+                            tipValue: 0,
+                          },
+                        });
+                      }
                     }}
                     onFocus={() => {
-                      setShowCustomTipInput(true);
-                      updateOrder({
-                        newOrderDetails: {
-                          ...orderDetails,
-                          tipPercentage: null,
-                          tipValue: 0,
-                        },
-                      });
+                      setTimeout(() => {
+                        customTipInputRef.current?.focus();
+                      }, 0);
+
+                      if (orderDetails.tipPercentage !== null) {
+                        updateOrder({
+                          newOrderDetails: {
+                            ...orderDetails,
+                            tipPercentage: null,
+                            tipValue: 0,
+                          },
+                        });
+                      }
                     }}
                   >
                     Custom
@@ -1257,7 +1272,6 @@ function CartDrawer({
                   }
                   className="w-full text-xs font-semibold xs:w-auto"
                   onClick={() => {
-                    setShowCustomTipInput(false);
                     updateOrder({
                       newOrderDetails: {
                         ...orderDetails,
@@ -1275,7 +1289,6 @@ function CartDrawer({
                   }
                   className="w-full text-xs font-semibold xs:w-auto"
                   onClick={() => {
-                    setShowCustomTipInput(false);
                     updateOrder({
                       newOrderDetails: {
                         ...orderDetails,
@@ -1293,7 +1306,6 @@ function CartDrawer({
                   }
                   className="w-full text-xs font-semibold xs:w-auto"
                   onClick={() => {
-                    setShowCustomTipInput(false);
                     updateOrder({
                       newOrderDetails: {
                         ...orderDetails,

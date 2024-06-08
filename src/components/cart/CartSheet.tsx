@@ -7,7 +7,13 @@ import isEqual from "lodash.isequal";
 import { X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { CiCalendarDate, CiGift, CiLocationOn } from "react-icons/ci";
 import { FaRegClock, FaTrashAlt } from "react-icons/fa";
@@ -133,7 +139,7 @@ function CartSheet({
   const [regularItems, setRegularItems] = useState<Item[]>([]);
   const [rewardItems, setRewardItems] = useState<Item[]>([]);
 
-  const [showCustomTipInput, setShowCustomTipInput] = useState(false);
+  const customTipInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const filteredRewardItems = [];
@@ -1124,7 +1130,7 @@ function CartSheet({
             <span className="font-medium">Tip</span>
 
             <div className="baseFlex gap-2">
-              {showCustomTipInput ? (
+              {orderDetails.tipPercentage === null ? (
                 <Form {...tipForm}>
                   <form
                     onSubmit={(e) => {
@@ -1141,7 +1147,7 @@ function CartSheet({
                       control={tipForm.control}
                       name="tipValue"
                       render={({
-                        field: { onChange, onBlur, value, ref },
+                        field: { onChange, onBlur, value },
                         fieldState: { invalid, error },
                       }) => (
                         <FormItem className="baseVertFlex relative !items-start space-y-0 rounded-md outline outline-2 outline-primary">
@@ -1150,9 +1156,8 @@ function CartSheet({
                             best ui option to keep everything low-profile.. */}
                             {/* <FormLabel className="font-semibold">Tip</FormLabel> */}
                             <Input
-                              ref={ref}
+                              ref={customTipInputRef}
                               value={value}
-                              autoFocus={true}
                               type={"tel"}
                               onChange={(e) => {
                                 const inputValue = e.target.value.replace(
@@ -1209,24 +1214,34 @@ function CartSheet({
                   }
                   className="text-xs font-semibold"
                   onClick={() => {
-                    setShowCustomTipInput(true);
-                    updateOrder({
-                      newOrderDetails: {
-                        ...orderDetails,
-                        tipPercentage: null,
-                        tipValue: 0,
-                      },
-                    });
+                    setTimeout(() => {
+                      customTipInputRef.current?.focus();
+                    }, 0);
+
+                    if (orderDetails.tipPercentage !== null) {
+                      updateOrder({
+                        newOrderDetails: {
+                          ...orderDetails,
+                          tipPercentage: null,
+                          tipValue: 0,
+                        },
+                      });
+                    }
                   }}
                   onFocus={() => {
-                    setShowCustomTipInput(true);
-                    updateOrder({
-                      newOrderDetails: {
-                        ...orderDetails,
-                        tipPercentage: null,
-                        tipValue: 0,
-                      },
-                    });
+                    setTimeout(() => {
+                      customTipInputRef.current?.focus();
+                    }, 0);
+
+                    if (orderDetails.tipPercentage !== null) {
+                      updateOrder({
+                        newOrderDetails: {
+                          ...orderDetails,
+                          tipPercentage: null,
+                          tipValue: 0,
+                        },
+                      });
+                    }
                   }}
                 >
                   Custom
@@ -1238,7 +1253,6 @@ function CartSheet({
                 }
                 className="text-xs font-semibold"
                 onClick={() => {
-                  setShowCustomTipInput(false);
                   updateOrder({
                     newOrderDetails: {
                       ...orderDetails,
@@ -1256,7 +1270,6 @@ function CartSheet({
                 }
                 className="text-xs font-semibold"
                 onClick={() => {
-                  setShowCustomTipInput(false);
                   updateOrder({
                     newOrderDetails: {
                       ...orderDetails,
@@ -1274,7 +1287,6 @@ function CartSheet({
                 }
                 className="text-xs font-semibold"
                 onClick={() => {
-                  setShowCustomTipInput(false);
                   updateOrder({
                     newOrderDetails: {
                       ...orderDetails,
