@@ -41,7 +41,13 @@ function GeneralLayout({ children }: GeneralLayout) {
     useState(false);
 
   useEffect(() => {
-    if (userId && isSignedIn && userExists === true) {
+    // if user is signed in and user does not exist, show post sign up dialog
+    if (
+      userId &&
+      isSignedIn &&
+      userExists !== undefined &&
+      userExists === false
+    ) {
       setShouldRenderPostSignUpDialog(true);
     }
   }, [isSignedIn, userExists, userId]);
@@ -54,12 +60,18 @@ function GeneralLayout({ children }: GeneralLayout) {
 
   useClearToastsOnRefocus();
 
-  if (
-    initViewportLabelSet === false ||
-    !isLoaded ||
-    (isLoaded && isSignedIn && user === undefined)
-  )
-    return null;
+  if (initViewportLabelSet === false) return null;
+
+  // TODO: <Head> tags do not attach themselves to the page source if we block
+  // rendering until auth is fully settled. need to probably find better way to manage
+  // layout shift instead & allow rendering
+
+  // if (
+  //   initViewportLabelSet === false ||
+  //   !isLoaded ||
+  //   (isLoaded && isSignedIn && user === undefined)
+  // )
+  //   return null;
 
   return (
     <>
