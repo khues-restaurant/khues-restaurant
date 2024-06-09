@@ -1,5 +1,5 @@
 import { AnimatePresence } from "framer-motion";
-import { type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import HeaderShell from "~/components/headers/HeaderShell";
 import Footer from "~/components/Footer";
 import PostSignUpDialog from "~/components/PostSignUpDialog";
@@ -25,13 +25,26 @@ function GeneralLayout({ children }: GeneralLayout) {
   const { isLoaded, isSignedIn } = useAuth();
   const userId = useGetUserId();
 
+  const { initViewportLabelSet } = useMainStore((state) => ({
+    initViewportLabelSet: state.initViewportLabelSet,
+  }));
+
   const { data: user } = api.user.get.useQuery(userId, {
     enabled: Boolean(userId && isSignedIn),
   });
 
-  const { initViewportLabelSet } = useMainStore((state) => ({
-    initViewportLabelSet: state.initViewportLabelSet,
-  }));
+  const { data: userExists } = api.user.isUserRegistered.useQuery(userId, {
+    enabled: Boolean(userId && isSignedIn),
+  });
+
+  const [shouldRenderPostSignUpDialog, setShouldRenderPostSignUpDialog] =
+    useState(false);
+
+  useEffect(() => {
+    if (userId && isSignedIn && userExists === true) {
+      setShouldRenderPostSignUpDialog(true);
+    }
+  }, [isSignedIn, userExists, userId]);
 
   useViewportLabelResizeListener();
 
@@ -50,19 +63,20 @@ function GeneralLayout({ children }: GeneralLayout) {
 
   return (
     <>
-      <main className="baseVertFlex bg-body relative min-h-dvh !justify-between">
+      <main className="baseVertFlex relative min-h-dvh !justify-between bg-body">
         <HeaderShell />
 
-        {/* still use mode="wait"? */}
         <AnimatePresence>{children}</AnimatePresence>
 
         <Chat />
 
         <Footer />
 
-        {/* if you want, extract a bit of the logic within here to this component so you can just wholly
-            conditionally render this component */}
-        <PostSignUpDialog />
+        {shouldRenderPostSignUpDialog && (
+          <PostSignUpDialog
+            setShouldRenderPostSignUpDialog={setShouldRenderPostSignUpDialog}
+          />
+        )}
 
         <Toaster />
 

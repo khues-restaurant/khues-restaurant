@@ -1,8 +1,14 @@
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useState, type ComponentProps } from "react";
+import {
+  useEffect,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+  type ComponentProps,
+} from "react";
 import { useForm } from "react-hook-form";
 import { CiGift } from "react-icons/ci";
 import { FaPhone } from "react-icons/fa6";
@@ -129,8 +135,13 @@ const dietaryRestrictionsSchema = z.object({
     .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,
 });
 
-function PostSignUpDialog() {
-  const { isSignedIn } = useAuth();
+interface PostSignUpDialog {
+  setShouldRenderPostSignUpDialog: Dispatch<SetStateAction<boolean>>;
+}
+
+function PostSignUpDialog({
+  setShouldRenderPostSignUpDialog,
+}: PostSignUpDialog) {
   const { user } = useUser();
   const userId = useGetUserId();
   const ctx = api.useUtils();
@@ -139,10 +150,6 @@ function PostSignUpDialog() {
     orderDetails: state.orderDetails,
     viewportLabel: state.viewportLabel,
   }));
-
-  const { data: userExists } = api.user.isUserRegistered.useQuery(userId, {
-    enabled: Boolean(userId && isSignedIn),
-  });
 
   const { data: order } = api.order.getById.useQuery(
     localStorage.getItem("khue's-orderIdToRedeem") ?? "",
@@ -160,7 +167,13 @@ function PostSignUpDialog() {
         }, 2000);
 
         setTimeout(() => {
-          setIsOpen(false);
+          setDialogIsOpen(false);
+
+          setTimeout(() => {
+            setShouldRenderPostSignUpDialog(false);
+          }, 300);
+          // ^ duration of the dialog closing animation,
+          // allows the dialog to fade out before being removed from the DOM
         }, 750);
 
         localStorage.removeItem("khue's-orderIdToRedeem");
@@ -170,7 +183,7 @@ function PostSignUpDialog() {
       },
     });
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [dialogIsOpen, setDialogIsOpen] = useState(true);
   const [step, setStep] = useState(1);
   const [initialRewardsPoints, setInitialRewardsPoints] = useState(0);
   const [saveButtonText, setSaveButtonText] = useState("Save");
@@ -180,12 +193,6 @@ function PostSignUpDialog() {
   > | null>(null);
   const [dietaryRestrictionsValues, setDietaryRestrictionsValues] =
     useState<z.infer<typeof dietaryRestrictionsSchema> | null>(null);
-
-  useEffect(() => {
-    if (userId && isSignedIn && userExists !== undefined && !userExists) {
-      setIsOpen(true);
-    }
-  }, [isSignedIn, userExists, userId]);
 
   const mainForm = useForm<z.infer<typeof mainFormSchema>>({
     resolver: zodResolver(mainFormSchema),
@@ -268,16 +275,9 @@ function PostSignUpDialog() {
 
     onChange(formattedValue);
   }
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return <></>;
 
   return (
-    <AlertDialog open={isOpen}>
+    <AlertDialog open={dialogIsOpen}>
       <AlertDialogContent className="max-w-screen-md">
         <div
           style={{
