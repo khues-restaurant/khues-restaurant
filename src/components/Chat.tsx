@@ -283,9 +283,9 @@ function Chat() {
             )}
           </AnimatePresence>
 
-          <AlertDialogContent className="baseVertFlex h-[90dvh] max-h-[750px] w-[90vw] !gap-0 rounded-lg border-none !p-0 shadow-xl">
+          <AlertDialogContent className="baseVertFlex h-[90dvh] max-h-[750px] w-[90vw] !gap-0 rounded-xl border-none !p-0 shadow-xl">
             {/* header */}
-            <div className="baseFlex relative z-20 w-full gap-4 rounded-t-lg bg-primary p-4 shadow-md">
+            <div className="baseFlex relative z-20 w-full gap-4 rounded-t-xl bg-primary p-4 shadow-md">
               <Image
                 src={khuesKitchenLogo}
                 alt={"TODO: fill in w/ appropriate alt text"}
@@ -350,9 +350,9 @@ function Chat() {
             </div>
 
             {/* input */}
-            <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-stone-200 to-stone-300 p-2 px-4 shadow-inner">
+            <div className="baseFlex w-full gap-4 rounded-b-xl bg-gradient-to-br from-stone-200 to-stone-300 p-2 px-4 shadow-inner">
               <Textarea
-                placeholder="Enter your message here"
+                placeholder="Enter your message here..."
                 minLength={1}
                 maxLength={500}
                 value={newMessageContent}
@@ -518,7 +518,7 @@ function Chat() {
             {/* input */}
             <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-stone-200 to-stone-300 p-2 px-4 shadow-inner">
               <Textarea
-                placeholder="Enter your message here"
+                placeholder="Enter your message here..."
                 minLength={1}
                 maxLength={500}
                 value={newMessageContent}
