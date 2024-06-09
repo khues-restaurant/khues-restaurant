@@ -60,18 +60,12 @@ function GeneralLayout({ children }: GeneralLayout) {
 
   useClearToastsOnRefocus();
 
-  if (initViewportLabelSet === false) return null;
-
-  // TODO: <Head> tags do not attach themselves to the page source if we block
-  // rendering until auth is fully settled. need to probably find better way to manage
-  // layout shift instead & allow rendering
-
-  // if (
-  //   initViewportLabelSet === false ||
-  //   !isLoaded ||
-  //   (isLoaded && isSignedIn && user === undefined)
-  // )
-  //   return null;
+  if (
+    initViewportLabelSet === false ||
+    !isLoaded ||
+    (isLoaded && isSignedIn && user === undefined)
+  )
+    return null;
 
   return (
     <>
