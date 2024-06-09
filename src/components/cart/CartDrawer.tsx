@@ -147,6 +147,20 @@ function CartDrawer({
   const [rewardItems, setRewardItems] = useState<Item[]>([]);
 
   const customTipInputRef = useRef<HTMLInputElement>(null);
+  const [showCustomTipInput, setShowCustomTipInput] = useState(false);
+  const [tipValueInitialized, setTipValueInitialized] = useState(false);
+
+  // hacky, but should work for effect you want
+  useEffect(() => {
+    if (tipValueInitialized) return;
+
+    if (orderDetails.tipValue !== 0) {
+      setShowCustomTipInput(true);
+      setTipValueInitialized(true);
+    } else {
+      setTipValueInitialized(true);
+    }
+  }, [orderDetails, tipValueInitialized]);
 
   useEffect(() => {
     const filteredRewardItems = [];
@@ -1165,7 +1179,7 @@ function CartDrawer({
               <span className="font-medium">Tip</span>
 
               <div className="baseFlex w-full gap-2 xs:w-auto">
-                {orderDetails.tipPercentage === null ? (
+                {showCustomTipInput ? (
                   <Form {...tipForm}>
                     <form
                       onSubmit={(e) => {
@@ -1251,6 +1265,8 @@ function CartDrawer({
                     }
                     className="w-full text-xs font-semibold xs:w-auto"
                     onClick={() => {
+                      setShowCustomTipInput(true);
+
                       setTimeout(() => {
                         customTipInputRef.current?.focus();
                       }, 0);
@@ -1290,6 +1306,8 @@ function CartDrawer({
                   }
                   className="w-full text-xs font-semibold xs:w-auto"
                   onClick={() => {
+                    setShowCustomTipInput(false);
+
                     updateOrder({
                       newOrderDetails: {
                         ...orderDetails,
@@ -1307,6 +1325,8 @@ function CartDrawer({
                   }
                   className="w-full text-xs font-semibold xs:w-auto"
                   onClick={() => {
+                    setShowCustomTipInput(false);
+
                     updateOrder({
                       newOrderDetails: {
                         ...orderDetails,
@@ -1324,6 +1344,8 @@ function CartDrawer({
                   }
                   className="w-full text-xs font-semibold xs:w-auto"
                   onClick={() => {
+                    setShowCustomTipInput(false);
+
                     updateOrder({
                       newOrderDetails: {
                         ...orderDetails,

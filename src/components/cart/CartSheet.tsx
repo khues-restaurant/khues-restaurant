@@ -140,6 +140,20 @@ function CartSheet({
   const [rewardItems, setRewardItems] = useState<Item[]>([]);
 
   const customTipInputRef = useRef<HTMLInputElement>(null);
+  const [showCustomTipInput, setShowCustomTipInput] = useState(false);
+  const [tipValueInitialized, setTipValueInitialized] = useState(false);
+
+  // hacky, but should work for effect you want
+  useEffect(() => {
+    if (tipValueInitialized) return;
+
+    if (orderDetails.tipValue !== 0) {
+      setShowCustomTipInput(true);
+      setTipValueInitialized(true);
+    } else {
+      setTipValueInitialized(true);
+    }
+  }, [orderDetails, tipValueInitialized]);
 
   useEffect(() => {
     const filteredRewardItems = [];
@@ -1148,7 +1162,7 @@ function CartSheet({
             <span className="font-medium">Tip</span>
 
             <div className="baseFlex gap-2">
-              {orderDetails.tipPercentage === null ? (
+              {showCustomTipInput ? (
                 <Form {...tipForm}>
                   <form
                     onSubmit={(e) => {
@@ -1232,6 +1246,8 @@ function CartSheet({
                   }
                   className="text-xs font-semibold"
                   onClick={() => {
+                    setShowCustomTipInput(true);
+
                     setTimeout(() => {
                       customTipInputRef.current?.focus();
                     }, 0);
@@ -1271,6 +1287,8 @@ function CartSheet({
                 }
                 className="text-xs font-semibold"
                 onClick={() => {
+                  setShowCustomTipInput(false);
+
                   updateOrder({
                     newOrderDetails: {
                       ...orderDetails,
@@ -1288,6 +1306,8 @@ function CartSheet({
                 }
                 className="text-xs font-semibold"
                 onClick={() => {
+                  setShowCustomTipInput(false);
+
                   updateOrder({
                     newOrderDetails: {
                       ...orderDetails,
@@ -1305,6 +1325,8 @@ function CartSheet({
                 }
                 className="text-xs font-semibold"
                 onClick={() => {
+                  setShowCustomTipInput(false);
+
                   updateOrder({
                     newOrderDetails: {
                       ...orderDetails,
