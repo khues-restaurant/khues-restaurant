@@ -1,20 +1,10 @@
 import { useAuth } from "@clerk/nextjs";
-import { loadStripe, type Stripe } from "@stripe/stripe-js";
-import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import useGetUserId from "~/hooks/useGetUserId";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { env } from "~/env";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
-
-const useStripe = () => {
-  const stripe = useMemo<Promise<Stripe | null>>(
-    () => loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY),
-    [],
-  );
-
-  return stripe;
-};
 
 interface UseInitializeCheckout {
   setCheckoutButtonText: Dispatch<SetStateAction<string>>;
@@ -76,8 +66,6 @@ function useInitializeCheckout({
     },
   });
 
-  const stripePromise = useStripe();
-
   async function checkout() {
     const response = await createCheckout.mutateAsync({
       userId,
@@ -85,7 +73,10 @@ function useInitializeCheckout({
       orderDetails,
       pickupName,
     });
-    const stripe = await stripePromise;
+    // dynamically import stripe to avoid loading it immediately on page load
+    const stripe = await (
+      await import("@stripe/stripe-js")
+    ).loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
     setValidatingCart(false);
 
