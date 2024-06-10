@@ -2,7 +2,7 @@ import { useLayoutEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { FaTrashAlt } from "react-icons/fa";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useGetUserId from "~/hooks/useGetUserId";
@@ -57,6 +57,7 @@ import { TfiReceipt } from "react-icons/tfi";
 function Preferences() {
   const userId = useGetUserId();
   const { isSignedIn, signOut } = useAuth();
+  const { user: clerkUser } = useUser();
   const ctx = api.useUtils();
   const { asPath, push } = useRouter();
 
@@ -781,23 +782,24 @@ function Preferences() {
                     Account management
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="baseVertFlex mt-4 gap-8 p-4 tablet:!flex-row">
-                  {/* if user is not signed in with oauth (aka they have a password for their account), show button to change/reset password */}
+                <AccordionContent className="baseVertFlex mt-4 gap-6 p-4 tablet:!flex-row tablet:gap-8">
+                  {clerkUser?.passwordEnabled && (
+                    <>
+                      <Button
+                        variant={"link"}
+                        disabled={saveButtonText !== "Save changes"}
+                        onClick={() => {
+                          // TODO
+                        }}
+                      >
+                        Change password
+                      </Button>
+                      <Separator className="h-[1px] w-1/4 tablet:h-[25px] tablet:w-[1px]" />
+                    </>
+                  )}
 
                   <Button
-                    variant={"secondary"}
-                    disabled={saveButtonText !== "Save changes"}
-                    onClick={() => {
-                      // TODO
-                    }}
-                  >
-                    Change password
-                    {/* TODO: looks like you need to create your own jsx for this, shouldn't be terrible
-                but prob just open up an alert dialog to do this in? seems most reasonable/safe */}
-                  </Button>
-
-                  <Button
-                    variant={"secondary"}
+                    variant={"link"}
                     disabled={saveButtonText !== "Save changes"}
                     // className="mt-2 h-8"
                     onClick={async () => {
@@ -811,14 +813,14 @@ function Preferences() {
                     Log out
                   </Button>
 
-                  <Separator className="h-[1px] w-1/2 tablet:h-[25px] tablet:w-[1px]" />
+                  <Separator className="h-[1px] w-1/4 tablet:h-[25px] tablet:w-[1px]" />
 
                   <AlertDialog open={showDeleteUserDialog}>
                     <AlertDialogTrigger asChild>
                       <Button
-                        variant={"ghost"}
+                        variant={"link"}
                         disabled={saveButtonText !== "Save changes"}
-                        className="baseFlex gap-2 border-destructive text-destructive"
+                        className="baseFlex gap-2 !text-destructive hover:!text-destructive"
                         onClick={() => setShowDeleteUserDialog(true)}
                       >
                         <FaTrashAlt />
@@ -864,7 +866,7 @@ function Preferences() {
                         </p>
                       </AlertDialogDescription>
 
-                      <AlertDialogFooter>
+                      <AlertDialogFooter className="gap-2">
                         <Button
                           variant="outline"
                           onClick={() => setShowDeleteUserDialog(false)}
