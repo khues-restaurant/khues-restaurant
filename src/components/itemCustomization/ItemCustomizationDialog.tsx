@@ -574,7 +574,10 @@ function CustomizationGroup({
       <p className="font-medium">{category.name}</p>
       <p className="text-sm text-stone-400">{category.description}</p>
       <div className="baseFlex mt-2 gap-2">
-        <RadioGroup value={localItemOrderDetails.customizations[category.id]}>
+        <RadioGroup
+          value={localItemOrderDetails.customizations[category.id]}
+          className="grid grid-cols-1 tablet:grid-cols-2"
+        >
           {category.customizationChoices.map((choice) => {
             // Determine if the current choice is the default choice.
             const isDefaultChoice = choice.id === category.defaultChoiceId;
@@ -638,7 +641,7 @@ function CustomizationOption({
   return (
     <div
       key={choice.id}
-      className={`baseFlex relative min-w-96 !justify-start gap-4 rounded-md border-2 p-4 transition-all ${(isHovered || isSelected) && choice.isAvailable ? "border-primary" : "border-stone-300"}
+      className={`baseFlex relative min-w-96 !justify-start gap-4 rounded-md border-2 p-4 transition-all tablet:min-w-80 ${(isHovered || isSelected) && choice.isAvailable ? "border-primary" : "border-stone-300"}
       ${choice.isAvailable ? "cursor-pointer" : ""}
       `}
       onMouseEnter={() => setIsHovered(true)}
