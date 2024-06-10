@@ -336,7 +336,7 @@ model User {
     firstName           String
     lastName            String
     email               String   @unique
-    phoneNumber         String   @unique
+    phoneNumber         String
     birthday            DateTime
     dietaryRestrictions String
 

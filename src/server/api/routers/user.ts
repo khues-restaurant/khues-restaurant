@@ -260,19 +260,7 @@ export const userRouter = createTRPCRouter({
           .string({
             required_error: "Phone number cannot be empty",
           })
-          .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Invalid phone number format")
-          .refine(
-            async (phoneNumber) => {
-              // TODO: do this later, but should be very possible to query users model to see if phone number is unique. I don't think any special authentication logic is desired/needed here
-
-              const isUnique = true; // Replace with actual check
-              return isUnique;
-            },
-            {
-              message: "Phone number must be unique",
-            },
-          ),
-
+          .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Invalid phone number format"),
         dietaryRestrictions: z
           .string()
           .max(100, { message: "Must be at most 100 characters" })

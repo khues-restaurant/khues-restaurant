@@ -38,7 +38,7 @@ const PaymentMetadataSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   email: z.string().email(),
-  phoneNumber: z.string().nullable(), // Additional validation can be added if there's a specific format for phone numbers
+  phoneNumber: z.string().nullable(),
 });
 
 interface PaymentMetadata {
