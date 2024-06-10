@@ -2,7 +2,6 @@ import { useAuth } from "@clerk/nextjs";
 import { PrismaClient } from "@prisma/client";
 import { motion } from "framer-motion";
 import { type GetServerSideProps } from "next";
-import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { MdOutlineMail } from "react-icons/md";
@@ -62,22 +61,6 @@ function PaymentSuccess({
       // to be a tiny tiny element on this page
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
-      <Head>
-        <title>Payment success | Khue&apos;s</title>
-        <meta name="robots" content="noindex,nofollow" />
-        <meta property="og:title" content="Payment success | Khue's"></meta>
-        <meta
-          property="og:url"
-          content={`www.khueskitchen.com/payment-sucess?session_id=${sessionId}&userId=${userId}`}
-        />
-        <meta property="og:type" content="website" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: 'history.scrollRestoration = "manual"',
-          }}
-        />
-      </Head>
-
       <div className="baseVertFlex relative max-w-80 gap-4 overflow-hidden rounded-lg border bg-gradient-to-br from-offwhite to-primary/10 px-6 py-8 tablet:max-w-2xl tablet:gap-8 tablet:p-12">
         <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
         <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />

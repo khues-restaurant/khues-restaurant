@@ -1,7 +1,6 @@
 import DashboardDesktopHeader from "~/components/dashboard/headers/DashboardDesktopHeader";
 import DashboardMobileHeader from "~/components/dashboard/headers/DashboardMobileHeader";
 import { type Dispatch, type SetStateAction } from "react";
-import Head from "next/head";
 import { useMainStore } from "~/stores/MainStore";
 import useViewportLabelResizeListener from "~/hooks/useViewportLabelResizeListener";
 import { type Socket } from "socket.io-client";
@@ -36,11 +35,6 @@ function DashboardHeaderShell({
 
   return (
     <>
-      <Head>
-        <title>Dashboard | Khue&apos;s</title>
-        <meta name="robots" content="noindex,nofollow" />
-      </Head>
-
       {viewportLabel.includes("mobile") ? (
         <DashboardMobileHeader
           viewState={viewState}

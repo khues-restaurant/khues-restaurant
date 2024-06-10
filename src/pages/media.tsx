@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import Head from "next/head";
 import Image from "next/image";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
@@ -23,29 +22,6 @@ function Media() {
       transition={{ duration: 0.5 }}
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
-      <Head>
-        <title>Media | Khue&apos;s</title>
-        <meta
-          name="description"
-          content="Explore Khue's Kitchen in the media, featuring interviews, articles, and videos showcasing Chef Eric Pham's culinary journey and Vietnamese cuisine."
-        />
-        <meta property="og:title" content="Media | Khue's"></meta>
-        <meta property="og:url" content="www.khueskitchen.com/media" />
-        <meta
-          property="og:description"
-          content="Explore Khue's Kitchen in the media, featuring interviews, articles, and videos showcasing Chef Eric Pham's culinary journey and Vietnamese cuisine."
-        />
-        <meta property="og:type" content="website" />
-        {/* <meta
-          property="og:image"
-          content="https://www.autostrum.com/opengraphScreenshots/explore.png"
-        ></meta> */}
-        {/* <meta
-          property="og:image:alt"
-          content="TODO: A description of what is in the image (not a caption). If the page specifies an og:image it should specify og:image:alt"
-        ></meta> */}
-      </Head>
-
       {/* Hero */}
 
       {/* if doing images in hero, maybe only darkPrimary as singular color w/o a gradient? 

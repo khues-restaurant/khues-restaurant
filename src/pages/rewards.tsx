@@ -12,7 +12,6 @@ import { LuCakeSlice } from "react-icons/lu";
 import { Separator } from "~/components/ui/separator";
 import Image from "next/image";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
-import Head from "next/head";
 
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import StaticLotus from "~/components/ui/StaticLotus";
@@ -27,29 +26,6 @@ function Rewards() {
       transition={{ duration: 0.5 }}
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start gap-8 pb-24 tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)] tablet:pb-8"
     >
-      <Head>
-        <title>Rewards | Khue&apos;s</title>
-        <meta
-          name="description"
-          content="Become a member of Khue's Rewards and enjoy exclusive benefits, from earning points towards free meals to special birthday treats and early access to new dishes."
-        />
-        <meta property="og:title" content="Rewards | Khue's"></meta>
-        <meta property="og:url" content="www.khueskitchen.com/rewards" />
-        <meta
-          property="og:description"
-          content="Become a member of Khue's Rewards and enjoy exclusive benefits, from earning points towards free meals to special birthday treats and early access to new dishes."
-        />
-        <meta property="og:type" content="website" />
-        {/* <meta
-          property="og:image"
-          content="https://www.autostrum.com/opengraphScreenshots/explore.png"
-        ></meta> */}
-        {/* <meta
-          property="og:image:alt"
-          content="TODO: A description of what is in the image (not a caption). If the page specifies an og:image it should specify og:image:alt"
-        ></meta> */}
-      </Head>
-
       {/* Hero */}
       <div
         style={{

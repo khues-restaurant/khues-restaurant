@@ -46,7 +46,6 @@ import { Separator } from "~/components/ui/separator";
 import { formatPhoneNumber } from "~/utils/formatPhoneNumber";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { useMainStore } from "~/stores/MainStore";
-import Head from "next/head";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import { useToast } from "~/components/ui/use-toast";
 import { AlertDialogTitle } from "@radix-ui/react-alert-dialog";
@@ -262,22 +261,6 @@ function Preferences() {
       w-full !justify-start bg-offwhite lg:bg-body tablet:mt-28 tablet:min-h-[calc(100dvh-7rem-120px)]
       "
     >
-      <Head>
-        <title>Preferences | Khue&apos;s</title>
-        <meta name="robots" content="noindex,nofollow" />
-        <meta property="og:title" content="Preferences | Khue's"></meta>
-        <meta
-          property="og:url"
-          content="www.khueskitchen.com/profile/preferences"
-        />
-        <meta property="og:type" content="website" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: 'history.scrollRestoration = "manual"',
-          }}
-        />
-      </Head>
-
       <div className="baseFlex my-12 !hidden gap-4 rounded-lg border border-stone-400 bg-offwhite p-1 tablet:!flex">
         <Button
           variant={

@@ -1,15 +1,15 @@
 import { type AppProps } from "next/app";
 import { ClerkProvider } from "@clerk/nextjs";
 import { api } from "~/utils/api";
-
-import "~/styles/globals.css";
 import GeneralLayout from "~/components/layouts/GeneralLayout";
 import { useRouter } from "next/router";
 import DashboardLayout from "~/components/dashboard/DashboardLayout";
 import { ParallaxProvider } from "react-scroll-parallax";
+import DynamicHead from "~/components/DynamicHead";
+import "~/styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const { asPath } = useRouter();
+  const { pathname } = useRouter();
 
   return (
     <ClerkProvider
@@ -30,8 +30,10 @@ function MyApp({ Component, pageProps }: AppProps) {
       }}
       {...pageProps}
     >
+      <DynamicHead currentPath={pathname} />
+
       <ParallaxProvider scrollAxis="vertical">
-        {asPath.includes("/dashboard") ? (
+        {pathname === "/dashboard" ? (
           <DashboardLayout>
             <Component {...pageProps} />
           </DashboardLayout>

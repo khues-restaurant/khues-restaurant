@@ -19,7 +19,6 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { IoChatbox } from "react-icons/io5";
 import { FaPhone } from "react-icons/fa6";
-import Head from "next/head";
 
 import mobileHero from "/public/homepage/mobileHero.webp";
 import topLeftTabletHero from "/public/homepage/heroTwo.webp";
@@ -196,29 +195,6 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
       transition={{ duration: 0.5 }}
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
-      <Head>
-        <title>Khue&apos;s</title>
-        <meta
-          name="description"
-          content="Discover the modern Vietnamese flavors at Khue's, where Chef Eric Pham brings a fresh perspective to traditional dishes inspired by his mother's legacy."
-        />
-        <meta property="og:title" content="Khue's"></meta>
-        <meta property="og:url" content="www.khueskitchen.com/" />
-        <meta
-          property="og:description"
-          content="Discover the modern Vietnamese flavors at Khue's, where Chef Eric Pham brings a fresh perspective to traditional dishes inspired by his mother's legacy."
-        />
-        <meta property="og:type" content="website" />
-        {/* <meta
-          property="og:image"
-          content="https://www.autostrum.com/opengraphScreenshots/explore.png"
-        ></meta> */}
-        {/* <meta
-          property="og:image:alt"
-          content="TODO: A description of what is in the image (not a caption). If the page specifies an og:image it should specify og:image:alt"
-        ></meta> */}
-      </Head>
-
       {/* Hero */}
       <div
         ref={mobileHeroRef}

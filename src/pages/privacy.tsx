@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import Head from "next/head";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 
@@ -13,29 +12,6 @@ function Privacy() {
       transition={{ duration: 0.5 }}
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
-      <Head>
-        <title>Privacy | Khue&apos;s</title>
-        <meta
-          name="description"
-          content="Khue's Kitchen is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website, use our services, and interact with our platform."
-        />
-        <meta property="og:title" content="Privacy | Khue's"></meta>
-        <meta property="og:url" content="www.khueskitchen.com/privacy" />
-        <meta
-          property="og:description"
-          content="Khue's Kitchen is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website, use our services, and interact with our platform."
-        />
-        <meta property="og:type" content="website" />
-        {/* <meta
-          property="og:image"
-          content="https://www.autostrum.com/opengraphScreenshots/explore.png"
-        ></meta> */}
-        {/* <meta
-          property="og:image:alt"
-          content="TODO: A description of what is in the image (not a caption). If the page specifies an og:image it should specify og:image:alt"
-        ></meta> */}
-      </Head>
-
       <div className="mx-auto max-w-4xl p-6">
         <h1 className="mb-6 text-3xl font-bold">Privacy Policy</h1>
         <p className="mb-4">

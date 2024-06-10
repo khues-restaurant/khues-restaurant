@@ -22,7 +22,6 @@ import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationC
 import { IoSettingsOutline } from "react-icons/io5";
 import { TfiReceipt } from "react-icons/tfi";
 import { useRouter } from "next/router";
-import Head from "next/head";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
 
 import sampleImage from "/public/menuItems/sampleImage.webp";
@@ -151,22 +150,6 @@ function Rewards() {
       className="baseVertFlex baseVertFlex relative mt-24
       h-full min-h-[calc(100dvh-6rem-81px)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem-120px)]"
     >
-      <Head>
-        <title>Rewards | Khue&apos;s</title>
-        <meta name="robots" content="noindex,nofollow" />
-        <meta property="og:title" content="Rewards | Khue's"></meta>
-        <meta
-          property="og:url"
-          content="www.khueskitchen.com/profile/rewards"
-        />
-        <meta property="og:type" content="website" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: 'history.scrollRestoration = "manual"',
-          }}
-        />
-      </Head>
-
       <div className="baseFlex my-12 !hidden gap-4 rounded-lg border border-stone-400 bg-offwhite p-1 tablet:!flex">
         <Button
           variant={
