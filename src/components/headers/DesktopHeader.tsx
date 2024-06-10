@@ -70,13 +70,10 @@ function DesktopHeader() {
     };
   }, [events]);
 
-  // okay I want to not show rewards/auth buttons until user auth status is known,
-  // however I *really* want to show the page as soon as possible, what options do I have here?
-
   return (
     <nav
       id="header"
-      className={`${classes.desktopHeader} fixed left-0 top-0 z-50 grid h-28 w-screen grid-cols-1 grid-rows-1 bg-offwhite shadow-md
+      className={`${classes.desktopHeader} fixed left-0 top-0 z-50 grid h-28 w-screen bg-offwhite shadow-md
       `}
     >
       <Button variant="text" asChild>
@@ -159,7 +156,7 @@ function DesktopHeader() {
               size={"icon"}
               className="baseFlex gap-2 2xl:hidden"
             >
-              <IoMdMore className="size-8 text-primary 2xl:hidden" />
+              <IoMdMore className="size-7 text-primary 2xl:hidden" />
             </Button>
           </PopoverTrigger>
           <PopoverContent side="bottom" className="w-auto">
