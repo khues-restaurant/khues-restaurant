@@ -186,6 +186,7 @@ function OrderNow() {
 
     window.addEventListener("scroll", dynamicallySetCurrentlyInViewCategory);
     window.addEventListener("resize", dynamicallySetCurrentlyInViewCategory);
+    window.addEventListener("focus", dynamicallySetCurrentlyInViewCategory);
 
     return () => {
       window.removeEventListener(
@@ -194,6 +195,10 @@ function OrderNow() {
       );
       window.removeEventListener(
         "resize",
+        dynamicallySetCurrentlyInViewCategory,
+      );
+      window.removeEventListener(
+        "focus",
         dynamicallySetCurrentlyInViewCategory,
       );
     };

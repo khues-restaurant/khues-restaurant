@@ -179,6 +179,7 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
 
     window.addEventListener("scroll", dynamicallySetCurrentlyInViewCategory);
     window.addEventListener("resize", dynamicallySetCurrentlyInViewCategory);
+    window.addEventListener("focus", dynamicallySetCurrentlyInViewCategory);
 
     return () => {
       window.removeEventListener(
@@ -187,6 +188,10 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
       );
       window.removeEventListener(
         "resize",
+        dynamicallySetCurrentlyInViewCategory,
+      );
+      window.removeEventListener(
+        "focus",
         dynamicallySetCurrentlyInViewCategory,
       );
     };
