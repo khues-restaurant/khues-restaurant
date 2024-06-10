@@ -390,8 +390,6 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         socket.emit("newOrderPlaced", {
           orderId: order.id,
         });
-
-        socket.close();
       });
 
       // TODO: uncomment for production
@@ -451,6 +449,12 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       //       notableUserDescription: response,
       //     },
       //   });
+      //
+      //  need to have dashboard refetch the order to display the notableUserDescription
+
+      //    socket.emit("newOrderPlaced", {
+      //      orderId: order.id,
+      //    });
       // }
 
       // 10) cleanup transient order, technically not necessary though right since we just upsert either way?
@@ -460,6 +464,8 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
+      // 11) close socket connection
+      socket.close();
       break;
     default:
       console.log(`Unhandled event type ${event.type}`);
