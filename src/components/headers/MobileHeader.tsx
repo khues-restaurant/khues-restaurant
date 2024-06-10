@@ -364,7 +364,7 @@ function MobileHeader() {
                       </AccordionTrigger>
                       <AccordionContent className="pt-2">
                         <div className="baseVertFlex !items-start gap-8 rounded-md border bg-offwhite p-4 shadow-sm">
-                          <div className="baseVertFlex w-full !items-start gap-2">
+                          <div className="baseVertFlex w-full !items-start gap-4">
                             <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
                               <MdAccessTime />
                               Hours
@@ -394,28 +394,36 @@ function MobileHeader() {
 
                           <Separator className="w-4/5 self-center" />
 
-                          <div className="baseVertFlex relative !items-start gap-4">
-                            <div className="baseVertFlex !items-start gap-2">
+                          <div className="baseVertFlex relative w-full !items-start gap-4">
+                            <div className="baseVertFlex !items-start gap-4">
                               <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
                                 <TbLocation />
                                 Location
                               </div>
-                              <p>
-                                We are located just outside of the HarMar Mall
-                                in Roseville, Minnesota.
+                              <p className="w-[55vw] sm:w-auto">
+                                We are conveniently located next to the Green
+                                Line light rail, offering easy access for all
+                                visitors. Parking space is also available for
+                                your convenience.
                               </p>
 
                               <div className="baseFlex gap-2">
                                 <TbLocation className="size-6 text-primary sm:size-4" />
 
-                                <a
-                                  href="https://facebook.com"
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="text-primary"
+                                <Button
+                                  variant={"link"}
+                                  className="h-8 !p-0"
+                                  asChild
                                 >
-                                  1234 Lorem Ipsum Dr. Roseville, MN 12345
-                                </a>
+                                  <a
+                                    href="https://facebook.com"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="my-2 text-wrap text-primary"
+                                  >
+                                    799 University Ave W, St Paul, MN 55104
+                                  </a>
+                                </Button>
                               </div>
                             </div>
 

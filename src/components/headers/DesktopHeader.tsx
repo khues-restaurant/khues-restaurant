@@ -285,7 +285,7 @@ function DesktopHeader() {
             </Button>
           </DialogTrigger>
           <DialogContent extraBottomSpacer={false} className="max-w-[900px]">
-            <div className="baseFlex w-[850px] !items-start gap-8">
+            <div className="baseFlex w-[850px] !items-start">
               <div className="baseVertFlex w-64 !items-start gap-2">
                 <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
                   <MdAccessTime />
@@ -316,28 +316,31 @@ function DesktopHeader() {
 
               <Separator orientation="vertical" className="h-4/5 self-center" />
 
-              <div className="baseVertFlex relative !items-start gap-4">
+              <div className="baseVertFlex relative ml-8 !items-start gap-4">
                 <div className="baseVertFlex !items-start gap-2">
                   <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
                     <TbLocation />
                     Location
                   </div>
-                  <p>
-                    We are located just outside of the HarMar Mall in Roseville,
-                    Minnesota.
+                  <p className="w-[550px]">
+                    We are conveniently located next to the Green Line light
+                    rail, offering easy access for all visitors. Parking space
+                    is also available for your convenience.
                   </p>
 
                   <div className="baseFlex gap-2">
                     <TbLocation className="text-primary" />
 
-                    <a
-                      href="https://facebook.com"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-primary"
-                    >
-                      1234 Lorem Ipsum Dr. Roseville, MN 12345
-                    </a>
+                    <Button variant={"link"} className="h-8 !p-0" asChild>
+                      <a
+                        href="https://facebook.com"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-primary"
+                      >
+                        799 University Ave W, St Paul, MN 55104
+                      </a>
+                    </Button>
                   </div>
                 </div>
 
