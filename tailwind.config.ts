@@ -36,6 +36,8 @@ const config = {
       },
       boxShadow: {
         heavyInner: "inset 0px 2px 4px 0px rgba(0 0 0 / 0.35)",
+        heroContainer: "0px 4px 8px 0px rgba(0 0 0 / 0.35)",
+        lightHeroContainer: "0px 4px 16px 0px rgba(0 0 0 / 0.35)",
       },
       colors: {
         border: "hsl(var(--border))",

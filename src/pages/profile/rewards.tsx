@@ -416,7 +416,7 @@ function Rewards() {
                 />
               </motion.div>
 
-              <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-primary shadow-lg">
+              <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-primary shadow-lg tablet:shadow-xl">
                 <div className="text-center text-lg font-semibold tablet:text-xl">
                   Khue&apos;s Rewards
                 </div>

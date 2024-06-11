@@ -323,7 +323,7 @@ function OrderNow() {
             sizes="(min-width: 1000px) 160px, 192px"
             className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
           />
-          <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-offwhite p-2 shadow-lg tablet:!flex">
+          <div className="baseFlex shadow-heroContainer z-10 mx-8 !hidden rounded-md bg-offwhite p-2 tablet:!flex">
             <div className="baseFlex gap-2 font-semibold text-primary tablet:p-2 tablet:text-xl desktop:text-2xl">
               <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
               <h1>Order</h1>
@@ -344,7 +344,7 @@ function OrderNow() {
           />
         </div>
 
-        <div className="baseFlex z-10 rounded-md bg-offwhite p-2 shadow-lg tablet:hidden">
+        <div className="baseFlex shadow-heroContainer z-10 rounded-md bg-offwhite p-2 tablet:hidden">
           <div className="baseFlex gap-2 p-2 text-xl font-semibold text-primary tablet:px-8 tablet:py-3 tablet:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary" />
             <h1>Order</h1>

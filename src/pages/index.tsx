@@ -435,7 +435,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             }}
             className="baseVertFlex absolute top-0 z-10 h-full md:left-8 xl:!left-16 2xl:!left-24"
           >
-            <section className="baseFlex gap-12 rounded-md border bg-offwhite bg-gradient-to-br from-offwhite to-primary/10 py-8 pl-12 pr-16 shadow-xl">
+            <section className="baseFlex shadow-lightHeroContainer gap-12 rounded-md border bg-offwhite bg-gradient-to-br from-offwhite to-primary/10 py-8 pl-12 pr-16">
               <Image
                 src={khuesKitchenLogo}
                 alt={"TODO: fill in w/ appropriate alt text"}

@@ -93,7 +93,7 @@ function Media() {
           ></div>
         </div> */}
 
-        <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-lg tablet:!flex">
+        <div className="baseFlex shadow-heroContainer z-10 mx-8 rounded-md bg-offwhite p-4 tablet:!flex">
           <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
             <h1>Media</h1>
