@@ -291,6 +291,15 @@ function CartSheet({
     ),
   });
 
+  console.log(
+    "orderDetails.datetimeToPickup",
+    orderDetails.datetimeToPickup,
+    "orderDetails.isASAP",
+    orderDetails.isASAP,
+    "getHoursAndMinutesFromDate(orderDetails.datetimeToPickup)",
+    getHoursAndMinutesFromDate(orderDetails.datetimeToPickup),
+  );
+
   const mainForm = useForm<z.infer<typeof mainFormSchema>>({
     resolver: zodResolver(mainFormSchema),
     values: {
