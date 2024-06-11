@@ -26,6 +26,7 @@ import { TbLocation } from "react-icons/tb";
 import { motion } from "framer-motion";
 
 import outsideOfRestaurant from "/public/homepage/heroTwo.webp";
+import { useToast } from "~/components/ui/use-toast";
 
 const linkContainer = {
   visible: {
@@ -67,6 +68,8 @@ function MobileHeader() {
   const [hoursAndLocationAccordionOpen, setHoursAndLocationAccordionOpen] =
     useState(false);
   const hoursAndLocationAccordionRef = useRef<HTMLDivElement>(null);
+
+  const { dismiss: dismissToasts } = useToast();
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -110,6 +113,10 @@ function MobileHeader() {
           open={sheetIsOpen}
           onOpenChange={(open) => {
             setSheetIsOpen(open);
+
+            if (open === true) {
+              dismissToasts();
+            }
 
             if (open === false) {
               setTimeout(() => {
