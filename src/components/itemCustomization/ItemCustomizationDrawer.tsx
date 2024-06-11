@@ -188,7 +188,11 @@ function ItemCustomizationDrawer({
         >
           <div className="baseFlex relative w-full !items-start !justify-between px-8">
             <div className="baseFlex gap-2">
-              <p className="max-w-52 text-xl font-semibold underline underline-offset-2">
+              <p
+                className={`text-xl font-semibold underline underline-offset-2
+                  ${isSignedIn ? "max-w-52" : "max-w-72"}
+                `}
+              >
                 {itemToCustomize.name}
               </p>
             </div>
