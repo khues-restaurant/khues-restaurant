@@ -15,16 +15,7 @@ const getCurrentWeekDates = () => {
   return dates;
 };
 
-// interface AvailablePickupDays {
-//   selectedDate: Date;
-//   minPickupTime: Date | null | undefined;
-// }
-
 function AvailablePickupDays() {
-  //   {
-  //   selectedDate,
-  //   minPickupTime,
-  // }: AvailablePickupDays
   const weekDates = getCurrentWeekDates();
 
   return (
