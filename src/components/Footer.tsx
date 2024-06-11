@@ -65,12 +65,7 @@ p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tab
           <div className="baseFlex gap-2">
             <MdOutlineMail size={"0.95rem"} />
             <Button variant="link" className="h-8 px-1" asChild>
-              <a
-                href="mailto:example@example.com"
-                target="_blank"
-                rel="noreferrer"
-                className="!text-offwhite"
-              >
+              <a href="mailto:example@example.com" className="!text-offwhite">
                 example@example.com
               </a>
             </Button>
@@ -91,24 +86,24 @@ p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tab
 
         <div className="baseFlex gap-2">
           <Button variant="ghost" asChild>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer">
+            <a href="https://instagram.com">
               <SiTiktok className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
             </a>
           </Button>
           <Button variant="ghost" asChild>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer">
+            <a href="https://instagram.com">
               <IoLogoInstagram className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
             </a>
           </Button>
 
           <Button variant="ghost" asChild>
-            <a href="https://facebook.com" target="_blank" rel="noreferrer">
+            <a href="https://facebook.com">
               <FaFacebook className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
             </a>
           </Button>
 
           <Button variant="ghost" asChild>
-            <a href="https://twitter.com" target="_blank" rel="noreferrer">
+            <a href="https://twitter.com">
               <FaXTwitter className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
             </a>
           </Button>

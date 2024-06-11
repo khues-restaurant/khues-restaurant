@@ -130,12 +130,7 @@ function Unsubscribe({ email }: { email?: string }) {
                 If you are still having trouble, please feel free to reach out
                 to us at{" "}
                 <Button variant="link" asChild>
-                  <a
-                    href="mailto:example@example.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="h-5 !p-0"
-                  >
+                  <a href="mailto:example@example.com" className="h-5 !p-0">
                     example@example.com
                   </a>
                 </Button>

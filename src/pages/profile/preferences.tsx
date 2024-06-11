@@ -858,7 +858,12 @@ function Preferences() {
                           to your account data upon account deletion, please
                           refer to our
                           <Button variant={"link"} asChild>
-                            <Link href="/privacy" className="h-6 !p-0 !px-2">
+                            <Link
+                              href="/privacy"
+                              target="_blank"
+                              rel="noreferrer"
+                              className="h-6 !p-0 !px-2"
+                            >
                               Privacy Policy
                             </Link>
                           </Button>

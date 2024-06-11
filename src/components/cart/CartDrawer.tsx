@@ -495,9 +495,14 @@ function CartDrawer({
           <TbLocation className="text-primary" />
 
           <Button variant={"link"} className="h-6" asChild>
-            <Link href="/googleMapsLink" className="!p-0 !text-sm">
+            <a
+              href="https://www.google.com/maps/place/Ngon+Bistro/@44.9560024,-93.1337998,15z/data=!4m6!3m5!1s0x87f62a8194b9460f:0x51ed0108f30095d4!8m2!3d44.9560024!4d-93.1337998!16s%2Fg%2F1tk6wglq?entry=ttu"
+              target="_blank"
+              rel="noreferrer"
+              className="!p-0 !text-sm"
+            >
               2100 Snelling Ave Roseville, MN 55113
-            </Link>
+            </a>
           </Button>
         </div>
 
