@@ -10,10 +10,8 @@ export default async function handler(
   response: NextApiResponse,
 ) {
   try {
-    const timeZone = "America/Chicago";
-
     // Get the current date in the "America/Chicago" time zone
-    const nowInChicago = fromZonedTime(new Date(), timeZone);
+    const nowInChicago = fromZonedTime(new Date(), "America/Chicago");
 
     // Set the time to midnight in the "America/Chicago" time zone
     nowInChicago.setHours(0, 0, 0, 0);
@@ -31,7 +29,7 @@ export default async function handler(
         id: 1,
       },
       data: {
-        value: new Date(startOfDayInChicagoUTC),
+        value: startOfDayInChicagoUTC,
       },
     });
 
