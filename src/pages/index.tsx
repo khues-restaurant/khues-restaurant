@@ -1266,13 +1266,15 @@ function OurFavoriteMenuItemCard({ menuItem }: OurFavoriteMenuItemCard) {
         alt={"TODO: Fix later"}
         width={160}
         height={160}
-        className="self-center rounded-md drop-shadow-md tablet:drop-shadow-lg"
+        className="select-none self-center rounded-md drop-shadow-md tablet:drop-shadow-lg"
       />
-      <p className="font-semibold">{menuItem.name}</p>
-      <p className="line-clamp-3 text-center text-sm">{menuItem.description}</p>
+      <p className="select-none font-semibold">{menuItem.name}</p>
+      <p className="line-clamp-3 select-none text-center text-sm">
+        {menuItem.description}
+      </p>
       <Button
         disabled={!menuItem.available}
-        className="w-full"
+        className="w-full select-none"
         onClick={() => {
           // set prev order details so we can revert if necessary
           // with toast's undo button
