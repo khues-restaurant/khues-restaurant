@@ -4,10 +4,28 @@ import isEqual from "lodash.isequal";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import Decimal from "decimal.js";
 import { toZonedTime } from "date-fns-tz";
-import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
 import { isSelectedTimeSlotValid } from "~/utils/isSelectedTimeSlotValid";
 import { loopToFindFirstOpenDay } from "~/utils/loopToFindFirstOpenDay";
 import { isEligibleForBirthdayReward } from "~/utils/isEligibleForBirthdayReward";
+import { getMidnightDate } from "~/utils/getMidnightDate";
+
+function validateDayOfDatetimeToPickup(orderDatetimeToPickup: Date) {
+  let datetimeToPickup = orderDatetimeToPickup
+    ? toZonedTime(orderDatetimeToPickup, "America/Chicago")
+    : // TODO: check if the getMidnightDate() here is wanted/needed
+      toZonedTime(getMidnightDate(new Date()), "America/Chicago");
+
+  const now = toZonedTime(new Date(), "America/Chicago");
+  now.setHours(0, 0, 0, 0); // Normalize now to midnight for consistent comparison
+
+  // If datetimeToPickup is in the past, need to find the next valid day
+  // (at midnight specifically) to set it to.
+  if (datetimeToPickup < now) {
+    datetimeToPickup = loopToFindFirstOpenDay(now);
+  }
+
+  return datetimeToPickup;
+}
 
 function validateTimeToPickup(
   orderDetails: OrderDetails,
@@ -33,6 +51,10 @@ function validateTimeToPickup(
     return;
   }
 
+  // technically by this point, the date _should_ be valid, and it's just that the time
+  // should be set to midnight of currently selected day, however setting it to midnight
+  // here and still sending it through loopToFindFirstOpenDay function just to be safe.
+  now.setHours(0, 0, 0, 0);
   orderDetails.datetimeToPickup = loopToFindFirstOpenDay(now);
 }
 
@@ -98,7 +120,7 @@ export const validateOrderRouter = createTRPCRouter({
 
       if (!validatingAReorder) {
         // Date validation
-        orderDetails.datetimeToPickup = getFirstValidMidnightDate(
+        orderDetails.datetimeToPickup = validateDayOfDatetimeToPickup(
           orderDetails.datetimeToPickup,
         );
 

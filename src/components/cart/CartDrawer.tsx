@@ -1,6 +1,6 @@
 import { useAuth } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
+import { format, isToday, parseISO } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import {
@@ -21,7 +21,6 @@ import AnimatedNumbers from "~/components/AnimatedNumbers";
 import AnimatedPrice from "~/components/AnimatedPrice";
 import AvailablePickupTimes from "~/components/cart/AvailablePickupTimes";
 import { Button } from "~/components/ui/button";
-import { Calendar } from "~/components/ui/calendar";
 import { DrawerFooter } from "~/components/ui/drawer";
 import {
   Form,
@@ -56,7 +55,6 @@ import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
 import { getHoursAndMinutesFromDate } from "~/utils/getHoursAndMinutesFromDate";
-import { selectedDateIsToday } from "~/utils/selectedDateIsToday";
 import { X } from "lucide-react";
 import isEqual from "lodash.isequal";
 import Decimal from "decimal.js";
@@ -65,6 +63,7 @@ import Image from "next/image";
 import { TbLocation } from "react-icons/tb";
 import { Separator } from "~/components/ui/separator";
 import { Input } from "~/components/ui/input";
+import AvailablePickupDays from "~/components/cart/AvailablePickupDays";
 
 function getSafeAreaInsetBottom() {
   // Create a temporary element to get the CSS variable
@@ -525,39 +524,25 @@ function CartDrawer({
                 <FormItem className="baseVertFlex relative !items-start space-y-0">
                   <div className="baseFlex gap-6">
                     <FormLabel className="font-semibold">Pickup date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-[200px] justify-start text-left font-normal",
-                              !field.value && "text-muted-foreground",
-                            )}
-                          >
-                            <CiCalendarDate className="mr-2 h-5 w-5" />
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Select a date</span>
-                            )}
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="mr-6 w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          disabled={getDisabledDates()}
-                          selected={field.value}
-                          onSelect={(e) => {
-                            if (e instanceof Date) {
-                              field.onChange(e);
-                            }
-                          }}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <Select
+                      onValueChange={(stringifiedDate) =>
+                        field.onChange(parseISO(stringifiedDate))
+                      }
+                      value={format(field.value, "yyyy-MM-dd")}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-[200px] pl-[14px]">
+                          <CiCalendarDate className="h-5 w-5 shrink-0" />
+                          <SelectValue
+                            placeholder="Select a day"
+                            className="w-[200px] placeholder:!text-muted-foreground"
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent side="bottom">
+                        <AvailablePickupDays />
+                      </SelectContent>
+                    </Select>
                   </div>
                   <AnimatePresence>
                     {invalid && (
@@ -590,8 +575,8 @@ function CartDrawer({
                     <FormLabel className="font-semibold">Pickup time</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger className="w-max gap-2 pl-4 pr-2">
-                          <FaRegClock />
+                        <SelectTrigger className="w-max gap-2 pl-4">
+                          <FaRegClock className="shrink-0" />
                           <SelectValue
                             placeholder="Select a time"
                             className="placeholder:!text-muted-foreground"
@@ -601,9 +586,7 @@ function CartDrawer({
                       <SelectContent
                         side="bottom"
                         className={`${
-                          selectedDateIsToday(
-                            mainForm.getValues().dateToPickup,
-                          ) &&
+                          isToday(mainForm.getValues().dateToPickup) &&
                           mainForm.getValues().dateToPickup.getHours() >= 22
                             ? ""
                             : "max-h-[300px]"
@@ -628,7 +611,7 @@ function CartDrawer({
                         }}
                         exit={{ opacity: 0, height: 0, marginTop: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="text-sm font-medium text-red-500"
+                        className="w-72 text-sm font-medium text-red-500"
                       >
                         {error?.message}
                       </motion.div>

@@ -3,7 +3,10 @@
 // and a time slot that is roughly 15 minutes from the current time, which would be
 // confusing to the user.
 
-export function is15MinsFromDatetime(targetDate: Date, currentDate: Date) {
+export function isAtLeast15MinsFromDatetime(
+  targetDate: Date,
+  currentDate: Date,
+) {
   // Calculate the difference in time between targetDate and currentDate in milliseconds
   const differenceInMillis = targetDate.getTime() - currentDate.getTime();
 

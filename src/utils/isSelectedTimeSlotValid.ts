@@ -1,5 +1,6 @@
 import { toZonedTime } from "date-fns-tz";
-import { is15MinsFromDatetime } from "~/utils/is15MinsFromDatetime";
+import { hoursOpenPerDay, isHoliday } from "~/utils/datesAndHoursOfOperation";
+import { isAtLeast15MinsFromDatetime } from "~/utils/isAtLeast15MinsFromDatetime";
 interface IsSelectedTimeSlotValid {
   isASAP?: boolean;
   datetimeToPickup: Date;
@@ -15,6 +16,14 @@ export function isSelectedTimeSlotValid({
   const tzDatetimeToPickup = toZonedTime(datetimeToPickup, "America/Chicago");
   const tzMinPickupDatetime = toZonedTime(minPickupDatetime, "America/Chicago");
 
+  const todaysHours =
+    hoursOpenPerDay[now.getDay() as keyof typeof hoursOpenPerDay];
+
+  // if restaurant is closed today, immediately return false
+  if ((todaysHours.open === 0 && todaysHours.close === 0) || isHoliday(now)) {
+    return false;
+  }
+
   // TODO: keep an eye on this check, might have unintended side effects
   // if tzDatetimeToPickup is midnight, return true
   if (
@@ -26,7 +35,7 @@ export function isSelectedTimeSlotValid({
   }
 
   // if currentDate hours is earlier than opening time, return false
-  if (tzDatetimeToPickup.getHours() < 12) {
+  if (tzDatetimeToPickup.getHours() < todaysHours.open) {
     return false;
   }
 
@@ -37,10 +46,10 @@ export function isSelectedTimeSlotValid({
     }
   } else {
     // make sure that the passed in datetimeToPickup is later than the current time
-    // and more specifically 15+ minutes from the current time
+    // and more specifically, is >= 15 minutes from the current time
     if (
       tzDatetimeToPickup <= now ||
-      !is15MinsFromDatetime(tzDatetimeToPickup, now)
+      !isAtLeast15MinsFromDatetime(tzDatetimeToPickup, now)
     ) {
       return false;
     }
@@ -51,15 +60,16 @@ export function isSelectedTimeSlotValid({
     return false;
   }
 
-  // if tzDatetimeToPickup hours is later than 21:30 (9:30 PM), return false
+  // if tzDatetimeToPickup > 30 mins from close or later, return false
 
   // TODO: depending on what specific interaction that eric wants (either
   // 30 mins from close is last time customer will be walking in to pickup their order,
   // or 30 mins from close is last time customer can place an order for pickup that night)
   // this will either be .getMinutes() > 30 or .getMinutes() > 15 respectively.
   if (
-    tzDatetimeToPickup.getHours() >= 21 &&
-    tzDatetimeToPickup.getMinutes() > 30
+    tzDatetimeToPickup.getHours() >= todaysHours.close ||
+    (tzDatetimeToPickup.getHours() === todaysHours.close - 1 &&
+      tzDatetimeToPickup.getMinutes() > 30)
   ) {
     return false;
   }

@@ -2,6 +2,11 @@ import { toZonedTime } from "date-fns-tz";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { SelectGroup, SelectItem, SelectLabel } from "~/components/ui/select";
+import {
+  hoursOpenPerDay,
+  isHoliday,
+  isRestaurantClosedToday,
+} from "~/utils/datesAndHoursOfOperation";
 import { formatTimeString } from "~/utils/formatTimeString";
 import { isSelectedTimeSlotValid } from "~/utils/isSelectedTimeSlotValid";
 import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
@@ -17,6 +22,18 @@ function AvailablePickupTimes({
 }: AvailablePickupTimes) {
   const [availablePickupTimes, setAvailablePickupTimes] = useState<string[]>([
     "ASAP (~20 mins)",
+    "12:00",
+    "12:15",
+    "12:30",
+    "12:45",
+    "13:00",
+    "13:15",
+    "13:30",
+    "13:45",
+    "14:00",
+    "14:15",
+    "14:30",
+    "14:45",
     "15:00",
     "15:15",
     "15:30",
@@ -53,6 +70,18 @@ function AvailablePickupTimes({
 
     let basePickupTimes = [
       "ASAP (~20 mins)",
+      "12:00",
+      "12:15",
+      "12:30",
+      "12:45",
+      "13:00",
+      "13:15",
+      "13:30",
+      "13:45",
+      "14:00",
+      "14:15",
+      "14:30",
+      "14:45",
       "15:00",
       "15:15",
       "15:30",
@@ -121,14 +150,29 @@ function AvailablePickupTimes({
 
   const orderingIsNotAvailable = useMemo(() => {
     const now = toZonedTime(new Date(), "America/Chicago");
+    const todaysHours =
+      hoursOpenPerDay[now.getDay() as keyof typeof hoursOpenPerDay];
 
     return (
       selectedDate.getTime() === todayAtMidnight.getTime() &&
-      ((minPickupTime && minPickupTime.getHours() >= 22) ||
-        now.getHours() >= 22 ||
-        (now.getHours() === 21 && now.getMinutes() >= 30))
+      ((minPickupTime && minPickupTime.getHours() >= todaysHours.close) ||
+        // if it's 30 mins from close or later, we should disable ordering
+        now.getHours() >= todaysHours.close ||
+        (now.getHours() === todaysHours.close - 1 && now.getMinutes() >= 30))
     );
   }, [selectedDate, minPickupTime, todayAtMidnight]);
+
+  // should be exceedingly rare that this is true, should only happen if someone manually
+  // enables a disabled day in the date picker <Select />...
+  if (isRestaurantClosedToday(selectedDate) || isHoliday(selectedDate)) {
+    <div className="baseVertFlex w-64 !items-start gap-2 p-4">
+      <p className="font-semibold underline underline-offset-2">Notice:</p>
+      <p className="text-sm">
+        Our restaurant is not open on this day. Please select a future date for
+        your pickup. We apologize for any inconvenience this may cause.
+      </p>
+    </div>;
+  }
 
   if (orderingIsNotAvailable) {
     return (

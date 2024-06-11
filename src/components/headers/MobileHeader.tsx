@@ -27,6 +27,7 @@ import { motion } from "framer-motion";
 
 import outsideOfRestaurant from "/public/homepage/heroTwo.webp";
 import { useToast } from "~/components/ui/use-toast";
+import { getWeeklyHours } from "~/utils/datesAndHoursOfOperation";
 
 const linkContainer = {
   visible: {
@@ -387,13 +388,7 @@ function MobileHeader() {
                                 <p>Sunday</p>
                               </div>
                               <div className="baseVertFlex w-full !items-start">
-                                <p>Closed</p>
-                                <p>3PM - 10PM</p>
-                                <p>3PM - 10PM</p>
-                                <p>3PM - 10PM</p>
-                                <p>3PM - 10PM</p>
-                                <p>3PM - 10PM</p>
-                                <p>Closed</p>
+                                {getWeeklyHours()}
                               </div>
                             </div>
                             {/* any special hours for holidays would go here */}

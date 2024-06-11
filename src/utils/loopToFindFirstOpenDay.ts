@@ -1,22 +1,8 @@
 import { toZonedTime } from "date-fns-tz";
-
-const holidays = [
-  new Date("2024-12-25"),
-  new Date("2024-12-26"),
-  new Date("2025-01-01"),
-];
-
-function isSundayOrMonday(date: Date) {
-  const dayOfWeek = date.getDay();
-  return dayOfWeek === 0 || dayOfWeek === 1;
-}
-
-function isHoliday(date: Date, holidays: Date[]) {
-  const dateString = date.toISOString().split("T")[0]; // Converts date to YYYY-MM-DD format
-  return holidays.some(
-    (holiday) => holiday.toISOString().split("T")[0] === dateString,
-  );
-}
+import {
+  isRestaurantClosedToday,
+  isHoliday,
+} from "~/utils/datesAndHoursOfOperation";
 
 export function loopToFindFirstOpenDay(datetimeToPickup: Date) {
   const localDatetimeToPickup = toZonedTime(
@@ -24,13 +10,14 @@ export function loopToFindFirstOpenDay(datetimeToPickup: Date) {
     "America/Chicago",
   );
 
-  localDatetimeToPickup.setHours(0, 0, 0, 0); // Normalize to midnight for consistent comparison
-
-  // Check and adjust for Sundays, Mondays, and Holidays
+  // Check and adjust for days of week that the restaurant is closed + holidays
   while (
-    isSundayOrMonday(localDatetimeToPickup) ||
-    isHoliday(localDatetimeToPickup, holidays)
+    isRestaurantClosedToday(localDatetimeToPickup) ||
+    isHoliday(localDatetimeToPickup)
   ) {
+    // reset to midnight and move to the next day (bit redundant but it's fine)
+    localDatetimeToPickup.setHours(0, 0, 0, 0); // Normalize to midnight for consistent comparison
+
     localDatetimeToPickup.setDate(localDatetimeToPickup.getDate() + 1); // Move to the next day
   }
 
