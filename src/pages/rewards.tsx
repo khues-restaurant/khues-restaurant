@@ -65,7 +65,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={96}
             height={96}
-            className="!relative"
+            className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -99,7 +99,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={96}
             height={96}
-            className="!relative"
+            className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -127,7 +127,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
-            className="!relative"
+            className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -154,7 +154,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
-            className="!relative"
+            className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -181,7 +181,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
-            className="!relative"
+            className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -208,7 +208,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
-            className="!relative"
+            className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -251,7 +251,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={96}
             height={96}
-            className="!relative"
+            className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -285,7 +285,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={96}
             height={96}
-            className="!relative"
+            className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -335,7 +335,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
-            className="!relative"
+            className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -357,7 +357,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
-            className="!relative"
+            className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -384,7 +384,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
-            className="!relative"
+            className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
       </div>
@@ -459,46 +459,46 @@ function Rewards() {
       </div>
 
       {/* filler images to break up the monotony */}
-      <div className="baseVertFlex relative my-8 gap-8 text-primary tablet:my-28 tablet:!flex-row tablet:gap-28">
-        <div className="baseVertFlex gap-4">
+      <div className="baseVertFlex relative my-8 gap-12 text-primary tablet:my-28 tablet:!flex-row tablet:gap-28">
+        <div className="baseVertFlex gap-4 tablet:gap-6">
           <Image
             src={sampleImage}
             alt={"TODO: replace with proper alt tag text"}
             sizes="(max-width: 1000px) 192px, 256px"
-            className="!relative size-48 rounded-md tablet:size-64"
+            className="!relative size-48 rounded-md drop-shadow-xl tablet:size-64"
           />
 
           <div className="baseVertFlex">
-            <p className="text-lg font-semibold">Appetizer One</p>
-            <p>950 points</p>
-          </div>
-        </div>
-
-        <div className="baseVertFlex gap-4">
-          <Image
-            src={sampleImage}
-            alt={"TODO: replace with proper alt tag text"}
-            sizes="(max-width: 1000px) 192px, 256px"
-            className="!relative size-48 rounded-md tablet:size-64"
-          />
-
-          <div className="baseVertFlex">
-            <p className="text-lg font-semibold">Entree One</p>
-            <p>1250 points</p>
-          </div>
-        </div>
-
-        <div className="baseVertFlex gap-4">
-          <Image
-            src={sampleImage}
-            alt={"TODO: replace with proper alt tag text"}
-            sizes="(max-width: 1000px) 192px, 256px"
-            className="!relative size-48 rounded-md tablet:size-64"
-          />
-
-          <div className="baseVertFlex">
-            <p className="text-lg font-semibold">Entree Two</p>
+            <p className="text-lg font-semibold">Egg Rolls</p>
             <p>1600 points</p>
+          </div>
+        </div>
+
+        <div className="baseVertFlex gap-4 tablet:gap-6">
+          <Image
+            src={sampleImage}
+            alt={"TODO: replace with proper alt tag text"}
+            sizes="(max-width: 1000px) 192px, 256px"
+            className="!relative size-48 rounded-md drop-shadow-xl tablet:size-64"
+          />
+
+          <div className="baseVertFlex">
+            <p className="text-lg font-semibold">Chili Crunch Wings</p>
+            <p>2400 points</p>
+          </div>
+        </div>
+
+        <div className="baseVertFlex gap-4 tablet:gap-6">
+          <Image
+            src={sampleImage}
+            alt={"TODO: replace with proper alt tag text"}
+            sizes="(max-width: 1000px) 192px, 256px"
+            className="!relative size-48 rounded-md drop-shadow-xl tablet:size-64"
+          />
+
+          <div className="baseVertFlex">
+            <p className="text-lg font-semibold">Chicken Sandwich</p>
+            <p>3800 points</p>
           </div>
         </div>
       </div>

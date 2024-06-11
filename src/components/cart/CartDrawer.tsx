@@ -799,7 +799,7 @@ function CartDrawer({
                         alt={item.name}
                         width={64}
                         height={64}
-                        className="rounded-md"
+                        className="rounded-md drop-shadow-md"
                       />
 
                       <div className="baseFlex w-full !items-start !justify-between">
@@ -979,7 +979,7 @@ function CartDrawer({
                                 alt={item.name}
                                 width={56}
                                 height={56}
-                                className="!size-14 rounded-md"
+                                className="!size-14 rounded-md drop-shadow-md"
                               />
                             </div>
 

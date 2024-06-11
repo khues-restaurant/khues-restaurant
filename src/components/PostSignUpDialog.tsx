@@ -787,7 +787,7 @@ function PostSignUpDialog({
                       alt={"TODO: replace with proper alt tag text"}
                       width={96}
                       height={96}
-                      className="!relative"
+                      className="!relative drop-shadow-md tablet:drop-shadow-lg"
                     />
                   </motion.div>
 
@@ -821,7 +821,7 @@ function PostSignUpDialog({
                       alt={"TODO: replace with proper alt tag text"}
                       width={96}
                       height={96}
-                      className="!relative"
+                      className="!relative drop-shadow-md tablet:drop-shadow-lg"
                     />
                   </motion.div>
 
@@ -876,7 +876,7 @@ function PostSignUpDialog({
                       alt={"TODO: replace with proper alt tag text"}
                       width={96}
                       height={96}
-                      className="!relative"
+                      className="!relative drop-shadow-md tablet:drop-shadow-lg"
                     />
                   </motion.div>
 
@@ -910,7 +910,7 @@ function PostSignUpDialog({
                       alt={"TODO: replace with proper alt tag text"}
                       width={96}
                       height={96}
-                      className="!relative"
+                      className="!relative drop-shadow-md tablet:drop-shadow-lg"
                     />
                   </motion.div>
                 </div>

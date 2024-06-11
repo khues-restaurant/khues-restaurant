@@ -249,7 +249,7 @@ function Rewards() {
                   alt={"TODO: replace with proper alt tag text"}
                   width={96}
                   height={96}
-                  className="!relative"
+                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -283,7 +283,7 @@ function Rewards() {
                   alt={"TODO: replace with proper alt tag text"}
                   width={96}
                   height={96}
-                  className="!relative"
+                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -316,7 +316,7 @@ function Rewards() {
                   alt={"TODO: replace with proper alt tag text"}
                   width={144}
                   height={144}
-                  className="!relative"
+                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -348,7 +348,7 @@ function Rewards() {
                   alt={"TODO: replace with proper alt tag text"}
                   width={144}
                   height={144}
-                  className="!relative"
+                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -380,7 +380,7 @@ function Rewards() {
                   alt={"TODO: replace with proper alt tag text"}
                   width={144}
                   height={144}
-                  className="!relative"
+                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -412,7 +412,7 @@ function Rewards() {
                   alt={"TODO: replace with proper alt tag text"}
                   width={144}
                   height={144}
-                  className="!relative"
+                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -467,7 +467,7 @@ function Rewards() {
                   alt={"TODO: replace with proper alt tag text"}
                   width={96}
                   height={96}
-                  className="!relative"
+                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -501,7 +501,7 @@ function Rewards() {
                   alt={"TODO: replace with proper alt tag text"}
                   width={96}
                   height={96}
-                  className="!relative"
+                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -566,7 +566,7 @@ function Rewards() {
                   alt={"TODO: replace with proper alt tag text"}
                   width={144}
                   height={144}
-                  className="!relative"
+                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -598,7 +598,7 @@ function Rewards() {
                   alt={"TODO: replace with proper alt tag text"}
                   width={144}
                   height={144}
-                  className="!relative"
+                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -630,7 +630,7 @@ function Rewards() {
                   alt={"TODO: replace with proper alt tag text"}
                   width={144}
                   height={144}
-                  className="!relative"
+                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
                 />
               </motion.div>
             </div>
@@ -886,7 +886,7 @@ function RewardMenuItem({
           src={sampleImage}
           alt={menuItem.name}
           fill
-          className="!relative !size-16 rounded-md tablet:!size-24"
+          className="!relative !size-16 rounded-md drop-shadow-md tablet:!size-24 tablet:drop-shadow-lg"
         />
 
         <div className="baseVertFlex size-full !items-start !justify-between">

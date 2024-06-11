@@ -201,7 +201,7 @@ function ItemCustomizerDialogContent({
             alt={itemToCustomize.name}
             width={240}
             height={240}
-            className="z-10 my-4 mr-16 rounded-md"
+            className="z-10 my-4 mr-16 rounded-md drop-shadow-xl"
           />
 
           <div className="baseFlex absolute bottom-0 left-4 gap-4 rounded-t-md border border-b-0 bg-offwhite px-4 py-2 text-xl font-semibold">

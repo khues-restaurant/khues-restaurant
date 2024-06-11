@@ -253,20 +253,20 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
             alt={"TODO: fill in w/ appropriate alt text"}
             width={204}
             height={204}
-            className="!relative rounded-md tablet:!hidden"
+            className="!relative rounded-md drop-shadow-lg tablet:!hidden"
           />
 
           <Image
             src={sampleImage}
             alt={"TODO: fill in w/ appropriate alt text"}
             sizes="(min-width: 1000px) 160px, 192px"
-            className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
+            className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
           />
           <Image
             src={sampleImage}
             alt={"TODO: fill in w/ appropriate alt text"}
             sizes="(min-width: 1000px) 160px, 192px"
-            className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
+            className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
           />
           <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-offwhite p-2 shadow-lg tablet:!flex">
             <div className="baseFlex gap-2 font-semibold text-primary tablet:p-2 tablet:text-xl desktop:text-2xl">
@@ -279,13 +279,13 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
             src={sampleImage}
             alt={"TODO: fill in w/ appropriate alt text"}
             sizes="(min-width: 1000px) 160px, 192px"
-            className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
+            className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
           />
           <Image
             src={sampleImage}
             alt={"TODO: fill in w/ appropriate alt text"}
             sizes="(min-width: 1000px) 160px, 192px"
-            className="!relative !hidden !size-40 rounded-md tablet:!block desktop:!size-48"
+            className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
           />
         </div>
 
@@ -608,7 +608,7 @@ function MenuCategory({
           src={wideAngleFoodShot}
           alt={name}
           sizes="(min-width: 1000px) 90vw, 75vw"
-          className="!relative !h-48 w-full rounded-md object-cover"
+          className="!relative !h-48 w-full rounded-md object-cover shadow-md"
         />
 
         <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md bg-offwhite px-4 py-2 shadow-heavyInner tablet:!flex-row tablet:!items-center tablet:gap-4">
@@ -894,7 +894,7 @@ function MenuItemPreview({
             alt={menuItem.name}
             width={96}
             height={96}
-            className="mt-2 !self-start rounded-md"
+            className="mt-2 !self-start rounded-md drop-shadow-lg"
           />
 
           <div className="baseVertFlex size-full !items-start">

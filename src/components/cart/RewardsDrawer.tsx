@@ -161,7 +161,7 @@ function RewardsDrawer({
               alt={"TODO: replace with proper alt tag text"}
               width={96}
               height={96}
-              className="!relative"
+              className="!relative drop-shadow-md tablet:drop-shadow-lg"
             />
           </motion.div>
 
@@ -195,7 +195,7 @@ function RewardsDrawer({
               alt={"TODO: replace with proper alt tag text"}
               width={96}
               height={96}
-              className="!relative"
+              className="!relative drop-shadow-md tablet:drop-shadow-lg"
             />
           </motion.div>
 
@@ -250,7 +250,7 @@ function RewardsDrawer({
               alt={"TODO: replace with proper alt tag text"}
               width={96}
               height={96}
-              className="!relative"
+              className="!relative drop-shadow-md tablet:drop-shadow-lg"
             />
           </motion.div>
 
@@ -284,7 +284,7 @@ function RewardsDrawer({
               alt={"TODO: replace with proper alt tag text"}
               width={96}
               height={96}
-              className="!relative"
+              className="!relative drop-shadow-md tablet:drop-shadow-lg"
             />
           </motion.div>
         </div>
@@ -413,7 +413,7 @@ function RewardMenuItem({
           alt={menuItem.name}
           width={64}
           height={64}
-          className="rounded-md"
+          className="rounded-md drop-shadow-md tablet:drop-shadow-lg"
         />
 
         <div className="baseVertFlex h-full w-48 !items-start !justify-between">

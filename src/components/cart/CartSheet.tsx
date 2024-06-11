@@ -786,7 +786,7 @@ function CartSheet({
                         alt={item.name}
                         width={64}
                         height={64}
-                        className="rounded-md"
+                        className="rounded-md drop-shadow-md"
                       />
 
                       <div className="baseFlex w-full !items-start !justify-between">
@@ -967,7 +967,7 @@ function CartSheet({
                                 alt={item.name}
                                 width={64}
                                 height={64}
-                                className="rounded-md"
+                                className="rounded-md drop-shadow-md"
                               />
                             </div>
 

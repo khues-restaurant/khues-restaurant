@@ -470,7 +470,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                       alt={order.orderItems[0]?.name ?? "First item image"}
                       width={48}
                       height={48}
-                      className="rounded-md"
+                      className="rounded-md drop-shadow-md"
                     />
 
                     {order.orderItems.length > 1 && (
@@ -479,7 +479,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                         alt={order.orderItems[0]?.name ?? "Second item image"}
                         width={48}
                         height={48}
-                        className="rounded-md"
+                        className="rounded-md drop-shadow-md"
                       />
                     )}
 
@@ -498,7 +498,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                             }
                             width={48}
                             height={48}
-                            className="rounded-md"
+                            className="rounded-md drop-shadow-md"
                           />
                         )}
                       </>
@@ -650,7 +650,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                     alt={order.orderItems[0]?.name ?? "First item image"}
                     width={64}
                     height={64}
-                    className="rounded-md"
+                    className="rounded-md drop-shadow-md"
                   />
 
                   {order.orderItems.length > 1 && (
@@ -659,7 +659,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                       alt={order.orderItems[0]?.name ?? "Second item image"}
                       width={64}
                       height={64}
-                      className="rounded-md"
+                      className="rounded-md drop-shadow-md"
                     />
                   )}
 
@@ -676,7 +676,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                           alt={order.orderItems[0]?.name ?? "Second item image"}
                           width={64}
                           height={64}
-                          className="rounded-md"
+                          className="rounded-md drop-shadow-md"
                         />
                       )}
                     </>

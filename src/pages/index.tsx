@@ -1266,7 +1266,7 @@ function OurFavoriteMenuItemCard({ menuItem }: OurFavoriteMenuItemCard) {
         alt={"TODO: Fix later"}
         width={160}
         height={160}
-        className="self-center rounded-md"
+        className="self-center rounded-md drop-shadow-md tablet:drop-shadow-lg"
       />
       <p className="font-semibold">{menuItem.name}</p>
       <p className="line-clamp-3 text-center text-sm">{menuItem.description}</p>

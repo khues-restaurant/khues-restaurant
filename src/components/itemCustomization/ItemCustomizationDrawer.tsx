@@ -255,7 +255,7 @@ function ItemCustomizationDrawer({
             alt={itemToCustomize.name}
             width={180}
             height={180}
-            className="my-4 rounded-md"
+            className="my-4 rounded-md drop-shadow-xl"
           />
         </div>
 
