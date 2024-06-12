@@ -260,7 +260,7 @@ function Chat() {
               >
                 <AlertDialogTrigger asChild>
                   <Button
-                    className={`size-12 rounded-full shadow-md ${asPath.includes("/menu") ? "opacity-0 tablet:opacity-100" : ""}`}
+                    className={`size-12 rounded-full shadow-md ${asPath.includes("/menu") ? "pointer-events-none opacity-0 tablet:pointer-events-auto tablet:opacity-100" : ""}`}
                     onClick={() => {
                       setChatIsOpen(!chatIsOpen);
                     }}
