@@ -59,9 +59,9 @@
   :root {
     --background: 40 100% 99%;
     --foreground: 0 0% 3.9%;
-    --card: 40 100% 98%;
+    --card: 40 100% 99%;
     --card-foreground: 0 0% 3.9%;
-    --popover: 40 100% 98%;
+    --popover: 40 100% 99%;
     --popover-foreground: 0 0% 3.9%;
     --primary: 144 61% 20%;
     /* could go to 150 maybe for deg */
@@ -91,9 +91,9 @@
   .dark {
     --background: 40 100% 99%;
     --foreground: 0 0% 3.9%;
-    --card: 40 100% 98%;
+    --card: 40 100% 99%;
     --card-foreground: 0 0% 3.9%;
-    --popover: 40 100% 98%;
+    --popover: 40 100% 99%;
     --popover-foreground: 0 0% 3.9%;
     --primary: 144 61% 20%;
     /* could go to 150 maybe for deg */
