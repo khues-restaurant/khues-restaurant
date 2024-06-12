@@ -226,7 +226,15 @@ function DynamicHead({ currentPath }: DynamicHead) {
       {dynamicHeadJSON.ogType && (
         <meta property="og:type" content={dynamicHeadJSON.ogType} />
       )}
-      {dynamicHeadJSON.ogImage && (
+
+      {/* default tags */}
+      <meta property="og:image" content={"/opengraphImage.png"}></meta>
+      <meta
+        property="og:image:alt"
+        content="Welcome to Khue's - A modern take on classic Vietnamese cuisine. The image features a welcoming character in traditional Vietnamese attire, set against a background of delicious Vietnamese dishes."
+      ></meta>
+
+      {/* {dynamicHeadJSON.ogImage && (
         <meta property="og:image" content={dynamicHeadJSON.ogImage}></meta>
       )}
       {dynamicHeadJSON.ogImageAlt && (
@@ -234,7 +242,7 @@ function DynamicHead({ currentPath }: DynamicHead) {
           property="og:image:alt"
           content={dynamicHeadJSON.ogImageAlt}
         ></meta>
-      )}
+      )} */}
     </Head>
   );
 }
