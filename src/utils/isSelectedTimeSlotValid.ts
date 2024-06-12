@@ -21,16 +21,6 @@ export function isSelectedTimeSlotValid({
   const todaysHours =
     hoursOpenPerDay[now.getDay() as keyof typeof hoursOpenPerDay];
 
-  console.log(
-    todaysHours.open,
-    todaysHours.close,
-    isHoliday(now),
-    now.getDay(),
-    format(now, "yyyy-MM-dd HH:mm:ss"),
-    format(tzDatetimeToPickup, "yyyy-MM-dd HH:mm:ss"),
-    format(tzMinPickupDatetime, "yyyy-MM-dd HH:mm:ss"),
-  );
-
   // if restaurant is closed today, immediately return false
   if ((todaysHours.open === 0 && todaysHours.close === 0) || isHoliday(now)) {
     return false;
