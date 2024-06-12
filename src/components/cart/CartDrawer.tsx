@@ -1170,127 +1170,149 @@ function CartDrawer({
               <span className="font-medium">Tip</span>
 
               <div className="baseFlex w-full gap-2 xs:w-auto">
-                {showCustomTipInput ? (
-                  <Form {...tipForm}>
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        void mainForm.handleSubmit((mainFormData) => {
-                          void tipForm.handleSubmit((tipFormData) => {
-                            void onMainFormSubmit(mainFormData);
-                          })();
-                        })();
-                      }}
-                      className="baseVertFlex w-full gap-2 xs:w-auto"
+                <AnimatePresence mode="popLayout">
+                  {showCustomTipInput ? (
+                    <motion.div
+                      key="customTipForm"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.15 }}
                     >
-                      <FormField
-                        control={tipForm.control}
-                        name="tipValue"
-                        render={({
-                          field: { onChange, onBlur, value },
-                          fieldState: { invalid, error },
-                        }) => (
-                          <FormItem className="baseVertFlex relative w-full !items-start space-y-0 rounded-md outline outline-2 outline-primary xs:w-auto">
-                            <div className="baseVertFlex relative !items-start gap-2">
-                              {/* TODO: doesn't feel great to comment this out, but not sure of other
+                      <Form {...tipForm}>
+                        <form
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            void mainForm.handleSubmit((mainFormData) => {
+                              void tipForm.handleSubmit((tipFormData) => {
+                                void onMainFormSubmit(mainFormData);
+                              })();
+                            })();
+                          }}
+                          className="baseVertFlex w-full gap-2 xs:w-auto"
+                        >
+                          <FormField
+                            control={tipForm.control}
+                            name="tipValue"
+                            render={({
+                              field: { onChange, onBlur, value },
+                              fieldState: { invalid, error },
+                            }) => (
+                              <FormItem className="baseVertFlex relative w-full !items-start space-y-0 rounded-md outline outline-2 outline-primary xs:w-auto">
+                                <div className="baseVertFlex relative !items-start gap-2">
+                                  {/* TODO: doesn't feel great to comment this out, but not sure of other
                             best ui option to keep everything low-profile.. */}
-                              {/* <FormLabel className="font-semibold">Tip</FormLabel> */}
-                              <Input
-                                ref={customTipInputRef}
-                                value={value}
-                                type={"tel"}
-                                onChange={(e) => {
-                                  const inputValue = e.target.value.replace(
-                                    /[^0-9.]/g,
-                                    "",
-                                  );
-                                  onChange(inputValue);
+                                  {/* <FormLabel className="font-semibold">Tip</FormLabel> */}
+                                  <Input
+                                    ref={customTipInputRef}
+                                    value={value}
+                                    type={"tel"}
+                                    onChange={(e) => {
+                                      const inputValue = e.target.value.replace(
+                                        /[^0-9.]/g,
+                                        "",
+                                      );
+                                      onChange(inputValue);
 
-                                  const numericValue =
-                                    getNumericTipValue(inputValue);
-                                  if (numericValue !== null) {
-                                    updateOrder({
-                                      newOrderDetails: {
-                                        ...orderDetails,
-                                        tipPercentage: null,
-                                        tipValue: numericValue,
-                                      },
-                                    });
-                                  }
-                                }}
-                                onBlur={onBlur}
-                                placeholder="0"
-                                className="w-[77px] pl-5"
-                              />
-                              <div className="absolute bottom-0 left-0 top-0 flex items-center pl-2">
-                                $
-                              </div>
-                            </div>
-                            <AnimatePresence>
-                              {invalid && (
-                                <motion.div
-                                  key={"tipValueError"}
-                                  // due to being absolute, not copy pasting the
-                                  // animation states w/ marginTop/height changes
-                                  initial={{ opacity: 0 }}
-                                  animate={{ opacity: 1 }}
-                                  exit={{ opacity: 0 }}
-                                  transition={{ duration: 0.2 }}
-                                  className="absolute -bottom-6 left-0 right-0 ml-1 w-[280px] text-sm font-medium text-red-500"
-                                >
-                                  {error?.message}
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
-                          </FormItem>
-                        )}
-                      />
-                    </form>
-                  </Form>
-                ) : (
-                  <Button
-                    variant={
-                      orderDetails.tipPercentage === null
-                        ? "default"
-                        : "outline"
-                    }
-                    className="w-full text-xs font-semibold xs:w-auto"
-                    onClick={() => {
-                      setShowCustomTipInput(true);
+                                      const numericValue =
+                                        getNumericTipValue(inputValue);
+                                      if (numericValue !== null) {
+                                        updateOrder({
+                                          newOrderDetails: {
+                                            ...orderDetails,
+                                            tipPercentage: null,
+                                            tipValue: numericValue,
+                                          },
+                                        });
+                                      }
+                                    }}
+                                    onBlur={onBlur}
+                                    placeholder="0"
+                                    className="w-[77px] pl-5"
+                                  />
+                                  <div
+                                    className={`absolute bottom-0 left-0 top-0 flex items-center pl-2
+                                      ${tipForm.getValues().tipValue === "" ? "text-stone-500" : ""}
+                                    `}
+                                  >
+                                    $
+                                  </div>
+                                </div>
+                                <AnimatePresence>
+                                  {invalid && (
+                                    <motion.div
+                                      key={"tipValueError"}
+                                      // due to being absolute, not copy pasting the
+                                      // animation states w/ marginTop/height changes
+                                      initial={{ opacity: 0 }}
+                                      animate={{ opacity: 1 }}
+                                      exit={{ opacity: 0 }}
+                                      transition={{ duration: 0.2 }}
+                                      className="absolute -bottom-6 left-0 right-0 ml-1 w-[280px] text-sm font-medium text-red-500"
+                                    >
+                                      {error?.message}
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                              </FormItem>
+                            )}
+                          />
+                        </form>
+                      </Form>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="customTipButton"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.15 }}
+                    >
+                      <Button
+                        variant={
+                          orderDetails.tipPercentage === null
+                            ? "default"
+                            : "outline"
+                        }
+                        className="w-full text-xs font-semibold xs:w-auto"
+                        onClick={() => {
+                          setShowCustomTipInput(true);
 
-                      setTimeout(() => {
-                        customTipInputRef.current?.focus();
-                      }, 0);
+                          setTimeout(() => {
+                            customTipInputRef.current?.focus();
+                          }, 0);
 
-                      if (orderDetails.tipPercentage !== null) {
-                        updateOrder({
-                          newOrderDetails: {
-                            ...orderDetails,
-                            tipPercentage: null,
-                            tipValue: 0,
-                          },
-                        });
-                      }
-                    }}
-                    onFocus={() => {
-                      setTimeout(() => {
-                        customTipInputRef.current?.focus();
-                      }, 0);
+                          if (orderDetails.tipPercentage !== null) {
+                            updateOrder({
+                              newOrderDetails: {
+                                ...orderDetails,
+                                tipPercentage: null,
+                                tipValue: 0,
+                              },
+                            });
+                          }
+                        }}
+                        onFocus={() => {
+                          setTimeout(() => {
+                            customTipInputRef.current?.focus();
+                          }, 0);
 
-                      if (orderDetails.tipPercentage !== null) {
-                        updateOrder({
-                          newOrderDetails: {
-                            ...orderDetails,
-                            tipPercentage: null,
-                            tipValue: 0,
-                          },
-                        });
-                      }
-                    }}
-                  >
-                    Custom
-                  </Button>
-                )}
+                          if (orderDetails.tipPercentage !== null) {
+                            updateOrder({
+                              newOrderDetails: {
+                                ...orderDetails,
+                                tipPercentage: null,
+                                tipValue: 0,
+                              },
+                            });
+                          }
+                        }}
+                      >
+                        Custom
+                      </Button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
                 <Button
                   variant={
                     orderDetails.tipPercentage === 10 ? "default" : "outline"
