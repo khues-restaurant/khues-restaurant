@@ -123,13 +123,13 @@ function RewardsDrawer({
       }}
       className="baseVertFlex relative size-full !justify-start"
     >
-      <div className="baseVertFlex relative mt-8 w-full !justify-start">
+      <div className="baseVertFlex relative mt-10 w-full !justify-start overflow-y-auto ">
         <div
           style={{
             backgroundImage:
               "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
           }}
-          className="baseFlex relative mt-2 h-40 w-full overflow-hidden shadow-sm"
+          className="baseFlex relative mt-2 !h-40 w-full shrink-0 overflow-hidden shadow-sm"
         >
           <motion.div
             key={"rewardsHeroMobileImageOne"}
@@ -289,7 +289,7 @@ function RewardsDrawer({
           </motion.div>
         </div>
 
-        <div className="baseFlex w-full gap-2 border-b p-2 shadow-sm">
+        <div className="baseFlex sticky top-[-2px] z-10 w-full gap-2 border-b bg-offwhite p-2 shadow-sm">
           <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-primary" />
           <p className="text-center font-semibold text-primary">
             Choose your reward
@@ -298,7 +298,7 @@ function RewardsDrawer({
         </div>
 
         {/* TODO: come back to this.. I feel like a higher dvh value should work but on shorter height viewports content is being cut off... just a css understanding gap, maybe you need some kind of calc trickery here? */}
-        <div className="baseVertFlex relative h-[55dvh] !justify-start overflow-y-auto px-4 pb-24 pt-4 text-primary">
+        <div className="baseVertFlex relative !justify-start px-4 pb-24 pt-4 text-primary">
           {/* .map() of Your rewards */}
           <div className="baseVertFlex w-full gap-8 ">
             {/* Birthday reward options */}
