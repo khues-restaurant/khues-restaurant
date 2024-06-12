@@ -4,7 +4,6 @@ import { api } from "~/utils/api";
 import GeneralLayout from "~/components/layouts/GeneralLayout";
 import { useRouter } from "next/router";
 import DashboardLayout from "~/components/dashboard/DashboardLayout";
-import { ParallaxProvider } from "react-scroll-parallax";
 import DynamicHead from "~/components/DynamicHead";
 import "~/styles/globals.css";
 
@@ -17,14 +16,14 @@ function MyApp({ Component, pageProps }: AppProps) {
       appearance={{
         variables: {
           colorPrimary: "hsl(144deg, 61%, 20%)",
-          colorInputBackground: "hsl(40deg, 100%, 98%)",
+          colorInputBackground: "hsl(40deg, 100%, 99%)",
           colorTextSecondary: "rgb(128, 128, 128)", // gray
           fontFamily: "'Noto Sans', sans-serif",
           borderRadius: "0.375rem",
           colorDanger: "#dc2626", // red-600
           colorSuccess: "#16a34a", // green-600
           colorInputText: "rgb(64, 64, 64)", // dark gray
-          colorBackground: "hsl(40deg, 100%, 98%)",
+          colorBackground: "hsl(40deg, 100%, 99%)",
           colorText: "rgb(64, 64, 64)", // dark gray
         },
       }}

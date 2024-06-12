@@ -131,7 +131,7 @@
 
 @layer base {
   :root {
-    --background: 40 100% 98%;
+    --background: 40 100% 99%;
     --foreground: 0 0% 3.9%;
     --card: 40 100% 98%;
     --card-foreground: 0 0% 3.9%;
@@ -155,15 +155,15 @@
     --radius: 0.5rem;
 
     --active-link: 144 61% 10%;
-    --offwhite: 40 100% 98%;
+    --offwhite: 40 100% 99%;
     --gold: 43.62 61.12% 52.98%;
     --borderGold: 49 61% 58%;
     --darkPrimary: 144 61% 15%;
-    --body: 40 100% 97%;
+    --body: 40 100% 98%;
   }
 
   .dark {
-    --background: 40 100% 98%;
+    --background: 40 100% 99%;
     --foreground: 0 0% 3.9%;
     --card: 40 100% 98%;
     --card-foreground: 0 0% 3.9%;
@@ -187,11 +187,11 @@
     --radius: 0.5rem;
 
     --active-link: 144 61% 10%;
-    --offwhite: 40 100% 98%;
+    --offwhite: 40 100% 99%;
     --gold: 43.62 61.12% 52.98%;
     --borderGold: 49 61% 52%;
     --darkPrimary: 144 61% 15%;
-    --body: 40 100% 97%;
+    --body: 40 100% 98%;
   }
 }
 
@@ -201,7 +201,9 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    /* this was bg-background before, but I think it makes more sense
+    to have this be bg-body. keep an eye on it */
+    @apply bg-body text-foreground;
   }
 }
 
