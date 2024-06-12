@@ -455,8 +455,10 @@ function CartSheet({
 
       <div className="baseVertFlex size-full !justify-start overflow-y-auto">
         {/* location + date & time picker + pickup name form */}
-        <div className="baseFlex relative my-4 w-min flex-wrap gap-2 overflow-hidden rounded-md border border-stone-300 bg-gradient-to-br from-stone-200 to-stone-300/70 p-4 px-8 shadow-sm">
-          <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+        <div className="baseFlex relative my-4 w-min flex-wrap gap-2 rounded-md border border-stone-300 bg-gradient-to-br from-stone-200 to-stone-300/70 p-4 px-8 shadow-sm">
+          <div className="absolute inset-0 size-full overflow-hidden rounded-md">
+            <StaticLotus className="absolute -bottom-9 -right-9 size-28 rotate-[-45deg] fill-primary/50" />
+          </div>
 
           <span className="text-sm">
             Your order will be available for pickup at
