@@ -24,6 +24,7 @@ import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { Button } from "../ui/button";
+import { HiOutlineInformationCircle } from "react-icons/hi";
 import { getWeeklyHours } from "~/utils/datesAndHoursOfOperation";
 import classes from "./DesktopHeader.module.css";
 
@@ -316,8 +317,12 @@ function DesktopHeader() {
             <Button
               variant="outline"
               size={"sm"}
-              className="absolute -top-[36px] left-[-174px] hidden rounded-t-none text-primary 2xl:block"
+              className={`absolute -top-[36px] hidden !flex-nowrap gap-2 rounded-t-none text-primary 2xl:flex
+                
+              ${isSignedIn ? "left-[-200px]" : "left-[-189px]"}
+              `}
             >
+              <HiOutlineInformationCircle />
               Hours & Location
             </Button>
           </DialogTrigger>
