@@ -72,7 +72,7 @@ function PaymentSuccess({
 
         <div className="baseVertFlex gap-6 tablet:gap-8">
           {emailReceiptsAllowed && (
-            <div className="baseFlex mt-4 gap-4 rounded-md border bg-offwhite/80 p-4 text-sm shadow-inner">
+            <div className="baseFlex mt-4 gap-4 rounded-md border bg-offwhite/60 p-4 text-sm shadow-inner">
               <MdOutlineMail className="size-5 shrink-0 tablet:size-6" />
               Your email receipt has been sent and should arrive shortly.
             </div>
