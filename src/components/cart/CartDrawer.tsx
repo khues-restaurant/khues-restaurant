@@ -64,6 +64,7 @@ import { Separator } from "~/components/ui/separator";
 import { Input } from "~/components/ui/input";
 import AvailablePickupDays from "~/components/cart/AvailablePickupDays";
 import { getMidnightCSTInUTC } from "~/utils/cstToUTCHelpers";
+import StaticLotus from "~/components/ui/StaticLotus";
 
 function getSafeAreaInsetBottom() {
   // Create a temporary element to get the CSS variable
@@ -482,9 +483,13 @@ function CartDrawer({
 
       {/* location + date & time picker */}
       <div
-        className="baseVertFlex my-4 max-w-lg !justify-start gap-1 rounded-md border border-stone-300 bg-gradient-to-br
+        className="baseVertFlex relative my-4 max-w-lg !justify-start gap-1 rounded-md border border-stone-300 bg-gradient-to-br
         from-stone-200 to-stone-300/80 px-6 py-4 shadow-sm"
       >
+        <div className="absolute inset-0 size-full overflow-hidden rounded-md">
+          <StaticLotus className="absolute -bottom-10 -right-10 size-32 rotate-[-45deg] fill-primary/50" />
+        </div>
+
         <span className="text-sm">
           Your order will be available for pickup at
         </span>
