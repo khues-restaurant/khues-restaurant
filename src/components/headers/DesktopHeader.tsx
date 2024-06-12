@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { FaUserAlt } from "react-icons/fa";
 import { IoMdMore } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
+import { CiCalendarDate } from "react-icons/ci";
 import { MdAccessTime } from "react-icons/md";
 import { SlPresent } from "react-icons/sl";
 import { TbLocation } from "react-icons/tb";
@@ -192,15 +193,56 @@ function DesktopHeader() {
                           {getWeeklyHours()}
                         </div>
                       </div>
-                      {/* any special hours for holidays would go here */}
+
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant={"underline"}
+                            className="mt-2 !self-center"
+                          >
+                            Holiday hours
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <div className="baseVertFlex !items-start gap-4">
+                            <div className="baseFlex mb-2 gap-2">
+                              <CiCalendarDate className="size-6" />
+                              <p className="text-lg font-medium">
+                                Our holiday hours
+                              </p>
+                            </div>
+
+                            <p className="font-medium underline underline-offset-2">
+                              Thanksgiving
+                            </p>
+                            <p>
+                              We are closed from Thursday, November 25th to
+                              Saturday, November 27th.
+                            </p>
+
+                            <p className="font-medium underline underline-offset-2">
+                              Christmas
+                            </p>
+                            <p>
+                              We are closed from Friday, December 24th to
+                              Sunday, December 26th.
+                            </p>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+
+                      <p className="mt-2 text-center text-sm italic text-stone-400">
+                        * Pickup orders must be placed at least 30 minutes
+                        before closing.
+                      </p>
                     </div>
 
                     <Separator
                       orientation="vertical"
-                      className="h-4/5 self-center"
+                      className="mx-4 h-4/5 self-center"
                     />
 
-                    <div className="baseVertFlex relative ml-8 !items-start gap-4">
+                    <div className="baseVertFlex relative ml-4 !items-start gap-4">
                       <div className="baseVertFlex !items-start gap-2">
                         <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
                           <TbLocation />
@@ -300,12 +342,51 @@ function DesktopHeader() {
                     {getWeeklyHours()}
                   </div>
                 </div>
-                {/* any special hours for holidays would go here */}
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant={"underline"} className="mt-2 !self-center">
+                      Holiday hours
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <div className="baseVertFlex !items-start gap-4">
+                      <div className="baseFlex mb-2 gap-2">
+                        <CiCalendarDate className="size-6" />
+                        <p className="text-lg font-medium">Our holiday hours</p>
+                      </div>
+
+                      <p className="font-medium underline underline-offset-2">
+                        Thanksgiving
+                      </p>
+                      <p>
+                        We are closed from Thursday, November 25th to Saturday,
+                        November 27th.
+                      </p>
+
+                      <p className="font-medium underline underline-offset-2">
+                        Christmas
+                      </p>
+                      <p>
+                        We are closed from Friday, December 24th to Sunday,
+                        December 26th.
+                      </p>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+
+                <p className="mt-2 text-center text-sm italic text-stone-400">
+                  * Pickup orders must be placed at least 30 minutes before
+                  closing.
+                </p>
               </div>
 
-              <Separator orientation="vertical" className="h-4/5 self-center" />
+              <Separator
+                orientation="vertical"
+                className="mx-4 h-4/5 self-center"
+              />
 
-              <div className="baseVertFlex relative ml-8 !items-start gap-4">
+              <div className="baseVertFlex relative ml-4 !items-start gap-4">
                 <div className="baseVertFlex !items-start gap-2">
                   <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
                     <TbLocation />

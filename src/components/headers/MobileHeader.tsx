@@ -8,6 +8,8 @@ import { FaUserAlt } from "react-icons/fa";
 import { MdAccessTime } from "react-icons/md";
 import { SlPresent } from "react-icons/sl";
 import { TfiReceipt } from "react-icons/tfi";
+import { CiCalendarDate } from "react-icons/ci";
+import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 import CartButton from "~/components/cart/CartButton";
 import {
   Accordion,
@@ -391,7 +393,48 @@ function MobileHeader() {
                                 {getWeeklyHours()}
                               </div>
                             </div>
-                            {/* any special hours for holidays would go here */}
+
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button
+                                  variant={"underline"}
+                                  className=" !self-center"
+                                >
+                                  Holiday hours
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent>
+                                <div className="baseVertFlex !items-start gap-4">
+                                  <div className="baseFlex mb-2 gap-2">
+                                    <CiCalendarDate className="size-6" />
+                                    <p className="text-lg font-medium">
+                                      Our holiday hours
+                                    </p>
+                                  </div>
+
+                                  <p className="font-medium underline underline-offset-2">
+                                    Thanksgiving
+                                  </p>
+                                  <p>
+                                    We are closed from Thursday, November 25th
+                                    to Saturday, November 27th.
+                                  </p>
+
+                                  <p className="font-medium underline underline-offset-2">
+                                    Christmas
+                                  </p>
+                                  <p>
+                                    We are closed from Friday, December 24th to
+                                    Sunday, December 26th.
+                                  </p>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+
+                            <p className=" text-center text-xs italic text-stone-400">
+                              * Pickup orders must be placed at least 30 minutes
+                              before closing.
+                            </p>
                           </div>
 
                           <Separator className="w-4/5 self-center" />
