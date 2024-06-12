@@ -31,18 +31,15 @@ function MyApp({ Component, pageProps }: AppProps) {
       {...pageProps}
     >
       <DynamicHead currentPath={pathname} />
-
-      <ParallaxProvider scrollAxis="vertical">
-        {pathname === "/dashboard" ? (
-          <DashboardLayout>
-            <Component {...pageProps} />
-          </DashboardLayout>
-        ) : (
-          <GeneralLayout>
-            <Component {...pageProps} />
-          </GeneralLayout>
-        )}
-      </ParallaxProvider>
+      {pathname === "/dashboard" ? (
+        <DashboardLayout>
+          <Component {...pageProps} />
+        </DashboardLayout>
+      ) : (
+        <GeneralLayout>
+          <Component {...pageProps} />
+        </GeneralLayout>
+      )}
     </ClerkProvider>
   );
 }

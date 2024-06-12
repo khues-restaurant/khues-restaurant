@@ -7,7 +7,7 @@ import { MdOutlineMoneyOff } from "react-icons/md";
 import { BsSpeedometer2 } from "react-icons/bs";
 import { TfiReceipt } from "react-icons/tfi";
 import { SignUpButton, useAuth } from "@clerk/nextjs";
-import { Parallax } from "react-scroll-parallax";
+import { Parallax, ParallaxProvider } from "react-scroll-parallax";
 import WideFancySwirls from "~/components/ui/wideFancySwirls";
 import { HiOutlineNewspaper } from "react-icons/hi2";
 import {
@@ -216,15 +216,13 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             }}
             className="relative col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
-            <Parallax speed={0} className="!absolute !top-0 !size-full">
-              <Image
-                src={topLeftTabletHero}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                priority
-                sizes="33vw"
-                className="!relative !size-full rounded-md object-cover"
-              />
-            </Parallax>
+            <Image
+              src={topLeftTabletHero}
+              alt={"TODO: fill in w/ appropriate alt text"}
+              priority
+              sizes="33vw"
+              className="!relative !size-full rounded-md object-cover"
+            />
           </motion.div>
 
           {/* top right */}
@@ -242,15 +240,13 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             }}
             className="relative col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
-            <Parallax speed={0} className="!absolute !top-0 !size-full">
-              <Image
-                src={topRightTabletHero}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                priority
-                sizes="66vw"
-                className="!relative !size-full rounded-md object-cover"
-              />
-            </Parallax>
+            <Image
+              src={topRightTabletHero}
+              alt={"TODO: fill in w/ appropriate alt text"}
+              priority
+              sizes="66vw"
+              className="!relative !size-full rounded-md object-cover"
+            />
           </motion.div>
         </div>
 
@@ -320,19 +316,13 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             }}
             className="relative !top-0 col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
-            <Parallax
-              speed={0}
-              className="!absolute !top-0 !h-[150%] !w-full"
-              // TODO: this one is off by a bit in the other direction
-            >
-              <Image
-                src={bottomLeftTabletHero}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                priority
-                sizes="66vw"
-                className="!relative !size-full rounded-md object-cover"
-              />
-            </Parallax>
+            <Image
+              src={bottomLeftTabletHero}
+              alt={"TODO: fill in w/ appropriate alt text"}
+              priority
+              sizes="66vw"
+              className="!relative !size-full rounded-md object-cover"
+            />
           </motion.div>
 
           {/* bottom right */}
@@ -350,19 +340,13 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             }}
             className="relative !top-0 col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
-            <Parallax
-              speed={0}
-              className="!absolute !top-0 !h-[150%] !w-full"
-              // TODO: this one is off by a bit
-            >
-              <Image
-                src={bottomRightTabletHero}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                priority
-                sizes="33vw"
-                className="!relative !size-full rounded-md object-cover !pb-16"
-              />
-            </Parallax>
+            <Image
+              src={bottomRightTabletHero}
+              alt={"TODO: fill in w/ appropriate alt text"}
+              priority
+              sizes="33vw"
+              className="!relative !size-full rounded-md object-cover"
+            />
           </motion.div>
         </div>
       </div>
@@ -384,15 +368,13 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             }}
             className="relative col-span-1 row-span-2 size-full overflow-hidden rounded-md shadow-md"
           >
-            <Parallax speed={0} className="!absolute !top-0 !size-full">
-              <Image
-                src={topLeftTabletHero}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                priority
-                sizes="33vw"
-                className="!relative !size-full rounded-md object-cover"
-              />
-            </Parallax>
+            <Image
+              src={topLeftTabletHero}
+              alt={"TODO: fill in w/ appropriate alt text"}
+              priority
+              sizes="33vw"
+              className="!relative !size-full rounded-md object-cover"
+            />
           </motion.div>
 
           {/* top right */}
@@ -410,15 +392,13 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             }}
             className="relative col-span-2 row-span-2 size-full overflow-hidden rounded-md shadow-md"
           >
-            <Parallax speed={0} className="!absolute !top-0 !size-full">
-              <Image
-                src={topRightTabletHero}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                priority
-                sizes="66vw"
-                className="!relative !size-full rounded-md object-cover"
-              />
-            </Parallax>
+            <Image
+              src={topRightTabletHero}
+              alt={"TODO: fill in w/ appropriate alt text"}
+              priority
+              sizes="66vw"
+              className="!relative !size-full rounded-md object-cover"
+            />
           </motion.div>
 
           <motion.div
@@ -435,7 +415,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             }}
             className="baseVertFlex absolute top-0 z-10 h-full md:left-8 xl:!left-16 2xl:!left-24"
           >
-            <section className="baseFlex shadow-lightHeroContainer gap-12 rounded-md border bg-offwhite bg-gradient-to-br from-offwhite to-primary/10 py-8 pl-12 pr-16">
+            <section className="baseFlex gap-12 rounded-md border bg-offwhite bg-gradient-to-br from-offwhite to-primary/10 py-8 pl-12 pr-16 shadow-lightHeroContainer">
               <Image
                 src={khuesKitchenLogo}
                 alt={"TODO: fill in w/ appropriate alt text"}
@@ -486,19 +466,13 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             }}
             className="relative !top-0 col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
-            <Parallax
-              speed={0}
-              className="!absolute !top-0 !h-[150%] !w-full"
-              // TODO: this one is off by a bit
-            >
-              <Image
-                src={bottomLeftTabletHero}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                priority
-                sizes="33vw"
-                className="!relative !size-full rounded-md object-cover !pb-16"
-              />
-            </Parallax>
+            <Image
+              src={bottomLeftTabletHero}
+              alt={"TODO: fill in w/ appropriate alt text"}
+              priority
+              sizes="33vw"
+              className="!relative !size-full rounded-md object-cover "
+            />
           </motion.div>
 
           {/* bottom right */}
@@ -516,19 +490,13 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             }}
             className="relative !top-0 col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
-            <Parallax
-              speed={0}
-              className="!absolute !top-0 !h-[150%] !w-full"
-              // TODO: this one is off by a bit in the other direction
-            >
-              <Image
-                src={bottomRightTabletHero}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                priority
-                sizes="66vw"
-                className="!relative !size-full rounded-md object-cover"
-              />
-            </Parallax>
+            <Image
+              src={bottomRightTabletHero}
+              alt={"TODO: fill in w/ appropriate alt text"}
+              priority
+              sizes="66vw"
+              className="!relative !size-full rounded-md object-cover"
+            />
           </motion.div>
         </div>
       </div>
@@ -630,580 +598,582 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
         </div>
       </div>
 
-      {/* wrapping (prob just for padding?) container of promo sections below */}
-      <div className="baseVertFlex w-full gap-16 p-8 pb-16">
-        {/* masonry of featured food items */}
-        <div className="homepageFoodMasonry h-[700px] w-full max-w-sm tablet:h-[450px] tablet:max-w-4xl">
-          <div className="firstMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-3} className="!absolute !top-0 !size-[120%]">
-              <Image
-                src={masonryFoodOne}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                sizes="(max-width: 1000px) 384px, 500px"
-                className="!relative !size-full rounded-md object-cover"
-              />
-            </Parallax>
-          </div>
-
-          <div className="secondMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-3} className="!absolute !top-0 !size-[150%] ">
-              <Image
-                src={masonryFoodTwo}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                sizes="(max-width: 1000px) 159px, 500px"
-                className="!relative !size-full rounded-md object-cover"
-              />
-            </Parallax>
-          </div>
-
-          <div className="thirdMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-3} className="!absolute !top-0 !size-[150%]">
-              <Image
-                src={masonryFoodThree}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                sizes="(max-width: 1000px) 159px, 500px"
-                className="!relative !size-full rounded-md object-cover"
-              />
-            </Parallax>
-          </div>
-
-          <div className="fourthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-3} className="!absolute !top-0 !size-[150%]">
-              <Image
-                src={masonryFoodFour}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                sizes="(max-width: 1000px) 159px, 500px"
-                className="!relative !size-full rounded-md object-cover"
-              />
-            </Parallax>
-          </div>
-
-          <div className="fifthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-3} className="!absolute !top-0">
-              <Image
-                src={masonryFoodFive}
-                priority // I feel like this shouldn't be necessary, but the image wasn't auto-loading
-                // when it came into the viewport otherwise
-                alt={"TODO: fill in w/ appropriate alt text"}
-                sizes="(max-width: 1000px) 384px, 500px"
-                className="!relative !size-full rounded-md object-cover"
-              />
-            </Parallax>
-          </div>
-        </div>
-
-        {/* "Order directly through us" promo section */}
-        <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md tablet:hidden">
-          {/* maybe have stock image of person holding a phone and you would have a proportionally
-                tilted screenshot of the order page showing on their phone? think about it */}
-          <div className="relative h-60 w-full overflow-hidden rounded-t-md shadow-md">
-            <Image
-              src={rewardsPromo}
-              alt={"TODO: fill in w/ appropriate alt text"}
-              width={384}
-              className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-32"
-            />
-          </div>
-          <div className="baseVertFlex relative gap-4 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
-            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
-            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
-
-            <p className="text-lg font-medium">
-              Enjoy exclusive benefits when you order direct
-            </p>
-            <div className="baseVertFlex mt-2 !items-start gap-4 pl-4">
-              <div className="baseFlex !items-start gap-4">
-                <MdOutlineMoneyOff className="size-6 shrink-0" />
-                <p>Shop our lowest menu prices</p>
-              </div>
-              <div className="baseFlex !items-start gap-4">
-                <BsSpeedometer2 className="mt-2 size-6 shrink-0" />
-                <p>
-                  Priority order processing over third-party delivery services
-                </p>
-              </div>
-              <div className="baseFlex !items-start gap-4">
-                <TfiReceipt className="mt-2 size-6 shrink-0" />
-                <p>
-                  Rewards members earn points towards free meals with every
-                  order
-                </p>
-              </div>
+      <ParallaxProvider scrollAxis="vertical">
+        {/* wrapping (prob just for padding?) container of promo sections below */}
+        <div className="baseVertFlex w-full gap-16 p-8 pb-16">
+          {/* masonry of featured food items */}
+          <div className="homepageFoodMasonry h-[700px] w-full max-w-sm tablet:h-[450px] tablet:max-w-4xl">
+            <div className="firstMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[120%]">
+                <Image
+                  src={masonryFoodOne}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  sizes="(max-width: 1000px) 384px, 500px"
+                  className="!relative !size-full rounded-md object-cover"
+                />
+              </Parallax>
             </div>
 
-            <Button size={"lg"} asChild>
-              <Link
-                href="/order"
-                className="baseFlex my-2 mt-4 gap-2 !px-4 !text-base shadow-md"
-              >
-                <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
-                Order now
-                <SideAccentSwirls className="h-[14px] fill-offwhite" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-
-        <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
-          <div className="baseVertFlex relative mt-6 !items-start gap-4 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
-            <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
-            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
-
-            <p className="text-lg font-medium">
-              Enjoy exclusive benefits when you order direct
-            </p>
-            <div className="baseVertFlex mt-2 !items-start gap-4">
-              <div className="baseFlex gap-4">
-                <MdOutlineMoneyOff className="size-6 shrink-0" />
-                <p>Shop our lowest menu prices</p>
-              </div>
-              <div className="baseFlex gap-4">
-                <BsSpeedometer2 className="size-6 shrink-0" />
-                <p>
-                  Priority order processing over third-party delivery services
-                </p>
-              </div>
-              <div className="baseFlex gap-4">
-                <TfiReceipt className="size-6 shrink-0" />
-                <p className="max-w-lg">
-                  Rewards members earn points towards free meals with every
-                  order
-                </p>
-              </div>
+            <div className="secondMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[150%] ">
+                <Image
+                  src={masonryFoodTwo}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  sizes="(max-width: 1000px) 159px, 500px"
+                  className="!relative !size-full rounded-md object-cover"
+                />
+              </Parallax>
             </div>
 
-            <Button size={"lg"} asChild>
-              <Link
-                href="/order"
-                className="baseFlex mt-4 gap-2 self-center !px-4 !text-base shadow-md"
-              >
-                <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
-                Order now
-                <SideAccentSwirls className="h-[14px] fill-offwhite" />
-              </Link>
-            </Button>
+            <div className="thirdMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[150%]">
+                <Image
+                  src={masonryFoodThree}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  sizes="(max-width: 1000px) 159px, 500px"
+                  className="!relative !size-full rounded-md object-cover"
+                />
+              </Parallax>
+            </div>
+
+            <div className="fourthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[150%]">
+                <Image
+                  src={masonryFoodFour}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  sizes="(max-width: 1000px) 159px, 500px"
+                  className="!relative !size-full rounded-md object-cover"
+                />
+              </Parallax>
+            </div>
+
+            <div className="fifthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+              <Parallax speed={-3} className="!absolute !top-0">
+                <Image
+                  src={masonryFoodFive}
+                  priority // I feel like this shouldn't be necessary, but the image wasn't auto-loading
+                  // when it came into the viewport otherwise
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  sizes="(max-width: 1000px) 384px, 500px"
+                  className="!relative !size-full rounded-md object-cover"
+                />
+              </Parallax>
+            </div>
           </div>
 
-          <div className="baseFlex relative size-72">
-            <motion.div
-              ref={firstBackdropAnimation.elementRef}
-              initial={{ opacity: 0, x: 50 }}
-              animate={firstBackdropAnimation.controls}
-              transition={{
-                opacity: { duration: 0.2 },
-                type: "spring",
-                stiffness: 100,
-                damping: 15,
-              }}
-              className="absolute right-4 top-4 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
-            ></motion.div>
-
+          {/* "Order directly through us" promo section */}
+          <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md tablet:hidden">
             {/* maybe have stock image of person holding a phone and you would have a proportionally
                 tilted screenshot of the order page showing on their phone? think about it */}
-            <motion.div
-              ref={firstPromoImageAnimation.elementRef}
-              initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
-              animate={firstPromoImageAnimation.controls}
-              transition={{
-                opacity: { duration: 0.2 },
-                type: "spring",
-                stiffness: 100,
-                damping: 15,
-              }}
-              className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
-            >
+            <div className="relative h-60 w-full overflow-hidden rounded-t-md shadow-md">
               <Image
                 src={rewardsPromo}
                 alt={"TODO: fill in w/ appropriate alt text"}
-                sizes="500px"
-                className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-8"
+                width={384}
+                className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-32"
               />
-            </motion.div>
+            </div>
+            <div className="baseVertFlex relative gap-4 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
+              <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+
+              <p className="text-lg font-medium">
+                Enjoy exclusive benefits when you order direct
+              </p>
+              <div className="baseVertFlex mt-2 !items-start gap-4 pl-4">
+                <div className="baseFlex !items-start gap-4">
+                  <MdOutlineMoneyOff className="size-6 shrink-0" />
+                  <p>Shop our lowest menu prices</p>
+                </div>
+                <div className="baseFlex !items-start gap-4">
+                  <BsSpeedometer2 className="mt-2 size-6 shrink-0" />
+                  <p>
+                    Priority order processing over third-party delivery services
+                  </p>
+                </div>
+                <div className="baseFlex !items-start gap-4">
+                  <TfiReceipt className="mt-2 size-6 shrink-0" />
+                  <p>
+                    Rewards members earn points towards free meals with every
+                    order
+                  </p>
+                </div>
+              </div>
+
+              <Button size={"lg"} asChild>
+                <Link
+                  href="/order"
+                  className="baseFlex my-2 mt-4 gap-2 !px-4 !text-base shadow-md"
+                >
+                  <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
+                  Order now
+                  <SideAccentSwirls className="h-[14px] fill-offwhite" />
+                </Link>
+              </Button>
+            </div>
           </div>
-        </div>
 
-        {/* Meet the Chef promo section */}
-        <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md tablet:hidden">
-          <div className="relative h-60 w-full overflow-hidden rounded-t-md">
-            <Image
-              src={eric}
-              alt={"TODO: fill in w/ appropriate alt text"}
-              width={384}
-              className="!relative !top-0 !size-full !h-96 rounded-md object-cover !object-top !pb-16"
-            />
+          <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
+            <div className="baseVertFlex relative mt-6 !items-start gap-4 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
+              <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
+
+              <p className="text-lg font-medium">
+                Enjoy exclusive benefits when you order direct
+              </p>
+              <div className="baseVertFlex mt-2 !items-start gap-4">
+                <div className="baseFlex gap-4">
+                  <MdOutlineMoneyOff className="size-6 shrink-0" />
+                  <p>Shop our lowest menu prices</p>
+                </div>
+                <div className="baseFlex gap-4">
+                  <BsSpeedometer2 className="size-6 shrink-0" />
+                  <p>
+                    Priority order processing over third-party delivery services
+                  </p>
+                </div>
+                <div className="baseFlex gap-4">
+                  <TfiReceipt className="size-6 shrink-0" />
+                  <p className="max-w-lg">
+                    Rewards members earn points towards free meals with every
+                    order
+                  </p>
+                </div>
+              </div>
+
+              <Button size={"lg"} asChild>
+                <Link
+                  href="/order"
+                  className="baseFlex mt-4 gap-2 self-center !px-4 !text-base shadow-md"
+                >
+                  <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
+                  Order now
+                  <SideAccentSwirls className="h-[14px] fill-offwhite" />
+                </Link>
+              </Button>
+            </div>
+
+            <div className="baseFlex relative size-72">
+              <motion.div
+                ref={firstBackdropAnimation.elementRef}
+                initial={{ opacity: 0, x: 50 }}
+                animate={firstBackdropAnimation.controls}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 15,
+                }}
+                className="absolute right-4 top-4 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
+              ></motion.div>
+
+              {/* maybe have stock image of person holding a phone and you would have a proportionally
+                tilted screenshot of the order page showing on their phone? think about it */}
+              <motion.div
+                ref={firstPromoImageAnimation.elementRef}
+                initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
+                animate={firstPromoImageAnimation.controls}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 15,
+                }}
+                className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
+              >
+                <Image
+                  src={rewardsPromo}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  sizes="500px"
+                  className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-8"
+                />
+              </motion.div>
+            </div>
           </div>
-          <div className="baseVertFlex relative !items-start gap-4 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-12">
-            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
-            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
 
-            <p className="text-lg font-medium">Meet the Chef</p>
-
-            <p>
-              Eric Pham, chef and owner of Khue&apos;s, carries forward the
-              culinary legacy of his mother, Khue Pham, by reimagining
-              Vietnamese cuisine with bold, traditional flavors and modern
-              techniques. Shaped by his early experiences at his family&apos;s
-              restaurant and rigorous training at Spoon and Stable, Eric is
-              dedicated to honoring his cultural heritage and sharing it with a
-              new generation of diners.
-            </p>
-
-            <Button variant={"link"} className="h-8 !p-0" asChild>
-              <Link href="/our-story">Read more</Link>
-            </Button>
-          </div>
-        </div>
-
-        <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
-          <div className="baseFlex relative size-72">
-            <motion.div
-              ref={secondBackdropAnimation.elementRef}
-              initial={{ opacity: 0, x: -50 }}
-              animate={secondBackdropAnimation.controls}
-              transition={{
-                opacity: { duration: 0.2 },
-                type: "spring",
-                stiffness: 100,
-                damping: 15,
-              }}
-              className="absolute left-4 top-4 size-full rounded-md bg-gradient-to-bl from-primary to-darkPrimary"
-            ></motion.div>
-
-            <motion.div
-              ref={secondPromoImageAnimation.elementRef}
-              initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
-              animate={secondPromoImageAnimation.controls}
-              transition={{
-                opacity: { duration: 0.2 },
-                type: "spring",
-                stiffness: 100,
-                damping: 15,
-              }}
-              className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
-            >
+          {/* Meet the Chef promo section */}
+          <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md tablet:hidden">
+            <div className="relative h-60 w-full overflow-hidden rounded-t-md">
               <Image
                 src={eric}
                 alt={"TODO: fill in w/ appropriate alt text"}
-                sizes="288px"
-                className="!relative !top-0 !size-full !h-96 rounded-md object-cover object-top"
+                width={384}
+                className="!relative !top-0 !size-full !h-96 rounded-md object-cover !object-top !pb-16"
               />
-            </motion.div>
-          </div>
-
-          <div className="baseVertFlex relative mt-4 max-w-3xl !items-start gap-4 overflow-hidden rounded-md border bg-gradient-to-bl from-offwhite to-primary/10 p-6 pl-8 shadow-md">
-            <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-primary/50" />
-            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
-
-            <p className="text-lg font-medium">Meet the chef</p>
-
-            <p className="max-w-lg xl:max-w-full">
-              Eric Pham, chef and owner of Khue&apos;s, carries forward the
-              culinary legacy of his mother, Khue Pham, by reimagining
-              Vietnamese cuisine with bold, traditional flavors and modern
-              techniques. Shaped by his early experiences at his family&apos;s
-              restaurant and rigorous training at Spoon and Stable, Eric is
-              dedicated to honoring his cultural heritage and sharing it with a
-              new generation of diners.
-            </p>
-
-            <Button variant={"link"} className="h-8 !p-0" asChild>
-              <Link href="/our-story">Read more</Link>
-            </Button>
-          </div>
-        </div>
-
-        {/* Reservation promo section */}
-        <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md tablet:hidden">
-          <div className="relative h-60 w-full overflow-hidden rounded-t-md">
-            <Image
-              src={reservations}
-              alt={"TODO: fill in w/ appropriate alt text"}
-              width={384}
-              className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-24"
-            />
-          </div>
-          <div className="baseVertFlex relative !items-start gap-2 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
-            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
-            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
-
-            <p className="text-lg font-medium leading-6">
-              Planning a birthday dinner or get together with your friends?
-            </p>
-
-            <p className="mt-4">
-              Secure your spot for larger parties. For parties of 4 or less,
-              reservations are usually not needed. However, to guarantee your
-              seats for larger groups, please get in touch with us.
-            </p>
-
-            <div className="baseVertFlex mt-8 w-full gap-4">
-              <Button
-                className="baseFlex gap-2"
-                onClick={() => setChatIsOpen(true)}
-              >
-                Send us a message
-                <IoChatbox className="size-5 drop-shadow-md" />
-              </Button>
-
-              <Separator
-                orientation="vertical"
-                className="mt-2 h-[1px] w-1/2 bg-stone-400"
-              />
-
-              <Button variant="link" className="h-8 px-1" asChild>
-                <a href="tel:+1234567890" className="baseFlex gap-2">
-                  <FaPhone size={"0.75rem"} />
-                  (234) 567-8900
-                </a>
-              </Button>
             </div>
-          </div>
-        </div>
+            <div className="baseVertFlex relative !items-start gap-4 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-12">
+              <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
 
-        <div className="baseFlex !hidden w-full gap-16 py-8  tablet:!flex">
-          <div className="baseVertFlex relative mt-4 max-w-[600px] gap-2 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 pr-8 shadow-md">
-            <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
-            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
+              <p className="text-lg font-medium">Meet the Chef</p>
 
-            <p className="text-lg font-medium">
-              Planning a birthday dinner or get together with your friends?
-            </p>
+              <p>
+                Eric Pham, chef and owner of Khue&apos;s, carries forward the
+                culinary legacy of his mother, Khue Pham, by reimagining
+                Vietnamese cuisine with bold, traditional flavors and modern
+                techniques. Shaped by his early experiences at his family&apos;s
+                restaurant and rigorous training at Spoon and Stable, Eric is
+                dedicated to honoring his cultural heritage and sharing it with
+                a new generation of diners.
+              </p>
 
-            <p className="mt-2 text-center">
-              Secure your spot for larger parties. For parties of 4 or less,
-              reservations are usually not needed. However, to guarantee your
-              seats for larger groups, please get in touch with us.
-            </p>
-
-            <div className="baseFlex mt-8 gap-4">
-              <Button
-                className="baseFlex gap-2"
-                onClick={() => setChatIsOpen(!chatIsOpen)}
-              >
-                Send us a message
-                <IoChatbox className="size-5 drop-shadow-md" />
-              </Button>
-
-              <Separator
-                orientation="vertical"
-                className="h-6 w-[1px] bg-stone-400"
-              />
-
-              <Button variant="link" className="h-8 px-1" asChild>
-                <a href="tel:+1234567890" className="baseFlex gap-2">
-                  <FaPhone size={"0.75rem"} />
-                  (234) 567-8900
-                </a>
+              <Button variant={"link"} className="h-8 !p-0" asChild>
+                <Link href="/our-story">Read more</Link>
               </Button>
             </div>
           </div>
 
-          <div className="baseFlex relative size-72">
-            <motion.div
-              ref={thirdBackdropAnimation.elementRef}
-              initial={{ opacity: 0, x: 50 }}
-              animate={thirdBackdropAnimation.controls}
-              transition={{
-                opacity: { duration: 0.2 },
-                type: "spring",
-                stiffness: 100,
-                damping: 15,
-              }}
-              className="absolute right-4 top-4 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
-            ></motion.div>
+          <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
+            <div className="baseFlex relative size-72">
+              <motion.div
+                ref={secondBackdropAnimation.elementRef}
+                initial={{ opacity: 0, x: -50 }}
+                animate={secondBackdropAnimation.controls}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 15,
+                }}
+                className="absolute left-4 top-4 size-full rounded-md bg-gradient-to-bl from-primary to-darkPrimary"
+              ></motion.div>
 
-            <motion.div
-              ref={thirdPromoImageAnimation.elementRef}
-              initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
-              animate={thirdPromoImageAnimation.controls}
-              transition={{
-                opacity: { duration: 0.2 },
-                type: "spring",
-                stiffness: 100,
-                damping: 15,
-              }}
-              className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
-            >
+              <motion.div
+                ref={secondPromoImageAnimation.elementRef}
+                initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
+                animate={secondPromoImageAnimation.controls}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 15,
+                }}
+                className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
+              >
+                <Image
+                  src={eric}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  sizes="288px"
+                  className="!relative !top-0 !size-full !h-96 rounded-md object-cover object-top"
+                />
+              </motion.div>
+            </div>
+
+            <div className="baseVertFlex relative mt-4 max-w-3xl !items-start gap-4 overflow-hidden rounded-md border bg-gradient-to-bl from-offwhite to-primary/10 p-6 pl-8 shadow-md">
+              <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+
+              <p className="text-lg font-medium">Meet the chef</p>
+
+              <p className="max-w-lg xl:max-w-full">
+                Eric Pham, chef and owner of Khue&apos;s, carries forward the
+                culinary legacy of his mother, Khue Pham, by reimagining
+                Vietnamese cuisine with bold, traditional flavors and modern
+                techniques. Shaped by his early experiences at his family&apos;s
+                restaurant and rigorous training at Spoon and Stable, Eric is
+                dedicated to honoring his cultural heritage and sharing it with
+                a new generation of diners.
+              </p>
+
+              <Button variant={"link"} className="h-8 !p-0" asChild>
+                <Link href="/our-story">Read more</Link>
+              </Button>
+            </div>
+          </div>
+
+          {/* Reservation promo section */}
+          <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md tablet:hidden">
+            <div className="relative h-60 w-full overflow-hidden rounded-t-md">
               <Image
                 src={reservations}
                 alt={"TODO: fill in w/ appropriate alt text"}
-                sizes="750px"
-                className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-16"
+                width={384}
+                className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-24"
               />
-            </motion.div>
-          </div>
-        </div>
+            </div>
+            <div className="baseVertFlex relative !items-start gap-2 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
+              <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
 
-        {/* masonry but prob more of just inside/outside the restaurant */}
-        <div className="homepageInteriorMasonry h-[700px] w-full max-w-sm tablet:h-[450px] tablet:max-w-4xl">
-          <div className="firstMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
-              <Image
-                src={masonryInteriorOne}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                sizes="(max-width: 1000px) 384px, 500px"
-                className="!relative !size-full rounded-md object-cover object-bottom"
-              />
-            </Parallax>
-          </div>
+              <p className="text-lg font-medium leading-6">
+                Planning a birthday dinner or get together with your friends?
+              </p>
 
-          <div className="secondMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
-              <Image
-                src={masonryInteriorTwo}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                sizes="(max-width: 1000px) 159px, 500px"
-                className="!relative !size-full rounded-md object-cover object-bottom"
-              />
-            </Parallax>
-          </div>
+              <p className="mt-4">
+                Secure your spot for larger parties. For parties of 4 or less,
+                reservations are usually not needed. However, to guarantee your
+                seats for larger groups, please get in touch with us.
+              </p>
 
-          <div className="thirdMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
-              <Image
-                src={masonryInteriorThree}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                sizes="(max-width: 1000px) 159px, 500px"
-                className="!relative !size-full rounded-md object-cover object-bottom"
-              />
-            </Parallax>
-          </div>
+              <div className="baseVertFlex mt-8 w-full gap-4">
+                <Button
+                  className="baseFlex gap-2"
+                  onClick={() => setChatIsOpen(true)}
+                >
+                  Send us a message
+                  <IoChatbox className="size-5 drop-shadow-md" />
+                </Button>
 
-          <div className="fourthMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
-              <Image
-                src={masonryInteriorFour}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                sizes="(max-width: 1000px) 159px, 500px"
-                className="!relative !size-full rounded-md object-cover object-bottom"
-              />
-            </Parallax>
-          </div>
-
-          <div className="fifthMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-            <Parallax speed={-3} className="!absolute !top-0 !size-[125%]">
-              <Image
-                src={masonryInteriorFive}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                sizes="(max-width: 1000px) 384px, 500px"
-                className="!relative !size-full rounded-md object-cover object-bottom"
-              />
-            </Parallax>
-          </div>
-        </div>
-
-        {/* Rewards program promo section */}
-        {isLoaded && !isSignedIn && (
-          <div className="baseVertFlex relative mb-16 mt-8 w-screen max-w-xl gap-8 overflow-hidden border-y-4 border-y-gold bg-offwhite !p-6 text-primary shadow-md sm:rounded-sm sm:!p-8">
-            <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-gold/80" />
-            <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-gold/80" />
-            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-gold/80" />
-            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-gold/80" />
-
-            <span className="w-64 text-center font-semibold sm:w-auto">
-              Join Khue&apos;s Rewards and unlock exclusive benefits!
-            </span>
-            <span className="text-center text-sm tablet:text-base">
-              With every order, you&apos;ll earn points which can be redeemed
-              for complimentary meals. Plus, get early access to new dishes and
-              celebrate your birthday with a free dessert of your choice!
-            </span>
-
-            <SignUpButton mode="modal">
-              <Button
-                variant={"rewards"}
-                size={"lg"}
-                className="text-base shadow-md"
-              >
-                Join now
-              </Button>
-            </SignUpButton>
-
-            <WideFancySwirls className="h-14 fill-primary sm:h-16" />
-          </div>
-        )}
-
-        {/* Explore Our Favorites section */}
-        <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-6xl tablet:max-w-2xl">
-          <p className="text-lg font-medium tablet:text-xl">
-            Explore Our Favorites
-          </p>
-
-          <div className="baseVertFlex relative w-full gap-4 overflow-hidden rounded-md">
-            <Carousel
-              setApi={setChefSpecialsApi}
-              opts={{
-                breakpoints: {
-                  "(min-width: 768px)": {
-                    slidesToScroll: 2,
-                  },
-                  "(min-width: 1280px)": {
-                    slidesToScroll: 4,
-                  },
-                },
-                // dragFree: true,
-                // skipSnaps: true, play around with this
-              }}
-              className="baseFlex w-full rounded-md border bg-gradient-to-br from-offwhite to-primary/10 shadow-md"
-            >
-              <CarouselContent>
-                {ourFavoriteMenuItems?.map((menuItem) => (
-                  <CarouselItem
-                    key={menuItem.id}
-                    className="baseVertFlex relative basis-full gap-4 rounded-md p-4 px-6 md:basis-1/2 xl:basis-1/4"
-                  >
-                    <OurFavoriteMenuItemCard menuItem={menuItem} />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
-
-            <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
-            <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-primary/50" />
-
-            <div className="baseFlex gap-2">
-              <Button asChild>
-                <div
-                  className={`!size-2 cursor-pointer rounded-full !p-0 ${chefSpecialsSlide === 0 ? "!bg-primary" : "!bg-stone-300"}`}
-                  onClick={() => chefSpecialsApi?.scrollTo(0)}
+                <Separator
+                  orientation="vertical"
+                  className="mt-2 h-[1px] w-1/2 bg-stone-400"
                 />
-              </Button>
-              <Button asChild>
-                <div
-                  className={`!size-2 cursor-pointer rounded-full !p-0 ${chefSpecialsSlide === 1 ? "!bg-primary" : "!bg-stone-300"}`}
-                  onClick={() => chefSpecialsApi?.scrollTo(1)}
-                />
-              </Button>
-              <Button asChild>
-                <div
-                  className={`!size-2 cursor-pointer rounded-full !p-0 xl:hidden ${chefSpecialsSlide === 2 ? "!bg-primary" : "!bg-stone-300"}`}
-                  onClick={() => chefSpecialsApi?.scrollTo(2)}
-                />
-              </Button>
-              <Button asChild>
-                <div
-                  className={`!size-2 cursor-pointer rounded-full !p-0 md:hidden ${chefSpecialsSlide === 3 ? "!bg-primary" : "!bg-stone-300"}`}
-                  onClick={() => chefSpecialsApi?.scrollTo(3)}
-                />
-              </Button>
-              <Button asChild>
-                <div
-                  className={`!size-2 cursor-pointer rounded-full !p-0 md:hidden ${chefSpecialsSlide === 4 ? "!bg-primary" : "!bg-stone-300"}`}
-                  onClick={() => chefSpecialsApi?.scrollTo(4)}
-                />
-              </Button>
-              <Button asChild>
-                <div
-                  className={`!size-2 cursor-pointer rounded-full !p-0 md:hidden ${chefSpecialsSlide === 5 ? "!bg-primary" : "!bg-stone-300"}`}
-                  onClick={() => chefSpecialsApi?.scrollTo(5)}
-                />
-              </Button>
+
+                <Button variant="link" className="h-8 px-1" asChild>
+                  <a href="tel:+1234567890" className="baseFlex gap-2">
+                    <FaPhone size={"0.75rem"} />
+                    (234) 567-8900
+                  </a>
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* maybe a gallary/slideshow section? Prob not though */}
-      </div>
+          <div className="baseFlex !hidden w-full gap-16 py-8  tablet:!flex">
+            <div className="baseVertFlex relative mt-4 max-w-[600px] gap-2 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 pr-8 shadow-md">
+              <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
+
+              <p className="text-lg font-medium">
+                Planning a birthday dinner or get together with your friends?
+              </p>
+
+              <p className="mt-2 text-center">
+                Secure your spot for larger parties. For parties of 4 or less,
+                reservations are usually not needed. However, to guarantee your
+                seats for larger groups, please get in touch with us.
+              </p>
+
+              <div className="baseFlex mt-8 gap-4">
+                <Button
+                  className="baseFlex gap-2"
+                  onClick={() => setChatIsOpen(!chatIsOpen)}
+                >
+                  Send us a message
+                  <IoChatbox className="size-5 drop-shadow-md" />
+                </Button>
+
+                <Separator
+                  orientation="vertical"
+                  className="h-6 w-[1px] bg-stone-400"
+                />
+
+                <Button variant="link" className="h-8 px-1" asChild>
+                  <a href="tel:+1234567890" className="baseFlex gap-2">
+                    <FaPhone size={"0.75rem"} />
+                    (234) 567-8900
+                  </a>
+                </Button>
+              </div>
+            </div>
+
+            <div className="baseFlex relative size-72">
+              <motion.div
+                ref={thirdBackdropAnimation.elementRef}
+                initial={{ opacity: 0, x: 50 }}
+                animate={thirdBackdropAnimation.controls}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 15,
+                }}
+                className="absolute right-4 top-4 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
+              ></motion.div>
+
+              <motion.div
+                ref={thirdPromoImageAnimation.elementRef}
+                initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
+                animate={thirdPromoImageAnimation.controls}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 15,
+                }}
+                className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
+              >
+                <Image
+                  src={reservations}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  sizes="750px"
+                  className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-16"
+                />
+              </motion.div>
+            </div>
+          </div>
+
+          {/* masonry but prob more of just inside/outside the restaurant */}
+          <div className="homepageInteriorMasonry h-[700px] w-full max-w-sm tablet:h-[450px] tablet:max-w-4xl">
+            <div className="firstMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
+                <Image
+                  src={masonryInteriorOne}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  sizes="(max-width: 1000px) 384px, 500px"
+                  className="!relative !size-full rounded-md object-cover object-bottom"
+                />
+              </Parallax>
+            </div>
+
+            <div className="secondMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
+                <Image
+                  src={masonryInteriorTwo}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  sizes="(max-width: 1000px) 159px, 500px"
+                  className="!relative !size-full rounded-md object-cover object-bottom"
+                />
+              </Parallax>
+            </div>
+
+            <div className="thirdMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
+                <Image
+                  src={masonryInteriorThree}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  sizes="(max-width: 1000px) 159px, 500px"
+                  className="!relative !size-full rounded-md object-cover object-bottom"
+                />
+              </Parallax>
+            </div>
+
+            <div className="fourthMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
+                <Image
+                  src={masonryInteriorFour}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  sizes="(max-width: 1000px) 159px, 500px"
+                  className="!relative !size-full rounded-md object-cover object-bottom"
+                />
+              </Parallax>
+            </div>
+
+            <div className="fifthMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[125%]">
+                <Image
+                  src={masonryInteriorFive}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  sizes="(max-width: 1000px) 384px, 500px"
+                  className="!relative !size-full rounded-md object-cover object-bottom"
+                />
+              </Parallax>
+            </div>
+          </div>
+
+          {/* Rewards program promo section */}
+          {isLoaded && !isSignedIn && (
+            <div className="baseVertFlex relative mb-16 mt-8 w-screen max-w-xl gap-8 overflow-hidden border-y-4 border-y-gold bg-offwhite !p-6 text-primary shadow-md sm:rounded-sm sm:!p-8">
+              <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-gold/80" />
+              <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-gold/80" />
+              <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-gold/80" />
+              <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-gold/80" />
+
+              <span className="w-64 text-center font-semibold sm:w-auto">
+                Join Khue&apos;s Rewards and unlock exclusive benefits!
+              </span>
+              <span className="text-center text-sm tablet:text-base">
+                With every order, you&apos;ll earn points which can be redeemed
+                for complimentary meals. Plus, get early access to new dishes
+                and celebrate your birthday with a free dessert of your choice!
+              </span>
+
+              <SignUpButton mode="modal">
+                <Button
+                  variant={"rewards"}
+                  size={"lg"}
+                  className="text-base shadow-md"
+                >
+                  Join now
+                </Button>
+              </SignUpButton>
+
+              <WideFancySwirls className="h-14 fill-primary sm:h-16" />
+            </div>
+          )}
+
+          {/* Explore Our Favorites section */}
+          <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-6xl tablet:max-w-2xl">
+            <p className="text-lg font-medium tablet:text-xl">
+              Explore Our Favorites
+            </p>
+
+            <div className="baseVertFlex relative w-full gap-4 overflow-hidden rounded-md">
+              <Carousel
+                setApi={setChefSpecialsApi}
+                opts={{
+                  breakpoints: {
+                    "(min-width: 768px)": {
+                      slidesToScroll: 2,
+                    },
+                    "(min-width: 1280px)": {
+                      slidesToScroll: 4,
+                    },
+                  },
+                  // dragFree: true,
+                  // skipSnaps: true, play around with this
+                }}
+                className="baseFlex w-full rounded-md border bg-gradient-to-br from-offwhite to-primary/10 shadow-md"
+              >
+                <CarouselContent>
+                  {ourFavoriteMenuItems?.map((menuItem) => (
+                    <CarouselItem
+                      key={menuItem.id}
+                      className="baseVertFlex relative basis-full gap-4 rounded-md p-4 px-6 md:basis-1/2 xl:basis-1/4"
+                    >
+                      <OurFavoriteMenuItemCard menuItem={menuItem} />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+
+              <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
+              <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-primary/50" />
+
+              <div className="baseFlex gap-2">
+                <Button asChild>
+                  <div
+                    className={`!size-2 cursor-pointer rounded-full !p-0 ${chefSpecialsSlide === 0 ? "!bg-primary" : "!bg-stone-300"}`}
+                    onClick={() => chefSpecialsApi?.scrollTo(0)}
+                  />
+                </Button>
+                <Button asChild>
+                  <div
+                    className={`!size-2 cursor-pointer rounded-full !p-0 ${chefSpecialsSlide === 1 ? "!bg-primary" : "!bg-stone-300"}`}
+                    onClick={() => chefSpecialsApi?.scrollTo(1)}
+                  />
+                </Button>
+                <Button asChild>
+                  <div
+                    className={`!size-2 cursor-pointer rounded-full !p-0 xl:hidden ${chefSpecialsSlide === 2 ? "!bg-primary" : "!bg-stone-300"}`}
+                    onClick={() => chefSpecialsApi?.scrollTo(2)}
+                  />
+                </Button>
+                <Button asChild>
+                  <div
+                    className={`!size-2 cursor-pointer rounded-full !p-0 md:hidden ${chefSpecialsSlide === 3 ? "!bg-primary" : "!bg-stone-300"}`}
+                    onClick={() => chefSpecialsApi?.scrollTo(3)}
+                  />
+                </Button>
+                <Button asChild>
+                  <div
+                    className={`!size-2 cursor-pointer rounded-full !p-0 md:hidden ${chefSpecialsSlide === 4 ? "!bg-primary" : "!bg-stone-300"}`}
+                    onClick={() => chefSpecialsApi?.scrollTo(4)}
+                  />
+                </Button>
+                <Button asChild>
+                  <div
+                    className={`!size-2 cursor-pointer rounded-full !p-0 md:hidden ${chefSpecialsSlide === 5 ? "!bg-primary" : "!bg-stone-300"}`}
+                    onClick={() => chefSpecialsApi?.scrollTo(5)}
+                  />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* maybe a gallary/slideshow section? Prob not though */}
+        </div>
+      </ParallaxProvider>
     </motion.div>
   );
 }

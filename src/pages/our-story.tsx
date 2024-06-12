@@ -1,7 +1,6 @@
 import { motion, useAnimation } from "framer-motion";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Parallax } from "react-scroll-parallax";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
 import {
@@ -226,19 +225,16 @@ function OurStory() {
         {/* wide-ish angle shot of the dining room maybe? technically could also
               do outside shot of restaurant as well! also obv just a collage of images of eric could work well
               too, but maybe save those for below in the actual content of this page? */}
-        <Parallax
-          speed={-10}
-          className="!absolute !left-0 !top-0 !h-[475px] !w-full tablet:!h-[650px]"
-        >
+        <div className="!absolute !left-0 !top-0 !h-[475px] !w-full tablet:!h-[650px]">
           <Image
             src={ourStoryHero}
             alt={"TODO: Alt text"}
             sizes="100vw"
             className={`!relative !h-56 !w-full object-cover tablet:!h-72`}
           />
-        </Parallax>
+        </div>
 
-        <div className="baseFlex shadow-heroContainer z-10 mx-8 rounded-md bg-offwhite p-4 tablet:!flex">
+        <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-heroContainer tablet:!flex">
           <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
             <h1>Our story</h1>
