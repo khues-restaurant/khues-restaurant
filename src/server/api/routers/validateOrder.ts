@@ -1,3 +1,4 @@
+import { startOfDay } from "date-fns";
 import { z } from "zod";
 import { type OrderDetails, orderDetailsSchema } from "~/stores/MainStore";
 import isEqual from "lodash.isequal";
@@ -15,13 +16,16 @@ function validateDayOfDatetimeToPickup(orderDatetimeToPickup: Date) {
     : // TODO: check if the getMidnightDate() here is wanted/needed
       toZonedTime(getMidnightDate(new Date()), "America/Chicago");
 
-  const now = toZonedTime(new Date(), "America/Chicago");
-  now.setHours(0, 0, 0, 0); // Normalize now to midnight for consistent comparison
+  const todayAtMidnight = toZonedTime(
+    startOfDay(new Date()),
+    "America/Chicago",
+  );
+  // now.setUTCHours(0, 0, 0, 0); // Normalize now to midnight for consistent comparison
 
   // If datetimeToPickup is in the past, need to find the next valid day
   // (at midnight specifically) to set it to.
-  if (datetimeToPickup < now) {
-    datetimeToPickup = loopToFindFirstOpenDay(now);
+  if (datetimeToPickup < todayAtMidnight) {
+    datetimeToPickup = loopToFindFirstOpenDay(todayAtMidnight);
   }
 
   return datetimeToPickup;
@@ -54,7 +58,7 @@ function validateTimeToPickup(
   // technically by this point, the date _should_ be valid, and it's just that the time
   // should be set to midnight of currently selected day, however setting it to midnight
   // here and still sending it through loopToFindFirstOpenDay function just to be safe.
-  now.setHours(0, 0, 0, 0);
+  now.setUTCHours(0, 0, 0, 0);
   orderDetails.datetimeToPickup = loopToFindFirstOpenDay(now);
 }
 
@@ -120,9 +124,11 @@ export const validateOrderRouter = createTRPCRouter({
 
       if (!validatingAReorder) {
         // Date validation
+        console.log("date passed in", orderDetails.datetimeToPickup);
         orderDetails.datetimeToPickup = validateDayOfDatetimeToPickup(
           orderDetails.datetimeToPickup,
         );
+        console.log("date after validation", orderDetails.datetimeToPickup);
 
         // Pickup time validation
         const dbMinOrderPickupTime =
