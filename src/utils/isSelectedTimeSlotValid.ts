@@ -1,10 +1,7 @@
 import { format } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
 import { getCSTDateInUTC } from "~/utils/cstToUTCHelpers";
 import { hoursOpenPerDay, isHoliday } from "~/utils/datesAndHoursOfOperation";
 import { isAtLeast15MinsFromDatetime } from "~/utils/isAtLeast15MinsFromDatetime";
-
-// process.env.TZ = "America/New_York";
 
 interface IsSelectedTimeSlotValid {
   isASAP?: boolean;
@@ -17,9 +14,6 @@ export function isSelectedTimeSlotValid({
   datetimeToPickup,
   minPickupDatetime,
 }: IsSelectedTimeSlotValid) {
-  // const now = toZonedTime(new Date(), "America/Chicago");
-  // const tzDatetimeToPickup = toZonedTime(datetimeToPickup, "America/Chicago");
-  // const tzMinPickupDatetime = toZonedTime(minPickupDatetime, "America/Chicago");
   const now = getCSTDateInUTC(new Date());
   const tzDatetimeToPickup = getCSTDateInUTC(datetimeToPickup);
   const tzMinPickupDatetime = getCSTDateInUTC(minPickupDatetime);
@@ -39,7 +33,6 @@ export function isSelectedTimeSlotValid({
 
   // if restaurant is closed today, immediately return false
   if ((todaysHours.open === 0 && todaysHours.close === 0) || isHoliday(now)) {
-    console.log("fail 1");
     return false;
   }
 
@@ -50,20 +43,17 @@ export function isSelectedTimeSlotValid({
     tzDatetimeToPickup.getMinutes() === 0 &&
     tzDatetimeToPickup.getSeconds() === 0
   ) {
-    console.log("is midnight, good to go");
     return true;
   }
 
   // if currentDate hours is earlier than opening time, return false
   if (tzDatetimeToPickup.getHours() < todaysHours.open) {
-    console.log("fail 2");
     return false;
   }
 
   if (isASAP) {
     // make sure that the passed in datetimeToPickup is the current day
     if (tzDatetimeToPickup.getDay() !== now.getDay()) {
-      console.log("fail 3");
       return false;
     }
   } else {
@@ -73,14 +63,12 @@ export function isSelectedTimeSlotValid({
       tzDatetimeToPickup <= now ||
       !isAtLeast15MinsFromDatetime(tzDatetimeToPickup, now)
     ) {
-      console.log("fail 4");
       return false;
     }
   }
 
   // if tzDatetimeToPickup time is earlier than tzMinPickupDatetime, return false
   if (tzDatetimeToPickup.getTime() < tzMinPickupDatetime.getTime()) {
-    console.log("fail 5");
     return false;
   }
 
@@ -95,7 +83,6 @@ export function isSelectedTimeSlotValid({
     (tzDatetimeToPickup.getHours() === todaysHours.close - 1 &&
       tzDatetimeToPickup.getMinutes() > 30)
   ) {
-    console.log("fail 6");
     return false;
   }
 

@@ -139,16 +139,6 @@ function AvailablePickupTimes({
     setAvailablePickupTimes(basePickupTimes);
   }, [selectedDate, minPickupTime]);
 
-  // TODO: see if you can use the getMidnightDate function here, I know there were
-  // issues with rerendering too many times/infinitely before but I think it should
-  // be doable.
-  // const todayAtMidnight = useMemo(() => {
-  //   const today = toZonedTime(new Date(), "America/Chicago");
-  //   today.setHours(0, 0, 0, 0);
-
-  //   return today;
-  // }, []);
-
   const orderingIsNotAvailable = useMemo(() => {
     const now = toZonedTime(new Date(), "America/Chicago");
     const todaysHours =

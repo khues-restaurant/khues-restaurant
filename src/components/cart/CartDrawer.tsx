@@ -362,11 +362,8 @@ function CartDrawer({
         value.dateToPickup.getFullYear() !==
           orderDetails.datetimeToPickup.getFullYear()
       ) {
-        // newDate.setHours(0, 0, 0, 0);
         newDate = getMidnightCSTInUTC(value.dateToPickup);
       } else if (value.timeToPickup === "ASAP (~20 mins)") {
-        // normalizing datetime to midnight
-        // newDate.setHours(0, 0, 0, 0);
         newDate = getMidnightCSTInUTC(value.dateToPickup);
 
         const newOrderDetails = structuredClone(orderDetails);

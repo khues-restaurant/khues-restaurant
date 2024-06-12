@@ -29,7 +29,6 @@ function validateTimeToPickup(
   orderDetails: OrderDetails,
   minOrderPickupDatetime: Date,
 ) {
-  // const now = toZonedTime(new Date(), "America/Chicago");
   const datetimeToPickup = toZonedTime(
     orderDetails.datetimeToPickup,
     "America/Chicago",
