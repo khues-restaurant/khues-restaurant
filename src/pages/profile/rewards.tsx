@@ -731,7 +731,7 @@ function Rewards() {
               </div>
 
               <p className="text-sm italic text-stone-400">
-                Only one reward is able to be redeemed per order.*
+                * Only one reward is able to be redeemed per order.
               </p>
             </div>
 
