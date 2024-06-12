@@ -10,6 +10,12 @@ import { useMainStore, type StoreMenuItems } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { io } from "socket.io-client";
 import { env } from "~/env";
+import { Noto_Sans } from "next/font/google";
+
+const notoSans = Noto_Sans({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 const socket = io(env.NEXT_PUBLIC_SOCKET_IO_URL, {
   query: {
@@ -98,7 +104,9 @@ function DashboardLayout({ children }: DashboardLayout) {
   }, [menuCategories, setMenuItems]);
 
   return (
-    <main className="baseVertFlex relative min-h-[100dvh] w-full !justify-between bg-body">
+    <main
+      className={`baseVertFlex ${notoSans.className} relative min-h-[100dvh] w-full !justify-between bg-body`}
+    >
       <DashboardHeaderShell
         viewState={viewState}
         setViewState={setViewState}

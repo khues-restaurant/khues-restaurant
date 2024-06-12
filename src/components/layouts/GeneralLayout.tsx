@@ -15,7 +15,14 @@ import useGetUserId from "~/hooks/useGetUserId";
 import useInitLocalStorage from "~/hooks/useInitLocalStorage";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
+import { Noto_Sans } from "next/font/google";
+
 import useClearToastsOnRefocus from "~/hooks/useClearToastsOnRefocus";
+
+const notoSans = Noto_Sans({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 interface GeneralLayout {
   children: ReactNode;
@@ -69,7 +76,9 @@ function GeneralLayout({ children }: GeneralLayout) {
 
   return (
     <>
-      <main className="baseVertFlex relative min-h-dvh !justify-between bg-body">
+      <main
+        className={`baseVertFlex ${notoSans.className} relative min-h-dvh !justify-between bg-body`}
+      >
         <HeaderShell />
 
         <AnimatePresence>{children}</AnimatePresence>
