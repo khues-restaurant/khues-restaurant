@@ -347,12 +347,7 @@ function CartDrawer({
           ? value.dateToPickup
           : mergeDateAndTime(value.dateToPickup, value.timeToPickup);
 
-      // make sure that the new date isn't the same as the current orderDetails.datetimeToPickup
-      if (
-        newDate === undefined ||
-        newDate.getTime() === orderDetails.datetimeToPickup.getTime()
-      )
-        return;
+      if (newDate === undefined) return;
 
       // if the day was changed then just set the time to be midnight of w/e the new day is
       if (
@@ -364,7 +359,10 @@ function CartDrawer({
           orderDetails.datetimeToPickup.getFullYear()
       ) {
         newDate = getMidnightCSTInUTC(value.dateToPickup);
-      } else if (value.timeToPickup === "ASAP (~20 mins)") {
+      } else if (
+        value.timeToPickup === "ASAP (~20 mins)" &&
+        !orderDetails.isASAP
+      ) {
         newDate = getMidnightCSTInUTC(value.dateToPickup);
 
         const newOrderDetails = structuredClone(orderDetails);
@@ -375,6 +373,11 @@ function CartDrawer({
           newOrderDetails,
         });
 
+        return;
+      }
+
+      // make sure that the new date isn't the same as the current orderDetails.datetimeToPickup
+      if (newDate.getTime() === orderDetails.datetimeToPickup.getTime()) {
         return;
       }
 
@@ -391,6 +394,7 @@ function CartDrawer({
       subscription.unsubscribe();
     };
   }, [mainForm, orderDetails, updateOrder]);
+
   const formPickupNameValue = useWatch({
     name: "pickupName",
     control: mainForm.control,

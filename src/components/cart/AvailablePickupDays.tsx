@@ -1,4 +1,5 @@
 import { addDays, format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { SelectGroup, SelectItem, SelectLabel } from "~/components/ui/select";
 import {
   isHoliday,
@@ -6,7 +7,7 @@ import {
 } from "~/utils/datesAndHoursOfOperation";
 
 const getCurrentWeekDates = () => {
-  const today = new Date();
+  const today = toZonedTime(new Date(), "America/Chicago");
   const dates = [];
   for (let i = 0; i < 7; i++) {
     const date = addDays(today, i);
