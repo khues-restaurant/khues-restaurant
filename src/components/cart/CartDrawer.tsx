@@ -518,14 +518,14 @@ function CartDrawer({
                 })();
               })();
             }}
-            className="baseVertFlex mt-4 !items-start gap-2"
+            className="baseVertFlex mt-4 w-full !items-start gap-4"
           >
             <FormField
               control={mainForm.control}
               name="dateToPickup"
               render={({ field, fieldState: { invalid, error } }) => (
                 <FormItem className="baseVertFlex relative !items-start space-y-0">
-                  <div className="baseFlex gap-6">
+                  <div className="baseVertFlex !items-start gap-2">
                     <FormLabel className="font-semibold">Pickup date</FormLabel>
                     <Select
                       onValueChange={(stringifiedDate) =>
@@ -534,11 +534,11 @@ function CartDrawer({
                       value={format(field.value, "yyyy-MM-dd")}
                     >
                       <FormControl>
-                        <SelectTrigger className="w-[200px] pl-[14px]">
+                        <SelectTrigger className="pl-[14px]">
                           <CiCalendarDate className="h-5 w-5 shrink-0" />
                           <SelectValue
                             placeholder="Select a day"
-                            className="w-[200px] placeholder:!text-muted-foreground"
+                            className="placeholder:!text-muted-foreground"
                           />
                         </SelectTrigger>
                       </FormControl>
@@ -574,7 +574,7 @@ function CartDrawer({
               name="timeToPickup"
               render={({ field, fieldState: { invalid, error } }) => (
                 <FormItem className="baseVertFlex relative !items-start space-y-0">
-                  <div className="baseFlex gap-6">
+                  <div className="baseVertFlex !items-start gap-2">
                     <FormLabel className="font-semibold">Pickup time</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
@@ -629,7 +629,7 @@ function CartDrawer({
               name="pickupName"
               render={({ field, fieldState: { invalid, error } }) => (
                 <FormItem className="baseVertFlex relative !items-start space-y-0">
-                  <div className="baseFlex gap-4">
+                  <div className="baseVertFlex !items-start gap-2">
                     <FormLabel className="text-nowrap font-semibold">
                       Pickup name
                     </FormLabel>
