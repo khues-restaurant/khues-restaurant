@@ -457,7 +457,7 @@ function MobileHeader() {
 
                                 <Button
                                   variant={"link"}
-                                  className="h-8 !p-0"
+                                  className="h-12 !rounded-t-none !p-0 xs:h-8"
                                   asChild
                                 >
                                   <a
