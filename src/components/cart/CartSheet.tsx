@@ -56,15 +56,14 @@ import { api } from "~/utils/api";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
 import { formatPrice } from "~/utils/formatPrice";
-import { getDisabledDates } from "~/utils/getDisabledPickupDates";
 import { getHoursAndMinutesFromDate } from "~/utils/getHoursAndMinutesFromDate";
-import { getMidnightDate } from "~/utils/getMidnightDate";
 import { isSelectedTimeSlotValid } from "~/utils/isSelectedTimeSlotValid";
 import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
 import { cn } from "~/utils/shadcnuiUtils";
 import { Separator } from "~/components/ui/separator";
 import { Input } from "~/components/ui/input";
 import AvailablePickupDays from "~/components/cart/AvailablePickupDays";
+import { getMidnightCSTInUTC } from "~/utils/cstToUTCHelpers";
 
 interface OrderCost {
   subtotal: number;
@@ -189,11 +188,10 @@ function CartSheet({
       })
       .refine(
         (date) => {
-          const now = new Date();
-          now.setHours(0, 0, 0, 0);
+          const todayAtMidnight = getMidnightCSTInUTC();
 
           // fyi: returns message if expression is false
-          return date >= now;
+          return date >= todayAtMidnight;
         },
         {
           message: "Invalid pickup date",
@@ -291,15 +289,6 @@ function CartSheet({
     ),
   });
 
-  console.log(
-    "orderDetails.datetimeToPickup",
-    orderDetails.datetimeToPickup,
-    "orderDetails.isASAP",
-    orderDetails.isASAP,
-    "getHoursAndMinutesFromDate(orderDetails.datetimeToPickup)",
-    getHoursAndMinutesFromDate(orderDetails.datetimeToPickup),
-  );
-
   const mainForm = useForm<z.infer<typeof mainFormSchema>>({
     resolver: zodResolver(mainFormSchema),
     values: {
@@ -344,7 +333,7 @@ function CartSheet({
       if (value.dateToPickup === undefined || value.timeToPickup === undefined)
         return;
 
-      const newDate =
+      let newDate =
         value.timeToPickup === "ASAP (~20 mins)"
           ? value.dateToPickup
           : mergeDateAndTime(value.dateToPickup, value.timeToPickup);
@@ -365,10 +354,12 @@ function CartSheet({
         value.dateToPickup.getFullYear() !==
           orderDetails.datetimeToPickup.getFullYear()
       ) {
-        newDate.setHours(0, 0, 0, 0);
+        // newDate.setHours(0, 0, 0, 0);
+        newDate = getMidnightCSTInUTC(value.dateToPickup);
       } else if (value.timeToPickup === "ASAP (~20 mins)") {
         // normalizing datetime to midnight
-        newDate.setHours(0, 0, 0, 0);
+        // newDate.setHours(0, 0, 0, 0);
+        newDate = getMidnightCSTInUTC(value.dateToPickup);
 
         const newOrderDetails = structuredClone(orderDetails);
         newOrderDetails.datetimeToPickup = newDate;

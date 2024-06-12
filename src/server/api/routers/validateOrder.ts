@@ -1,4 +1,3 @@
-import { format, startOfDay } from "date-fns";
 import { z } from "zod";
 import { type OrderDetails, orderDetailsSchema } from "~/stores/MainStore";
 import isEqual from "lodash.isequal";
@@ -8,20 +7,14 @@ import { toZonedTime } from "date-fns-tz";
 import { isSelectedTimeSlotValid } from "~/utils/isSelectedTimeSlotValid";
 import { loopToFindFirstOpenDay } from "~/utils/loopToFindFirstOpenDay";
 import { isEligibleForBirthdayReward } from "~/utils/isEligibleForBirthdayReward";
-import { getMidnightDate } from "~/utils/getMidnightDate";
-import { getMidnightCST } from "~/utils/getMidnightCST";
+import { getCSTDateInUTC, getMidnightCSTInUTC } from "~/utils/cstToUTCHelpers";
 
 function validateDayOfDatetimeToPickup(orderDatetimeToPickup: Date) {
   let datetimeToPickup = orderDatetimeToPickup
-    ? toZonedTime(orderDatetimeToPickup, "America/Chicago")
-    : // TODO: check if the getMidnightDate() here is wanted/needed
-      toZonedTime(getMidnightDate(new Date()), "America/Chicago");
+    ? getCSTDateInUTC(orderDatetimeToPickup)
+    : getMidnightCSTInUTC();
 
-  const todayAtMidnight = toZonedTime(
-    startOfDay(new Date()),
-    "America/Chicago",
-  );
-  // now.setUTCHours(0, 0, 0, 0); // Normalize now to midnight for consistent comparison
+  const todayAtMidnight = getMidnightCSTInUTC();
 
   // If datetimeToPickup is in the past, need to find the next valid day
   // (at midnight specifically) to set it to.
@@ -36,7 +29,7 @@ function validateTimeToPickup(
   orderDetails: OrderDetails,
   minOrderPickupDatetime: Date,
 ) {
-  const now = toZonedTime(new Date(), "America/Chicago");
+  // const now = toZonedTime(new Date(), "America/Chicago");
   const datetimeToPickup = toZonedTime(
     orderDetails.datetimeToPickup,
     "America/Chicago",
@@ -59,8 +52,9 @@ function validateTimeToPickup(
   // technically by this point, the date _should_ be valid, and it's just that the time
   // should be set to midnight of currently selected day, however setting it to midnight
   // here and still sending it through loopToFindFirstOpenDay function just to be safe.
-  now.setUTCHours(0, 0, 0, 0);
-  orderDetails.datetimeToPickup = loopToFindFirstOpenDay(now);
+  const nowAtMidnight = getMidnightCSTInUTC();
+
+  orderDetails.datetimeToPickup = loopToFindFirstOpenDay(nowAtMidnight);
 }
 
 export const validateOrderRouter = createTRPCRouter({
@@ -123,19 +117,11 @@ export const validateOrderRouter = createTRPCRouter({
 
       const orderDetails = structuredClone(originalOrderDetails);
 
-      console.log("standalone getMidnightCST", getMidnightCST());
-      console.log(
-        "formatted",
-        format(getMidnightCST(), "yyyy-MM-dd HH:mm:ssXXX"),
-      );
-
       if (!validatingAReorder) {
         // Date validation
-        console.log("date passed in", orderDetails.datetimeToPickup);
         orderDetails.datetimeToPickup = validateDayOfDatetimeToPickup(
           orderDetails.datetimeToPickup,
         );
-        console.log("date after validation", orderDetails.datetimeToPickup);
 
         // Pickup time validation
         const dbMinOrderPickupTime =

@@ -44,7 +44,6 @@ import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { useMainStore, type Item } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { formatPrice } from "~/utils/formatPrice";
-import { getDisabledDates } from "~/utils/getDisabledPickupDates";
 import { cn } from "~/utils/shadcnuiUtils";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import useInitializeCheckout from "~/hooks/useInitializeCheckout";
@@ -64,6 +63,7 @@ import { TbLocation } from "react-icons/tb";
 import { Separator } from "~/components/ui/separator";
 import { Input } from "~/components/ui/input";
 import AvailablePickupDays from "~/components/cart/AvailablePickupDays";
+import { getMidnightCSTInUTC } from "~/utils/cstToUTCHelpers";
 
 function getSafeAreaInsetBottom() {
   // Create a temporary element to get the CSS variable
@@ -196,11 +196,10 @@ function CartDrawer({
       })
       .refine(
         (date) => {
-          const now = new Date();
-          now.setHours(0, 0, 0, 0);
+          const todayAtMidnight = getMidnightCSTInUTC();
 
           // fyi: returns message if expression is false
-          return date >= now;
+          return date >= todayAtMidnight;
         },
         {
           message: "Invalid pickup date",
@@ -342,7 +341,7 @@ function CartDrawer({
       if (value.dateToPickup === undefined || value.timeToPickup === undefined)
         return;
 
-      const newDate =
+      let newDate =
         value.timeToPickup === "ASAP (~20 mins)"
           ? value.dateToPickup
           : mergeDateAndTime(value.dateToPickup, value.timeToPickup);
@@ -363,10 +362,12 @@ function CartDrawer({
         value.dateToPickup.getFullYear() !==
           orderDetails.datetimeToPickup.getFullYear()
       ) {
-        newDate.setHours(0, 0, 0, 0);
+        // newDate.setHours(0, 0, 0, 0);
+        newDate = getMidnightCSTInUTC(value.dateToPickup);
       } else if (value.timeToPickup === "ASAP (~20 mins)") {
         // normalizing datetime to midnight
-        newDate.setHours(0, 0, 0, 0);
+        // newDate.setHours(0, 0, 0, 0);
+        newDate = getMidnightCSTInUTC(value.dateToPickup);
 
         const newOrderDetails = structuredClone(orderDetails);
         newOrderDetails.datetimeToPickup = newDate;

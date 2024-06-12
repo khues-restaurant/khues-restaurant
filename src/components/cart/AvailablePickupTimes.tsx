@@ -2,6 +2,7 @@ import { toZonedTime } from "date-fns-tz";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { SelectGroup, SelectItem, SelectLabel } from "~/components/ui/select";
+import { getMidnightCSTInUTC } from "~/utils/cstToUTCHelpers";
 import {
   hoursOpenPerDay,
   isHoliday,
@@ -141,17 +142,18 @@ function AvailablePickupTimes({
   // TODO: see if you can use the getMidnightDate function here, I know there were
   // issues with rerendering too many times/infinitely before but I think it should
   // be doable.
-  const todayAtMidnight = useMemo(() => {
-    const today = toZonedTime(new Date(), "America/Chicago");
-    today.setHours(0, 0, 0, 0);
+  // const todayAtMidnight = useMemo(() => {
+  //   const today = toZonedTime(new Date(), "America/Chicago");
+  //   today.setHours(0, 0, 0, 0);
 
-    return today;
-  }, []);
+  //   return today;
+  // }, []);
 
   const orderingIsNotAvailable = useMemo(() => {
     const now = toZonedTime(new Date(), "America/Chicago");
     const todaysHours =
       hoursOpenPerDay[now.getDay() as keyof typeof hoursOpenPerDay];
+    const todayAtMidnight = getMidnightCSTInUTC();
 
     return (
       selectedDate.getTime() === todayAtMidnight.getTime() &&
@@ -160,7 +162,7 @@ function AvailablePickupTimes({
         now.getHours() >= todaysHours.close ||
         (now.getHours() === todaysHours.close - 1 && now.getMinutes() >= 30))
     );
-  }, [selectedDate, minPickupTime, todayAtMidnight]);
+  }, [selectedDate, minPickupTime]);
 
   // should be exceedingly rare that this is true, should only happen if someone manually
   // enables a disabled day in the date picker <Select />...

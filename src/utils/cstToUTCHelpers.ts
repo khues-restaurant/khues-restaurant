@@ -1,12 +1,12 @@
 import { fromZonedTime, toZonedTime } from "date-fns-tz";
 import { startOfDay } from "date-fns";
 
-export function getMidnightCST() {
+function getMidnightCSTInUTC(date?: Date) {
   // Get the current date and time in UTC
-  const now = new Date();
+  const initalDate = date ?? new Date();
 
   // Convert the current date and time to CST/CDT
-  const cstDate = toZonedTime(now, "America/Chicago");
+  const cstDate = toZonedTime(initalDate, "America/Chicago");
 
   // Get the start of the day (midnight) in CST/CDT
   const startOfTodayCST = startOfDay(cstDate);
@@ -16,3 +16,12 @@ export function getMidnightCST() {
 
   return startOfTodayUTC;
 }
+
+function getCSTDateInUTC(date: Date) {
+  const cstDate = toZonedTime(date, "America/Chicago");
+  const utcDate = fromZonedTime(cstDate, "America/Chicago");
+
+  return utcDate;
+}
+
+export { getMidnightCSTInUTC, getCSTDateInUTC };
