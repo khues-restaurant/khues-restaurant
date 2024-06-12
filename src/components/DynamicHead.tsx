@@ -9,6 +9,7 @@ interface DynamicHeadJSON {
   ogTitle?: string;
   ogUrl?: string;
   ogDescription?: string;
+  ogSiteName?: string;
   ogType?: string;
   ogImage?: string;
   ogImageAlt?: string;
@@ -25,7 +26,8 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
         description:
           "Discover the modern Vietnamese flavors at Khue's, where Chef Eric Pham brings a fresh perspective to traditional dishes inspired by his mother's legacy.",
         ogTitle: "Khue's",
-        ogUrl: "www.khueskitchen.com/",
+        ogSiteName: "Khue's",
+        ogUrl: "www.khueskitchen.com",
         ogDescription:
           "Discover the modern Vietnamese flavors at Khue's, where Chef Eric Pham brings a fresh perspective to traditional dishes inspired by his mother's legacy.",
         ogType: "website",
@@ -36,6 +38,7 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
         description:
           "Explore Khue's Kitchen in the media, featuring interviews, articles, and videos showcasing Chef Eric Pham's culinary journey and Vietnamese cuisine.",
         ogTitle: "Menu | Khue's",
+        ogSiteName: "Khue's",
         ogUrl: "www.khueskitchen.com/menu",
         ogDescription:
           "Explore Khue's Kitchen in the media, featuring interviews, articles, and videos showcasing Chef Eric Pham's culinary journey and Vietnamese cuisine.",
@@ -47,6 +50,7 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
         description:
           "Order directly from Khue's for exclusive benefits, including our lowest menu prices, priority processing, and rewards points towards free meals.",
         ogTitle: "Order | Khue's",
+        ogSiteName: "Khue's",
         ogUrl: "www.khueskitchen.com/order",
         ogDescription:
           "Order directly from Khue's for exclusive benefits, including our lowest menu prices, priority processing, and rewards points towards free meals.",
@@ -58,6 +62,7 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
         description:
           "Secure your reservations at Khue's Kitchen. Learn about our policies for larger parties and how to guarantee your spot for an unforgettable dining experience.",
         ogTitle: "Reservations | Khue's",
+        ogSiteName: "Khue's",
         ogUrl: "www.khueskitchen.com/reservations",
         ogDescription:
           "Secure your reservations at Khue's Kitchen. Learn about our policies for larger parties and how to guarantee your spot for an unforgettable dining experience.",
@@ -69,6 +74,7 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
         description:
           "Become a member of Khue's Rewards and enjoy exclusive benefits, from earning points towards free meals to special birthday treats and early access to new dishes.",
         ogTitle: "Rewards | Khue's",
+        ogSiteName: "Khue's",
         ogUrl: "www.khueskitchen.com/rewards",
         ogDescription:
           "Become a member of Khue's Rewards and enjoy exclusive benefits, from earning points towards free meals to special birthday treats and early access to new dishes.",
@@ -80,6 +86,7 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
         description:
           "Discover the inspiring story behind Khue's, where Chef Eric Pham honors his mother's legacy through modern Vietnamese cuisine, blending tradition with innovation.",
         ogTitle: "Our story | Khue's",
+        ogSiteName: "Khue's",
         ogUrl: "www.khueskitchen.com/our-story",
         ogDescription:
           "Discover the inspiring story behind Khue's, where Chef Eric Pham honors his mother's legacy through modern Vietnamese cuisine, blending tradition with innovation.",
@@ -91,6 +98,7 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
         description:
           "Explore Khue's Kitchen in the media, featuring interviews, articles, and videos showcasing Chef Eric Pham's culinary journey and Vietnamese cuisine.",
         ogTitle: "Media | Khue's",
+        ogSiteName: "Khue's",
         ogUrl: "www.khueskitchen.com/media",
         ogDescription:
           "Explore Khue's Kitchen in the media, featuring interviews, articles, and videos showcasing Chef Eric Pham's culinary journey and Vietnamese cuisine.",
@@ -100,6 +108,7 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
       return {
         title: "Payment success | Khue's",
         ogTitle: "Payment success | Khue's",
+        ogSiteName: "Khue's",
         ogUrl: "www.khueskitchen.com/payment-sucess",
         ogType: "website",
         robots: "noindex,nofollow",
@@ -108,6 +117,7 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
       return {
         title: "Track | Khue's",
         ogTitle: "Track | Khue's",
+        ogSiteName: "Khue's",
         ogUrl: "www.khueskitchen.com/track",
         ogType: "website",
         robots: "noindex,nofollow",
@@ -118,6 +128,7 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
         description:
           "Khue's is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website, use our services, and interact with our platform.",
         ogTitle: "Privacy | Khue's",
+        ogSiteName: "Khue's",
         ogUrl: "www.khueskitchen.com/privacy",
         ogDescription:
           "Khue's is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website, use our services, and interact with our platform.",
@@ -129,6 +140,7 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
         description:
           "Unsubscribe from Khue's email list to stop receiving updates on new dishes, special promotions, and exclusive events.",
         ogTitle: "Unsubscribe | Khue's",
+        ogSiteName: "Khue's",
         ogUrl: "www.khueskitchen.com/unsubscribe",
         ogDescription:
           "Unsubscribe from Khue's email list to stop receiving updates on new dishes, special promotions, and exclusive events.",
@@ -143,6 +155,7 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
         description:
           "Manage your Khue's account preferences, including email subscriptions, notifications, and personal information.",
         ogTitle: "Preferences | Khue's",
+        ogSiteName: "Khue's",
         ogUrl: "www.khueskitchen.com/profile/preferences",
         ogDescription:
           "Manage your Khue's account preferences, including email subscriptions, notifications, and personal information.",
@@ -155,6 +168,7 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
         description:
           "Track your Khue's Rewards points, redeem rewards, and view your rewards history.",
         ogTitle: "Rewards | Khue's",
+        ogSiteName: "Khue's",
         ogUrl: "www.khueskitchen.com/profile/rewards",
         ogDescription:
           "Track your Khue's Rewards points, redeem rewards, and view your rewards history.",
@@ -167,6 +181,7 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
         description:
           "View your past orders, track your current orders, and access your order history.",
         ogTitle: "My orders | Khue's",
+        ogSiteName: "Khue's",
         ogUrl: "www.khueskitchen.com/profile/my-orders",
         ogDescription:
           "View your past orders, track your current orders, and access your order history.",
@@ -187,7 +202,8 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
         description:
           "Discover the modern Vietnamese flavors at Khue's, where Chef Eric Pham brings a fresh perspective to traditional dishes inspired by his mother's legacy.",
         ogTitle: "Khue's",
-        ogUrl: "www.khueskitchen.com/",
+        ogSiteName: "Khue's",
+        ogUrl: "www.khueskitchen.com",
         ogDescription:
           "Discover the modern Vietnamese flavors at Khue's, where Chef Eric Pham brings a fresh perspective to traditional dishes inspired by his mother's legacy.",
         ogType: "website",
@@ -226,9 +242,16 @@ function DynamicHead({ currentPath }: DynamicHead) {
       {dynamicHeadJSON.ogType && (
         <meta property="og:type" content={dynamicHeadJSON.ogType} />
       )}
+      {dynamicHeadJSON.ogSiteName && (
+        <meta property="og:site_name" content={dynamicHeadJSON.ogSiteName} />
+      )}
 
       {/* default tags */}
-      <meta property="og:image" content={"/opengraphImage.png"}></meta>
+      <meta
+        property="og:image"
+        // TODO: Change for production
+        content={"https://khues-restaurant.vercel.app/opengraphImage.png"}
+      ></meta>
       <meta
         property="og:image:alt"
         content="Welcome to Khue's - A modern take on classic Vietnamese cuisine. The image features a welcoming character in traditional Vietnamese attire, set against a background of delicious Vietnamese dishes."
