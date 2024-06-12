@@ -323,7 +323,7 @@ function OrderNow() {
             sizes="(min-width: 1000px) 160px, 192px"
             className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
           />
-          <div className="baseFlex shadow-heroContainer z-10 mx-8 !hidden rounded-md bg-offwhite p-2 tablet:!flex">
+          <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-offwhite p-2 shadow-heroContainer tablet:!flex">
             <div className="baseFlex gap-2 font-semibold text-primary tablet:p-2 tablet:text-xl desktop:text-2xl">
               <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
               <h1>Order</h1>
@@ -344,7 +344,7 @@ function OrderNow() {
           />
         </div>
 
-        <div className="baseFlex shadow-heroContainer z-10 rounded-md bg-offwhite p-2 tablet:hidden">
+        <div className="baseFlex z-10 rounded-md bg-offwhite p-2 shadow-heroContainer tablet:hidden">
           <div className="baseFlex gap-2 p-2 text-xl font-semibold text-primary tablet:px-8 tablet:py-3 tablet:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary" />
             <h1>Order</h1>
@@ -1335,18 +1335,18 @@ function PreviousOrder({ order }: PreviousOrder) {
             </p>
 
             <div className="baseVertFlex w-full !items-start text-xs text-stone-400">
-              <p className="baseFlex gap-2">
+              <p className="max-w-28 truncate">
                 {order.orderItems[0]?.quantity} {order.orderItems[0]?.name}
               </p>
 
               {order.orderItems.length > 1 && (
-                <p className="baseFlex gap-2">
+                <p className="max-w-28 truncate">
                   {order.orderItems[1]?.quantity} {order.orderItems[1]?.name}
                 </p>
               )}
 
               {order.orderItems.length > 2 && (
-                <p className="baseFlex gap-2">
+                <p className="max-w-28 truncate">
                   {order.orderItems[2]?.quantity} {order.orderItems[2]?.name}
                 </p>
               )}
