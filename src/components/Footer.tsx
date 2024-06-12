@@ -53,7 +53,7 @@ p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tab
       {/* contact info */}
       <div className="baseVertFlex gap-2 tablet:!items-start tablet:!justify-start tablet:gap-0">
         <p className="font-semibold underline underline-offset-2">Contact</p>
-        <div className="baseVertFlex tablet:!items-start tablet:!justify-start">
+        <div className="baseVertFlex gap-1 tablet:!items-start tablet:!justify-start tablet:gap-0">
           <div className="baseFlex gap-2 tablet:gap-[9px]">
             <FaPhone size={"0.8rem"} className="tablet:ml-[1px]" />
             <Button variant="link" className="h-8 px-1" asChild>
