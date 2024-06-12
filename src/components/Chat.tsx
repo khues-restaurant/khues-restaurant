@@ -350,7 +350,7 @@ function Chat() {
             </div>
 
             {/* input */}
-            <div className="baseFlex w-full gap-4 rounded-b-xl bg-gradient-to-br from-stone-200 to-stone-300 p-2 px-4 shadow-inner">
+            <div className="baseFlex w-full gap-4 rounded-b-xl bg-gradient-to-br from-stone-200 to-stone-300 px-4 py-3 shadow-inner">
               <Textarea
                 placeholder="Enter your message here..."
                 minLength={1}
@@ -516,7 +516,7 @@ function Chat() {
             </div>
 
             {/* input */}
-            <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-stone-200 to-stone-300 p-2 px-4 shadow-inner">
+            <div className="baseFlex w-full gap-4 rounded-b-lg bg-gradient-to-br from-stone-200 to-stone-300 px-4 py-3 shadow-inner">
               <Textarea
                 placeholder="Enter your message here..."
                 minLength={1}
@@ -539,7 +539,7 @@ function Chat() {
                     });
                   }
                 }}
-                className="max-h-12 flex-grow border border-stone-500 bg-transparent placeholder-stone-400"
+                className="max-h-12 flex-grow border-2 border-stone-500 bg-transparent placeholder-stone-400"
               />
               <Button
                 disabled={

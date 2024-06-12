@@ -327,7 +327,7 @@ function CustomerChats({ socket }: CustomerChats) {
               )}
             </div>
 
-            <div className="baseFlex w-full gap-4 rounded-br-lg bg-gradient-to-br from-stone-200 to-stone-300 p-4 shadow-inner">
+            <div className="baseFlex w-full gap-4 rounded-br-lg bg-gradient-to-br from-stone-200 to-stone-300 px-4 py-3 shadow-inner">
               <Textarea
                 placeholder="Enter your message here"
                 minLength={1}
