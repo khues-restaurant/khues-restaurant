@@ -1,4 +1,4 @@
-import { startOfDay } from "date-fns";
+import { format, startOfDay } from "date-fns";
 import { z } from "zod";
 import { type OrderDetails, orderDetailsSchema } from "~/stores/MainStore";
 import isEqual from "lodash.isequal";
@@ -9,6 +9,7 @@ import { isSelectedTimeSlotValid } from "~/utils/isSelectedTimeSlotValid";
 import { loopToFindFirstOpenDay } from "~/utils/loopToFindFirstOpenDay";
 import { isEligibleForBirthdayReward } from "~/utils/isEligibleForBirthdayReward";
 import { getMidnightDate } from "~/utils/getMidnightDate";
+import { getMidnightCST } from "~/utils/getMidnightCST";
 
 function validateDayOfDatetimeToPickup(orderDatetimeToPickup: Date) {
   let datetimeToPickup = orderDatetimeToPickup
@@ -121,6 +122,12 @@ export const validateOrderRouter = createTRPCRouter({
       } = input;
 
       const orderDetails = structuredClone(originalOrderDetails);
+
+      console.log("standalone getMidnightCST", getMidnightCST());
+      console.log(
+        "formatted",
+        format(getMidnightCST(), "yyyy-MM-dd HH:mm:ssXXX"),
+      );
 
       if (!validatingAReorder) {
         // Date validation
