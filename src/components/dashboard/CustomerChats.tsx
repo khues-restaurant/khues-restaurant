@@ -283,7 +283,7 @@ function CustomerChats({ socket }: CustomerChats) {
             {/* scroll-y-auto messages container */}
             <div
               ref={scrollableChatContainerRef}
-              className="baseVertFlex relative size-full !justify-start gap-2 overflow-y-auto bg-background p-2 sm:h-96 "
+              className="baseVertFlex relative size-full !justify-start gap-2 overflow-y-auto bg-background p-2 sm:h-[391px] "
             >
               {dateLabeledMessages ? (
                 <>
