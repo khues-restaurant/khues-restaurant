@@ -42,12 +42,12 @@ function ItemManagement({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex my-8 mb-24 mt-24 h-full max-w-3xl tablet:mt-28"
+      className="baseVertFlex my-8 mb-24 mt-24 h-full max-w-3xl tablet:mt-28 desktop:max-w-6xl"
     >
       <p className="mt-8 pb-8 text-xl font-semibold underline underline-offset-2">
         Menu items
       </p>
-      <div className="grid w-full grid-cols-2 !place-items-start gap-4">
+      <div className="baseVertFlex w-full !items-start gap-4">
         {menuCategories?.map((category) => (
           <MenuCategoryContainer
             key={category.id}
@@ -62,7 +62,7 @@ function ItemManagement({
       <p className="mt-8 pb-8 text-xl font-semibold underline underline-offset-2">
         Customizations
       </p>
-      <div className="grid w-full grid-cols-2 !place-items-start gap-4">
+      <div className="baseVertFlex w-full !items-start gap-4">
         {customizationCategories?.map((category) => (
           <CustomizationCategoryContainer
             key={category.id}
@@ -126,7 +126,7 @@ function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
         {name}
       </p>
 
-      <div className="baseFlex w-full flex-wrap !justify-start gap-4">
+      <div className="grid w-full grid-cols-2 !justify-start gap-4 desktop:grid-cols-3">
         {menuItems.map((item) => (
           <div
             key={item.id}
@@ -239,7 +239,7 @@ function CustomizationCategoryContainer({
         {name}
       </p>
 
-      <div className="baseFlex w-full flex-wrap !justify-start gap-4">
+      <div className="grid w-full grid-cols-2 !justify-start gap-4 desktop:grid-cols-3">
         {customizationChoices.map((choice) => (
           <div
             key={choice.id}
