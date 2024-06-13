@@ -34,7 +34,6 @@ function ItemManagement({
   menuCategories,
   customizationCategories,
 }: ItemManagement) {
-  console.log(menuCategories);
   return (
     <motion.div
       key={"itemManagement"}
