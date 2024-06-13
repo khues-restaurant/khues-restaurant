@@ -211,13 +211,7 @@ function Rewards() {
             transition={{ duration: 0.5 }}
             className="baseVertFlex relative mb-24 w-full gap-8 bg-offwhite transition-all md:w-3/4 tablet:mb-32 tablet:mt-0 tablet:rounded-xl tablet:border tablet:shadow-md"
           >
-            <div
-              style={{
-                backgroundImage:
-                  "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
-              }}
-              className="baseFlex relative h-56 w-full overflow-hidden shadow-md tablet:h-72 tablet:overflow-x-hidden tablet:rounded-t-lg"
-            >
+            <div className="baseFlex bg-rewardsGradient relative h-56 w-full overflow-hidden shadow-md tablet:h-72 tablet:overflow-x-hidden tablet:rounded-t-lg">
               {/* mobile images */}
               <motion.div
                 key={"rewardsHeroMobileImageOne"}

@@ -124,13 +124,7 @@ function RewardsDrawer({
       className="baseVertFlex relative size-full !justify-start"
     >
       <div className="baseVertFlex relative mt-10 w-full !justify-start overflow-y-auto ">
-        <div
-          style={{
-            backgroundImage:
-              "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
-          }}
-          className="baseFlex relative mt-2 !h-40 w-full shrink-0 overflow-hidden shadow-sm"
-        >
+        <div className="baseFlex bg-rewardsGradient relative mt-2 !h-40 w-full shrink-0 overflow-hidden shadow-sm">
           <motion.div
             key={"rewardsHeroMobileImageOne"}
             initial={{

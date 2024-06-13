@@ -150,13 +150,7 @@ function RewardsDialogContent({
       className="w-[800px] max-w-[800px]"
     >
       <div className="baseVertFlex relative max-h-[85vh] w-full !justify-start gap-2">
-        <div
-          style={{
-            backgroundImage:
-              "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
-          }}
-          className="baseFlex relative h-48 w-full overflow-hidden rounded-md shadow-sm"
-        >
+        <div className="baseFlex bg-rewardsGradient relative h-48 w-full overflow-hidden rounded-md shadow-sm">
           <motion.div
             key={"rewardsHeroMobileImageOne"}
             initial={{

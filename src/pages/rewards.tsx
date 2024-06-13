@@ -27,13 +27,7 @@ function Rewards() {
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start gap-8 pb-24 tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)] tablet:pb-8"
     >
       {/* Hero */}
-      <div
-        style={{
-          backgroundImage:
-            "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
-        }}
-        className="baseFlex relative h-56 w-full overflow-hidden shadow-md tablet:h-72 tablet:overflow-x-hidden"
-      >
+      <div className="baseFlex bg-rewardsGradient relative h-56 w-full overflow-hidden shadow-md tablet:h-72 tablet:overflow-x-hidden">
         {/* mobile images */}
         <motion.div
           key={"rewardsHeroMobileImageOne"}
@@ -545,24 +539,6 @@ function Rewards() {
           </div>
         </div>
       </div>
-
-      {/* 
-            #DAA520 is interesting, #FFECB3 as a top left ? still too bright though,
-
-            #e2c479 - #dbb658
-            
-                background: linear-gradient(to right, #DF9F28, #FDE08D, #DF9F28);
-      ^ maybe?
-        
-      linear-gradient(to right bottom, oklch(0.9 0.13 87.8 / 1) 0%, hsl(46 65% 59% / 1) 100%)
-      ^ this was legit just playing around with numbers
-
-      maybe lean more towards oklch realm or keep asking chatgpt to refine on
-
-      ^ maybe have highlight section but usually with gradients it just looks washed out..
-      maybe have some kind of texture effect layed over to make up for this/make it look like actual gold?
-
-            */}
 
       {/* Join */}
       <div className="baseVertFlex relative mb-16 mt-16 max-w-xl gap-8 overflow-hidden border-y-4 border-b-borderGold border-t-borderGold bg-offwhite !p-6 text-primary shadow-md sm:rounded-sm sm:!p-8">

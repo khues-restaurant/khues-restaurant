@@ -607,13 +607,7 @@ function Track() {
                   </div>
                 </div>
 
-                <div
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
-                  }}
-                  className="baseFlex relative w-full overflow-hidden rounded-md py-6 shadow-md"
-                >
+                <div className="baseFlex bg-rewardsGradient relative w-full overflow-hidden rounded-md py-6 shadow-md">
                   <motion.div
                     key={"rewardsHeroMobileImageOne"}
                     initial={{ opacity: 0, y: -125, x: -125 }}

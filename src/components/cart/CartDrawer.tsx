@@ -968,7 +968,7 @@ function CartDrawer({
                             className="baseFlex w-full !items-start gap-4"
                           >
                             {/* preview image of item */}
-                            <div className="goldBorder !size-16 min-h-16 min-w-16 rounded-md !p-1">
+                            <div className="bg-rewardsGradient !size-16 min-h-16 min-w-16 rounded-md !p-1">
                               <Image
                                 src={"/menuItems/sampleImage.webp"}
                                 alt={item.name}

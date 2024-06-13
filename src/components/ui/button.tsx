@@ -90,7 +90,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         onPointerUp={() => setBrightness(1)}
         onPointerLeave={() => setBrightness(1)}
         style={{
-          // filter: `brightness(${brightness}`,
           background:
             variant === "rewards"
               ? "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.70 0.13 87.8) 100%)"

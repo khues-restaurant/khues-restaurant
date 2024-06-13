@@ -80,6 +80,10 @@ const config = {
         darkPrimary: "hsl(var(--darkPrimary))",
         body: "hsl(var(--body))",
       },
+      backgroundImage: {
+        rewardsGradient:
+          "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

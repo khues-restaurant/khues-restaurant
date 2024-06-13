@@ -87,13 +87,7 @@ function OrderReady({
         <Body style={main} className="rounded-lg">
           <Container style={container} className="rounded-lg">
             <Section className="my-4 bg-offwhite">
-              <div
-                // style={{
-                //   backgroundImage:
-                //     "linear-gradient(to bottom right, #14522d, #0f3e22)",
-                // }}
-                className="w-full rounded-t-lg bg-primary"
-              >
+              <div className="w-full rounded-t-lg bg-primary">
                 <Text className="py-4 pl-4 text-2xl font-semibold text-offwhite">
                   Khue&apos;s
                 </Text>

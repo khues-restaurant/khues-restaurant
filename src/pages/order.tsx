@@ -657,14 +657,14 @@ function MenuCategory({
             {name}
           </p>
 
-          {activeDiscount && (
+          {/* {activeDiscount && (
             <div className="rewardsGoldBorder baseFlex gap-1 rounded-md bg-primary px-4 py-0.5 text-sm font-medium text-yellow-500">
               <span>{activeDiscount.name}</span>
               <span>
                 until {format(activeDiscount.expirationDate, "MM/dd")}
               </span>
             </div>
-          )}
+          )} */}
         </div>
       </div>
 
@@ -795,8 +795,7 @@ function MenuItemPreviewButton({
             </div>
           )}
           <p
-            // TODO: idk about either the goldBorder or rewardsGoldBorder here...
-            className={`text-base ${activeDiscount ? "goldBorder rounded-md !py-0.5 px-4 text-offwhite" : ""}`}
+            className={`text-base ${activeDiscount ? "bg-rewardsGradient rounded-md !py-0.5 px-4 text-offwhite" : ""}`}
           >
             {formatPrice(
               calculateRelativeTotal({

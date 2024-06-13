@@ -750,13 +750,7 @@ function PostSignUpDialog({
                 }}
                 className="baseVertFlex mt-8 min-h-48 w-full !justify-start overflow-y-auto overflow-x-hidden"
               >
-                <div
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(to right bottom, oklch(0.9 0.13 87.8) 0%, oklch(0.75 0.13 87.8) 100%)",
-                  }}
-                  className="baseFlex relative h-48 w-full shrink-0 overflow-hidden rounded-md shadow-md tablet:w-[75%]"
-                >
+                <div className="baseFlex bg-rewardsGradient relative h-48 w-full shrink-0 overflow-hidden rounded-md shadow-md tablet:w-[75%]">
                   <motion.div
                     key={"rewardsHeroMobileImageOne"}
                     initial={{
