@@ -27,7 +27,7 @@ function Rewards() {
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start gap-8 pb-24 tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)] tablet:pb-8"
     >
       {/* Hero */}
-      <div className="baseFlex bg-rewardsGradient relative h-56 w-full overflow-hidden shadow-md tablet:h-72 tablet:overflow-x-hidden">
+      <div className="baseFlex relative h-56 w-full overflow-hidden bg-rewardsGradient shadow-md tablet:h-72 tablet:overflow-x-hidden">
         {/* mobile images */}
         <motion.div
           key={"rewardsHeroMobileImageOne"}
@@ -453,7 +453,7 @@ function Rewards() {
       </div>
 
       {/* filler images to break up the monotony */}
-      <div className="baseVertFlex relative my-8 gap-12 text-primary tablet:my-28 tablet:!flex-row tablet:gap-28">
+      <div className="baseVertFlex relative my-8 gap-12 text-primary lg:my-28 lg:!flex-row lg:gap-28">
         <div className="baseVertFlex gap-4 tablet:gap-6">
           <Image
             src={sampleImage}
