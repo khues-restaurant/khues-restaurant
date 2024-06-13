@@ -28,6 +28,10 @@ import {
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import useGetUserId from "~/hooks/useGetUserId";
+import { FaUserAlt } from "react-icons/fa";
+import { FaList } from "react-icons/fa";
+import { IoIosMail } from "react-icons/io";
+
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { CiCalendarDate } from "react-icons/ci";
@@ -36,6 +40,7 @@ import { Switch } from "~/components/ui/switch";
 import { Label } from "~/components/ui/label";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 import { Separator } from "~/components/ui/separator";
+import { Checkbox } from "~/components/ui/checkbox";
 
 const mainFormSchema = z.object({
   firstName: z
@@ -124,6 +129,13 @@ const dietaryRestrictionsSchema = z.object({
     .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,
 });
 
+const emailCommunicationsSchema = z.object({
+  allowsEmailReceipts: z.boolean(),
+  allowsOrderCompleteEmails: z.boolean(),
+  allowsRewardAvailabilityReminderEmails: z.boolean(),
+  allowsPromotionalEmails: z.boolean(),
+});
+
 interface PostSignUpDialog {
   setShouldRenderPostSignUpDialog: Dispatch<SetStateAction<boolean>>;
 }
@@ -131,7 +143,7 @@ interface PostSignUpDialog {
 function PostSignUpDialog({
   setShouldRenderPostSignUpDialog,
 }: PostSignUpDialog) {
-  const { user } = useUser();
+  const { user: clerkUser } = useUser();
   const userId = useGetUserId();
   const ctx = api.useUtils();
 
@@ -182,6 +194,8 @@ function PostSignUpDialog({
   > | null>(null);
   const [dietaryRestrictionsValues, setDietaryRestrictionsValues] =
     useState<z.infer<typeof dietaryRestrictionsSchema> | null>(null);
+  const [emailCommunicationsValues, setEmailCommunicationsValues] =
+    useState<z.infer<typeof emailCommunicationsSchema> | null>(null);
 
   const mainForm = useForm<z.infer<typeof mainFormSchema>>({
     resolver: zodResolver(mainFormSchema),
@@ -220,8 +234,27 @@ function PostSignUpDialog({
     setStep(3);
   }
 
+  const emailCommunicationsForm = useForm<
+    z.infer<typeof emailCommunicationsSchema>
+  >({
+    resolver: zodResolver(emailCommunicationsSchema),
+    defaultValues: {
+      allowsEmailReceipts: true,
+      allowsOrderCompleteEmails: true,
+      allowsRewardAvailabilityReminderEmails: false,
+      allowsPromotionalEmails: false,
+    },
+  });
+
+  function onEmailCommunicationsFormSubmit(
+    values: z.infer<typeof emailCommunicationsSchema>,
+  ) {
+    setEmailCommunicationsValues(values);
+    setStep(4);
+  }
+
   useEffect(() => {
-    if (step === 3) {
+    if (step === 4) {
       const pointsBeingRedeemedFromPreviousOrder = order
         ? order.userId === null
           ? order.earnedRewardsPoints
@@ -238,8 +271,89 @@ function PostSignUpDialog({
     setInitialRewardsPoints(0);
   }, [step, order]);
 
+  function renderSaveButtonText() {
+    if (
+      step === 1 ||
+      step === 3 ||
+      (step === 2 && dietaryRestrictionsForm.formState.isDirty)
+    ) {
+      return (
+        <motion.span
+          key="continue"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          Continue
+        </motion.span>
+      );
+    } else if (step === 2 && !dietaryRestrictionsForm.formState.isDirty) {
+      return (
+        <motion.span
+          key="skip"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          Skip
+        </motion.span>
+      );
+    }
+
+    return (
+      <AnimatePresence mode={"popLayout"} initial={false}>
+        <motion.div
+          key={saveButtonText}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{
+            duration: 0.25,
+          }}
+          className="baseFlex gap-2"
+        >
+          {saveButtonText}
+          {saveButtonText === "Saving" && (
+            <div
+              className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
+              role="status"
+              aria-label="loading"
+            >
+              <span className="sr-only">Loading...</span>
+            </div>
+          )}
+          {saveButtonText === "Saved" && (
+            <svg
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              className="size-4 text-offwhite"
+            >
+              <motion.path
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{
+                  delay: 0.2,
+                  type: "tween",
+                  ease: "easeOut",
+                  duration: 0.3,
+                }}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          )}
+        </motion.div>
+      </AnimatePresence>
+    );
+  }
+
   function getDynamicWidth() {
-    if (step === 3) {
+    if (step === 4) {
       return "100px";
     } else if (step === 2) {
       if (dietaryRestrictionsForm.formState.isDirty) return "175px";
@@ -267,11 +381,11 @@ function PostSignUpDialog({
 
   return (
     <AlertDialog open={dialogIsOpen}>
-      <AlertDialogContent className="max-w-screen-md">
+      <AlertDialogContent className="max-w-screen-md pb-3">
         <div
           style={{
             height:
-              step === 3
+              step === 4
                 ? viewportLabel.includes("mobile")
                   ? "575px"
                   : "600px"
@@ -284,10 +398,18 @@ function PostSignUpDialog({
             Account setup
           </p>
           <div className="baseFlex mt-4 w-full !justify-between p-0 pb-8 pt-2 tablet:mt-0 tablet:p-8">
-            <div className="baseVertFlex relative gap-2 pl-4 pr-4 tablet:pl-8">
+            <div className="baseVertFlex relative gap-2 pl-2 pr-2 tablet:pl-8 tablet:pr-4">
               <Step step={1} currentStep={step} />
+              <div
+                className={`absolute left-[15px] top-12 text-center transition-all tablet:left-[44px]
+                  tablet:top-14
+                  ${step === 1 ? "scale-110 text-primary" : "text-stone-400"}
+                  `}
+              >
+                <FaUserAlt />
+              </div>
               <p
-                className={`absolute left-[0px] top-10 text-center text-xs transition-all tablet:left-[9px] tablet:top-12 tablet:text-nowrap tablet:text-sm ${step === 1 ? "font-semibold" : "text-stone-400"}`}
+                className={`absolute left-[0px] top-[72px] text-center text-xs transition-all tablet:left-[9px] tablet:top-20 tablet:text-nowrap tablet:text-sm ${step === 1 ? "opacity-1 font-semibold text-primary" : "text-stone-400 opacity-0"}`}
               >
                 Personal info
               </p>
@@ -322,11 +444,18 @@ function PostSignUpDialog({
               </AnimatePresence>
             </div>
 
-            <div className="baseVertFlex relative gap-2 px-4 text-sm">
+            <div className="baseVertFlex relative gap-2 px-2 text-sm tablet:px-4">
               <Step step={2} currentStep={step} />
+              <div
+                className={`absolute left-[15px] top-12 text-center transition-all tablet:left-[29px] tablet:top-14
+                  ${step === 2 ? "scale-110 text-primary" : "text-stone-400"}
+                  `}
+              >
+                <FaList className="size-[17px]" />
+              </div>
 
               <p
-                className={`absolute left-[-3px] top-10 text-center text-xs transition-all tablet:left-[-29px] tablet:top-12 tablet:text-nowrap tablet:text-sm ${step === 2 ? "font-semibold" : "text-stone-400"}`}
+                className={`absolute left-[-10px] top-[72px] text-center text-xs transition-all tablet:left-[-29px] tablet:top-20 tablet:text-nowrap tablet:text-sm ${step === 2 ? "opacity-1 font-semibold text-primary" : "text-stone-400 opacity-0"}`}
               >
                 Dietary preferences
               </p>
@@ -360,12 +489,61 @@ function PostSignUpDialog({
               </AnimatePresence>
             </div>
 
-            <div className="baseVertFlex relative gap-2 pl-4 pr-4 text-sm tablet:pr-8">
+            <div className="baseVertFlex relative gap-2 px-2 text-sm tablet:px-4">
               <Step step={3} currentStep={step} />
-              {/* <p className="absolute left-[16px] top-12">Finish</p> */}
+              <div
+                className={`absolute left-[14px] top-12 text-center transition-all tablet:left-[26px] tablet:top-14
+                  ${step === 3 ? "scale-110 text-primary" : "text-stone-400"}
+                  `}
+              >
+                <IoIosMail className="size-5" />
+              </div>
+
+              <p
+                className={`absolute left-[-12px] top-[72px] text-center text-xs transition-all tablet:left-[-22px] tablet:top-20 tablet:text-nowrap tablet:text-sm ${step === 3 ? "opacity-1 font-semibold text-primary" : "text-stone-400 opacity-0"}`}
+              >
+                Email preferences
+              </p>
+            </div>
+
+            <div
+              style={{
+                position: "relative",
+                flex: 1,
+                height: "2px",
+              }}
+              className="rounded-md bg-stone-400"
+            >
+              <AnimatePresence>
+                {step === 4 && (
+                  <motion.div
+                    key="lineThree"
+                    initial={{ width: 0 }}
+                    animate={{ width: "100%" }}
+                    exit={{ width: 0 }}
+                    transition={{ duration: 0.25 }}
+                    style={{
+                      position: "absolute",
+                      height: "2px",
+                      backgroundColor: "hsl(144deg, 61%, 20%)",
+                      top: 0,
+                      left: 0,
+                    }}
+                  />
+                )}
+              </AnimatePresence>
+            </div>
+
+            <div className="baseVertFlex relative gap-2 px-2 text-sm tablet:pl-4 tablet:pr-8">
+              <Step step={4} currentStep={step} />
               <CiGift
-                className={`absolute top-10 size-6 tablet:top-11 ${step === 3 ? "" : "text-stone-400"}`}
+                className={`absolute top-12 size-5 tablet:top-14 ${step === 4 ? "scale-110 text-primary" : "text-stone-400"}`}
               />
+              <p
+                className={`absolute left-[0px] top-[72px] text-center text-xs transition-all tablet:left-[-3px] tablet:top-20 tablet:text-nowrap tablet:text-sm ${step === 4 ? "opacity-1 font-semibold text-primary" : "text-stone-400 opacity-0"}`}
+              >
+                Thank you!
+              </p>
             </div>
           </div>
 
@@ -381,15 +559,18 @@ function PostSignUpDialog({
                   translateX: { duration: 0.5 },
                   ease: "easeInOut",
                 }}
-                className="baseVertFlex h-full min-h-48 w-full overflow-hidden"
+                className="baseVertFlex mt-16 h-full min-h-48 w-full overflow-hidden tablet:mt-0"
               >
                 <Form {...mainForm}>
                   <form
                     onSubmit={mainForm.handleSubmit(onMainFormSubmit)}
                     className="baseVertFlex w-full p-1 tablet:mt-8"
                   >
-                    <div className="baseVertFlex w-full gap-16 tablet:gap-12">
-                      <div className="grid grid-cols-2 !items-start gap-4 tablet:gap-16">
+                    <div
+                      className={`baseVertFlex h-[300px] w-full !justify-start gap-6 overflow-y-auto pb-16 tablet:h-auto tablet:!justify-center tablet:gap-8 tablet:overflow-y-visible tablet:pb-0
+                      `}
+                    >
+                      <div className="grid grid-cols-1 !items-start gap-4 tablet:grid-cols-2 tablet:gap-16">
                         <FormField
                           control={mainForm.control}
                           name="firstName"
@@ -489,7 +670,7 @@ function PostSignUpDialog({
                         />
                       </div>
 
-                      <div className="grid grid-cols-2 !items-start gap-4 tablet:gap-16">
+                      <div className="grid grid-cols-1 !items-start gap-4 tablet:grid-cols-2 tablet:gap-16">
                         <FormField
                           control={mainForm.control}
                           name="phoneNumber"
@@ -578,7 +759,7 @@ function PostSignUpDialog({
                                   <Input
                                     id="birthday"
                                     type={"tel"}
-                                    placeholder="mm/dd/yyyy"
+                                    placeholder="MM/DD/YYYY"
                                     className="w-full"
                                     maxLength={10} // Ensure the input doesn't exceed the format length
                                     {...field}
@@ -635,7 +816,7 @@ function PostSignUpDialog({
                   translateX: { duration: 0.5 },
                   ease: "easeInOut",
                 }}
-                className="baseVertFlex h-full min-h-48 w-full gap-4 overflow-hidden tablet:mt-8"
+                className="baseVertFlex mt-8 h-full min-h-48 w-full gap-4 overflow-hidden tablet:mt-16 "
               >
                 <Form {...dietaryRestrictionsForm}>
                   <form
@@ -710,9 +891,11 @@ function PostSignUpDialog({
                     extraBottomSpacer={false}
                     className="baseVertFlex gap-8 text-sm sm:text-base"
                   >
-                    <p>
-                      To add these restrictions while adding an item to your
-                      cart, simply toggle on the below switch:
+                    <p className="px-4">
+                      To add these restrictions when adding an item to your
+                      cart, toggle the switch found under the item&apos;s{" "}
+                      <span className="font-medium">Special instructions</span>{" "}
+                      menu.
                     </p>
                     <div className="baseFlex w-full gap-2 text-sm">
                       <Switch
@@ -727,17 +910,133 @@ function PostSignUpDialog({
                         Include your account&apos;s dietary preferences.
                       </Label>
                     </div>
-                    <p>
-                      which can be found under the item&apos;s{" "}
-                      <span className="font-medium">Special instructions</span>{" "}
-                      menu.
-                    </p>
                   </DialogContent>
                 </Dialog>
               </motion.div>
             )}
 
             {step === 3 && (
+              <motion.div
+                key={"emailCommunications"}
+                initial={{ opacity: 0, translateX: "50%" }}
+                animate={{ opacity: 1, translateX: 0 }}
+                exit={{ opacity: 0, translateX: "-50%" }}
+                transition={{
+                  opacity: { duration: 0.1 },
+                  translateX: { duration: 0.5 },
+                  ease: "easeInOut",
+                }}
+                className="baseVertFlex mt-4 h-full min-h-48 gap-4 overflow-hidden tablet:mt-8"
+              >
+                <div className="baseVertFlex w-full !items-start gap-1">
+                  <p className="text-sm font-semibold">
+                    Email communication preferences
+                  </p>
+                  <p className="text-sm text-stone-500">
+                    Let us know how you&apos;d like to hear from us.
+                  </p>
+                </div>
+
+                <Form {...emailCommunicationsForm}>
+                  <form
+                    onSubmit={emailCommunicationsForm.handleSubmit(
+                      onEmailCommunicationsFormSubmit,
+                    )}
+                  >
+                    <div className="baseVertFlex mt-2 w-full !items-start gap-4 tablet:gap-6">
+                      <FormField
+                        control={emailCommunicationsForm.control}
+                        name="allowsEmailReceipts"
+                        render={({ field }) => (
+                          <FormItem className="baseVertFlex relative gap-2 space-y-0">
+                            <div className="baseFlex ml-1 gap-[1.15rem]">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                  className="size-4"
+                                />
+                              </FormControl>
+                              <FormLabel className="leading-4">
+                                Receive email receipts for your orders.
+                              </FormLabel>
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={emailCommunicationsForm.control}
+                        name="allowsOrderCompleteEmails"
+                        render={({ field }) => (
+                          <FormItem className="baseVertFlex relative gap-2 space-y-0">
+                            <div className="baseFlex ml-1 gap-[1.15rem]">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                  className="size-4"
+                                />
+                              </FormControl>
+                              <FormLabel className="leading-4">
+                                Receive an email when your order is ready to be
+                                picked up.
+                              </FormLabel>
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={emailCommunicationsForm.control}
+                        name="allowsRewardAvailabilityReminderEmails"
+                        render={({ field }) => (
+                          <FormItem className="baseVertFlex relative gap-2 space-y-0">
+                            <div className="baseFlex ml-1 gap-[1.15rem]">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                  className="size-4"
+                                />
+                              </FormControl>
+                              <FormLabel className="leading-4">
+                                Receive reminders about the availability of your
+                                rewards.
+                              </FormLabel>
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={emailCommunicationsForm.control}
+                        name="allowsPromotionalEmails"
+                        render={({ field }) => (
+                          <FormItem className="baseVertFlex relative gap-2 space-y-0">
+                            <div className="baseFlex ml-1 gap-[1.15rem]">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                  className="size-4"
+                                />
+                              </FormControl>
+                              <FormLabel className="leading-4">
+                                Receive promotional content and special menu
+                                offers.
+                              </FormLabel>
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </form>
+                </Form>
+              </motion.div>
+            )}
+
+            {step === 4 && (
               <motion.div
                 key={"finish"}
                 initial={{ opacity: 0, translateX: "50%" }}
@@ -748,9 +1047,9 @@ function PostSignUpDialog({
                   translateX: { duration: 0.5 },
                   ease: "easeInOut",
                 }}
-                className="baseVertFlex mt-8 min-h-48 w-full !justify-start overflow-y-auto overflow-x-hidden"
+                className="baseVertFlex mt-16 min-h-48 w-full !justify-start overflow-y-auto overflow-x-hidden"
               >
-                <div className="baseFlex bg-rewardsGradient relative h-48 w-full shrink-0 overflow-hidden rounded-md shadow-md tablet:w-[75%]">
+                <div className="baseFlex relative h-48 w-full shrink-0 overflow-hidden rounded-md bg-rewardsGradient shadow-md tablet:w-[75%]">
                   <motion.div
                     key={"rewardsHeroMobileImageOne"}
                     initial={{
@@ -923,15 +1222,16 @@ function PostSignUpDialog({
             )}
           </AnimatePresence>
 
-          <div className="baseFlex mt-4 w-full !justify-between p-1 tablet:mt-8 desktop:mt-16">
+          <div className="baseFlex w-full !justify-between border-t p-1 pt-4 tablet:mt-8 desktop:mt-8">
             <Button
               variant={"text"}
               onClick={() => setStep(step - 1)}
-              className={`${
-                step === 1 || saveButtonText === "Saving"
-                  ? "pointer-events-none opacity-50"
-                  : "text-stone-500"
-              }`}
+              className={`
+                ${
+                  step === 1 || saveButtonText === "Saving"
+                    ? "pointer-events-none opacity-50"
+                    : "text-stone-500"
+                }`}
             >
               Back
             </Button>
@@ -948,96 +1248,30 @@ function PostSignUpDialog({
                   void dietaryRestrictionsForm.handleSubmit(
                     onDietaryRestrictionsFormSubmit,
                   )();
+                } else if (step === 3) {
+                  void emailCommunicationsForm.handleSubmit(
+                    onEmailCommunicationsFormSubmit,
+                  )();
                 } else {
-                  if (!user) return;
+                  if (!clerkUser) return;
 
                   setSaveButtonText("Saving");
 
                   createUser({
                     userId,
-                    email: user.primaryEmailAddress!.emailAddress, // guaranteed to exist
+                    email: clerkUser.primaryEmailAddress!.emailAddress, // guaranteed to exist
                     ...mainFormValues!,
                     ...dietaryRestrictionsValues!,
                     birthday: new Date(mainFormValues!.birthday),
                     currentOrder: orderDetails,
                     initialRewardsPoints,
+                    ...emailCommunicationsValues!,
                   });
                 }
               }}
             >
               <AnimatePresence mode="wait">
-                {step !== 2 ||
-                (step === 2 && dietaryRestrictionsForm.formState.isDirty) ? (
-                  step === 3 ? (
-                    <AnimatePresence mode={"popLayout"} initial={false}>
-                      <motion.div
-                        key={saveButtonText}
-                        // whileTap={{ scale: 0.95 }}
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 20 }}
-                        transition={{
-                          duration: 0.25,
-                        }}
-                        className="baseFlex gap-2"
-                      >
-                        {saveButtonText}
-                        {saveButtonText === "Saving" && (
-                          <div
-                            className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
-                            role="status"
-                            aria-label="loading"
-                          >
-                            <span className="sr-only">Loading...</span>
-                          </div>
-                        )}
-                        {saveButtonText === "Saved" && (
-                          <svg
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                            className="size-4 text-offwhite"
-                          >
-                            <motion.path
-                              initial={{ pathLength: 0 }}
-                              animate={{ pathLength: 1 }}
-                              transition={{
-                                delay: 0.2,
-                                type: "tween",
-                                ease: "easeOut",
-                                duration: 0.3,
-                              }}
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        )}
-                      </motion.div>
-                    </AnimatePresence>
-                  ) : (
-                    <motion.span
-                      key="continue"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      Continue
-                    </motion.span>
-                  )
-                ) : (
-                  <motion.span
-                    key="skip"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    Skip
-                  </motion.span>
-                )}
+                {renderSaveButtonText()}
               </AnimatePresence>
             </Button>
           </div>

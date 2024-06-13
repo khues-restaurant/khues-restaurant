@@ -364,6 +364,9 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
               includeNapkinsAndUtensils: false,
               discountId: null,
             },
+            orderHasBeenPlacedSinceLastCloseToRewardEmail: true,
+            // ^ gets set back to false whenever the next "close to reward"
+            // email is sent out
           },
         });
       }

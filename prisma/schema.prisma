@@ -342,8 +342,13 @@ model User {
 
     allowsEmailReceipts                    Boolean @default(true)
     allowsOrderCompleteEmails              Boolean @default(true)
-    allowsPromotionalEmails                Boolean @default(true)
-    allowsRewardAvailabilityReminderEmails Boolean @default(true)
+    allowsPromotionalEmails                Boolean @default(false)
+    // ^ this encompasses "New menu items available", merch promotional content, etc.
+    allowsRewardAvailabilityReminderEmails Boolean @default(false)
+    // ^ this encompasses the "Close to a reward", "Reward(s) are expiring soon",
+    // and "Birthday reward available" emails
+
+    orderHasBeenPlacedSinceLastCloseToRewardEmail Boolean @default(false)
 
     rewardsPoints        Int @default(500) // TODO: most likely change this later
     lifetimeRewardPoints Int @default(0)

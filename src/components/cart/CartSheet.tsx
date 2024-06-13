@@ -954,7 +954,7 @@ function CartSheet({
                             className="baseFlex w-full !items-start gap-4"
                           >
                             {/* preview image of item */}
-                            <div className="bg-rewardsGradient rounded-md p-1">
+                            <div className="rounded-md bg-rewardsGradient p-1">
                               <Image
                                 src={"/menuItems/sampleImage.webp"}
                                 alt={item.name}
