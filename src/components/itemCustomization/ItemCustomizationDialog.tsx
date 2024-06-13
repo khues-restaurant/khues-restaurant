@@ -473,13 +473,12 @@ function ItemCustomizerDialogContent({
 
                   // just need to update the existing item
                   if (forCart) {
-                    newOrderDetails.items[localItemOrderDetails.id] = {
-                      ...localItemOrderDetails,
+                    const itemIndex = newOrderDetails.items.findIndex(
+                      (item) => item.id === localItemOrderDetails.id,
+                    );
 
-                      // I think these are baked into localItemOrderDetails already,
-                      // but investigate later
-                      pointReward: itemOrderDetails?.pointReward ?? false,
-                      birthdayReward: itemOrderDetails?.birthdayReward ?? false,
+                    newOrderDetails.items[itemIndex] = {
+                      ...localItemOrderDetails,
                     };
                   } else {
                     // set prev order details so we can revert if necessary
