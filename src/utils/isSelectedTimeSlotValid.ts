@@ -1,4 +1,3 @@
-import { format } from "date-fns";
 import { getCSTDateInUTC } from "~/utils/cstToUTCHelpers";
 import { hoursOpenPerDay, isHoliday } from "~/utils/datesAndHoursOfOperation";
 import { isAtLeast15MinsFromDatetime } from "~/utils/isAtLeast15MinsFromDatetime";
@@ -18,11 +17,16 @@ export function isSelectedTimeSlotValid({
   const tzDatetimeToPickup = getCSTDateInUTC(datetimeToPickup);
   const tzMinPickupDatetime = getCSTDateInUTC(minPickupDatetime);
 
-  const todaysHours =
-    hoursOpenPerDay[now.getDay() as keyof typeof hoursOpenPerDay];
+  const pickupDayHours =
+    hoursOpenPerDay[
+      tzDatetimeToPickup.getDay() as keyof typeof hoursOpenPerDay
+    ];
 
   // if restaurant is closed today, immediately return false
-  if ((todaysHours.open === 0 && todaysHours.close === 0) || isHoliday(now)) {
+  if (
+    (pickupDayHours.open === 0 && pickupDayHours.close === 0) ||
+    isHoliday(tzDatetimeToPickup)
+  ) {
     return false;
   }
 
@@ -37,7 +41,7 @@ export function isSelectedTimeSlotValid({
   }
 
   // if currentDate hours is earlier than opening time, return false
-  if (tzDatetimeToPickup.getHours() < todaysHours.open) {
+  if (tzDatetimeToPickup.getHours() < pickupDayHours.open) {
     return false;
   }
 
@@ -69,8 +73,8 @@ export function isSelectedTimeSlotValid({
   // or 30 mins from close is last time customer can place an order for pickup that night)
   // this will either be .getMinutes() > 30 or .getMinutes() > 15 respectively.
   if (
-    tzDatetimeToPickup.getHours() >= todaysHours.close ||
-    (tzDatetimeToPickup.getHours() === todaysHours.close - 1 &&
+    tzDatetimeToPickup.getHours() >= pickupDayHours.close ||
+    (tzDatetimeToPickup.getHours() === pickupDayHours.close - 1 &&
       tzDatetimeToPickup.getMinutes() > 30)
   ) {
     return false;
