@@ -21,27 +21,14 @@ import {
 } from "~/components/ui/select";
 import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/utils/api";
+import { getMidnightCSTInUTC } from "~/utils/cstToUTCHelpers";
+import {
+  getOpenTimesForDay,
+  type hoursOpenPerDay,
+} from "~/utils/datesAndHoursOfOperation";
 import { formatTimeString } from "~/utils/formatTimeString";
 import { getHoursAndMinutesFromDate } from "~/utils/getHoursAndMinutesFromDate";
 import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
-
-const times = [
-  "15:00",
-  "15:30",
-  "16:00",
-  "16:30",
-  "17:00",
-  "17:30",
-  "18:00",
-  "18:30",
-  "19:00",
-  "19:30",
-  "20:00",
-  "20:30",
-  "21:00",
-  "21:30",
-  "22:00",
-];
 
 function DelayNewOrders() {
   const ctx = api.useUtils();
@@ -69,6 +56,10 @@ function DelayNewOrders() {
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [minOrderPickupTimeValue, setMinOrderPickupTimeValue] = useState("");
+
+  const times = getOpenTimesForDay({
+    dayOfWeek: currentDate.getDay() as keyof typeof hoursOpenPerDay,
+  });
 
   const { toast } = useToast();
 
@@ -126,8 +117,7 @@ function DelayNewOrders() {
                     variant="destructive"
                     disabled={isUpdatingNewMinOrderPickupTime}
                     onClick={() => {
-                      const todayAtMidnight = new Date();
-                      todayAtMidnight.setHours(0, 0, 0, 0);
+                      const todayAtMidnight = getMidnightCSTInUTC();
 
                       setDBValue(todayAtMidnight);
                     }}
@@ -161,12 +151,6 @@ function DelayNewOrders() {
                               (mergeDateAndTime(new Date(), time)?.getTime() ??
                                 new Date().getTime()) && (
                               <SelectItem key={time} value={time}>
-                                {/* {getFormattedTime(
-                                  currentDate ?? new Date(),
-                                  time,
-                                )} */}
-                                {/* ^ the total delay in HH:MM is probably useless information... 
-                                    check in with Eric to be sure */}
                                 {formatTimeString(time)}
                               </SelectItem>
                             )}

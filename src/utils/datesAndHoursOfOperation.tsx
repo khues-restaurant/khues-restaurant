@@ -1,4 +1,12 @@
-import { format, isSameDay } from "date-fns";
+import {
+  addMinutes,
+  format,
+  isSameDay,
+  setHours,
+  setMinutes,
+  setSeconds,
+  startOfDay,
+} from "date-fns";
 
 enum DayOfWeek {
   Sunday = 0,
@@ -24,7 +32,7 @@ const hoursOpenPerDay: Record<DayOfWeek, { open: number; close: number }> = {
   [DayOfWeek.Monday]: { open: 12, close: 22 },
   [DayOfWeek.Tuesday]: { open: 12, close: 22 },
   [DayOfWeek.Wednesday]: { open: 12, close: 22 },
-  [DayOfWeek.Thursday]: { open: 12, close: 22 },
+  [DayOfWeek.Thursday]: { open: 20, close: 22 },
   [DayOfWeek.Friday]: { open: 12, close: 22 },
   [DayOfWeek.Saturday]: { open: 12, close: 22 },
 };
@@ -44,6 +52,48 @@ function formatTime(hour: number): string {
   const date = new Date();
   date.setHours(hour, 0, 0, 0);
   return format(date, "h a");
+}
+
+function getOpenTimesForDay({
+  dayOfWeek,
+  includeASAPOption,
+  limitToThirtyMinutesBeforeClose,
+}: {
+  dayOfWeek: DayOfWeek;
+  includeASAPOption?: boolean;
+  limitToThirtyMinutesBeforeClose?: boolean;
+}): string[] {
+  const hours = hoursOpenPerDay[dayOfWeek];
+  if (hours.open === 0 && hours.close === 0) {
+    return []; // Closed all day
+  }
+
+  const openTime = setSeconds(
+    setMinutes(setHours(startOfDay(new Date()), hours.open), 0),
+    0,
+  );
+  let closeTime = setSeconds(
+    setMinutes(setHours(startOfDay(new Date()), hours.close), 0),
+    0,
+  );
+
+  if (limitToThirtyMinutesBeforeClose) {
+    closeTime = addMinutes(closeTime, -30); // Limit to 30 minutes before close
+  }
+
+  const times: string[] = [];
+  let currentTime = openTime;
+
+  if (includeASAPOption) {
+    times.push("ASAP (~20 mins)");
+  }
+
+  while (currentTime <= closeTime) {
+    times.push(format(currentTime, "HH:mm"));
+    currentTime = addMinutes(currentTime, 15);
+  }
+
+  return times;
 }
 
 function getWeeklyHours() {
@@ -97,4 +147,5 @@ export {
   isRestaurantClosedToday,
   isHoliday,
   getWeeklyHours,
+  getOpenTimesForDay,
 };
