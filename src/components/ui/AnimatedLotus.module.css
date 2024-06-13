@@ -21,7 +21,7 @@
 
 .center {
   opacity: 1;
-  animation: animatedLotusPulse 4s 0s ease-in-out infinite alternate;
+  animation: animatedLotusPulse 4s 0.2s ease-in-out infinite alternate;
 }
 
 .topSmallRight {
@@ -45,14 +45,13 @@
 }
 
 
-/* scale/path animation ? */
 @keyframes animatedLotusPulse {
   0% {
     opacity: 1;
   }
 
-  45% {
-    opacity: 0;
+  50% {
+    opacity: 0.25;
   }
 
   100% {
