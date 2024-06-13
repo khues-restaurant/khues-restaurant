@@ -11,7 +11,7 @@ export function mergeDateAndTime(date: Date, time: string) {
   if (isNaN(hours) || isNaN(minutes)) return;
 
   const newDate = new Date(date);
-  newDate.setHours(hours, minutes);
+  newDate.setHours(hours, minutes, 0, 0);
 
   const utcJustifiedDate = getCSTDateInUTC(newDate);
 

@@ -9,7 +9,7 @@ export function formatTimeString(timeString: string): string {
     throw new Error("Invalid time");
   }
 
-  date.setHours(hours, minutes);
+  date.setHours(hours, minutes, 0, 0);
 
   // Format the date object to a "7:30 PM" style string
   return format(date, "h:mm a");
