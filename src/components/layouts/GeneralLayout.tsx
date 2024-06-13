@@ -77,6 +77,9 @@ function GeneralLayout({ children }: GeneralLayout) {
   return (
     <>
       <main
+        style={{
+          fontFamily: notoSans.style.fontFamily,
+        }}
         className={`baseVertFlex ${notoSans.className} relative min-h-dvh !justify-between bg-body`}
       >
         <HeaderShell />
