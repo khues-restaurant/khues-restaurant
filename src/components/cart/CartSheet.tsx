@@ -1399,7 +1399,7 @@ function CartSheet({
 
             <Separator
               orientation="vertical"
-              className="h-16 w-[1px] bg-stone-400" // was h-12 before tip refactor fyi
+              className="h-5/6 w-[1px] bg-stone-400"
             />
 
             <Button

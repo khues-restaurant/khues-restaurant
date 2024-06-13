@@ -1421,7 +1421,7 @@ function CartDrawer({
 
               <Separator
                 // orientation="vertical"
-                className="hidden h-[1px] w-full bg-stone-400 xs:block xs:h-16 xs:w-[1px]"
+                className="hidden h-[1px] w-full bg-stone-400 xs:block xs:h-5/6 xs:w-[1px]"
               />
 
               <div className="w-full px-8 xs:w-1/2 xs:px-0">
