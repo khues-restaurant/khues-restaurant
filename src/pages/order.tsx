@@ -795,7 +795,7 @@ function MenuItemPreviewButton({
             </div>
           )}
           <p
-            className={`text-base ${activeDiscount ? "bg-rewardsGradient rounded-md !py-0.5 px-4 text-offwhite" : ""}`}
+            className={`text-base ${activeDiscount ? "rounded-md bg-rewardsGradient !py-0.5 px-4 text-offwhite" : ""}`}
           >
             {formatPrice(
               calculateRelativeTotal({
