@@ -312,6 +312,10 @@ function CartSheet({
     return tipValue.toString();
   }
 
+  function trimLeadingZeros(value: string): string {
+    return value.replace(/^0+(?=\d)/, "");
+  }
+
   function getNumericTipValue(tipValue: string) {
     if (tipValue.trim() === "") {
       return 0; // Return 0 if the input is empty
@@ -1185,18 +1189,19 @@ function CartSheet({
                           }) => (
                             <FormItem className="baseVertFlex relative !items-start space-y-0 rounded-md outline outline-2 outline-primary">
                               <div className="baseVertFlex relative !items-start gap-2">
-                                {/* TODO: doesn't feel great to comment this out, but not sure of other
-                            best ui option to keep everything low-profile.. */}
-                                {/* <FormLabel className="font-semibold">Tip</FormLabel> */}
                                 <Input
                                   ref={customTipInputRef}
-                                  value={value}
+                                  aria-label="Custom tip amount"
+                                  value={
+                                    value === "0" ? "" : trimLeadingZeros(value)
+                                  }
                                   type={"tel"}
                                   onChange={(e) => {
                                     const inputValue = e.target.value.replace(
                                       /[^0-9.]/g,
                                       "",
                                     );
+
                                     onChange(inputValue);
 
                                     const numericValue =
@@ -1217,7 +1222,7 @@ function CartSheet({
                                 />
                                 <div
                                   className={`absolute bottom-0 left-0 top-0 flex items-center pl-2
-                                  ${tipForm.getValues().tipValue === "" ? "text-stone-500" : ""}
+                                  ${tipForm.getValues().tipValue === "" || tipForm.getValues().tipValue === "0" ? "text-stone-500" : ""}
                                   `}
                                 >
                                   $
