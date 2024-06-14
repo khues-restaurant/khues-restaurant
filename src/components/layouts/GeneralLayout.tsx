@@ -76,10 +76,12 @@ function GeneralLayout({ children }: GeneralLayout) {
 
   return (
     <>
+      <style jsx global>{`
+        html {
+          font-family: ${notoSans.style.fontFamily};
+        }
+      `}</style>
       <main
-        style={{
-          fontFamily: notoSans.style.fontFamily,
-        }}
         className={`baseVertFlex ${notoSans.className} relative min-h-dvh !justify-between bg-body`}
       >
         <HeaderShell />

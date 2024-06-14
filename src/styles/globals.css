@@ -104,8 +104,6 @@
 }
 
 body {
-  font-family: 'Noto Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-
   /* prevents fixed elements (<Chat>) from bouncing back and forth when the scrollbar
      appears/disappears. Doesn't work in Safari yet but afaik they have overlaid scrollbars anyway */
   scrollbar-gutter: stable;
