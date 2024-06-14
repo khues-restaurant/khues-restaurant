@@ -259,13 +259,13 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
           <Image
             src={sampleImage}
             alt={"TODO: fill in w/ appropriate alt text"}
-            sizes="(min-width: 1000px) 160px, 192px"
+            sizes="(max-width: 1000px) 160px, 192px"
             className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
           />
           <Image
             src={sampleImage}
             alt={"TODO: fill in w/ appropriate alt text"}
-            sizes="(min-width: 1000px) 160px, 192px"
+            sizes="(max-width: 1000px) 160px, 192px"
             className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
           />
           <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-offwhite p-2 shadow-heroContainer tablet:!flex">
@@ -278,13 +278,13 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
           <Image
             src={sampleImage}
             alt={"TODO: fill in w/ appropriate alt text"}
-            sizes="(min-width: 1000px) 160px, 192px"
+            sizes="(max-width: 1000px) 160px, 192px"
             className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
           />
           <Image
             src={sampleImage}
             alt={"TODO: fill in w/ appropriate alt text"}
-            sizes="(min-width: 1000px) 160px, 192px"
+            sizes="(max-width: 1000px) 160px, 192px"
             className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
           />
         </div>
@@ -607,7 +607,8 @@ function MenuCategory({
         <Image
           src={wideAngleFoodShot}
           alt={name}
-          sizes="(min-width: 1000px) 90vw, 75vw"
+          sizes="(max-width: 1000px) 90vw, 75vw"
+          priority={listOrder === 0} // only want the first category to be a priority
           className="!relative !h-48 w-full rounded-md object-cover shadow-md"
         />
 
@@ -669,7 +670,7 @@ function NotInDatabaseCategory({
         <Image
           src={wideAngleFoodShot}
           alt={name}
-          sizes="(min-width: 1000px) 90vw, 75vw"
+          sizes="(max-width: 1000px) 90vw, 75vw"
           className="!relative !h-48 w-full rounded-md object-cover"
         />
 
@@ -709,7 +710,7 @@ function NotInDatabaseCategory({
               <Image
                 src={wideAngleFoodShot}
                 alt={name}
-                sizes="(min-width: 1000px) 462px, 90vw"
+                sizes="(max-width: 1000px) 90vw, 462px"
                 className="!relative !h-48 w-full rounded-md object-cover"
               />
 

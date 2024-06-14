@@ -17,28 +17,28 @@ function ogImageTemplate() {
           src={masonryFoodOne}
           alt="TODO"
           fill
-          // sizes="(min-width: 1000px) 400px, 320px"
+          // sizes="(max-width: 1000px) 400px, 320px"
           className="!relative !size-full object-cover object-top opacity-20"
         />
         <Image
           src={masonryFoodTwo}
           alt="TODO"
           fill
-          // sizes="(min-width: 1000px) 400px, 320px"
+          // sizes="(max-width: 1000px) 400px, 320px"
           className="!relative !size-full object-cover object-top opacity-20"
         />
         <Image
           src={masonryFoodFive}
           alt="TODO"
           fill
-          // sizes="(min-width: 1000px) 400px, 320px"
+          // sizes="(max-width: 1000px) 400px, 320px"
           className="!relative !size-full object-cover object-top opacity-20"
         />
         <Image
           src={masonryFoodFour}
           alt="TODO"
           fill
-          // sizes="(min-width: 1000px) 400px, 320px"
+          // sizes="(max-width: 1000px) 400px, 320px"
           className="!relative !size-full object-cover object-top opacity-20"
         />
       </div>

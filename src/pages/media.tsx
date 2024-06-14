@@ -36,28 +36,28 @@ function Media() {
             src={kare11InTheKitchen}
             alt="TODO"
             fill
-            // sizes="(min-width: 1000px) 400px, 320px"
+            // sizes="(max-width: 1000px) 400px, 320px"
             className="!relative !size-full object-cover object-top opacity-20"
           />
           <Image
             src={kare11MothersDay}
             alt="TODO"
             fill
-            // sizes="(min-width: 1000px) 400px, 320px"
+            // sizes="(max-width: 1000px) 400px, 320px"
             className="!relative !size-full object-cover object-top opacity-20"
           />
           <Image
             src={starTribune}
             alt="TODO"
             fill
-            // sizes="(min-width: 1000px) 400px, 320px"
+            // sizes="(max-width: 1000px) 400px, 320px"
             className="!relative !size-full object-cover object-top opacity-20"
           />
           <Image
             src={mpr}
             alt="TODO"
             fill
-            // sizes="(min-width: 1000px) 400px, 320px"
+            // sizes="(max-width: 1000px) 400px, 320px"
             className="!relative !size-full object-cover object-top opacity-20"
           />
         </div>
@@ -112,7 +112,7 @@ function Media() {
               <Image
                 src={kare11InTheKitchen}
                 alt="TODO"
-                sizes="(min-width: 1000px) 400px, 320px"
+                sizes="(max-width: 1000px) 400px, 320px"
                 className="!relative rounded-t-md bg-offwhite transition-all hover:brightness-90 active:brightness-75"
               />
             </a>
@@ -158,7 +158,7 @@ function Media() {
               <Image
                 src={kare11MothersDay}
                 alt="TODO"
-                sizes="(min-width: 1000px) 400px, 320px"
+                sizes="(max-width: 1000px) 400px, 320px"
                 className="!relative rounded-t-md bg-offwhite transition-all hover:brightness-90 active:brightness-75"
               />
             </a>
@@ -205,7 +205,7 @@ function Media() {
               <Image
                 src={starTribune}
                 alt="TODO"
-                sizes="(min-width: 1000px) 400px, 320px"
+                sizes="(max-width: 1000px) 400px, 320px"
                 className="!relative rounded-t-md bg-offwhite transition-all hover:brightness-90 active:brightness-75"
               />
             </a>
@@ -255,7 +255,7 @@ function Media() {
               <Image
                 src={mpr}
                 alt="TODO"
-                sizes="(min-width: 1000px) 400px, 320px"
+                sizes="(max-width: 1000px) 400px, 320px"
                 className="!relative rounded-t-md bg-offwhite transition-all hover:brightness-90 active:brightness-75"
               />
             </a>
@@ -335,7 +335,7 @@ function Media() {
               <Image
                 src={kare11InTheKitchen}
                 alt="TODO"
-                sizes="(min-width: 1000px) 400px, 320px"
+                sizes="(max-width: 1000px) 400px, 320px"
                 className="!relative rounded-r-md bg-offwhite transition-all hover:brightness-90 active:brightness-75"
               />
             </a>
@@ -382,7 +382,7 @@ function Media() {
               <Image
                 src={kare11MothersDay}
                 alt="TODO"
-                sizes="(min-width: 1000px) 400px, 320px"
+                sizes="(max-width: 1000px) 400px, 320px"
                 className="!relative h-full rounded-r-md bg-offwhite transition-all hover:brightness-90 active:brightness-75"
               />
             </a>
@@ -432,7 +432,7 @@ function Media() {
               <Image
                 src={starTribune}
                 alt="TODO"
-                sizes="(min-width: 1000px) 400px, 320px"
+                sizes="(max-width: 1000px) 400px, 320px"
                 className="!relative !h-full rounded-r-md bg-offwhite !object-cover transition-all hover:brightness-90 active:brightness-75"
               />
             </a>
@@ -480,7 +480,7 @@ function Media() {
               <Image
                 src={mpr}
                 alt="TODO"
-                sizes="(min-width: 1000px) 400px, 320px"
+                sizes="(max-width: 1000px) 400px, 320px"
                 className="!relative !h-full rounded-r-md bg-offwhite object-cover transition-all hover:brightness-90 active:brightness-75"
               />
             </a>
