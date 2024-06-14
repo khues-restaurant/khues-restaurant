@@ -150,7 +150,7 @@ function RewardsDialogContent({
       className="w-[800px] max-w-[800px]"
     >
       <div className="baseVertFlex relative max-h-[85vh] w-full !justify-start gap-2">
-        <div className="baseFlex bg-rewardsGradient relative h-48 w-full overflow-hidden rounded-md shadow-sm">
+        <div className="baseFlex relative h-48 w-full overflow-hidden rounded-md bg-rewardsGradient shadow-sm">
           <motion.div
             key={"rewardsHeroMobileImageOne"}
             initial={{
@@ -363,7 +363,7 @@ function RewardsDialogContent({
             </div>
           </div>
         </div>
-        <p className="text-sm italic text-stone-400">
+        <p className="text-sm italic text-stone-400 desktop:mt-2">
           * Only one reward is able to be redeemed per order.
         </p>
       </div>
@@ -411,7 +411,7 @@ function RewardMenuItem({
   }
 
   return (
-    <div className="relative w-full max-w-96">
+    <div className="relative w-full">
       <div className="baseFlex size-full !items-start gap-4 rounded-md p-4">
         <Image
           src={"/menuItems/sampleImage.webp"}
@@ -421,7 +421,7 @@ function RewardMenuItem({
           className="rounded-md drop-shadow-md tablet:drop-shadow-lg"
         />
 
-        <div className="baseVertFlex h-full w-48 !items-start !justify-between">
+        <div className="baseVertFlex size-full !items-start !justify-between">
           <div className="baseVertFlex !items-start gap-2">
             <p className="text-lg font-medium underline underline-offset-2">
               {menuItem.name}

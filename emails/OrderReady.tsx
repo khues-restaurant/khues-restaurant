@@ -27,6 +27,9 @@ import { type Item } from "~/stores/MainStore";
 import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
 import { formatPrice } from "~/utils/formatPrice";
 import { getFirstSixNumbers } from "~/utils/getFirstSixNumbers";
+import { main, container, tailwindConfig } from "emails/utils/styles";
+import Header from "emails/Header";
+import Footer from "emails/Footer";
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -58,19 +61,7 @@ function OrderReady({
         Thanks for ordering from Khue&apos;s! We&apos;re preparing your order
         now and will update when it&apos;s ready.
       </Preview>
-      <Tailwind
-        config={{
-          theme: {
-            extend: {
-              colors: {
-                primary: "#14522d",
-                darkPrimary: "#0f3e22",
-                offwhite: "#fffcf5",
-              },
-            },
-          },
-        }}
-      >
+      <Tailwind config={tailwindConfig}>
         <Head>
           <Font
             fontFamily="Noto Sans"
@@ -86,12 +77,8 @@ function OrderReady({
 
         <Body style={main} className="rounded-lg">
           <Container style={container} className="rounded-lg">
-            <Section className="my-4 bg-offwhite">
-              <div className="w-full rounded-t-lg bg-primary">
-                <Text className="py-4 pl-4 text-2xl font-semibold text-offwhite">
-                  Khue&apos;s
-                </Text>
-              </div>
+            <Section className="mb-4 bg-offwhite">
+              <Header />
 
               <Section className="p-4">
                 <Row align="center" className="w-64">
@@ -290,153 +277,10 @@ function OrderReady({
                 </Section>
               </Section>
 
-              <Section className="rounded-b-lg bg-primary text-offwhite">
-                <Column align="center">
-                  {/* 
-
-                    idk why this was messing up the whole flow, fix later for mobile
-                  
-                  <Column className="w-80 text-center sm:hidden">
-                    <Row>
-                      <Text className="mb-0 text-xs">
-                        1234 Lorem Ipsum Dr. Roseville, MN 12345
-                      </Text>
-                    </Row>
-
-                    <Row>
-                      <Link href="tel:+1234567890">
-                        <Text className="mb-0 text-xs text-offwhite">
-                          (123) 456-7890
-                        </Text>
-                      </Link>
-                    </Row>
-                  </Column> */}
-
-                  <Row className="w-[350px]">
-                    <Column className="text-left">
-                      <Text className="mb-0 text-xs">
-                        1234 Lorem Ipsum Dr. Roseville, MN 12345
-                      </Text>
-                    </Column>
-
-                    <Column className="text-center">
-                      <Text className="mb-0">|</Text>
-                    </Column>
-
-                    <Column className="text-right">
-                      <Link href="tel:+1234567890">
-                        <Text className="mb-0 pl-2 text-xs text-offwhite">
-                          (123) 456-7890
-                        </Text>
-                      </Link>
-                    </Column>
-                  </Row>
-
-                  <Row className="mt-1 w-52">
-                    <Column className="text-left">
-                      <Link href="https://khueskitchen.com">
-                        <Text className="my-0 text-xs text-offwhite">
-                          Visit our website
-                        </Text>
-                      </Link>
-                    </Column>
-
-                    <Column className="text-center">
-                      <Text className="my-0 pl-1">|</Text>
-                    </Column>
-
-                    <Column className="text-right">
-                      <Link href="https://khueskitchen.com/privacy">
-                        <Text className="my-0 pl-2 text-xs text-offwhite">
-                          Privacy Policy
-                        </Text>
-                      </Link>
-                    </Column>
-                  </Row>
-
-                  <Text className="mb-0 text-sm font-medium">
-                    Follow us on social media
-                  </Text>
-
-                  <Row
-                    align="center"
-                    style={{
-                      width: "100px",
-                    }}
-                  >
-                    <Column>
-                      <Link href="https://tiktok.com/khueskitchen">
-                        <Img
-                          src={`${baseUrl}/static/socials/whiteTiktok.png`}
-                          width="24"
-                          height="24"
-                          alt="Tiktok"
-                          className="m-4"
-                        />
-                      </Link>
-                    </Column>
-                    <Column>
-                      <Link href="https://instagram.com/khueskitchen">
-                        <Img
-                          src={`${baseUrl}/static/socials/whiteInstagram.png`}
-                          width="24"
-                          height="24"
-                          alt="Instagram"
-                          className="m-4"
-                        />
-                      </Link>
-                    </Column>
-                    <Column>
-                      <Link href="https://facebook.com/khueskitchen">
-                        <Img
-                          src={`${baseUrl}/static/socials/whiteFacebook.png`}
-                          width="24"
-                          height="24"
-                          alt="Facebook"
-                          className="m-4"
-                        />
-                      </Link>
-                    </Column>
-                    <Column>
-                      <Link href="https://twitter.com/khueskitchen">
-                        <Img
-                          src={`${baseUrl}/static/socials/whiteTwitter.png`}
-                          width="24"
-                          height="24"
-                          alt="Twitter"
-                          className="m-4 "
-                        />
-                      </Link>
-                    </Column>
-                  </Row>
-
-                  <Text className="text-xs">
-                    © 2024 Khue&apos;s. All rights reserved.
-                  </Text>
-
-                  <Section className="w-96 text-center">
-                    {userIsAMember && (
-                      <Row className="text-center">
-                        <Link href="https://khueskitchen.com/profile/preferences">
-                          <Text className="mt-0 text-xs text-offwhite underline underline-offset-2">
-                            Manage your email communication preferences
-                          </Text>
-                        </Link>
-                      </Row>
-                    )}
-
-                    <Row className="text-center">
-                      <Link
-                        href={`https://khueskitchen.com/unsubscribe?token=${unsubscriptionToken}`}
-                      >
-                        <Text className="mt-0 pl-2 text-xs text-offwhite underline underline-offset-2">
-                          Unsubscribe from all emails
-                        </Text>
-                      </Link>
-                    </Row>
-                  </Section>
-                </Column>
-              </Section>
+              <Footer
+                userIsAMember={userIsAMember}
+                unsubscriptionToken={unsubscriptionToken}
+              />
             </Section>
           </Container>
         </Body>
@@ -446,14 +290,3 @@ function OrderReady({
 }
 
 export default OrderReady;
-
-const main = {
-  backgroundColor: "#e7e5e4",
-  fontFamily:
-    '\'Noto Sans\', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-};
-
-const container = {
-  backgroundColor: "#e7e5e4",
-  margin: "0 auto",
-};

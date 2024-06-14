@@ -105,7 +105,7 @@ model MenuItem {
     description  String
     imageUrl     String
     price        Int
-    altPrice     Int? // used for singular glass pricing of wine/beer
+    altPrice     Int? // used for singular glass pricing of wine
     available    Boolean @default(true) // whether item is able to be ordered (86'd or not)
     discontinued Boolean @default(false) // whether item is no longer on the menu
     listOrder    Int     @default(autoincrement())
@@ -122,8 +122,10 @@ model MenuItem {
     isGlutenFree                   Boolean @default(false)
     showUndercookedOrRawDisclaimer Boolean @default(false)
 
-    isRewardItem Boolean @default(false)
-    reviews      String? // max three hand-picked reviews, separated/delimited by " | "
+    pointReward    Boolean @default(false)
+    birthdayReward Boolean @default(false)
+
+    reviews String? // max three hand-picked reviews, separated/delimited by " | "
 
     favoriteItem            FavoriteItem[]
     customizationCategories MenuItemCustomizationCategory[]

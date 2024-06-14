@@ -333,6 +333,9 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         if (payment.metadata.userId) {
           const currentDate = new Date();
           const sixMonthsLater = addMonths(currentDate, 6);
+          // ^ not setting to midnight of today before adding months because I think it would be bad ux for the user
+          // to lose out on w/e time they made this order if they were to order exactly 6 months later to the day.
+          // small thing but this was intentional.
 
           await prisma.reward.create({
             data: {

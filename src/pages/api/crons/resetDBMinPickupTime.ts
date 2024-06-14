@@ -3,7 +3,8 @@ import { prisma } from "~/server/db";
 import { getMidnightCSTInUTC } from "~/utils/cstToUTCHelpers";
 
 // This is set to run at "0 6 * * *"
-// which allows for daylight savings time buffer
+// which runs every day at midnight/1 am CST,
+// allows for daylight savings time buffer
 
 export default async function handler(
   request: NextApiRequest,

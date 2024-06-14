@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "~/server/db";
 
+// This is set to run at "0 6 * * *"
+// which allows for daylight savings time buffer
+
 export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse,
