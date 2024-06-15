@@ -265,4 +265,5 @@ body {
 
 .cl-modalBackdrop {
   height: 100dvh !important;
+  background-color: rgba(0, 0, 0, 0.8);
 }
