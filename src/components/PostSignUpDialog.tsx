@@ -35,7 +35,7 @@ import { IoIosMail } from "react-icons/io";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { CiCalendarDate } from "react-icons/ci";
-import { formatPhoneNumber } from "~/utils/formatPhoneNumber";
+import { formatPhoneNumber } from "~/utils/formatters/formatPhoneNumber";
 import { Switch } from "~/components/ui/switch";
 import { Label } from "~/components/ui/label";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";

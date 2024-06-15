@@ -21,7 +21,7 @@ import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import { getFirstSixNumbers } from "~/utils/getFirstSixNumbers";
+import { getFirstSixNumbers } from "~/utils/formatters/getFirstSixNumbers";
 import { io } from "socket.io-client";
 import { env } from "~/env";
 import { toZonedTime } from "date-fns-tz";
@@ -607,7 +607,7 @@ function Track() {
                   </div>
                 </div>
 
-                <div className="baseFlex bg-rewardsGradient relative w-full overflow-hidden rounded-md py-6 shadow-md">
+                <div className="baseFlex relative w-full overflow-hidden rounded-md bg-rewardsGradient py-6 shadow-md">
                   <motion.div
                     key={"rewardsHeroMobileImageOne"}
                     initial={{ opacity: 0, y: -125, x: -125 }}

@@ -47,7 +47,7 @@ import { api } from "~/utils/api";
 import { useAuth } from "@clerk/nextjs";
 import Image from "next/image";
 import noOrders from "/public/menuItems/myOrders.jpg";
-import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
+import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import Decimal from "decimal.js";
 import { toZonedTime } from "date-fns-tz";

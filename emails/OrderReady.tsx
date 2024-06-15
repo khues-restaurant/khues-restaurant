@@ -24,9 +24,9 @@ import {
   type DBOrderSummaryItem,
 } from "~/server/api/routers/order";
 import { type Item } from "~/stores/MainStore";
-import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
-import { formatPrice } from "~/utils/formatPrice";
-import { getFirstSixNumbers } from "~/utils/getFirstSixNumbers";
+import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
+import { formatPrice } from "~/utils/formatters/formatPrice";
+import { getFirstSixNumbers } from "~/utils/formatters/getFirstSixNumbers";
 import { main, container, tailwindConfig } from "emails/utils/styles";
 import Header from "emails/Header";
 import Footer from "emails/Footer";

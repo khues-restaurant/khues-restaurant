@@ -21,7 +21,7 @@ import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
-import { getRewardsPointCost } from "~/utils/getRewardsPointCost";
+import { getRewardsPointCost } from "~/utils/priceHelpers/getRewardsPointCost";
 
 // okay so we kinda spliced together some basic structure here, just look through it
 // and complete this fully before moving onto backend dashboard improvements
@@ -124,7 +124,7 @@ function RewardsDrawer({
       className="baseVertFlex relative size-full !justify-start"
     >
       <div className="baseVertFlex relative mt-10 w-full !justify-start overflow-y-auto ">
-        <div className="baseFlex bg-rewardsGradient relative mt-2 !h-40 w-full shrink-0 overflow-hidden shadow-sm">
+        <div className="baseFlex relative mt-2 !h-40 w-full shrink-0 overflow-hidden bg-rewardsGradient shadow-sm">
           <motion.div
             key={"rewardsHeroMobileImageOne"}
             initial={{

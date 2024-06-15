@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "~/server/db";
-import { getMidnightCSTInUTC } from "~/utils/cstToUTCHelpers";
+import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 
 // This is set to run at "0 6 * * *"
 // which runs every day at midnight/1 am CST,

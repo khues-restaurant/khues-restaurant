@@ -7,7 +7,7 @@ import { z } from "zod";
 import { type OrderDetails } from "~/stores/MainStore";
 import { orderDetailsSchema } from "~/stores/MainStore";
 import Decimal from "decimal.js";
-import { splitFullName } from "~/utils/splitFullName";
+import { splitFullName } from "~/utils/formatters/splitFullName";
 import { addMinutes, addMonths } from "date-fns";
 import { Resend } from "resend";
 import Receipt from "emails/Receipt";
@@ -15,7 +15,7 @@ import { type CustomizationChoiceAndCategory } from "~/server/api/routers/custom
 import { prisma } from "~/server/db";
 import OpenAI from "openai";
 import { io } from "socket.io-client";
-import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
+import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
 import { toZonedTime } from "date-fns-tz";
 
 const resend = new Resend(env.RESEND_API_KEY);

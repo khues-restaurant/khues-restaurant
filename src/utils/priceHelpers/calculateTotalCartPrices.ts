@@ -1,4 +1,4 @@
-import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
+import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 import Decimal from "decimal.js";
 import { type Discount } from "@prisma/client";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";

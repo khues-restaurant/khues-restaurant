@@ -12,7 +12,7 @@ import {
 import receiptline, { type Printer } from "receiptline";
 import { format } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
-import { getFirstSixNumbers } from "~/utils/getFirstSixNumbers";
+import { getFirstSixNumbers } from "~/utils/formatters/getFirstSixNumbers";
 
 export default async function handler(
   req: NextApiRequest,

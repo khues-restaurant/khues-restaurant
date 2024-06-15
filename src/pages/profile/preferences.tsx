@@ -43,7 +43,7 @@ import { Button } from "~/components/ui/button";
 import { FaUserAlt } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { Separator } from "~/components/ui/separator";
-import { formatPhoneNumber } from "~/utils/formatPhoneNumber";
+import { formatPhoneNumber } from "~/utils/formatters/formatPhoneNumber";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { useMainStore } from "~/stores/MainStore";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";

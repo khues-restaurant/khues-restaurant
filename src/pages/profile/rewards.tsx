@@ -16,8 +16,8 @@ import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import { getRewardsPointCost } from "~/utils/getRewardsPointCost";
-import { isEligibleForBirthdayReward } from "~/utils/isEligibleForBirthdayReward";
+import { getRewardsPointCost } from "~/utils/priceHelpers/getRewardsPointCost";
+import { isEligibleForBirthdayReward } from "~/utils/dateHelpers/isEligibleForBirthdayReward";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 import { IoSettingsOutline } from "react-icons/io5";
 import { TfiReceipt } from "react-icons/tfi";
@@ -211,7 +211,7 @@ function Rewards() {
             transition={{ duration: 0.5 }}
             className="baseVertFlex relative mb-24 w-full gap-8 bg-offwhite transition-all md:w-3/4 tablet:mb-32 tablet:mt-0 tablet:rounded-xl tablet:border tablet:shadow-md"
           >
-            <div className="baseFlex bg-rewardsGradient relative h-56 w-full overflow-hidden shadow-md tablet:h-72 tablet:overflow-x-hidden tablet:rounded-t-lg">
+            <div className="baseFlex relative h-56 w-full overflow-hidden bg-rewardsGradient shadow-md tablet:h-72 tablet:overflow-x-hidden tablet:rounded-t-lg">
               {/* mobile images */}
               <motion.div
                 key={"rewardsHeroMobileImageOne"}

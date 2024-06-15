@@ -27,7 +27,7 @@ import {
 } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
-import { formatPrice } from "~/utils/formatPrice";
+import { formatPrice } from "~/utils/formatters/formatPrice";
 import isEqual from "lodash.isequal";
 import {
   Carousel,
@@ -40,7 +40,7 @@ import {
   type StoreCustomizationCategory,
   type FullMenuItem,
 } from "~/server/api/routers/menuCategory";
-import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
+import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import Image from "next/image";
 import { useAuth } from "@clerk/nextjs";

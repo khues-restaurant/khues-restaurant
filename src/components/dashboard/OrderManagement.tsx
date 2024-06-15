@@ -28,7 +28,7 @@ import { ChevronDown } from "lucide-react";
 import { DashboardOrder } from "~/server/api/routers/order";
 import { FaUtensils } from "react-icons/fa6";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
-import { getFirstSixNumbers } from "~/utils/getFirstSixNumbers";
+import { getFirstSixNumbers } from "~/utils/formatters/getFirstSixNumbers";
 import { Separator } from "~/components/ui/separator";
 import { format } from "date-fns";
 import { useToast } from "~/components/ui/use-toast";

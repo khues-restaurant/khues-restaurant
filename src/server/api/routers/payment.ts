@@ -5,7 +5,7 @@ import { z } from "zod";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { orderDetailsSchema } from "~/stores/MainStore";
-import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
+import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 import { env } from "~/env";
 
 export const config = {

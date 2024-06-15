@@ -5,7 +5,7 @@ import { type Discount } from "@prisma/client";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { z } from "zod";
-import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
+import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
 
 const storeCustomizationChoiceSchema = z.record(z.string());
 

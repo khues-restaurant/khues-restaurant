@@ -7,7 +7,7 @@ import { orderDetailsSchema } from "~/stores/MainStore";
 import { useMainStore, type OrderDetails } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
-import { getFirstValidMidnightDate } from "~/utils/getFirstValidMidnightDate";
+import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
 
 function useInitLocalStorage() {
   const userId = useGetUserId();

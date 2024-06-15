@@ -43,8 +43,8 @@ import {
   type StoreCustomizations,
 } from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
-import { formatPrice } from "~/utils/formatPrice";
+import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
+import { formatPrice } from "~/utils/formatters/formatPrice";
 import Image from "next/image";
 import { useAuth } from "@clerk/nextjs";
 import { ToastAction } from "~/components/ui/toast";

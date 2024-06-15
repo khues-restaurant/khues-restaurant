@@ -1,4 +1,4 @@
-import { getCSTDateInUTC } from "~/utils/cstToUTCHelpers";
+import { getCSTDateInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 
 export function mergeDateAndTime(date: Date, time: string) {
   const hoursAndMinutes = time === "" ? ["0", "0"] : time.split(":");

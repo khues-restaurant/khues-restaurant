@@ -30,8 +30,8 @@ import {
   type FullMenuItem,
 } from "~/server/api/routers/menuCategory";
 import { useMainStore } from "~/stores/MainStore";
-import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
-import { formatPrice } from "~/utils/formatPrice";
+import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
+import { formatPrice } from "~/utils/formatters/formatPrice";
 import { type GetStaticProps } from "next";
 
 import sampleImage from "/public/menuItems/sampleImage.webp";

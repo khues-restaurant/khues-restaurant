@@ -4,7 +4,7 @@ import { SelectGroup, SelectItem, SelectLabel } from "~/components/ui/select";
 import {
   isHoliday,
   isRestaurantClosedToday,
-} from "~/utils/datesAndHoursOfOperation";
+} from "~/utils/dateHelpers/datesAndHoursOfOperation";
 
 const getCurrentWeekDates = () => {
   const today = toZonedTime(new Date(), "America/Chicago");

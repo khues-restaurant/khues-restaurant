@@ -1,6 +1,9 @@
-import { getCSTDateInUTC } from "~/utils/cstToUTCHelpers";
-import { hoursOpenPerDay, isHoliday } from "~/utils/datesAndHoursOfOperation";
-import { isAtLeast15MinsFromDatetime } from "~/utils/isAtLeast15MinsFromDatetime";
+import { getCSTDateInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
+import {
+  hoursOpenPerDay,
+  isHoliday,
+} from "~/utils/dateHelpers/datesAndHoursOfOperation";
+import { isAtLeast15MinsFromDatetime } from "~/utils/dateHelpers/isAtLeast15MinsFromDatetime";
 
 interface IsSelectedTimeSlotValid {
   isASAP?: boolean;

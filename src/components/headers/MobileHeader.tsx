@@ -29,7 +29,7 @@ import { motion } from "framer-motion";
 
 import outsideOfRestaurant from "/public/homepage/heroTwo.webp";
 import { useToast } from "~/components/ui/use-toast";
-import { getWeeklyHours } from "~/utils/datesAndHoursOfOperation";
+import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 
 const linkContainer = {
   visible: {

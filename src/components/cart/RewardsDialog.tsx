@@ -17,7 +17,7 @@ import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import { getRewardsPointCost } from "~/utils/getRewardsPointCost";
+import { getRewardsPointCost } from "~/utils/priceHelpers/getRewardsPointCost";
 import { motion } from "framer-motion";
 import { Separator } from "~/components/ui/separator";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";

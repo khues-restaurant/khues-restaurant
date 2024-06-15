@@ -4,10 +4,13 @@ import isEqual from "lodash.isequal";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import Decimal from "decimal.js";
 import { toZonedTime } from "date-fns-tz";
-import { isSelectedTimeSlotValid } from "~/utils/isSelectedTimeSlotValid";
-import { loopToFindFirstOpenDay } from "~/utils/loopToFindFirstOpenDay";
-import { isEligibleForBirthdayReward } from "~/utils/isEligibleForBirthdayReward";
-import { getCSTDateInUTC, getMidnightCSTInUTC } from "~/utils/cstToUTCHelpers";
+import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
+import { loopToFindFirstOpenDay } from "~/utils/dateHelpers/loopToFindFirstOpenDay";
+import { isEligibleForBirthdayReward } from "~/utils/dateHelpers/isEligibleForBirthdayReward";
+import {
+  getCSTDateInUTC,
+  getMidnightCSTInUTC,
+} from "~/utils/dateHelpers/cstToUTCHelpers";
 
 function validateDayOfDatetimeToPickup(orderDatetimeToPickup: Date) {
   let datetimeToPickup = orderDatetimeToPickup

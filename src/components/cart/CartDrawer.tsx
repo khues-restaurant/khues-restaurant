@@ -43,27 +43,27 @@ import {
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { useMainStore, type Item } from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import { formatPrice } from "~/utils/formatPrice";
+import { formatPrice } from "~/utils/formatters/formatPrice";
 import { cn } from "~/utils/shadcnuiUtils";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import useInitializeCheckout from "~/hooks/useInitializeCheckout";
 import useGetUserId from "~/hooks/useGetUserId";
-import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
-import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
+import { calculateTotalCartPrices } from "~/utils/priceHelpers/calculateTotalCartPrices";
+import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
-import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
-import { getHoursAndMinutesFromDate } from "~/utils/getHoursAndMinutesFromDate";
+import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
+import { getHoursAndMinutesFromDate } from "~/utils/dateHelpers/getHoursAndMinutesFromDate";
 import { X } from "lucide-react";
 import isEqual from "lodash.isequal";
 import Decimal from "decimal.js";
-import { isSelectedTimeSlotValid } from "~/utils/isSelectedTimeSlotValid";
+import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
 import Image from "next/image";
 import { TbLocation } from "react-icons/tb";
 import { Separator } from "~/components/ui/separator";
 import { Input } from "~/components/ui/input";
 import AvailablePickupDays from "~/components/cart/AvailablePickupDays";
-import { getMidnightCSTInUTC } from "~/utils/cstToUTCHelpers";
+import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import StaticLotus from "~/components/ui/StaticLotus";
 
 function getSafeAreaInsetBottom() {

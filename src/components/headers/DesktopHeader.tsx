@@ -25,7 +25,7 @@ import { api } from "~/utils/api";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { Button } from "../ui/button";
 import { HiOutlineInformationCircle } from "react-icons/hi";
-import { getWeeklyHours } from "~/utils/datesAndHoursOfOperation";
+import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import classes from "./DesktopHeader.module.css";
 
 import outsideOfRestaurant from "/public/homepage/heroTwo.webp";

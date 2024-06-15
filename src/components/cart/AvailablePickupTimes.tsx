@@ -2,16 +2,16 @@ import { toZonedTime } from "date-fns-tz";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { SelectGroup, SelectItem, SelectLabel } from "~/components/ui/select";
-import { getMidnightCSTInUTC } from "~/utils/cstToUTCHelpers";
+import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import {
   getOpenTimesForDay,
   hoursOpenPerDay,
   isHoliday,
   isRestaurantClosedToday,
-} from "~/utils/datesAndHoursOfOperation";
-import { formatTimeString } from "~/utils/formatTimeString";
-import { isSelectedTimeSlotValid } from "~/utils/isSelectedTimeSlotValid";
-import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
+} from "~/utils/dateHelpers/datesAndHoursOfOperation";
+import { formatTimeString } from "~/utils/formatters/formatTimeString";
+import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
+import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
 
 interface AvailablePickupTimes {
   selectedDate: Date;

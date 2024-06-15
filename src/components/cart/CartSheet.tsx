@@ -53,17 +53,17 @@ import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { useMainStore, type Item } from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import { calculateRelativeTotal } from "~/utils/calculateRelativeTotal";
-import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
-import { formatPrice } from "~/utils/formatPrice";
-import { getHoursAndMinutesFromDate } from "~/utils/getHoursAndMinutesFromDate";
-import { isSelectedTimeSlotValid } from "~/utils/isSelectedTimeSlotValid";
-import { mergeDateAndTime } from "~/utils/mergeDateAndTime";
+import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
+import { calculateTotalCartPrices } from "~/utils/priceHelpers/calculateTotalCartPrices";
+import { formatPrice } from "~/utils/formatters/formatPrice";
+import { getHoursAndMinutesFromDate } from "~/utils/dateHelpers/getHoursAndMinutesFromDate";
+import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
+import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
 import { cn } from "~/utils/shadcnuiUtils";
 import { Separator } from "~/components/ui/separator";
 import { Input } from "~/components/ui/input";
 import AvailablePickupDays from "~/components/cart/AvailablePickupDays";
-import { getMidnightCSTInUTC } from "~/utils/cstToUTCHelpers";
+import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import StaticLotus from "~/components/ui/StaticLotus";
 
 interface OrderCost {

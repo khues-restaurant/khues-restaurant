@@ -3,7 +3,7 @@ import { startOfDay, addDays } from "date-fns";
 import {
   isRestaurantClosedToday,
   isHoliday,
-} from "~/utils/datesAndHoursOfOperation";
+} from "~/utils/dateHelpers/datesAndHoursOfOperation";
 
 export function loopToFindFirstOpenDay(datetimeToPickup: Date) {
   // Convert the given datetime to CST
