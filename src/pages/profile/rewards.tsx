@@ -26,6 +26,7 @@ import AnimatedLotus from "~/components/ui/AnimatedLotus";
 
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import Link from "next/link";
+import StaticLotus from "~/components/ui/StaticLotus";
 
 // TODO: honestly the logic within here is very hit or miss, comb through this for sure
 
@@ -739,7 +740,10 @@ function Rewards() {
               </div>
 
               <div className="baseVertFlex mb-24 gap-8 xl:!flex-row">
-                <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+                <div className="baseVertFlex relative m-4 w-72 !items-start gap-2 overflow-hidden rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+                  {/* <StaticLotus className="absolute -right-24 -top-10 size-48 rotate-[0deg] fill-gold/80" /> */}
+                  <StaticLotus className="absolute -right-16 -top-16 size-48 rotate-[-135deg] fill-gold/80" />
+
                   <CiGift className="ml-2 size-16 h-20 text-primary" />
                   <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
                   <div className="hyphens-auto p-4 text-left text-primary">
@@ -750,7 +754,9 @@ function Rewards() {
                   </div>
                 </div>
 
-                <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+                <div className="baseVertFlex relative m-4 w-72 !items-start gap-2 overflow-hidden rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+                  <StaticLotus className="absolute -right-24 -top-10 size-48 rotate-[0deg] fill-gold/80" />
+
                   <LuCakeSlice className="ml-4 h-20 w-[50px] stroke-[1.5px] text-primary" />
                   <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
                   <div className="hyphens-auto p-4 text-left text-primary">
@@ -761,7 +767,9 @@ function Rewards() {
                   </div>
                 </div>
 
-                <div className="baseVertFlex m-4 w-72 !items-start gap-2 rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+                <div className="baseVertFlex relative m-4 w-72 !items-start gap-2 overflow-hidden rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+                  <StaticLotus className="absolute -right-24 -top-16 size-48 rotate-[180deg] fill-gold/80" />
+
                   <LuCalendarClock className="ml-2 size-12 h-20 shrink-0 stroke-[1.75px] text-primary" />
                   <Separator className="ml-4 h-[2px] w-[120px] bg-gold" />
                   <div className="hyphens-auto p-4 text-left text-primary">

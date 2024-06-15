@@ -10,6 +10,11 @@ import { useMainStore } from "~/stores/MainStore";
 import reservations from "/public/reservations.webp";
 import noOrders from "/public/menuItems/myOrders.jpg";
 
+import masonryInteriorOne from "/public/interior/one.webp";
+import masonryInteriorTwo from "/public/interior/two.webp";
+import masonryInteriorThree from "/public/interior/three.webp";
+import masonryInteriorFour from "/public/interior/four.webp";
+
 function Reservations() {
   const { chatIsOpen, setChatIsOpen } = useMainStore((state) => ({
     chatIsOpen: state.chatIsOpen,
@@ -26,8 +31,43 @@ function Reservations() {
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
       {/* Hero */}
-      <div className="baseFlex relative h-56 w-full overflow-hidden bg-gradient-to-br from-primary to-darkPrimary shadow-md tablet:h-72">
-        <div className="baseFlex shadow-heroContainer z-10 mx-8 rounded-md bg-offwhite p-4 tablet:!flex">
+      <div className="baseFlex relative h-56 w-full overflow-hidden bg-darkPrimary shadow-md tablet:h-72">
+        <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1 tablet:h-72">
+          <Image
+            src={masonryInteriorOne}
+            alt="TODO"
+            fill
+            // sizes="(max-width: 1000px) 400px, 320px"
+            priority
+            className="!relative !size-full object-cover object-top opacity-20"
+          />
+          <Image
+            src={masonryInteriorTwo}
+            alt="TODO"
+            fill
+            // sizes="(max-width: 1000px) 400px, 320px"
+            priority
+            className="!relative !size-full object-cover object-top opacity-20"
+          />
+          <Image
+            src={masonryInteriorThree}
+            alt="TODO"
+            fill
+            // sizes="(max-width: 1000px) 400px, 320px"
+            priority
+            className="!relative !size-full object-cover object-top opacity-20"
+          />
+          <Image
+            src={masonryInteriorFour}
+            alt="TODO"
+            fill
+            // sizes="(max-width: 1000px) 400px, 320px"
+            priority
+            className="!relative !size-full object-cover object-top opacity-20"
+          />
+        </div>
+
+        <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-heroContainer tablet:!flex">
           <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
             <h1>Reservations</h1>

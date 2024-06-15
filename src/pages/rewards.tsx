@@ -59,6 +59,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={96}
             height={96}
+            priority
             className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
@@ -93,6 +94,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={96}
             height={96}
+            priority
             className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
@@ -121,6 +123,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
+            priority
             className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
@@ -148,6 +151,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
+            priority
             className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
@@ -175,6 +179,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
+            priority
             className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
@@ -202,6 +207,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
+            priority
             className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
@@ -245,6 +251,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={96}
             height={96}
+            priority
             className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
@@ -279,6 +286,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={96}
             height={96}
+            priority
             className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
@@ -329,6 +337,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
+            priority
             className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
@@ -351,6 +360,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
+            priority
             className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>
@@ -378,6 +388,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
+            priority
             className="!relative drop-shadow-md tablet:drop-shadow-lg"
           />
         </motion.div>

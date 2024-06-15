@@ -18,6 +18,7 @@ function ogImageTemplate() {
           alt="TODO"
           fill
           // sizes="(max-width: 1000px) 400px, 320px"
+          priority
           className="!relative !size-full object-cover object-top opacity-20"
         />
         <Image
@@ -25,6 +26,7 @@ function ogImageTemplate() {
           alt="TODO"
           fill
           // sizes="(max-width: 1000px) 400px, 320px"
+          priority
           className="!relative !size-full object-cover object-top opacity-20"
         />
         <Image
@@ -32,6 +34,7 @@ function ogImageTemplate() {
           alt="TODO"
           fill
           // sizes="(max-width: 1000px) 400px, 320px"
+          priority
           className="!relative !size-full object-cover object-top opacity-20"
         />
         <Image
@@ -39,6 +42,7 @@ function ogImageTemplate() {
           alt="TODO"
           fill
           // sizes="(max-width: 1000px) 400px, 320px"
+          priority
           className="!relative !size-full object-cover object-top opacity-20"
         />
       </div>

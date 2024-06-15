@@ -37,6 +37,7 @@ function Media() {
             alt="TODO"
             fill
             // sizes="(max-width: 1000px) 400px, 320px"
+            priority
             className="!relative !size-full object-cover object-top opacity-20"
           />
           <Image
@@ -44,6 +45,7 @@ function Media() {
             alt="TODO"
             fill
             // sizes="(max-width: 1000px) 400px, 320px"
+            priority
             className="!relative !size-full object-cover object-top opacity-20"
           />
           <Image
@@ -51,6 +53,7 @@ function Media() {
             alt="TODO"
             fill
             // sizes="(max-width: 1000px) 400px, 320px"
+            priority
             className="!relative !size-full object-cover object-top opacity-20"
           />
           <Image
@@ -58,40 +61,10 @@ function Media() {
             alt="TODO"
             fill
             // sizes="(max-width: 1000px) 400px, 320px"
+            priority
             className="!relative !size-full object-cover object-top opacity-20"
           />
         </div>
-
-        {/* <div className="pointer-events-none absolute inset-0">
-          <div
-            // top left
-            className="absolute left-0 top-0 h-3/4 w-1/6 bg-black opacity-50"
-            style={{
-              clipPath: "polygon(0 0, 100% 0, 0 100%)",
-            }}
-          ></div>
-          <div
-            // top right
-            className="absolute right-0 top-0 h-3/4 w-1/6 bg-black opacity-50"
-            style={{
-              clipPath: "polygon(100% 0, 100% 100%, 0 0)",
-            }}
-          ></div>
-          <div
-            // bottom left
-            className="absolute bottom-0 left-0 h-3/4 w-1/6 bg-black opacity-50"
-            style={{
-              clipPath: "polygon(0 0, 0 100%, 100% 100%)",
-            }}
-          ></div>
-          <div
-            // bottom right
-            className="absolute bottom-0 right-0 h-3/4 w-1/6 bg-black opacity-50"
-            style={{
-              clipPath: "polygon(100% 0, 100% 100%, 0 100%)",
-            }}
-          ></div>
-        </div> */}
 
         <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-heroContainer tablet:!flex">
           <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">

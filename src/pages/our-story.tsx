@@ -13,6 +13,11 @@ import {
 import ourStoryHero from "/public/interior/seven.webp";
 import test from "/public/test.webp";
 
+import kare11InTheKitchen from "/public/media/kare11InTheKitchen.jpg";
+import kare11MothersDay from "/public/media/kare11MothersDay.jpg";
+import starTribune from "/public/media/starTribune.jpg";
+import mpr from "/public/media/mpr.jpg";
+
 // const TWEEN_FACTOR_BASE = 0.2;
 
 const restaurantNamesAndBackstories = [
@@ -221,16 +226,39 @@ function OurStory() {
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
       {/* Hero */}
-      <div className="baseFlex relative h-56 w-full overflow-hidden shadow-md tablet:h-72">
-        {/* wide-ish angle shot of the dining room maybe? technically could also
-              do outside shot of restaurant as well! also obv just a collage of images of eric could work well
-              too, but maybe save those for below in the actual content of this page? */}
-        <div className="!absolute !left-0 !top-0 !h-[475px] !w-full tablet:!h-[650px]">
+      <div className="baseFlex relative h-56 w-full overflow-hidden bg-darkPrimary shadow-md tablet:h-72">
+        <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1 tablet:h-72">
           <Image
-            src={ourStoryHero}
-            alt={"TODO: Alt text"}
-            sizes="100vw"
-            className={`!relative !h-56 !w-full object-cover tablet:!h-72`}
+            src={kare11InTheKitchen}
+            alt="TODO"
+            fill
+            // sizes="(max-width: 1000px) 400px, 320px"
+            priority
+            className="!relative !size-full object-cover object-top opacity-20"
+          />
+          <Image
+            src={kare11MothersDay}
+            alt="TODO"
+            fill
+            // sizes="(max-width: 1000px) 400px, 320px"
+            priority
+            className="!relative !size-full object-cover object-top opacity-20"
+          />
+          <Image
+            src={starTribune}
+            alt="TODO"
+            fill
+            // sizes="(max-width: 1000px) 400px, 320px"
+            priority
+            className="!relative !size-full object-cover object-top opacity-20"
+          />
+          <Image
+            src={mpr}
+            alt="TODO"
+            fill
+            // sizes="(max-width: 1000px) 400px, 320px"
+            priority
+            className="!relative !size-full object-cover object-top opacity-20"
           />
         </div>
 
@@ -480,6 +508,7 @@ function RestaurantAndBackstory({ name, backstory }: RestaurantAndBackstory) {
         src={test}
         alt="Khue's"
         sizes="(max-width: 400px) 320px, (max-width: 640px) 384px, (max-width: 1000px) 600px, 33vw"
+        priority
         className="!relative !w-80 rounded-t-md object-cover shadow-sm sm:!w-96 tablet:!h-[450px] tablet:!w-[600px] tablet:rounded-md"
       />
 
