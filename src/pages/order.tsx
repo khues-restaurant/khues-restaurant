@@ -353,165 +353,171 @@ function OrderNow() {
         </div>
       </div>
 
-      {ableToRenderMainContent() && (
-        <motion.div
-          key={"orderStickyHeader"}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-          // bg is background color of the <body>, 1% off from what bg-offwhite is
-          className="baseFlex sticky left-0 top-24 z-10 size-full h-16 w-full overflow-x-hidden bg-body shadow-lg tablet:top-28 tablet:h-16 tablet:w-3/4 tablet:shadow-none"
-        >
-          <Carousel
-            setApi={setStickyCategoriesApi}
-            opts={{
-              breakpoints: {
-                "(min-width: 1000px)": {
-                  active: false,
-                },
-              },
-              dragFree: true,
-              align: "start",
-            }}
-            className="baseFlex mb-1 w-full"
-          >
-            <CarouselContent>
-              {userFavoriteItemIds.length > 0 && (
-                <CarouselItem className="baseFlex basis-auto first:ml-2">
-                  <MenuCategoryButton
-                    name={"Favorites"}
-                    listOrder={menuCategoryIndicies!.Favorites!}
-                    currentlyInViewCategory={currentlyInViewCategory}
-                    setProgrammaticallyScrolling={setProgrammaticallyScrolling}
-                    programmaticallyScrolling={programmaticallyScrolling}
-                  />
-                </CarouselItem>
-              )}
-
-              {userRecentOrders && userRecentOrders.length > 0 && (
-                <CarouselItem className="baseFlex basis-auto first:ml-2">
-                  <MenuCategoryButton
-                    name={"Recent orders"}
-                    listOrder={menuCategoryIndicies!["Recent orders"]!}
-                    currentlyInViewCategory={currentlyInViewCategory}
-                    setProgrammaticallyScrolling={setProgrammaticallyScrolling}
-                    programmaticallyScrolling={programmaticallyScrolling}
-                  />
-                </CarouselItem>
-              )}
-
-              {(userFavoriteItemIds.length > 0 ||
-                (userRecentOrders && userRecentOrders.length > 0)) && (
-                <Separator
-                  orientation="vertical"
-                  className="mx-2 h-[35px] w-[2px]"
-                />
-              )}
-
-              {menuCategories?.map((category) => (
-                <CarouselItem
-                  className="baseFlex basis-auto first:ml-2 last:mr-2"
-                  key={category.id}
-                >
-                  <MenuCategoryButton
-                    name={category.name}
-                    listOrder={menuCategoryIndicies![category.name] ?? 0}
-                    currentlyInViewCategory={currentlyInViewCategory}
-                    setProgrammaticallyScrolling={setProgrammaticallyScrolling}
-                    programmaticallyScrolling={programmaticallyScrolling}
-                  />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
-
-          {/* Custom scrollbar indicating scroll progress */}
-          <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-200">
-            <div
-              style={{ width: `${scrollProgress}%` }}
-              className="h-1 bg-primary"
-            ></div>
-          </div>
-        </motion.div>
-      )}
-
       <div className="baseVertFlex relative size-full tablet:w-3/4">
         <AnimatePresence mode="popLayout">
           {ableToRenderMainContent() ? (
-            <motion.div
-              key={"orderContent"}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="baseVertFlex my-8 size-full gap-8 p-4 pb-16 tablet:mt-0 tablet:p-0 tablet:pb-8"
-            >
-              {userFavoriteItemIds.length > 0 && (
-                <FavoriteItems
-                  setIsDrawerOpen={setIsDrawerOpen}
-                  setIsDialogOpen={setIsDialogOpen}
-                  setItemToCustomize={setItemToCustomize}
-                  itemsPerSlide={itemsPerSlide}
-                />
-              )}
+            <>
+              <motion.div
+                key={"orderStickyHeader"}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                // bg is background color of the <body>, 1% off from what bg-offwhite is
+                className="baseFlex sticky left-0 top-24 z-10 size-full h-16 w-full overflow-x-hidden bg-body shadow-lg tablet:top-28 tablet:h-16 tablet:shadow-none"
+              >
+                <Carousel
+                  setApi={setStickyCategoriesApi}
+                  opts={{
+                    breakpoints: {
+                      "(min-width: 1000px)": {
+                        active: false,
+                      },
+                    },
+                    dragFree: true,
+                    align: "start",
+                  }}
+                  className="baseFlex mb-1 w-full"
+                >
+                  <CarouselContent>
+                    {userFavoriteItemIds.length > 0 && (
+                      <CarouselItem className="baseFlex basis-auto first:ml-2">
+                        <MenuCategoryButton
+                          name={"Favorites"}
+                          listOrder={menuCategoryIndicies!.Favorites!}
+                          currentlyInViewCategory={currentlyInViewCategory}
+                          setProgrammaticallyScrolling={
+                            setProgrammaticallyScrolling
+                          }
+                          programmaticallyScrolling={programmaticallyScrolling}
+                        />
+                      </CarouselItem>
+                    )}
 
-              {userRecentOrders && userRecentOrders.length > 0 && (
-                <RecentOrders
-                  userRecentOrders={userRecentOrders}
-                  itemsPerSlide={itemsPerSlide}
-                />
-              )}
+                    {userRecentOrders && userRecentOrders.length > 0 && (
+                      <CarouselItem className="baseFlex basis-auto first:ml-2">
+                        <MenuCategoryButton
+                          name={"Recent orders"}
+                          listOrder={menuCategoryIndicies!["Recent orders"]!}
+                          currentlyInViewCategory={currentlyInViewCategory}
+                          setProgrammaticallyScrolling={
+                            setProgrammaticallyScrolling
+                          }
+                          programmaticallyScrolling={programmaticallyScrolling}
+                        />
+                      </CarouselItem>
+                    )}
 
-              {menuCategories?.map((category) => (
-                <MenuCategory
-                  key={category.id}
-                  name={category.name}
-                  activeDiscount={category.activeDiscount}
-                  menuItems={category.menuItems}
-                  listOrder={menuCategoryIndicies![category.name]!}
-                  setIsDrawerOpen={setIsDrawerOpen}
-                  setIsDialogOpen={setIsDialogOpen}
-                  setItemToCustomize={setItemToCustomize}
-                />
-              ))}
+                    {(userFavoriteItemIds.length > 0 ||
+                      (userRecentOrders && userRecentOrders.length > 0)) && (
+                      <Separator
+                        orientation="vertical"
+                        className="mx-2 h-[35px] w-[2px]"
+                      />
+                    )}
 
-              <div className="baseVertFlex order-[999] mt-8 w-full gap-4 px-4 ">
-                <div className="baseFlex w-full flex-wrap gap-4 text-sm tablet:text-base">
-                  <div className="baseFlex gap-2">
-                    <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
-                      K
-                    </p>
-                    -<p>Chef&apos;s Choice</p>
-                  </div>
-                  |
-                  <div className="baseFlex gap-2">
-                    <SiLeaflet className="size-4" />
-                    <p>Vegetarian</p>
-                  </div>
-                  |
-                  <div className="baseFlex gap-2">
-                    <LuVegan className="size-4" />-<p>Vegan</p>
-                  </div>
-                  |
-                  <div className="baseFlex gap-2">
-                    <span>GF</span>-<span>Gluten Free</span>
-                  </div>
+                    {menuCategories?.map((category) => (
+                      <CarouselItem
+                        className="baseFlex basis-auto first:ml-2 last:mr-2"
+                        key={category.id}
+                      >
+                        <MenuCategoryButton
+                          name={category.name}
+                          listOrder={menuCategoryIndicies![category.name] ?? 0}
+                          currentlyInViewCategory={currentlyInViewCategory}
+                          setProgrammaticallyScrolling={
+                            setProgrammaticallyScrolling
+                          }
+                          programmaticallyScrolling={programmaticallyScrolling}
+                        />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                </Carousel>
+
+                {/* Custom scrollbar indicating scroll progress */}
+                <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-200">
+                  <div
+                    style={{ width: `${scrollProgress}%` }}
+                    className="h-1 bg-primary"
+                  ></div>
                 </div>
-                <p className="text-center text-xs italic text-stone-400 tablet:text-sm">
-                  <span className="not-italic">* </span>
-                  Consuming raw or undercooked meats, poultry, seafood,
-                  shellfish, or eggs may increase your risk of foodborne
-                  illness.
-                </p>
-                <div className="baseFlex w-full gap-2 text-stone-400 ">
-                  <FaWineBottle className="shrink-0 -rotate-45" />
-                  <p className="text-xs italic tablet:text-sm">
-                    All alcoholic beverages must be purchased on-site.
+              </motion.div>
+
+              <motion.div
+                key={"orderContent"}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="baseVertFlex my-8 size-full gap-8 p-4 pb-16 tablet:mt-0 tablet:p-0 tablet:pb-8"
+              >
+                {userFavoriteItemIds.length > 0 && (
+                  <FavoriteItems
+                    setIsDrawerOpen={setIsDrawerOpen}
+                    setIsDialogOpen={setIsDialogOpen}
+                    setItemToCustomize={setItemToCustomize}
+                    itemsPerSlide={itemsPerSlide}
+                  />
+                )}
+
+                {userRecentOrders && userRecentOrders.length > 0 && (
+                  <RecentOrders
+                    userRecentOrders={userRecentOrders}
+                    itemsPerSlide={itemsPerSlide}
+                  />
+                )}
+
+                {menuCategories?.map((category) => (
+                  <MenuCategory
+                    key={category.id}
+                    name={category.name}
+                    activeDiscount={category.activeDiscount}
+                    menuItems={category.menuItems}
+                    listOrder={menuCategoryIndicies![category.name]!}
+                    setIsDrawerOpen={setIsDrawerOpen}
+                    setIsDialogOpen={setIsDialogOpen}
+                    setItemToCustomize={setItemToCustomize}
+                  />
+                ))}
+
+                <div className="baseVertFlex order-[999] mt-8 w-full gap-4 px-4 ">
+                  <div className="baseFlex w-full flex-wrap gap-4 text-sm tablet:text-base">
+                    <div className="baseFlex gap-2">
+                      <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
+                        K
+                      </p>
+                      -<p>Chef&apos;s Choice</p>
+                    </div>
+                    |
+                    <div className="baseFlex gap-2">
+                      <SiLeaflet className="size-4" />
+                      <p>Vegetarian</p>
+                    </div>
+                    |
+                    <div className="baseFlex gap-2">
+                      <LuVegan className="size-4" />-<p>Vegan</p>
+                    </div>
+                    |
+                    <div className="baseFlex gap-2">
+                      <span>GF</span>-<span>Gluten Free</span>
+                    </div>
+                  </div>
+                  <p className="text-center text-xs italic text-stone-400 tablet:text-sm">
+                    <span className="not-italic">* </span>
+                    Consuming raw or undercooked meats, poultry, seafood,
+                    shellfish, or eggs may increase your risk of foodborne
+                    illness.
                   </p>
+                  <div className="baseFlex w-full gap-2 text-stone-400 ">
+                    <FaWineBottle className="shrink-0 -rotate-45" />
+                    <p className="text-xs italic tablet:text-sm">
+                      All alcoholic beverages must be purchased on-site.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </>
           ) : (
             <motion.div
               key={"loadingMenuContent"}
