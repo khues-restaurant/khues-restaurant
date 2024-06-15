@@ -120,7 +120,7 @@ function RecentOrders() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.2 }}
       // className={`baseVertFlex relative min-h-[calc(100dvh-6rem-81px)] w-full tablet:min-h-0
       // ${sortedOrders && sortedOrders.length > 0 ? "!justify-start tablet:mb-16" : ""}
       // ${sortedOrders && sortedOrders.length > 5 ? "mb-16" : ""}

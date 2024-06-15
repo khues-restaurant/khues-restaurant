@@ -291,7 +291,7 @@ function Track() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.2 }}
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full p-4 tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
       <div className="baseVertFlex mb-8 w-full gap-4 px-0 py-4 tablet:max-w-2xl tablet:p-8">
