@@ -1,4 +1,3 @@
-import { AnimatePresence } from "framer-motion";
 import { useEffect, useState, type ReactNode } from "react";
 import HeaderShell from "~/components/headers/HeaderShell";
 import Footer from "~/components/Footer";
@@ -86,7 +85,7 @@ function GeneralLayout({ children }: GeneralLayout) {
       >
         <HeaderShell />
 
-        <AnimatePresence>{children}</AnimatePresence>
+        {children}
 
         <Chat />
 
