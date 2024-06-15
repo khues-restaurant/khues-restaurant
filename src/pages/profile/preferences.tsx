@@ -245,7 +245,7 @@ function Preferences() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: 0.5 }}
       className="baseVertFlex baseVertFlex relative mt-24 h-full min-h-[calc(100dvh-6rem-81px)]
       w-full !justify-start bg-offwhite lg:bg-body tablet:mt-28 tablet:min-h-[calc(100dvh-7rem-120px)]
       "

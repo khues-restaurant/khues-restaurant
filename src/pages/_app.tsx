@@ -6,10 +6,9 @@ import { useRouter } from "next/router";
 import DashboardLayout from "~/components/dashboard/DashboardLayout";
 import DynamicHead from "~/components/DynamicHead";
 import "~/styles/globals.css";
-import { AnimatePresence } from "framer-motion";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const { pathname, asPath } = useRouter();
+  const { pathname } = useRouter();
 
   return (
     <ClerkProvider
@@ -37,9 +36,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         </DashboardLayout>
       ) : (
         <GeneralLayout>
-          <AnimatePresence mode="wait" initial={false}>
-            <Component {...pageProps} key={asPath} />
-          </AnimatePresence>
+          <Component {...pageProps} />
         </GeneralLayout>
       )}
     </ClerkProvider>
