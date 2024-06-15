@@ -673,7 +673,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                 className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-32"
               />
             </div>
-            <div className="baseVertFlex relative gap-4 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
+            <div className="baseVertFlex relative gap-4 overflow-hidden rounded-b-md bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
               <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
               <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
 
@@ -801,11 +801,11 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                 className="!relative !top-0 !size-full !h-96 rounded-md object-cover !object-top !pb-16"
               />
             </div>
-            <div className="baseVertFlex relative !items-start gap-4 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-12">
+            <div className="baseVertFlex relative !items-start gap-4 overflow-hidden rounded-b-md bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-12">
               <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
               <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
 
-              <p className="text-lg font-medium">Meet the Chef</p>
+              <p className="text-lg font-medium">Meet the chef</p>
 
               <p>
                 Eric Pham, chef and owner of Khue&apos;s, carries forward the
@@ -891,7 +891,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                 className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-24"
               />
             </div>
-            <div className="baseVertFlex relative !items-start gap-2 overflow-hidden bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
+            <div className="baseVertFlex relative !items-start gap-2 overflow-hidden rounded-b-md bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
               <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
               <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
 
