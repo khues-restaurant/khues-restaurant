@@ -1142,7 +1142,7 @@ function CartSheet({
                   setShowRewardsDialog(true);
                 }}
               >
-                <CiGift className="size-6 drop-shadow-[0_1px_4px_rgb(0_0_0_/_20%)]" />
+                <CiGift className="size-6 drop-shadow-[0_1px_4px_rgb(0_0_0_/_25%)]" />
                 My rewards
               </Button>
             )}
