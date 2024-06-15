@@ -32,7 +32,7 @@ const hoursOpenPerDay: Record<DayOfWeek, { open: number; close: number }> = {
   [DayOfWeek.Monday]: { open: 12, close: 22 },
   [DayOfWeek.Tuesday]: { open: 12, close: 22 },
   [DayOfWeek.Wednesday]: { open: 12, close: 22 },
-  [DayOfWeek.Thursday]: { open: 20, close: 22 },
+  [DayOfWeek.Thursday]: { open: 12, close: 22 },
   [DayOfWeek.Friday]: { open: 12, close: 22 },
   [DayOfWeek.Saturday]: { open: 12, close: 22 },
 };
