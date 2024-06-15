@@ -161,7 +161,7 @@ function MobileHeader() {
                       // unless we wait for the sheet to fully close first
                       setTimeout(() => {
                         openSignUp();
-                      }, 350);
+                      }, 500);
                     }}
                   >
                     Sign up
@@ -179,7 +179,7 @@ function MobileHeader() {
                       // unless we wait for the sheet to fully close first
                       setTimeout(() => {
                         openSignIn();
-                      }, 350);
+                      }, 500);
                     }}
                   >
                     Sign in
