@@ -173,7 +173,7 @@ function Track() {
             order.spentRewardsPoints,
         );
       }
-    }, 5000);
+    }, 3000);
 
     setRewardsPointsTimerSet(true);
   }, [order, rewardsPointsTimerSet]);
