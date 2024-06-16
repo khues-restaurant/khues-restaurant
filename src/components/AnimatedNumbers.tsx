@@ -110,13 +110,7 @@ function Digit({
       className="relative w-[1ch] tabular-nums"
     >
       {[...Array(10).keys()].map((i) => (
-        <Number
-          key={i}
-          mv={animatedValue}
-          place={place}
-          number={i}
-          height={height}
-        />
+        <Number key={i} mv={animatedValue} number={i} height={height} />
       ))}
     </motion.div>
   );
@@ -124,12 +118,10 @@ function Digit({
 
 function Number({
   mv,
-  place,
   number,
   height,
 }: {
   mv: MotionValue;
-  place: number;
   number: number;
   height: number;
 }) {
