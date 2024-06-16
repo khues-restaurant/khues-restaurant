@@ -59,7 +59,7 @@ const Toast = React.forwardRef<
         toastVariants({ variant }),
         className,
         viewportLabel.includes("mobile")
-          ? "data-[swipe=cancel]:translate-y-0 data-[swipe=end]:translate-y-[var(--radix-toast-swipe-end-y)] data-[swipe=move]:translate-y-[var(--radix-toast-swipe-move-y)] data-[state=closed]:slide-out-to-bottom-[130%] data-[state=open]:slide-in-from-bottom-full"
+          ? "bottom-2 data-[swipe=cancel]:translate-y-0 data-[swipe=end]:translate-y-[var(--radix-toast-swipe-end-y)] data-[swipe=move]:translate-y-[var(--radix-toast-swipe-move-y)] data-[state=closed]:slide-out-to-bottom-[135%] data-[state=open]:slide-in-from-bottom-full"
           : "data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[state=closed]:slide-out-to-right-[110%] data-[state=open]:slide-in-from-right-full",
       )}
       {...props}
