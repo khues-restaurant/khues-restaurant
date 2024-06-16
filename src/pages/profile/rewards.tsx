@@ -923,7 +923,7 @@ function RewardMenuItem({
           variant="outline"
           disabled={isDisabled()}
           className={`self-end`}
-          onClick={() => {
+          onClick={async () => {
             if (currentlySelectedRewardId === menuItem.id) {
               const { items } = orderDetails;
 
@@ -1002,8 +1002,12 @@ function RewardMenuItem({
               },
             });
 
+            const pluralize = (await import("pluralize")).default;
+            const isPlural = pluralize.isPlural(menuItem.name);
+            const contextAwarePlural = isPlural ? "were" : "was";
+
             toast({
-              description: `${menuItem.name} was added to your order.`,
+              description: `${menuItem.name} ${contextAwarePlural} added to your order.`,
             });
           }}
         >

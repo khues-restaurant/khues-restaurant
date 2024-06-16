@@ -468,7 +468,7 @@ function ItemCustomizerDialogContent({
                 variant="default"
                 disabled={isEqual(localItemOrderDetails, initialItemState)}
                 className="text-xs font-semibold tablet:text-sm"
-                onClick={() => {
+                onClick={async () => {
                   const newOrderDetails = structuredClone(orderDetails);
 
                   // just need to update the existing item
@@ -485,9 +485,18 @@ function ItemCustomizerDialogContent({
                     // with toast's undo button
                     setPrevOrderDetails(orderDetails);
 
+                    const pluralize = (await import("pluralize")).default;
+                    const isPlural = pluralize.isPlural(
+                      localItemOrderDetails.name,
+                    );
+                    const contextAwarePlural =
+                      localItemOrderDetails.quantity > 1 || isPlural
+                        ? "were"
+                        : "was";
+
                     setTimeout(() => {
                       toast({
-                        description: `${localItemOrderDetails.quantity > 1 ? `${localItemOrderDetails.quantity}x` : ""} ${localItemOrderDetails.name} was added to your order.`,
+                        description: `${localItemOrderDetails.quantity > 1 ? `${localItemOrderDetails.quantity}x` : ""} ${localItemOrderDetails.name} ${contextAwarePlural} added to your order.`,
                         action: (
                           <ToastAction
                             altText={`Undo the addition of ${localItemOrderDetails.name} to your order.`}

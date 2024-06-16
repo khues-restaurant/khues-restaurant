@@ -847,13 +847,17 @@ function MenuItemPreviewButton({
           size={"icon"}
           disabled={showCheckmark}
           className="baseFlex absolute right-0 top-0 h-10 w-10 rounded-none rounded-bl-md rounded-tr-md border border-stone-300 text-primary"
-          onClick={() => {
+          onClick={async () => {
             // set prev order details so we can revert if necessary
             // with toast's undo button
             setPrevOrderDetails(orderDetails);
 
+            const pluralize = (await import("pluralize")).default;
+            const isPlural = pluralize.isPlural(menuItem.name);
+            const contextAwarePlural = isPlural ? "were" : "was";
+
             toast({
-              description: `${menuItem.name} was added to your order.`,
+              description: `${menuItem.name} ${contextAwarePlural} added to your order.`,
               action: (
                 <ToastAction
                   altText={`Undo the addition of ${menuItem.name} to your order.`}
