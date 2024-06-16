@@ -4,6 +4,7 @@ import {
   useSpring,
   useTransform,
   motion,
+  AnimatePresence,
 } from "framer-motion";
 
 function calculateDelay(place: number) {
@@ -43,11 +44,21 @@ function AnimatedNumbers({
       style={{ fontSize }}
       className="flex space-x-0 overflow-hidden rounded"
     >
-      {value > 9999 && <Digit place={10000} value={value} height={height} />}
-      {value > 999 && <Digit place={1000} value={value} height={height} />}
-      {value > 99 && <Digit place={100} value={value} height={height} />}
-      {value > 9 && <Digit place={10} value={value} height={height} />}
-      <Digit place={1} value={value} height={height} />
+      <AnimatePresence>
+        {value > 9999 && (
+          <Digit key="10000" place={10000} value={value} height={height} />
+        )}
+        {value > 999 && (
+          <Digit key="1000" place={1000} value={value} height={height} />
+        )}
+        {value > 99 && (
+          <Digit key="100" place={100} value={value} height={height} />
+        )}
+        {value > 9 && (
+          <Digit key="10" place={10} value={value} height={height} />
+        )}
+        <Digit key="1" place={1} value={value} height={height} />
+      </AnimatePresence>
     </div>
   );
 }
@@ -89,20 +100,36 @@ function Digit({
   }, [animatedValue, valueRoundedToPlace]);
 
   return (
-    <div style={{ height }} className="relative w-[1ch] tabular-nums">
+    <motion.div
+      key={place}
+      style={{ height }}
+      initial={{ opacity: 0, width: 0 }}
+      animate={{ opacity: 1, width: "1ch" }}
+      exit={{ opacity: 0, width: 0 }}
+      transition={{ duration: 0.2 }}
+      className="relative w-[1ch] tabular-nums"
+    >
       {[...Array(10).keys()].map((i) => (
-        <Number key={i} mv={animatedValue} number={i} height={height} />
+        <Number
+          key={i}
+          mv={animatedValue}
+          place={place}
+          number={i}
+          height={height}
+        />
       ))}
-    </div>
+    </motion.div>
   );
 }
 
 function Number({
   mv,
+  place,
   number,
   height,
 }: {
   mv: MotionValue;
+  place: number;
   number: number;
   height: number;
 }) {
