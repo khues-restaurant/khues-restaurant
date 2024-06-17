@@ -41,6 +41,7 @@ import { Label } from "~/components/ui/label";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 import { Separator } from "~/components/ui/separator";
 import { Checkbox } from "~/components/ui/checkbox";
+import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 
 const mainFormSchema = z.object({
   firstName: z
@@ -1257,12 +1258,16 @@ function PostSignUpDialog({
 
                   setSaveButtonText("Saving");
 
+                  const utcDate = getMidnightCSTInUTC(
+                    new Date(mainFormValues!.birthday),
+                  );
+
                   createUser({
                     userId,
                     email: clerkUser.primaryEmailAddress!.emailAddress, // guaranteed to exist
                     ...mainFormValues!,
                     ...dietaryRestrictionsValues!,
-                    birthday: new Date(mainFormValues!.birthday),
+                    birthday: utcDate,
                     currentOrder: orderDetails,
                     initialRewardsPoints,
                     ...emailCommunicationsValues!,
