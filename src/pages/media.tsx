@@ -270,7 +270,7 @@ function Media() {
 
       <div className="baseVertFlex relative !hidden w-[1200px] gap-16 py-16 pb-24 xl:!flex">
         <div className="baseFlex h-min w-full rounded-md border shadow-md">
-          <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-b-md rounded-l-md bg-offwhite p-4 pb-8 pt-3">
+          <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-b-md rounded-l-md bg-offwhite p-6 pb-8 pt-3">
             <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
             <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
             <Button variant={"text"} className="!p-0" asChild>
@@ -316,7 +316,7 @@ function Media() {
         </div>
 
         <div className="baseFlex h-min w-full rounded-md border shadow-md">
-          <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-l-md bg-offwhite p-4 pb-8 pt-3">
+          <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-l-md bg-offwhite p-6 pb-8 pt-3">
             <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
             <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
             <Button variant={"text"} className="!p-0" asChild>
@@ -363,7 +363,7 @@ function Media() {
         </div>
 
         <div className="baseFlex h-min w-full rounded-md border shadow-md">
-          <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-l-md bg-offwhite p-4 pb-8 pt-2">
+          <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-l-md bg-offwhite p-6 pb-7 pt-3">
             <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
             <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
             <Button variant={"text"} className="!p-0" asChild>
@@ -413,7 +413,7 @@ function Media() {
         </div>
 
         <div className="baseFlex h-min w-full rounded-md border shadow-md">
-          <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-l-md bg-offwhite p-4 pb-8 pt-6">
+          <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-l-md bg-offwhite px-6 pb-8 pt-5">
             <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
             <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
             <Button variant={"text"} className="!p-0" asChild>
@@ -423,7 +423,7 @@ function Media() {
                   alt="TODO"
                   width={110}
                   height={85}
-                  className="mb-3"
+                  className="mb-2"
                 />
               </a>
             </Button>
@@ -448,12 +448,12 @@ function Media() {
           <Button variant={"text"} asChild>
             <a
               href="https://www.mprnews.org/story/2023/12/27/appetites-looks-back-on-2023-restaurants-vietnamese-meatballs-and-the-secret-to-entertaining"
-              className="baseVertFlex relative h-[268px] w-[650px] !rounded-l-none rounded-r-md bg-primary !p-0 shadow-md"
+              className="baseVertFlex relative h-[288px] w-[650px] !rounded-l-none rounded-r-md bg-primary !p-0 shadow-md"
             >
               <Image
                 src={mpr}
                 alt="TODO"
-                sizes="(max-width: 1000px) 400px, 320px"
+                sizes="(max-width: 1000px) 400px, 415px"
                 className="!relative !h-full rounded-r-md bg-offwhite object-cover transition-all hover:brightness-90 active:brightness-75"
               />
             </a>
