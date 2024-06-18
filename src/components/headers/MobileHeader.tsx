@@ -34,8 +34,8 @@ import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 const linkContainer = {
   visible: {
     transition: {
-      delayChildren: 0.25,
-      staggerChildren: 0.1,
+      delayChildren: 0.15,
+      staggerChildren: 0.09,
     },
   },
 };
@@ -46,7 +46,7 @@ const linkVariants = {
     opacity: 1,
     x: 0,
     transition: {
-      duration: 0.35,
+      duration: 0.4,
       ease: "easeOut",
     },
   },
