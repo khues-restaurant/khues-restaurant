@@ -739,9 +739,8 @@ function Rewards() {
                 <SideAccentSwirls className="h-4 fill-primary sm:h-[18px]" />
               </div>
 
-              <div className="baseVertFlex mb-24 gap-8 xl:!flex-row">
-                <div className="baseVertFlex relative m-4 w-72 !items-start gap-2 overflow-hidden rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
-                  {/* <StaticLotus className="absolute -right-24 -top-10 size-48 rotate-[0deg] fill-gold/80" /> */}
+              <div className="baseVertFlex mx-8 mb-24 gap-8 3xl:!flex-row">
+                <div className="baseVertFlex relative m-4 w-72 !items-start gap-2 overflow-hidden rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base md:w-[500px] 3xl:m-0 3xl:w-full 3xl:justify-start">
                   <StaticLotus className="absolute -right-16 -top-16 size-48 rotate-[-135deg] fill-gold/80" />
 
                   <CiGift className="ml-2 size-16 h-20 text-primary" />
@@ -754,7 +753,7 @@ function Rewards() {
                   </div>
                 </div>
 
-                <div className="baseVertFlex relative m-4 w-72 !items-start gap-2 overflow-hidden rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+                <div className="baseVertFlex relative m-4 w-72 !items-start gap-2 overflow-hidden rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base md:w-[500px] 3xl:m-0 3xl:w-full 3xl:justify-start">
                   <StaticLotus className="absolute -right-24 -top-10 size-48 rotate-[0deg] fill-gold/80" />
 
                   <LuCakeSlice className="ml-4 h-20 w-[50px] stroke-[1.5px] text-primary" />
@@ -767,7 +766,7 @@ function Rewards() {
                   </div>
                 </div>
 
-                <div className="baseVertFlex relative m-4 w-72 !items-start gap-2 overflow-hidden rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base xl:m-0 xl:w-full xl:justify-start">
+                <div className="baseVertFlex relative m-4 w-72 !items-start gap-2 overflow-hidden rounded-sm border-y-4 border-y-gold bg-offwhite p-3 text-sm shadow-lg sm:h-[300px] sm:w-96 sm:text-base md:w-[500px] 3xl:m-0 3xl:w-full 3xl:justify-start">
                   <StaticLotus className="absolute -right-24 -top-16 size-48 rotate-[180deg] fill-gold/80" />
 
                   <LuCalendarClock className="ml-2 size-12 h-20 shrink-0 stroke-[1.75px] text-primary" />
