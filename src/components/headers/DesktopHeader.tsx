@@ -80,7 +80,10 @@ function DesktopHeader() {
       `}
     >
       <Button variant="text" asChild>
-        <Link href={"/"} className={`${classes.logo ?? ""} justify-self-start`}>
+        <Link
+          href={"/"}
+          className={`${classes.logo ?? ""} h-[55px] justify-self-start !p-0`}
+        >
           {/* <p className="text-3xl font-semibold text-primary">Khue&apos;s</p> */}
           <Image
             src={"/logo.svg"}
@@ -94,7 +97,7 @@ function DesktopHeader() {
       </Button>
 
       <div
-        className={`${classes.mainLinks} baseFlex w-full !justify-end 2xl:gap-2`}
+        className={`${classes.mainLinks} baseFlex w-full !justify-start 2xl:gap-2`}
       >
         <Button
           variant={asPath.includes("/menu") ? "activeLink" : "link"}
@@ -128,7 +131,10 @@ function DesktopHeader() {
             variant={asPath.includes("/rewards") ? "activeLink" : "link"}
             asChild
           >
-            <Link href={"/rewards"} className="hidden !text-xl 2xl:flex">
+            <Link
+              href={"/rewards"}
+              className="smallDesktopHeader:hidden block !text-xl"
+            >
               Rewards
             </Link>
           </Button>
@@ -138,7 +144,10 @@ function DesktopHeader() {
           variant={asPath.includes("/our-story") ? "activeLink" : "link"}
           asChild
         >
-          <Link href={"/our-story"} className="!text-xl">
+          <Link
+            href={"/our-story"}
+            className="smallDesktopHeader:hidden block !text-xl"
+          >
             Our story
           </Link>
         </Button>
@@ -147,7 +156,10 @@ function DesktopHeader() {
           variant={asPath.includes("/media") ? "activeLink" : "link"}
           asChild
         >
-          <Link href={"/media"} className="hidden !text-xl 2xl:flex">
+          <Link
+            href={"/media"}
+            className="smallDesktopHeader:hidden block !text-xl"
+          >
             Media
           </Link>
         </Button>
@@ -157,130 +169,21 @@ function DesktopHeader() {
             <Button
               variant="ghost"
               size={"icon"}
-              className="baseFlex gap-2 2xl:hidden"
+              className="baseFlex smallDesktopHeader:flex hidden gap-2"
             >
-              <IoMdMore className="size-7 text-primary 2xl:hidden" />
+              <IoMdMore className="smallDesktopHeader:flex hidden size-7 text-primary" />
             </Button>
           </PopoverTrigger>
           <PopoverContent side="bottom" className="w-auto">
             <div className="baseVertFlex !items-start gap-2">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant={"link"} className="text-xl">
-                    Hours & Location
-                  </Button>
-                </DialogTrigger>
-                <DialogContent
-                  extraBottomSpacer={false}
-                  className="max-w-[900px]"
-                >
-                  <div className="baseFlex w-[850px] !items-start">
-                    <div className="baseVertFlex w-64 !items-start gap-2">
-                      <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
-                        <MdAccessTime />
-                        Hours
-                      </div>
-                      <div className="mt-1 grid w-full grid-cols-2">
-                        <div className="baseVertFlex w-full !items-start gap-2">
-                          <p>Monday</p>
-                          <p>Tuesday</p>
-                          <p>Wednesday</p>
-                          <p>Thursday</p>
-                          <p>Friday</p>
-                          <p>Saturday</p>
-                          <p>Sunday</p>
-                        </div>
-                        <div className="baseVertFlex w-full !items-start gap-2">
-                          {getWeeklyHours()}
-                        </div>
-                      </div>
-
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button
-                            variant={"underline"}
-                            className="mt-2 !self-center"
-                          >
-                            Holiday hours
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <div className="baseVertFlex !items-start gap-4">
-                            <div className="baseFlex mb-2 gap-2">
-                              <CiCalendarDate className="size-6" />
-                              <p className="text-lg font-medium">
-                                Our holiday hours
-                              </p>
-                            </div>
-
-                            <p className="font-medium underline underline-offset-2">
-                              Thanksgiving
-                            </p>
-                            <p>
-                              We are closed from Thursday, November 25th to
-                              Saturday, November 27th.
-                            </p>
-
-                            <p className="font-medium underline underline-offset-2">
-                              Christmas
-                            </p>
-                            <p>
-                              We are closed from Friday, December 24th to
-                              Sunday, December 26th.
-                            </p>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-
-                      <p className="mt-2 text-center text-sm italic text-stone-400">
-                        * Pickup orders must be placed at least 30 minutes
-                        before closing.
-                      </p>
-                    </div>
-
-                    <Separator
-                      orientation="vertical"
-                      className="mx-4 h-4/5 self-center"
-                    />
-
-                    <div className="baseVertFlex relative ml-4 !items-start gap-4">
-                      <div className="baseVertFlex !items-start gap-2">
-                        <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
-                          <TbLocation />
-                          Location
-                        </div>
-                        <p className="w-[550px]">
-                          We are conveniently located next to the Green Line
-                          light rail, offering easy access for all visitors.
-                          Parking space is also available for your convenience.
-                        </p>
-
-                        <div className="baseFlex gap-2">
-                          <TbLocation className="text-primary" />
-
-                          <Button variant={"link"} className="h-8 !p-0" asChild>
-                            <a
-                              href="https://facebook.com"
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-primary"
-                            >
-                              799 University Ave W, St Paul, MN 55104
-                            </a>
-                          </Button>
-                        </div>
-                      </div>
-
-                      <Image
-                        src={outsideOfRestaurant}
-                        alt={"TODO: fill in w/ appropriate alt text"}
-                        sizes="550px"
-                        className="!relative !h-64 !w-full rounded-md object-cover shadow-md"
-                      />
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <Button
+                variant={asPath.includes("/our-story") ? "activeLink" : "link"}
+                asChild
+              >
+                <Link href={"/our-story"} className="!text-xl">
+                  Our story
+                </Link>
+              </Button>
 
               {isLoaded && !isSignedIn && (
                 <Button
@@ -316,13 +219,9 @@ function DesktopHeader() {
           <DialogTrigger asChild>
             <Button
               variant="outline"
-              size={"sm"}
-              className={`absolute -top-[36px] hidden !flex-nowrap gap-2 rounded-t-none text-primary 2xl:flex
-                
-              ${isSignedIn ? "left-[-200px]" : "left-[-189px]"}
-              `}
+              className="smallDesktopHeader:mr-0 mr-4 !flex-nowrap gap-2 text-primary"
             >
-              <HiOutlineInformationCircle />
+              <HiOutlineInformationCircle className="size-4" />
               Hours & Location
             </Button>
           </DialogTrigger>
