@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 
 import { cn } from "~/utils/shadcnuiUtils";
 import { useMainStore } from "~/stores/MainStore";
+import { HiOutlineInformationCircle } from "react-icons/hi";
 
 const ToastProvider = ToastPrimitives.Provider;
 
@@ -25,7 +26,7 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 const toastVariants = cva(
-  "group pointer-events-auto relative flex gap-2 w-full items-center justify-start space-x-4 overflow-hidden rounded-md border p-4 pr-8 shadow-lg transition-[ease-in-out] !duration-300 data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-70",
+  "group pointer-events-auto relative flex gap-2 w-full items-center justify-start space-x-2 overflow-hidden rounded-md border p-4 pr-8 shadow-lg transition-[ease-in-out] !duration-300 data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-70",
   {
     variants: {
       variant: {
@@ -91,6 +92,10 @@ const Toast = React.forwardRef<
             d="M5 13l4 4L19 7"
           />
         </motion.svg>
+      )}
+
+      {variant === "neutral" && (
+        <HiOutlineInformationCircle className="size-5 shrink-0 opacity-90" />
       )}
 
       {props.children}
