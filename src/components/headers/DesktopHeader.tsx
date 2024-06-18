@@ -169,22 +169,13 @@ function DesktopHeader() {
             <Button
               variant="ghost"
               size={"icon"}
-              className="baseFlex smallDesktopHeader:flex hidden gap-2"
+              className="baseFlex smallDesktopHeader:!flex !hidden gap-2"
             >
-              <IoMdMore className="smallDesktopHeader:flex hidden size-7 text-primary" />
+              <IoMdMore className="smallDesktopHeader:!flex !hidden size-7 text-primary" />
             </Button>
           </PopoverTrigger>
           <PopoverContent side="bottom" className="w-auto">
             <div className="baseVertFlex !items-start gap-2">
-              <Button
-                variant={asPath.includes("/our-story") ? "activeLink" : "link"}
-                asChild
-              >
-                <Link href={"/our-story"} className="!text-xl">
-                  Our story
-                </Link>
-              </Button>
-
               {isLoaded && !isSignedIn && (
                 <Button
                   variant={asPath.includes("/rewards") ? "activeLink" : "link"}
@@ -195,6 +186,15 @@ function DesktopHeader() {
                   </Link>
                 </Button>
               )}
+
+              <Button
+                variant={asPath.includes("/our-story") ? "activeLink" : "link"}
+                asChild
+              >
+                <Link href={"/our-story"} className="!text-xl">
+                  Our story
+                </Link>
+              </Button>
 
               <Button
                 variant={asPath.includes("/media") ? "activeLink" : "link"}
