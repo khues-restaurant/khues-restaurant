@@ -674,8 +674,8 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
               />
             </div>
             <div className="baseVertFlex relative gap-4 overflow-hidden rounded-b-md bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
-              <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
-              <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
 
               <p className="text-lg font-medium">
                 Enjoy exclusive benefits when you order direct
@@ -715,8 +715,8 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
 
           <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
             <div className="baseVertFlex relative mt-6 !items-start gap-4 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
-              <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
-              <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
+              <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
 
               <p className="text-lg font-medium">
                 Enjoy exclusive benefits when you order direct
@@ -802,8 +802,8 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
               />
             </div>
             <div className="baseVertFlex relative !items-start gap-4 overflow-hidden rounded-b-md bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-12">
-              <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
-              <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
 
               <p className="text-lg font-medium">Meet the chef</p>
 
@@ -860,8 +860,8 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             </div>
 
             <div className="baseVertFlex relative mt-4 max-w-2xl !items-start gap-4 overflow-hidden rounded-md border bg-gradient-to-bl from-offwhite to-primary/10 p-6 pl-12 shadow-md">
-              <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-primary/50" />
-              <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+              <StaticLotus className="absolute -left-5 -top-5 size-16 rotate-[135deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
 
               <p className="text-lg font-medium">Meet the chef</p>
 
@@ -892,8 +892,8 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
               />
             </div>
             <div className="baseVertFlex relative !items-start gap-2 overflow-hidden rounded-b-md bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
-              <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
-              <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
 
               <p className="text-lg font-medium leading-6">
                 Planning a birthday dinner or get together with your friends?
@@ -929,16 +929,16 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             </div>
           </div>
 
-          <div className="baseFlex !hidden w-full gap-16 py-8  tablet:!flex">
-            <div className="baseVertFlex relative mt-4 max-w-[600px] gap-2 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 pr-8 shadow-md">
-              <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
-              <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
+          <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
+            <div className="baseVertFlex relative mt-4 max-w-[610px] !items-start gap-2 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 pr-10 shadow-md">
+              <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
 
-              <p className="text-lg font-medium">
+              <p className="text-left text-lg font-medium">
                 Planning a birthday dinner or get together with your friends?
               </p>
 
-              <p className="mt-2 text-center">
+              <p className="mt-2 text-left">
                 Secure your spot for larger parties. For parties of 4 or less,
                 reservations are usually not needed. However, to guarantee your
                 seats for larger groups, please get in touch with us.
@@ -1127,8 +1127,8 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                 </CarouselContent>
               </Carousel>
 
-              <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
-              <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-primary/50" />
+              <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-primary/50" />
+              <StaticLotus className="absolute -left-5 -top-5 size-16 rotate-[135deg] fill-primary/50" />
 
               <div className="baseFlex gap-2">
                 <Button asChild>

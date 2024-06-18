@@ -530,7 +530,7 @@ function Rewards() {
           </div>
 
           <div className="baseVertFlex relative max-w-72 gap-2 overflow-hidden rounded-sm border-y-4 border-y-borderGold bg-offwhite !p-4 shadow-lg tablet:h-36 tablet:w-96">
-            <StaticLotus className="absolute -left-4 -top-6 size-14 rotate-[135deg] fill-gold/80" />
+            <StaticLotus className="absolute -left-5 -top-5 size-14 rotate-[135deg] fill-gold/80" />
             <StaticLotus className="absolute -bottom-5 -right-5 size-14 rotate-[-45deg] fill-gold/80" />
 
             <IoMdHeart className="size-8 text-primary" />

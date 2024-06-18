@@ -92,8 +92,8 @@ function Media() {
           </Button>
 
           <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-b-md bg-offwhite p-4 pb-12 pt-3">
-            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
-            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
             <Button variant={"text"} className="!p-0" asChild>
               <a href="https://www.kare11.com/">
                 <Image
@@ -138,8 +138,8 @@ function Media() {
           </Button>
 
           <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-b-md bg-offwhite p-4 pb-12 pt-3">
-            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
-            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
             <Button variant={"text"} className="!p-0" asChild>
               <a href="https://www.kare11.com/">
                 <Image
@@ -185,8 +185,8 @@ function Media() {
           </Button>
 
           <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-b-md bg-offwhite p-4 pb-12 pt-2">
-            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
-            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
             <Button variant={"text"} className="!p-0" asChild>
               <a href="https://www.startribune.com/">
                 <Image
@@ -235,8 +235,8 @@ function Media() {
           </Button>
 
           <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-b-md bg-offwhite p-4 pb-12">
-            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-primary/50" />
-            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
             <Button variant={"text"} className="!p-0" asChild>
               <a href="https://www.mprnews.org/">
                 <Image
@@ -271,8 +271,8 @@ function Media() {
       <div className="baseVertFlex relative !hidden w-[1200px] gap-16 py-16 pb-24 xl:!flex">
         <div className="baseFlex h-min w-full rounded-md border shadow-md">
           <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-b-md rounded-l-md bg-offwhite p-6 pb-8 pt-3">
-            <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
-            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+            <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
             <Button variant={"text"} className="!p-0" asChild>
               <a href="https://www.kare11.com/">
                 <Image
@@ -317,8 +317,8 @@ function Media() {
 
         <div className="baseFlex h-min w-full rounded-md border shadow-md">
           <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-l-md bg-offwhite p-6 pb-8 pt-3">
-            <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
-            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+            <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
             <Button variant={"text"} className="!p-0" asChild>
               <a href="https://www.kare11.com/">
                 <Image
@@ -364,8 +364,8 @@ function Media() {
 
         <div className="baseFlex h-min w-full rounded-md border shadow-md">
           <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-l-md bg-offwhite p-6 pb-7 pt-3">
-            <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
-            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+            <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
             <Button variant={"text"} className="!p-0" asChild>
               <a href="https://www.startribune.com/">
                 <Image
@@ -414,8 +414,8 @@ function Media() {
 
         <div className="baseFlex h-min w-full rounded-md border shadow-md">
           <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-l-md bg-offwhite px-6 pb-8 pt-5">
-            <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-primary/50" />
-            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-primary/50" />
+            <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
             <Button variant={"text"} className="!p-0" asChild>
               <a href="https://www.mprnews.org/">
                 <Image
