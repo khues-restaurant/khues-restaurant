@@ -309,7 +309,7 @@ function Preferences() {
             transition={{ duration: 0.5 }}
             className="baseVertFlex relative mb-32 mt-8 size-full bg-offwhite lg:w-[775px] tablet:mt-0 tablet:rounded-xl tablet:border tablet:shadow-md"
           >
-            <div className="baseVertFlex relative w-full !items-start p-8 transition-all tablet:my-8 tablet:p-16 tablet:pb-0">
+            <div className="baseVertFlex relative w-full !items-start p-8 transition-all tablet:mb-8 tablet:p-16 tablet:pb-0">
               {/* Personal Information */}
 
               <div className="baseFlex gap-4 text-lg font-semibold text-primary underline underline-offset-2">
@@ -692,82 +692,6 @@ function Preferences() {
               </Form>
             </div>
 
-            {/* Save changes button/card */}
-
-            {!viewportLabel.includes("mobile") && (
-              <Button
-                disabled={
-                  saveButtonText !== "Save changes" ||
-                  isEqual(form.getValues(), {
-                    firstName: user?.firstName,
-                    lastName: user?.lastName,
-                    phoneNumber: user?.phoneNumber,
-                    email: user?.email,
-                    birthday: user?.birthday,
-                    dietaryRestrictions: user?.dietaryRestrictions,
-                    allowsEmailReceipts: user?.allowsEmailReceipts,
-                    allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails,
-                    allowsPromotionalEmails: user?.allowsPromotionalEmails,
-                    allowsRewardAvailabilityReminderEmails:
-                      user?.allowsRewardAvailabilityReminderEmails,
-                  })
-                }
-                className="absolute right-4 top-4"
-                onClick={() => {
-                  void form.handleSubmit(onFormSubmit)();
-                }}
-              >
-                <AnimatePresence mode={"popLayout"} initial={false}>
-                  <motion.div
-                    key={saveButtonText}
-                    layout
-                    // whileTap={{ scale: 0.95 }}
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
-                    transition={{
-                      duration: 0.25,
-                    }}
-                    className="baseFlex gap-2"
-                  >
-                    {saveButtonText}
-                    {saveButtonText === "Saving" && (
-                      <div
-                        className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
-                        role="status"
-                        aria-label="loading"
-                      >
-                        <span className="sr-only">Loading...</span>
-                      </div>
-                    )}
-                    {saveButtonText === "Saved" && (
-                      <svg
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                        className="size-4 text-offwhite"
-                      >
-                        <motion.path
-                          initial={{ pathLength: 0 }}
-                          animate={{ pathLength: 1 }}
-                          transition={{
-                            delay: 0.2,
-                            type: "tween",
-                            ease: "easeOut",
-                            duration: 0.3,
-                          }}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    )}
-                  </motion.div>
-                </AnimatePresence>
-              </Button>
-            )}
-
             {/* Account management */}
             <Accordion
               type="single"
@@ -945,81 +869,78 @@ function Preferences() {
               </AccordionItem>
             </Accordion>
 
-            {viewportLabel.includes("mobile") && (
-              <div className="baseFlex w-11/12 border-t py-8">
-                <Button
-                  disabled={
-                    saveButtonText !== "Save changes" ||
-                    isEqual(form.getValues(), {
-                      firstName: user?.firstName,
-                      lastName: user?.lastName,
-                      phoneNumber: user?.phoneNumber,
-                      email: user?.email,
-                      birthday: user?.birthday,
-                      dietaryRestrictions: user?.dietaryRestrictions,
-                      allowsEmailReceipts: user?.allowsEmailReceipts,
-                      allowsOrderCompleteEmails:
-                        user?.allowsOrderCompleteEmails,
-                      allowsPromotionalEmails: user?.allowsPromotionalEmails,
-                      allowsRewardAvailabilityReminderEmails:
-                        user?.allowsRewardAvailabilityReminderEmails,
-                    })
-                  }
-                  onClick={() => {
-                    void form.handleSubmit(onFormSubmit)();
-                  }}
-                >
-                  <AnimatePresence mode={"popLayout"} initial={false}>
-                    <motion.div
-                      key={saveButtonText}
-                      layout
-                      // whileTap={{ scale: 0.95 }}
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 20 }}
-                      transition={{
-                        duration: 0.25,
-                      }}
-                      className="baseFlex gap-2"
-                    >
-                      {saveButtonText}
-                      {saveButtonText === "Saving" && (
-                        <div
-                          className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
-                          role="status"
-                          aria-label="loading"
-                        >
-                          <span className="sr-only">Loading...</span>
-                        </div>
-                      )}
-                      {saveButtonText === "Saved" && (
-                        <svg
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                          className="size-4 text-offwhite"
-                        >
-                          <motion.path
-                            initial={{ pathLength: 0 }}
-                            animate={{ pathLength: 1 }}
-                            transition={{
-                              delay: 0.2,
-                              type: "tween",
-                              ease: "easeOut",
-                              duration: 0.3,
-                            }}
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      )}
-                    </motion.div>
-                  </AnimatePresence>
-                </Button>
-              </div>
-            )}
+            <div className="baseFlex w-11/12 border-t py-8">
+              <Button
+                disabled={
+                  saveButtonText !== "Save changes" ||
+                  isEqual(form.getValues(), {
+                    firstName: user?.firstName,
+                    lastName: user?.lastName,
+                    phoneNumber: user?.phoneNumber,
+                    email: user?.email,
+                    birthday: user?.birthday,
+                    dietaryRestrictions: user?.dietaryRestrictions,
+                    allowsEmailReceipts: user?.allowsEmailReceipts,
+                    allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails,
+                    allowsPromotionalEmails: user?.allowsPromotionalEmails,
+                    allowsRewardAvailabilityReminderEmails:
+                      user?.allowsRewardAvailabilityReminderEmails,
+                  })
+                }
+                onClick={() => {
+                  void form.handleSubmit(onFormSubmit)();
+                }}
+              >
+                <AnimatePresence mode={"popLayout"} initial={false}>
+                  <motion.div
+                    key={saveButtonText}
+                    layout
+                    // whileTap={{ scale: 0.95 }}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    transition={{
+                      duration: 0.25,
+                    }}
+                    className="baseFlex w-[122.75px] gap-2"
+                  >
+                    {saveButtonText}
+                    {saveButtonText === "Saving" && (
+                      <div
+                        className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
+                        role="status"
+                        aria-label="loading"
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    )}
+                    {saveButtonText === "Saved" && (
+                      <svg
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        className="size-4 text-offwhite"
+                      >
+                        <motion.path
+                          initial={{ pathLength: 0 }}
+                          animate={{ pathLength: 1 }}
+                          transition={{
+                            delay: 0.2,
+                            type: "tween",
+                            ease: "easeOut",
+                            duration: 0.3,
+                          }}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              </Button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
