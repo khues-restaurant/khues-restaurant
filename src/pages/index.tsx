@@ -66,12 +66,17 @@ interface Home {
 export default function Home({ ourFavoriteMenuItems }: Home) {
   const { isLoaded, isSignedIn } = useAuth();
 
-  const { chatIsOpen, setChatIsOpen, setMobileHeroThresholdInView } =
-    useMainStore((state) => ({
-      chatIsOpen: state.chatIsOpen,
-      setChatIsOpen: state.setChatIsOpen,
-      setMobileHeroThresholdInView: state.setMobileHeroThresholdInView,
-    }));
+  const {
+    chatIsOpen,
+    setChatIsOpen,
+    setMobileHeroThresholdInView,
+    viewportLabel,
+  } = useMainStore((state) => ({
+    chatIsOpen: state.chatIsOpen,
+    setChatIsOpen: state.setChatIsOpen,
+    setMobileHeroThresholdInView: state.setMobileHeroThresholdInView,
+    viewportLabel: state.viewportLabel,
+  }));
 
   const mobileHeroRef = useRef<HTMLDivElement>(null);
 
@@ -506,11 +511,6 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
         <StaticLotus className="absolute -right-8 -top-8 size-24 rotate-[-135deg] fill-primary/50 " />
         <StaticLotus className="absolute -bottom-8 -left-8 size-24 rotate-[45deg] fill-primary/50 " />
 
-        {/* <StaticLotus className="absolute bottom-8 right-[5%] w-[8%] fill-primary/50" />
-        <StaticLotus className="absolute bottom-8 left-[5%] w-[8%] fill-primary/50" /> */}
-
-        {/* maybe somehow do an alternating pattern (reg, 180deg, reg) as the background? */}
-
         <div className="baseFlex gap-3 rounded-md rounded-t-none border border-t-0 bg-offwhite/40 p-2 px-8 font-medium shadow-sm tablet:text-xl">
           <HiOutlineNewspaper />
           Find us on
@@ -524,10 +524,19 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
               },
             },
             loop: true,
+            startIndex: 1,
+          }}
+          style={{
+            overflow: "hidden",
+            ...(viewportLabel.includes("mobile") && {
+              WebkitMask:
+                "linear-gradient(90deg, hsl(40deg, 100%, 99%), white 20%, white 80%, hsla(144deg, 61%, 20%, 0.1))",
+              mask: "linear-gradient(90deg, transparent, white 20%, white 80%, transparent)",
+            }),
           }}
         >
-          <CarouselContent className="mb-5 mt-3 xl:w-[800px] tablet:mb-4 tablet:mt-4">
-            <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md tablet:basis-1/3">
+          <CarouselContent className="relative mb-5 mt-3 xl:w-[800px] tablet:mb-4 tablet:mt-4">
+            <CarouselItem className="baseVertFlex basis-[55%] gap-4 rounded-md tablet:basis-1/3">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.startribune.com/how-these-moms-shaped-the-next-generation-of-great-twin-cities-restaurateurs/600273728/?refresh=true"
@@ -542,7 +551,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md tablet:basis-1/3">
+            <CarouselItem className="baseVertFlex basis-[55%] gap-4 rounded-md tablet:basis-1/3">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.kare11.com/article/news/local/mpls-chef-credits-his-mom-for-inspiration/89-0f237053-85cf-48ae-96f7-8cbebb780555"
@@ -557,7 +566,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-full gap-4 rounded-md tablet:basis-1/3">
+            <CarouselItem className="baseVertFlex basis-[55%] gap-4 rounded-md tablet:basis-1/3">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.mprnews.org/story/2023/12/27/appetites-looks-back-on-2023-restaurants-vietnamese-meatballs-and-the-secret-to-entertaining"
