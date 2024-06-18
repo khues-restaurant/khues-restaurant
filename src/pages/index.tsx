@@ -1064,10 +1064,10 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
           {/* Rewards program promo section */}
           {isLoaded && !isSignedIn && (
             <div className="baseVertFlex relative mb-16 mt-8 w-screen max-w-xl gap-8 overflow-hidden border-y-4 border-y-gold bg-offwhite !p-6 text-primary shadow-md sm:rounded-sm sm:!p-8">
-              <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-gold/80" />
-              <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-gold/80" />
-              <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-gold/80" />
-              <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-gold/80" />
+              <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-gold/80" />
+              <StaticLotus className="absolute -left-5 -top-5 size-16 rotate-[135deg] fill-gold/80" />
+              <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-gold/80" />
+              <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-gold/80" />
 
               <span className="w-64 text-center font-semibold sm:w-auto">
                 Join Khue&apos;s Rewards and unlock exclusive benefits!

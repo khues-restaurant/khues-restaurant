@@ -520,8 +520,8 @@ function Rewards() {
 
         <div className="baseVertFlex gap-8 tablet:!flex-row">
           <div className="baseVertFlex relative max-w-72 gap-4 overflow-hidden rounded-sm border-y-4 border-y-borderGold bg-offwhite !p-4 shadow-lg tablet:h-36 tablet:w-96">
-            <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-gold/80" />
-            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-gold/80" />
+            <StaticLotus className="absolute -right-5 -top-5 size-14 rotate-[-135deg] fill-gold/80" />
+            <StaticLotus className="absolute -bottom-5 -left-5 size-14 rotate-[45deg] fill-gold/80" />
 
             <FaRedo className="size-6 text-primary" />
             <div className="text-center text-sm text-primary sm:text-base">
@@ -530,8 +530,8 @@ function Rewards() {
           </div>
 
           <div className="baseVertFlex relative max-w-72 gap-2 overflow-hidden rounded-sm border-y-4 border-y-borderGold bg-offwhite !p-4 shadow-lg tablet:h-36 tablet:w-96">
-            <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-gold/80" />
-            <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-gold/80" />
+            <StaticLotus className="absolute -left-4 -top-6 size-14 rotate-[135deg] fill-gold/80" />
+            <StaticLotus className="absolute -bottom-5 -right-5 size-14 rotate-[-45deg] fill-gold/80" />
 
             <IoMdHeart className="size-8 text-primary" />
             <div className="text-center text-sm text-primary sm:text-base tablet:max-w-64">
@@ -540,8 +540,8 @@ function Rewards() {
           </div>
 
           <div className="baseVertFlex relative max-w-72 gap-2 overflow-hidden rounded-sm border-y-4 border-y-borderGold bg-offwhite !p-4 shadow-lg tablet:h-36 tablet:w-96">
-            <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-gold/80" />
-            <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-gold/80" />
+            <StaticLotus className="absolute -right-5 -top-5 size-14 rotate-[-135deg] fill-gold/80" />
+            <StaticLotus className="absolute -bottom-5 -left-5 size-14 rotate-[45deg] fill-gold/80" />
 
             <IoToggle className="size-9 text-primary" />
             <div className="text-center text-sm text-primary sm:text-base tablet:max-w-64">
@@ -553,10 +553,10 @@ function Rewards() {
 
       {/* Join */}
       <div className="baseVertFlex relative mb-16 mt-16 max-w-xl gap-8 overflow-hidden border-y-4 border-b-borderGold border-t-borderGold bg-offwhite !p-6 text-primary shadow-md sm:rounded-sm sm:!p-8">
-        <StaticLotus className="absolute -right-4 -top-6 h-16 w-16 rotate-[-135deg] fill-gold/80" />
-        <StaticLotus className="absolute -left-4 -top-6 h-16 w-16 rotate-[135deg] fill-gold/80" />
-        <StaticLotus className="absolute -bottom-6 -right-4 h-16 w-16 rotate-[-45deg] fill-gold/80" />
-        <StaticLotus className="absolute -bottom-6 -left-4 h-16 w-16 rotate-[45deg] fill-gold/80" />
+        <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-gold/80" />
+        <StaticLotus className="absolute -left-5 -top-5 size-16 rotate-[135deg] fill-gold/80" />
+        <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-gold/80" />
+        <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-gold/80" />
 
         <p className="text-center">
           Joining Khue&apos;s Rewards is easy! Simply create an account with us
