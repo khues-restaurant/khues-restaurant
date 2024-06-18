@@ -334,7 +334,7 @@ function Chat() {
                                `}
                     >
                       <p
-                        className={`text-xs text-stone-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
+                        className={`mb-0.5 text-xs text-stone-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
                       >
                         {format(message.createdAt, "h:mm a")}
                       </p>
@@ -457,14 +457,12 @@ function Chat() {
             className="baseVertFlex w-full !rounded-xl border-none !p-0 shadow-xl sm:mr-4 sm:max-w-sm"
           >
             {/* header */}
-            <div className="baseFlex z-20 gap-4 rounded-t-lg bg-primary p-4 shadow-md">
+            <div className="baseFlex z-20 gap-5 rounded-t-lg bg-primary p-4 shadow-md">
               <Image
                 src={khuesKitchenLogo}
                 alt={"TODO: fill in w/ appropriate alt text"}
                 priority
-                // className="h-[228px] w-[120.75px]"
-                // className="h-[205.2px] w-[108.675px]"
-                className="h-[101.33px] w-[53.67px] drop-shadow-md"
+                className="ml-1 h-[101.33px] w-[53.67px] drop-shadow-md"
               />
 
               <div className="baseVertFlex !items-start gap-2">
@@ -481,7 +479,7 @@ function Chat() {
             {/* scroll-y-auto messages container */}
             <div
               ref={scrollableChatContainerRef}
-              className="baseVertFlex relative size-full !justify-start gap-2 overflow-y-auto overscroll-y-contain bg-background p-2 shadow-inner sm:h-96 "
+              className="baseVertFlex tall:h-96 relative size-full h-64 !justify-start gap-2 overflow-y-auto overscroll-y-contain bg-background p-2 shadow-inner"
             >
               {dateLabeledMessages.map((message) => (
                 <>
@@ -500,7 +498,7 @@ function Chat() {
                                `}
                     >
                       <p
-                        className={`text-xs text-stone-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
+                        className={`mb-0.5 text-xs text-stone-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
                       >
                         {format(message.createdAt, "h:mm a")}
                       </p>

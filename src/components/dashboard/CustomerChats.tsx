@@ -304,7 +304,7 @@ function CustomerChats({ socket }: CustomerChats) {
                                `}
                         >
                           <p
-                            className={`text-xs text-stone-400 ${message.senderId === "dashboard" ? "mr-2" : "ml-2"}`}
+                            className={`mb-0.5 text-xs text-stone-400 ${message.senderId === "dashboard" ? "mr-2" : "ml-2"}`}
                           >
                             {format(message.createdAt, "h:mm a")}
                           </p>

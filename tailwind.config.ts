@@ -33,6 +33,8 @@ const config = {
         desktop: { raw: "(min-height: 600px) and (min-width: 1536px)" },
         "2xl": "1536px",
         "3xl": "1700px",
+        tall: { raw: "(min-height: 850px)" }, // this currently is showing up before the default "breakpoint"
+        // in className order, ideally find proper way to tell tailwind to put it after the default breakpoint
       },
       boxShadow: {
         heavyInner: "inset 0px 2px 4px 0px rgba(0 0 0 / 0.35)",
