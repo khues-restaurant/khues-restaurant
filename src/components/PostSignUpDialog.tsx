@@ -31,7 +31,7 @@ import useGetUserId from "~/hooks/useGetUserId";
 import { FaUserAlt } from "react-icons/fa";
 import { FaList } from "react-icons/fa";
 import { IoIosMail } from "react-icons/io";
-
+import { HiOutlineInformationCircle } from "react-icons/hi";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { CiCalendarDate } from "react-icons/ci";
@@ -387,9 +387,9 @@ function PostSignUpDialog({
           style={{
             height:
               step === 4
-                ? viewportLabel.includes("mobile")
-                  ? "575px"
-                  : "600px"
+                ? viewportLabel !== "desktop"
+                  ? "600px"
+                  : "625px"
                 : "525px",
             transition: "height 0.2s ease-in-out",
           }}
@@ -548,16 +548,16 @@ function PostSignUpDialog({
             </div>
           </div>
 
-          <AnimatePresence initial={false} mode="popLayout">
+          <AnimatePresence initial={false} mode="wait">
             {step === 1 && (
               <motion.div
                 key={"personalInfo"}
-                initial={{ opacity: 0, translateX: "-50%" }}
+                initial={{ opacity: 0, translateX: "-25%" }}
                 animate={{ opacity: 1, translateX: 0 }}
-                exit={{ opacity: 0, translateX: "-50%" }}
+                exit={{ opacity: 0, translateX: "-25%" }}
                 transition={{
                   opacity: { duration: 0.1 },
-                  translateX: { duration: 0.5 },
+                  translateX: { duration: 0.25 },
                   ease: "easeInOut",
                 }}
                 className="baseVertFlex mt-16 h-full min-h-48 w-full overflow-hidden tablet:mt-0"
@@ -809,12 +809,12 @@ function PostSignUpDialog({
             {step === 2 && (
               <motion.div
                 key={"allergiesAndDietaryRestrictions"}
-                initial={{ opacity: 0, translateX: "50%" }}
+                initial={{ opacity: 0, translateX: "25%" }}
                 animate={{ opacity: 1, translateX: 0 }}
-                exit={{ opacity: 0, translateX: "-50%" }}
+                exit={{ opacity: 0, translateX: "-25%" }}
                 transition={{
                   opacity: { duration: 0.1 },
-                  translateX: { duration: 0.5 },
+                  translateX: { duration: 0.25 },
                   ease: "easeInOut",
                 }}
                 className="baseVertFlex mt-8 h-full min-h-48 w-full gap-4 overflow-hidden tablet:mt-16 "
@@ -883,8 +883,9 @@ function PostSignUpDialog({
                   <DialogTrigger asChild>
                     <Button
                       variant={"underline"}
-                      className="text-sm sm:text-base"
+                      className="baseFlex gap-2 text-sm sm:text-base"
                     >
+                      <HiOutlineInformationCircle className="size-4" />
                       How to add dietary restrictions
                     </Button>
                   </DialogTrigger>
@@ -894,7 +895,7 @@ function PostSignUpDialog({
                   >
                     <p className="px-4">
                       To add these restrictions when adding an item to your
-                      cart, toggle the switch found under the item&apos;s{" "}
+                      order, toggle the switch found under the item&apos;s{" "}
                       <span className="font-medium">Special instructions</span>{" "}
                       menu.
                     </p>
@@ -919,12 +920,12 @@ function PostSignUpDialog({
             {step === 3 && (
               <motion.div
                 key={"emailCommunications"}
-                initial={{ opacity: 0, translateX: "50%" }}
+                initial={{ opacity: 0, translateX: "25%" }}
                 animate={{ opacity: 1, translateX: 0 }}
-                exit={{ opacity: 0, translateX: "-50%" }}
+                exit={{ opacity: 0, translateX: "-25%" }}
                 transition={{
                   opacity: { duration: 0.1 },
-                  translateX: { duration: 0.5 },
+                  translateX: { duration: 0.25 },
                   ease: "easeInOut",
                 }}
                 className="baseVertFlex mt-4 h-full min-h-48 gap-4 overflow-hidden tablet:mt-8"
@@ -1040,12 +1041,12 @@ function PostSignUpDialog({
             {step === 4 && (
               <motion.div
                 key={"finish"}
-                initial={{ opacity: 0, translateX: "50%" }}
+                initial={{ opacity: 0, translateX: "25%" }}
                 animate={{ opacity: 1, translateX: 0 }}
-                exit={{ opacity: 0, translateX: "50%" }}
+                exit={{ opacity: 0, translateX: "25%" }}
                 transition={{
                   opacity: { duration: 0.1 },
-                  translateX: { duration: 0.5 },
+                  translateX: { duration: 0.25 },
                   ease: "easeInOut",
                 }}
                 className="baseVertFlex mt-16 min-h-48 w-full !justify-start overflow-y-auto overflow-x-hidden"
