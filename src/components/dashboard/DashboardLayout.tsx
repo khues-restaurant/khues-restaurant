@@ -11,6 +11,7 @@ import { api } from "~/utils/api";
 import { io } from "socket.io-client";
 import { env } from "~/env";
 import { Noto_Sans } from "next/font/google";
+import Stats from "~/components/dashboard/Stats";
 
 const notoSans = Noto_Sans({
   subsets: ["latin"],
@@ -104,37 +105,47 @@ function DashboardLayout({ children }: DashboardLayout) {
   }, [menuCategories, setMenuItems]);
 
   return (
-    <main
-      className={`baseVertFlex ${notoSans.className} relative min-h-[100dvh] w-full !justify-between bg-body`}
-    >
-      <DashboardHeaderShell
-        viewState={viewState}
-        setViewState={setViewState}
-        socket={socket}
-      />
+    <>
+      <style jsx global>{`
+        html {
+          font-family: ${notoSans.style.fontFamily};
+        }
+      `}</style>
+      <main
+        className={`baseVertFlex ${notoSans.className} relative min-h-[100dvh] w-full !justify-between bg-body`}
+      >
+        <DashboardHeaderShell
+          viewState={viewState}
+          setViewState={setViewState}
+          socket={socket}
+        />
 
-      <AnimatePresence>
-        <>
-          {viewState === "orderManagement" && orders && (
-            <OrderManagement orders={orders} socket={socket} />
-          )}
-
-          {viewState === "customerChats" && <CustomerChats socket={socket} />}
-          {viewState === "itemManagement" &&
-            menuCategories &&
-            customizationCategories && (
-              <ItemManagement
-                menuCategories={menuCategories}
-                customizationCategories={customizationCategories}
-              />
+        <AnimatePresence>
+          <>
+            {viewState === "orderManagement" && orders && (
+              <OrderManagement orders={orders} socket={socket} />
             )}
 
-          {/* TODO: reviews component */}
-        </>
-      </AnimatePresence>
+            {viewState === "customerChats" && <CustomerChats socket={socket} />}
 
-      <Toaster />
-    </main>
+            {viewState === "itemManagement" &&
+              menuCategories &&
+              customizationCategories && (
+                <ItemManagement
+                  menuCategories={menuCategories}
+                  customizationCategories={customizationCategories}
+                />
+              )}
+
+            {viewState === "stats" && <Stats />}
+
+            {/* TODO: reviews component */}
+          </>
+        </AnimatePresence>
+
+        <Toaster />
+      </main>
+    </>
   );
 }
 

@@ -65,6 +65,7 @@
     "react-icons": "^5.0.1",
     "react-scroll-parallax": "^3.4.5",
     "receiptline": "^1.16.1",
+    "recharts": "^2.12.7",
     "resend": "^3.2.0",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",

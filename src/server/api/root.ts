@@ -15,6 +15,7 @@ import { chatRouter } from "~/server/api/routers/chat";
 import { customizationCategoryRouter } from "~/server/api/routers/customizationCategory";
 import { blacklistedEmailRouter } from "~/server/api/routers/blacklistedEmail";
 import { orderPrintQueueRouter } from "~/server/api/routers/orderPrintQueue";
+import { statsRouter } from "~/server/api/routers/stats";
 
 export const appRouter = createTRPCRouter({
   user: userRouter,
@@ -32,6 +33,7 @@ export const appRouter = createTRPCRouter({
   chat: chatRouter,
   blacklistedEmail: blacklistedEmailRouter,
   orderPrintQueue: orderPrintQueueRouter,
+  stats: statsRouter,
 
   discount: discountRouter, // currently not being used
 });

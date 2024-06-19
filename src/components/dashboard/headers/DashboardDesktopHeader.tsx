@@ -144,8 +144,6 @@ function DashboardDesktopHeader({
           Item management
         </Button>
 
-        {/* TODO: explore wher the unique key prop error is coming from in
-            this component */}
         <DelayNewOrders />
 
         <Popover>
@@ -157,13 +155,16 @@ function DashboardDesktopHeader({
           <PopoverContent side="bottom" align="end">
             <div className="baseVertFlex gap-2">
               <DiscountManagement />
-              <div>TODO: Reviews</div>
 
-              {user?.email === "ericxpham@gmail.com" && (
-                <Button variant={"link"} onClick={() => setViewState("stats")}>
-                  Stats
-                </Button>
-              )}
+              <Button
+                variant={"link"}
+                className="!text-xl"
+                onClick={() => setViewState("stats")}
+              >
+                Stats
+              </Button>
+
+              {/* <div>TODO: Reviews</div> */}
 
               <Button
                 variant={"link"}
