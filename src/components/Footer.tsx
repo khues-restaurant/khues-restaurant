@@ -51,7 +51,7 @@ function Footer() {
 p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tablet:py-4"
     >
       {/* contact info */}
-      <div className="baseVertFlex gap-2 tablet:!items-start tablet:!justify-start tablet:gap-0">
+      <div className="baseVertFlex gap-3 tablet:!items-start tablet:!justify-start tablet:gap-0">
         <p className="font-semibold underline underline-offset-2">Contact</p>
         <div className="baseVertFlex gap-1 tablet:!items-start tablet:!justify-start tablet:gap-0">
           <div className="baseFlex gap-2 tablet:gap-[9px]">
@@ -81,7 +81,7 @@ p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tab
       </Button>
 
       {/* socials */}
-      <div className="baseVertFlex order-2 gap-2 tablet:order-3 tablet:!items-end tablet:!justify-end">
+      <div className="baseVertFlex order-2 gap-[14px] tablet:order-3 tablet:!items-end tablet:!justify-between tablet:gap-2">
         <p className="font-semibold underline underline-offset-2">Socials</p>
 
         <div className="baseFlex gap-2">
