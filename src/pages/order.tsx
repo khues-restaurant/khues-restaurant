@@ -375,7 +375,7 @@ function OrderNow() {
                       },
                     },
                     dragFree: true,
-                    align: "start",
+                    align: "end",
                   }}
                   className="baseFlex mb-1 w-full"
                 >
