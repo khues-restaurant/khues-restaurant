@@ -91,13 +91,13 @@ function DesktopHeader() {
             priority
             width={55}
             height={55}
-            className="!size-[55px]"
+            className="mr-4 !size-[55px]"
           />
         </Link>
       </Button>
 
       <div
-        className={`${classes.mainLinks} baseFlex w-full !justify-start 2xl:gap-2`}
+        className={`${classes.mainLinks} baseFlex w-full !justify-start 2xl:gap-4`}
       >
         <Button
           variant={asPath.includes("/menu") ? "activeLink" : "link"}
