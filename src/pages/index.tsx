@@ -1072,16 +1072,16 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
 
           {/* Rewards program promo section */}
           {isLoaded && !isSignedIn && (
-            <div className="baseVertFlex relative mb-16 mt-8 w-screen max-w-xl gap-8 overflow-hidden border-y-4 border-y-gold bg-offwhite !p-6 text-primary shadow-md sm:rounded-sm sm:!p-8">
+            <div className="baseVertFlex relative mb-16 mt-8 w-screen max-w-xl gap-4 overflow-hidden border-y-4 border-y-gold bg-offwhite !p-6 !pb-8 text-primary shadow-md sm:rounded-sm sm:!p-8 sm:!pb-5">
               <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-gold/80" />
               <StaticLotus className="absolute -left-5 -top-5 size-16 rotate-[135deg] fill-gold/80" />
               <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-gold/80" />
               <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-gold/80" />
 
-              <span className="w-64 text-center font-semibold sm:w-auto">
+              <span className="mt-4 w-64 text-center font-semibold sm:mt-0 sm:w-auto">
                 Join Khue&apos;s Rewards and unlock exclusive benefits!
               </span>
-              <span className="text-center text-sm tablet:text-base">
+              <span className="mt-2 text-center text-sm tablet:text-base">
                 With every order, you&apos;ll earn points which can be redeemed
                 for complimentary meals. Plus, get early access to new dishes
                 and celebrate your birthday with a free dessert of your choice!
@@ -1091,7 +1091,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                 <Button
                   variant={"rewards"}
                   size={"lg"}
-                  className="text-base shadow-md"
+                  className="mt-4 text-base shadow-md"
                 >
                   Join now
                 </Button>
