@@ -44,6 +44,8 @@ function DesktopHeader() {
     enabled: Boolean(userId && isSignedIn),
   });
 
+  const [showSmallViewportPopoverLinks, setShowSmallViewportPopoverLinks] =
+    useState(false);
   const [showUserPopoverLinks, setShowUserPopoverLinks] = useState(false);
   const [numberOfItems, setNumberOfItems] = useState(0);
 
@@ -133,7 +135,7 @@ function DesktopHeader() {
           >
             <Link
               href={"/rewards"}
-              className="smallDesktopHeader:hidden block !text-xl"
+              className="block !text-xl smallDesktopHeader:hidden"
             >
               Rewards
             </Link>
@@ -146,7 +148,7 @@ function DesktopHeader() {
         >
           <Link
             href={"/our-story"}
-            className="smallDesktopHeader:hidden block !text-xl"
+            className="block !text-xl smallDesktopHeader:hidden"
           >
             Our story
           </Link>
@@ -158,20 +160,23 @@ function DesktopHeader() {
         >
           <Link
             href={"/media"}
-            className="smallDesktopHeader:hidden block !text-xl"
+            className="block !text-xl smallDesktopHeader:hidden"
           >
             Media
           </Link>
         </Button>
 
-        <Popover>
+        <Popover
+          open={showSmallViewportPopoverLinks}
+          onOpenChange={(open) => setShowSmallViewportPopoverLinks(open)}
+        >
           <PopoverTrigger asChild>
             <Button
               variant="ghost"
               size={"icon"}
-              className="baseFlex smallDesktopHeader:!flex !hidden gap-2"
+              className="baseFlex !hidden gap-2 smallDesktopHeader:!flex"
             >
-              <IoMdMore className="smallDesktopHeader:!flex !hidden size-7 text-primary" />
+              <IoMdMore className="!hidden size-7 text-primary smallDesktopHeader:!flex" />
             </Button>
           </PopoverTrigger>
           <PopoverContent side="bottom" className="w-auto">
@@ -179,6 +184,7 @@ function DesktopHeader() {
               {isLoaded && !isSignedIn && (
                 <Button
                   variant={asPath.includes("/rewards") ? "activeLink" : "link"}
+                  onClick={() => setShowSmallViewportPopoverLinks(false)}
                   asChild
                 >
                   <Link href={"/rewards"} className="!text-xl">
@@ -189,6 +195,7 @@ function DesktopHeader() {
 
               <Button
                 variant={asPath.includes("/our-story") ? "activeLink" : "link"}
+                onClick={() => setShowSmallViewportPopoverLinks(false)}
                 asChild
               >
                 <Link href={"/our-story"} className="!text-xl">
@@ -198,6 +205,7 @@ function DesktopHeader() {
 
               <Button
                 variant={asPath.includes("/media") ? "activeLink" : "link"}
+                onClick={() => setShowSmallViewportPopoverLinks(false)}
                 asChild
               >
                 <Link href={"/media"} className="!text-xl">
@@ -219,7 +227,7 @@ function DesktopHeader() {
           <DialogTrigger asChild>
             <Button
               variant="outline"
-              className="smallDesktopHeader:mr-0 mr-4 !flex-nowrap gap-2 text-primary"
+              className="mr-4 !flex-nowrap gap-2 text-primary smallDesktopHeader:mr-0"
             >
               <HiOutlineInformationCircle className="size-4" />
               Hours & Location
