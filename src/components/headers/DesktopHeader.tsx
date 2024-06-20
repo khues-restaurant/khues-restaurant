@@ -262,27 +262,37 @@ function DesktopHeader() {
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
-                    <div className="baseVertFlex !items-start gap-4">
-                      <div className="baseFlex mb-2 gap-2">
-                        <CiCalendarDate className="size-6" />
-                        <p className="text-lg font-medium">Our holiday hours</p>
+                    <div className="baseVertFlex w-full !items-start gap-4">
+                      <div className="baseVertFlex w-full !items-start gap-2">
+                        <div className="baseFlex w-full !justify-start gap-2">
+                          <CiCalendarDate className="size-6" />
+                          <p className="text-lg font-medium">
+                            Our holiday hours
+                          </p>
+                        </div>
+
+                        <Separator className="h-[1px] w-full" />
                       </div>
 
-                      <p className="font-medium underline underline-offset-2">
-                        Thanksgiving
-                      </p>
-                      <p>
-                        We are closed from Thursday, November 25th to Saturday,
-                        November 27th.
-                      </p>
+                      <div className="baseVertFlex !items-start gap-2">
+                        <p className="font-medium underline underline-offset-2">
+                          Thanksgiving
+                        </p>
+                        <p>
+                          We are closed from Thursday, November 25th to
+                          Saturday, November 27th.
+                        </p>
+                      </div>
 
-                      <p className="font-medium underline underline-offset-2">
-                        Christmas
-                      </p>
-                      <p>
-                        We are closed from Friday, December 24th to Sunday,
-                        December 26th.
-                      </p>
+                      <div className="baseVertFlex !items-start gap-2">
+                        <p className="font-medium underline underline-offset-2">
+                          Christmas
+                        </p>
+                        <p>
+                          We are closed from Friday, December 24th to Sunday,
+                          December 26th.
+                        </p>
+                      </div>
                     </div>
                   </DialogContent>
                 </Dialog>
