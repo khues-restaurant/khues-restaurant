@@ -2,7 +2,7 @@ import { useAuth } from "@clerk/nextjs";
 import Decimal from "decimal.js";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { Fragment, useEffect, useLayoutEffect, useState } from "react";
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CiGift } from "react-icons/ci";
 import { LuCakeSlice } from "react-icons/lu";
 import { LuCalendarClock } from "react-icons/lu";
@@ -22,11 +22,25 @@ import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationC
 import { IoSettingsOutline } from "react-icons/io5";
 import { TfiReceipt } from "react-icons/tfi";
 import { useRouter } from "next/router";
+import { MdOutlineHistory } from "react-icons/md";
+import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
 
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import Link from "next/link";
 import StaticLotus from "~/components/ui/StaticLotus";
+import { Label } from "~/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import isEqual from "lodash.isequal";
+import { format } from "date-fns";
 
 // TODO: honestly the logic within here is very hit or miss, comb through this for sure
 
@@ -411,12 +425,12 @@ function Rewards() {
                 />
               </motion.div>
 
-              <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-primary shadow-lg tablet:shadow-xl">
-                <div className="text-center text-lg font-semibold tablet:text-xl">
+              <div className="baseVertFlex z-10 rounded-md bg-offwhite px-8 py-4 text-primary shadow-lg tablet:px-16 tablet:shadow-xl">
+                <div className="mb-4 text-center text-lg font-semibold tablet:text-xl">
                   Khue&apos;s Rewards
                 </div>
 
-                <div className="baseFlex gap-4 font-bold tracking-wider">
+                <div className="baseFlex mb-4 gap-4 font-bold tracking-wider">
                   <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
 
                   <div className="baseVertFlex">
@@ -429,6 +443,13 @@ function Rewards() {
                   </div>
                   <SideAccentSwirls className="h-5 fill-primary" />
                 </div>
+
+                <Separator className="mb-2 h-[1px] w-full bg-stone-400" />
+
+                <RewardsHistory
+                  userId={userId}
+                  rewardsPointsEarned={rewardsPointsEarned}
+                />
               </div>
 
               {/* mobile images */}
@@ -1014,5 +1035,216 @@ function RewardMenuItem({
         </Button>
       </div>
     </div>
+  );
+}
+
+interface RewardSnippet {
+  id: string;
+  datetimeToPickup: Date;
+  earnedRewardsPoints: number;
+  spentRewardsPoints: number;
+}
+
+interface RewardsHistory {
+  userId: string;
+  rewardsPointsEarned: number;
+}
+
+function RewardsHistory({ userId, rewardsPointsEarned }: RewardsHistory) {
+  const [sortedRewardsHistory, setSortedRewardsHistory] = useState<
+    RewardSnippet[] | undefined
+  >();
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+
+  const {
+    data: rewardsHistory,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = api.user.getInfiniteRewards.useInfiniteQuery(
+    {
+      userId,
+      sortDirection,
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
+
+  const lastElementRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!lastElementRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          void fetchNextPage();
+        }
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.75,
+      },
+    );
+
+    observer.observe(lastElementRef.current);
+
+    const stableLastElementRef = lastElementRef.current;
+
+    return () => {
+      if (stableLastElementRef) {
+        observer.unobserve(stableLastElementRef);
+      }
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  useEffect(() => {
+    if (rewardsHistory === undefined && sortedRewardsHistory === undefined) {
+      setSortedRewardsHistory([]);
+      return;
+    }
+
+    // this logic is reversed from what you'd expect because the list is rendered
+    // with the first item in the array being rendered first. So to sort by the newest
+    // orders, we need to sort in descending order actually.
+    // (uses slice to avoid mutating the original array)
+
+    const rewardsHistoryData = rewardsHistory?.pages.flatMap(
+      (page) => page.rewards,
+    );
+
+    if (rewardsHistoryData === undefined) return;
+
+    const localSortedRewardsHistory = rewardsHistoryData
+      .slice()
+      .sort((a, b) => {
+        if (sortDirection === "asc") {
+          return a.datetimeToPickup.getTime() - b.datetimeToPickup.getTime();
+        } else {
+          return b.datetimeToPickup.getTime() - a.datetimeToPickup.getTime();
+        }
+      });
+
+    if (
+      localSortedRewardsHistory !== undefined &&
+      !isEqual(localSortedRewardsHistory, sortedRewardsHistory)
+    ) {
+      setSortedRewardsHistory(localSortedRewardsHistory);
+    }
+  }, [rewardsHistory, sortedRewardsHistory, sortDirection]);
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button
+          variant={"underline"}
+          className="baseFlex mb-1 mt-1 h-5 gap-2 !p-0 text-sm sm:text-base"
+        >
+          <MdOutlineHistory className="size-4 tablet:size-5" />
+          Point history
+        </Button>
+      </DialogTrigger>
+      <DialogContent
+        extraBottomSpacer={false}
+        // idk about text-sm on mobile, let's see
+        className="baseVertFlex gap-4 text-sm sm:text-base"
+      >
+        <div className="baseFlex w-full !justify-between border-b pb-4 pt-2">
+          <div className="baseFlex gap-2 text-base font-medium tablet:text-lg">
+            <MdOutlineHistory className="size-4 tablet:mt-0.5 tablet:size-5" />
+            Point history
+          </div>
+
+          <div className="baseFlex gap-2">
+            <Label htmlFor="sortDirection" className="text-nowrap">
+              Sort by
+            </Label>
+            <Select
+              value={sortDirection}
+              onValueChange={(direction) =>
+                setSortDirection(direction as "asc" | "desc")
+              }
+            >
+              <SelectTrigger id={"sortDirection"}>
+                <SelectValue placeholder="Sort direction" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Sort direction</SelectLabel>
+
+                  <SelectItem value={"desc"}>
+                    <div className="baseFlex gap-1">Newest</div>
+                  </SelectItem>
+                  <SelectItem value={"asc"}>
+                    <div className="baseFlex gap-1">Oldest</div>
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <AnimatePresence mode="popLayout">
+          {sortedRewardsHistory === undefined ? (
+            <motion.div
+              key={"rewardsHistoryLoadingContent"}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="baseFlex size-full"
+            >
+              <AnimatedLotus className="size-16 fill-primary" />
+            </motion.div>
+          ) : (
+            <motion.div
+              key={"rewardsHistoryLoadedContent"}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="baseVertFlex h-72 w-4/5 !justify-start gap-4 overflow-y-auto pr-4"
+            >
+              {sortedRewardsHistory.map((reward, index) => (
+                <div
+                  key={reward.id}
+                  ref={
+                    index === sortedRewardsHistory.length - 1
+                      ? lastElementRef
+                      : null
+                  }
+                  className="baseFlex w-full !justify-between border-b pb-2 last:border-b-0"
+                >
+                  <p className="self-start font-medium">
+                    {format(reward.datetimeToPickup, "MMMM do, yyyy")}
+                  </p>
+
+                  <div className="baseVertFlex !items-end">
+                    <p className="font-semibold text-primary">
+                      + {reward.earnedRewardsPoints} points
+                    </p>
+
+                    {reward.spentRewardsPoints > 0 && (
+                      <p className="text-stone-400">
+                        - {reward.spentRewardsPoints} points
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="baseFlex w-full gap-1 border-t pt-4">
+          You currently have
+          <span className="font-semibold">{rewardsPointsEarned}</span>
+          points.
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

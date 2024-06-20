@@ -361,6 +361,52 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+
+  getInfiniteRewards: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string().min(1).max(100),
+        sortDirection: z.enum(["asc", "desc"]).default("desc"),
+        cursor: z.string().nullish(), // <-- "cursor" needs to exist, but can be any type
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      if (input.userId !== ctx.auth.userId) {
+        throw new Error("Unauthorized");
+      }
+
+      const { userId, sortDirection, cursor } = input;
+      const rewards = await ctx.prisma.order.findMany({
+        where: {
+          userId,
+        },
+        // TODO: unsure of if you need "distinct: ["id"]" here
+        select: {
+          id: true,
+          datetimeToPickup: true,
+          earnedRewardsPoints: true,
+          spentRewardsPoints: true,
+        },
+        orderBy: {
+          datetimeToPickup: sortDirection,
+        },
+        take: 25 + 1, // get an extra item at the end which we'll use as next cursor
+        cursor: cursor ? { id: cursor } : undefined,
+      });
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (rewards.length > 25) {
+        const nextReward = rewards.pop();
+
+        if (nextReward) {
+          nextCursor = nextReward.id;
+        }
+      }
+      return {
+        rewards,
+        nextCursor,
+      };
+    }),
+
   // most likely should be deprecated, since if discounts are added they will
   // almost definitely come with some schema shape changes
   // getRewards: protectedProcedure
