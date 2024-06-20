@@ -135,9 +135,9 @@ function CartDrawer({
   const { updateOrder } = useUpdateOrder();
 
   const { data: minPickupTime } = api.minimumOrderPickupTime.get.useQuery();
-  const { data: userRewards } = api.user.getRewards.useQuery(userId, {
-    enabled: Boolean(userId && isSignedIn),
-  });
+  // const { data: userRewards } = api.user.getRewards.useQuery(userId, {
+  //   enabled: Boolean(userId && isSignedIn),
+  // });
 
   const { initializeCheckout } = useInitializeCheckout({
     setCheckoutButtonText,
