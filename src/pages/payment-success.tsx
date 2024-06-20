@@ -61,18 +61,18 @@ function PaymentSuccess({
       // to be a tiny tiny element on this page
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
-      <div className="baseVertFlex relative max-w-80 gap-4 overflow-hidden rounded-lg border bg-gradient-to-br from-offwhite to-primary/10 px-6 py-8 tablet:max-w-2xl tablet:gap-8 tablet:p-12">
+      <div className="baseVertFlex relative max-w-80 gap-4 overflow-hidden rounded-lg border bg-gradient-to-br from-offwhite to-primary/10 px-6 py-8 shadow-md tablet:max-w-2xl tablet:p-12">
         <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
         <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
         <AnimatedLotus className="size-16 fill-primary tablet:size-24" />
 
-        <p className="mt-8 text-center text-lg font-semibold">
+        <p className="mt-4 text-center text-lg font-medium tablet:mt-6">
           Thank you! Your order has been successfully placed.
         </p>
 
-        <div className="baseVertFlex gap-6 tablet:gap-8">
+        <div className="baseVertFlex gap-4">
           {emailReceiptsAllowed && (
-            <div className="baseFlex mt-4 gap-4 rounded-md border bg-offwhite/60 p-4 text-sm shadow-inner">
+            <div className="baseFlex my-2 gap-4 rounded-md border bg-offwhite/60 p-4 text-sm shadow-inner">
               <MdOutlineMail className="size-5 shrink-0 tablet:size-6" />
               Your email receipt has been sent and should arrive shortly.
             </div>
