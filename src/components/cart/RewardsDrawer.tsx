@@ -472,7 +472,7 @@ function RewardMenuItem({
 
             if (userAvailablePoints < rewardItemPointsCost) {
               toast({
-                variant: "default",
+                variant: "neutral",
                 description: `You don't have enough points to redeem this item.`,
               });
 
