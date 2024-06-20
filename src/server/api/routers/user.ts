@@ -50,34 +50,56 @@ export const userRouter = createTRPCRouter({
         birthday: z.date(),
         dietaryRestrictions: z.string().max(100),
         currentOrder: orderDetailsSchema,
-        initialRewardsPoints: z.number().int().default(500),
         orderIdBeingRedeemed: z.string().optional(),
+        rewardsPointsBeingRedeemed: z.number().int().default(0),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const {
+        userId,
+        email,
+        firstName,
+        lastName,
+        phoneNumber,
+        birthday,
+        dietaryRestrictions,
+        currentOrder,
+        orderIdBeingRedeemed,
+        rewardsPointsBeingRedeemed,
+      } = input;
+
       const customer = await stripe.customers.create({
-        email: input.email,
-        name: `${input.firstName} ${input.lastName}`,
-        phone: input.phoneNumber,
+        email: email,
+        name: `${firstName} ${lastName}`,
+        phone: phoneNumber,
       });
 
       // add inital rewards for user
       void ctx.prisma.reward.create({
         data: {
-          userId: input.userId,
+          userId,
           expiresAt: addMonths(new Date(), 6),
-          value: input.initialRewardsPoints,
+          value: 500,
         },
       });
 
       // if applicable, set orderIdBeingRedeemed's "rewardsPointsRedeemed" to true
-      if (input.orderIdBeingRedeemed) {
+      if (orderIdBeingRedeemed && rewardsPointsBeingRedeemed > 0) {
         await ctx.prisma.order.update({
           where: {
-            id: input.orderIdBeingRedeemed,
+            id: orderIdBeingRedeemed,
           },
           data: {
             rewardsPointsRedeemed: true,
+            userId,
+          },
+        });
+
+        await ctx.prisma.reward.create({
+          data: {
+            userId,
+            expiresAt: addMonths(new Date(), 6),
+            value: rewardsPointsBeingRedeemed,
           },
         });
       }
@@ -87,17 +109,17 @@ export const userRouter = createTRPCRouter({
         await ctx.prisma.emailUnsubscriptionToken.create({
           data: {
             expiresAt: addMonths(new Date(), 3),
-            emailAddress: input.email,
+            emailAddress: email,
           },
         });
 
       try {
         const { data, error } = await resend.emails.send({
           from: "onboarding@resend.dev",
-          to: "khues.dev@gmail.com", // input.email,
+          to: "khues.dev@gmail.com", // TODO: email,
           subject: "Hello world",
           react: Welcome({
-            firstName: input.firstName,
+            firstName: firstName,
             unsubscriptionToken: unsubscriptionToken.id,
           }),
         });
@@ -119,7 +141,7 @@ export const userRouter = createTRPCRouter({
 
       const blacklistedEmail = await ctx.prisma.blacklistedEmail.findFirst({
         where: {
-          emailAddress: input.email,
+          emailAddress: email,
         },
       });
 
@@ -140,17 +162,17 @@ export const userRouter = createTRPCRouter({
       return ctx.prisma.user.create({
         data: {
           stripeUserId: customer.id,
+          userId,
+          email,
+          firstName,
+          lastName,
+          phoneNumber,
+          birthday,
+          dietaryRestrictions,
+          currentOrder,
+          rewardsPoints: 500 + rewardsPointsBeingRedeemed,
+          lifetimeRewardPoints: 500 + rewardsPointsBeingRedeemed,
           ...initialEmailPreferences,
-          userId: input.userId,
-          email: input.email,
-          firstName: input.firstName,
-          lastName: input.lastName,
-          phoneNumber: input.phoneNumber,
-          birthday: input.birthday,
-          dietaryRestrictions: input.dietaryRestrictions,
-          currentOrder: input.currentOrder,
-          rewardsPoints: input.initialRewardsPoints,
-          lifetimeRewardPoints: input.initialRewardsPoints,
         },
       });
     }),

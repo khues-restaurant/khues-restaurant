@@ -187,8 +187,13 @@ function PostSignUpDialog({
 
   const [dialogIsOpen, setDialogIsOpen] = useState(true);
   const [step, setStep] = useState(1);
-  const [initialRewardsPoints, setInitialRewardsPoints] = useState(0);
   const [saveButtonText, setSaveButtonText] = useState("Save");
+
+  // if redeeming points for a previous order, this will be the amount of points being redeemed
+  const [rewardsPointsBeingRedeemed, setRewardsPointsBeingRedeemed] =
+    useState(0);
+  // the total amount of points the user will have upon completion of the sign up process
+  const [initialRewardsPoints, setInitialRewardsPoints] = useState(0);
 
   const [mainFormValues, setMainFormValues] = useState<z.infer<
     typeof mainFormSchema
@@ -263,6 +268,8 @@ function PostSignUpDialog({
         : 0;
 
       const pointsBeingRedeemed = 500 + pointsBeingRedeemedFromPreviousOrder;
+
+      setRewardsPointsBeingRedeemed(pointsBeingRedeemedFromPreviousOrder);
 
       setTimeout(() => {
         setInitialRewardsPoints(pointsBeingRedeemed);
@@ -1270,7 +1277,7 @@ function PostSignUpDialog({
                     ...dietaryRestrictionsValues!,
                     birthday: utcDate,
                     currentOrder: orderDetails,
-                    initialRewardsPoints,
+                    rewardsPointsBeingRedeemed,
                     ...emailCommunicationsValues!,
                   });
                 }
