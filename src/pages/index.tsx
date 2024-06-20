@@ -1072,7 +1072,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
 
           {/* Rewards program promo section */}
           {isLoaded && !isSignedIn && (
-            <div className="baseVertFlex relative mb-16 mt-8 w-screen max-w-xl gap-4 overflow-hidden border-y-4 border-y-gold bg-offwhite !p-6 !pb-8 text-primary shadow-md sm:rounded-sm sm:!p-8 sm:!pb-5">
+            <div className="baseVertFlex relative my-4 w-screen max-w-xl gap-4 overflow-hidden border-y-4 border-y-gold bg-offwhite !p-6 !pb-8 text-primary shadow-md sm:rounded-sm sm:!p-8 sm:!pb-5 tablet:my-12">
               <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-gold/80" />
               <StaticLotus className="absolute -left-5 -top-5 size-16 rotate-[135deg] fill-gold/80" />
               <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-gold/80" />
@@ -1102,7 +1102,11 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
           )}
 
           {/* Explore Our Favorites section */}
-          <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-6xl tablet:max-w-2xl">
+          <div
+            className={`baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-6xl tablet:max-w-2xl
+              ${isLoaded && !isSignedIn ? "" : "tablet:mt-10"}
+            `}
+          >
             <p className="text-lg font-medium tablet:text-xl">
               Explore Our Favorites
             </p>
