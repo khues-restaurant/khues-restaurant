@@ -244,20 +244,20 @@ function RecentOrders() {
                 />
 
                 <div className="baseVertFlex gap-4">
-                  <p className="text-center tablet:text-lg">
+                  <p className="text-center">
                     It looks like you haven&apos;t placed an order yet.
                   </p>
                   <Button asChild>
                     <Link
                       href="/order"
-                      className="baseFlex gap-2 !px-4 !text-base shadow-md"
+                      className="baseFlex gap-2 !px-4 shadow-md tablet:!py-6 tablet:!text-lg"
                     >
                       <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
                       Get started
                       <SideAccentSwirls className="h-[14px] fill-offwhite" />
                     </Link>
                   </Button>
-                  with your first order today!
+                  <p className="text-center">with your first order today!</p>
                 </div>
               </div>
             )}
