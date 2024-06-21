@@ -79,8 +79,14 @@ function Track() {
     }, 2000);
   }, []);
 
-  const targetRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
-  const floatingRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
+  const orderPlacedTargetRef = useRef<HTMLDivElement | null>(null);
+  const inProgressTargetRef = useRef<HTMLDivElement | null>(null);
+  const readyForPickupTargetRef = useRef<HTMLDivElement | null>(null);
+
+  const orderPlacedFloatingRef = useRef<HTMLDivElement | null>(null);
+  const inProgressFloatingRef = useRef<HTMLDivElement | null>(null);
+  const readyForPickupFloatingRef = useRef<HTMLDivElement | null>(null);
+
   const [positions, setPositions] = useState([
     { top: 0, left: 0 },
     { top: 0, left: 0 },
@@ -101,13 +107,17 @@ function Track() {
     function updatePositions() {
       if (!order || !minTimeoutElapsed) return;
 
-      const newPositions = targetRefs.current.map((targetRef, index) => {
-        if (targetRef && floatingRefs.current[index]) {
-          const targetRect = targetRef.getBoundingClientRect();
-          const floatingRect =
-            floatingRefs.current[index]?.getBoundingClientRect();
-
-          if (!floatingRect) return { top: 0, left: 0 };
+      const newPositions = [
+        { target: orderPlacedTargetRef, floating: orderPlacedFloatingRef },
+        { target: inProgressTargetRef, floating: inProgressFloatingRef },
+        {
+          target: readyForPickupTargetRef,
+          floating: readyForPickupFloatingRef,
+        },
+      ].map(({ target, floating }) => {
+        if (target.current && floating.current) {
+          const targetRect = target.current.getBoundingClientRect();
+          const floatingRect = floating.current.getBoundingClientRect();
 
           const targetCenterX = targetRect.left + targetRect.width / 2;
           const newLeftPosition = targetCenterX - floatingRect.width / 2;
@@ -186,9 +196,9 @@ function Track() {
     const handleResize = () => {
       const container = containerRef.current;
 
-      const orderPlacedAnchor = targetRefs.current[0];
-      const inProgressAnchor = targetRefs.current[1];
-      const readyForPickupAnchor = targetRefs.current[2];
+      const orderPlacedAnchor = orderPlacedTargetRef.current;
+      const inProgressAnchor = inProgressTargetRef.current;
+      const readyForPickupAnchor = readyForPickupTargetRef.current;
 
       if (
         orderStatus === undefined ||
@@ -325,7 +335,7 @@ function Track() {
 
                     {/* orderPlaced checkpoint w/ animated checkmark */}
                     <div
-                      ref={(el) => (targetRefs.current[0] = el)}
+                      ref={orderPlacedTargetRef}
                       className="absolute left-[11%] top-1 z-10"
                     >
                       <Step
@@ -339,7 +349,7 @@ function Track() {
 
                     {/* inProgress checkpoint w/ animated checkmark */}
                     <div
-                      ref={(el) => (targetRefs.current[1] = el)}
+                      ref={inProgressTargetRef}
                       className="absolute left-[45%] top-1 z-10"
                     >
                       <Step
@@ -355,7 +365,7 @@ function Track() {
 
                     {/* readyForPickup checkpoint w/ animated checkmark */}
                     <div
-                      ref={(el) => (targetRefs.current[2] = el)}
+                      ref={readyForPickupTargetRef}
                       className="absolute left-[80%] top-1 z-10"
                     >
                       <Step
@@ -372,7 +382,7 @@ function Track() {
                 {/* floating checkpoint icons + labels */}
                 <div className="h-11 w-full text-xs">
                   <motion.div
-                    ref={(el) => (floatingRefs.current[0] = el)}
+                    ref={orderPlacedFloatingRef}
                     key={"orderPlacedCheckpointContainer"}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -400,7 +410,7 @@ function Track() {
                   </motion.div>
 
                   <motion.div
-                    ref={(el) => (floatingRefs.current[1] = el)}
+                    ref={inProgressFloatingRef}
                     key={"inProgressCheckpointContainer"}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -428,7 +438,7 @@ function Track() {
                   </motion.div>
 
                   <motion.div
-                    ref={(el) => (floatingRefs.current[2] = el)}
+                    ref={readyForPickupFloatingRef}
                     key={"orderReadyForPickupCheckpointContainer"}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
