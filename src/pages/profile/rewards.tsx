@@ -1043,6 +1043,7 @@ interface RewardSnippet {
   datetimeToPickup: Date;
   earnedRewardsPoints: number;
   spentRewardsPoints: number;
+  expired: boolean;
 }
 
 interface RewardsHistory {
@@ -1223,8 +1224,16 @@ function RewardsHistory({ userId, rewardsPointsEarned }: RewardsHistory) {
                   </p>
 
                   <div className="baseVertFlex !items-end">
-                    <p className="font-semibold text-primary">
-                      + {reward.earnedRewardsPoints} points
+                    <p
+                      className={`${reward.expired ? "text-stone-400" : "font-semibold text-primary"}`}
+                    >
+                      <span>{reward.expired ? "(Expired)" : ""}</span>
+                      <span
+                        className={`${reward.expired ? "ml-2 line-through" : ""}`}
+                      >
+                        {reward.expired ? "" : "+"} {reward.earnedRewardsPoints}{" "}
+                        points
+                      </span>
                     </p>
 
                     {reward.spentRewardsPoints > 0 && (

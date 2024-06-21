@@ -273,7 +273,10 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         const rewards = await prisma.reward.findMany({
           where: {
             userId: payment.metadata.userId,
-            active: true,
+            value: {
+              gt: 0,
+            },
+            expired: false,
             expiresAt: {
               gt: new Date(),
             },
@@ -284,7 +287,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         });
 
         const totalValue = new Decimal(0);
-        const rewardIdsToDeactivate: string[] = [];
+        const zeroPointsRewardIds: string[] = [];
 
         for (const reward of rewards) {
           totalValue.add(reward.value);
@@ -292,7 +295,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
           if (totalValue >= spentPoints) {
             // this reward is the last one to be used up
             if (totalValue === spentPoints) {
-              rewardIdsToDeactivate.push(reward.id);
+              zeroPointsRewardIds.push(reward.id);
             } else {
               // this reward is now partially used up
               const remainingValue = totalValue.sub(spentPoints);
@@ -311,18 +314,18 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
             break;
           }
 
-          rewardIdsToDeactivate.push(reward.id);
+          zeroPointsRewardIds.push(reward.id);
         }
 
-        if (rewardIdsToDeactivate.length > 0) {
+        if (zeroPointsRewardIds.length > 0) {
           await prisma.reward.updateMany({
             where: {
               id: {
-                in: rewardIdsToDeactivate,
+                in: zeroPointsRewardIds,
               },
             },
             data: {
-              active: false,
+              value: 0,
             },
           });
         }
@@ -341,6 +344,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
             data: {
               userId: payment.metadata.userId,
               expiresAt: sixMonthsLater,
+              initValue: earnedPoints.toNumber(),
               value: earnedPoints.toNumber(),
               orderId: order.id,
             },

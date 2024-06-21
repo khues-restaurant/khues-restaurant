@@ -79,6 +79,7 @@ export const userRouter = createTRPCRouter({
         data: {
           userId,
           expiresAt: addMonths(new Date(), 6),
+          initValue: 500,
           value: 500,
         },
       });
@@ -99,6 +100,7 @@ export const userRouter = createTRPCRouter({
           data: {
             userId,
             expiresAt: addMonths(new Date(), 6),
+            initValue: rewardsPointsBeingRedeemed,
             value: rewardsPointsBeingRedeemed,
           },
         });
@@ -386,6 +388,11 @@ export const userRouter = createTRPCRouter({
           datetimeToPickup: true,
           earnedRewardsPoints: true,
           spentRewardsPoints: true,
+          reward: {
+            select: {
+              expired: true,
+            },
+          },
         },
         orderBy: {
           datetimeToPickup: sortDirection,
@@ -394,15 +401,52 @@ export const userRouter = createTRPCRouter({
         cursor: cursor ? { id: cursor } : undefined,
       });
       let nextCursor: typeof cursor | undefined = undefined;
-      if (rewards.length > 25) {
-        const nextReward = rewards.pop();
+
+      const rewardsWithExpiredField = rewards.map((reward) => ({
+        id: reward.id,
+        datetimeToPickup: reward.datetimeToPickup,
+        earnedRewardsPoints: reward.earnedRewardsPoints,
+        spentRewardsPoints: reward.spentRewardsPoints,
+        expired: reward.reward?.expired ?? true, // playing it safe, if related reward isn't found, then it's labled as expired
+      }));
+
+      const initialReward = await ctx.prisma.reward.findFirst({
+        where: {
+          userId,
+        },
+        select: {
+          id: true,
+          createdAt: true,
+          initValue: true, // init since the regular value can/will change
+          expired: true,
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      });
+
+      // TODO: verify that adding the initial sign up reward doesn't mess with the cursor
+      // later on
+      if (initialReward) {
+        rewardsWithExpiredField.push({
+          id: initialReward.id,
+          datetimeToPickup: initialReward.createdAt,
+          earnedRewardsPoints: initialReward.initValue,
+          spentRewardsPoints: 0,
+          expired: initialReward.expired ?? true,
+        });
+      }
+
+      if (rewardsWithExpiredField.length > 25) {
+        const nextReward = rewardsWithExpiredField.pop();
 
         if (nextReward) {
           nextCursor = nextReward.id;
         }
       }
+
       return {
-        rewards,
+        rewards: rewardsWithExpiredField,
         nextCursor,
       };
     }),

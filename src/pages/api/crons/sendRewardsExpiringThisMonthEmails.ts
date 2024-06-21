@@ -35,7 +35,10 @@ export default async function handler(
       const rewardsExpiringThisMonth = await prisma.reward.findMany({
         where: {
           userId: user.userId,
-          active: true, // a bit redundant but it's fine
+          value: {
+            gt: 0,
+          },
+          expired: false,
           expiresAt: {
             gte: new Date(),
             lt: addMonths(new Date(), 1),

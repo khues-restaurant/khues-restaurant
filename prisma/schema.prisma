@@ -274,8 +274,8 @@ model Order {
     reviews Review[] // these are just the direct reviews on the order, so that the dashboard can show the user's order
     // alongside their feedback. This isn't to be confused with the to be made "MenuItemReview" model
 
-    reward          Reward[]
-    orderPrintQueue OrderPrintQueue[]
+    reward          Reward?
+    orderPrintQueue OrderPrintQueue[] // maybe this should be a one-to-one relationship, but I think it's fine as is. Playing it safe for now to avoid any issues this might bring concerning reprinting order tickets
 }
 
 model OrderPrintQueue {
@@ -286,19 +286,23 @@ model OrderPrintQueue {
     orderId String
 }
 
+// Only used for point rewards. Birthday rewards are handled on a more one-off basis
+// on the User model
 model Reward {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
     expiresAt DateTime
 
-    active  Boolean @default(true)
-    expired Boolean @default(false)
-    value   Int
+    expired Boolean @default(false) // used to narrow down why value might be 0
+    // esp. for Point history section on user's rewards page
+
+    initValue Int // kept for historical purposes
+    value     Int // is 0 if expired/has been fully redeemed
 
     partiallyRedeemed Boolean @default(false)
 
     order   Order?  @relation(fields: [orderId], references: [id])
-    orderId String?
+    orderId String? @unique
 
     user   User   @relation(fields: [userId], references: [userId])
     userId String

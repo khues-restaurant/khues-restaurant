@@ -11,12 +11,16 @@ export default async function handler(
   try {
     await prisma.reward.updateMany({
       where: {
+        value: {
+          gt: 0,
+        },
+        expired: false,
         expiresAt: {
           lte: new Date(),
         },
       },
       data: {
-        expired: true,
+        value: 0,
       },
     });
     return response.status(200).json({ completed: true });
