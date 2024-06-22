@@ -67,16 +67,11 @@ function RewardsDialogContent({
     enabled: Boolean(userId && isSignedIn),
   });
 
-  const { menuItems, orderDetails, viewportLabel } = useMainStore((state) => ({
-    menuItems: state.menuItems,
+  const { rewards, orderDetails, viewportLabel } = useMainStore((state) => ({
+    rewards: state.rewards,
     orderDetails: state.orderDetails,
     viewportLabel: state.viewportLabel,
   }));
-
-  const { data: rewards } = api.menuCategory.getRewardsCategories.useQuery();
-
-  const { data: activeDiscounts } = api.discount.getAll.useQuery();
-  // const { data: activeRewards } = api.discount.getUserRewards.useQuery(userId);
 
   const [rewardsPointsEarned, setRewardsPointsEarned] = useState(0);
 
@@ -316,9 +311,9 @@ function RewardsDialogContent({
           <SideAccentSwirls className="h-4 fill-primary" />
         </div>
 
-        <div className="baseVertFlex relative !justify-start overflow-y-auto border-t pr-4 pt-2 text-primary tablet:h-[500px]">
+        <div className="baseVertFlex relative !justify-start overflow-y-auto border-y pr-4 pt-2 text-primary tablet:h-[500px]">
           {/* .map() of Your rewards */}
-          <div className="baseVertFlex w-full gap-8 ">
+          <div className="baseVertFlex w-full gap-8">
             {/* Birthday reward options */}
             {/* {true && (
 
@@ -330,7 +325,7 @@ function RewardsDialogContent({
               {rewards.rewardMenuCategories.map((category) => (
                 <div
                   key={category.id}
-                  className="baseVertFlex w-full !items-start gap-4"
+                  className="baseVertFlex w-full !items-start"
                 >
                   <p className="text-lg font-semibold underline underline-offset-2">
                     {category.name}
@@ -353,7 +348,7 @@ function RewardsDialogContent({
                           />
 
                           {index !== category.menuItems.length - 1 && (
-                            <Separator className="h-[1px] w-11/12" />
+                            <Separator className="h-[1px] w-[96%]" />
                           )}
                         </Fragment>
                       ))}
@@ -363,6 +358,7 @@ function RewardsDialogContent({
             </div>
           </div>
         </div>
+
         <p className="text-sm italic text-stone-400 desktop:mt-2">
           * Only one reward is able to be redeemed per order.
         </p>
@@ -396,6 +392,8 @@ function RewardMenuItem({
   const { toast } = useToast();
 
   function isDisabled() {
+    if (!menuItem.available) return true;
+
     if (currentlySelectedRewardId === null) return false;
 
     if (
@@ -411,8 +409,8 @@ function RewardMenuItem({
   }
 
   return (
-    <div className="relative w-full">
-      <div className="baseFlex size-full !items-start gap-4 rounded-md p-4">
+    <div className="relative w-[400px]">
+      <div className="baseFlex size-full !items-start gap-4 rounded-md px-2 py-4">
         <Image
           src={"/menuItems/sampleImage.webp"}
           alt={menuItem.name}
@@ -421,110 +419,118 @@ function RewardMenuItem({
           className="rounded-md drop-shadow-md tablet:drop-shadow-lg"
         />
 
-        <div className="baseVertFlex size-full !items-start !justify-between">
-          <div className="baseVertFlex !items-start gap-2">
-            <p className="text-lg font-medium underline underline-offset-2">
-              {menuItem.name}
-            </p>
-
-            {/* Point cost for item */}
-            {!forBirthdayReward && (
-              <p className="max-w-48 text-wrap text-left text-stone-400">
-                {new Decimal(menuItem.price)
-                  .mul(2) // item price (in cents) multiplied by 2
-                  .toNumber()}{" "}
-                points
+        <div className="baseVertFlex w-full !items-start">
+          <div className="baseVertFlex size-full !items-start !justify-between">
+            <div className="baseVertFlex !items-start gap-1">
+              <p className="font-medium underline underline-offset-2">
+                {menuItem.name}
               </p>
-            )}
 
+              {/* Point cost for item */}
+              {!forBirthdayReward && (
+                <p className="max-w-48 text-wrap text-left text-sm text-stone-400">
+                  {new Decimal(menuItem.price)
+                    .mul(2) // item price (in cents) multiplied by 2
+                    .toNumber()}{" "}
+                  points
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="baseFlex w-full !justify-between">
             {!menuItem.available && (
               <div className="rounded-md bg-stone-100 px-2 py-0.5 text-stone-400">
                 <p className="text-xs italic">Currently unavailable</p>
               </div>
             )}
-          </div>
-        </div>
-        <Button
-          variant={"outline"}
-          disabled={isDisabled()}
-          className={`self-end`}
-          onClick={() => {
-            if (currentlySelectedRewardId === menuItem.id) {
-              const { items } = orderDetails;
 
-              const updatedItems = [];
+            <Button
+              variant={"outline"}
+              disabled={isDisabled()}
+              className="ml-auto"
+              onClick={() => {
+                if (currentlySelectedRewardId === menuItem.id) {
+                  const { items } = orderDetails;
 
-              for (const item of items) {
-                // Check if this item should be excluded
-                if (
-                  item.itemId === menuItem.id &&
-                  (item.birthdayReward || item.pointReward)
-                ) {
-                  continue;
+                  const updatedItems = [];
+
+                  for (const item of items) {
+                    // Check if this item should be excluded
+                    if (
+                      item.itemId === menuItem.id &&
+                      (item.birthdayReward || item.pointReward)
+                    ) {
+                      continue;
+                    }
+
+                    // If the item doesn't match our criteria for removal, add it to the updatedItems array
+                    updatedItems.push(item);
+                  }
+
+                  updateOrder({
+                    newOrderDetails: {
+                      ...orderDetails,
+                      items: updatedItems,
+                    },
+                  });
+
+                  return;
                 }
 
-                // If the item doesn't match our criteria for removal, add it to the updatedItems array
-                updatedItems.push(item);
-              }
+                const rewardItemPointsCost = new Decimal(menuItem.price)
+                  .mul(2) // item price (in cents) multiplied by 2
+                  .toNumber();
 
-              updateOrder({
-                newOrderDetails: {
-                  ...orderDetails,
-                  items: updatedItems,
-                },
-              });
+                if (userAvailablePoints < rewardItemPointsCost) {
+                  toast({
+                    variant: "neutral",
+                    description: `You don't have enough points to redeem this item.`,
+                  });
 
-              return;
-            }
+                  return;
+                }
 
-            const rewardItemPointsCost = new Decimal(menuItem.price)
-              .mul(2) // item price (in cents) multiplied by 2
-              .toNumber();
-
-            if (userAvailablePoints < rewardItemPointsCost) {
-              toast({
-                variant: "neutral",
-                description: `You don't have enough points to redeem this item.`,
-              });
-
-              return;
-            }
-
-            updateOrder({
-              newOrderDetails: {
-                ...orderDetails,
-                items: [
-                  ...orderDetails.items,
-                  {
-                    id:
-                      orderDetails.items.length === 0
-                        ? 0
-                        : orderDetails.items.at(-1)!.id + 1,
-                    itemId: menuItem.id,
-                    name: menuItem.name,
-                    customizations: getDefaultCustomizationChoices(menuItem),
-                    specialInstructions: "",
-                    includeDietaryRestrictions: false,
-                    quantity: 1,
-                    price: menuItem.price,
-                    discountId: null,
-                    isChefsChoice: menuItem.isChefsChoice,
-                    isAlcoholic: menuItem.isAlcoholic,
-                    isVegetarian: menuItem.isVegetarian,
-                    isVegan: menuItem.isVegan,
-                    isGlutenFree: menuItem.isGlutenFree,
-                    showUndercookedOrRawDisclaimer:
-                      menuItem.showUndercookedOrRawDisclaimer,
-                    birthdayReward: forBirthdayReward,
-                    pointReward: !forBirthdayReward,
+                updateOrder({
+                  newOrderDetails: {
+                    ...orderDetails,
+                    items: [
+                      ...orderDetails.items,
+                      {
+                        id:
+                          orderDetails.items.length === 0
+                            ? 0
+                            : orderDetails.items.at(-1)!.id + 1,
+                        itemId: menuItem.id,
+                        name: menuItem.name,
+                        customizations:
+                          getDefaultCustomizationChoices(menuItem),
+                        specialInstructions: "",
+                        includeDietaryRestrictions: false,
+                        quantity: 1,
+                        price: menuItem.price,
+                        discountId: null,
+                        isChefsChoice: menuItem.isChefsChoice,
+                        isAlcoholic: menuItem.isAlcoholic,
+                        isVegetarian: menuItem.isVegetarian,
+                        isVegan: menuItem.isVegan,
+                        isGlutenFree: menuItem.isGlutenFree,
+                        showUndercookedOrRawDisclaimer:
+                          menuItem.showUndercookedOrRawDisclaimer,
+                        birthdayReward: forBirthdayReward,
+                        pointReward: !forBirthdayReward,
+                      },
+                    ],
                   },
-                ],
-              },
-            });
-          }}
-        >
-          {currentlySelectedRewardId === menuItem.id ? "Unselect" : "Select"}
-        </Button>
+                });
+              }}
+            >
+              {currentlySelectedRewardId === menuItem.id
+                ? "Unselect"
+                : "Select"}
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

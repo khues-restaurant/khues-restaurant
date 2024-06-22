@@ -53,14 +53,8 @@ function Rewards() {
     enabled: Boolean(userId && isSignedIn),
   });
 
-  const { data: rewards } = api.menuCategory.getRewardsCategories.useQuery();
-
-  const { data: activeDiscounts } = api.discount.getAll.useQuery();
-
-  // const { data: activeRewards } = api.discount.getUserRewards.useQuery(userId);
-
-  const { menuItems, orderDetails, viewportLabel } = useMainStore((state) => ({
-    menuItems: state.menuItems,
+  const { rewards, orderDetails, viewportLabel } = useMainStore((state) => ({
+    rewards: state.rewards,
     orderDetails: state.orderDetails,
     viewportLabel: state.viewportLabel,
   }));
@@ -145,15 +139,6 @@ function Rewards() {
       });
     }, 10);
   }, []);
-
-  // need to extract the categories/items from menuItems,
-  // and make a separate component below for rendering each menu item w/ it's "Select/Unselect" button + content
-
-  // TODO: when changing to mobile-friendly bottom navigation for /profile links,
-  // need the <Sticky> container for the header. Probably just avoid on tablet+ though since you would
-  // have to make the actual content container scrollable, not the page as it is now.
-  // - will first try to just use style prop to conditionally have flex direction be column or row
-  // - then use layout prop from framer motion to animate the transition
 
   return (
     <motion.div
@@ -652,7 +637,7 @@ function Rewards() {
             </div>
 
             {/* .map() of Your rewards */}
-            <div className="baseVertFlex max-w-7xl gap-8 px-4 text-primary tablet:mt-4 tablet:gap-16">
+            <div className="baseVertFlex max-w-7xl gap-8 px-4 text-primary tablet:mt-4 tablet:gap-16 tablet:px-8">
               {/* Birthday reward options */}
               {isElegibleForBirthdayReward && (
                 <div className="baseVertFlex mb-8 w-full gap-8">
@@ -709,19 +694,19 @@ function Rewards() {
               </div>
 
               {/* Regular reward options */}
-              <div className="grid w-full grid-cols-1 gap-4 text-primary lg:grid-cols-2 lg:!place-items-start 2xl:grid-cols-3">
+              <div className="grid w-full grid-cols-1 gap-4 text-primary lg:grid-cols-2 lg:!place-items-start lg:gap-8 2xl:grid-cols-3">
                 {/* Categories */}
                 {rewards.rewardMenuCategories.map((category) => (
                   <div
                     key={category.id}
-                    className="baseVertFlex w-full !items-start gap-4"
+                    className="baseVertFlex w-full !items-start gap-2"
                   >
                     <p className="text-lg font-semibold underline underline-offset-2">
                       {category.name}
                     </p>
 
                     {/* Items */}
-                    <div className="baseVertFlex w-full">
+                    <div className="baseVertFlex w-full gap-2">
                       {category.menuItems
                         .sort((a, b) => a.price - b.price)
                         .map((item, index) => (
@@ -737,7 +722,7 @@ function Rewards() {
                               forBirthdayReward={false}
                             />
                             {index !== category.menuItems.length - 1 && (
-                              <Separator className="h-[1px] w-11/12" />
+                              <Separator className="h-[1px] w-[95%]" />
                             )}
                           </Fragment>
                         ))}
@@ -887,6 +872,8 @@ function RewardMenuItem({
   const { toast, dismiss: dismissToasts } = useToast();
 
   function isDisabled() {
+    if (!menuItem.available) return true;
+
     if (currentlySelectedRewardId === null) return false;
 
     if (
@@ -903,7 +890,7 @@ function RewardMenuItem({
 
   return (
     <div className="relative w-full text-primary sm:max-w-96">
-      <div className="baseFlex relative size-full !items-start gap-4 rounded-md p-4">
+      <div className="baseFlex relative size-full !items-start gap-4 rounded-md px-2 py-4">
         <Image
           src={sampleImage}
           alt={menuItem.name}
@@ -911,128 +898,135 @@ function RewardMenuItem({
           className="!relative !size-16 rounded-md drop-shadow-md tablet:!size-24 tablet:drop-shadow-lg"
         />
 
-        <div className="baseVertFlex size-full !items-start !justify-between">
-          <div className="baseVertFlex !items-start gap-2">
-            <p className="text-lg font-medium underline underline-offset-2">
-              {menuItem.name}
-            </p>
-
-            {/* Point cost for item */}
-            {forBirthdayReward ? (
-              <p className="max-w-48 text-wrap text-left text-stone-400">
-                Free
+        <div className="baseVertFlex w-full !items-start">
+          <div className="baseVertFlex size-full !items-start !justify-between">
+            <div className="baseVertFlex !items-start gap-1">
+              <p className="text-lg font-medium underline underline-offset-2">
+                {menuItem.name}
               </p>
-            ) : (
-              <p className="max-w-48 text-wrap text-left text-stone-400">
-                {new Decimal(menuItem.price)
-                  .mul(2) // item price (in cents) multiplied by 2
-                  .toNumber()}{" "}
-                points
-              </p>
-            )}
 
+              {/* Point cost for item */}
+              {forBirthdayReward ? (
+                <p className="max-w-48 text-wrap text-left text-stone-400">
+                  Free
+                </p>
+              ) : (
+                <p className="max-w-48 text-wrap text-left text-stone-400">
+                  {new Decimal(menuItem.price)
+                    .mul(2) // item price (in cents) multiplied by 2
+                    .toNumber()}{" "}
+                  points
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="baseFlex w-full !justify-between">
             {!menuItem.available && (
               <div className="rounded-md bg-stone-100 px-2 py-0.5 text-stone-400">
                 <p className="text-xs italic">Currently unavailable</p>
               </div>
             )}
-          </div>
-        </div>
 
-        <Button
-          variant="outline"
-          disabled={isDisabled()}
-          className={`self-end`}
-          onClick={async () => {
-            if (currentlySelectedRewardId === menuItem.id) {
-              const { items } = orderDetails;
+            <Button
+              variant="outline"
+              disabled={isDisabled()}
+              className="ml-auto"
+              onClick={async () => {
+                if (currentlySelectedRewardId === menuItem.id) {
+                  const { items } = orderDetails;
 
-              const updatedItems = [];
+                  const updatedItems = [];
 
-              for (const item of items) {
-                // Check if this item should be excluded
-                if (
-                  item.itemId === menuItem.id &&
-                  (item.birthdayReward || item.pointReward)
-                ) {
-                  continue;
+                  for (const item of items) {
+                    // Check if this item should be excluded
+                    if (
+                      item.itemId === menuItem.id &&
+                      (item.birthdayReward || item.pointReward)
+                    ) {
+                      continue;
+                    }
+
+                    // If the item doesn't match our criteria for removal, add it to the updatedItems array
+                    updatedItems.push(item);
+                  }
+
+                  dismissToasts();
+
+                  updateOrder({
+                    newOrderDetails: {
+                      ...orderDetails,
+                      items: updatedItems,
+                    },
+                  });
+
+                  return;
                 }
 
-                // If the item doesn't match our criteria for removal, add it to the updatedItems array
-                updatedItems.push(item);
-              }
+                const rewardItemPointsCost = new Decimal(menuItem.price)
+                  .mul(2) // item price (in cents) multiplied by 2
+                  .toNumber();
 
-              dismissToasts();
+                if (
+                  !forBirthdayReward &&
+                  userAvailablePoints < rewardItemPointsCost
+                ) {
+                  toast({
+                    variant: "neutral",
+                    description: `You don't have enough points to redeem this item.`,
+                  });
 
-              updateOrder({
-                newOrderDetails: {
-                  ...orderDetails,
-                  items: updatedItems,
-                },
-              });
+                  return;
+                }
 
-              return;
-            }
-
-            const rewardItemPointsCost = new Decimal(menuItem.price)
-              .mul(2) // item price (in cents) multiplied by 2
-              .toNumber();
-
-            if (
-              !forBirthdayReward &&
-              userAvailablePoints < rewardItemPointsCost
-            ) {
-              toast({
-                variant: "neutral",
-                description: `You don't have enough points to redeem this item.`,
-              });
-
-              return;
-            }
-
-            updateOrder({
-              newOrderDetails: {
-                ...orderDetails,
-                items: [
-                  ...orderDetails.items,
-                  {
-                    id:
-                      orderDetails.items.length === 0
-                        ? 0
-                        : orderDetails.items.at(-1)!.id + 1,
-                    itemId: menuItem.id,
-                    name: menuItem.name,
-                    customizations: getDefaultCustomizationChoices(menuItem),
-                    specialInstructions: "",
-                    includeDietaryRestrictions: false,
-                    quantity: 1,
-                    price: menuItem.price,
-                    discountId: null,
-                    isChefsChoice: menuItem.isChefsChoice,
-                    isAlcoholic: menuItem.isAlcoholic,
-                    isVegetarian: menuItem.isVegetarian,
-                    isVegan: menuItem.isVegan,
-                    isGlutenFree: menuItem.isGlutenFree,
-                    showUndercookedOrRawDisclaimer:
-                      menuItem.showUndercookedOrRawDisclaimer,
-                    birthdayReward: forBirthdayReward,
-                    pointReward: !forBirthdayReward,
+                updateOrder({
+                  newOrderDetails: {
+                    ...orderDetails,
+                    items: [
+                      ...orderDetails.items,
+                      {
+                        id:
+                          orderDetails.items.length === 0
+                            ? 0
+                            : orderDetails.items.at(-1)!.id + 1,
+                        itemId: menuItem.id,
+                        name: menuItem.name,
+                        customizations:
+                          getDefaultCustomizationChoices(menuItem),
+                        specialInstructions: "",
+                        includeDietaryRestrictions: false,
+                        quantity: 1,
+                        price: menuItem.price,
+                        discountId: null,
+                        isChefsChoice: menuItem.isChefsChoice,
+                        isAlcoholic: menuItem.isAlcoholic,
+                        isVegetarian: menuItem.isVegetarian,
+                        isVegan: menuItem.isVegan,
+                        isGlutenFree: menuItem.isGlutenFree,
+                        showUndercookedOrRawDisclaimer:
+                          menuItem.showUndercookedOrRawDisclaimer,
+                        birthdayReward: forBirthdayReward,
+                        pointReward: !forBirthdayReward,
+                      },
+                    ],
                   },
-                ],
-              },
-            });
+                });
 
-            const pluralize = (await import("pluralize")).default;
-            const isPlural = pluralize.isPlural(menuItem.name);
-            const contextAwarePlural = isPlural ? "were" : "was";
+                const pluralize = (await import("pluralize")).default;
+                const isPlural = pluralize.isPlural(menuItem.name);
+                const contextAwarePlural = isPlural ? "were" : "was";
 
-            toast({
-              description: `${menuItem.name} ${contextAwarePlural} added to your order.`,
-            });
-          }}
-        >
-          {currentlySelectedRewardId === menuItem.id ? "Unselect" : "Select"}
-        </Button>
+                toast({
+                  description: `${menuItem.name} ${contextAwarePlural} added to your order.`,
+                });
+              }}
+            >
+              {currentlySelectedRewardId === menuItem.id
+                ? "Unselect"
+                : "Select"}
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

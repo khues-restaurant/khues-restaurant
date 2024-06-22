@@ -164,6 +164,12 @@ export const menuCategoryRouter = createTRPCRouter({
     return {
       rewardMenuCategories,
       birthdayMenuCategories,
-    };
+    } as RewardCategoriesResponse;
   }),
 });
+
+// just for providing type for "rewards" variable in zustand store
+export type RewardCategoriesResponse = {
+  rewardMenuCategories: FilteredMenuCategory[];
+  birthdayMenuCategories: FilteredMenuCategory[];
+};

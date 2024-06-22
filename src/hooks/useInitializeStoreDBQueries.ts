@@ -12,6 +12,7 @@ function useInitializeStoreDBQueries() {
     setMenuItems,
     customizationChoices,
     setCustomizationChoices,
+    setRewards,
     discounts,
     setDiscounts,
     setUserFavoriteItemIds,
@@ -23,6 +24,7 @@ function useInitializeStoreDBQueries() {
     setMenuItems: state.setMenuItems,
     customizationChoices: state.customizationChoices,
     setCustomizationChoices: state.setCustomizationChoices,
+    setRewards: state.setRewards,
     discounts: state.discounts,
     setDiscounts: state.setDiscounts,
     setUserFavoriteItemIds: state.setUserFavoriteItemIds,
@@ -40,6 +42,9 @@ function useInitializeStoreDBQueries() {
 
   const { data: databaseCustomizationChoices } =
     api.customizationChoice.getAll.useQuery();
+
+  const { data: databaseRewards } =
+    api.menuCategory.getRewardsCategories.useQuery();
 
   const { data: databaseDiscounts } = api.discount.getAll.useQuery();
 
@@ -76,12 +81,20 @@ function useInitializeStoreDBQueries() {
   }, [menuCategories, setMenuItems]);
 
   useEffect(() => {
+    if (!databaseRewards) return;
+
+    setRewards(databaseRewards);
+  }, [databaseRewards, setRewards]);
+
+  useEffect(() => {
     if (!userFavoriteItemIds) return;
 
     setUserFavoriteItemIds(userFavoriteItemIds);
   }, [userFavoriteItemIds, setUserFavoriteItemIds]);
 
   useEffect(() => {
+    // TODO: is there any good reason why we are gating this on whether
+    // the store value is empty or not?
     if (
       (Object.keys(customizationChoices).length !== 0 &&
         Object.keys(discounts).length !== 0) ||
@@ -91,7 +104,6 @@ function useInitializeStoreDBQueries() {
       return;
 
     setCustomizationChoices(databaseCustomizationChoices);
-
     setDiscounts(databaseDiscounts);
   }, [
     customizationChoices,

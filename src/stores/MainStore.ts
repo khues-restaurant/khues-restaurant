@@ -3,7 +3,10 @@ import { createWithEqualityFn } from "zustand/traditional";
 import { shallow } from "zustand/shallow";
 import { type Discount } from "@prisma/client";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
-import { type FullMenuItem } from "~/server/api/routers/menuCategory";
+import {
+  type RewardCategoriesResponse,
+  type FullMenuItem,
+} from "~/server/api/routers/menuCategory";
 import { z } from "zod";
 import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
 
@@ -121,6 +124,10 @@ function resetStore() {
     },
     menuItems: {},
     customizationChoices: {},
+    rewards: {
+      rewardMenuCategories: [],
+      birthdayMenuCategories: [],
+    },
     discounts: {},
     userFavoriteItemIds: [],
     itemNamesRemovedFromCart: [],
@@ -153,6 +160,9 @@ interface StoreState {
   setCustomizationChoices: (
     customizationChoices: Record<string, CustomizationChoiceAndCategory>,
   ) => void;
+
+  rewards: RewardCategoriesResponse;
+  setRewards: (rewards: RewardCategoriesResponse) => void;
 
   discounts: Record<string, Discount>;
   setDiscounts: (discounts: Record<string, Discount>) => void;
@@ -243,6 +253,14 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
         customizationChoices: Record<string, CustomizationChoiceAndCategory>,
       ) => {
         set({ customizationChoices });
+      },
+
+      rewards: {
+        rewardMenuCategories: [],
+        birthdayMenuCategories: [],
+      },
+      setRewards: (rewards: RewardCategoriesResponse) => {
+        set({ rewards });
       },
 
       discounts: {},
