@@ -395,9 +395,7 @@ function Rewards() {
       </div>
 
       {/* Intro */}
-      {/* may need an xs viewport as well at like ~400 or 425px width so it doesn't stay scrunched
-      for so long. Also would be used on the member benefit cards too */}
-      <p className="max-w-72 text-sm leading-7 text-primary sm:max-w-xl sm:text-base md:max-w-2xl tablet:font-medium tablet:leading-8">
+      <p className="max-w-72 text-sm leading-7 text-primary xs:max-w-96 sm:max-w-xl sm:text-base md:max-w-2xl md:font-medium md:leading-8">
         Welcome to Khue&apos;s Rewards — where every bite takes you closer to
         delightful rewards! As a token of our appreciation, we&apos;ve crafted
         an exclusive program designed to celebrate our loyal customers. Indulge
@@ -558,7 +556,7 @@ function Rewards() {
         <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-gold/80" />
         <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-gold/80" />
 
-        <p className="mt-2 text-center">
+        <p className="mt-4 text-center text-sm sm:mt-2 sm:text-base">
           Joining Khue&apos;s Rewards is easy! Simply create an account with us
           and start earning points with every order. Plus, you&apos;ll receive
           exclusive offers and surprises along the way.
