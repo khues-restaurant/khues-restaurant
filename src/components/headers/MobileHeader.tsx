@@ -407,7 +407,7 @@ function MobileHeader() {
                                 <div className="baseVertFlex w-full !items-start gap-4">
                                   <div className="baseVertFlex w-full !items-start gap-2">
                                     <div className="baseFlex w-full !justify-start gap-2">
-                                      <CiCalendarDate className="size-6" />
+                                      <CiCalendarDate className="size-6 stroke-[0.25px]" />
                                       <p className="text-lg font-medium">
                                         Our holiday hours
                                       </p>
