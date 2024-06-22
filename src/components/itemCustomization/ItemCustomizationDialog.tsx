@@ -394,7 +394,7 @@ function ItemCustomizerDialogContent({
                   </p>
 
                   <p className="relative left-0 top-0 gap-2 text-sm italic text-stone-400">
-                    *No price altering substitutions/additions allowed.
+                    * No price altering substitutions/additions are allowed.
                   </p>
                 </div>
               </AccordionContent>
@@ -649,7 +649,10 @@ function CustomizationOption({
   return (
     <div
       key={choice.id}
-      className={`baseFlex relative min-w-96 !justify-start gap-4 rounded-md border-2 p-4 transition-all tablet:min-w-80 ${(isHovered || isSelected) && choice.isAvailable ? "border-primary" : "border-stone-300"}
+      style={{
+        order: choice.listOrder,
+      }}
+      className={`baseFlex relative w-full min-w-96 !justify-start gap-4 rounded-md border-2 p-4 transition-all tablet:min-w-80 ${(isHovered || isSelected) && choice.isAvailable ? "border-primary" : "border-stone-300"}
       ${choice.isAvailable ? "cursor-pointer" : ""}
       `}
       onMouseEnter={() => setIsHovered(true)}
@@ -679,14 +682,20 @@ function CustomizationOption({
         disabled={!choice.isAvailable}
       />
       <div
-        className={`baseVertFlex size-full gap-2
+        className={`baseVertFlex size-full gap-1
         ${!choice.isAvailable ? "opacity-55" : ""}
       `}
       >
         <Label htmlFor={choice.id} className="self-start">
           {choice.name}
         </Label>
-        <p className="self-start text-stone-400">{choice.description}</p>
+
+        {/* conditional pr-12 to provide room for the conditional price */}
+        <p
+          className={`${!isSelected && relativePrice !== 0 ? "pr-12" : ""} w-64 self-start text-sm text-stone-400`}
+        >
+          {choice.description}
+        </p>
 
         {!choice.isAvailable && (
           <div className="absolute right-4 top-2 rounded-md bg-stone-200 px-2 py-0.5 text-stone-600">
@@ -696,7 +705,7 @@ function CustomizationOption({
 
         <div className="absolute bottom-2 right-4">
           <AnimatePresence>
-            {!isSelected && (
+            {!isSelected && relativePrice !== 0 && (
               <AnimatedPrice
                 price={formatPrice(relativePrice)}
                 excludeAnimatePresence={true}
