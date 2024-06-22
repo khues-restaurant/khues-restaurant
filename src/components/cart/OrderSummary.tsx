@@ -60,7 +60,7 @@ function OrderSummary({ order }: OrderSummary) {
                 alt={item.name}
                 width={48}
                 height={48}
-                className="rounded-md drop-shadow-md"
+                className="!size-12 rounded-md drop-shadow-md"
               />
 
               <div className="baseFlex w-full !items-start !justify-between">
