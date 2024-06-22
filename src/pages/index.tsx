@@ -291,12 +291,12 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                   className="baseFlex mt-4 gap-2 !px-4 shadow-md"
                 >
                   <SideAccentSwirls
-                    delay={1.75}
+                    delay={1.6}
                     className="h-[14px] scale-x-[-1] fill-offwhite"
                   />
                   Order now
                   <SideAccentSwirls
-                    delay={1.75}
+                    delay={1.6}
                     className="h-[14px] fill-offwhite"
                   />
                 </Link>
@@ -442,12 +442,12 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                     className="baseFlex mt-6 gap-2 !px-4 !py-6 !text-lg shadow-md "
                   >
                     <SideAccentSwirls
-                      delay={1.75}
+                      delay={1.6}
                       className="h-4 scale-x-[-1] fill-offwhite"
                     />
                     Order now
                     <SideAccentSwirls
-                      delay={1.75}
+                      delay={1.6}
                       className="h-4 fill-offwhite"
                     />
                   </Link>
