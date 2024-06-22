@@ -495,7 +495,7 @@ function CartDrawer({
         from-stone-200 to-stone-300/80 px-6 py-4 shadow-sm"
       >
         <div className="absolute inset-0 size-full overflow-hidden rounded-md">
-          <StaticLotus className="absolute -bottom-10 -right-10 size-32 rotate-[-45deg] fill-primary/50" />
+          <StaticLotus className="absolute bottom-[-41px] right-[-41px] size-32 rotate-[-45deg] fill-primary/50" />
         </div>
 
         <span className="text-sm">
