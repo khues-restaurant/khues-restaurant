@@ -524,7 +524,6 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
               },
             },
             loop: true,
-            startIndex: 1,
           }}
           style={{
             overflow: "hidden",
