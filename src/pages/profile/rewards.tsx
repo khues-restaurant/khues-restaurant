@@ -901,7 +901,7 @@ function RewardMenuItem({
         <div className="baseVertFlex w-full !items-start">
           <div className="baseVertFlex size-full !items-start !justify-between">
             <div className="baseVertFlex !items-start gap-1">
-              <p className="text-lg font-medium underline underline-offset-2">
+              <p className="font-medium underline underline-offset-2 tablet:text-lg">
                 {menuItem.name}
               </p>
 
@@ -911,7 +911,7 @@ function RewardMenuItem({
                   Free
                 </p>
               ) : (
-                <p className="max-w-48 text-wrap text-left text-stone-400">
+                <p className="max-w-48 text-wrap text-left text-sm text-stone-400 tablet:text-base">
                   {new Decimal(menuItem.price)
                     .mul(2) // item price (in cents) multiplied by 2
                     .toNumber()}{" "}
