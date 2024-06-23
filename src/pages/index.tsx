@@ -1122,10 +1122,8 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                       slidesToScroll: 4,
                     },
                   },
-                  // dragFree: true,
-                  // skipSnaps: true, play around with this
                 }}
-                className="baseFlex w-full rounded-md border bg-gradient-to-br from-offwhite to-primary/10 shadow-md"
+                className="baseFlex w-full rounded-md border bg-gradient-to-br from-offwhite to-primary/10 pt-6 shadow-md"
               >
                 <CarouselContent>
                   {ourFavoriteMenuItems?.map((menuItem) => (
