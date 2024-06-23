@@ -86,7 +86,7 @@ function Media() {
                 src={kare11InTheKitchen}
                 alt="TODO"
                 sizes="(max-width: 1000px) 400px, 320px"
-                className="!relative rounded-t-md bg-offwhite transition-all hover:brightness-90 active:brightness-75"
+                className="!relative rounded-t-md bg-offwhite"
               />
             </a>
           </Button>
@@ -132,7 +132,7 @@ function Media() {
                 src={kare11MothersDay}
                 alt="TODO"
                 sizes="(max-width: 1000px) 400px, 320px"
-                className="!relative rounded-t-md bg-offwhite transition-all hover:brightness-90 active:brightness-75"
+                className="!relative rounded-t-md bg-offwhite"
               />
             </a>
           </Button>
@@ -179,7 +179,7 @@ function Media() {
                 src={starTribune}
                 alt="TODO"
                 sizes="(max-width: 1000px) 400px, 320px"
-                className="!relative rounded-t-md bg-offwhite transition-all hover:brightness-90 active:brightness-75"
+                className="!relative rounded-t-md bg-offwhite"
               />
             </a>
           </Button>
@@ -229,7 +229,7 @@ function Media() {
                 src={mpr}
                 alt="TODO"
                 sizes="(max-width: 1000px) 400px, 320px"
-                className="!relative rounded-t-md bg-offwhite transition-all hover:brightness-90 active:brightness-75"
+                className="!relative rounded-t-md bg-offwhite"
               />
             </a>
           </Button>
@@ -309,7 +309,7 @@ function Media() {
                 src={kare11InTheKitchen}
                 alt="TODO"
                 sizes="(max-width: 1000px) 400px, 320px"
-                className="!relative rounded-r-md bg-offwhite transition-all hover:brightness-90 active:brightness-75"
+                className="!relative rounded-r-md bg-offwhite"
               />
             </a>
           </Button>
@@ -356,7 +356,7 @@ function Media() {
                 src={kare11MothersDay}
                 alt="TODO"
                 sizes="(max-width: 1000px) 400px, 320px"
-                className="!relative h-full rounded-r-md bg-offwhite transition-all hover:brightness-90 active:brightness-75"
+                className="!relative h-full rounded-r-md bg-offwhite"
               />
             </a>
           </Button>
@@ -406,7 +406,7 @@ function Media() {
                 src={starTribune}
                 alt="TODO"
                 sizes="(max-width: 1000px) 400px, 320px"
-                className="!relative !h-full rounded-r-md bg-offwhite !object-cover transition-all hover:brightness-90 active:brightness-75"
+                className="!relative !h-full rounded-r-md bg-offwhite !object-cover"
               />
             </a>
           </Button>
@@ -454,7 +454,7 @@ function Media() {
                 src={mpr}
                 alt="TODO"
                 sizes="(max-width: 1000px) 400px, 415px"
-                className="!relative !h-full rounded-r-md bg-offwhite object-cover transition-all hover:brightness-90 active:brightness-75"
+                className="!relative !h-full rounded-r-md bg-offwhite object-cover"
               />
             </a>
           </Button>
