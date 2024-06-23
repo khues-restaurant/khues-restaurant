@@ -1035,7 +1035,7 @@ function FavoriteItems({
                 {menuItems[itemId] && (
                   <CarouselItem className="basis-full md:basis-1/2 xl:basis-1/3 3xl:basis-1/4">
                     <MenuItemPreviewButton
-                      menuItem={menuItems[itemId]!}
+                      menuItem={menuItems[itemId]}
                       // TODO: going to prob remove this in big teardown of old system of discounts
                       activeDiscount={menuItems[itemId]?.activeDiscount ?? null}
                       listOrder={index}
