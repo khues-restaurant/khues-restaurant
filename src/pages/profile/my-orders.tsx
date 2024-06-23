@@ -49,7 +49,6 @@ import Image from "next/image";
 import noOrders from "/public/menuItems/myOrders.jpg";
 import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
-import Decimal from "decimal.js";
 import { toZonedTime } from "date-fns-tz";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { CiGift } from "react-icons/ci";
@@ -121,12 +120,8 @@ function RecentOrders() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      // className={`baseVertFlex relative min-h-[calc(100dvh-6rem-81px)] w-full tablet:min-h-0
-      // ${sortedOrders && sortedOrders.length > 0 ? "!justify-start tablet:mb-16" : ""}
-      // ${sortedOrders && sortedOrders.length > 5 ? "mb-16" : ""}
-      // `}
       className={`baseVertFlex baseVertFlex relative mt-24
-      h-full min-h-[calc(100dvh-6rem-81px)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem-120px)]
+      h-full min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]
         ${sortedOrders && sortedOrders.length > 0 ? "!justify-start" : ""}
       `}
     >
@@ -176,7 +171,9 @@ function RecentOrders() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseVertFlex h-full min-h-[calc(100dvh-6rem-81px)] w-full items-center justify-center tablet:min-h-[calc(100dvh-7rem-120px)] "
+            // offsetting the tablet+ top nav margin w/ a negative top margin of the same size to
+            // keep lotus centered
+            className="baseVertFlex w-full grow-[1] items-center justify-center tablet:mt-[-48px]"
           >
             <AnimatedLotus className="size-16 fill-primary tablet:size-24" />
           </motion.div>
@@ -187,11 +184,8 @@ function RecentOrders() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseVertFlex relative my-8 mb-32 mt-16 w-full !justify-start bg-offwhite p-0 transition-all lg:w-[775px] tablet:mt-0 tablet:rounded-xl tablet:border tablet:p-8 tablet:shadow-md"
+            className="baseVertFlex relative my-8 mb-32 mt-16 w-full grow-[1] !justify-start bg-offwhite p-0 transition-all lg:w-[775px] tablet:mt-0 tablet:rounded-xl tablet:border tablet:p-8 tablet:shadow-md"
           >
-            {/* fyi: don't think it makes sense to have these two be under an <AnimatePresence /> since
-            it should (rarely) ever change between 0 orders and some orders */}
-
             {sortedOrders && sortedOrders.length > 0 && (
               <div className="baseVertFlex gap-2">
                 <div className="baseFlex w-full !justify-end font-medium">
@@ -235,7 +229,7 @@ function RecentOrders() {
             )}
 
             {sortedOrders && sortedOrders.length === 0 && (
-              <div className="baseVertFlex relative gap-4 p-4">
+              <div className="baseVertFlex relative grow-[1] gap-4 p-4">
                 <Image
                   src={noOrders}
                   alt={"TODO: fill in w/ appropriate alt text"}
