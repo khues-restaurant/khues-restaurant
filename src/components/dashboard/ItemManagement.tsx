@@ -56,7 +56,7 @@ function ItemManagement({
         ))}
       </div>
 
-      <Separator className="my-4 h-[1px] w-full bg-gray-300" />
+      <Separator className="mb-4 mt-8 h-[2px] w-full bg-gray-300" />
 
       <p className="mt-8 pb-8 text-xl font-semibold underline underline-offset-2">
         Customizations

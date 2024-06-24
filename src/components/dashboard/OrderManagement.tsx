@@ -266,7 +266,10 @@ function OrderManagement({ orders, socket }: OrderManagement) {
               </AnimatePresence>
             </motion.div>
 
-            <Separator orientation="vertical" className="h-[70dvh] w-[2px] " />
+            <Separator
+              orientation="vertical"
+              className="h-[70dvh] w-[2px] bg-stone-300"
+            />
 
             <motion.div
               key={"started"}
