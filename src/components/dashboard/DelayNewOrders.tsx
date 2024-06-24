@@ -105,7 +105,6 @@ function DelayNewOrders() {
         {minOrderPickupTime && (
           <div className="baseVertFlex w-full">
             <div className="baseVertFlex gap-8">
-              {/* TODO: why is typescript mad at this? */}
               {minOrderPickupTime.value.getTime() !==
               todayAtMidnight.getTime() ? (
                 <div className="baseVertFlex gap-4">
