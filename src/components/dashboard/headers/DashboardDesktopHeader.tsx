@@ -15,7 +15,7 @@ import { api } from "~/utils/api";
 import { IoMdMore } from "react-icons/io";
 
 import classes from "./DashboardDesktopHeader.module.css";
-import DiscountManagement from "~/components/dashboard/DiscountManagement";
+// import DiscountManagement from "~/components/dashboard/DiscountManagement";
 import DelayNewOrders from "~/components/dashboard/DelayNewOrders";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
@@ -50,6 +50,7 @@ function DashboardDesktopHeader({
 
   const [numberOfActiveOrders, setNumberOfActiveOrders] = useState(0);
   const [numberOfUnreadMessages, setNumberOfUnreadMessages] = useState(0);
+  const [popoverIsOpen, setPopoverIsOpen] = useState(false);
 
   useEffect(() => {
     if (!todaysOrders) return;
@@ -146,7 +147,12 @@ function DashboardDesktopHeader({
 
         <DelayNewOrders />
 
-        <Popover>
+        <Popover
+          open={popoverIsOpen}
+          onOpenChange={(open) => {
+            setPopoverIsOpen(open);
+          }}
+        >
           <PopoverTrigger asChild>
             <Button variant="ghost" size={"icon"} className="baseFlex gap-2">
               <IoMdMore className="size-8 text-primary" />
@@ -154,12 +160,15 @@ function DashboardDesktopHeader({
           </PopoverTrigger>
           <PopoverContent side="bottom" align="end">
             <div className="baseVertFlex gap-2">
-              <DiscountManagement />
+              {/* <DiscountManagement /> */}
 
               <Button
                 variant={"link"}
                 className="!text-xl"
-                onClick={() => setViewState("stats")}
+                onClick={() => {
+                  setViewState("stats");
+                  setPopoverIsOpen(false);
+                }}
               >
                 Stats
               </Button>

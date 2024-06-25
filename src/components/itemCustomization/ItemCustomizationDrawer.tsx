@@ -16,7 +16,6 @@ import { IoIosArrowBack, IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { LuMinus, LuPlus, LuVegan } from "react-icons/lu";
 import AnimatedPrice from "~/components/AnimatedPrice";
 import { Button } from "~/components/ui/button";
-import { DrawerFooter } from "~/components/ui/drawer";
 import { SheetFooter } from "~/components/ui/sheet";
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";

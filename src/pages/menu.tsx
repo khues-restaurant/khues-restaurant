@@ -60,9 +60,6 @@ const mixedDrinkItems = [
   "Almond Joy Martini - $10.00",
 ];
 
-// - fyi as a performance optimization, we might want to dynamically import the <Dialog> and
-//   <Drawer> components and have them only conditionally be rendered based on dimensions
-
 interface Menu {
   menuCategories: FilteredMenuCategory[];
   menuCategoryIndicies: Record<string, number>;

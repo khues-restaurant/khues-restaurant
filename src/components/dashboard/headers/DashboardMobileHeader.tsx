@@ -8,7 +8,7 @@ import { FaUserAlt } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import DelayNewOrders from "~/components/dashboard/DelayNewOrders";
-import DiscountManagement from "~/components/dashboard/DiscountManagement";
+// import DiscountManagement from "~/components/dashboard/DiscountManagement";
 import {
   Accordion,
   AccordionContent,
@@ -74,7 +74,7 @@ function DashboardMobileHeader({
   return (
     <nav
       id="header"
-      className="baseFlex bg-offwhite fixed left-0 top-0 z-50 h-24 w-full !justify-between p-2 shadow-md"
+      className="baseFlex fixed left-0 top-0 z-50 h-24 w-full !justify-between bg-offwhite p-2 shadow-md"
     >
       <div className="baseFlex gap-4">
         <Image
@@ -135,7 +135,7 @@ function DashboardMobileHeader({
               ></span>
 
               {/* TODO: combine numberOfActiveOrders with unreadMessages */}
-              <div className="text-offwhite absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5">
+              <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite">
                 <AnimatedNumbers
                   value={numberOfActiveOrders}
                   fontSize={14}
@@ -198,7 +198,7 @@ function DashboardMobileHeader({
 
                 {/* notification count */}
                 {numberOfActiveOrders > 0 && (
-                  <div className="text-offwhite absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5">
+                  <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite">
                     <AnimatedNumbers
                       value={numberOfActiveOrders}
                       fontSize={14}
@@ -222,7 +222,7 @@ function DashboardMobileHeader({
 
                 {/* unreadMessages > 0 && */}
                 {false && (
-                  <div className="text-offwhite absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5">
+                  <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite">
                     <AnimatedNumbers
                       value={numberOfActiveOrders}
                       fontSize={14}
@@ -245,7 +245,7 @@ function DashboardMobileHeader({
 
               <DelayNewOrders />
 
-              <DiscountManagement />
+              {/* <DiscountManagement /> */}
             </div>
           </SheetContent>
         </Sheet>

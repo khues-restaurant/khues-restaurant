@@ -3,7 +3,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { api } from "~/utils/api";
 import GeneralLayout from "~/components/layouts/GeneralLayout";
 import { useRouter } from "next/router";
-import DashboardLayout from "~/components/dashboard/DashboardLayout";
 import DynamicHead from "~/components/DynamicHead";
 import "~/styles/globals.css";
 
@@ -31,9 +30,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     >
       <DynamicHead currentPath={pathname} />
       {pathname === "/dashboard" ? (
-        <DashboardLayout>
-          <Component {...pageProps} />
-        </DashboardLayout>
+        <Component {...pageProps} />
       ) : (
         <GeneralLayout>
           <Component {...pageProps} />

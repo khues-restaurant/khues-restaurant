@@ -21,7 +21,6 @@ import AnimatedNumbers from "~/components/AnimatedNumbers";
 import AnimatedPrice from "~/components/AnimatedPrice";
 import AvailablePickupTimes from "~/components/cart/AvailablePickupTimes";
 import { Button } from "~/components/ui/button";
-import { DrawerFooter } from "~/components/ui/drawer";
 import {
   Form,
   FormControl,
