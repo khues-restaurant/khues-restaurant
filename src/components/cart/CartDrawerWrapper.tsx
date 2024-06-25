@@ -3,7 +3,6 @@ import { useState, type Dispatch, type SetStateAction } from "react";
 import CartDrawer from "~/components/cart/CartDrawer";
 import RewardsDrawer from "~/components/cart/RewardsDrawer";
 import ItemCustomizationDrawer from "~/components/itemCustomization/ItemCustomizationDrawer";
-import { Drawer, DrawerContent } from "~/components/ui/drawer";
 import { Sheet, SheetContent } from "~/components/ui/sheet";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { useMainStore, type Item } from "~/stores/MainStore";
