@@ -285,7 +285,7 @@ function Chat() {
 
           <AlertDialogContent className="baseVertFlex h-[90dvh] max-h-[750px] w-[90vw] !gap-0 rounded-xl border-none !p-0 shadow-xl">
             {/* header */}
-            <div className="baseFlex relative z-20 w-full gap-4 rounded-t-xl bg-primary p-4 shadow-md">
+            <div className="baseFlex relative z-20 w-full gap-4 rounded-t-xl bg-primary p-4 shadow-md sm:gap-6 sm:pl-6">
               <Image
                 src={khuesKitchenLogo}
                 alt={"TODO: fill in w/ appropriate alt text"}
@@ -479,7 +479,7 @@ function Chat() {
             {/* scroll-y-auto messages container */}
             <div
               ref={scrollableChatContainerRef}
-              className="baseVertFlex tall:h-96 relative size-full h-64 !justify-start gap-2 overflow-y-auto overscroll-y-contain bg-background p-2 shadow-inner"
+              className="baseVertFlex relative size-full h-64 !justify-start gap-2 overflow-y-auto overscroll-y-contain bg-background p-2 shadow-inner tall:h-96"
             >
               {dateLabeledMessages.map((message) => (
                 <>
