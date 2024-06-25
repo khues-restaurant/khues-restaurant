@@ -108,7 +108,11 @@ function isWithin30MinutesBeforeCloseOrLater({
   const currentTotalMinutes = currentHour * 60 + currentMinute;
   const closeTotalMinutes = closeHour * 60 + closeMinute;
 
-  return Math.abs(closeTotalMinutes - currentTotalMinutes) >= 30;
+  const within30MinutesBeforeClose =
+    currentTotalMinutes >= closeTotalMinutes - 30;
+  const afterClose = currentTotalMinutes > closeTotalMinutes;
+
+  return afterClose || within30MinutesBeforeClose;
 }
 
 function formatTime(hour: number, minute: number): string {
