@@ -211,7 +211,7 @@ function CartDrawer({
         required_error: "Invalid pickup time",
       })
       .refine((val) => val.trim().length > 0, {
-        // Ensures the string is not just whitespace
+        // Ensures the string is not just whitespace (the default of midnight is "")
         message: "Invalid pickup time",
       })
       .refine(
@@ -224,17 +224,17 @@ function CartDrawer({
           const now = new Date();
           const selectedDate = mainForm.getValues().dateToPickup;
 
-          if (
-            isSelectedTimeSlotValid({
-              isASAP: orderDetails.isASAP,
-              datetimeToPickup: orderDetails.isASAP
-                ? now
-                : mergeDateAndTime(selectedDate, time) || now,
-              minPickupDatetime: minOrderPickupDatetime,
-            })
-          ) {
-            return true;
-          }
+          const isASAP = time === "ASAP (~20 mins)" || orderDetails.isASAP;
+
+          const pickupTimeIsValid = isSelectedTimeSlotValid({
+            isASAP,
+            datetimeToPickup: orderDetails.isASAP
+              ? now
+              : mergeDateAndTime(selectedDate, time) || now,
+            minPickupDatetime: minOrderPickupDatetime,
+          });
+
+          return pickupTimeIsValid;
         },
         {
           message:

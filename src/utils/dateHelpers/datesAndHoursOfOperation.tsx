@@ -25,33 +25,99 @@ const holidays = [
   new Date("2025-01-01"),
 ];
 
-// lets typescript know for a fact that 0-6 will be valid
-// keys for the object
-const hoursOpenPerDay: Record<DayOfWeek, { open: number; close: number }> = {
-  [DayOfWeek.Sunday]: { open: 0, close: 0 },
-  [DayOfWeek.Monday]: { open: 12, close: 22 },
-  [DayOfWeek.Tuesday]: { open: 12, close: 22 },
-  [DayOfWeek.Wednesday]: { open: 12, close: 22 },
-  [DayOfWeek.Thursday]: { open: 12, close: 22 },
-  [DayOfWeek.Friday]: { open: 12, close: 22 },
-  [DayOfWeek.Saturday]: { open: 12, close: 22 },
+const hoursOpenPerDay: Record<
+  DayOfWeek,
+  {
+    openHour: number;
+    openMinute: number;
+    closeHour: number;
+    closeMinute: number;
+  }
+> = {
+  [DayOfWeek.Sunday]: {
+    openHour: 0,
+    openMinute: 0,
+    closeHour: 0,
+    closeMinute: 0,
+  },
+  [DayOfWeek.Monday]: {
+    openHour: 12,
+    openMinute: 0,
+    closeHour: 22,
+    closeMinute: 0,
+  },
+  [DayOfWeek.Tuesday]: {
+    openHour: 12,
+    openMinute: 0,
+    closeHour: 22,
+    closeMinute: 0,
+  },
+  [DayOfWeek.Wednesday]: {
+    openHour: 12,
+    openMinute: 0,
+    closeHour: 22,
+    closeMinute: 0,
+  },
+  [DayOfWeek.Thursday]: {
+    openHour: 12,
+    openMinute: 0,
+    closeHour: 22,
+    closeMinute: 0,
+  },
+  [DayOfWeek.Friday]: {
+    openHour: 12,
+    openMinute: 0,
+    closeHour: 22,
+    closeMinute: 30,
+  },
+  [DayOfWeek.Saturday]: {
+    openHour: 12,
+    openMinute: 0,
+    closeHour: 22,
+    closeMinute: 30,
+  },
 };
 
 function isRestaurantClosedToday(date: Date) {
   const dayOfWeek = date.getDay() as DayOfWeek;
   const hours = hoursOpenPerDay[dayOfWeek];
 
-  return hours.open === 0 && hours.close === 0;
+  return (
+    hours.openHour === 0 &&
+    hours.openMinute === 0 &&
+    hours.closeHour === 0 &&
+    hours.closeMinute === 0
+  );
 }
 
 function isHoliday(date: Date) {
   return holidays.some((holiday) => isSameDay(date, holiday));
 }
 
-function formatTime(hour: number): string {
+function isWithin30MinutesBeforeCloseOrLater({
+  currentHour,
+  currentMinute,
+  closeHour,
+  closeMinute,
+}: {
+  currentHour: number;
+  currentMinute: number;
+  closeHour: number;
+  closeMinute: number;
+}) {
+  const currentTotalMinutes = currentHour * 60 + currentMinute;
+  const closeTotalMinutes = closeHour * 60 + closeMinute;
+
+  return Math.abs(closeTotalMinutes - currentTotalMinutes) >= 30;
+}
+
+function formatTime(hour: number, minute: number): string {
   const date = new Date();
-  date.setHours(hour, 0, 0, 0);
-  return format(date, "h a");
+  date.setHours(hour, minute, 0, 0);
+  if (minute === 0) {
+    return format(date, "h a");
+  }
+  return format(date, "h:mm a");
 }
 
 function getOpenTimesForDay({
@@ -64,16 +130,27 @@ function getOpenTimesForDay({
   limitToThirtyMinutesBeforeClose?: boolean;
 }): string[] {
   const hours = hoursOpenPerDay[dayOfWeek];
-  if (hours.open === 0 && hours.close === 0) {
+  if (
+    hours.openHour === 0 &&
+    hours.openMinute === 0 &&
+    hours.closeHour === 0 &&
+    hours.closeMinute === 0
+  ) {
     return []; // Closed all day
   }
 
   const openTime = setSeconds(
-    setMinutes(setHours(startOfDay(new Date()), hours.open), 0),
+    setMinutes(
+      setHours(startOfDay(new Date()), hours.openHour),
+      hours.openMinute,
+    ),
     0,
   );
   let closeTime = setSeconds(
-    setMinutes(setHours(startOfDay(new Date()), hours.close), 0),
+    setMinutes(
+      setHours(startOfDay(new Date()), hours.closeHour),
+      hours.closeMinute,
+    ),
     0,
   );
 
@@ -132,8 +209,9 @@ function getWeeklyHours() {
 
         const hours = hoursOpenPerDay[dayOfWeek];
         return (
-          <p key={day}>
-            {formatTime(hours.open)} - {formatTime(hours.close)}
+          <p key={day} className="text-nowrap">
+            {formatTime(hours.openHour, hours.openMinute)} -{" "}
+            {formatTime(hours.closeHour, hours.closeMinute)}
           </p>
         );
       })}
@@ -144,6 +222,7 @@ function getWeeklyHours() {
 export {
   holidays,
   hoursOpenPerDay,
+  isWithin30MinutesBeforeCloseOrLater,
   isRestaurantClosedToday,
   isHoliday,
   getWeeklyHours,

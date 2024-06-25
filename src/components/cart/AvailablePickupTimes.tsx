@@ -8,6 +8,7 @@ import {
   hoursOpenPerDay,
   isHoliday,
   isRestaurantClosedToday,
+  isWithin30MinutesBeforeCloseOrLater,
 } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import { formatTimeString } from "~/utils/formatters/formatTimeString";
 import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
@@ -44,20 +45,18 @@ function AvailablePickupTimes({
 
     // if selectedDate is today, then we need to check if the current time
     // is past the minimum pickup time
-    if (selectedDate.getDay() === now.getDay() && minPickupTime) {
+    if (selectedDate.getDate() === now.getDate() && minPickupTime) {
       basePickupTimes = basePickupTimes.filter((time) => {
-        if (
-          isSelectedTimeSlotValid({
-            isASAP: time === "ASAP (~20 mins)",
-            datetimeToPickup:
-              time === "ASAP (~20 mins)"
-                ? now
-                : mergeDateAndTime(selectedDate, time) || now,
-            minPickupDatetime: minPickupTime,
-          })
-        ) {
-          return true;
-        }
+        const pickupTimeIsValid = isSelectedTimeSlotValid({
+          isASAP: time === "ASAP (~20 mins)",
+          datetimeToPickup:
+            time === "ASAP (~20 mins)"
+              ? now
+              : mergeDateAndTime(selectedDate, time) || now,
+          minPickupDatetime: minPickupTime,
+        });
+
+        return pickupTimeIsValid;
       });
     } else {
       basePickupTimes.splice(0, 1); // remove ASAP time slot
@@ -72,12 +71,23 @@ function AvailablePickupTimes({
       hoursOpenPerDay[now.getDay() as keyof typeof hoursOpenPerDay];
     const todayAtMidnight = getMidnightCSTInUTC();
 
+    // TODO: maybe refactor these checks into a helper function to be
+    // more explicit
+
     return (
+      // if today is selected
       selectedDate.getTime() === todayAtMidnight.getTime() &&
-      ((minPickupTime && minPickupTime.getHours() >= todaysHours.close) ||
-        // if it's 30 mins from close or later, we should disable ordering
-        now.getHours() >= todaysHours.close ||
-        (now.getHours() === todaysHours.close - 1 && now.getMinutes() >= 30))
+      // & if it's past minPickupTime
+      ((minPickupTime &&
+        minPickupTime.getHours() >= todaysHours.closeHour &&
+        minPickupTime.getMinutes() >= todaysHours.closeMinute) ||
+        // & if it's within 30 mins to close time for the day
+        isWithin30MinutesBeforeCloseOrLater({
+          currentHour: now.getHours(),
+          currentMinute: now.getMinutes(),
+          closeHour: todaysHours.closeHour,
+          closeMinute: todaysHours.closeMinute,
+        }))
     );
   }, [selectedDate, minPickupTime]);
 

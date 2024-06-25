@@ -235,7 +235,7 @@ function DesktopHeader() {
           </DialogTrigger>
           <DialogContent extraBottomSpacer={false} className="max-w-[900px]">
             <div className="baseFlex w-[850px] !items-start">
-              <div className="baseVertFlex w-64 !items-start gap-2">
+              <div className="baseVertFlex w-max !items-start gap-2">
                 <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
                   <MdAccessTime />
                   Hours
@@ -314,7 +314,7 @@ function DesktopHeader() {
                     <TbLocation />
                     Location
                   </div>
-                  <p className="w-[550px]">
+                  <p className="w-[535px]">
                     We are conveniently located next to the Green Line light
                     rail, offering easy access for all visitors. Parking space
                     is also available for your convenience.

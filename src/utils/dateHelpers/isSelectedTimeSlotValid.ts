@@ -2,6 +2,7 @@ import { getCSTDateInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import {
   hoursOpenPerDay,
   isHoliday,
+  isWithin30MinutesBeforeCloseOrLater,
 } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import { isAtLeast15MinsFromDatetime } from "~/utils/dateHelpers/isAtLeast15MinsFromDatetime";
 
@@ -17,68 +18,77 @@ export function isSelectedTimeSlotValid({
   minPickupDatetime,
 }: IsSelectedTimeSlotValid) {
   const now = getCSTDateInUTC(new Date());
-  const tzDatetimeToPickup = getCSTDateInUTC(datetimeToPickup);
-  const tzMinPickupDatetime = getCSTDateInUTC(minPickupDatetime);
+  const pickupTime = getCSTDateInUTC(datetimeToPickup);
+  const minPickupTime = getCSTDateInUTC(minPickupDatetime);
+
+  // FYI: all times are coerced into the CST time zone
 
   const pickupDayHours =
-    hoursOpenPerDay[
-      tzDatetimeToPickup.getDay() as keyof typeof hoursOpenPerDay
-    ];
+    hoursOpenPerDay[pickupTime.getDay() as keyof typeof hoursOpenPerDay];
 
   // if restaurant is closed today, immediately return false
   if (
-    (pickupDayHours.open === 0 && pickupDayHours.close === 0) ||
-    isHoliday(tzDatetimeToPickup)
+    (pickupDayHours.openHour === 0 &&
+      pickupDayHours.openMinute === 0 &&
+      pickupDayHours.closeHour === 0 &&
+      pickupDayHours.closeMinute === 0) ||
+    isHoliday(pickupTime)
   ) {
     return false;
   }
 
   // TODO: keep an eye on this check, might have unintended side effects
-  // if tzDatetimeToPickup is midnight, return true
+  // It was meant as a workaround to not immediately throw an error when faced
+  // with the default midnight time being passed in to this function.
+  // if pickupTime is midnight, return true
   if (
-    tzDatetimeToPickup.getHours() === 0 &&
-    tzDatetimeToPickup.getMinutes() === 0 &&
-    tzDatetimeToPickup.getSeconds() === 0
+    pickupTime.getHours() === 0 &&
+    pickupTime.getMinutes() === 0 &&
+    pickupTime.getSeconds() === 0
   ) {
     return true;
   }
 
-  // if currentDate hours is earlier than opening time, return false
-  if (tzDatetimeToPickup.getHours() < pickupDayHours.open) {
+  // if pickupTime is earlier than opening time, return false
+  if (
+    pickupTime.getHours() < pickupDayHours.openHour ||
+    (pickupTime.getHours() === pickupDayHours.openHour &&
+      pickupTime.getMinutes() < pickupDayHours.openMinute)
+  ) {
     return false;
   }
 
   if (isASAP) {
     // make sure that the passed in datetimeToPickup is the current day
-    if (tzDatetimeToPickup.getDay() !== now.getDay()) {
+    if (pickupTime.getDate() !== now.getDate()) {
       return false;
     }
   } else {
     // make sure that the passed in datetimeToPickup is later than the current time
     // and more specifically, is >= 15 minutes from the current time
-    if (
-      tzDatetimeToPickup <= now ||
-      !isAtLeast15MinsFromDatetime(tzDatetimeToPickup, now)
-    ) {
+    if (pickupTime <= now || !isAtLeast15MinsFromDatetime(pickupTime, now)) {
       return false;
     }
   }
 
-  // if tzDatetimeToPickup time is earlier than tzMinPickupDatetime, return false
-  if (tzDatetimeToPickup.getTime() < tzMinPickupDatetime.getTime()) {
+  // if pickupTime time is earlier than minPickupTime, return false
+  if (pickupTime.getTime() < minPickupTime.getTime()) {
     return false;
   }
 
-  // if tzDatetimeToPickup > 30 mins from close or later, return false
+  // if pickupTime > 30 mins from close or later, return false
 
   // TODO: depending on what specific interaction that eric wants (either
   // 30 mins from close is last time customer will be walking in to pickup their order,
   // or 30 mins from close is last time customer can place an order for pickup that night)
   // this will either be .getMinutes() > 30 or .getMinutes() > 15 respectively.
   if (
-    tzDatetimeToPickup.getHours() >= pickupDayHours.close ||
-    (tzDatetimeToPickup.getHours() === pickupDayHours.close - 1 &&
-      tzDatetimeToPickup.getMinutes() > 30)
+    isWithin30MinutesBeforeCloseOrLater({
+      currentHour: now.getHours(),
+      currentMinute: now.getMinutes(),
+      closeHour: pickupDayHours.closeHour,
+      closeMinute: pickupDayHours.closeMinute,
+    })
   ) {
     return false;
   }

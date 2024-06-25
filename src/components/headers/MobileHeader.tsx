@@ -374,12 +374,12 @@ function MobileHeader() {
                       </AccordionTrigger>
                       <AccordionContent className="pt-2">
                         <div className="baseVertFlex !items-start gap-8 rounded-md border bg-offwhite p-4 shadow-sm">
-                          <div className="baseVertFlex w-full !items-start gap-4">
+                          <div className="baseVertFlex !items-start gap-4">
                             <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
                               <MdAccessTime />
                               Hours
                             </div>
-                            <div className="grid w-full max-w-[250px] grid-cols-2">
+                            <div className="grid w-full grid-cols-2">
                               <div className="baseVertFlex w-full !items-start">
                                 <p>Monday</p>
                                 <p>Tuesday</p>
@@ -398,7 +398,7 @@ function MobileHeader() {
                               <DialogTrigger asChild>
                                 <Button
                                   variant={"underline"}
-                                  className=" !self-center"
+                                  className="!self-center"
                                 >
                                   Holiday hours
                                 </Button>
