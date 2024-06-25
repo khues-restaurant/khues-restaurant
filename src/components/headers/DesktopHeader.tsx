@@ -240,7 +240,7 @@ function DesktopHeader() {
                   <MdAccessTime />
                   Hours
                 </div>
-                <div className="mt-1 grid w-full grid-cols-2">
+                <div className="baseFlex mt-1 w-full">
                   <div className="baseVertFlex w-full !items-start gap-2">
                     <p>Monday</p>
                     <p>Tuesday</p>
@@ -250,7 +250,7 @@ function DesktopHeader() {
                     <p>Saturday</p>
                     <p>Sunday</p>
                   </div>
-                  <div className="baseVertFlex w-full !items-start gap-2">
+                  <div className="baseVertFlex w-full !items-start gap-2 pr-4">
                     {getWeeklyHours()}
                   </div>
                 </div>
@@ -297,7 +297,7 @@ function DesktopHeader() {
                   </DialogContent>
                 </Dialog>
 
-                <p className="mt-2 text-center text-sm italic text-stone-400">
+                <p className="mt-2 w-[273px] text-center text-sm italic text-stone-400">
                   * Pickup orders must be placed at least 30 minutes before
                   closing.
                 </p>
@@ -314,7 +314,7 @@ function DesktopHeader() {
                     <TbLocation />
                     Location
                   </div>
-                  <p className="w-[535px]">
+                  <p className="w-[536px]">
                     We are conveniently located next to the Green Line light
                     rail, offering easy access for all visitors. Parking space
                     is also available for your convenience.
