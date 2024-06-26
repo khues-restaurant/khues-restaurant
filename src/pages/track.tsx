@@ -683,7 +683,7 @@ function Track() {
                     <div className={`baseVertFlex w-full text-sm text-primary`}>
                       {isSignedIn ? (
                         <>
-                          <div className="baseFlex gap-1">
+                          <div className="baseFlex gap-1 font-medium">
                             You earned
                             <div className="font-bold">
                               <AnimatedNumbers
@@ -713,7 +713,9 @@ function Track() {
                               Sign in
                             </Button>
                           </SignInButton>
-                          to redeem your points for this order.
+                          <span className="font-medium">
+                            to redeem your points for this order.
+                          </span>
                         </div>
                       )}
                     </div>
