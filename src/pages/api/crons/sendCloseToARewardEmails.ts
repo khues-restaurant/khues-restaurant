@@ -57,21 +57,27 @@ export default async function handler(
     // can already redeem, and the rewards they are close to redeeming if they
     // spend a little more
     for (const user of eligibleUsers) {
-      const ableToRedeem = pointRewards.filter((reward) => {
-        const rewardPointCost = new Decimal(reward.price).mul(2);
-        return rewardPointCost.lte(user.rewardsPoints);
-      });
+      const ableToRedeem = pointRewards
+        .filter((reward) => {
+          const rewardPointCost = new Decimal(reward.price).mul(2);
+
+          return rewardPointCost.lte(user.rewardsPoints);
+        })
+        .sort((a, b) => a.price - b.price);
 
       // being "close to redeeming" means they are within 500 points of an item
-      const closeToRedeeming = pointRewards.filter((reward) => {
-        // don't add the same reward to both lists
-        if (ableToRedeem.some((r) => r.id === reward.id)) {
-          return false;
-        }
+      const closeToRedeeming = pointRewards
+        .filter((reward) => {
+          // don't add the same reward to both lists
+          if (ableToRedeem.some((r) => r.id === reward.id)) {
+            return false;
+          }
 
-        const rewardPointCost = new Decimal(reward.price).mul(2);
-        return rewardPointCost.lte(user.rewardsPoints + 500);
-      });
+          const rewardPointCost = new Decimal(reward.price).mul(2);
+
+          return rewardPointCost.lte(user.rewardsPoints + 500);
+        })
+        .sort((a, b) => a.price - b.price);
 
       // generate email unsubscription token
       const unsubscriptionToken = await prisma.emailUnsubscriptionToken.create({
