@@ -1,11 +1,11 @@
 import Image from "next/image";
 
-import khuesKitchenLogo from "/public/khuesKitchenLogo.png";
-import masonryFoodOne from "/public/masonryFood/one.jpg";
-import masonryFoodTwo from "/public/masonryFood/two.webp";
-import masonryFoodThree from "/public/masonryFood/three.jpg";
-import masonryFoodFour from "/public/masonryFood/four.png";
-import masonryFoodFive from "/public/masonryFood/five.jpg";
+import khuesKitchenLogo from "/public/logos/khuesKitchenLogo.png";
+import masonryFoodOne from "/public/food/one.jpg";
+import masonryFoodTwo from "/public/food/two.webp";
+import masonryFoodThree from "/public/food/three.jpg";
+import masonryFoodFour from "/public/food/four.png";
+import masonryFoodFive from "/public/food/five.jpg";
 
 function ogImageTemplate() {
   return (

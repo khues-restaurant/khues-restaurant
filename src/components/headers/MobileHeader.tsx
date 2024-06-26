@@ -27,7 +27,7 @@ import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { TbLocation } from "react-icons/tb";
 import { motion } from "framer-motion";
 
-import outsideOfRestaurant from "/public/homepage/heroTwo.webp";
+import outsideOfRestaurant from "/public/exterior/one.webp";
 import { useToast } from "~/components/ui/use-toast";
 import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 
@@ -99,7 +99,7 @@ function MobileHeader() {
         <Link href={"/"}>
           {/* <p className="text-2xl font-semibold text-primary">Khue&apos;s</p> */}
           <Image
-            src={"/logo.svg"}
+            src={"/logos/logo.svg"}
             alt={"TODO: fill in w/ appropriate alt text"}
             priority
             width={45}

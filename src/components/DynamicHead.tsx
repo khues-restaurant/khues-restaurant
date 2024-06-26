@@ -193,7 +193,9 @@ function DynamicHead({ currentPath }: DynamicHead) {
       <meta
         property="og:image"
         // TODO: Change for production
-        content={"https://khues-restaurant.vercel.app/opengraphImage.png"}
+        content={
+          "https://khues-restaurant.vercel.app/openGraph/opengraphImage.png"
+        }
       ></meta>
       <meta
         property="og:image:alt"
@@ -201,7 +203,7 @@ function DynamicHead({ currentPath }: DynamicHead) {
       ></meta>
       <meta
         property="twitter:image"
-        content="https://khues-restaurant.vercel.app/opengraphImage.png"
+        content="https://khues-restaurant.vercel.app/openGraph/opengraphImage.png"
       />
       <meta property="twitter:card" content="summary_large_image" />
     </Head>

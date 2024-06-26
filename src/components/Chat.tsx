@@ -24,7 +24,7 @@ import {
 import { useMainStore } from "~/stores/MainStore";
 import { useRouter } from "next/router";
 
-import khuesKitchenLogo from "/public/khuesKitchenLogo.png";
+import khuesKitchenLogo from "/public/logos/khuesKitchenLogo.png";
 
 function containsLetterOrNumber(str: string) {
   const regex = /[a-zA-Z0-9]/;

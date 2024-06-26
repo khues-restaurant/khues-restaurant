@@ -19,34 +19,6 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { IoChatbox } from "react-icons/io5";
 import { FaPhone } from "react-icons/fa6";
-
-import mobileHero from "/public/homepage/mobileHero.webp";
-import topLeftTabletHero from "/public/homepage/heroTwo.webp";
-import topRightTabletHero from "/public/homepage/heroOne.jpeg";
-import bottomLeftTabletHero from "/public/homepage/heroThree.webp";
-import bottomRightTabletHero from "/public/homepage/heroFour.jpg";
-
-import khuesKitchenLogo from "/public/khuesKitchenLogo.png";
-
-import starTribuneLogo from "/public/media/starTribuneLogo.png";
-import kare11Logo from "/public/media/kare11Logo.png";
-import mprLogo from "/public/media/mprLogo.png";
-
-import masonryFoodOne from "/public/masonryFood/one.jpg";
-import masonryFoodTwo from "/public/masonryFood/two.webp";
-import masonryFoodThree from "/public/masonryFood/three.jpg";
-import masonryFoodFour from "/public/masonryFood/four.png";
-import masonryFoodFive from "/public/masonryFood/five.jpg";
-
-import rewardsPromo from "/public/rewardsPromo.jpg";
-import eric from "/public/eric.webp";
-import reservations from "/public/reservations.webp";
-
-import masonryInteriorOne from "/public/interior/one.webp";
-import masonryInteriorTwo from "/public/interior/two.webp";
-import masonryInteriorThree from "/public/interior/three.webp";
-import masonryInteriorFour from "/public/interior/four.webp";
-import masonryInteriorFive from "/public/interior/five.webp";
 import { useMainStore } from "~/stores/MainStore";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import useHomepageIntersectionObserver from "~/hooks/useHomepageIntersectionObserver";
@@ -58,6 +30,33 @@ import { ToastAction } from "~/components/ui/toast";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { type GetStaticProps } from "next";
+
+import topLeftHero from "/public/exterior/one.webp";
+import topRightHero from "/public/food/heroOne.jpeg";
+import bottomLeftHero from "/public/food/heroThree.webp";
+import bottomRightHero from "/public/food/heroFour.jpg";
+
+import khuesKitchenLogo from "/public/logos/khuesKitchenLogo.png";
+
+import starTribuneLogo from "/public/media/starTribuneLogo.png";
+import kare11Logo from "/public/media/kare11Logo.png";
+import mprLogo from "/public/media/mprLogo.png";
+
+import masonryFoodOne from "/public/food/one.jpg";
+import masonryFoodTwo from "/public/food/two.webp";
+import masonryFoodThree from "/public/food/three.jpg";
+import masonryFoodFour from "/public/food/four.png";
+import masonryFoodFive from "/public/food/five.jpg";
+
+import rewardsPromo from "/public/homepage/rewardsPromo.jpg";
+import eric from "/public/ourStory/eric.webp";
+import reservations from "/public/reservations/reservations.webp";
+
+import masonryInteriorOne from "/public/interior/one.webp";
+import masonryInteriorTwo from "/public/interior/two.webp";
+import masonryInteriorThree from "/public/interior/three.webp";
+import masonryInteriorFour from "/public/interior/four.webp";
+import masonryInteriorFive from "/public/interior/five.webp";
 
 interface Home {
   ourFavoriteMenuItems: FullMenuItem[];
@@ -222,7 +221,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             className="relative col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Image
-              src={topLeftTabletHero}
+              src={topLeftHero}
               alt={"TODO: fill in w/ appropriate alt text"}
               priority
               sizes="33vw"
@@ -246,7 +245,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             className="relative col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Image
-              src={topRightTabletHero}
+              src={topRightHero}
               alt={"TODO: fill in w/ appropriate alt text"}
               priority
               sizes="66vw"
@@ -322,7 +321,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             className="relative !top-0 col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Image
-              src={bottomLeftTabletHero}
+              src={bottomLeftHero}
               alt={"TODO: fill in w/ appropriate alt text"}
               priority
               sizes="66vw"
@@ -346,7 +345,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             className="relative !top-0 col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Image
-              src={bottomRightTabletHero}
+              src={bottomRightHero}
               alt={"TODO: fill in w/ appropriate alt text"}
               priority
               sizes="33vw"
@@ -374,7 +373,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             className="relative col-span-1 row-span-2 size-full overflow-hidden rounded-md shadow-md"
           >
             <Image
-              src={topLeftTabletHero}
+              src={topLeftHero}
               alt={"TODO: fill in w/ appropriate alt text"}
               priority
               sizes="33vw"
@@ -398,7 +397,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             className="relative col-span-2 row-span-2 size-full overflow-hidden rounded-md shadow-md"
           >
             <Image
-              src={topRightTabletHero}
+              src={topRightHero}
               alt={"TODO: fill in w/ appropriate alt text"}
               priority
               sizes="66vw"
@@ -472,7 +471,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             className="relative !top-0 col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Image
-              src={bottomLeftTabletHero}
+              src={bottomLeftHero}
               alt={"TODO: fill in w/ appropriate alt text"}
               priority
               sizes="33vw"
@@ -496,7 +495,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             className="relative !top-0 col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Image
-              src={bottomRightTabletHero}
+              src={bottomRightHero}
               alt={"TODO: fill in w/ appropriate alt text"}
               priority
               sizes="66vw"

@@ -78,7 +78,7 @@ function DashboardMobileHeader({
     >
       <div className="baseFlex gap-4">
         <Image
-          src="/logo.svg"
+          src="/logos/logo.svg"
           alt="Khue's header logo"
           style={{
             filter: "drop-shadow(0px 1px 0.5px hsla(336, 84%, 17%, 0.25))", // keep this?

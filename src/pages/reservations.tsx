@@ -7,7 +7,7 @@ import { Separator } from "~/components/ui/separator";
 import { FaPhone } from "react-icons/fa6";
 import { useMainStore } from "~/stores/MainStore";
 
-import reservations from "/public/reservations.webp";
+import reservations from "/public/reservations/reservations.webp";
 import noOrders from "/public/menuItems/myOrders.jpg";
 
 import masonryInteriorOne from "/public/interior/one.webp";

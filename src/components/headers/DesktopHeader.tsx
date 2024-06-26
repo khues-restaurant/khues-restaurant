@@ -28,7 +28,7 @@ import { HiOutlineInformationCircle } from "react-icons/hi";
 import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import classes from "./DesktopHeader.module.css";
 
-import outsideOfRestaurant from "/public/homepage/heroTwo.webp";
+import outsideOfRestaurant from "/public/exterior/one.webp";
 
 function DesktopHeader() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
@@ -88,7 +88,7 @@ function DesktopHeader() {
         >
           {/* <p className="text-3xl font-semibold text-primary">Khue&apos;s</p> */}
           <Image
-            src={"/logo.svg"}
+            src={"/logos/logo.svg"}
             alt={"TODO: fill in w/ appropriate alt text"}
             priority
             width={55}

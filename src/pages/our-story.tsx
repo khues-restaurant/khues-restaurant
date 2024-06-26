@@ -11,7 +11,7 @@ import {
 } from "~/components/ui/carousel";
 
 import ourStoryHero from "/public/interior/seven.webp";
-import test from "/public/test.webp";
+import khuesKitchen from "/public/ourStory/khuesKitchen.webp";
 
 import kare11InTheKitchen from "/public/media/kare11InTheKitchen.jpg";
 import kare11MothersDay from "/public/media/kare11MothersDay.jpg";
@@ -333,7 +333,7 @@ function OurStory() {
               className={`relative !size-20 rounded-md !p-0 opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 0 ? "!opacity-100" : ""}`}
             >
               <Image
-                src={test}
+                src={khuesKitchen}
                 alt={"Quang's"}
                 sizes="(max-width: 1000px) 80px, 96px"
                 className="!relative !size-full rounded-md object-cover"
@@ -345,7 +345,7 @@ function OurStory() {
               className={`relative !size-20 rounded-md !p-0 opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 1 ? "!opacity-100" : ""}`}
             >
               <Image
-                src={test}
+                src={khuesKitchen}
                 alt={"Quang's"}
                 sizes="(max-width: 1000px) 80px, 96px"
                 className="!relative !size-full rounded-md object-cover"
@@ -357,7 +357,7 @@ function OurStory() {
               className={`relative !size-20 rounded-md !p-0 opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 2 ? "!opacity-100" : ""}`}
             >
               <Image
-                src={test}
+                src={khuesKitchen}
                 alt={"Quang's"}
                 sizes="(max-width: 1000px) 80px, 96px"
                 className="!relative !size-full rounded-md object-cover"
@@ -369,7 +369,7 @@ function OurStory() {
               className={`relative !size-20 rounded-md !p-0 opacity-50 hover:opacity-100 tablet:!size-24 ${carouselSlide === 3 ? "!opacity-100" : ""}`}
             >
               <Image
-                src={test}
+                src={khuesKitchen}
                 alt={"Quang's"}
                 sizes="(max-width: 1000px) 80px, 96px"
                 className="!relative !size-full rounded-md object-cover"
@@ -505,7 +505,7 @@ function RestaurantAndBackstory({ name, backstory }: RestaurantAndBackstory) {
   return (
     <div className="baseVertFlex relative rounded-md border sm:pt-4 tablet:rounded-none tablet:border-none  tablet:pt-0 ">
       <Image
-        src={test}
+        src={khuesKitchen}
         alt="Khue's"
         sizes="(max-width: 400px) 320px, (max-width: 640px) 384px, (max-width: 1000px) 600px, 33vw"
         priority
