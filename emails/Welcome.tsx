@@ -22,11 +22,6 @@ const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "";
 
-// in other components, will want to pass in whether user is a member or not to conditionally show
-// "Manage your email communication preferences" alongside "Unsubscribe from all emails"
-
-// maybe also get user's first name to put in <Preview> section?
-
 interface Welcome {
   firstName: string;
   unsubscriptionToken: string;
@@ -52,12 +47,12 @@ function Welcome({ firstName, unsubscriptionToken }: Welcome) {
 
         <Body style={main} className="rounded-lg">
           <Container style={container} className="rounded-lg">
-            <Section className="mb-0 bg-offwhite">
+            <Section className="bg-offwhite">
               <Header />
 
               <Section className="p-4">
                 <Text className="text-xl font-semibold">
-                  Welcome to the Khue&apos;s Rewards Program, {firstName} 🎉
+                  Welcome to the Khue&apos;s Rewards Program, {firstName}
                 </Text>
                 <Text>
                   You now have access to free perks including earning points on
@@ -70,14 +65,19 @@ function Welcome({ firstName, unsubscriptionToken }: Welcome) {
                     <Img
                       src={`${baseUrl}/static/myOrders.jpg`}
                       alt="Promotional image for order now card"
-                      className="my-8 h-[126px] w-[240px] rounded-md sm:h-[252px] sm:w-[480px]"
+                      className="my-8 h-[176.4px] w-[336px] rounded-md sm:h-[252px] sm:w-[480px]"
                     />
-                    <Button
+
+                    <Link
                       href="https://khueskitchen.com/order"
-                      className="rounded-md bg-primary px-4 py-3 text-sm text-offwhite"
+                      className="block w-[253px]"
                     >
-                      Order now
-                    </Button>
+                      <Img
+                        src={`${baseUrl}/static/orderNowButton.png`}
+                        alt="Button to visit Khue's order page"
+                        className="mt-8"
+                      />
+                    </Link>
                   </Column>
                 </Section>
               </Section>

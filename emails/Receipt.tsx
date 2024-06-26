@@ -36,9 +36,6 @@ const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "";
 
-// in other components, will want to pass in whether user is a member or not to conditionally show
-// "Manage your email communication preferences" alongside "Unsubscribe from all emails"
-
 interface Receipt {
   order: DBOrderSummary;
   customizationChoices: Record<string, CustomizationChoiceAndCategory>;
@@ -49,10 +46,6 @@ interface Receipt {
 
 // TODO: probably want to add conditional jsx for "dietaryRestrictions" section
 
-// Have a "Track" button which links to /track?id=${order.id} on the website (or the app...)
-// would it be best ux to have "Track on website" and "Track on app" buttons or is there a way to tell
-// from the user agent which one to show? idk both seems safer
-
 function Receipt({
   order,
   customizationChoices,
@@ -60,6 +53,84 @@ function Receipt({
   userIsAMember,
   unsubscriptionToken,
 }: Receipt) {
+  order = {
+    id: "34d1dfcc-08e5-49e0-b428-6d7d94096427",
+    createdAt: new Date("2024-06-24T08:44:15.663Z"),
+    orderStartedAt: null,
+    orderCompletedAt: null,
+    datetimeToPickup: new Date("2024-06-24T18:30:00.000Z"),
+    firstName: "Michael",
+    lastName: "Ongaro",
+    email: "mongaro6@gmail.com",
+    phoneNumber: "+16513570468",
+    includeNapkinsAndUtensils: false,
+    dietaryRestrictions: "I am allergic to eggs and peanuts.",
+    discountId: null,
+    subtotal: 8100,
+    tax: 0,
+    tipPercentage: 10,
+    tipValue: 810,
+    total: 8910,
+    prevRewardsPoints: 870,
+    earnedRewardsPoints: 810,
+    spentRewardsPoints: 0,
+    stripeSessionId:
+      "cs_test_b18IqiMZpLsiXRaw4MBybXAsdeM5cQNmUhfRnTGLN97YkS5QoPXG81YpMj",
+    notableUserDescription: null,
+    rewardsPointsRedeemed: true,
+    userLeftFeedback: false,
+    userId: "user_2d4XoRNA57VwLUYXy0M9XTdP4wV",
+    orderItems: [
+      {
+        id: "27e9dd8f-08b9-4852-af2b-e7c66be02420",
+        name: "Asian Fries",
+        specialInstructions: "",
+        includeDietaryRestrictions: false,
+        quantity: 2,
+        price: 1200,
+        orderId: "34d1dfcc-08e5-49e0-b428-6d7d94096427",
+        menuItemId: "f651ed75-a596-4a9f-8ba8-6dafd8ddd9de",
+        discountId: null,
+        isChefsChoice: false,
+        isAlcoholic: false,
+        isVegetarian: false,
+        isVegan: false,
+        isGlutenFree: false,
+        showUndercookedOrRawDisclaimer: false,
+        pointReward: false,
+        birthdayReward: false,
+        customizations: {},
+        discount: null,
+      },
+      {
+        id: "91a046ab-564b-42d3-890e-e80d320d6ea5",
+        name: "Hainanese Chicken",
+        specialInstructions: "",
+        includeDietaryRestrictions: false,
+        quantity: 3,
+        price: 1900,
+        orderId: "34d1dfcc-08e5-49e0-b428-6d7d94096427",
+        menuItemId: "a44bfc71-facd-4ce6-a576-afbac6e2b2f3",
+        discountId: null,
+        isChefsChoice: true,
+        isAlcoholic: false,
+        isVegetarian: false,
+        isVegan: false,
+        isGlutenFree: false,
+        showUndercookedOrRawDisclaimer: false,
+        pointReward: false,
+        birthdayReward: false,
+        customizations: {},
+        discount: null,
+      },
+    ],
+  };
+
+  const totalItems = order.orderItems.reduce(
+    (acc, item) => acc + item.quantity,
+    0,
+  );
+
   return (
     <Html>
       <Preview>
@@ -82,14 +153,14 @@ function Receipt({
 
         <Body style={main} className="rounded-lg">
           <Container style={container} className="rounded-lg">
-            <Section className="mb-4 bg-offwhite">
+            <Section className="bg-offwhite">
               <Header />
 
               <Section className="p-4">
-                <Row align="center" className="w-64">
-                  <Text className="text-center font-semibold">
-                    Thank you! Your order has been successfully placed and will
-                    be started soon.
+                <Row align="center">
+                  <Text className="text-center font-medium leading-5">
+                    Thank you! Your order has been successfully placed.
+                    {/* and will be prepared according to your selected pickup time. */}
                   </Text>
                 </Row>
 
@@ -97,19 +168,11 @@ function Receipt({
 
                 <Section className="my-8 text-center">
                   <Column align="center">
-                    <Text className="text-lg font-semibold underline underline-offset-2">
-                      Order {getFirstSixNumbers(order.id)}
-                    </Text>
-
                     <Img
                       src={`${baseUrl}/static/emailOrderTracker.png`}
                       alt="Image of the order tracker progress bar: with steps of 'Order placed', 'In progress', and 'Ready for pickup'"
-                      className="my-8 h-[55px] w-[333px] sm:h-[78px] sm:w-[467px]"
+                      className="mb-8 h-[59px] w-[348px] sm:h-[85px] sm:w-[520px]"
                     />
-
-                    <Text className="text-base font-semibold">
-                      Your order has been received
-                    </Text>
 
                     <Section className="w-64">
                       <Row align="center">
@@ -143,6 +206,17 @@ function Receipt({
                       <Row align="center" className="mt-2">
                         <Column>
                           <Text className="my-0 text-left font-medium underline">
+                            Order #
+                          </Text>
+                          <Text className="my-0 text-left text-xs">
+                            {getFirstSixNumbers(order.id)}
+                          </Text>
+                        </Column>
+                      </Row>
+
+                      <Row align="center" className="mt-2">
+                        <Column>
+                          <Text className="my-0 text-left font-medium underline">
                             Address
                           </Text>
                           <Text className="my-0 text-left text-xs">
@@ -153,22 +227,23 @@ function Receipt({
                     </Section>
 
                     {/* loop through items to make an order summary section */}
-                    <Section className="mt-4 w-80 rounded-md bg-stone-200 p-4 text-left sm:w-[350px]">
-                      <Text className="mb-4 mt-0 text-lg font-semibold">
-                        {order.orderItems.length}{" "}
-                        {order.orderItems.length > 1 ? "Items" : "Item"}
+                    <Section className="mt-4 w-80 rounded-md border border-solid border-stone-300 bg-stone-200 p-4 text-left sm:w-[350px]">
+                      <Text className="mb-4 mt-0 text-base font-medium">
+                        {totalItems} {totalItems > 1 ? "Items" : "Item"}
                       </Text>
 
                       {order.orderItems.map((item, index) => (
                         <Row key={index} align="center" className="my-2 w-80">
-                          <Column className="align-top">
-                            <Text className="my-0 text-left font-medium">
+                          <Column className="w-5 align-top">
+                            <Text className="my-0 w-5 text-left text-base font-medium">
                               {item.quantity}
                             </Text>
                           </Column>
 
                           <Column className="align-top">
-                            <Text className="my-0">{item.name}</Text>
+                            <Text className="my-0 text-left text-base font-medium">
+                              {item.name}
+                            </Text>
                             {Object.values(item.customizations).map(
                               (choiceId, idx) => (
                                 <Text
@@ -192,7 +267,7 @@ function Receipt({
                           </Column>
 
                           <Column className="align-top">
-                            <Text className="my-0 text-right">
+                            <Text className="my-0 text-right text-base">
                               {formatPrice(
                                 calculateRelativeTotal({
                                   items: [item] as
@@ -207,18 +282,24 @@ function Receipt({
                         </Row>
                       ))}
 
-                      <Section className="mt-8 w-80 text-center sm:w-[350px]">
+                      <Section
+                        className={`mt-8 text-center ${order.includeNapkinsAndUtensils ? "w-[275px]" : "w-[300px]"}`}
+                      >
                         <Row>
-                          <Column className="w-4 text-right">
+                          <Column className="w-4">
                             <Img
-                              src={`${baseUrl}/static/utensils.png`}
+                              src={`${baseUrl}/static/${order.includeNapkinsAndUtensils ? "utensilsRequested" : "noUtensilsRequested"}.png`}
                               alt="Image of a fork and knife to represent napkins and utensils"
-                              className="ml-auto mr-2 h-3 w-3"
+                              className="mr-2 h-4 w-4"
                             />
                           </Column>
 
-                          <Column className="w-28 text-right">
-                            <Text className="my-0 text-left text-xs italic text-stone-400">
+                          <Column
+                            className={`${order.includeNapkinsAndUtensils ? "w-[250px]" : "w-[278px]"}`}
+                          >
+                            <Text
+                              className={`my-0 text-sm italic text-stone-400 ${order.includeNapkinsAndUtensils ? "w-[250px]" : "w-[278px]"}`}
+                            >
                               {`Napkins and utensils were ${
                                 order.includeNapkinsAndUtensils ? "" : "not"
                               } requested.`}
@@ -229,49 +310,49 @@ function Receipt({
 
                       <Hr className="border-stone-400" />
 
-                      <Section className="w-48">
-                        <Row>
+                      <Section className="w-72">
+                        <Row className="h-5">
                           <Column>
-                            <Text className="my-0 text-left">Subtotal</Text>
+                            <Text className="my-0 h-5 text-left">Subtotal</Text>
                           </Column>
                           <Column>
-                            <Text className="my-0 text-right">
+                            <Text className="my-0 h-5 text-right">
                               {formatPrice(order.subtotal)}
                             </Text>
                           </Column>
                         </Row>
-                        <Row>
+                        <Row className="h-5">
                           <Column>
-                            <Text className="my-0 text-left">Tax</Text>
+                            <Text className="my-0 h-5 text-left">Tax</Text>
                           </Column>
                           <Column>
-                            <Text className="my-0 text-right">
+                            <Text className="my-0 h-5 text-right">
                               {formatPrice(order.tax)}
                             </Text>
                           </Column>
                         </Row>
                         {order.tipValue !== 0 && (
-                          <Row>
+                          <Row className="h-5">
                             <Column>
-                              <Text className="my-0 text-left">
+                              <Text className="my-0 h-5 text-left">
                                 {`Tip${order.tipPercentage !== null ? ` (${order.tipPercentage}%)` : ""}`}
                               </Text>
                             </Column>
                             <Column>
-                              <Text className="my-0 text-right">
+                              <Text className="my-0 h-5 text-right">
                                 {formatPrice(order.tipValue)}
                               </Text>
                             </Column>
                           </Row>
                         )}
-                        <Row>
+                        <Row className="mt-1 h-5">
                           <Column>
-                            <Text className="my-0 text-left text-base font-semibold">
+                            <Text className="my-0 h-5 text-left text-base font-semibold">
                               Total
                             </Text>
                           </Column>
                           <Column>
-                            <Text className="my-0 text-right text-base font-semibold">
+                            <Text className="my-0 h-5 text-right text-base font-semibold">
                               {formatPrice(order.total)}
                             </Text>
                           </Column>
@@ -279,12 +360,16 @@ function Receipt({
                       </Section>
                     </Section>
 
-                    <Button
-                      href={`https://khueskitchen.com/track?id=${order.id}`}
-                      className="mt-4 rounded-md bg-primary px-4 py-3 text-sm text-offwhite"
+                    <Link
+                      href={`https://khueskitchen.com/order/${order.id}`}
+                      className="block w-[236px]"
                     >
-                      Track your order
-                    </Button>
+                      <Img
+                        src={`${baseUrl}/static/trackYourOrderButton.png`}
+                        alt="Button to track your order"
+                        className="mt-8"
+                      />
+                    </Link>
                   </Column>
                 </Section>
               </Section>
@@ -302,3 +387,98 @@ function Receipt({
 }
 
 export default Receipt;
+
+// {
+//     "id": "151ac520-08eb-4fc1-9e98-968486c13689",
+//     "createdAt": "2024-06-21T00:35:50.987Z",
+//     "orderStartedAt": null,
+//     "orderCompletedAt": null,
+//     "datetimeToPickup": "2024-06-21T00:50:50.982Z",
+//     "firstName": "Michael",
+//     "lastName": "Ongaro",
+//     "email": "mongaro6@gmail.com",
+//     "phoneNumber": "+16513570468",
+//     "includeNapkinsAndUtensils": false,
+//     "dietaryRestrictions": "I am allergic to eggs and peanuts",
+//     "discountId": null,
+//     "subtotal": 3700,
+//     "tax": 0,
+//     "tipPercentage": 10,
+//     "tipValue": 370,
+//     "total": 4070,
+//     "prevRewardsPoints": 500,
+//     "earnedRewardsPoints": 370,
+//     "spentRewardsPoints": 0,
+//     "stripeSessionId": "cs_test_b1IgztPcb4MwZIO05peXuboSmgoBLqylXrGfbmse0AlJPlFrs5yt8Q6UXy",
+//     "notableUserDescription": null,
+//     "rewardsPointsRedeemed": true,
+//     "userLeftFeedback": false,
+//     "userId": "user_2d4XoRNA57VwLUYXy0M9XTdP4wV",
+//     "orderItems": [
+//         {
+//             "id": "60e229f5-8ace-443a-ac05-cb84d1381a03",
+//             "name": "Drink One",
+//             "specialInstructions": "",
+//             "includeDietaryRestrictions": false,
+//             "quantity": 2,
+//             "price": 300,
+//             "orderId": "151ac520-08eb-4fc1-9e98-968486c13689",
+//             "menuItemId": "717349d0-4829-4e4a-98ab-a9e00a67768a",
+//             "discountId": null,
+//             "isChefsChoice": false,
+//             "isAlcoholic": false,
+//             "isVegetarian": false,
+//             "isVegan": false,
+//             "isGlutenFree": false,
+//             "showUndercookedOrRawDisclaimer": false,
+//             "pointReward": false,
+//             "birthdayReward": false,
+//             "customizations": {
+//                 "d58f86b3-d769-468e-9b5c-3e207438701f": "e1f38eae-c3d1-41e4-9069-a84a76d456cc"
+//             },
+//             "discount": null
+//         },
+//         {
+//             "id": "0837320e-d7a2-43b4-801b-4b85f2b00f75",
+//             "name": "Fried Shrimp",
+//             "specialInstructions": "",
+//             "includeDietaryRestrictions": false,
+//             "quantity": 1,
+//             "price": 1200,
+//             "orderId": "151ac520-08eb-4fc1-9e98-968486c13689",
+//             "menuItemId": "f61bf41d-ef94-428f-8a27-e979d8218690",
+//             "discountId": null,
+//             "isChefsChoice": false,
+//             "isAlcoholic": false,
+//             "isVegetarian": false,
+//             "isVegan": false,
+//             "isGlutenFree": false,
+//             "showUndercookedOrRawDisclaimer": false,
+//             "pointReward": false,
+//             "birthdayReward": false,
+//             "customizations": {},
+//             "discount": null
+//         },
+//         {
+//             "id": "acc01f14-7b2b-4d19-bbbb-b1bfd337b25c",
+//             "name": "Chicken Sandwich",
+//             "specialInstructions": "",
+//             "includeDietaryRestrictions": false,
+//             "quantity": 1,
+//             "price": 1900,
+//             "orderId": "151ac520-08eb-4fc1-9e98-968486c13689",
+//             "menuItemId": "d809597c-803b-4bbb-b8b9-65d57b5a3577",
+//             "discountId": null,
+//             "isChefsChoice": true,
+//             "isAlcoholic": false,
+//             "isVegetarian": false,
+//             "isVegan": false,
+//             "isGlutenFree": false,
+//             "showUndercookedOrRawDisclaimer": false,
+//             "pointReward": false,
+//             "birthdayReward": false,
+//             "customizations": {},
+//             "discount": null
+//         }
+//     ]
+// }

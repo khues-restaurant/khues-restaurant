@@ -8,6 +8,7 @@ import {
   Hr,
   Html,
   Img,
+  Link,
   Preview,
   Row,
   Section,
@@ -41,6 +42,7 @@ function CloseToAReward(
     // unsubscriptionToken,
   }: CloseToAReward,
 ) {
+  const firstName = "Michael";
   const userPoints = 1000;
   const unsubscriptionToken = "testUnsubToken";
 
@@ -179,58 +181,6 @@ function CloseToAReward(
 
   const closeToRedeeming = [
     {
-      id: "3581eac7-f105-486e-97de-2aa234bb6e0c",
-      createdAt: new Date(),
-      name: "Toffee Chocolate Chip Cookie",
-      description:
-        "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-      imageUrl: "test",
-      price: 1100,
-      altPrice: null,
-      available: true,
-      discontinued: false,
-      listOrder: 10,
-      menuCategoryId: "7abeebb9-4fce-457a-af05-adb1b89aa1b0",
-      activeDiscountId: null,
-      isChefsChoice: false,
-      isAlcoholic: false,
-      isVegetarian: false,
-      isVegan: false,
-      isGlutenFree: false,
-      showUndercookedOrRawDisclaimer: false,
-      pointReward: true,
-      birthdayReward: true,
-      reviews: null,
-      activeDiscount: null,
-      customizationCategories: [],
-    },
-    {
-      id: "3dad69fb-2607-4563-aeca-79515f93e06d",
-      createdAt: new Date(),
-      name: "Thai Tea Tres Leches",
-      description:
-        "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-      imageUrl: "test",
-      price: 1100,
-      altPrice: null,
-      available: true,
-      discontinued: false,
-      listOrder: 11,
-      menuCategoryId: "7abeebb9-4fce-457a-af05-adb1b89aa1b0",
-      activeDiscountId: null,
-      isChefsChoice: false,
-      isAlcoholic: false,
-      isVegetarian: false,
-      isVegan: false,
-      isGlutenFree: false,
-      showUndercookedOrRawDisclaimer: false,
-      pointReward: true,
-      birthdayReward: true,
-      reviews: null,
-      activeDiscount: null,
-      customizationCategories: [],
-    },
-    {
       id: "f5adc265-dc7c-47ad-aead-cdad3d111de8",
       createdAt: new Date(),
       name: "Drink Two",
@@ -293,7 +243,117 @@ function CloseToAReward(
         },
       ],
     },
+    {
+      id: "3581eac7-f105-486e-97de-2aa234bb6e0c",
+      createdAt: new Date(),
+      name: "Toffee Chocolate Chip Cookie",
+      description:
+        "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+      imageUrl: "test",
+      price: 1100,
+      altPrice: null,
+      available: true,
+      discontinued: false,
+      listOrder: 10,
+      menuCategoryId: "7abeebb9-4fce-457a-af05-adb1b89aa1b0",
+      activeDiscountId: null,
+      isChefsChoice: false,
+      isAlcoholic: false,
+      isVegetarian: false,
+      isVegan: false,
+      isGlutenFree: false,
+      showUndercookedOrRawDisclaimer: false,
+      pointReward: true,
+      birthdayReward: true,
+      reviews: null,
+      activeDiscount: null,
+      customizationCategories: [],
+    },
+    {
+      id: "3dad69fb-2607-4563-aeca-79515f93e06d",
+      createdAt: new Date(),
+      name: "Thai Tea Tres Leches",
+      description:
+        "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+      imageUrl: "test",
+      price: 1100,
+      altPrice: null,
+      available: true,
+      discontinued: false,
+      listOrder: 11,
+      menuCategoryId: "7abeebb9-4fce-457a-af05-adb1b89aa1b0",
+      activeDiscountId: null,
+      isChefsChoice: false,
+      isAlcoholic: false,
+      isVegetarian: false,
+      isVegan: false,
+      isGlutenFree: false,
+      showUndercookedOrRawDisclaimer: false,
+      pointReward: true,
+      birthdayReward: true,
+      reviews: null,
+      activeDiscount: null,
+      customizationCategories: [],
+    },
   ];
+
+  function getDynamicIntroduction() {
+    let introduction = (
+      <>
+        <Text className="text-left">Hi {firstName},</Text>
+
+        <Text className="text-left">
+          We noticed you haven&apos;t placed an order in a while, and we wanted
+          to let you know that you&apos;re just a few points away from redeeming
+          some amazing rewards! Earn a few more points on your next purchase and
+          unlock delicious treats.
+        </Text>
+
+        <Text className="text-left">
+          Don&apos;t miss out on this opportunity to enjoy your favorite dishes
+          and earn rewards while you do!
+        </Text>
+      </>
+    );
+
+    if (ableToRedeem.length > 0) {
+      introduction = (
+        <>
+          <Text className="text-left">Hi {firstName},</Text>
+
+          <Text className="text-left">
+            Great news! You have enough points to redeem some fantastic rewards
+            on your next order. We haven&apos;t seen you in a while, and
+            we&apos;d love to welcome you back with something special.
+          </Text>
+
+          <Text className="text-left">
+            Visit us soon and enjoy the rewards you&apos;ve earned!
+          </Text>
+        </>
+      );
+    } else if (ableToRedeem.length > 0 && closeToRedeeming.length === 0) {
+      introduction = (
+        <>
+          <Text className="text-left">Hi {firstName},</Text>
+
+          <Text className="text-left">
+            We miss you! It looks like you have enough points to redeem some
+            great rewards right now, and you&apos;re also close to earning even
+            more rewards with just a few more points.
+          </Text>
+
+          <Text className="text-left">
+            Come back and treat yourself to your favorite dishes, and take
+            advantage of the rewards you&apos;ve earned and those you&apos;re
+            close to achieving!
+          </Text>
+        </>
+      );
+    }
+
+    return introduction;
+  }
 
   let dynamicPreviewContent =
     "You're just a few points away from redeeming your favorite items. Keep earning and enjoy our special treats soon!";
@@ -325,59 +385,59 @@ function CloseToAReward(
 
         <Body style={main} className="rounded-lg">
           <Container style={container} className="rounded-lg">
-            <Section className="mb-4 rounded-lg bg-offwhite">
+            <Section className="rounded-lg bg-offwhite">
               <Header />
 
               <Section className="p-4">
-                <Row align="center" className="w-64">
-                  <Text className="text-center font-semibold">
-                    {/* TODO: make this text dynamic/reference the user's first name somewhere */}
-                    Thank you! Your order has been successfully placed and will
-                    be started soon.
-                  </Text>
+                <Row>
+                  <Column align="left">{getDynamicIntroduction()}</Column>
                 </Row>
 
                 <Hr />
 
                 <Section className="my-8 text-center">
-                  {/* TODO: section to show user's current points, might involve screenshotting
+                  <Column align="center">
+                    {/* TODO: section to show user's current points, might involve screenshotting
                       since ideally you want to use the same branding for the gold rewards gradient */}
 
-                  {ableToRedeem.length > 0 && (
-                    <Section className="my-4">
-                      <Text className="text-lg font-semibold underline underline-offset-2">
-                        You can already redeem these rewards
-                      </Text>
-                      {ableToRedeem.map((item) => (
-                        <Reward key={item.id} item={item} />
-                      ))}
-                    </Section>
-                  )}
+                    {ableToRedeem.length > 0 && (
+                      <Section className="mb-4">
+                        <Text className="text-center text-lg font-medium underline underline-offset-2">
+                          You can already redeem these rewards
+                        </Text>
+                        {ableToRedeem.map((item) => (
+                          <Reward key={item.id} item={item} />
+                        ))}
+                      </Section>
+                    )}
 
-                  {closeToRedeeming.length > 0 && (
-                    <Section className="my-4">
-                      <Text className="text-lg font-semibold underline underline-offset-2">
-                        You are close to redeeming these rewards:
-                      </Text>
-                      {closeToRedeeming.map((item) => (
-                        <Reward
-                          key={item.id}
-                          item={item}
-                          userPoints={userPoints}
-                        />
-                      ))}
-                    </Section>
-                  )}
+                    {closeToRedeeming.length > 0 && (
+                      <Section className="my-4">
+                        <Text className="text-center text-lg font-medium underline underline-offset-2">
+                          You&apos;re close to redeeming these rewards:
+                        </Text>
+                        {closeToRedeeming.map((item) => (
+                          <Reward
+                            key={item.id}
+                            item={item}
+                            userPoints={userPoints}
+                          />
+                        ))}
+                      </Section>
+                    )}
+
+                    <Link
+                      href="https://khueskitchen.com/order"
+                      className="block w-[236px]"
+                    >
+                      <Img
+                        src={`${baseUrl}/static/orderNowButton.png`}
+                        alt="Button to visit Khue's order page"
+                        className="mt-8"
+                      />
+                    </Link>
+                  </Column>
                 </Section>
-              </Section>
-
-              <Section className="text-center">
-                <Button
-                  href={`https://khueskitchen.com/order`}
-                  className="mb-8 rounded-md bg-primary px-8 py-4 text-offwhite"
-                >
-                  Order now
-                </Button>
               </Section>
 
               <Footer
@@ -400,17 +460,22 @@ function Reward({ item, userPoints }: { item: MenuItem; userPoints?: number }) {
   const pointsAway = userPoints ? itemPoints - userPoints : 0;
 
   return (
-    <Section className="mt-4 w-80 rounded-md bg-stone-200 p-4 text-left sm:w-[350px]">
+    <Section className="mt-4 w-80 rounded-md border border-solid border-stone-300 bg-stone-200 p-4 text-left sm:w-[350px]">
       <Section align="center">
         <Row align="left">
-          <Text className="m-0 text-lg font-semibold">{item.name}</Text>
+          <Text className="m-0 text-base font-semibold">{item.name}</Text>
         </Row>
 
         <Row align="left">
           <Text className="my-0 text-left font-medium">
             {itemPoints} points
-            {pointsAway > 0 ? ` - (${pointsAway} points away)` : ""}
           </Text>
+
+          {pointsAway > 0 && (
+            <Text className="my-0 text-left font-medium">
+              ({pointsAway} points away)
+            </Text>
+          )}
         </Row>
 
         <Column align="right">

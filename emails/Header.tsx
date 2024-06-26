@@ -6,7 +6,7 @@ const baseUrl = process.env.VERCEL_URL
 
 function Header() {
   return (
-    <div className="relative -top-16 rounded-t-lg bg-primary p-4 ">
+    <div className="relative rounded-t-lg bg-primary p-4">
       <Img
         src={`${baseUrl}/static/whiteLogo.png`}
         alt="Image of the Khue's logo."

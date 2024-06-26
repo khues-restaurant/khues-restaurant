@@ -7,6 +7,8 @@ import {
   Head,
   Hr,
   Html,
+  Img,
+  Link,
   Preview,
   Row,
   Section,
@@ -17,8 +19,9 @@ import Footer from "emails/Footer";
 import { type Reward } from "@prisma/client";
 import Decimal from "decimal.js";
 import { container, main, tailwindConfig } from "emails/utils/styles";
-import { addDays } from "date-fns";
+import { addDays, format } from "date-fns";
 import Header from "emails/Header";
+import { getCSTDateInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -39,6 +42,7 @@ function RewardsExpiringThisMonth(
     // unsubscriptionToken,
   }: RewardsExpiringThisMonth,
 ) {
+  const firstName = "Michael";
   const unsubscriptionToken = "testUnsubToken";
 
   const rewardsExpiringThisMonth = [
@@ -121,63 +125,85 @@ function RewardsExpiringThisMonth(
 
         <Body style={main} className="rounded-lg">
           <Container style={container} className="rounded-lg">
-            <Section className="mb-4 rounded-lg bg-offwhite">
+            <Section className="rounded-lg bg-offwhite">
               <Header />
 
               <Section className="p-4">
-                <Row align="center" className="w-64">
-                  <Text className="text-center font-semibold">
-                    {/* TODO: make this text dynamic/reference the user's first name somewhere */}
-                    Thank you! Your order has been successfully placed and will
-                    be started soon.
-                  </Text>
+                <Row>
+                  <Column>
+                    <Text className="text-left">Hi {firstName},</Text>
+
+                    <Text className="text-left">
+                      We wanted to give you a heads-up that some of your
+                      hard-earned rewards are about to expire at the end of this
+                      month. Now is the perfect time to treat yourself to your
+                      favorite dishes and make the most of your points.
+                    </Text>
+
+                    <Text className="text-left">
+                      Check out your available rewards and redeem them before
+                      they&apos;re gone!
+                    </Text>
+                  </Column>
                 </Row>
 
                 <Hr />
 
                 <Section className="my-8 text-center">
-                  {/* TODO: section to show user's current points, might involve screenshotting
+                  <Column align="center">
+                    {/* TODO: section to show user's current points, might involve screenshotting
                       since ideally you want to use the same branding for the gold rewards gradient */}
 
-                  <Text className="text-center text-lg font-medium">
-                    Your rewards that will expire during{" "}
-                    {new Date().toLocaleString("en-US", {
-                      month: "long",
-                    })}
-                  </Text>
+                    <Text className="text-center font-medium underline underline-offset-2">
+                      Your rewards that will expire during{" "}
+                      {new Date().toLocaleString("en-US", {
+                        month: "long",
+                      })}
+                    </Text>
 
-                  {/* Legend */}
-                  <Section className="w-80 pt-4 text-left sm:w-[350px]">
-                    <Row>
-                      <Column align="left" className="w-1/3">
-                        <Text className="m-0 ml-4 text-center">
-                          Expiration date
-                        </Text>
-                      </Column>
-                      <Column align="center" className="w-1/3">
-                        <Text className="m-0 text-center">Value</Text>
-                      </Column>
-                      <Column align="right" className="w-1/3">
-                        <Text className="m-0 mr-5 text-center">Status</Text>
-                      </Column>
-                    </Row>
-                  </Section>
+                    {/* Legend */}
+                    <Section className="w-80 pt-4 text-left sm:w-[350px]">
+                      <Row>
+                        <Column align="left" className="w-1/3">
+                          <Text className="m-0 ml-3 text-center font-medium">
+                            Expiration date
+                          </Text>
+                        </Column>
+                        <Column align="center" className="w-1/3">
+                          <Text className="m-0 text-center font-medium">
+                            Value
+                          </Text>
+                        </Column>
+                        <Column align="right" className="w-1/3">
+                          <Text className="m-0 mr-5 text-center font-medium">
+                            Status
+                          </Text>
+                        </Column>
+                      </Row>
+                    </Section>
 
-                  <Section className="text-center">
-                    {rewardsExpiringThisMonth.map((reward) => (
-                      <ExpiringReward key={reward.id} reward={reward} />
-                    ))}
-                  </Section>
+                    <Section className="text-center">
+                      {rewardsExpiringThisMonth.map((reward, index) => (
+                        <ExpiringReward
+                          key={reward.id}
+                          reward={reward}
+                          index={index}
+                        />
+                      ))}
+                    </Section>
+
+                    <Link
+                      href="https://khueskitchen.com/profile/rewards"
+                      className="block w-[253px]"
+                    >
+                      <Img
+                        src={`${baseUrl}/static/viewYourRewardsButton.png`}
+                        alt="Button to visit your profile's rewards page"
+                        className="mt-8"
+                      />
+                    </Link>
+                  </Column>
                 </Section>
-              </Section>
-
-              <Section className="text-center">
-                <Button
-                  href={`https://khueskitchen.com/order`}
-                  className="mb-8 rounded-md bg-primary px-8 py-4 text-offwhite"
-                >
-                  View your account&apos;s rewards
-                </Button>
               </Section>
 
               <Footer
@@ -194,41 +220,29 @@ function RewardsExpiringThisMonth(
 
 export default RewardsExpiringThisMonth;
 
-function ExpiringReward({ reward }: { reward: Reward }) {
-  // Calculate the difference in milliseconds
-  const millisecondsUntilExpiration = new Decimal(
-    reward.expiresAt.getTime(),
-  ).sub(new Decimal(new Date().getTime()));
-
-  // Convert milliseconds to days (1 day = 24 * 60 * 60 * 1000 milliseconds)
-  const daysInMilliseconds = new Decimal(24 * 60 * 60 * 1000);
-  const daysUntilExpiration = millisecondsUntilExpiration
-    .div(daysInMilliseconds)
-    .floor()
-    .toNumber();
+function ExpiringReward({ reward, index }: { reward: Reward; index: number }) {
+  const expirationDate = getCSTDateInUTC(reward.expiresAt);
 
   return (
-    <Section className="mt-4 w-80 rounded-md bg-stone-200 p-4 text-left sm:w-[350px]">
+    <Section
+      className={`${index === 0 ? "mt-2" : "mt-4"} w-80 rounded-md border border-solid border-stone-300 bg-stone-200 p-4 text-left sm:w-[350px]`}
+    >
       <Section align="center">
         <Row align="center">
           <Column align="left" className="w-1/3">
             <Row>
-              <Text className="m-0 text-center font-semibold">
-                {daysUntilExpiration === 0
-                  ? "Today"
-                  : `${daysUntilExpiration === 1 ? "1 day" : `in ${daysUntilExpiration} days`} `}
+              <Text className="m-0 text-center">
+                {format(expirationDate, "MM/dd/yyyy")}
               </Text>
             </Row>
           </Column>
 
           <Column align="center" className="w-1/3">
-            <Text className="my-0 text-center font-medium">
-              {reward.value} points
-            </Text>
+            <Text className="my-0 text-center">{reward.value} points</Text>
           </Column>
 
           <Column align="right" className="w-1/3">
-            <Text className="my-0 text-center font-medium">
+            <Text className="my-0 text-center">
               {reward.partiallyRedeemed ? "Partially used" : "Unused"}
             </Text>
           </Column>

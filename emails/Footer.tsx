@@ -11,40 +11,20 @@ interface Footer {
 
 function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
   return (
-    <Section className="relative -bottom-4 rounded-b-lg bg-primary text-offwhite">
+    <Section className="relative rounded-b-lg bg-primary text-offwhite">
       <Column align="center">
-        {/* 
-
-                    idk why this was messing up the whole flow, fix later for mobile
-                  
-                  <Column className="w-80 text-center sm:hidden">
-                    <Row>
-                      <Text className="mb-0 text-xs">
-                        1234 Lorem Ipsum Dr. Roseville, MN 12345
-                      </Text>
-                    </Row>
-
-                    <Row>
-                      <Link href="tel:+1234567890">
-                        <Text className="mb-0 text-xs text-offwhite">
-                          (123) 456-7890
-                        </Text>
-                      </Link>
-                    </Row>
-                  </Column> */}
-
-        <Row className="w-[350px]">
-          <Column className="text-left">
-            <Text className="mb-0 text-xs">
-              1234 Lorem Ipsum Dr. Roseville, MN 12345
-            </Text>
-          </Column>
-
+        <Row className="w-[350px] sm:hidden">
           <Column className="text-center">
-            <Text className="mb-0">|</Text>
+            <Link href="tel:+1234567890">
+              <Text className="mb-0 text-xs text-offwhite">
+                1234 Lorem Ipsum Dr. Roseville, MN 12345
+              </Text>
+            </Link>
           </Column>
+        </Row>
 
-          <Column className="text-right">
+        <Row className="w-[350px] sm:hidden">
+          <Column className="text-center">
             <Link href="tel:+1234567890">
               <Text className="mb-0 pl-2 text-xs text-offwhite">
                 (123) 456-7890
@@ -53,7 +33,29 @@ function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
           </Column>
         </Row>
 
-        <Row className="mt-1 w-52">
+        <Row className="hidden w-[363px] sm:inline-table">
+          <Column className="w-[256px]">
+            <Link href="tel:+1234567890">
+              <Text className="mb-0 text-xs text-offwhite">
+                1234 Lorem Ipsum Dr. Roseville, MN 12345
+              </Text>
+            </Link>
+          </Column>
+
+          <Column className="">
+            <Text className="mb-0">|</Text>
+          </Column>
+
+          <Column className="w-[91px]">
+            <Link href="tel:+1234567890">
+              <Text className="mb-0 pl-2 text-xs text-offwhite">
+                (123) 456-7890
+              </Text>
+            </Link>
+          </Column>
+        </Row>
+
+        <Row className="mt-3 w-52">
           <Column className="text-left">
             <Link href="https://khueskitchen.com">
               <Text className="my-0 text-xs text-offwhite">

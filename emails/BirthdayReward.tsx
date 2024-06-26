@@ -8,6 +8,7 @@ import {
   Hr,
   Html,
   Img,
+  Link,
   Preview,
   Row,
   Section,
@@ -214,72 +215,59 @@ function BirthdayReward(
 
         <Body style={main} className="rounded-lg">
           <Container style={container} className="rounded-lg">
-            <Section className="mb-4 rounded-lg bg-offwhite">
+            <Section className="rounded-lg bg-offwhite">
               <Header />
 
               <Section className="p-4">
-                <Row align="center" className="w-64">
-                  <Text className="my-1 text-left">Hi {firstName},</Text>
-                </Row>
+                <Row>
+                  <Column align="left">
+                    <Text className="text-left">Hi {firstName},</Text>
 
-                <Row align="center" className="w-64">
-                  <Text className="my-1 text-left">
-                    We&apos;re excited to celebrate your upcoming birthday with
-                    you! As a special treat, we&apos;re offering you a
-                    complimentary dessert to make your day even more delightful.
-                  </Text>
-                </Row>
-
-                <Row align="center" className="w-64">
-                  <Text className="my-1 text-left">
-                    You can redeem your free dessert when placing a pickup order
-                    on our website anytime between{" "}
-                    <strong>{formattedStartDate}</strong> and{" "}
-                    <strong>{formattedEndDate}</strong>.
-                  </Text>
+                    <Text className="text-left">
+                      We&apos;re excited to celebrate your upcoming birthday
+                      with you! As a special treat, we&apos;re offering you a
+                      complimentary dessert to make your day even more
+                      delightful.
+                    </Text>
+                    <Text className="text-left">
+                      You can redeem your free dessert when placing a pickup
+                      order on our website anytime between{" "}
+                      <strong>{formattedStartDate}</strong> and{" "}
+                      <strong>{formattedEndDate}</strong>.
+                    </Text>
+                  </Column>
                 </Row>
 
                 <Hr />
 
                 <Section className="my-8 text-center">
-                  <Text className="text-center text-lg font-medium">
-                    Explore your reward options
-                  </Text>
+                  <Column align="center">
+                    <Text className="text-center text-lg font-medium underline  underline-offset-2">
+                      Explore your reward options
+                    </Text>
 
-                  <Section className="w-80 rounded-md bg-stone-200 p-4 text-center sm:w-[350px]">
-                    {birthdayRewards.map((reward) => (
-                      <Row key={reward.id} align="center">
-                        <Column align="left">
-                          <Text className="text-left font-semibold">
-                            {reward.name}
-                          </Text>
-                          <Text className="text-left">
-                            {reward.description}
-                          </Text>
-                        </Column>
+                    <Section className="">
+                      {birthdayRewards.map((reward, index) => (
+                        <BirthdayRewardItem
+                          key={reward.id}
+                          reward={reward}
+                          index={index}
+                        />
+                      ))}
+                    </Section>
 
-                        <Column align="right">
-                          <Img
-                            src={`${baseUrl}/static/sampleImage.png`}
-                            alt={`Image of ${reward.name}`}
-                            width="100"
-                            height="100"
-                            className="my-0 ml-2 text-right sm:ml-4"
-                          />
-                        </Column>
-                      </Row>
-                    ))}
-                  </Section>
+                    <Link
+                      href="https://khueskitchen.com/profile/rewards"
+                      className="block w-[330px]"
+                    >
+                      <Img
+                        src={`${baseUrl}/static/redeemYourBirthdayReward.png`}
+                        alt="Button to visit Khue's order page"
+                        className="mt-8"
+                      />
+                    </Link>
+                  </Column>
                 </Section>
-              </Section>
-
-              <Section className="text-center">
-                <Button
-                  href={`https://khueskitchen.com/order`}
-                  className="mb-8 rounded-md bg-primary px-8 py-4 text-offwhite"
-                >
-                  Redeem your birthday reward
-                </Button>
               </Section>
 
               <Footer
@@ -295,3 +283,33 @@ function BirthdayReward(
 }
 
 export default BirthdayReward;
+
+function BirthdayRewardItem({
+  reward,
+  index,
+}: {
+  reward: MenuItem;
+  index: number;
+}) {
+  return (
+    <Row
+      align="center"
+      className={`${index === 0 ? "mt-2" : "mt-4"} w-80 rounded-md border border-solid border-stone-300 bg-stone-200 px-4 py-2 text-center sm:w-[350px]`}
+    >
+      <Column align="left">
+        <Text className="text-left font-semibold">{reward.name}</Text>
+        <Text className="text-left">{reward.description}</Text>
+      </Column>
+
+      <Column align="right">
+        <Img
+          src={`${baseUrl}/static/sampleImage.png`}
+          alt={`Image of ${reward.name}`}
+          width="100"
+          height="100"
+          className="my-0 ml-2 text-right sm:ml-4"
+        />
+      </Column>
+    </Row>
+  );
+}

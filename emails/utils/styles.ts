@@ -5,10 +5,8 @@ const main = {
 };
 
 const container = {
-  // backgroundColor: "#fffcf5",
   backgroundColor: "#fffdfa",
   margin: "2rem auto",
-  paddingTop: "4rem",
 };
 
 const tailwindConfig = {
