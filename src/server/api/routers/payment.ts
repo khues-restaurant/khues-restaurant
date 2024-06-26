@@ -305,7 +305,7 @@ export const paymentRouter = createTRPCRouter({
         },
 
         success_url: `${env.BASE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}&userId=${input.userId}`,
-        cancel_url: `${env.BASE_URL}`,
+        cancel_url: `${env.BASE_URL}/`,
       });
 
       setTimeout(

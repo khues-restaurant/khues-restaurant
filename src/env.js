@@ -34,7 +34,6 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string(),
     NEXT_PUBLIC_SOCKET_IO_URL: z.string().url(),
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
   },
 
   /**
@@ -54,7 +53,6 @@ export const env = createEnv({
     OPEN_AI_KEY: process.env.OPEN_AI_KEY,
     SOCKET_IO_URL: process.env.SOCKET_IO_URL,
     NEXT_PUBLIC_SOCKET_IO_URL: process.env.NEXT_PUBLIC_SOCKET_IO_URL,
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

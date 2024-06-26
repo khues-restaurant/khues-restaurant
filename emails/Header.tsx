@@ -1,14 +1,13 @@
 import { Img, Text } from "@react-email/components";
-
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "";
+import dynamicAssetUrls from "emails/utils/dynamicAssetUrls";
 
 function Header() {
+  const { baseUrl } = dynamicAssetUrls;
+
   return (
     <div className="relative rounded-t-lg bg-primary p-4">
       <Img
-        src={`${baseUrl}/static/whiteLogo.png`}
+        src={`${baseUrl}/whiteLogo.png`}
         alt="Image of the Khue's logo."
         width="50"
         height="50"

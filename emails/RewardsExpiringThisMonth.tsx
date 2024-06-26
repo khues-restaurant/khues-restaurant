@@ -22,10 +22,7 @@ import { container, main, tailwindConfig } from "emails/utils/styles";
 import { addDays, format } from "date-fns";
 import Header from "emails/Header";
 import { getCSTDateInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
-
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "";
+import dynamicAssetUrls from "emails/utils/dynamicAssetUrls";
 
 interface RewardsExpiringThisMonth {
   firstName: string;
@@ -102,6 +99,8 @@ function RewardsExpiringThisMonth(
       userId: "user_2d4XoRNA57VwLUYXy0M9XTdP4wV",
     },
   ];
+
+  const { baseUrl } = dynamicAssetUrls;
 
   return (
     <Html>
@@ -197,7 +196,7 @@ function RewardsExpiringThisMonth(
                       className="block w-[253px]"
                     >
                       <Img
-                        src={`${baseUrl}/static/viewYourRewardsButton.png`}
+                        src={`${baseUrl}/viewYourRewardsButton.png`}
                         alt="Button to visit your profile's rewards page"
                         className="mt-8"
                       />

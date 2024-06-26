@@ -1,8 +1,5 @@
 import { Column, Img, Link, Row, Section, Text } from "@react-email/components";
-
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "";
+import dynamicAssetUrls from "emails/utils/dynamicAssetUrls";
 
 interface Footer {
   userIsAMember: boolean;
@@ -10,6 +7,8 @@ interface Footer {
 }
 
 function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
+  const { baseUrl } = dynamicAssetUrls;
+
   return (
     <Section className="relative rounded-b-lg bg-primary text-offwhite">
       <Column align="center">
@@ -90,7 +89,7 @@ function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
           <Column>
             <Link href="https://tiktok.com/khueskitchen">
               <Img
-                src={`${baseUrl}/static/socials/whiteTiktok.png`}
+                src={`${baseUrl}/socials/whiteTiktok.png`}
                 width="24"
                 height="24"
                 alt="Tiktok"
@@ -101,7 +100,7 @@ function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
           <Column>
             <Link href="https://instagram.com/khueskitchen">
               <Img
-                src={`${baseUrl}/static/socials/whiteInstagram.png`}
+                src={`${baseUrl}/socials/whiteInstagram.png`}
                 width="24"
                 height="24"
                 alt="Instagram"
@@ -112,7 +111,7 @@ function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
           <Column>
             <Link href="https://facebook.com/khueskitchen">
               <Img
-                src={`${baseUrl}/static/socials/whiteFacebook.png`}
+                src={`${baseUrl}/socials/whiteFacebook.png`}
                 width="24"
                 height="24"
                 alt="Facebook"
@@ -123,7 +122,7 @@ function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
           <Column>
             <Link href="https://twitter.com/khueskitchen">
               <Img
-                src={`${baseUrl}/static/socials/whiteTwitter.png`}
+                src={`${baseUrl}/socials/whiteTwitter.png`}
                 width="24"
                 height="24"
                 alt="Twitter"

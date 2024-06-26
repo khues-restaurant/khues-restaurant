@@ -20,10 +20,7 @@ import { type MenuItem } from "@prisma/client";
 import Decimal from "decimal.js";
 import { container, main, tailwindConfig } from "emails/utils/styles";
 import Header from "emails/Header";
-
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "";
+import dynamicAssetUrls from "emails/utils/dynamicAssetUrls";
 
 interface CloseToAReward {
   firstName: string;
@@ -297,6 +294,8 @@ function CloseToAReward(
     },
   ];
 
+  const { baseUrl } = dynamicAssetUrls;
+
   function getDynamicIntroduction() {
     let introduction = (
       <>
@@ -431,7 +430,7 @@ function CloseToAReward(
                       className="block w-[236px]"
                     >
                       <Img
-                        src={`${baseUrl}/static/orderNowButton.png`}
+                        src={`${baseUrl}/orderNowButton.png`}
                         alt="Button to visit Khue's order page"
                         className="mt-8"
                       />
@@ -459,6 +458,8 @@ function Reward({ item, userPoints }: { item: MenuItem; userPoints?: number }) {
 
   const pointsAway = userPoints ? itemPoints - userPoints : 0;
 
+  const { menuItemBaseUrl } = dynamicAssetUrls;
+
   return (
     <Section className="mt-4 w-80 rounded-md border border-solid border-stone-300 bg-stone-200 p-4 text-left sm:w-[350px]">
       <Section align="center">
@@ -480,7 +481,7 @@ function Reward({ item, userPoints }: { item: MenuItem; userPoints?: number }) {
 
         <Column align="right">
           <Img
-            src={`${baseUrl}/static/sampleImage.png`}
+            src={`${menuItemBaseUrl}/menuItems/sampleImage.png`}
             alt={`Image of ${item.name}`}
             width="100"
             height="100"

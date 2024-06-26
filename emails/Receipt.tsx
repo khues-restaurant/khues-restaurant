@@ -31,10 +31,7 @@ import { formatPrice } from "~/utils/formatters/formatPrice";
 import { getFirstSixNumbers } from "~/utils/formatters/getFirstSixNumbers";
 import { main, container, tailwindConfig } from "emails/utils/styles";
 import Header from "emails/Header";
-
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "";
+import dynamicAssetUrls from "emails/utils/dynamicAssetUrls";
 
 interface Receipt {
   order: DBOrderSummary;
@@ -131,6 +128,8 @@ function Receipt({
     0,
   );
 
+  const { baseUrl } = dynamicAssetUrls;
+
   return (
     <Html>
       <Preview>
@@ -169,7 +168,7 @@ function Receipt({
                 <Section className="my-8 text-center">
                   <Column align="center">
                     <Img
-                      src={`${baseUrl}/static/emailOrderTracker.png`}
+                      src={`${baseUrl}/emailOrderTracker.png`}
                       alt="Image of the order tracker progress bar: with steps of 'Order placed', 'In progress', and 'Ready for pickup'"
                       className="mb-8 h-[59px] w-[348px] sm:h-[85px] sm:w-[520px]"
                     />
@@ -288,7 +287,7 @@ function Receipt({
                         <Row>
                           <Column className="w-4">
                             <Img
-                              src={`${baseUrl}/static/${order.includeNapkinsAndUtensils ? "utensilsRequested" : "noUtensilsRequested"}.png`}
+                              src={`${baseUrl}/${order.includeNapkinsAndUtensils ? "utensilsRequested" : "noUtensilsRequested"}.png`}
                               alt="Image of a fork and knife to represent napkins and utensils"
                               className="mr-2 h-4 w-4"
                             />
@@ -365,7 +364,7 @@ function Receipt({
                       className="block w-[236px]"
                     >
                       <Img
-                        src={`${baseUrl}/static/trackYourOrderButton.png`}
+                        src={`${baseUrl}/trackYourOrderButton.png`}
                         alt="Button to track your order"
                         className="mt-8"
                       />

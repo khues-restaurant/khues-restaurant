@@ -16,11 +16,8 @@ import {
 } from "@react-email/components";
 import Footer from "emails/Footer";
 import Header from "emails/Header";
+import dynamicAssetUrls from "emails/utils/dynamicAssetUrls";
 import { main, container, tailwindConfig } from "emails/utils/styles";
-
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "";
 
 interface Welcome {
   firstName: string;
@@ -28,6 +25,8 @@ interface Welcome {
 }
 
 function Welcome({ firstName, unsubscriptionToken }: Welcome) {
+  const { baseUrl } = dynamicAssetUrls;
+
   return (
     <Html>
       <Preview>Welcome to Khue&apos;s Rewards Program!</Preview>
@@ -63,7 +62,7 @@ function Welcome({ firstName, unsubscriptionToken }: Welcome) {
                 <Section className="my-8 text-center">
                   <Column align="center">
                     <Img
-                      src={`${baseUrl}/static/myOrders.jpg`}
+                      src={`${baseUrl}/myOrders.jpg`}
                       alt="Promotional image for order now card"
                       className="my-8 h-[176.4px] w-[336px] rounded-md sm:h-[252px] sm:w-[480px]"
                     />
@@ -73,7 +72,7 @@ function Welcome({ firstName, unsubscriptionToken }: Welcome) {
                       className="block w-[253px]"
                     >
                       <Img
-                        src={`${baseUrl}/static/orderNowButton.png`}
+                        src={`${baseUrl}/orderNowButton.png`}
                         alt="Button to visit Khue's order page"
                         className="mt-8"
                       />

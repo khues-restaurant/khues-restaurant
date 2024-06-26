@@ -21,10 +21,7 @@ import { container, main, tailwindConfig } from "emails/utils/styles";
 import { addWeeks, format, setYear } from "date-fns";
 import Header from "emails/Header";
 import { toZonedTime } from "date-fns-tz";
-
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "";
+import dynamicAssetUrls from "emails/utils/dynamicAssetUrls";
 
 interface BirthdayReward {
   firstName: string;
@@ -193,6 +190,8 @@ function BirthdayReward(
     },
   ];
 
+  const { baseUrl } = dynamicAssetUrls;
+
   return (
     <Html>
       <Preview>
@@ -261,7 +260,7 @@ function BirthdayReward(
                       className="block w-[330px]"
                     >
                       <Img
-                        src={`${baseUrl}/static/redeemYourBirthdayReward.png`}
+                        src={`${baseUrl}/redeemYourBirthdayReward.png`}
                         alt="Button to visit Khue's order page"
                         className="mt-8"
                       />
@@ -291,6 +290,8 @@ function BirthdayRewardItem({
   reward: MenuItem;
   index: number;
 }) {
+  const { menuItemBaseUrl } = dynamicAssetUrls;
+
   return (
     <Row
       align="center"
@@ -303,7 +304,7 @@ function BirthdayRewardItem({
 
       <Column align="right">
         <Img
-          src={`${baseUrl}/static/sampleImage.png`}
+          src={`${menuItemBaseUrl}/menuItems/sampleImage.png`}
           alt={`Image of ${reward.name}`}
           width="100"
           height="100"
