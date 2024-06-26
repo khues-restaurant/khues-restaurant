@@ -51,12 +51,18 @@ export function calculateTotalCartPrices({
     calculatedTipValue = subtotal.mul(decimalTipPercentage);
   }
 
-  const tax = subtotal.mul(0.08375);
-  const total = subtotal.add(tax).add(calculatedTipValue);
+  // MN State = 6.875%
+  // Ramsey County Transit = 0.500%
+  // St. Paul = 1.500%
+  // Metro Area Transportation = 0.750%
+  // Metro Area Tax for Housing = 0.250%
+  // Total = 9.875%
+  const cumulativeTax = subtotal.mul(0.09875);
+  const total = subtotal.add(cumulativeTax).add(calculatedTipValue);
 
   return {
     subtotal: subtotal.toNumber(),
-    tax: tax.toNumber(),
+    tax: cumulativeTax.toNumber(),
     tip: calculatedTipValue.toNumber(),
     total: total.toNumber(),
   };

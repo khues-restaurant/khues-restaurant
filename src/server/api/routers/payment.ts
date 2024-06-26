@@ -123,6 +123,7 @@ export const paymentRouter = createTRPCRouter({
               unit_amount: safePriceInCents,
             },
             quantity: item.quantity,
+            tax_rates: ["txr_1PW1YNKPndF2uHGQ4aBqBTcX"], // Total St. Paul sales tax rate
           };
         });
       }
@@ -247,7 +248,7 @@ export const paymentRouter = createTRPCRouter({
             unit_amount: tipValue.toNumber(), // `tipValue` is now in cents
           },
           quantity: 1,
-          // tax_rates: ["txr_1PIgFbKPndF2uHGQrW0TnYca"], // TODO: replace with production tax-free rate
+          tax_rates: [], // No tax on tips
         });
       }
 
@@ -294,10 +295,6 @@ export const paymentRouter = createTRPCRouter({
         phone_number_collection: {
           enabled: true,
         },
-
-        // automatic_tax: {
-        //   enabled: true,
-        // },
 
         metadata: {
           userId: input.userId,
