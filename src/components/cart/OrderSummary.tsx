@@ -1,4 +1,3 @@
-import { FaUtensils } from "react-icons/fa6";
 import { type DBOrderSummary } from "~/server/api/routers/order";
 import { motion } from "framer-motion";
 import { useMainStore } from "~/stores/MainStore";
@@ -8,6 +7,8 @@ import { formatPrice } from "~/utils/formatters/formatPrice";
 import Decimal from "decimal.js";
 import Image from "next/image";
 import { LuCakeSlice } from "react-icons/lu";
+import { FaUtensils } from "react-icons/fa6";
+import { MdNoMeals } from "react-icons/md";
 
 interface OrderSummary {
   order: DBOrderSummary;
@@ -22,6 +23,7 @@ function OrderSummary({ order }: OrderSummary) {
     (acc, item) => acc + item.quantity,
     0,
   );
+
   return (
     <motion.div
       key={`${order.id}-summary`}
@@ -161,7 +163,12 @@ function OrderSummary({ order }: OrderSummary) {
 
           <div className="baseFlex w-full">
             <div className="baseFlex gap-2 text-xs italic text-stone-400 xs:text-sm">
-              <FaUtensils className="size-3 xs:size-4" />
+              {order.includeNapkinsAndUtensils ? (
+                <FaUtensils className="size-3 xs:size-4" />
+              ) : (
+                <MdNoMeals className="size-3 xs:size-5" />
+              )}
+
               <p className="min-w-fit">
                 Napkins and utensils{" "}
                 {order.includeNapkinsAndUtensils ? "were" : "were not"}{" "}
