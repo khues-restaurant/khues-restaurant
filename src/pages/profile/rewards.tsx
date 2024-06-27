@@ -41,6 +41,7 @@ import {
 } from "~/components/ui/select";
 import isEqual from "lodash.isequal";
 import { format } from "date-fns";
+import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
 
 // TODO: honestly the logic within here is very hit or miss, comb through this for sure
 
@@ -130,15 +131,7 @@ function Rewards() {
     }
   }, [orderDetails.items, toBeDeductedRewardsPoints]);
 
-  useLayoutEffect(() => {
-    setTimeout(() => {
-      window.scroll({
-        top: 0,
-        left: 0,
-        behavior: "instant",
-      });
-    }, 10);
-  }, []);
+  useForceScrollToTopOnAsyncComponents();
 
   return (
     <motion.div

@@ -46,6 +46,7 @@ import sampleImage from "/public/menuItems/sampleImage.webp";
 import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";
 import { toZonedTime } from "date-fns-tz";
 import Script from "next/script";
+import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
 
 function OrderNow() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -261,6 +262,8 @@ function OrderNow() {
     programmaticallyScrolling,
     stickyCategoriesApi,
   ]);
+
+  useForceScrollToTopOnAsyncComponents();
 
   function ableToRenderMainContent() {
     if (menuCategories === undefined || menuCategoryIndicies === undefined) {

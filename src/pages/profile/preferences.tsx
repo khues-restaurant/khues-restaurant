@@ -53,6 +53,7 @@ import Link from "next/link";
 import { CiGift } from "react-icons/ci";
 import { IoSettingsOutline } from "react-icons/io5";
 import { TfiReceipt } from "react-icons/tfi";
+import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
 
 function Preferences() {
   const userId = useGetUserId();
@@ -229,15 +230,7 @@ function Preferences() {
     });
   }
 
-  useLayoutEffect(() => {
-    setTimeout(() => {
-      window.scroll({
-        top: 0,
-        left: 0,
-        behavior: "instant",
-      });
-    }, 10);
-  }, []);
+  useForceScrollToTopOnAsyncComponents();
 
   return (
     <motion.div

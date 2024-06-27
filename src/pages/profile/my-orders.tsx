@@ -57,6 +57,7 @@ import { TfiReceipt } from "react-icons/tfi";
 import { useRouter } from "next/router";
 import { Separator } from "~/components/ui/separator";
 import isEqual from "lodash.isequal";
+import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
 
 function RecentOrders() {
   const userId = useGetUserId();
@@ -101,15 +102,7 @@ function RecentOrders() {
     }
   }, [orders, sortedOrders, sortDirection]);
 
-  useLayoutEffect(() => {
-    setTimeout(() => {
-      window.scroll({
-        top: 0,
-        left: 0,
-        behavior: "instant",
-      });
-    }, 10);
-  }, []);
+  useForceScrollToTopOnAsyncComponents();
 
   // TODO: there is still seemingly the flash of layout on the initial render, investigate.
 
@@ -184,7 +177,7 @@ function RecentOrders() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseVertFlex relative my-8 mb-32 mt-16 w-full grow-[1] !justify-start bg-offwhite p-0 transition-all lg:w-[775px] tablet:mt-0 tablet:rounded-xl tablet:border tablet:p-8 tablet:shadow-md"
+            className="baseVertFlex relative my-8 mb-32 mt-16 w-full grow-[1] !justify-start p-0 transition-all lg:w-[775px] tablet:mt-0 tablet:rounded-xl tablet:border tablet:bg-offwhite tablet:p-8 tablet:shadow-md"
           >
             {sortedOrders && sortedOrders.length > 0 && (
               <div className="baseVertFlex gap-2">

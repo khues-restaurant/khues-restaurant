@@ -25,6 +25,7 @@ import { getFirstSixNumbers } from "~/utils/formatters/getFirstSixNumbers";
 import { io } from "socket.io-client";
 import { env } from "~/env";
 import { toZonedTime } from "date-fns-tz";
+import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
 
 function Track() {
   const { isSignedIn } = useAuth();
@@ -250,6 +251,8 @@ function Track() {
       resizeObserver.disconnect();
     };
   }, [orderStatus]);
+
+  useForceScrollToTopOnAsyncComponents();
 
   function getProgressBarWidth() {
     if (viewportLabel.includes("mobile")) {
