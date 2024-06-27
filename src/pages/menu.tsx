@@ -1,5 +1,4 @@
 import { PrismaClient, type Discount } from "@prisma/client";
-import { format } from "date-fns";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,7 +21,6 @@ import {
   CarouselItem,
   type CarouselApi,
 } from "~/components/ui/carousel";
-import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 import { Separator } from "~/components/ui/separator";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import {
@@ -37,40 +35,12 @@ import { type GetStaticProps } from "next";
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";
 
-const mixedDrinkItems = [
-  "Sunset Mojito - $8.50",
-  "Velvet Martini - $9.00",
-  "Sapphire Gin Fizz - $7.50",
-  "Tropical Rum Punch - $8.00",
-  "Midnight Espresso Martini - $10.00",
-  "Citrus Whiskey Sour - $7.00",
-  "Cherry Blossom Cocktail - $9.50",
-  "Frosty Mint Julep - $8.00",
-  "Cucumber Vodka Spritz - $7.50",
-  "Caribbean Blue Margarita - $8.50",
-  "Spiced Apple Cider Rum - $9.00",
-  "Lavender Lemonade Vodka - $7.50",
-  "Smoked Maple Bourbon - $10.00",
-  "Ginger Peach Sangria - $8.00",
-  "Blackberry Bramble - $9.00",
-  "Fiery Tequila Sunrise - $8.00",
-  "Pineapple Coconut Daiquiri - $7.50",
-  "Golden Rush - $9.50",
-  "Berry Blast Mimosa - $8.00",
-  "Almond Joy Martini - $10.00",
-];
-
 interface Menu {
   menuCategories: FilteredMenuCategory[];
   menuCategoryIndicies: Record<string, number>;
 }
 
 function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
-  const { viewportLabel, cartDrawerIsOpen } = useMainStore((state) => ({
-    viewportLabel: state.viewportLabel,
-    cartDrawerIsOpen: state.cartDrawerIsOpen,
-  }));
-
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const [currentlyInViewCategory, setCurrentlyInViewCategory] = useState("");
@@ -324,7 +294,7 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
                   <div key={category.id} className="baseFlex gap-2">
                     <Separator
                       orientation="vertical"
-                      className="ml-2 h-full w-[2px]"
+                      className="ml-4 mr-2 h-full w-[2px]"
                     />
                     <CarouselItem className="baseFlex basis-auto first:ml-2">
                       <MenuCategoryButton
@@ -355,15 +325,6 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
                 </CarouselItem>
               );
             })}
-
-            <CarouselItem className="baseFlex basis-auto first:ml-2 last:mr-2">
-              <MenuCategoryButton
-                name={"Mixed Drinks"}
-                listOrder={menuCategoryIndicies["Mixed Drinks"]!}
-                currentlyInViewCategory={currentlyInViewCategory}
-                setProgrammaticallyScrolling={setProgrammaticallyScrolling}
-              />
-            </CarouselItem>
           </CarouselContent>
         </Carousel>
 
@@ -394,12 +355,6 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
               listOrder={menuCategoryIndicies[category.name]!}
             />
           ))}
-
-          <NotInDatabaseCategory
-            name={"Mixed Drinks"}
-            menuItems={mixedDrinkItems}
-            listOrder={menuCategoryIndicies["Mixed Drinks"]!}
-          />
 
           <div className="baseVertFlex order-[999] mt-8 w-full gap-4 px-4 ">
             <div className="baseFlex w-full flex-wrap gap-4 text-sm tablet:text-base">
@@ -516,9 +471,6 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     categoryIndicies[category.name] = currentIndex;
     currentIndex++;
   });
-
-  // add mixed drinks category/any other similar "not in database" ones here
-  categoryIndicies["Mixed Drinks"] = currentIndex;
 
   return {
     props: {
@@ -637,105 +589,6 @@ function MenuCategory({
           />
         ))}
       </div>
-    </motion.div>
-  );
-}
-
-interface NotInDatabaseCategory {
-  name: string;
-  menuItems: string[];
-  listOrder: number;
-}
-
-function NotInDatabaseCategory({
-  name,
-  menuItems,
-  listOrder,
-}: NotInDatabaseCategory) {
-  return (
-    <motion.div
-      key={`${name}MenuCategory`}
-      id={`${name}Container`}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      style={{
-        order: listOrder,
-      }}
-      className="baseVertFlex w-full scroll-m-48 !items-start gap-4 p-2"
-    >
-      <div className="baseFlex relative w-full rounded-md">
-        <Image
-          src={wideAngleFoodShot}
-          alt={name}
-          sizes="(max-width: 1000px) 90vw, 75vw"
-          className="!relative !h-48 w-full rounded-md object-cover"
-        />
-
-        <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md bg-offwhite px-4 py-2 shadow-heavyInner tablet:!flex-row tablet:!items-center tablet:gap-4">
-          <p className="ml-1 text-xl font-semibold underline underline-offset-2">
-            {name}
-          </p>
-
-          {/* {activeDiscount && (
-                      <div className="rewardsGoldBorder baseFlex gap-1 rounded-md bg-primary px-4 py-0.5 text-sm font-medium text-yellow-500">
-                        <span>{activeDiscount.name}</span>
-                        <span>
-                          until {format(activeDiscount.expirationDate, "MM/dd")}
-                        </span>
-                      </div>
-                    )} */}
-        </div>
-      </div>
-
-      {/* wrapping container for each food item in the category */}
-      <div className="grid w-full grid-cols-2 gap-4 p-2 text-sm sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 tablet:gap-8">
-        {menuItems.slice(0, 10).map((item) => (
-          <p key={item}>{item}</p>
-        ))}
-      </div>
-
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button
-            variant="link"
-            className="ml-1 h-8 self-center !p-0 tablet:self-start"
-          >{`View all ${name}`}</Button>
-        </DialogTrigger>
-        <DialogContent extraBottomSpacer={false}>
-          <div className="baseVertFlex !items-start gap-8">
-            <div className="baseFlex relative w-full rounded-md">
-              <Image
-                src={wideAngleFoodShot}
-                alt={name}
-                sizes="(max-width: 1000px) 90vw, 462px"
-                className="!relative !h-48 w-full rounded-md object-cover"
-              />
-
-              <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md bg-offwhite px-4 py-2 shadow-heavyInner tablet:!flex-row tablet:!items-center tablet:gap-4">
-                <p className="ml-1 text-xl font-semibold underline underline-offset-2">
-                  {name}
-                </p>
-
-                {/* {activeDiscount && (
-                  <div className="rewardsGoldBorder baseFlex gap-1 rounded-md bg-primary px-4 py-0.5 text-sm font-medium text-yellow-500">
-                    <span>{activeDiscount.name}</span>
-                    <span>
-                      until {format(activeDiscount.expirationDate, "MM/dd")}
-                    </span>
-                  </div>
-                )} */}
-              </div>
-            </div>
-
-            {/* wrapping container for each food item in the category */}
-            <ul className="baseVertFlex max-h-[300px] w-full gap-2 overflow-y-auto tablet:max-h-[500px]">
-              {menuItems.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>
-        </DialogContent>
-      </Dialog>
     </motion.div>
   );
 }
