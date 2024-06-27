@@ -29,6 +29,7 @@ import {
 import { formatTimeString } from "~/utils/formatters/formatTimeString";
 import { getHoursAndMinutesFromDate } from "~/utils/dateHelpers/getHoursAndMinutesFromDate";
 import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
+import { Separator } from "~/components/ui/separator";
 
 function DelayNewOrders() {
   const ctx = api.useUtils();
@@ -83,6 +84,16 @@ function DelayNewOrders() {
   // ^ TODO: maybe need to have actual AlertDialogContent be in a separate component so you can properly
   // tap into the lifcycle hooks?
 
+  function timeIsEqualToStoreCloseTime(time: string) {
+    const storeCloseTime = getOpenTimesForDay({
+      dayOfWeek: currentDate.getDay() as keyof typeof hoursOpenPerDay,
+    }).slice(-1)[0];
+
+    if (!storeCloseTime) return false;
+
+    return time === formatTimeString(storeCloseTime);
+  }
+
   return (
     <AlertDialog
       open={showDialog}
@@ -110,10 +121,15 @@ function DelayNewOrders() {
                 <div className="baseVertFlex gap-4">
                   <p>
                     Online ordering is paused until{" "}
-                    {format(minOrderPickupTime.value, "p")}.
+                    {timeIsEqualToStoreCloseTime(
+                      format(minOrderPickupTime.value, "p"),
+                    )
+                      ? "Tomorrow"
+                      : format(minOrderPickupTime.value, "p")}
+                    .
                   </p>
                   <Button
-                    variant="destructive"
+                    variant="secondary"
                     disabled={isUpdatingNewMinOrderPickupTime}
                     onClick={() => {
                       const todayAtMidnight = getMidnightCSTInUTC();
@@ -128,11 +144,11 @@ function DelayNewOrders() {
                 <p>Currently accepting new orders as normal.</p>
               )}
 
-              {/*  */}
+              <Separator className="w-full bg-stone-400" />
+
               <div className="baseVertFlex !items-start gap-2">
                 <div className="baseFlex gap-2">
                   <Label htmlFor="delayAmount">Pause online orders until</Label>
-                  {/* value should be just */}
                   <Select
                     value={minOrderPickupTimeValue}
                     onValueChange={(value) => setMinOrderPickupTimeValue(value)}
@@ -143,16 +159,24 @@ function DelayNewOrders() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Delay until</SelectLabel>
-                        {times.map((time) => (
+                        {times.map((time, index) => (
                           <>
                             {/* only show times in the future */}
-                            {currentDate.getTime() <
-                              (mergeDateAndTime(new Date(), time)?.getTime() ??
-                                new Date().getTime()) && (
-                              <SelectItem key={time} value={time}>
-                                {formatTimeString(time)}
-                              </SelectItem>
-                            )}
+                            {/* also excluding the second to last time slot since an order will never
+                                be able to be picked up 15 minutes from close. Just reduces confusion
+                                on dashboard side */}
+                            {index !== times.length - 2 &&
+                              currentDate.getTime() <
+                                (mergeDateAndTime(
+                                  new Date(),
+                                  time,
+                                )?.getTime() ?? new Date().getTime()) && (
+                                <SelectItem key={time} value={time}>
+                                  {index === times.length - 1
+                                    ? "Tomorrow"
+                                    : formatTimeString(time)}
+                                </SelectItem>
+                              )}
                           </>
                         ))}
                       </SelectGroup>
