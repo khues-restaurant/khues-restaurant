@@ -117,8 +117,8 @@ export const userRouter = createTRPCRouter({
 
       try {
         const { data, error } = await resend.emails.send({
-          from: "onboarding@resend.dev",
-          to: "khues.dev@gmail.com", // TODO: email,
+          from: "onboarding@resend.dev", // FYI: can format as "Khue's <support@khueskitchen.com"> for production
+          to: "michael.ongaro.dev@gmail.com", // TODO: email,
           subject: "Hello world",
           react: Welcome({
             firstName: firstName,

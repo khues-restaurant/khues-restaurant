@@ -2,7 +2,7 @@ import { useLayoutEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useAuth, useClerk, useUser } from "@clerk/nextjs";
 import { FaTrashAlt } from "react-icons/fa";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useGetUserId from "~/hooks/useGetUserId";
@@ -55,9 +55,72 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { TfiReceipt } from "react-icons/tfi";
 import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
 
+const formSchema = z.object({
+  firstName: z
+    .string({
+      required_error: "First name cannot be empty",
+    })
+    .min(1, { message: "Must be at least 1 character" })
+    .max(30, { message: "Must be at most 30 characters" })
+    .refine((value) => /^[A-Za-z'-]+$/.test(value), {
+      message: "Only English characters, hyphens, and apostrophes are allowed",
+    })
+    .refine((value) => !/[^\u0000-\u007F]/.test(value), {
+      message: "No non-ASCII characters are allowed",
+    })
+    .refine((value) => !/[\p{Emoji}]/u.test(value), {
+      message: "No emojis are allowed",
+    })
+    .transform((value) => value.trim()) // Remove leading and trailing whitespace
+    .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,
+  lastName: z
+    .string({
+      required_error: "Last name cannot be empty",
+    })
+    .min(1, { message: "Must be at least 1 character" })
+    .max(30, { message: "Must be at most 30 characters" })
+    .refine((value) => /^[A-Za-z'-]+$/.test(value), {
+      message: "Only English characters, hyphens, and apostrophes are allowed",
+    })
+    .refine((value) => !/[^\u0000-\u007F]/.test(value), {
+      message: "No non-ASCII characters are allowed",
+    })
+    .refine((value) => !/[\p{Emoji}]/u.test(value), {
+      message: "No emojis are allowed",
+    })
+    .transform((value) => value.trim()) // Remove leading and trailing whitespace
+    .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,
+  phoneNumber: z
+    .string({
+      required_error: "Phone number cannot be empty",
+    })
+    .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Invalid phone number format"),
+  dietaryRestrictions: z
+    .string()
+    .max(100, { message: "Must be at most 100 characters" })
+    .refine((value) => /^[A-Za-z0-9\s\-';.,!?:"(){}\[\]/\\_@]*$/.test(value), {
+      message: "Invalid characters were found",
+    })
+    .refine((value) => !/[^\u0000-\u007F]/.test(value), {
+      message: "No non-ASCII characters are allowed",
+    })
+    .transform((value) => value.trim()) // Remove leading and trailing whitespace
+    .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,,
+
+  allowsEmailReceipts: z.boolean(),
+  allowsOrderCompleteEmails: z.boolean(),
+  allowsPromotionalEmails: z.boolean(),
+  allowsRewardAvailabilityReminderEmails: z.boolean(),
+
+  // these fields will be disabled but just to be safe
+  email: z.string().email(),
+  birthday: z.date(),
+});
+
 function Preferences() {
   const userId = useGetUserId();
   const { isSignedIn, signOut } = useAuth();
+  const { openUserProfile } = useClerk();
   const { user: clerkUser } = useUser();
   const ctx = api.useUtils();
   const { asPath, push } = useRouter();
@@ -109,81 +172,12 @@ function Preferences() {
     },
   });
 
-  const [showChangePasswordDialog, setShowChangePasswordDialog] =
-    useState(false);
   const [showDeleteUserDialog, setShowDeleteUserDialog] = useState(false);
 
   const [saveButtonText, setSaveButtonText] = useState("Save changes");
   const [deleteButtonText, setDeleteButtonText] = useState("Delete account");
 
   const { toast } = useToast();
-
-  const formSchema = z.object({
-    firstName: z
-      .string({
-        required_error: "First name cannot be empty",
-      })
-      .min(1, { message: "Must be at least 1 character" })
-      .max(30, { message: "Must be at most 30 characters" })
-      .refine((value) => /^[A-Za-z'-]+$/.test(value), {
-        message:
-          "Only English characters, hyphens, and apostrophes are allowed",
-      })
-      .refine((value) => !/[^\u0000-\u007F]/.test(value), {
-        message: "No non-ASCII characters are allowed",
-      })
-      .refine((value) => !/[\p{Emoji}]/u.test(value), {
-        message: "No emojis are allowed",
-      })
-      .transform((value) => value.trim()) // Remove leading and trailing whitespace
-      .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,
-    lastName: z
-      .string({
-        required_error: "Last name cannot be empty",
-      })
-      .min(1, { message: "Must be at least 1 character" })
-      .max(30, { message: "Must be at most 30 characters" })
-      .refine((value) => /^[A-Za-z'-]+$/.test(value), {
-        message:
-          "Only English characters, hyphens, and apostrophes are allowed",
-      })
-      .refine((value) => !/[^\u0000-\u007F]/.test(value), {
-        message: "No non-ASCII characters are allowed",
-      })
-      .refine((value) => !/[\p{Emoji}]/u.test(value), {
-        message: "No emojis are allowed",
-      })
-      .transform((value) => value.trim()) // Remove leading and trailing whitespace
-      .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,
-    phoneNumber: z
-      .string({
-        required_error: "Phone number cannot be empty",
-      })
-      .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Invalid phone number format"),
-    dietaryRestrictions: z
-      .string()
-      .max(100, { message: "Must be at most 100 characters" })
-      .refine(
-        (value) => /^[A-Za-z0-9\s\-';.,!?:"(){}\[\]/\\_@]*$/.test(value),
-        {
-          message: "Invalid characters were found",
-        },
-      )
-      .refine((value) => !/[^\u0000-\u007F]/.test(value), {
-        message: "No non-ASCII characters are allowed",
-      })
-      .transform((value) => value.trim()) // Remove leading and trailing whitespace
-      .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,,
-
-    allowsEmailReceipts: z.boolean(),
-    allowsOrderCompleteEmails: z.boolean(),
-    allowsPromotionalEmails: z.boolean(),
-    allowsRewardAvailabilityReminderEmails: z.boolean(),
-
-    // these fields will be disabled but just to be safe
-    email: z.string().email(),
-    birthday: z.date(),
-  });
 
   // should be able to remove ?. and ?? from these now since we are using getServerSideProps
   const form = useForm<z.infer<typeof formSchema>>({
@@ -705,9 +699,7 @@ function Preferences() {
                       <Button
                         variant={"link"}
                         disabled={saveButtonText !== "Save changes"}
-                        onClick={() => {
-                          // TODO
-                        }}
+                        onClick={() => openUserProfile()}
                       >
                         Change password
                       </Button>
