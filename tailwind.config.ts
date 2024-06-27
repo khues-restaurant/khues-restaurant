@@ -112,6 +112,11 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
+    // mobile safari was glitchy/inconsistent at best with the default
+    // cubic-bezier transition timing function, so currently using linear
+    transitionTimingFunction: {
+      DEFAULT: "linear",
+    },
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
