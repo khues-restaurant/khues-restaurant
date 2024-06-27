@@ -11,7 +11,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { IoIosArrowBack, IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { LuMinus, LuPlus, LuVegan } from "react-icons/lu";
 import AnimatedPrice from "~/components/AnimatedPrice";
@@ -143,6 +149,11 @@ function ItemCustomizationDrawer({
   const initialItemState = itemOrderDetails;
 
   const { toast } = useToast();
+
+  const [accordionIsOpen, setAccordionIsOpen] = useState<"open" | "closed">(
+    itemOrderDetails?.specialInstructions ? "open" : "closed",
+  );
+  const customizationAccordionRef = useRef<HTMLDivElement>(null);
 
   const [paddingBottom, setPaddingBottom] = useState("0.75rem");
 
@@ -331,11 +342,20 @@ function ItemCustomizationDrawer({
             type="single"
             collapsible
             className="w-full"
-            defaultValue={
-              itemOrderDetails?.specialInstructions ? "open" : "closed"
-            }
+            onAnimationEnd={() => {
+              if (accordionIsOpen === "open") {
+                customizationAccordionRef.current?.scrollIntoView({
+                  behavior: "smooth",
+                });
+              }
+            }}
+            value={accordionIsOpen}
+            onValueChange={(value) => {
+              setAccordionIsOpen(value === "open" ? "open" : "closed");
+            }}
           >
             <AccordionItem
+              ref={customizationAccordionRef}
               value={"open"}
               className="w-full max-w-[550px] rounded-md border px-4 py-1"
             >

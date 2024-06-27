@@ -3,7 +3,13 @@ import {
   type CustomizationChoice,
   type Discount,
 } from "@prisma/client";
-import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
+import {
+  useState,
+  type Dispatch,
+  type SetStateAction,
+  useEffect,
+  useRef,
+} from "react";
 import { LuMinus, LuPlus, LuVegan } from "react-icons/lu";
 import AnimatedPrice from "~/components/AnimatedPrice";
 import { Button } from "~/components/ui/button";
@@ -182,6 +188,11 @@ function ItemCustomizerDialogContent({
 
   const initialItemState = itemOrderDetails;
 
+  const [accordionIsOpen, setAccordionIsOpen] = useState<"open" | "closed">(
+    itemOrderDetails?.specialInstructions ? "open" : "closed",
+  );
+  const customizationAccordionRef = useRef<HTMLDivElement>(null);
+
   const { toast } = useToast();
 
   return (
@@ -334,11 +345,23 @@ function ItemCustomizerDialogContent({
             type="single"
             collapsible
             className="w-full"
-            defaultValue={
-              itemOrderDetails?.specialInstructions ? "open" : "closed"
-            }
+            value={accordionIsOpen}
+            onValueChange={(value) => {
+              setAccordionIsOpen(value === "open" ? "open" : "closed");
+            }}
+            // TODO: come back and fix this jerky behavior
+            // (should be fine on tablet-ish viewports or on items with
+            // enough content to already render scrollbar on container)
+            onAnimationEnd={() => {
+              if (accordionIsOpen === "open") {
+                customizationAccordionRef.current?.scrollIntoView({
+                  behavior: "smooth",
+                });
+              }
+            }}
           >
             <AccordionItem
+              ref={customizationAccordionRef}
               value={"open"}
               className="w-[550px] rounded-md border px-4 py-1"
             >
