@@ -426,25 +426,33 @@ function Chat() {
                       : ""
                   }`}
                 ></div>
-                <AnimatePresence>
-                  <motion.div
-                    key="chatContainer"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.15 }}
-                  >
-                    {/* not my favorite approach, but couldn't fully get rid of bug with both icons
-                    rendering at once when we had two motion.div containers that we were rapidly switching
-                    between for some reason */}
-                    <>
-                      {chatIsOpen ? (
-                        <X className="size-6 drop-shadow-md" />
-                      ) : (
-                        <IoChatbox className="size-6 drop-shadow-md" />
-                      )}
-                    </>
-                  </motion.div>
+
+                {/* split into two because framer motion has a bug where quick unmount -> remount
+                    can cause both of the icons to show at once. */}
+                <AnimatePresence mode="popLayout">
+                  {chatIsOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.75 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.75 }}
+                      transition={{ duration: 0.15 }}
+                    >
+                      <X className="size-6 drop-shadow-md" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <AnimatePresence mode="popLayout">
+                  {!chatIsOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.75 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.75 }}
+                      transition={{ duration: 0.15 }}
+                    >
+                      <IoChatbox className="size-6 drop-shadow-md" />
+                    </motion.div>
+                  )}
                 </AnimatePresence>
               </Button>
             </PopoverTrigger>
