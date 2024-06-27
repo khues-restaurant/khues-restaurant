@@ -84,7 +84,7 @@ function DesktopHeader() {
       <Button variant="text" asChild>
         <Link
           href={"/"}
-          className={`${classes.logo ?? ""} h-[55px] justify-self-start !p-0`}
+          className={`${classes.logo ?? ""} mr-4 !size-[55px] justify-self-start !p-0`}
         >
           {/* <p className="text-3xl font-semibold text-primary">Khue&apos;s</p> */}
           <Image
@@ -93,7 +93,7 @@ function DesktopHeader() {
             priority
             width={55}
             height={55}
-            className="mr-4 !size-[55px]"
+            className="!size-[55px]"
           />
         </Link>
       </Button>
