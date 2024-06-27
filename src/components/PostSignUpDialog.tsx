@@ -87,6 +87,8 @@ const mainFormSchema = z.object({
     .string()
     .refine(
       (birthday) => {
+        if (birthday.length !== 10) return false;
+
         const date = new Date(birthday);
         return !isNaN(date.getTime());
       },
@@ -205,12 +207,6 @@ function PostSignUpDialog({
 
   const mainForm = useForm<z.infer<typeof mainFormSchema>>({
     resolver: zodResolver(mainFormSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      phoneNumber: "",
-      birthday: "",
-    },
     values: mainFormValues ?? {
       firstName: "",
       lastName: "",
@@ -575,10 +571,18 @@ function PostSignUpDialog({
                     className="baseVertFlex w-full p-1 tablet:mt-8"
                   >
                     <div
+                      style={{
+                        ...(viewportLabel.includes("mobile") && {
+                          WebkitMaskImage:
+                            "linear-gradient(to bottom, transparent 0, black var(--top-mask-size, 0), black calc(100% - 48px), transparent 100%)",
+                          maskImage:
+                            "linear-gradient(to bottom, transparent 0, black var(--top-mask-size, 0), black calc(100% - 48px), transparent 100%)",
+                        }),
+                      }}
                       className={`baseVertFlex h-[300px] w-full !justify-start gap-6 overflow-y-auto pb-16 tablet:h-auto tablet:!justify-center tablet:gap-8 tablet:overflow-y-visible tablet:pb-0
                       `}
                     >
-                      <div className="grid grid-cols-1 !items-start gap-4 tablet:grid-cols-2 tablet:gap-16">
+                      <div className="grid w-64 grid-cols-1 !items-start gap-4 tablet:w-[500px] tablet:grid-cols-2 tablet:gap-16">
                         <FormField
                           control={mainForm.control}
                           name="firstName"
@@ -678,7 +682,7 @@ function PostSignUpDialog({
                         />
                       </div>
 
-                      <div className="grid grid-cols-1 !items-start gap-4 tablet:grid-cols-2 tablet:gap-16">
+                      <div className="grid w-64 grid-cols-1 !items-start gap-4 tablet:w-[500px] tablet:grid-cols-2 tablet:gap-16">
                         <FormField
                           control={mainForm.control}
                           name="phoneNumber"
@@ -735,7 +739,7 @@ function PostSignUpDialog({
                                       marginTop: 0,
                                     }}
                                     transition={{ duration: 0.2 }}
-                                    className="ml-1 max-w-48 text-sm font-medium text-red-500"
+                                    className="ml-1 text-sm font-medium text-red-500"
                                   >
                                     {error?.message}
                                   </motion.div>
@@ -780,7 +784,12 @@ function PostSignUpDialog({
                               <AnimatePresence>
                                 {invalid && (
                                   <motion.div
-                                    key={"birthdayError"}
+                                    // framer-motion has a bug where quick mounts/unmounts result in
+                                    // the motion component staying mounted when it shouldn't be
+                                    // removing the key entirely here seems to work minus the fact
+                                    // that there aren't smooth transitions *between* the error messages
+                                    // if going from "Invalid date" to "Users must be at least 13 years old to sign up." for example
+                                    // key={"birthdayError"}
                                     initial={{
                                       opacity: 0,
                                       height: 0,
@@ -797,7 +806,7 @@ function PostSignUpDialog({
                                       marginTop: 0,
                                     }}
                                     transition={{ duration: 0.2 }}
-                                    className="ml-1 max-w-48 text-sm font-medium text-red-500"
+                                    className="ml-1 text-sm font-medium text-red-500"
                                   >
                                     {error?.message}
                                   </motion.div>
