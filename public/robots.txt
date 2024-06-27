@@ -4,3 +4,5 @@ Disallow: /payment-success
 Disallow: /track
 Disallow: /unsubscribe
 Disallow: /dashboard
+
+Sitemap: https://www.khueskitchen.com/sitemap.xml
