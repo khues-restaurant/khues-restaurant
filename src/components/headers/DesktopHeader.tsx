@@ -99,7 +99,7 @@ function DesktopHeader() {
       </Button>
 
       <div
-        className={`${classes.mainLinks} baseFlex w-full !justify-start 2xl:gap-4`}
+        className={`${classes.mainLinks} baseFlex w-full !justify-start gap-2 2xl:gap-4`}
       >
         <Button
           variant={asPath.includes("/menu") ? "activeLink" : "link"}
@@ -123,7 +123,10 @@ function DesktopHeader() {
           variant={asPath.includes("/reservations") ? "activeLink" : "link"}
           asChild
         >
-          <Link href={"/reservations"} className="!text-xl">
+          <Link
+            href={"/reservations"}
+            className="block !text-xl smallDesktopHeader:hidden"
+          >
             Reservations
           </Link>
         </Button>
@@ -146,10 +149,7 @@ function DesktopHeader() {
           variant={asPath.includes("/our-story") ? "activeLink" : "link"}
           asChild
         >
-          <Link
-            href={"/our-story"}
-            className="block !text-xl smallDesktopHeader:hidden"
-          >
+          <Link href={"/our-story"} className="block !text-xl">
             Our story
           </Link>
         </Button>
@@ -181,6 +181,17 @@ function DesktopHeader() {
           </PopoverTrigger>
           <PopoverContent side="bottom" className="w-auto">
             <div className="baseVertFlex !items-start gap-2">
+              <Button
+                variant={
+                  asPath.includes("/reservations") ? "activeLink" : "link"
+                }
+                asChild
+              >
+                <Link href={"/reservations"} className="!text-xl">
+                  Reservations
+                </Link>
+              </Button>
+
               {isLoaded && !isSignedIn && (
                 <Button
                   variant={asPath.includes("/rewards") ? "activeLink" : "link"}
@@ -192,16 +203,6 @@ function DesktopHeader() {
                   </Link>
                 </Button>
               )}
-
-              <Button
-                variant={asPath.includes("/our-story") ? "activeLink" : "link"}
-                onClick={() => setShowSmallViewportPopoverLinks(false)}
-                asChild
-              >
-                <Link href={"/our-story"} className="!text-xl">
-                  Our story
-                </Link>
-              </Button>
 
               <Button
                 variant={asPath.includes("/media") ? "activeLink" : "link"}
@@ -229,7 +230,7 @@ function DesktopHeader() {
               variant="outline"
               className="mr-4 !flex-nowrap gap-2 text-primary smallDesktopHeader:mr-0"
             >
-              <HiOutlineInformationCircle className="size-4" />
+              <HiOutlineInformationCircle className="size-[17px]" />
               Hours & Location
             </Button>
           </DialogTrigger>
