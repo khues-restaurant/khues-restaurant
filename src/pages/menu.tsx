@@ -368,10 +368,10 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
         </Carousel>
 
         {/* Custom scrollbar indicating scroll progress */}
-        <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-200">
+        <div className="absolute bottom-0 left-0 h-1 w-full bg-stone-200 tablet:rounded-lg">
           <div
             style={{ width: `${scrollProgress}%` }}
-            className="h-1 bg-primary"
+            className="h-1 bg-primary tablet:rounded-lg"
           ></div>
         </div>
       </motion.div>
