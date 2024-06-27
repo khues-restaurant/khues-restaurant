@@ -20,6 +20,8 @@ import DelayNewOrders from "~/components/dashboard/DelayNewOrders";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { type Socket } from "socket.io-client";
+import { addDays } from "date-fns";
+import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 
 interface DashboardDesktopHeader {
   viewState: "orderManagement" | "customerChats" | "itemManagement" | "stats";
@@ -44,7 +46,7 @@ function DashboardDesktopHeader({
     enabled: Boolean(userId && isSignedIn),
   });
 
-  const { data: todaysOrders } = api.order.getTodaysOrders.useQuery();
+  const { data: orders } = api.order.getDashboardOrders.useQuery();
   const { data: databaseChats, refetch: refetchChats } =
     api.chat.getAllMessages.useQuery();
 
@@ -53,14 +55,17 @@ function DashboardDesktopHeader({
   const [popoverIsOpen, setPopoverIsOpen] = useState(false);
 
   useEffect(() => {
-    if (!todaysOrders) return;
+    if (!orders) return;
 
-    const activeOrders = todaysOrders.filter(
-      (order) => order.orderCompletedAt === null,
+    const futureDate = addDays(getMidnightCSTInUTC(new Date()), 1);
+
+    const activeOrders = orders.filter(
+      (order) =>
+        order.orderCompletedAt === null && order.datetimeToPickup < futureDate,
     );
 
     setNumberOfActiveOrders(activeOrders.length);
-  }, [todaysOrders]);
+  }, [orders]);
 
   useEffect(() => {
     if (!databaseChats) return;

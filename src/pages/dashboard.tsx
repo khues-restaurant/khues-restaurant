@@ -32,7 +32,7 @@ interface Dashboard {
 
 function Dashboard({ children }: Dashboard) {
   const { data: orders, refetch: refetchOrders } =
-    api.order.getTodaysOrders.useQuery();
+    api.order.getDashboardOrders.useQuery();
 
   // const { data: chats, refetch: refetchChats } = api.chats.getAll.useQuery();
 

@@ -1,47 +1,37 @@
 import {
-  OrderItemCustomization,
+  type OrderItem,
+  type OrderItemCustomization,
   type Order,
-  Discount,
-  MenuItem,
-  OrderItem,
 } from "@prisma/client";
-import { useState, useEffect } from "react";
+import { addDays, format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { AnimatePresence, motion } from "framer-motion";
-import { Button } from "~/components/ui/button";
+import { ChevronDown } from "lucide-react";
+import { useEffect, useState } from "react";
+import { FaRedo } from "react-icons/fa";
+import { FaUtensils } from "react-icons/fa6";
+import { type Socket } from "socket.io-client";
+import AnimatedNumbers from "~/components/AnimatedNumbers";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
-  AccordionTrigger,
 } from "~/components/ui/accordion";
-import { api } from "~/utils/api";
 import {
-  AlertDialogFooter,
-  AlertDialogHeader,
   AlertDialog,
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import { useMainStore, type OrderDetails } from "~/stores/MainStore";
-import { ChevronDown } from "lucide-react";
-import { DashboardOrder } from "~/server/api/routers/order";
-import { FaUtensils } from "react-icons/fa6";
-import AnimatedNumbers from "~/components/AnimatedNumbers";
-import { getFirstSixNumbers } from "~/utils/formatters/getFirstSixNumbers";
+import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
-import { format } from "date-fns";
 import { useToast } from "~/components/ui/use-toast";
-import { type Socket } from "socket.io-client";
-import { toZonedTime } from "date-fns-tz";
-import { FaRedo } from "react-icons/fa";
-
-// type FullOrderItems = OrderItem & {
-//   customizations: OrderItemCustomization[];
-//   discount: Discount;
-//   // menuItem: MenuItem;
-//   // order: Order;
-// };
+import { useMainStore } from "~/stores/MainStore";
+import { api } from "~/utils/api";
+import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
+import { getFirstSixNumbers } from "~/utils/formatters/getFirstSixNumbers";
 
 type OrderItemTest = OrderItem & {
   customizations: OrderItemCustomization[];
@@ -57,13 +47,14 @@ interface OrderManagement {
 }
 
 function OrderManagement({ orders, socket }: OrderManagement) {
-  const { refetch: refetchOrders } = api.order.getTodaysOrders.useQuery();
+  const { refetch: refetchOrders } = api.order.getDashboardOrders.useQuery();
 
   const [notStartedOrders, setNotStartedOrders] = useState<OrderWithItems[]>(
     [],
   );
   const [startedOrders, setStartedOrders] = useState<OrderWithItems[]>([]);
   const [completedOrders, setCompletedOrders] = useState<OrderWithItems[]>([]);
+  const [futureOrders, setFutureOrders] = useState<OrderWithItems[]>([]);
 
   const [selectedTab, setSelectedTab] = useState<
     "notStarted" | "started" | "completed" | "future"
@@ -72,7 +63,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
   const [manuallyRefreshingOrders, setManuallyRefreshingOrders] =
     useState(false);
 
-  // TODO/FYI: if not already stated, do NOT want to ever clear the "notification" numbers
+  // FYI: if not already stated, do NOT want to ever clear the "notification" numbers
   // on the not started/in progress tabs, since they are strictly the number of current orders
   // in their respective states.
 
@@ -93,14 +84,19 @@ function OrderManagement({ orders, socket }: OrderManagement) {
     const notStarted = [];
     const started = [];
     const completed = [];
+    const future = [];
 
-    // split up the orders into the three categories
+    const futureDate = addDays(getMidnightCSTInUTC(new Date()), 1);
+
+    // split up the orders into categories
     for (const order of orders) {
-      if (order.orderStartedAt === null) {
+      if (order.datetimeToPickup >= futureDate) {
+        future.push(order);
+      } else if (order.orderStartedAt === null) {
         notStarted.push(order);
       } else if (order.orderCompletedAt === null) {
         started.push(order);
-      } else {
+      } else if (order.orderCompletedAt !== null) {
         completed.push(order);
       }
     }
@@ -115,10 +111,14 @@ function OrderManagement({ orders, socket }: OrderManagement) {
     completed.sort((a, b) => {
       return a.datetimeToPickup.getTime() - b.datetimeToPickup.getTime();
     });
+    future.sort((a, b) => {
+      return a.datetimeToPickup.getTime() - b.datetimeToPickup.getTime();
+    });
 
     setNotStartedOrders(notStarted);
     setStartedOrders(started);
     setCompletedOrders(completed);
+    setFutureOrders(future);
   }, [orders]);
 
   const { toast } = useToast();
@@ -237,7 +237,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
       )}
 
       <div className="baseFlex w-full">
-        {selectedTab !== "completed" && selectedTab !== "future" && (
+        {(selectedTab === "notStarted" || selectedTab === "started") && (
           <div className="baseFlex w-full !items-start">
             <motion.div
               key={"notStarted"}
@@ -328,6 +328,35 @@ function OrderManagement({ orders, socket }: OrderManagement) {
             </AnimatePresence>
           </motion.div>
         )}
+
+        {selectedTab === "future" && (
+          <motion.div
+            key={"future"}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="baseFlex w-full"
+          >
+            <AnimatePresence>
+              <div className="baseVertFlex mt-8 max-h-[70dvh] w-11/12 !justify-start gap-2 overflow-y-auto pb-4 tablet:w-full tablet:max-w-xl">
+                {futureOrders.length > 0 ? (
+                  <>
+                    {futureOrders.map((order) => (
+                      <CustomerOrder
+                        key={order.id}
+                        order={order}
+                        view={"future"}
+                      />
+                    ))}
+                  </>
+                ) : (
+                  <div>No orders found</div>
+                )}
+              </div>
+            </AnimatePresence>
+          </motion.div>
+        )}
       </div>
     </motion.div>
   );
@@ -337,7 +366,7 @@ export default OrderManagement;
 
 interface CustomerOrder {
   order: OrderWithItems;
-  view: "notStarted" | "started" | "completed";
+  view: "notStarted" | "started" | "completed" | "future";
 }
 
 function CustomerOrder({ order, view }: CustomerOrder) {
@@ -357,7 +386,7 @@ function CustomerOrder({ order, view }: CustomerOrder) {
       // toast this error
     },
     onSettled: async () => {
-      await ctx.order.getTodaysOrders.invalidate();
+      await ctx.order.getDashboardOrders.invalidate();
 
       setAccordionOpen("closed");
       setOpenDialogId(null);
@@ -374,7 +403,7 @@ function CustomerOrder({ order, view }: CustomerOrder) {
       // toast this error
     },
     onSettled: async () => {
-      await ctx.order.getTodaysOrders.invalidate();
+      await ctx.order.getDashboardOrders.invalidate();
 
       setAccordionOpen("closed");
       setOpenDialogId(null);
@@ -443,16 +472,19 @@ function CustomerOrder({ order, view }: CustomerOrder) {
                 <span>{order.lastName}</span>
               </div>
 
-              {/* (up to) first three images w/ the (+ however many more one) */}
-              {/* <div className="baseFlex gap-2">
-                <div className="imageFiller size-8 rounded-full" />
-                <div className="imageFiller size-8 rounded-full" />
-                <div className="imageFiller size-8 rounded-full" />
-              </div> */}
-
               <p className="baseFlex gap-2 text-lg font-semibold">
                 <>
-                  {view === "completed" && order.orderCompletedAt ? (
+                  {(view === "notStarted" || view === "started") && (
+                    <>
+                      Due at{" "}
+                      {format(
+                        toZonedTime(order.datetimeToPickup, "America/Chicago"),
+                        "h:mm a",
+                      )}
+                    </>
+                  )}
+
+                  {view === "completed" && order.orderCompletedAt && (
                     <>
                       Completed at{" "}
                       {format(
@@ -460,13 +492,12 @@ function CustomerOrder({ order, view }: CustomerOrder) {
                         "h:mm a",
                       )}
                     </>
-                  ) : (
+                  )}
+
+                  {view === "future" && (
                     <>
-                      Due at{" "}
-                      {format(
-                        toZonedTime(order.datetimeToPickup, "America/Chicago"),
-                        "h:mm a",
-                      )}
+                      Due on {format(order.datetimeToPickup, "EEEE, MMM d ")} at{" "}
+                      {format(order.datetimeToPickup, "h:mm a")}
                     </>
                   )}
                 </>
@@ -485,7 +516,7 @@ function CustomerOrder({ order, view }: CustomerOrder) {
                     : "1 item"}
                 </p>
 
-                {view !== "completed" && (
+                {(view === "notStarted" || view === "started") && (
                   <AlertDialog open={openDialogId === order.id}>
                     <AlertDialogTrigger asChild>
                       <Button
@@ -685,7 +716,7 @@ function OrderItems({ order }: OrderItems) {
       )}
 
       {order.includeNapkinsAndUtensils && (
-        <div className="baseFlex w-full">
+        <div className="baseFlex mt-2 w-full">
           <div className="baseFlex gap-2 text-sm italic text-stone-400">
             <FaUtensils className="size-4" />
             <p>Napkins and utensils were requested.</p>

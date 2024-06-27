@@ -15,6 +15,7 @@ import {
 } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
 import type Decimal from "decimal.js";
+import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -205,15 +206,13 @@ export const orderRouter = createTRPCRouter({
       });
     }),
 
-  getTodaysOrders: adminProcedure.query(async ({ ctx }) => {
+  getDashboardOrders: adminProcedure.query(async ({ ctx }) => {
     return ctx.prisma.order.findMany({
-      // Uncomment and adjust according to your requirements
-      // where: {
-      //   datetimeToPickup: {
-      //     gte: new Date(new Date().setHours(0, 0, 0, 0)),
-      //     lte: new Date(new Date().setHours(23, 59, 59, 999)),
-      //   },
-      // },
+      where: {
+        datetimeToPickup: {
+          gte: getMidnightCSTInUTC(new Date()),
+        },
+      },
       include: {
         orderItems: {
           include: {
