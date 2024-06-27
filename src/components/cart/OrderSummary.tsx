@@ -162,11 +162,11 @@ function OrderSummary({ order }: OrderSummary) {
           )}
 
           <div className="baseFlex w-full">
-            <div className="baseFlex gap-2 text-xs italic text-stone-400 xs:text-sm">
+            <div className="baseFlex gap-2 text-[13px] italic text-stone-400 xs:text-sm">
               {order.includeNapkinsAndUtensils ? (
-                <FaUtensils className="size-3 xs:size-4" />
+                <FaUtensils className="size-[13.5px] xs:size-4" />
               ) : (
-                <MdNoMeals className="size-3 xs:size-5" />
+                <MdNoMeals className="size-4 xs:size-5" />
               )}
 
               <p className="min-w-fit">
