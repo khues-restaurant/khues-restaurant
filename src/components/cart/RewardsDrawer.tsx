@@ -193,8 +193,8 @@ function RewardsDrawer({
               Khue&apos;s Rewards
             </div>
 
-            <div className="baseFlex gap-4 font-bold tracking-wider">
-              <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
+            <div className="baseFlex gap-3 font-bold tracking-wider xs:gap-4">
+              <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary xs:h-5" />
 
               <div className="baseVertFlex">
                 <AnimatedNumbers
@@ -205,7 +205,7 @@ function RewardsDrawer({
                 <p className="font-semibold tracking-normal">points</p>
               </div>
 
-              <SideAccentSwirls className="h-5 fill-primary" />
+              <SideAccentSwirls className="h-4 fill-primary xs:h-5" />
             </div>
           </div>
 

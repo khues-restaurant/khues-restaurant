@@ -408,8 +408,8 @@ function Rewards() {
                   Khue&apos;s Rewards
                 </div>
 
-                <div className="baseFlex mb-4 gap-4 font-bold tracking-wider">
-                  <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
+                <div className="baseFlex mb-4 gap-3 font-bold tracking-wider xs:gap-4">
+                  <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary xs:h-5" />
 
                   <div className="baseVertFlex">
                     <AnimatedNumbers
@@ -419,7 +419,7 @@ function Rewards() {
                     />
                     <p className="font-semibold tracking-normal">points</p>
                   </div>
-                  <SideAccentSwirls className="h-5 fill-primary" />
+                  <SideAccentSwirls className="h-4 fill-primary xs:h-5" />
                 </div>
 
                 <Separator className="mb-2 h-[1px] w-full bg-stone-400" />
