@@ -26,6 +26,9 @@ import { io } from "socket.io-client";
 import { env } from "~/env";
 import { toZonedTime } from "date-fns-tz";
 import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
+import StaticLotus from "~/components/ui/StaticLotus";
+import { MdQuestionMark } from "react-icons/md";
+import Link from "next/link";
 
 function Track() {
   const { isSignedIn } = useAuth();
@@ -296,6 +299,50 @@ function Track() {
     }
 
     return "1.5s"; // not sure about this default
+  }
+
+  if (order === null) {
+    return (
+      <motion.div
+        key={"track"}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+        // TODO: find a way css wise so that you don't have any scrollbar on tablet+ since this is guarenteed
+        // to be a tiny tiny element on this page
+        className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
+      >
+        <div className="baseVertFlex relative max-w-80 gap-4 overflow-hidden rounded-lg border bg-gradient-to-br from-offwhite to-primary/10 px-6 py-8 shadow-md tablet:max-w-2xl tablet:p-12 tablet:pb-8">
+          <>
+            <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
+
+            <MdQuestionMark className="mb-4 size-10" />
+
+            <Separator />
+
+            <div className="baseVertFlex gap-4 pb-6">
+              <p className="text-center font-medium">
+                We were unable to find your order.
+              </p>
+
+              <p className="text-center text-sm">
+                If you think this is a mistake, please contact us.
+              </p>
+
+              <Button asChild>
+                <Link href={"/"} className="baseFlex mt-2 gap-2 tablet:mt-4">
+                  <SideAccentSwirls className="h-4 scale-x-[-1] fill-offwhite" />
+                  Return home
+                  <SideAccentSwirls className="h-4 fill-offwhite" />
+                </Link>
+              </Button>
+            </div>
+          </>
+        </div>
+      </motion.div>
+    );
   }
 
   return (

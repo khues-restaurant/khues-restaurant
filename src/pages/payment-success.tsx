@@ -2,11 +2,15 @@ import { useAuth } from "@clerk/nextjs";
 import { PrismaClient } from "@prisma/client";
 import { motion } from "framer-motion";
 import { type GetServerSideProps } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { MdOutlineMail } from "react-icons/md";
+import { MdOutlineMail, MdQuestionMark } from "react-icons/md";
 import Stripe from "stripe";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
+import { Button } from "~/components/ui/button";
+import { Separator } from "~/components/ui/separator";
+import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import StaticLotus from "~/components/ui/StaticLotus";
 import { env } from "~/env";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
@@ -61,27 +65,58 @@ function PaymentSuccess({
       // to be a tiny tiny element on this page
       className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
     >
-      <div className="baseVertFlex relative max-w-80 gap-4 overflow-hidden rounded-lg border bg-gradient-to-br from-offwhite to-primary/10 px-6 py-8 shadow-md tablet:max-w-2xl tablet:p-12">
-        <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
-        <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
-        <AnimatedLotus className="size-16 fill-primary tablet:size-24" />
+      <div className="baseVertFlex relative max-w-80 gap-4 overflow-hidden rounded-lg border bg-gradient-to-br from-offwhite to-primary/10 px-6 py-8 shadow-md tablet:max-w-2xl tablet:p-12 tablet:pb-8">
+        {order === null ? (
+          <>
+            <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
 
-        <p className="mt-4 text-center text-lg font-medium tablet:mt-6">
-          Thank you! Your order has been successfully placed.
-        </p>
+            <MdQuestionMark className="mb-4 size-10" />
 
-        <div className="baseVertFlex gap-4">
-          {emailReceiptsAllowed && (
-            <div className="baseFlex my-2 gap-4 rounded-md border bg-offwhite/60 p-4 text-sm shadow-inner">
-              <MdOutlineMail className="size-5 shrink-0 tablet:size-6" />
-              Your email receipt has been sent and should arrive shortly.
+            <Separator />
+
+            <div className="baseVertFlex gap-4 pb-6">
+              <p className="text-center font-medium">
+                We were unable to find your order.
+              </p>
+
+              <p className="text-center text-sm">
+                If you think this is a mistake, please contact us.
+              </p>
+
+              <Button asChild>
+                <Link href={"/"} className="baseFlex mt-2 gap-2 tablet:mt-4">
+                  <SideAccentSwirls className="h-4 scale-x-[-1] fill-offwhite" />
+                  Return home
+                  <SideAccentSwirls className="h-4 fill-offwhite" />
+                </Link>
+              </Button>
             </div>
-          )}
+          </>
+        ) : (
+          <>
+            <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
+            <AnimatedLotus className="size-16 fill-primary tablet:size-24" />
 
-          <p className="text-center">
-            Please wait while your order is sent to our kitchen.
-          </p>
-        </div>
+            <p className="mt-4 text-center text-lg font-medium tablet:mt-6">
+              Thank you! Your order has been successfully placed.
+            </p>
+
+            <div className="baseVertFlex gap-4">
+              {emailReceiptsAllowed && (
+                <div className="baseFlex my-2 gap-4 rounded-md border bg-offwhite/60 p-4 text-sm shadow-inner">
+                  <MdOutlineMail className="size-5 shrink-0 tablet:size-6" />
+                  Your email receipt has been sent and should arrive shortly.
+                </div>
+              )}
+
+              <p className="text-center">
+                Please wait while your order is sent to our kitchen.
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </motion.div>
   );
