@@ -64,6 +64,7 @@ const Toast = React.forwardRef<
           : "data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[state=closed]:slide-out-to-right-[110%] data-[state=open]:slide-in-from-right-full",
       )}
       {...props}
+      duration={3500} // radix-ui default was 5000
     >
       {(variant === "default" || variant === undefined) && (
         <motion.svg
