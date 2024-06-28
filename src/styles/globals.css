@@ -90,6 +90,13 @@
   }
 }
 
+svg {
+  -webkit-transform: translate(0px, 0px);
+  /* for Safari */
+  transform: translate(0px, 0px);
+  /* for css linting, wanted both specified */
+}
+
 body {
   /* prevents fixed elements (<Chat>) from bouncing back and forth when the scrollbar
      appears/disappears. Doesn't work in Safari yet but afaik they have overlaid scrollbars anyway */
