@@ -30,6 +30,7 @@ import { motion } from "framer-motion";
 import outsideOfRestaurant from "/public/exterior/one.webp";
 import { useToast } from "~/components/ui/use-toast";
 import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
+import StaticLotus from "~/components/ui/StaticLotus";
 
 const linkContainer = {
   visible: {
@@ -404,7 +405,10 @@ function MobileHeader() {
                                 </Button>
                               </DialogTrigger>
                               <DialogContent>
-                                <div className="baseVertFlex w-full !items-start gap-4">
+                                <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+                                <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
+
+                                <div className="baseVertFlex h-full w-full !items-start gap-4">
                                   <div className="baseVertFlex w-full !items-start gap-2">
                                     <div className="baseFlex w-full !justify-start gap-2">
                                       <CiCalendarDate className="size-6 stroke-[0.25px]" />
@@ -416,7 +420,7 @@ function MobileHeader() {
                                     <Separator className="h-[1px] w-full" />
                                   </div>
 
-                                  <div className="baseVertFlex !items-start gap-2">
+                                  <div className="baseVertFlex !items-start gap-2 text-sm sm:text-base">
                                     <p className="font-medium underline underline-offset-2">
                                       Thanksgiving
                                     </p>
@@ -426,7 +430,7 @@ function MobileHeader() {
                                     </p>
                                   </div>
 
-                                  <div className="baseVertFlex !items-start gap-2">
+                                  <div className="baseVertFlex !items-start gap-2 text-sm sm:text-base">
                                     <p className="font-medium underline underline-offset-2">
                                       Christmas
                                     </p>

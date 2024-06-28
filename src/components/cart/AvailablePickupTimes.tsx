@@ -13,6 +13,7 @@ import {
 import { formatTimeString } from "~/utils/formatters/formatTimeString";
 import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
 import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
+import StaticLotus from "~/components/ui/StaticLotus";
 
 interface AvailablePickupTimes {
   selectedDate: Date;
@@ -105,7 +106,9 @@ function AvailablePickupTimes({
 
   if (orderingIsNotAvailable) {
     return (
-      <div className="baseVertFlex w-64 !items-start gap-2 p-4">
+      <div className="baseVertFlex relative w-64 !items-start gap-2 p-4">
+        <StaticLotus className="absolute -right-6 -top-6 size-16 rotate-[-135deg] fill-primary/50" />
+
         <p className="font-semibold underline underline-offset-2">Notice:</p>
         <p className="text-sm">
           We are currently not accepting new orders for the night. Please select

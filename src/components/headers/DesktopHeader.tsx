@@ -29,6 +29,7 @@ import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import classes from "./DesktopHeader.module.css";
 
 import outsideOfRestaurant from "/public/exterior/one.webp";
+import StaticLotus from "~/components/ui/StaticLotus";
 
 function DesktopHeader() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
@@ -263,6 +264,9 @@ function DesktopHeader() {
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
+                    <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+                    <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
+
                     <div className="baseVertFlex w-full !items-start gap-4">
                       <div className="baseVertFlex w-full !items-start gap-2">
                         <div className="baseFlex w-full !justify-start gap-2">
