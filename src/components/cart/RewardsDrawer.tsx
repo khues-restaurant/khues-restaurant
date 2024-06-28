@@ -381,12 +381,15 @@ function RewardMenuItem({
   function isDisabled() {
     if (!menuItem.available) return true;
 
-    if (currentlySelectedRewardId === null) return false;
+    if (
+      currentlySelectedRewardId === null ||
+      currentlySelectedRewardId === menuItem.id
+    )
+      return false;
 
     if (
       // conversion: item price (in cents) multiplied by 2
       userAvailablePoints < new Decimal(menuItem.price).mul(2).toNumber() ||
-      !menuItem.available ||
       currentlySelectedRewardId !== menuItem.id
     ) {
       return true;
