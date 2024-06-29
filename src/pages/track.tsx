@@ -816,7 +816,7 @@ function Track() {
                   </motion.div>
                 </div>
               </div>
-              <div className="baseFlex w-full max-w-[400px] sm:max-w-[500px]">
+              <div className="baseFlex w-full max-w-[400px] sm:max-w-[450px]">
                 <OrderSummary order={order} />
               </div>
               <Button
