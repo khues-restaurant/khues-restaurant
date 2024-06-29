@@ -446,6 +446,43 @@ function CartSheet({
     await initializeCheckout(values.pickupName);
   }
 
+  const pickupDateContainerRef = useRef<HTMLDivElement>(null);
+  const pickupTimeContainerRef = useRef<HTMLDivElement>(null);
+
+  function scrollPickupDateErorrIntoView(date: Date) {
+    const todayAtMidnight = getMidnightCSTInUTC();
+
+    return date < todayAtMidnight;
+  }
+
+  function scrollPickupTimeErrorIntoView(time: string) {
+    if (time.trim().length === 0) {
+      return true;
+    }
+
+    if (minPickupTime === null || minPickupTime === undefined) {
+      return false;
+    }
+
+    const minOrderPickupDatetime = minPickupTime.value;
+    const now = new Date();
+    const selectedDate = mainForm.getValues().dateToPickup;
+
+    const isASAP = time === "ASAP (~20 mins)" || orderDetails.isASAP;
+
+    const pickupTimeIsValid = isSelectedTimeSlotValid({
+      isASAP,
+      datetimeToPickup: orderDetails.isASAP
+        ? now
+        : mergeDateAndTime(selectedDate, time) || now,
+      minPickupDatetime: minOrderPickupDatetime,
+    });
+
+    console.log("returning", !pickupTimeIsValid);
+
+    return !pickupTimeIsValid;
+  }
+
   return (
     <div className="baseVertFlex relative size-full !justify-start">
       <div className="baseVertFlex w-full !items-start gap-1 border-b p-4">
@@ -502,7 +539,10 @@ function CartSheet({
                   control={mainForm.control}
                   name="dateToPickup"
                   render={({ field, fieldState: { invalid, error } }) => (
-                    <FormItem className="baseVertFlex relative !items-start space-y-0">
+                    <FormItem
+                      ref={pickupDateContainerRef}
+                      className="baseVertFlex relative scroll-mt-12 !items-start space-y-0"
+                    >
                       <div className="baseVertFlex !items-start gap-2">
                         <FormLabel className="font-semibold">
                           Pickup date
@@ -554,6 +594,7 @@ function CartSheet({
                   name="timeToPickup"
                   render={({ field, fieldState: { invalid, error } }) => (
                     <FormItem
+                      ref={pickupTimeContainerRef}
                       style={{
                         width:
                           field.value === ""
@@ -562,7 +603,7 @@ function CartSheet({
                               ? "176px"
                               : `${field.value.length * 25}px`,
                       }}
-                      className="baseVertFlex relative !items-start space-y-0 transition-[width]"
+                      className="baseVertFlex relative scroll-mt-12 !items-start space-y-0 transition-[width]"
                     >
                       <div className="baseVertFlex !items-start gap-2">
                         <FormLabel className="font-semibold">
@@ -1415,6 +1456,44 @@ function CartSheet({
               }
               className="text-xs font-semibold tablet:text-sm"
               onClick={() => {
+                // FYI: need to manually scroll up to these errors if they exist
+                // because all react-hook-form does is call "focus()" on the invalid input
+                // but in this case the input is a <select> which I guess doesn't scroll into view
+                // or maybe it's a radix/shadcnui thing
+
+                const needToScrollPickupDateErrorIntoView =
+                  scrollPickupDateErorrIntoView(
+                    mainForm.getValues().dateToPickup,
+                  );
+                const needToScrollPickupTimeErrorIntoView =
+                  scrollPickupTimeErrorIntoView(
+                    mainForm.getValues().timeToPickup,
+                  );
+
+                if (needToScrollPickupDateErrorIntoView) {
+                  const container = pickupDateContainerRef.current;
+
+                  if (container) {
+                    setTimeout(() => {
+                      container.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }, 500); // waiting for error to render
+                  }
+                } else if (needToScrollPickupTimeErrorIntoView) {
+                  const container = pickupTimeContainerRef.current;
+
+                  if (container) {
+                    setTimeout(() => {
+                      container.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }, 500); // waiting for error to render
+                  }
+                }
+
                 void mainForm.handleSubmit((mainFormData) => {
                   void tipForm.handleSubmit((tipFormData) => {
                     void onMainFormSubmit(mainFormData);
