@@ -178,7 +178,7 @@ function OrderSummary({ order }: OrderSummary) {
           </div>
         </div>
 
-        <div className="baseVertFlex w-full border-t border-stone-300 p-4">
+        <div className="baseVertFlex w-full border-t border-stone-300 px-4 pt-4">
           <div className="baseFlex w-full !justify-between gap-2 text-sm">
             <p>Subtotal</p>
             <p>{formatPrice(order.subtotal)}</p>
