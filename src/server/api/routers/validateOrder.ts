@@ -51,11 +51,11 @@ function validateTimeToPickup(
     return;
   }
 
-  // technically by this point, the date _should_ be valid, and it's just that the time
-  // should be set to midnight of currently selected day, however setting it to midnight
-  // here and still sending it through loopToFindFirstOpenDay function just to be safe.
-  const nowAtMidnight = getMidnightCSTInUTC();
+  // at this point datetimeToPickup is invalid, so we need to find the next valid
+  // day to set it to, and by convention we set isASAP to false as a precaution.
+  orderDetails.isASAP = false;
 
+  const nowAtMidnight = getMidnightCSTInUTC();
   orderDetails.datetimeToPickup = loopToFindFirstOpenDay(nowAtMidnight);
 }
 

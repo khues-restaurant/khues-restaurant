@@ -44,7 +44,10 @@ export function isSelectedTimeSlotValid({
   if (
     pickupTime.getHours() === 0 &&
     pickupTime.getMinutes() === 0 &&
-    pickupTime.getSeconds() === 0
+    pickupTime.getSeconds() === 0 &&
+    !isASAP
+    // isASAP will by definition always be represented at midnight client side,
+    // so making sure that it still passes through all the below checks
   ) {
     return true;
   }
