@@ -2,7 +2,7 @@ import { getCSTDateInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import {
   hoursOpenPerDay,
   isHoliday,
-  isWithin30MinutesBeforeCloseOrLater,
+  isPastFinalPickupTimeForDay,
 } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import { isAtLeast15MinsFromDatetime } from "~/utils/dateHelpers/isAtLeast15MinsFromDatetime";
 
@@ -84,11 +84,10 @@ export function isSelectedTimeSlotValid({
   // TODO: depending on what specific interaction that eric wants (either
   // 30 mins from close is last time customer will be walking in to pickup their order,
   // or 30 mins from close is last time customer can place an order for pickup that night)
-  // this will either be .getMinutes() > 30 or .getMinutes() > 15 respectively.
   if (
-    isWithin30MinutesBeforeCloseOrLater({
-      currentHour: now.getHours(),
-      currentMinute: now.getMinutes(),
+    isPastFinalPickupTimeForDay({
+      currentHour: isASAP ? now.getHours() : pickupTime.getHours(),
+      currentMinute: isASAP ? now.getMinutes() : pickupTime.getMinutes(),
       closeHour: pickupDayHours.closeHour,
       closeMinute: pickupDayHours.closeMinute,
     })

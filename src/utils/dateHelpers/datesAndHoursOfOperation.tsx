@@ -94,7 +94,8 @@ function isHoliday(date: Date) {
   return holidays.some((holiday) => isSameDay(date, holiday));
 }
 
-function isWithin30MinutesBeforeCloseOrLater({
+// final pickup time for day is 30 minutes before close
+function isPastFinalPickupTimeForDay({
   currentHour,
   currentMinute,
   closeHour,
@@ -108,11 +109,9 @@ function isWithin30MinutesBeforeCloseOrLater({
   const currentTotalMinutes = currentHour * 60 + currentMinute;
   const closeTotalMinutes = closeHour * 60 + closeMinute;
 
-  const within30MinutesBeforeClose =
-    currentTotalMinutes >= closeTotalMinutes - 30;
-  const afterClose = currentTotalMinutes > closeTotalMinutes;
+  const pastFinalPickupTime = currentTotalMinutes > closeTotalMinutes - 30;
 
-  return afterClose || within30MinutesBeforeClose;
+  return pastFinalPickupTime;
 }
 
 function formatTime(hour: number, minute: number): string {
@@ -226,7 +225,7 @@ function getWeeklyHours() {
 export {
   holidays,
   hoursOpenPerDay,
-  isWithin30MinutesBeforeCloseOrLater,
+  isPastFinalPickupTimeForDay,
   isRestaurantClosedToday,
   isHoliday,
   getWeeklyHours,
