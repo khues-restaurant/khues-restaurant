@@ -35,9 +35,14 @@ function CartDrawerWrapper({ pickupName, setPickupName }: CartDrawerWrapper) {
         setCartDrawerIsOpen(open);
 
         if (!open) {
-          setItemToCustomize(null);
-          setItemOrderDetails(undefined);
-          setShowRewardsDrawer(false);
+          // waiting until drawer is closed to reset drawer state since the framer-motion
+          // horizontal sliding animations would be visible if on item customization or
+          // rewards when closing the drawer
+          setTimeout(() => {
+            setItemToCustomize(null);
+            setItemOrderDetails(undefined);
+            setShowRewardsDrawer(false);
+          }, 500);
         }
       }}
     >
