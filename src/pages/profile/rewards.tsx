@@ -1140,10 +1140,12 @@ function RewardsHistory({ userId, rewardsPointsEarned }: RewardsHistory) {
       </DialogTrigger>
       <DialogContent
         extraBottomSpacer={false}
-        // idk about text-sm on mobile, let's see
-        className="baseVertFlex gap-4 text-sm sm:text-base"
+        className="baseVertFlex gap-4 overflow-hidden text-sm sm:text-base"
       >
-        <div className="baseFlex w-full !justify-between border-b pb-4 pt-2">
+        <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+        <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
+
+        <div className="baseFlex w-full !justify-between border-b pb-2 pt-2 sm:pb-3">
           <div className="baseFlex gap-2 text-base font-medium tablet:text-lg">
             <MdOutlineHistory className="size-4 tablet:mt-0.5 tablet:size-5" />
             Point history
@@ -1238,7 +1240,7 @@ function RewardsHistory({ userId, rewardsPointsEarned }: RewardsHistory) {
           )}
         </AnimatePresence>
 
-        <div className="baseFlex w-full gap-1 border-t pt-4">
+        <div className="baseFlex w-full gap-1 border-t pt-5">
           You currently have
           <span className="font-semibold">{rewardsPointsEarned}</span>
           points.
