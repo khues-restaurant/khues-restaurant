@@ -605,7 +605,11 @@ function MenuCategoryButton({
         if (categoryContainer) {
           setProgrammaticallyScrolling(true);
 
-          categoryContainer.scrollIntoView({ behavior: "smooth" });
+          categoryContainer.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+            inline: "nearest",
+          });
 
           setTimeout(() => {
             setProgrammaticallyScrolling(false);
@@ -762,7 +766,7 @@ function MenuItemPreviewButton({
             alt={menuItem.name}
             width={96}
             height={96}
-            className="mt-2 !self-start rounded-md drop-shadow-lg"
+            className="mt-2 !size-24 !self-start rounded-md drop-shadow-lg"
           />
 
           <div className="baseVertFlex h-full w-48 !items-start">
