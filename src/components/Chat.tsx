@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { api } from "~/utils/api";
 import { IoChatbox } from "react-icons/io5";
 import { X } from "lucide-react";
@@ -318,17 +318,17 @@ function Chat() {
               className="baseVertFlex relative !h-full w-full !justify-start gap-2 overflow-y-auto bg-background p-2 sm:h-96 "
             >
               {dateLabeledMessages.map((message) => (
-                <>
+                <Fragment
+                  key={
+                    message instanceof Date ? message.toString() : message.id
+                  }
+                >
                   {message instanceof Date ? (
-                    <p
-                      key={message.toString()}
-                      className="pt-4 text-center text-xs text-stone-400"
-                    >
+                    <p className="pt-4 text-center text-xs text-stone-400">
                       {format(message, "EEEE, MMMM do")}
                     </p>
                   ) : (
                     <div
-                      key={message.id}
                       className={`baseVertFlex w-full
                                   ${message.senderId === userId ? "!items-end" : "!items-start"}
                                `}
@@ -345,7 +345,7 @@ function Chat() {
                       </div>
                     </div>
                   )}
-                </>
+                </Fragment>
               ))}
             </div>
 
@@ -490,17 +490,17 @@ function Chat() {
               className="baseVertFlex relative size-full h-64 !justify-start gap-2 overflow-y-auto overscroll-y-contain bg-background p-2 shadow-inner tall:h-96"
             >
               {dateLabeledMessages.map((message) => (
-                <>
+                <Fragment
+                  key={
+                    message instanceof Date ? message.toString() : message.id
+                  }
+                >
                   {message instanceof Date ? (
-                    <p
-                      key={message.toString()}
-                      className="pt-4 text-center text-xs text-stone-400"
-                    >
+                    <p className="pt-4 text-center text-xs text-stone-400">
                       {format(message, "EEEE, MMMM do")}
                     </p>
                   ) : (
                     <div
-                      key={message.id}
                       className={`baseVertFlex w-full
                                   ${message.senderId === userId ? "!items-end" : "!items-start"}
                                `}
@@ -517,7 +517,7 @@ function Chat() {
                       </div>
                     </div>
                   )}
-                </>
+                </Fragment>
               ))}
             </div>
 
