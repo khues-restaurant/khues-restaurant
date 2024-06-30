@@ -754,8 +754,8 @@ function Preferences() {
                         </p>
 
                         <p className="italic">
-                          *For financial and historical purposes, we will retain
-                          records of your orders. However, all personal
+                          * For financial and historical purposes, we will
+                          retain records of your orders. However, all personal
                           information will be anonymized to protect your
                           privacy. Anonymization means that any data that could
                           identify you will be removed or altered so that you
@@ -780,9 +780,10 @@ function Preferences() {
                         </p>
                       </AlertDialogDescription>
 
-                      <AlertDialogFooter className="gap-2">
+                      <AlertDialogFooter className="baseFlex w-full !flex-row gap-2">
                         <Button
                           variant="outline"
+                          className="w-full"
                           onClick={() => setShowDeleteUserDialog(false)}
                         >
                           Cancel
@@ -790,6 +791,7 @@ function Preferences() {
                         <Button
                           variant={"destructive"}
                           disabled={deleteButtonText !== "Delete account"}
+                          className="w-full"
                           onClick={() => {
                             setDeleteButtonText("Deleting account");
                             deleteUser(userId);
