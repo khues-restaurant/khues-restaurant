@@ -10,7 +10,7 @@ import {
   type CarouselApi,
 } from "~/components/ui/carousel";
 
-import ourStoryHero from "/public/interior/seven.webp";
+import eric from "/public/ourStory/eric.webp";
 import khuesKitchen from "/public/ourStory/khuesKitchen.webp";
 
 import kare11InTheKitchen from "/public/media/kare11InTheKitchen.jpg";
@@ -432,7 +432,7 @@ function OurStory() {
             // viewport={{ once: true, amount: 0.75 }}
             className="relative h-[425px] w-[300px] rounded-md tablet:h-[525px] tablet:w-[350px]"
           >
-            <Image src="/eric.webp" alt="Eric" fill className="rounded-md" />
+            <Image src={eric} alt="Eric" fill className="rounded-md" />
           </motion.div>
         </div>
         {/* Q&A w/ Eric */}
