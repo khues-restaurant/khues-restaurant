@@ -28,6 +28,7 @@ export const statsRouter = createTRPCRouter({
       z.object({
         totalOrders: z.boolean().optional(),
         totalRevenue: z.boolean().optional(),
+        totalTips: z.boolean().optional(),
         averageOrderValue: z.boolean().optional(),
         averageOrderCompletionTime: z.boolean().optional(),
         lateOrders: z.boolean().optional(),
@@ -44,6 +45,7 @@ export const statsRouter = createTRPCRouter({
       const {
         totalOrders,
         totalRevenue,
+        totalTips,
         averageOrderValue,
         averageOrderCompletionTime,
         lateOrders,
@@ -57,6 +59,7 @@ export const statsRouter = createTRPCRouter({
       if (
         !totalOrders &&
         !totalRevenue &&
+        !totalTips &&
         !averageOrderValue &&
         !averageOrderCompletionTime &&
         !lateOrders
@@ -337,6 +340,146 @@ export const statsRouter = createTRPCRouter({
           data: combinedResults,
           ...generateContextStrings({
             category: "totalRevenue",
+            totalCurr,
+            totalPrev,
+          }),
+        });
+      }
+
+      if (totalTips) {
+        // get the total tips for the current period
+        const currPeriod = await ctx.prisma.order.findMany({
+          where: {
+            createdAt: {
+              gte: currStartDate,
+              lte: currEndDate,
+            },
+          },
+          select: {
+            tipValue: true,
+            createdAt: true,
+          },
+          orderBy: {
+            createdAt: "asc", // prob not necessary
+          },
+        });
+
+        let index = 0;
+
+        const currResults: number[] = [];
+
+        // group/aggregate the orders by the periodicity
+        for (const order of currPeriod) {
+          const createdAt = order.createdAt;
+
+          if (periodicity === "daily") {
+            index = createdAt.getHours();
+          } else if (periodicity === "weekly") {
+            index = createdAt.getDay();
+          } else if (periodicity === "monthly") {
+            index = createdAt.getDate(); // see how this looks, obv if you want to go back to the
+            // grouping into 4 weeks you'll need to change this
+          } else if (periodicity === "yearly") {
+            index = createdAt.getMonth();
+          }
+
+          currResults[index] = (currResults[index] || 0) + order.tipValue;
+        }
+
+        // prev period (if necessary)
+        const prevResults: number[] = [];
+
+        if (prevStartDate && prevEndDate) {
+          // get the total orders for the current period
+          const prevPeriod = await ctx.prisma.order.findMany({
+            where: {
+              createdAt: {
+                gte: prevStartDate,
+                lte: prevEndDate,
+              },
+            },
+            select: {
+              tipValue: true,
+              createdAt: true,
+            },
+            orderBy: {
+              createdAt: "asc", // prob not necessary
+            },
+          });
+
+          let index = 0;
+
+          // group/aggregate the orders by the periodicity
+          for (const order of prevPeriod) {
+            const createdAt = order.createdAt;
+
+            if (periodicity === "daily") {
+              index = createdAt.getHours();
+            } else if (periodicity === "weekly") {
+              index = createdAt.getDay();
+            } else if (periodicity === "monthly") {
+              index = createdAt.getDate(); // see how this looks, obv if you want to go back to the
+              // grouping into 4 weeks you'll need to change this
+            } else if (periodicity === "yearly") {
+              index = createdAt.getMonth();
+            }
+
+            prevResults[index] = (prevResults[index] || 0) + order.tipValue;
+          }
+        }
+
+        // format/combine the results (if necessary)
+        const combinedResults = [];
+
+        // name will be be dynamic based on the periodicity (6:00 PM, Monday, etc)
+
+        let iterationAmount = 24;
+
+        if (periodicity === "weekly") {
+          iterationAmount = 7;
+        } else if (periodicity === "monthly") {
+          iterationAmount = 31;
+        } else if (periodicity === "yearly") {
+          iterationAmount = 12;
+        }
+
+        for (let i = 0; i < iterationAmount; i++) {
+          // all database money values are stored as cents, so divide by 100 to get dollars
+          const curr = new Decimal(currResults[i] || 0).div(100).toNumber();
+          const prev = new Decimal(prevResults[i] || 0).div(100).toNumber();
+
+          combinedResults.push({
+            name: getPeriodName(i, periodicity),
+            curr,
+            prev,
+          });
+        }
+
+        // get total orders for the current period and the previous period (if necessary)
+        const totalCurrInCents = currResults.reduce((a, b) => a + b, 0);
+        const totalPrevInCents =
+          prevStartDate && prevEndDate
+            ? prevResults.reduce((a, b) => a + b, 0)
+            : null;
+
+        const totalCurr = new Decimal(totalCurrInCents).div(100).toNumber();
+        const totalPrev = totalPrevInCents
+          ? new Decimal(totalPrevInCents).div(100).toNumber()
+          : null;
+
+        // add to the results under key of "totalOrders"
+        results.push({
+          ...generateTitleAndTimeRange({
+            category: "totalTips",
+            periodicity,
+            currStartDate,
+            currEndDate,
+            prevStartDate,
+            prevEndDate,
+          }),
+          data: combinedResults,
+          ...generateContextStrings({
+            category: "totalTips",
             totalCurr,
             totalPrev,
           }),
@@ -852,6 +995,7 @@ export const statsRouter = createTRPCRouter({
 type Category =
   | "totalOrders"
   | "totalRevenue"
+  | "totalTips"
   | "averageOrderValue"
   | "averageOrderCompletionTime"
   | "lateOrders";
@@ -886,6 +1030,7 @@ function generateTitleAndTimeRange({
   const categoryMap: { [key in Category]: string } = {
     totalOrders: "Total orders",
     totalRevenue: "Total revenue",
+    totalTips: "Total tips",
     averageOrderValue: "Average order value",
     averageOrderCompletionTime: "Average order completion time",
     lateOrders: "Late orders",
@@ -948,6 +1093,10 @@ function generateContextStrings({
     totalRevenue: (curr, prev) => ({
       totalCurr: `$${formatNumber(curr)} in revenue`,
       totalPrev: prev !== null ? `$${formatNumber(prev)} in revenue` : null,
+    }),
+    totalTips: (curr, prev) => ({
+      totalCurr: `$${formatNumber(curr)} in tips`,
+      totalPrev: prev !== null ? `$${formatNumber(prev)} in tips` : null,
     }),
     averageOrderValue: (curr, prev) => ({
       totalCurr: `$${formatNumber(curr)} per order`,

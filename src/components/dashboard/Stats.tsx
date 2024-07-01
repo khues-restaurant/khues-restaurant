@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  addDays,
   addWeeks,
   endOfDay,
   endOfMonth,
@@ -51,6 +52,7 @@ const customReportSchema = z.object({
   category: z.enum([
     "totalOrders",
     "totalRevenue",
+    "totalTips",
     "averageOrderValue",
     "averageOrderCompletionTime",
     "lateOrders",
@@ -162,6 +164,9 @@ function Stats() {
                             <SelectItem value="totalRevenue">
                               Total Revenue
                             </SelectItem>
+                            <SelectItem value="totalTips">
+                              Total tips
+                            </SelectItem>
                             <SelectItem value="averageOrderValue">
                               Average order value
                             </SelectItem>
@@ -210,8 +215,24 @@ function Stats() {
                         <FormLabel className="font-semibold">Range</FormLabel>
                         <FormControl>
                           <RadioGroup
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            onValueChange={(e) => {
+                              // reset day, week, and month inputs to an empty string
+                              customReportForm.setValue("day", "", {
+                                shouldValidate: true,
+                              });
+                              customReportForm.setValue("week", "", {
+                                shouldValidate: true,
+                              });
+                              customReportForm.setValue("month", "", {
+                                shouldValidate: true,
+                              });
+
+                              field.onChange(e);
+                              // unsure of why this is necessary, but the customReportForm.getValues("periodicity")
+                              // was not updating when switching to monthly/yearly without it...
+                              void customReportForm.trigger("periodicity");
+                            }}
+                            value={field.value}
                             className="baseFlex gap-4"
                           >
                             <FormItem className="flex items-center space-x-2 space-y-0">
@@ -277,14 +298,19 @@ function Stats() {
                   <FormField
                     control={customReportForm.control}
                     name="day"
-                    disabled={orderYearRange === undefined || generatingReport}
                     render={({ field, fieldState: { invalid, error } }) => (
                       <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
                         <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
                           <FormLabel className="font-semibold">Day</FormLabel>
                           <Select
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            value={field.value}
+                            disabled={
+                              orderYearRange === undefined ||
+                              generatingReport ||
+                              customReportForm.getValues("periodicity") !==
+                                "daily"
+                            }
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -293,12 +319,10 @@ function Stats() {
                             </FormControl>
                             <SelectContent>
                               {/* for loop that renders 1-31, shifted to 0-30 for the value */}
-                              {/* TODO: may need to just have the ui value be zero indexed... not sure
-                            if <Select> allows for mismatching value and text content */}
                               {Array.from({ length: 31 }, (_, i) => i).map(
                                 (i) => (
                                   <SelectItem key={i} value={`${i}`}>
-                                    {i + 1}
+                                    {getOrdinalNumber(i + 1)}
                                   </SelectItem>
                                 ),
                               )}
@@ -334,14 +358,21 @@ function Stats() {
                   <FormField
                     control={customReportForm.control}
                     name="week"
-                    disabled={orderYearRange === undefined || generatingReport}
                     render={({ field, fieldState: { invalid, error } }) => (
                       <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
                         <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
                           <FormLabel className="font-semibold">Week</FormLabel>
                           <Select
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            value={field.value}
+                            disabled={
+                              orderYearRange === undefined ||
+                              generatingReport ||
+                              customReportForm.getValues("periodicity") ===
+                                "monthly" ||
+                              customReportForm.getValues("periodicity") ===
+                                "yearly"
+                            }
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -353,6 +384,9 @@ function Stats() {
                               <SelectItem value="2nd week">2nd week</SelectItem>
                               <SelectItem value="3rd week">3rd week</SelectItem>
                               <SelectItem value="4th week">4th week</SelectItem>
+                              <SelectItem value="5th week">
+                                5th week*
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -391,7 +425,13 @@ function Stats() {
                           <FormLabel className="font-semibold">Month</FormLabel>
                           <Select
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            value={field.value}
+                            disabled={
+                              orderYearRange === undefined ||
+                              generatingReport ||
+                              customReportForm.getValues("periodicity") ===
+                                "yearly"
+                            }
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -445,14 +485,16 @@ function Stats() {
                   <FormField
                     control={customReportForm.control}
                     name="year"
-                    disabled={orderYearRange === undefined || generatingReport}
                     render={({ field, fieldState: { invalid, error } }) => (
                       <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
                         <div className="baseVertFlex w-full !items-start gap-2">
                           <FormLabel className="font-semibold">Year</FormLabel>
                           <Select
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            value={field.value}
+                            disabled={
+                              orderYearRange === undefined || generatingReport
+                            }
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -774,8 +816,7 @@ function getSpecificDateRange({
         const weekNumber = parseInt(week.split(" ")[0] ?? "1", 10) - 1; // Get week number (0-indexed)
         const monthStartDate = startOfMonth(startDate);
         startDate = addWeeks(monthStartDate, weekNumber);
-        startDate = startOfWeek(startDate);
-        endDate = endOfWeek(startDate);
+        endDate = addDays(startDate, 6);
       } else {
         startDate = startOfWeek(startDate);
         endDate = endOfWeek(endDate);
@@ -803,6 +844,7 @@ function getPresetReportParams(periodicity: Periodicity) {
   return {
     totalOrders: true,
     totalRevenue: true,
+    totalTips: true,
     averageOrderValue: true,
     averageOrderCompletionTime: true,
     lateOrders: true,
@@ -811,4 +853,24 @@ function getPresetReportParams(periodicity: Periodicity) {
 
     ...getReportDateRanges(periodicity),
   };
+}
+
+function getOrdinalNumber(n: number): string {
+  const s = ["th", "st", "nd", "rd"];
+  const v = n % 100;
+
+  if (v > 10 && v < 20) {
+    return `${n}th`;
+  } else {
+    switch (n % 10) {
+      case 1:
+        return `${n}st`;
+      case 2:
+        return `${n}nd`;
+      case 3:
+        return `${n}rd`;
+      default:
+        return `${n}th`;
+    }
+  }
 }
