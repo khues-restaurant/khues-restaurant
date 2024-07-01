@@ -856,7 +856,6 @@ function getPresetReportParams(periodicity: Periodicity) {
 }
 
 function getOrdinalNumber(n: number): string {
-  const s = ["th", "st", "nd", "rd"];
   const v = n % 100;
 
   if (v > 10 && v < 20) {
