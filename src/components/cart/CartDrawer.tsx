@@ -828,7 +828,7 @@ function CartDrawer({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="baseVertFlex my-8 w-full gap-4 px-4 py-16"
+              className="baseVertFlex my-8 w-full gap-4 px-4 py-12"
             >
               <p className="text-lg font-semibold">Your order is empty</p>
               <p className="w-64 text-center">
