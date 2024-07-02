@@ -57,7 +57,9 @@ export function calculateTotalCartPrices({
   // Metro Area Transportation = 0.750%
   // Metro Area Tax for Housing = 0.250%
   // Total = 9.875%
-  const cumulativeTax = subtotal.mul(0.09875);
+  const cumulativeTax = subtotal
+    .mul(0.09875)
+    .toDecimalPlaces(0, Decimal.ROUND_HALF_UP);
   const total = subtotal.add(cumulativeTax).add(calculatedTipValue);
 
   return {
