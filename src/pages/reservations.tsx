@@ -76,7 +76,7 @@ function Reservations() {
         </div>
       </div>
 
-      <div className="baseVertFlex my-auto h-full max-w-sm gap-4 p-4 py-16 pb-32 tablet:max-w-3xl tablet:gap-8 tablet:pb-24">
+      <div className="baseVertFlex my-auto h-full max-w-sm gap-4 p-8 py-16 pb-32 xs:max-w-md tablet:max-w-3xl tablet:gap-8 tablet:pb-24">
         <Image
           src={reservations}
           alt={"TODO: fill in w/ appropriate alt text"}
@@ -101,7 +101,7 @@ function Reservations() {
           for larger groups, please get in touch with us.
         </p>
 
-        <div className="baseFlex mt-4 gap-4">
+        <div className="baseVertFlex mt-6 gap-4 xs:mt-4 xs:!flex-row">
           <Button
             className="baseFlex gap-2"
             onClick={() => setChatIsOpen(!chatIsOpen)}
@@ -112,7 +112,7 @@ function Reservations() {
 
           <Separator
             orientation="vertical"
-            className="h-6 w-[1px] bg-stone-400"
+            className="mt-2 h-[1px] w-full bg-stone-400 xs:mt-0 xs:h-6 xs:w-[1px]"
           />
 
           <Button variant="link" className="h-8 px-1" asChild>
