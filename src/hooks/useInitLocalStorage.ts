@@ -176,6 +176,9 @@ function useInitLocalStorage() {
           JSON.stringify(defaultCart),
         );
       }
+
+      // set key for pickupName to empty string
+      localStorage.setItem("khue's-pickupName", "");
     }
   }, [isSignedIn]);
 }

@@ -40,18 +40,34 @@ function CartButton() {
   });
 
   const [showCartSheet, setShowCartSheet] = useState(false);
-
-  // was planning on having this be on orderDetails object, but feels flaky
-  // to implement workaround for if user hits "undo" button (it will reset field to
-  // an empty string, which would not be expected for the user)
   const [pickupName, setPickupName] = useState("");
 
+  // ------ signed in flow ------
   useEffect(() => {
     if (user && !cartInitiallyValidated && pickupName === "") {
       // set pickup name to user's name in db
       setPickupName(`${user.firstName} ${user.lastName}`);
     }
   }, [cartInitiallyValidated, pickupName, user]);
+
+  // ------ signed out flow ------
+  useEffect(() => {
+    if (!isSignedIn && !cartInitiallyValidated && pickupName === "") {
+      // check localStorage for pickup name, and set it if it exists
+      const pickupName = localStorage.getItem("khue's-pickupName");
+      if (pickupName) {
+        setPickupName(pickupName);
+      }
+    }
+  }, [cartInitiallyValidated, isSignedIn, pickupName]);
+
+  useEffect(() => {
+    // unsure if cartInitiallyValidated is necessary here
+    if (!isSignedIn && cartInitiallyValidated) {
+      // keep localStorage pickupName in sync with state
+      localStorage.setItem("khue's-pickupName", pickupName);
+    }
+  }, [cartInitiallyValidated, isSignedIn, pickupName]);
 
   useEffect(() => {
     if (showCartSheet || cartDrawerIsOpen) {
