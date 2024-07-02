@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "~/components/ui/button";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -1238,6 +1238,8 @@ function OurFavoriteMenuItemCard({ menuItem }: OurFavoriteMenuItemCard) {
 
   const { toast, dismiss: dismissToasts } = useToast();
 
+  const [addToOrderText, setAddToOrderText] = useState("Add to order");
+
   return (
     <>
       <Image
@@ -1252,9 +1254,11 @@ function OurFavoriteMenuItemCard({ menuItem }: OurFavoriteMenuItemCard) {
         {menuItem.description}
       </p>
       <Button
-        disabled={!menuItem.available}
+        disabled={!menuItem.available || addToOrderText === "Added to order"}
         className="w-full select-none"
         onClick={async () => {
+          setAddToOrderText("Added to order");
+
           // set prev order details so we can revert if necessary
           // with toast's undo button
           setPrevOrderDetails(orderDetails);
@@ -1312,9 +1316,52 @@ function OurFavoriteMenuItemCard({ menuItem }: OurFavoriteMenuItemCard) {
               ],
             },
           });
+
+          setTimeout(() => {
+            setAddToOrderText("Add to order");
+          }, 1500);
         }}
       >
-        Add to order
+        <AnimatePresence mode={"popLayout"} initial={false}>
+          <motion.div
+            key={`${menuItem.id}-${addToOrderText}`}
+            layout
+            // whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{
+              duration: 0.25,
+            }}
+            className="baseFlex w-[122.75px] gap-2"
+          >
+            {addToOrderText === "Add to order" && "Add to order"}
+
+            {addToOrderText === "Added to order" && (
+              <svg
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+                className="size-6 text-offwhite"
+              >
+                <motion.path
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{
+                    delay: 0.2,
+                    type: "tween",
+                    ease: "easeOut",
+                    duration: 0.3,
+                  }}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            )}
+          </motion.div>
+        </AnimatePresence>
       </Button>
     </>
   );
