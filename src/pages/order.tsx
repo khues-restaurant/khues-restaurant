@@ -772,7 +772,7 @@ function MenuItemPreviewButton({
           <div className="baseVertFlex h-full w-48 !items-start">
             <div className="baseVertFlex !items-start gap-2">
               <div className="baseVertFlex !items-start gap-1">
-                <p className="max-w-36 text-wrap text-left text-lg font-medium underline underline-offset-2">
+                <p className="max-w-36 whitespace-normal text-left text-lg font-medium underline underline-offset-2 supports-[text-wrap]:text-wrap">
                   {menuItem.name}
                 </p>
 
@@ -788,7 +788,7 @@ function MenuItemPreviewButton({
                 </div>
               </div>
 
-              <p className="line-clamp-3 max-w-48 text-wrap text-left text-stone-400">
+              <p className="line-clamp-3 max-w-48 whitespace-normal text-left text-stone-400 supports-[text-wrap]:text-wrap">
                 {menuItem.description}
               </p>
             </div>

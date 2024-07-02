@@ -277,7 +277,7 @@ function ItemCustomizationDrawer({
           {/* Description */}
           <div className="baseVertFlex w-full !items-start gap-2">
             <p className="text-lg underline underline-offset-2">Description</p>
-            <p className="max-w-96 text-wrap text-left text-sm text-stone-400 tablet:max-w-2xl">
+            <p className="max-w-96 whitespace-normal text-left text-sm text-stone-400 supports-[text-wrap]:text-wrap tablet:max-w-2xl">
               {itemToCustomize.description}
             </p>
 

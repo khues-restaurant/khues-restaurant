@@ -133,15 +133,15 @@ function MobileHeader() {
             <Button variant="ghost" size={"icon"} className="relative mx-2">
               <span
                 aria-hidden="true"
-                className="absolute top-[12px] block h-0.5 w-6 bg-current transition duration-500 ease-in-out"
+                className="ease-in-out absolute top-[12px] block h-0.5 w-6 bg-current transition duration-500"
               ></span>
               <span
                 aria-hidden="true"
-                className="absolute block h-0.5 w-6 bg-current transition duration-500 ease-in-out"
+                className="ease-in-out absolute block h-0.5 w-6 bg-current transition duration-500"
               ></span>
               <span
                 aria-hidden="true"
-                className="absolute top-[26px] block h-0.5 w-6 bg-current transition duration-500 ease-in-out"
+                className="ease-in-out absolute top-[26px] block h-0.5 w-6 bg-current transition duration-500"
               ></span>
             </Button>
           </SheetTrigger>
@@ -476,7 +476,7 @@ function MobileHeader() {
                                     href="https://facebook.com"
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="my-2 text-wrap text-primary"
+                                    className="my-2 whitespace-normal text-primary supports-[text-wrap]:text-wrap"
                                   >
                                     799 University Ave W, St Paul, MN 55104
                                   </a>

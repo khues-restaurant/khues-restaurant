@@ -755,7 +755,7 @@ function MenuItemPreview({
           <div className="baseVertFlex size-full !items-start">
             <div className="baseFlex w-full !justify-between">
               <div className="baseVertFlex !items-start gap-1">
-                <p className="text-wrap text-left text-lg font-medium ">
+                <p className="whitespace-normal text-left text-lg font-medium supports-[text-wrap]:text-wrap ">
                   <span className="underline underline-offset-2">
                     {menuItem.name}
                   </span>
@@ -773,7 +773,7 @@ function MenuItemPreview({
                   {menuItem.isGlutenFree && <p className="text-sm">GF</p>}
                 </div>
 
-                <p className="max-w-72 text-wrap text-left text-sm text-stone-400">
+                <p className="max-w-72 whitespace-normal text-left text-sm text-stone-400 supports-[text-wrap]:text-wrap">
                   {menuItem.description}
                 </p>
               </div>

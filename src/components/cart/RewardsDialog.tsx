@@ -431,7 +431,7 @@ function RewardMenuItem({
 
               {/* Point cost for item */}
               {!forBirthdayReward && (
-                <p className="max-w-48 text-wrap text-left text-sm text-stone-400">
+                <p className="max-w-48 whitespace-normal text-left text-sm text-stone-400 supports-[text-wrap]:text-wrap">
                   {new Decimal(menuItem.price)
                     .mul(2) // item price (in cents) multiplied by 2
                     .toNumber()}{" "}
