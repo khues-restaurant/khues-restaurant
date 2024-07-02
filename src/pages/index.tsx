@@ -669,15 +669,15 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
           </div>
 
           {/* "Order directly through us" promo section */}
-          <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md tablet:hidden">
+          <div className="baseVertFlex w-full max-w-sm overflow-hidden rounded-md border shadow-md tablet:hidden">
             {/* maybe have stock image of person holding a phone and you would have a proportionally
                 tilted screenshot of the order page showing on their phone? think about it */}
-            <div className="relative h-60 w-full overflow-hidden rounded-t-md shadow-md">
+            <div className="relative h-60 w-full overflow-hidden shadow-md">
               <Image
                 src={rewardsPromo}
                 alt={"TODO: fill in w/ appropriate alt text"}
                 width={384}
-                className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-32"
+                className="!relative !top-0 !size-full !h-96 object-cover !pb-32"
               />
             </div>
             <div className="baseVertFlex relative gap-4 overflow-hidden rounded-b-md bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
@@ -799,13 +799,13 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
           </div>
 
           {/* Meet the Chef promo section */}
-          <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md tablet:hidden">
-            <div className="relative h-60 w-full overflow-hidden rounded-t-md">
+          <div className="baseVertFlex w-full max-w-sm overflow-hidden rounded-md border shadow-md tablet:hidden">
+            <div className="relative h-60 w-full overflow-hidden shadow-md">
               <Image
                 src={eric}
                 alt={"TODO: fill in w/ appropriate alt text"}
                 width={384}
-                className="!relative !top-0 !size-full !h-96 rounded-md object-cover !object-top !pb-16"
+                className="!relative !top-0 !size-full !h-96 rounded-none object-cover !object-top !pb-16"
               />
             </div>
             <div className="baseVertFlex relative !items-start gap-4 overflow-hidden rounded-b-md bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-12">
@@ -889,13 +889,13 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
           </div>
 
           {/* Reservation promo section */}
-          <div className="baseVertFlex w-full max-w-sm rounded-md shadow-md tablet:hidden">
-            <div className="relative h-60 w-full overflow-hidden rounded-t-md">
+          <div className="baseVertFlex w-full max-w-sm overflow-hidden rounded-md border shadow-md tablet:hidden">
+            <div className="relative h-60 w-full overflow-hidden shadow-md">
               <Image
                 src={reservations}
                 alt={"TODO: fill in w/ appropriate alt text"}
                 width={384}
-                className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-24"
+                className="!relative !top-0 !size-full !h-96 object-cover !pb-24"
               />
             </div>
             <div className="baseVertFlex relative !items-start gap-2 overflow-hidden rounded-b-md bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
