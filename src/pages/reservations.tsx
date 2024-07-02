@@ -107,7 +107,7 @@ function Reservations() {
             onClick={() => setChatIsOpen(!chatIsOpen)}
           >
             Send us a message
-            <IoChatbox className="size-5 drop-shadow-md" />
+            <IoChatbox className="size-4 drop-shadow-md" />
           </Button>
 
           <Separator
