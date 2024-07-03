@@ -132,6 +132,9 @@ export const chatRouter = createTRPCRouter({
           },
         },
       },
+      orderBy: {
+        updatedAt: "desc",
+      },
     });
   }),
 });

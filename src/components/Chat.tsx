@@ -339,7 +339,7 @@ function Chat() {
                         {format(message.createdAt, "h:mm a")}
                       </p>
                       <div
-                        className={`z-10 rounded-full px-4 py-2 ${message.senderId === userId ? "bg-primary text-offwhite" : "bg-secondary"}`}
+                        className={`z-10 rounded-lg px-4 py-2 ${message.senderId === userId ? "bg-primary text-offwhite" : "bg-secondary"}`}
                       >
                         <p className="text-sm">{message.content}</p>
                       </div>
@@ -511,7 +511,7 @@ function Chat() {
                         {format(message.createdAt, "h:mm a")}
                       </p>
                       <div
-                        className={`z-10 rounded-full px-4 py-2 ${message.senderId === userId ? "bg-primary text-offwhite" : "bg-secondary"}`}
+                        className={`z-10 rounded-lg px-4 py-2 ${message.senderId === userId ? "bg-primary text-offwhite" : "bg-secondary"}`}
                       >
                         <p className="text-sm">{message.content}</p>
                       </div>

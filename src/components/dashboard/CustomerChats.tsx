@@ -115,12 +115,6 @@ function CustomerChats({ socket }: CustomerChats) {
       },
     });
 
-  const [chats, setMessages] = useState<
-    (Chat & {
-      messages: ChatMessage[];
-    })[]
-  >([]);
-
   const [newMessageContent, setNewMessageContent] = useState("");
   const [selectedUserId, setSelectedUserId] = useState("");
   const [dateLabeledMessages, setDateLabeledMessages] =
@@ -130,17 +124,6 @@ function CustomerChats({ socket }: CustomerChats) {
   const [manuallyRefreshingChats, setManuallyRefreshingChats] = useState(false);
 
   const scrollableChatContainerRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (!databaseChats) return;
-
-    // Sort databaseChats by the updatedAt timestamp in descending order
-    const sortedChats = databaseChats.sort(
-      (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
-    );
-
-    setMessages(sortedChats); // Assuming `setMessages` now expects an array of Chat objects
-  }, [databaseChats]);
 
   useEffect(() => {
     if (selectedUserId === "") return;
@@ -159,7 +142,7 @@ function CustomerChats({ socket }: CustomerChats) {
     if (selectedUserId === "") return;
     const transformedMessages: CombinedMessagesAndDateLabels = [];
     let lastDate: Date | null = null;
-    const chat = chats.find((chat) => chat.userId === selectedUserId);
+    const chat = databaseChats?.find((chat) => chat.userId === selectedUserId);
 
     if (!chat) return;
 
@@ -173,7 +156,7 @@ function CustomerChats({ socket }: CustomerChats) {
     });
 
     setDateLabeledMessages(transformedMessages);
-  }, [chats, selectedUserId]);
+  }, [databaseChats, selectedUserId]);
 
   // autoscroll to bottom of chat when chat is opened
   useLayoutEffect(() => {
@@ -191,8 +174,7 @@ function CustomerChats({ socket }: CustomerChats) {
 
   console.log(selectedUserId);
 
-  // vv obv improve this vv
-  if (!chats) return <p>Loading...</p>;
+  if (!databaseChats) return <p>Loading customer messages...</p>;
 
   return (
     <motion.div
@@ -203,16 +185,16 @@ function CustomerChats({ socket }: CustomerChats) {
       transition={{ duration: 0.5 }}
       className="baseVertFlex mt-24 w-full gap-4 border-t-0 tablet:mt-28"
     >
-      <div className="baseFlex rounded-lg border border-t-0">
+      <div className="baseFlex rounded-lg border border-t-0 bg-offwhite">
         {((viewportLabel.includes("mobile") && !selectedUserId) ||
           !viewportLabel.includes("mobile")) && (
-          <div className="baseVertFlex h-[557px] w-full rounded-bl-lg bg-offwhite tablet:!w-[500px] tablet:border-r tablet:border-stone-600">
+          <div className="baseVertFlex h-[556px] w-full rounded-bl-lg tablet:!w-[320px] tablet:border-r tablet:border-stone-600">
             <div className="w-full rounded-tl-lg border-b border-stone-600 bg-stone-200 p-4 text-center text-lg font-semibold">
               Chats
             </div>
 
             <div className="baseVertFlex size-full !justify-start overflow-y-auto">
-              {chats.map((chat) => {
+              {databaseChats.map((chat) => {
                 const lastMessage = chat.messages?.at(-1);
 
                 return (
@@ -266,7 +248,7 @@ function CustomerChats({ socket }: CustomerChats) {
             <div className="baseVertFlex relative h-[61px] w-full gap-2 rounded-tr-md border-b border-stone-600 bg-stone-200 p-4 shadow-md tablet:rounded-tr-md">
               <div className="text-lg font-semibold">
                 {
-                  chats.find((chat) => chat.userId === selectedUserId)
+                  databaseChats.find((chat) => chat.userId === selectedUserId)
                     ?.userFullName
                 }
               </div>
@@ -283,7 +265,7 @@ function CustomerChats({ socket }: CustomerChats) {
             {/* scroll-y-auto messages container */}
             <div
               ref={scrollableChatContainerRef}
-              className="baseVertFlex relative size-full !justify-start gap-2 overflow-y-auto bg-background p-2 sm:h-[391px] "
+              className="baseVertFlex relative w-full !justify-start gap-2 overflow-y-auto bg-background p-2 sm:h-[391px] sm:w-[576px]"
             >
               {dateLabeledMessages ? (
                 <>
@@ -309,7 +291,7 @@ function CustomerChats({ socket }: CustomerChats) {
                             {format(message.createdAt, "h:mm a")}
                           </p>
                           <div
-                            className={`z-10 rounded-full px-4 py-2 ${message.senderId === "dashboard" ? "bg-primary text-offwhite" : "bg-secondary"}`}
+                            className={`z-10 rounded-lg px-4 py-2 ${message.senderId === "dashboard" ? "bg-primary text-offwhite" : "bg-secondary"}`}
                           >
                             <p className="text-sm">{message.content}</p>
                           </div>
@@ -377,7 +359,7 @@ function CustomerChats({ socket }: CustomerChats) {
       <Button
         variant="outline"
         disabled={manuallyRefreshingChats}
-        className="baseFlex gap-2"
+        className="baseFlex gap-3"
         onClick={() => {
           setManuallyRefreshingChats(true);
 
@@ -392,7 +374,7 @@ function CustomerChats({ socket }: CustomerChats) {
           });
         }}
       >
-        <FaRedo className="size-4" />
+        <FaRedo className="size-3" />
         Refresh Chats
       </Button>
     </motion.div>
