@@ -8,6 +8,7 @@ import { SiTiktok } from "react-icons/si";
 import { Button } from "~/components/ui/button";
 import { useEffect, useRef } from "react";
 import { useMainStore } from "~/stores/MainStore";
+import { Separator } from "~/components/ui/separator";
 
 function Footer() {
   const { setFooterIsInView } = useMainStore((state) => ({
@@ -73,12 +74,18 @@ p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tab
         </div>
       </div>
 
-      {/* privacy policy */}
+      {/* privacy policy + business copyright */}
+      <div className="baseFlex order-3 gap-2 tablet:order-2">
       <Button variant={"link"} asChild>
-        <Link href="/privacy" className="order-3 !text-offwhite tablet:order-2">
+          <Link href="/privacy" className="!text-offwhite">
           Privacy Policy
         </Link>
       </Button>
+
+        <Separator className="mr-4 h-5 w-[1px]" />
+
+        <p className="mr-4 text-sm tablet:mr-0">&copy; Khue&apos;s</p>
+      </div>
 
       {/* socials */}
       <div className="baseVertFlex order-2 gap-[14px] tablet:order-3 tablet:!items-end tablet:!justify-between tablet:gap-2">
