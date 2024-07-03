@@ -24,22 +24,22 @@ const restaurantNamesAndBackstories = [
   {
     name: "Quang (2013 - 2018)",
     backstory:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
+      "During these formative years, Eric Pham honed his culinary skills at the family restaurant, Quang, under the watchful eye of his mother, Khue. Here, he absorbed traditional Vietnamese cooking techniques and learned the importance of dedication and hard work. This period laid the foundation for Eric's culinary journey, instilling in him a deep appreciation for his heritage and the craft of cooking.",
   },
   {
     name: "Khue's Kitchen (2021 - 2022)",
     backstory:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
+      "In 2020, after a rigorous year at the prestigious Spoon and Stable, Eric launched Khue's Kitchen as a ghost kitchen. This venture was the first tangible step toward his dream of honoring his mother by creating a restaurant named after her. Despite its virtual nature, Khue's Kitchen was a significant milestone, allowing Eric to experiment with his vision and bring his innovative takes on Vietnamese cuisine to life.",
   },
   {
     name: "Khue's Kitchen @ Bar Brava (2022 - 2023)",
     backstory:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
+      "Eric's culinary journey progressed as he brought Khue's Kitchen to Bar Brava in downtown Minneapolis. This move allowed him to reach a broader audience and further refine his menu. The collaboration with Bar Brava not only expanded his culinary reach but also enriched his experience, enabling him to blend traditional Vietnamese flavors with contemporary dining trends.",
   },
   {
     name: "Khue's (2024 - Present)",
     backstory:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
+      "Now, Eric is on the brink of a new chapter with the opening of Khue's in St. Paul. This establishment marks the culmination of his dream: a dedicated space to celebrate his mother's legacy and showcase his unique interpretation of Vietnamese cuisine. Eric is poised to honor Khue Pham's enduring influence, ensuring her legacy continues to inspire and delight the community.",
   },
 ];
 
@@ -512,7 +512,7 @@ function RestaurantAndBackstory({ name, backstory }: RestaurantAndBackstory) {
         className="!relative !w-80 rounded-t-md object-cover shadow-sm sm:!w-96 tablet:!h-[450px] tablet:!w-[600px] tablet:rounded-md"
       />
 
-      <div className="baseVertFlex w-full max-w-80 gap-2 rounded-b-md p-4 sm:max-w-md tablet:absolute tablet:bottom-0 tablet:left-0 tablet:!items-start tablet:rounded-br-none tablet:rounded-tr-md tablet:bg-gradient-to-tr tablet:from-black tablet:to-black/50 tablet:text-offwhite">
+      <div className="baseVertFlex w-full max-w-80 gap-2 rounded-b-md p-4 sm:max-w-lg tablet:absolute tablet:bottom-0 tablet:left-0 tablet:!items-start tablet:rounded-br-none tablet:rounded-tr-md tablet:bg-gradient-to-tr tablet:from-black tablet:to-black/50 tablet:text-offwhite">
         <p className="font-semibold underline underline-offset-2">{name}</p>
         <p className="text-sm">{backstory}</p>
       </div>
