@@ -1,4 +1,5 @@
 import { SignOutButton, useAuth } from "@clerk/nextjs";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 // import { useLocalStorageValue } from "@react-hookz/web";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -26,6 +27,7 @@ import {
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
+import { DialogDescription, DialogTitle } from "~/components/ui/dialog";
 import { Separator } from "~/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import useGetUserId from "~/hooks/useGetUserId";
@@ -57,19 +59,19 @@ function DashboardMobileHeader({
 
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
 
-  const { data: todaysOrders } = api.order.getTodaysOrders.useQuery();
+  const { data: orders } = api.order.getDashboardOrders.useQuery();
 
   const [numberOfActiveOrders, setNumberOfActiveOrders] = useState(0);
 
   useEffect(() => {
-    if (!todaysOrders) return;
+    if (!orders) return;
 
-    const activeOrders = todaysOrders.filter(
+    const activeOrders = orders.filter(
       (order) => order.orderCompletedAt === null,
     );
 
     setNumberOfActiveOrders(activeOrders.length);
-  }, [todaysOrders]);
+  }, [orders]);
 
   return (
     <nav
@@ -110,7 +112,7 @@ function DashboardMobileHeader({
                     //   : "translateY(0)",
                   }
                 }
-                className="absolute top-[12px] block h-0.5 w-6 bg-current transition duration-500 ease-in-out"
+                className="ease-in-out absolute top-[12px] block h-0.5 w-6 bg-current transition duration-500"
               ></span>
               <span
                 aria-hidden="true"
@@ -119,7 +121,7 @@ function DashboardMobileHeader({
                     // opacity: sheetIsOpen ? "0" : "1",
                   }
                 }
-                className="absolute block h-0.5 w-6 bg-current transition duration-500 ease-in-out"
+                className="ease-in-out absolute block h-0.5 w-6 bg-current transition duration-500"
               ></span>
               <span
                 aria-hidden="true"
@@ -131,7 +133,7 @@ function DashboardMobileHeader({
                     //   : "translateY(0)",
                   }
                 }
-                className="absolute top-[26px] block h-0.5 w-6 bg-current transition duration-500 ease-in-out"
+                className="ease-in-out absolute top-[26px] block h-0.5 w-6 bg-current transition duration-500"
               ></span>
 
               {/* TODO: combine numberOfActiveOrders with unreadMessages */}
@@ -145,6 +147,13 @@ function DashboardMobileHeader({
             </Button>
           </SheetTrigger>
           <SheetContent className="!h-dvh !overflow-auto p-6">
+            <VisuallyHidden>
+              <DialogTitle>Extra links</DialogTitle>
+              <DialogDescription>
+                Extra links for the dashboard
+              </DialogDescription>
+            </VisuallyHidden>
+
             <div className="baseVertFlex !justify-start gap-4 overflow-y-scroll pt-12">
               {isSignedIn && user && (
                 <Accordion type="single" collapsible className="w-full">

@@ -13,7 +13,13 @@ import {
 import { LuMinus, LuPlus, LuVegan } from "react-icons/lu";
 import AnimatedPrice from "~/components/AnimatedPrice";
 import { Button } from "~/components/ui/button";
-import { Dialog, DialogContent, DialogFooter } from "~/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle,
+} from "~/components/ui/dialog";
 import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
@@ -55,6 +61,7 @@ import { ToastAction } from "~/components/ui/toast";
 import { SiLeaflet } from "react-icons/si";
 import { Separator } from "~/components/ui/separator";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 interface ItemCustomizationDialog {
   isDialogOpen: boolean;
@@ -197,6 +204,15 @@ function ItemCustomizerDialogContent({
 
   return (
     <DialogContent className="max-w-4xl">
+      <VisuallyHidden>
+        <DialogTitle>
+          {itemOrderDetails ? "Update" : "Customize"} {itemToCustomize.name}
+        </DialogTitle>
+        <DialogDescription>
+          Customize this item by selecting from the available options.
+        </DialogDescription>
+      </VisuallyHidden>
+
       <div className="baseVertFlex relative w-full !justify-start overflow-y-auto pr-4 pt-4 tablet:max-h-[75vh]">
         <div className="baseFlex relative h-72 w-full !justify-end rounded-md bg-offwhite shadow-md">
           {/* primary diagonal bg */}

@@ -12,7 +12,12 @@ import { SlPresent } from "react-icons/sl";
 import { TbLocation } from "react-icons/tb";
 import { TfiReceipt } from "react-icons/tfi";
 import CartButton from "~/components/cart/CartButton";
-import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import {
   Popover,
   PopoverContent,
@@ -30,6 +35,8 @@ import classes from "./DesktopHeader.module.css";
 
 import outsideOfRestaurant from "/public/exterior/one.webp";
 import StaticLotus from "~/components/ui/StaticLotus";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 function DesktopHeader() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
@@ -236,6 +243,15 @@ function DesktopHeader() {
             </Button>
           </DialogTrigger>
           <DialogContent extraBottomSpacer={false} className="max-w-[900px]">
+            <VisuallyHidden>
+              <DialogTitle>
+                Hours of operation and location information
+              </DialogTitle>
+              <DialogDescription>
+                Our hours of operation and location information
+              </DialogDescription>
+            </VisuallyHidden>
+
             <div className="baseFlex w-[850px] !items-start">
               <div className="baseVertFlex w-max !items-start gap-2">
                 <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
@@ -264,6 +280,10 @@ function DesktopHeader() {
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
+                    <VisuallyHidden>
+                      <DialogTitle>Holiday hours</DialogTitle>
+                      <DialogDescription>Our holiday hours</DialogDescription>
+                    </VisuallyHidden>
                     <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
                     <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
 

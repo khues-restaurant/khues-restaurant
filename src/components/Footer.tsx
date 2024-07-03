@@ -76,11 +76,11 @@ p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tab
 
       {/* privacy policy + business copyright */}
       <div className="baseFlex order-3 gap-2 tablet:order-2">
-      <Button variant={"link"} asChild>
+        <Button variant={"link"} asChild>
           <Link href="/privacy" className="!text-offwhite">
-          Privacy Policy
-        </Link>
-      </Button>
+            Privacy Policy
+          </Link>
+        </Button>
 
         <Separator className="mr-4 h-5 w-[1px]" />
 
@@ -93,24 +93,28 @@ p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tab
 
         <div className="baseFlex gap-2">
           <Button variant="ghost" asChild>
-            <a href="https://instagram.com">
+            <a aria-label="Visit our Tiktok page" href="https://instagram.com">
               <SiTiktok className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
             </a>
           </Button>
+
           <Button variant="ghost" asChild>
-            <a href="https://instagram.com">
+            <a
+              aria-label="Visit our Instagram page"
+              href="https://instagram.com"
+            >
               <IoLogoInstagram className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
             </a>
           </Button>
 
           <Button variant="ghost" asChild>
-            <a href="https://facebook.com">
+            <a aria-label="Visit our Facebook page" href="https://facebook.com">
               <FaFacebook className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
             </a>
           </Button>
 
           <Button variant="ghost" asChild>
-            <a href="https://twitter.com">
+            <a aria-label="Visit our Twitter page" href="https://twitter.com">
               <FaXTwitter className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
             </a>
           </Button>

@@ -9,7 +9,13 @@ import { MdAccessTime } from "react-icons/md";
 import { SlPresent } from "react-icons/sl";
 import { TfiReceipt } from "react-icons/tfi";
 import { CiCalendarDate } from "react-icons/ci";
-import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import CartButton from "~/components/cart/CartButton";
 import {
   Accordion,
@@ -31,6 +37,7 @@ import outsideOfRestaurant from "/public/exterior/one.webp";
 import { useToast } from "~/components/ui/use-toast";
 import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import StaticLotus from "~/components/ui/StaticLotus";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 const linkContainer = {
   visible: {
@@ -146,6 +153,11 @@ function MobileHeader() {
             </Button>
           </SheetTrigger>
           <SheetContent className="!h-dvh !overflow-auto p-6">
+            <VisuallyHidden>
+              <DialogTitle>Navigation menu</DialogTitle>
+              <DialogDescription>Our navigation menu</DialogDescription>
+            </VisuallyHidden>
+
             <div className="baseVertFlex !justify-start gap-4 overflow-y-auto pt-12">
               {!isSignedIn && (
                 <div className="baseFlex gap-4">
@@ -405,6 +417,13 @@ function MobileHeader() {
                                 </Button>
                               </DialogTrigger>
                               <DialogContent>
+                                <VisuallyHidden>
+                                  <DialogTitle>Holiday hours</DialogTitle>
+                                  <DialogDescription>
+                                    Our holiday hours
+                                  </DialogDescription>
+                                </VisuallyHidden>
+
                                 <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
                                 <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
 

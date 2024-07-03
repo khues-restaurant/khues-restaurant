@@ -825,7 +825,9 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
               </p>
 
               <Button variant={"link"} className="h-8 !p-0" asChild>
-                <Link href="/our-story">Read more</Link>
+                <Link aria-label="Read more about our story" href="/our-story">
+                  Read more
+                </Link>
               </Button>
             </div>
           </div>
@@ -883,7 +885,9 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
               </p>
 
               <Button variant={"link"} className="h-8 !p-0" asChild>
-                <Link href="/our-story">Read more</Link>
+                <Link aria-label="Read more about our story" href="/our-story">
+                  Read more
+                </Link>
               </Button>
             </div>
           </div>

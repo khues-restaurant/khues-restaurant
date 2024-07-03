@@ -38,10 +38,17 @@ import { CiCalendarDate } from "react-icons/ci";
 import { formatPhoneNumber } from "~/utils/formatters/formatPhoneNumber";
 import { Switch } from "~/components/ui/switch";
 import { Label } from "~/components/ui/label";
-import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import { Separator } from "~/components/ui/separator";
 import { Checkbox } from "~/components/ui/checkbox";
 import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 const mainFormSchema = z.object({
   firstName: z
@@ -905,10 +912,19 @@ function PostSignUpDialog({
                       How to add dietary restrictions
                     </Button>
                   </DialogTrigger>
+
                   <DialogContent
                     extraBottomSpacer={false}
                     className="baseVertFlex gap-8 text-sm sm:text-base"
                   >
+                    <VisuallyHidden>
+                      <DialogTitle>How to add dietary restrictions</DialogTitle>
+                      <DialogDescription>
+                        Instructions on how to add dietary restrictions to your
+                        account.
+                      </DialogDescription>
+                    </VisuallyHidden>
+
                     <p className="px-4">
                       To add these restrictions when adding an item to your
                       order, toggle the switch found under the item&apos;s{" "}

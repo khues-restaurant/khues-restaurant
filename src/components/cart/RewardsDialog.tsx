@@ -10,7 +10,7 @@ import {
 } from "react";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import { Button } from "~/components/ui/button";
-import { Dialog, DialogContent } from "~/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "~/components/ui/dialog";
 import { useToast } from "~/components/ui/use-toast";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
@@ -22,6 +22,8 @@ import { motion } from "framer-motion";
 import { Separator } from "~/components/ui/separator";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 interface RewardsDialog {
   showRewardsDialog: boolean;
@@ -144,6 +146,14 @@ function RewardsDialogContent({
       extraBottomSpacer={false}
       className="w-[800px] max-w-[800px]"
     >
+      <VisuallyHidden>
+        <DialogTitle>Rewards selection</DialogTitle>
+        <DialogDescription>
+          Select a reward from the list below. Only one reward can be redeemed
+          per order.
+        </DialogDescription>
+      </VisuallyHidden>
+
       <div className="baseVertFlex relative max-h-[85vh] w-full !justify-start gap-2">
         <div className="baseFlex relative h-48 w-full overflow-hidden rounded-md bg-rewardsGradient shadow-sm">
           <motion.div

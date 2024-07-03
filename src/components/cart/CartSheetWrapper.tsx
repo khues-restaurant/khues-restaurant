@@ -1,7 +1,9 @@
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import CartSheet from "~/components/cart/CartSheet";
 import RewardsDialog from "~/components/cart/RewardsDialog";
 import ItemCustomizationDialog from "~/components/itemCustomization/ItemCustomizationDialog";
+import { DialogDescription, DialogTitle } from "~/components/ui/dialog";
 import { Sheet, SheetContent } from "~/components/ui/sheet";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { type Item } from "~/stores/MainStore";
@@ -41,6 +43,13 @@ function CartSheetWrapper({
         }}
       >
         <SheetContent className="h-screen">
+          <VisuallyHidden>
+            <DialogTitle>Cart</DialogTitle>
+            <DialogDescription>
+              Cart drawer containing all items added to your cart
+            </DialogDescription>
+          </VisuallyHidden>
+
           <div className="baseVertFlex relative size-full">
             <CartSheet
               setShowCartSheet={setShowCartSheet}

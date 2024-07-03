@@ -260,6 +260,7 @@ function Chat() {
               >
                 <AlertDialogTrigger asChild>
                   <Button
+                    aria-label="Toggle chat visibility"
                     className={`size-12 rounded-full shadow-md ${asPath.includes("/menu") ? "pointer-events-none opacity-0 tablet:pointer-events-auto tablet:opacity-100" : ""}`}
                     onClick={() => {
                       setChatIsOpen(!chatIsOpen);
@@ -415,7 +416,10 @@ function Chat() {
             className="relative z-20 mb-[120px] hidden size-14 rounded-full shadow-md tablet:block"
           >
             <PopoverTrigger asChild>
-              <Button className="size-14 rounded-full shadow-md">
+              <Button
+                aria-label="Toggle chat visibility"
+                className="size-14 rounded-full shadow-md"
+              >
                 <div
                   style={{
                     animationDuration: "2s",

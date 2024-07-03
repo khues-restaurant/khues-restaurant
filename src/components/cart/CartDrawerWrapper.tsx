@@ -1,8 +1,10 @@
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import CartDrawer from "~/components/cart/CartDrawer";
 import RewardsDrawer from "~/components/cart/RewardsDrawer";
 import ItemCustomizationDrawer from "~/components/itemCustomization/ItemCustomizationDrawer";
+import { DialogDescription, DialogTitle } from "~/components/ui/dialog";
 import { Sheet, SheetContent } from "~/components/ui/sheet";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { useMainStore, type Item } from "~/stores/MainStore";
@@ -47,6 +49,13 @@ function CartDrawerWrapper({ pickupName, setPickupName }: CartDrawerWrapper) {
       }}
     >
       <SheetContent side={"bottom"}>
+        <VisuallyHidden>
+          <DialogTitle>Cart</DialogTitle>
+          <DialogDescription>
+            Cart drawer containing all items added to your cart
+          </DialogDescription>
+        </VisuallyHidden>
+
         <div
           style={{
             height: getDrawerHeight(),

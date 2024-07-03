@@ -23,7 +23,13 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { TfiReceipt } from "react-icons/tfi";
 import { useRouter } from "next/router";
 import { MdOutlineHistory } from "react-icons/md";
-import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
 
 import sampleImage from "/public/menuItems/sampleImage.webp";
@@ -42,6 +48,7 @@ import {
 import isEqual from "lodash.isequal";
 import { format } from "date-fns";
 import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 // TODO: honestly the logic within here is very hit or miss, comb through this for sure
 
@@ -1142,6 +1149,13 @@ function RewardsHistory({ userId, rewardsPointsEarned }: RewardsHistory) {
         extraBottomSpacer={false}
         className="baseVertFlex gap-4 overflow-hidden text-sm sm:text-base"
       >
+        <VisuallyHidden>
+          <DialogTitle>Point history</DialogTitle>
+          <DialogDescription>
+            A list of all the points you&apos;ve earned and spent.
+          </DialogDescription>
+        </VisuallyHidden>
+
         <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
         <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
 
