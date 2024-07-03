@@ -8,14 +8,13 @@ datasource db {
 }
 
 // FYI: all prices/finacial fields are stored in cents to avoid floating point errors
+// FYI: id fields and "@unique" fields are automatically indexed
 
 model BlacklistedEmail {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
 
     emailAddress String @unique
-
-    @@index([emailAddress])
 }
 
 model EmailUnsubscriptionToken {
@@ -50,6 +49,8 @@ model ChatMessage {
 
     Chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
     chatId String
+
+    @@index([chatId]) // is this what we want?
 }
 
 // unsure of whether these will make it to prod
@@ -307,7 +308,7 @@ model Reward {
     user   User   @relation(fields: [userId], references: [userId])
     userId String
 
-    @@index([id, userId])
+    @@index([userId])
 }
 
 model Discount {
@@ -329,7 +330,7 @@ model Discount {
     user   User?   @relation(fields: [userId], references: [userId])
     userId String?
 
-    @@index([id, userId]) // TODO: is this the right way to do this? and do you want to index the userId field on User model?
+    @@index([userId])
 }
 
 model User {
@@ -368,6 +369,4 @@ model User {
     favoriteItems FavoriteItem[]
     discounts     Discount[]
     reviews       Review[]
-
-    @@index([userId])
 }
