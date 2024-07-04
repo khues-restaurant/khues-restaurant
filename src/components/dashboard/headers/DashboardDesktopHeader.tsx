@@ -1,6 +1,4 @@
-import { SignOutButton, useAuth } from "@clerk/nextjs";
-// import { useLocalStorageValue } from "@react-hookz/web";
-import Image from "next/image";
+import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import { Button } from "~/components/ui/button";
 import {
@@ -9,18 +7,18 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 
-import { useState, type Dispatch, type SetStateAction, useEffect } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { IoMdMore } from "react-icons/io";
 import useGetUserId from "~/hooks/useGetUserId";
 import { api } from "~/utils/api";
-import { IoMdMore } from "react-icons/io";
 
 import classes from "./DashboardDesktopHeader.module.css";
 // import DiscountManagement from "~/components/dashboard/DiscountManagement";
-import DelayNewOrders from "~/components/dashboard/DelayNewOrders";
-import AnimatedNumbers from "~/components/AnimatedNumbers";
-import { clearLocalStorage } from "~/utils/clearLocalStorage";
-import { type Socket } from "socket.io-client";
 import { addDays } from "date-fns";
+import { type Socket } from "socket.io-client";
+import AnimatedNumbers from "~/components/AnimatedNumbers";
+import DelayNewOrders from "~/components/dashboard/DelayNewOrders";
+import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 
 interface DashboardDesktopHeader {

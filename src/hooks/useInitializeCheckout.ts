@@ -1,10 +1,10 @@
 import { useAuth } from "@clerk/nextjs";
 import { type Dispatch, type SetStateAction, useState } from "react";
+import { env } from "~/env";
 import useGetUserId from "~/hooks/useGetUserId";
+import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import { env } from "~/env";
-import useUpdateOrder from "~/hooks/useUpdateOrder";
 
 interface UseInitializeCheckout {
   setCheckoutButtonText: Dispatch<SetStateAction<string>>;

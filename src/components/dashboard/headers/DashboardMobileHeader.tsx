@@ -1,10 +1,8 @@
-import { SignOutButton, useAuth } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-// import { useLocalStorageValue } from "@react-hookz/web";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-// import { useTabStore } from "~/stores/TabStore";
 import { FaUserAlt } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
@@ -16,16 +14,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTrigger,
-} from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
 import { DialogDescription, DialogTitle } from "~/components/ui/dialog";
 import { Separator } from "~/components/ui/separator";

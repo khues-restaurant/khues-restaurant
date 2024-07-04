@@ -1,7 +1,7 @@
 import {
+  type Order,
   type OrderItem,
   type OrderItemCustomization,
-  type Order,
 } from "@prisma/client";
 import { addDays, format } from "date-fns";
 import { toZonedTime } from "date-fns-tz";

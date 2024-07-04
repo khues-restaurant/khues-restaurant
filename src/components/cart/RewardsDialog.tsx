@@ -1,5 +1,8 @@
 import { useAuth } from "@clerk/nextjs";
+import { DialogDescription } from "@radix-ui/react-dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import Decimal from "decimal.js";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import {
   Fragment,
@@ -11,19 +14,16 @@ import {
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "~/components/ui/dialog";
+import { Separator } from "~/components/ui/separator";
+import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { useToast } from "~/components/ui/use-toast";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
-import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
+import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import { getRewardsPointCost } from "~/utils/priceHelpers/getRewardsPointCost";
-import { motion } from "framer-motion";
-import { Separator } from "~/components/ui/separator";
-import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { DialogDescription } from "@radix-ui/react-dialog";
+import { getRewardsPointCost } from "~/utils/priceHelpers/getRewardsPointCost";
 
 interface RewardsDialog {
   showRewardsDialog: boolean;

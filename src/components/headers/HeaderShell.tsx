@@ -1,5 +1,5 @@
-import MobileHeader from "~/components/headers/MobileHeader";
 import DesktopHeader from "~/components/headers/DesktopHeader";
+import MobileHeader from "~/components/headers/MobileHeader";
 import { useMainStore } from "~/stores/MainStore";
 
 function HeaderShell() {

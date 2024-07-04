@@ -1,22 +1,34 @@
 import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import {
   useEffect,
   useState,
+  type ComponentProps,
   type Dispatch,
   type SetStateAction,
-  type ComponentProps,
 } from "react";
 import { useForm } from "react-hook-form";
-import { CiGift } from "react-icons/ci";
+import { CiCalendarDate, CiGift } from "react-icons/ci";
+import { FaList, FaUserAlt } from "react-icons/fa";
 import { FaPhone } from "react-icons/fa6";
+import { HiOutlineInformationCircle } from "react-icons/hi";
+import { IoIosMail } from "react-icons/io";
 import { z } from "zod";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { AlertDialog, AlertDialogContent } from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -26,29 +38,15 @@ import {
   FormLabel,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Separator } from "~/components/ui/separator";
+import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
 import useGetUserId from "~/hooks/useGetUserId";
-import { FaUserAlt } from "react-icons/fa";
-import { FaList } from "react-icons/fa";
-import { IoIosMail } from "react-icons/io";
-import { HiOutlineInformationCircle } from "react-icons/hi";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import { CiCalendarDate } from "react-icons/ci";
-import { formatPhoneNumber } from "~/utils/formatters/formatPhoneNumber";
-import { Switch } from "~/components/ui/switch";
-import { Label } from "~/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
-import { Separator } from "~/components/ui/separator";
-import { Checkbox } from "~/components/ui/checkbox";
 import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { formatPhoneNumber } from "~/utils/formatters/formatPhoneNumber";
 
 const mainFormSchema = z.object({
   firstName: z

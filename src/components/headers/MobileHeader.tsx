@@ -1,21 +1,17 @@
 import { useAuth, useClerk } from "@clerk/nextjs";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState, useRef } from "react";
-import { IoSettingsOutline } from "react-icons/io5";
+import { useEffect, useRef, useState } from "react";
+import { CiCalendarDate } from "react-icons/ci";
 import { FaUserAlt } from "react-icons/fa";
+import { IoSettingsOutline } from "react-icons/io5";
 import { MdAccessTime } from "react-icons/md";
 import { SlPresent } from "react-icons/sl";
+import { TbLocation } from "react-icons/tb";
 import { TfiReceipt } from "react-icons/tfi";
-import { CiCalendarDate } from "react-icons/ci";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
 import CartButton from "~/components/cart/CartButton";
 import {
   Accordion,
@@ -24,20 +20,24 @@ import {
   AccordionTrigger,
 } from "~/components/ui/accordion";
 import { Button } from "~/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import { Separator } from "~/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
+import StaticLotus from "~/components/ui/StaticLotus";
+import { useToast } from "~/components/ui/use-toast";
 import useGetUserId from "~/hooks/useGetUserId";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
-import { TbLocation } from "react-icons/tb";
-import { motion } from "framer-motion";
+import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 
 import outsideOfRestaurant from "/public/exterior/one.webp";
-import { useToast } from "~/components/ui/use-toast";
-import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
-import StaticLotus from "~/components/ui/StaticLotus";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 const linkContainer = {
   visible: {

@@ -1,12 +1,12 @@
-import { type AppProps } from "next/app";
 import { ClerkProvider } from "@clerk/nextjs";
-import { api } from "~/utils/api";
-import GeneralLayout from "~/components/layouts/GeneralLayout";
-import { useRouter } from "next/router";
-import DynamicHead from "~/components/DynamicHead";
-import "~/styles/globals.css";
-import { useEffect, useState } from "react";
+import { type AppProps } from "next/app";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import DynamicHead from "~/components/DynamicHead";
+import GeneralLayout from "~/components/layouts/GeneralLayout";
+import "~/styles/globals.css";
+import { api } from "~/utils/api";
 
 const UnsupportedBrowserDetected = dynamic(
   () => import("~/components/UnsupportedBrowserDetected"),

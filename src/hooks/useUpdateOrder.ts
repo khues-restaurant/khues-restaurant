@@ -1,10 +1,10 @@
 import { useAuth } from "@clerk/nextjs";
-import useGetUserId from "~/hooks/useGetUserId";
-import { useMainStore, type OrderDetails, type Item } from "~/stores/MainStore";
-import { api } from "~/utils/api";
-import isEqual from "lodash.isequal";
 import debounce from "lodash.debounce";
+import isEqual from "lodash.isequal";
 import { useCallback, useEffect, useRef } from "react";
+import useGetUserId from "~/hooks/useGetUserId";
+import { useMainStore, type Item, type OrderDetails } from "~/stores/MainStore";
+import { api } from "~/utils/api";
 // import { calculateTotalCartPrices } from "~/utils/calculateTotalCartPrices";
 
 interface UpdateOrder {

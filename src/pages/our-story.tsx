@@ -1,6 +1,6 @@
 import { motion, useAnimation } from "framer-motion";
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
 import {
@@ -13,11 +13,11 @@ import {
 import eric from "/public/ourStory/eric.webp";
 import khuesKitchen from "/public/ourStory/khuesKitchen.webp";
 
+import { useMainStore } from "~/stores/MainStore";
 import kare11InTheKitchen from "/public/media/kare11InTheKitchen.jpg";
 import kare11MothersDay from "/public/media/kare11MothersDay.jpg";
-import starTribune from "/public/media/starTribune.jpg";
 import mpr from "/public/media/mpr.jpg";
-import { useMainStore } from "~/stores/MainStore";
+import starTribune from "/public/media/starTribune.jpg";
 
 // const TWEEN_FACTOR_BASE = 0.2;
 

@@ -18,7 +18,7 @@ import { useToast } from "~/components/ui/use-toast";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
-import { type StoreCustomizations, useMainStore } from "~/stores/MainStore";
+import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 import { getRewardsPointCost } from "~/utils/priceHelpers/getRewardsPointCost";

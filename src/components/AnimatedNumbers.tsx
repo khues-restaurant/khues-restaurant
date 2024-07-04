@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
 import {
+  AnimatePresence,
+  motion,
   type MotionValue,
   useSpring,
   useTransform,
-  motion,
-  AnimatePresence,
 } from "framer-motion";
+import { useEffect, useState } from "react";
 
 function calculateDelay(place: number) {
   const baseDelay = 0.2; // Base delay in seconds

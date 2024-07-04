@@ -1,17 +1,26 @@
+import { useAuth } from "@clerk/nextjs";
+import { type CustomizationChoice } from "@prisma/client";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { AnimatePresence, motion } from "framer-motion";
+import isEqual from "lodash.isequal";
+import Image from "next/image";
 import {
-  type MenuItem,
-  type CustomizationChoice,
-  type Discount,
-} from "@prisma/client";
-import {
+  useEffect,
+  useRef,
   useState,
   type Dispatch,
   type SetStateAction,
-  useEffect,
-  useRef,
 } from "react";
+import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { LuMinus, LuPlus, LuVegan } from "react-icons/lu";
+import { SiLeaflet } from "react-icons/si";
 import AnimatedPrice from "~/components/AnimatedPrice";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -21,47 +30,22 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import { Label } from "~/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
-import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
+import { ToastAction } from "~/components/ui/toast";
+import { useToast } from "~/components/ui/use-toast";
 import useGetUserId from "~/hooks/useGetUserId";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "~/components/ui/accordion";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import {
-  useMainStore,
-  type Item,
-  type StoreCustomizations,
-} from "~/stores/MainStore";
-import { api } from "~/utils/api";
-import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
-import { formatPrice } from "~/utils/formatters/formatPrice";
-import isEqual from "lodash.isequal";
-import {
-  Carousel,
-  CarouselContent,
-  type CarouselApi,
-  CarouselItem,
-} from "~/components/ui/carousel";
-import { AnimatePresence, motion } from "framer-motion";
-import {
-  type StoreCustomizationCategory,
   type FullMenuItem,
+  type StoreCustomizationCategory,
 } from "~/server/api/routers/menuCategory";
-import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
-import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
-import Image from "next/image";
-import { useAuth } from "@clerk/nextjs";
-import { useToast } from "~/components/ui/use-toast";
-import { ToastAction } from "~/components/ui/toast";
-import { SiLeaflet } from "react-icons/si";
-import { Separator } from "~/components/ui/separator";
+import { useMainStore, type Item } from "~/stores/MainStore";
+import { api } from "~/utils/api";
+import { formatPrice } from "~/utils/formatters/formatPrice";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 
 interface ItemCustomizationDialog {
   isDialogOpen: boolean;

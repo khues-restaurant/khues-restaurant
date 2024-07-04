@@ -1,20 +1,20 @@
-import { useEffect, useState, type ReactNode } from "react";
-import HeaderShell from "~/components/headers/HeaderShell";
-import Footer from "~/components/Footer";
-import PostSignUpDialog from "~/components/PostSignUpDialog";
-import useKeepOrderDetailsValidated from "~/hooks/useKeepOrderDetailsValidated";
-import useInitializeStoreDBQueries from "~/hooks/useInitializeStoreDBQueries";
-import { Toaster } from "~/components/ui/toaster";
-import Chat from "~/components/Chat";
-import { useMainStore } from "~/stores/MainStore";
-import useViewportLabelResizeListener from "~/hooks/useViewportLabelResizeListener";
 import { useAuth } from "@clerk/nextjs";
-import { api } from "~/utils/api";
-import useGetUserId from "~/hooks/useGetUserId";
-import useInitLocalStorage from "~/hooks/useInitLocalStorage";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Noto_Sans } from "next/font/google";
+import { useEffect, useState, type ReactNode } from "react";
+import Chat from "~/components/Chat";
+import Footer from "~/components/Footer";
+import HeaderShell from "~/components/headers/HeaderShell";
+import PostSignUpDialog from "~/components/PostSignUpDialog";
+import { Toaster } from "~/components/ui/toaster";
+import useGetUserId from "~/hooks/useGetUserId";
+import useInitializeStoreDBQueries from "~/hooks/useInitializeStoreDBQueries";
+import useInitLocalStorage from "~/hooks/useInitLocalStorage";
+import useKeepOrderDetailsValidated from "~/hooks/useKeepOrderDetailsValidated";
+import useViewportLabelResizeListener from "~/hooks/useViewportLabelResizeListener";
+import { useMainStore } from "~/stores/MainStore";
+import { api } from "~/utils/api";
 
 import useClearToastsOnRefocus from "~/hooks/useClearToastsOnRefocus";
 

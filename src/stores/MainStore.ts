@@ -1,13 +1,13 @@
-import { devtools } from "zustand/middleware";
-import { createWithEqualityFn } from "zustand/traditional";
-import { shallow } from "zustand/shallow";
 import { type Discount } from "@prisma/client";
+import { z } from "zod";
+import { devtools } from "zustand/middleware";
+import { shallow } from "zustand/shallow";
+import { createWithEqualityFn } from "zustand/traditional";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import {
-  type RewardCategoriesResponse,
   type FullMenuItem,
+  type RewardCategoriesResponse,
 } from "~/server/api/routers/menuCategory";
-import { z } from "zod";
 import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
 
 const storeCustomizationChoiceSchema = z.record(z.string());
@@ -181,9 +181,11 @@ interface StoreState {
   setFooterIsInView: (footerIsInView: boolean) => void;
 
   refetchMenu?: () => void;
-  setRefetchMenu: (refetchMenu: () => void) => void;
+  setRefetchMenu: (refetchMenu: () => Promise<unknown>) => void;
   refetchMinOrderPickupTime?: () => void;
-  setRefetchMinOrderPickupTime: (refetchMinOrderPickupTime: () => void) => void;
+  setRefetchMinOrderPickupTime: (
+    refetchMinOrderPickupTime: () => Promise<unknown>,
+  ) => void;
 
   viewportLabel: "mobile" | "mobileLarge" | "tablet" | "desktop";
   setViewportLabel: (

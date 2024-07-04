@@ -1,24 +1,15 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { api } from "~/utils/api";
-import { IoChatbox } from "react-icons/io5";
-import { X } from "lucide-react";
-import { IoIosArrowBack, IoIosSend } from "react-icons/io";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
-import { Button } from "~/components/ui/button";
-import { AnimatePresence, motion } from "framer-motion";
-import useGetUserId from "~/hooks/useGetUserId";
-import { Textarea } from "~/components/ui/textarea";
-import Image from "next/image";
 import { format, isSameDay } from "date-fns";
-import { type Chat, type ChatMessage } from "@prisma/client";
-import { useMainStore } from "~/stores/MainStore";
-import { type Socket } from "socket.io-client";
+import { motion } from "framer-motion";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FaRedo } from "react-icons/fa";
+import { IoIosArrowBack, IoIosSend } from "react-icons/io";
+import { type Socket } from "socket.io-client";
+import { Button } from "~/components/ui/button";
+import { Textarea } from "~/components/ui/textarea";
 import { useToast } from "~/components/ui/use-toast";
+import useGetUserId from "~/hooks/useGetUserId";
+import { useMainStore } from "~/stores/MainStore";
+import { api } from "~/utils/api";
 
 function containsLetterOrNumber(str: string) {
   const regex = /[a-zA-Z0-9]/;

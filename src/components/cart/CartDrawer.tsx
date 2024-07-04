@@ -1,8 +1,11 @@
 import { useAuth } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, isToday, parseISO } from "date-fns";
+import Decimal from "decimal.js";
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
+import isEqual from "lodash.isequal";
+import { X } from "lucide-react";
+import Image from "next/image";
 import {
   useEffect,
   useRef,
@@ -11,14 +14,16 @@ import {
   type SetStateAction,
 } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { CiCalendarDate, CiGift, CiLocationOn } from "react-icons/ci";
+import { CiCalendarDate, CiGift } from "react-icons/ci";
 import { FaTrashAlt } from "react-icons/fa";
-import { FaCakeCandles, FaRegClock } from "react-icons/fa6";
+import { FaRegClock } from "react-icons/fa6";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { LuCakeSlice, LuMinus, LuPlus } from "react-icons/lu";
+import { TbLocation } from "react-icons/tb";
 import { z } from "zod";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import AnimatedPrice from "~/components/AnimatedPrice";
+import AvailablePickupDays from "~/components/cart/AvailablePickupDays";
 import AvailablePickupTimes from "~/components/cart/AvailablePickupTimes";
 import { Button } from "~/components/ui/button";
 import {
@@ -28,42 +33,30 @@ import {
   FormItem,
   FormLabel,
 } from "~/components/ui/form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Separator } from "~/components/ui/separator";
+import StaticLotus from "~/components/ui/StaticLotus";
+import { Switch } from "~/components/ui/switch";
+import useGetUserId from "~/hooks/useGetUserId";
+import useInitializeCheckout from "~/hooks/useInitializeCheckout";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
+import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { useMainStore, type Item } from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import { formatPrice } from "~/utils/formatters/formatPrice";
-import { cn } from "~/utils/shadcnuiUtils";
-import { type FullMenuItem } from "~/server/api/routers/menuCategory";
-import useInitializeCheckout from "~/hooks/useInitializeCheckout";
-import useGetUserId from "~/hooks/useGetUserId";
-import { calculateTotalCartPrices } from "~/utils/priceHelpers/calculateTotalCartPrices";
-import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
-import { Label } from "~/components/ui/label";
-import { Switch } from "~/components/ui/switch";
-import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
-import { getHoursAndMinutesFromDate } from "~/utils/dateHelpers/getHoursAndMinutesFromDate";
-import { X } from "lucide-react";
-import isEqual from "lodash.isequal";
-import Decimal from "decimal.js";
-import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
-import Image from "next/image";
-import { TbLocation } from "react-icons/tb";
-import { Separator } from "~/components/ui/separator";
-import { Input } from "~/components/ui/input";
-import AvailablePickupDays from "~/components/cart/AvailablePickupDays";
 import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
-import StaticLotus from "~/components/ui/StaticLotus";
+import { getHoursAndMinutesFromDate } from "~/utils/dateHelpers/getHoursAndMinutesFromDate";
+import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
+import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
+import { formatPrice } from "~/utils/formatters/formatPrice";
+import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
+import { calculateTotalCartPrices } from "~/utils/priceHelpers/calculateTotalCartPrices";
 
 function getSafeAreaInsetBottom() {
   // Create a temporary element to get the CSS variable

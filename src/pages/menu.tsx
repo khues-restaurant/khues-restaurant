@@ -1,5 +1,6 @@
 import { PrismaClient, type Discount } from "@prisma/client";
 import { motion } from "framer-motion";
+import { type GetStaticProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -9,8 +10,8 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { IoIosWine } from "react-icons/io";
 import { FaWineBottle } from "react-icons/fa";
+import { IoIosWine } from "react-icons/io";
 import { LuVegan } from "react-icons/lu";
 import { SiLeaflet } from "react-icons/si";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
@@ -28,9 +29,8 @@ import {
   type FullMenuItem,
 } from "~/server/api/routers/menuCategory";
 import { useMainStore } from "~/stores/MainStore";
-import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 import { formatPrice } from "~/utils/formatters/formatPrice";
-import { type GetStaticProps } from "next";
+import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";

@@ -1,12 +1,15 @@
 import { SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
+import { DialogDescription } from "@radix-ui/react-dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { CiCalendarDate } from "react-icons/ci";
 import { FaUserAlt } from "react-icons/fa";
+import { HiOutlineInformationCircle } from "react-icons/hi";
 import { IoMdMore } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
-import { CiCalendarDate } from "react-icons/ci";
 import { MdAccessTime } from "react-icons/md";
 import { SlPresent } from "react-icons/sl";
 import { TbLocation } from "react-icons/tb";
@@ -28,15 +31,12 @@ import useGetUserId from "~/hooks/useGetUserId";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
-import { Button } from "../ui/button";
-import { HiOutlineInformationCircle } from "react-icons/hi";
 import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
+import { Button } from "../ui/button";
 import classes from "./DesktopHeader.module.css";
 
-import outsideOfRestaurant from "/public/exterior/one.webp";
 import StaticLotus from "~/components/ui/StaticLotus";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { DialogDescription } from "@radix-ui/react-dialog";
+import outsideOfRestaurant from "/public/exterior/one.webp";
 
 function DesktopHeader() {
   const { isLoaded, isSignedIn, signOut } = useAuth();

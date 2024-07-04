@@ -1,14 +1,14 @@
-import { type DBOrderSummary } from "~/server/api/routers/order";
-import { motion } from "framer-motion";
-import { useMainStore } from "~/stores/MainStore";
-import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
-import { CiGift } from "react-icons/ci";
-import { formatPrice } from "~/utils/formatters/formatPrice";
 import Decimal from "decimal.js";
+import { motion } from "framer-motion";
 import Image from "next/image";
-import { LuCakeSlice } from "react-icons/lu";
+import { CiGift } from "react-icons/ci";
 import { FaUtensils } from "react-icons/fa6";
+import { LuCakeSlice } from "react-icons/lu";
 import { MdNoMeals } from "react-icons/md";
+import { type DBOrderSummary } from "~/server/api/routers/order";
+import { useMainStore } from "~/stores/MainStore";
+import { formatPrice } from "~/utils/formatters/formatPrice";
+import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 
 interface OrderSummary {
   order: DBOrderSummary;

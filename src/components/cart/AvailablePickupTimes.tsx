@@ -2,18 +2,18 @@ import { toZonedTime } from "date-fns-tz";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { SelectGroup, SelectItem, SelectLabel } from "~/components/ui/select";
+import StaticLotus from "~/components/ui/StaticLotus";
 import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import {
   getOpenTimesForDay,
   hoursOpenPerDay,
   isHoliday,
-  isRestaurantClosedToday,
   isPastFinalPickupTimeForDay,
+  isRestaurantClosedToday,
 } from "~/utils/dateHelpers/datesAndHoursOfOperation";
-import { formatTimeString } from "~/utils/formatters/formatTimeString";
 import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
 import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
-import StaticLotus from "~/components/ui/StaticLotus";
+import { formatTimeString } from "~/utils/formatters/formatTimeString";
 
 interface AvailablePickupTimes {
   selectedDate: Date;

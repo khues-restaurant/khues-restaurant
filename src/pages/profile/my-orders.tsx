@@ -1,10 +1,18 @@
+import { useAuth } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { AnimatePresence, motion } from "framer-motion";
+import isEqual from "lodash.isequal";
 import { ChevronDown } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { CiGift } from "react-icons/ci";
+import { IoSettingsOutline } from "react-icons/io5";
+import { TfiReceipt } from "react-icons/tfi";
 import { z } from "zod";
 import OrderSummary from "~/components/cart/OrderSummary";
 import {
@@ -23,6 +31,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
+import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import { Button } from "~/components/ui/button";
 import { Form, FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { Label } from "~/components/ui/label";
@@ -35,29 +44,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Separator } from "~/components/ui/separator";
+import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
+import { ToastAction } from "~/components/ui/toast";
 import { useToast } from "~/components/ui/use-toast";
+import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type DBOrderSummary } from "~/server/api/routers/order";
-import { ToastAction } from "~/components/ui/toast";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import { useAuth } from "@clerk/nextjs";
-import Image from "next/image";
-import noOrders from "/public/menuItems/myOrders.jpg";
 import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
-import AnimatedLotus from "~/components/ui/AnimatedLotus";
-import { toZonedTime } from "date-fns-tz";
-import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
-import { CiGift } from "react-icons/ci";
-import { IoSettingsOutline } from "react-icons/io5";
-import { TfiReceipt } from "react-icons/tfi";
-import { useRouter } from "next/router";
-import { Separator } from "~/components/ui/separator";
-import isEqual from "lodash.isequal";
-import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
+
+import noOrders from "/public/menuItems/myOrders.jpg";
 
 function RecentOrders() {
   const userId = useGetUserId();

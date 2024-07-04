@@ -6,7 +6,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import isEqual from "lodash.isequal";
 import { X } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import {
   useEffect,
   useRef,
@@ -15,17 +14,17 @@ import {
   type SetStateAction,
 } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { CiCalendarDate, CiGift, CiLocationOn } from "react-icons/ci";
+import { CiCalendarDate, CiGift } from "react-icons/ci";
 import { FaRegClock, FaTrashAlt } from "react-icons/fa";
-import { FaCakeCandles } from "react-icons/fa6";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { LuCakeSlice, LuMinus, LuPlus } from "react-icons/lu";
+import { TbLocation } from "react-icons/tb";
 import { z } from "zod";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import AnimatedPrice from "~/components/AnimatedPrice";
+import AvailablePickupDays from "~/components/cart/AvailablePickupDays";
 import AvailablePickupTimes from "~/components/cart/AvailablePickupTimes";
 import { Button } from "~/components/ui/button";
-import { TbLocation } from "react-icons/tb";
 import {
   Form,
   FormControl,
@@ -33,19 +32,16 @@ import {
   FormItem,
   FormLabel,
 } from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
 import {
   Select,
   SelectContent,
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { SheetFooter } from "~/components/ui/sheet";
+import { Separator } from "~/components/ui/separator";
+import StaticLotus from "~/components/ui/StaticLotus";
 import { Switch } from "~/components/ui/switch";
 import useGetUserId from "~/hooks/useGetUserId";
 import useInitializeCheckout from "~/hooks/useInitializeCheckout";
@@ -53,18 +49,13 @@ import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { useMainStore, type Item } from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
-import { calculateTotalCartPrices } from "~/utils/priceHelpers/calculateTotalCartPrices";
-import { formatPrice } from "~/utils/formatters/formatPrice";
+import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import { getHoursAndMinutesFromDate } from "~/utils/dateHelpers/getHoursAndMinutesFromDate";
 import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
 import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
-import { cn } from "~/utils/shadcnuiUtils";
-import { Separator } from "~/components/ui/separator";
-import { Input } from "~/components/ui/input";
-import AvailablePickupDays from "~/components/cart/AvailablePickupDays";
-import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
-import StaticLotus from "~/components/ui/StaticLotus";
+import { formatPrice } from "~/utils/formatters/formatPrice";
+import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
+import { calculateTotalCartPrices } from "~/utils/priceHelpers/calculateTotalCartPrices";
 
 interface OrderCost {
   subtotal: number;

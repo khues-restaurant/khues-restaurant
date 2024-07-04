@@ -1,14 +1,13 @@
 import Link from "next/link";
-import { FaPhone } from "react-icons/fa6";
-import { MdOutlineMail } from "react-icons/md";
+import { useEffect, useRef } from "react";
 import { FaFacebook } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
+import { FaPhone, FaXTwitter } from "react-icons/fa6";
 import { IoLogoInstagram } from "react-icons/io5";
+import { MdOutlineMail } from "react-icons/md";
 import { SiTiktok } from "react-icons/si";
 import { Button } from "~/components/ui/button";
-import { useEffect, useRef } from "react";
-import { useMainStore } from "~/stores/MainStore";
 import { Separator } from "~/components/ui/separator";
+import { useMainStore } from "~/stores/MainStore";
 
 function Footer() {
   const { setFooterIsInView } = useMainStore((state) => ({

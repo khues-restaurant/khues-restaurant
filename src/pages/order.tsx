@@ -1,58 +1,50 @@
 import { useAuth } from "@clerk/nextjs";
 import { type Discount } from "@prisma/client";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  useEffect,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-  Fragment,
-} from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-  DialogTrigger,
-} from "~/components/ui/dialog";
-import { LuPlus } from "react-icons/lu";
+import Image from "next/image";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { FaRedo } from "react-icons/fa";
+import { FaWineBottle } from "react-icons/fa6";
+import { IoMdHeart } from "react-icons/io";
+import { LuPlus, LuVegan } from "react-icons/lu";
+import { SiLeaflet } from "react-icons/si";
 import ItemCustomizationDialog from "~/components/itemCustomization/ItemCustomizationDialog";
 import ItemCustomizationDrawer from "~/components/itemCustomization/ItemCustomizationDrawer";
+import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import { Button } from "~/components/ui/button";
-import { Sheet, SheetContent } from "~/components/ui/sheet";
-import useUpdateOrder from "~/hooks/useUpdateOrder";
-import { type FullMenuItem } from "~/server/api/routers/menuCategory";
-import { useMainStore } from "~/stores/MainStore";
-import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
-import { api } from "~/utils/api";
-import { FaRedo } from "react-icons/fa";
-import { formatPrice } from "~/utils/formatters/formatPrice";
-import { useToast } from "~/components/ui/use-toast";
-import { ToastAction } from "~/components/ui/toast";
-import { SiLeaflet } from "react-icons/si";
-import { LuVegan } from "react-icons/lu";
 import {
   Carousel,
   CarouselContent,
-  type CarouselApi,
   CarouselItem,
+  type CarouselApi,
 } from "~/components/ui/carousel";
-import { type DBOrderSummary } from "~/server/api/routers/order";
-import { format, max } from "date-fns";
-import { IoMdHeart } from "react-icons/io";
-import useGetUserId from "~/hooks/useGetUserId";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import { Separator } from "~/components/ui/separator";
-import Image from "next/image";
-import AnimatedLotus from "~/components/ui/AnimatedLotus";
+import { Sheet, SheetContent } from "~/components/ui/sheet";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
-import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
-import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
-import { FaWineBottle } from "react-icons/fa6";
 import StaticLotus from "~/components/ui/StaticLotus";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { ToastAction } from "~/components/ui/toast";
+import { useToast } from "~/components/ui/use-toast";
 import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
-import { toZonedTime } from "date-fns-tz";
-import Script from "next/script";
+import useGetUserId from "~/hooks/useGetUserId";
+import useUpdateOrder from "~/hooks/useUpdateOrder";
+import { type FullMenuItem } from "~/server/api/routers/menuCategory";
+import { type DBOrderSummary } from "~/server/api/routers/order";
+import { useMainStore } from "~/stores/MainStore";
+import { api } from "~/utils/api";
+import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
+import { formatPrice } from "~/utils/formatters/formatPrice";
+import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
+import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";

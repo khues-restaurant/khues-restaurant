@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
 
 function useGetUserId() {
   const { userId: clerkUserId, isSignedIn, isLoaded } = useAuth();

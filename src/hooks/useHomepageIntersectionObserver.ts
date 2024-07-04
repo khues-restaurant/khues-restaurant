@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
 import { useAnimation } from "framer-motion";
+import { useEffect, useRef } from "react";
 
 interface UseScrollAnimation {
   threshold: number;

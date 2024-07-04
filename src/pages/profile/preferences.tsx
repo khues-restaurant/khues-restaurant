@@ -1,25 +1,36 @@
-import { useLayoutEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
 import { useAuth, useClerk, useUser } from "@clerk/nextjs";
-import { FaTrashAlt } from "react-icons/fa";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useGetUserId from "~/hooks/useGetUserId";
+import { AlertDialogTitle } from "@radix-ui/react-alert-dialog";
+import { format } from "date-fns";
+import { AnimatePresence, motion } from "framer-motion";
+import isEqual from "lodash.isequal";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { CiGift } from "react-icons/ci";
+import { FaLock, FaTrashAlt, FaUserAlt } from "react-icons/fa";
 import { IoIosMail } from "react-icons/io";
-import { Checkbox } from "~/components/ui/checkbox";
+import { IoSettingsOutline } from "react-icons/io5";
 import { MdAdminPanelSettings } from "react-icons/md";
-import { api } from "~/utils/api";
+import { TfiReceipt } from "react-icons/tfi";
+import { z } from "zod";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
 import {
   AlertDialog,
-  AlertDialogDescription,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import { FaLock } from "react-icons/fa";
+import AnimatedLotus from "~/components/ui/AnimatedLotus";
+import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -28,32 +39,16 @@ import {
   FormItem,
   FormLabel,
 } from "~/components/ui/form";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "~/components/ui/accordion";
-import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
-import { format } from "date-fns";
-import { Textarea } from "~/components/ui/textarea";
-import isEqual from "lodash.isequal";
-import { Button } from "~/components/ui/button";
-import { FaUserAlt } from "react-icons/fa";
-import { useRouter } from "next/router";
 import { Separator } from "~/components/ui/separator";
-import { formatPhoneNumber } from "~/utils/formatters/formatPhoneNumber";
-import { clearLocalStorage } from "~/utils/clearLocalStorage";
-import { useMainStore } from "~/stores/MainStore";
-import AnimatedLotus from "~/components/ui/AnimatedLotus";
+import { Textarea } from "~/components/ui/textarea";
 import { useToast } from "~/components/ui/use-toast";
-import { AlertDialogTitle } from "@radix-ui/react-alert-dialog";
-import Link from "next/link";
-import { CiGift } from "react-icons/ci";
-import { IoSettingsOutline } from "react-icons/io5";
-import { TfiReceipt } from "react-icons/tfi";
 import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
+import useGetUserId from "~/hooks/useGetUserId";
+import { useMainStore } from "~/stores/MainStore";
+import { api } from "~/utils/api";
+import { clearLocalStorage } from "~/utils/clearLocalStorage";
+import { formatPhoneNumber } from "~/utils/formatters/formatPhoneNumber";
 
 const formSchema = z.object({
   firstName: z

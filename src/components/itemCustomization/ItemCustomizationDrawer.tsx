@@ -1,16 +1,8 @@
-import {
-  type MenuItem,
-  type CustomizationChoice,
-  type Discount,
-} from "@prisma/client";
+import { useAuth } from "@clerk/nextjs";
+import { type CustomizationChoice } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import isEqual from "lodash.isequal";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "~/components/ui/accordion";
+import Image from "next/image";
 import {
   useEffect,
   useRef,
@@ -20,41 +12,33 @@ import {
 } from "react";
 import { IoIosArrowBack, IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { LuMinus, LuPlus, LuVegan } from "react-icons/lu";
+import { SiLeaflet } from "react-icons/si";
 import AnimatedPrice from "~/components/AnimatedPrice";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
 import { Button } from "~/components/ui/button";
-import { SheetFooter } from "~/components/ui/sheet";
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
+import { SheetFooter } from "~/components/ui/sheet";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
+import { ToastAction } from "~/components/ui/toast";
+import { useToast } from "~/components/ui/use-toast";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
-import { SiLeaflet } from "react-icons/si";
-import { Separator } from "~/components/ui/separator";
-import {
-  Carousel,
-  CarouselContent,
-  type CarouselApi,
-  CarouselItem,
-} from "~/components/ui/carousel";
-import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import {
   type FullMenuItem,
   type StoreCustomizationCategory,
 } from "~/server/api/routers/menuCategory";
-import {
-  useMainStore,
-  type Item,
-  type StoreCustomizations,
-} from "~/stores/MainStore";
+import { useMainStore, type Item } from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 import { formatPrice } from "~/utils/formatters/formatPrice";
-import Image from "next/image";
-import { useAuth } from "@clerk/nextjs";
-import { ToastAction } from "~/components/ui/toast";
-import { useToast } from "~/components/ui/use-toast";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
+import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 
 function getSafeAreaInsetBottom() {
   // Create a temporary element to get the CSS variable

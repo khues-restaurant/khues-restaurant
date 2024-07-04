@@ -2,27 +2,17 @@ import { useAuth } from "@clerk/nextjs";
 import Decimal from "decimal.js";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { Fragment, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { CiGift } from "react-icons/ci";
-import { LuCakeSlice } from "react-icons/lu";
-import { LuCalendarClock } from "react-icons/lu";
+import { IoSettingsOutline } from "react-icons/io5";
+import { LuCakeSlice, LuCalendarClock } from "react-icons/lu";
+import { MdOutlineHistory } from "react-icons/md";
+import { TfiReceipt } from "react-icons/tfi";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
+import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
-import { Separator } from "~/components/ui/separator";
-import { useToast } from "~/components/ui/use-toast";
-import useGetUserId from "~/hooks/useGetUserId";
-import useUpdateOrder from "~/hooks/useUpdateOrder";
-import { type FullMenuItem } from "~/server/api/routers/menuCategory";
-import { useMainStore } from "~/stores/MainStore";
-import { api } from "~/utils/api";
-import { getRewardsPointCost } from "~/utils/priceHelpers/getRewardsPointCost";
-import { isEligibleForBirthdayReward } from "~/utils/dateHelpers/isEligibleForBirthdayReward";
-import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
-import { IoSettingsOutline } from "react-icons/io5";
-import { TfiReceipt } from "react-icons/tfi";
-import { useRouter } from "next/router";
-import { MdOutlineHistory } from "react-icons/md";
 import {
   Dialog,
   DialogContent,
@@ -30,9 +20,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
-import AnimatedLotus from "~/components/ui/AnimatedLotus";
+import { Separator } from "~/components/ui/separator";
+import { useToast } from "~/components/ui/use-toast";
+import useGetUserId from "~/hooks/useGetUserId";
+import useUpdateOrder from "~/hooks/useUpdateOrder";
+import { type FullMenuItem } from "~/server/api/routers/menuCategory";
+import { useMainStore } from "~/stores/MainStore";
+import { api } from "~/utils/api";
+import { isEligibleForBirthdayReward } from "~/utils/dateHelpers/isEligibleForBirthdayReward";
+import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
+import { getRewardsPointCost } from "~/utils/priceHelpers/getRewardsPointCost";
 
-import sampleImage from "/public/menuItems/sampleImage.webp";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { format } from "date-fns";
+import isEqual from "lodash.isequal";
 import Link from "next/link";
 import StaticLotus from "~/components/ui/StaticLotus";
 import { Label } from "~/components/ui/label";
@@ -45,10 +46,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import isEqual from "lodash.isequal";
-import { format } from "date-fns";
 import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import sampleImage from "/public/menuItems/sampleImage.webp";
 
 // TODO: honestly the logic within here is very hit or miss, comb through this for sure
 

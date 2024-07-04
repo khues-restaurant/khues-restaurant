@@ -1,6 +1,5 @@
 import { useAuth } from "@clerk/nextjs";
 import { AnimatePresence, motion } from "framer-motion";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
