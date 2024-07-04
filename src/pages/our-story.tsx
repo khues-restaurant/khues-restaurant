@@ -214,7 +214,7 @@ function OurStory() {
               viewportLabel.includes("mobile") ? "horizontal" : "vertical"
             }
             opts={{
-              align: "start",
+              align: "center",
               breakpoints: {
                 "(min-width: 0px)": {
                   axis: "x",
@@ -227,7 +227,7 @@ function OurStory() {
             }}
             className="baseFlex rounded-md sm:-mt-2 sm:p-0 tablet:!flex-col"
           >
-            <CarouselContent className="baseFlex max-w-80 !items-start !justify-start sm:h-[450px] sm:w-[600px] sm:max-w-full tablet:h-[500px] tablet:!flex-col tablet:!items-center tablet:!justify-start">
+            <CarouselContent className="baseFlex max-w-[350px] !items-start !justify-start sm:h-[450px] sm:w-[600px] sm:max-w-full tablet:h-[500px] tablet:!flex-col tablet:!items-center tablet:!justify-start">
               <CarouselItem className="mb-2 flex justify-center px-2 sm:!items-start tablet:px-0 tablet:pt-2">
                 <RestaurantAndBackstory
                   name={restaurantNamesAndBackstories[0]!.name}
@@ -430,13 +430,13 @@ function RestaurantAndBackstory({ name, backstory }: RestaurantAndBackstory) {
     <div className="baseVertFlex relative rounded-md border shadow-md sm:rounded-md sm:border-none">
       <Image
         src={khuesKitchen}
-        alt="Khue's"
-        sizes="(max-width: 400px) 320px, (max-width: 1000px) 600px, 33vw"
+        alt={name}
+        sizes="(max-width: 400px) 350px, (max-width: 1000px) 600px, 33vw"
         priority
-        className="!relative !w-80 select-none rounded-t-md object-cover shadow-sm sm:!h-[450px] sm:!w-[600px] sm:rounded-md sm:shadow-none"
+        className="!relative !w-[350px] select-none rounded-t-md object-cover shadow-sm sm:!h-[450px] sm:!w-[600px] sm:rounded-md sm:shadow-none"
       />
 
-      <div className="baseVertFlex w-full max-w-80 select-none gap-2 rounded-b-md p-4 sm:absolute sm:bottom-0 sm:left-0 sm:max-w-lg sm:!items-start sm:rounded-br-none sm:rounded-tr-md sm:bg-gradient-to-tr sm:from-black sm:to-black/50 sm:text-offwhite">
+      <div className="baseVertFlex w-full max-w-[350px] select-none gap-2 rounded-b-md p-4 sm:absolute sm:bottom-0 sm:left-0 sm:max-w-lg sm:!items-start sm:rounded-br-none sm:rounded-tr-md sm:bg-gradient-to-tr sm:from-black sm:to-black/50 sm:text-offwhite">
         <p className="font-semibold underline underline-offset-2">{name}</p>
         <p className="text-sm">{backstory}</p>
       </div>
