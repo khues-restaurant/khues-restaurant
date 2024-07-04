@@ -1006,9 +1006,11 @@ function FavoriteItems({
         {userFavoriteItemIds.length > maxItemsToShow && (
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="underline">View all</Button>
+              <Button variant="underline" className="pb-0">
+                View all
+              </Button>
             </DialogTrigger>
-            <DialogContent extraBottomSpacer={false} className="">
+            <DialogContent extraBottomSpacer={false} className="max-h-[80vh]">
               <VisuallyHidden>
                 <DialogTitle>Favorited items</DialogTitle>
                 <DialogDescription>Your favorited menu items</DialogDescription>
@@ -1020,12 +1022,12 @@ function FavoriteItems({
                 <div className="baseVertFlex w-full !items-start gap-2">
                   <div className="baseFlex w-full !justify-start gap-2">
                     <IoMdHeart />
-                    <p className="text-lg font-medium">Favorited items</p>
+                    <p className="font-medium">Favorited items</p>
                   </div>
 
                   <Separator className="h-[1px] w-full" />
 
-                  <div className="baseVertFlex my-4 h-[70vh] w-full !justify-start gap-2 overflow-y-auto py-4">
+                  <div className="baseVertFlex my-4 h-[60vh] w-full !justify-start gap-2 overflow-y-auto py-4 tablet:h-[70vh]">
                     {userFavoriteItemIds.map((itemId, index) => (
                       <MenuItemPreviewButton
                         key={itemId}
@@ -1088,9 +1090,11 @@ function RecentOrders({ userRecentOrders, viewportWidth }: RecentOrders) {
         {userRecentOrders.length > maxOrdersToShow && (
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="underline">View all</Button>
+              <Button variant="underline" className="pb-0">
+                View all
+              </Button>
             </DialogTrigger>
-            <DialogContent extraBottomSpacer={false} className="">
+            <DialogContent extraBottomSpacer={false} className="max-h-[80vh]">
               <VisuallyHidden>
                 <DialogTitle>Recent orders</DialogTitle>
                 <DialogDescription>Your recent orders</DialogDescription>
@@ -1102,12 +1106,12 @@ function RecentOrders({ userRecentOrders, viewportWidth }: RecentOrders) {
                 <div className="baseVertFlex w-full !items-start gap-2">
                   <div className="baseFlex w-full !justify-start gap-2">
                     <FaRedo className="size-3" />
-                    <p>Recent orders</p>
+                    <p className="font-medium">Recent orders</p>
                   </div>
 
                   <Separator className="h-[1px] w-full" />
 
-                  <div className="baseVertFlex my-4 h-[70vh] w-full !justify-start gap-2 overflow-y-auto py-4">
+                  <div className="baseVertFlex my-4 h-[60vh] w-full !justify-start gap-2 overflow-y-auto py-4 tablet:h-[70vh]">
                     {userRecentOrders.map((order) => (
                       <PreviousOrder key={order.id} order={order} />
                     ))}
