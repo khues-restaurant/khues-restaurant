@@ -5,9 +5,26 @@ import GeneralLayout from "~/components/layouts/GeneralLayout";
 import { useRouter } from "next/router";
 import DynamicHead from "~/components/DynamicHead";
 import "~/styles/globals.css";
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+
+const UnsupportedBrowserDetected = dynamic(
+  () => import("~/components/UnsupportedBrowserDetected"),
+);
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter();
+
+  const [isLookBehindSupported, setIsLookBehindSupported] = useState(true);
+
+  useEffect(() => {
+    const support = checkLookBehindSupport();
+    setIsLookBehindSupported(support);
+  }, []);
+
+  if (!isLookBehindSupported) {
+    return <UnsupportedBrowserDetected />;
+  }
 
   return (
     <ClerkProvider
@@ -41,3 +58,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 }
 
 export default api.withTRPC(MyApp);
+
+function checkLookBehindSupport() {
+  try {
+    new RegExp("(?<=)");
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
