@@ -26,6 +26,13 @@ export function isSelectedTimeSlotValid({
   const pickupDayHours =
     hoursOpenPerDay[pickupTime.getDay() as keyof typeof hoursOpenPerDay];
 
+  const asapAdjustedPickupHour = isASAP
+    ? now.getHours()
+    : pickupTime.getHours();
+  const asapAdjustedPickupMinute = isASAP
+    ? now.getMinutes()
+    : pickupTime.getMinutes();
+
   // if restaurant is closed today, immediately return false
   if (
     (pickupDayHours.openHour === 0 &&
@@ -54,9 +61,9 @@ export function isSelectedTimeSlotValid({
 
   // if pickupTime is earlier than opening time, return false
   if (
-    pickupTime.getHours() < pickupDayHours.openHour ||
-    (pickupTime.getHours() === pickupDayHours.openHour &&
-      pickupTime.getMinutes() < pickupDayHours.openMinute)
+    asapAdjustedPickupHour < pickupDayHours.openHour ||
+    (asapAdjustedPickupHour === pickupDayHours.openHour &&
+      asapAdjustedPickupMinute < pickupDayHours.openMinute)
   ) {
     return false;
   }
@@ -86,8 +93,8 @@ export function isSelectedTimeSlotValid({
   // or 30 mins from close is last time customer can place an order for pickup that night)
   if (
     isPastFinalPickupTimeForDay({
-      currentHour: isASAP ? now.getHours() : pickupTime.getHours(),
-      currentMinute: isASAP ? now.getMinutes() : pickupTime.getMinutes(),
+      currentHour: asapAdjustedPickupHour,
+      currentMinute: asapAdjustedPickupMinute,
       closeHour: pickupDayHours.closeHour,
       closeMinute: pickupDayHours.closeMinute,
     })
