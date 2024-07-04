@@ -497,33 +497,35 @@ function CartDrawer({
   }
 
   function scrollPickupNameErrorIntoView(pickupName: string) {
+    pickupName = pickupName.trim().replace(/\s+/g, " ");
+
     // Check if the pickup name is not empty
     if (pickupName.length < 1) {
-      return false; // "Pickup name is required"
+      return true; // "Pickup name is required"
     }
 
     // Check if the pickup name exceeds the maximum length of 61 characters
     if (pickupName.length > 61) {
-      return false; // "Invalid pickup name length"
+      return true; // "Invalid pickup name length"
     }
 
     // Check for valid characters (letters, spaces, hyphens, and apostrophes)
     if (!/^[A-Za-z\s'-]+$/.test(pickupName)) {
-      return false; // "Invalid characters found"
+      return true; // "Invalid characters found"
     }
 
     // Check for non-ASCII characters
     if (/[^\u0000-\u007F]/.test(pickupName)) {
-      return false; // "Invalid characters found"
+      return true; // "Invalid characters found"
     }
 
     // Check for emojis
     if (/[\p{Emoji}]/u.test(pickupName)) {
-      return false; // "Invalid characters found"
+      return true; // "Invalid characters found"
     }
 
     // All checks passed
-    return true;
+    return false;
   }
 
   return (
