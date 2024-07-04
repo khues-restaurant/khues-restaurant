@@ -8,6 +8,13 @@ import {
   type SetStateAction,
   Fragment,
 } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import { LuPlus } from "react-icons/lu";
 import ItemCustomizationDialog from "~/components/itemCustomization/ItemCustomizationDialog";
 import ItemCustomizationDrawer from "~/components/itemCustomization/ItemCustomizationDrawer";
@@ -31,7 +38,7 @@ import {
   CarouselItem,
 } from "~/components/ui/carousel";
 import { type DBOrderSummary } from "~/server/api/routers/order";
-import { format } from "date-fns";
+import { format, max } from "date-fns";
 import { IoMdHeart } from "react-icons/io";
 import useGetUserId from "~/hooks/useGetUserId";
 import { Separator } from "~/components/ui/separator";
@@ -41,14 +48,14 @@ import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
 import { FaWineBottle } from "react-icons/fa6";
+import StaticLotus from "~/components/ui/StaticLotus";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
+import { toZonedTime } from "date-fns-tz";
+import Script from "next/script";
 
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";
-import { toZonedTime } from "date-fns-tz";
-import Script from "next/script";
-import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { DialogDescription, DialogTitle } from "~/components/ui/dialog";
 
 function OrderNow() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -205,19 +212,12 @@ function OrderNow() {
   }, [categoryScrollYValues, currentlyInViewCategory]);
 
   const [stickyCategoriesApi, setStickyCategoriesApi] = useState<CarouselApi>();
-  const [itemsPerSlide, setItemsPerSlide] = useState(1);
+
+  const [viewportWidth, setViewportWidth] = useState(0);
 
   useEffect(() => {
     function handleResize() {
-      if (window.innerWidth >= 1700) {
-        setItemsPerSlide(4);
-      } else if (window.innerWidth >= 1280) {
-        setItemsPerSlide(3);
-      } else if (window.innerWidth >= 640) {
-        setItemsPerSlide(2);
-      } else {
-        setItemsPerSlide(1);
-      }
+      setViewportWidth(window.innerWidth);
     }
 
     handleResize();
@@ -452,21 +452,21 @@ function OrderNow() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
-                className="baseVertFlex my-8 size-full gap-8 p-4 pb-16 tablet:mt-0 tablet:p-0 tablet:pb-8"
+                className="baseVertFlex mb-8 size-full gap-8 p-4 pb-16 tablet:p-0 tablet:pb-8"
               >
                 {userFavoriteItemIds.length > 0 && (
                   <FavoriteItems
                     setIsDrawerOpen={setIsDrawerOpen}
                     setIsDialogOpen={setIsDialogOpen}
                     setItemToCustomize={setItemToCustomize}
-                    itemsPerSlide={itemsPerSlide}
+                    viewportWidth={viewportWidth}
                   />
                 )}
 
                 {userRecentOrders && userRecentOrders.length > 0 && (
                   <RecentOrders
                     userRecentOrders={userRecentOrders}
-                    itemsPerSlide={itemsPerSlide}
+                    viewportWidth={viewportWidth}
                   />
                 )}
 
@@ -690,7 +690,7 @@ function MenuCategory({
       </div>
 
       {/* wrapping container for each food item in the category */}
-      <div className="grid w-full grid-cols-1 place-items-center gap-4 sm:grid-cols-2 sm:place-items-start xl:grid-cols-3 3xl:grid-cols-4">
+      <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
         {menuItems.map((item) => (
           <MenuItemPreviewButton
             key={item.id}
@@ -975,115 +975,91 @@ interface FavoriteItems {
   setIsDrawerOpen: Dispatch<SetStateAction<boolean>>;
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
   setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
-  itemsPerSlide: number;
+  viewportWidth: number;
 }
 
 function FavoriteItems({
   setIsDrawerOpen,
   setIsDialogOpen,
   setItemToCustomize,
-  itemsPerSlide,
+  viewportWidth,
 }: FavoriteItems) {
   const { menuItems, userFavoriteItemIds } = useMainStore((state) => ({
     menuItems: state.menuItems,
     userFavoriteItemIds: state.userFavoriteItemIds,
   }));
 
-  const [favoriteItemsApi, setFavoriteItemsApi] = useState<CarouselApi>();
-  const [favoriteItemsSlide, setFavoriteItemsSlide] = useState(0);
-
-  useEffect(() => {
-    if (!favoriteItemsApi) {
-      return;
-    }
-
-    setFavoriteItemsSlide(favoriteItemsApi.selectedScrollSnap());
-
-    favoriteItemsApi.on("select", () => {
-      setFavoriteItemsSlide(favoriteItemsApi.selectedScrollSnap());
-    });
-
-    favoriteItemsApi.on("resize", () => {
-      setFavoriteItemsSlide(0);
-      favoriteItemsApi.scrollTo(0);
-    });
-
-    // eventually add proper cleanup functions here
-  }, [favoriteItemsApi]);
+  const maxItemsToShow = viewportWidth < 640 ? 3 : 4;
 
   return (
     <div
       id={"FavoritesContainer"}
       className="baseVertFlex mt-4 w-full scroll-m-48 !items-start gap-2"
     >
-      <div className="baseFlex gap-3 pl-4 text-xl font-medium underline underline-offset-2">
-        <IoMdHeart />
-        <p>Favorites</p>
+      <div className="baseFlex w-full !justify-between pl-4 text-xl font-medium underline underline-offset-2">
+        <div className="baseFlex gap-2">
+          <IoMdHeart />
+          <p>Favorites</p>
+        </div>
+
+        {/* dialog to show full list of favorite items */}
+        {userFavoriteItemIds.length > maxItemsToShow && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="underline">View all</Button>
+            </DialogTrigger>
+            <DialogContent extraBottomSpacer={false} className="">
+              <VisuallyHidden>
+                <DialogTitle>Favorited items</DialogTitle>
+                <DialogDescription>Your favorited menu items</DialogDescription>
+              </VisuallyHidden>
+              <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
+
+              <div className="baseVertFlex w-full !items-start gap-4">
+                <div className="baseVertFlex w-full !items-start gap-2">
+                  <div className="baseFlex w-full !justify-start gap-2">
+                    <IoMdHeart />
+                    <p className="text-lg font-medium">Favorited items</p>
+                  </div>
+
+                  <Separator className="h-[1px] w-full" />
+
+                  <div className="baseVertFlex my-4 h-[70vh] w-full !justify-start gap-2 overflow-y-auto py-4">
+                    {userFavoriteItemIds.map((itemId, index) => (
+                      <MenuItemPreviewButton
+                        key={itemId}
+                        menuItem={menuItems[itemId]!}
+                        activeDiscount={
+                          menuItems[itemId]?.activeDiscount ?? null
+                        }
+                        listOrder={index}
+                        setIsDialogOpen={setIsDialogOpen}
+                        setIsDrawerOpen={setIsDrawerOpen}
+                        setItemToCustomize={setItemToCustomize}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
-      <div className="baseVertFlex w-full gap-4">
-        <Carousel
-          setApi={setFavoriteItemsApi}
-          opts={{
-            breakpoints: {
-              "(min-width: 640px)": {
-                slidesToScroll: 2,
-                active: userFavoriteItemIds.length > itemsPerSlide,
-              },
-              "(min-width: 1280px)": {
-                slidesToScroll: 3,
-                active: userFavoriteItemIds.length > itemsPerSlide,
-              },
-              "(min-width: 1700px)": {
-                slidesToScroll: 4,
-                active: userFavoriteItemIds.length > itemsPerSlide,
-              },
-            },
-            // skipSnaps: true, play around with this
-          }}
-          className="baseFlex w-full !justify-start"
-        >
-          <CarouselContent className="w-full">
-            {userFavoriteItemIds.map((itemId, index) => (
-              <Fragment key={itemId}>
-                {menuItems[itemId] && (
-                  <CarouselItem className="basis-full md:basis-1/2 xl:basis-1/3 3xl:basis-1/4">
-                    <MenuItemPreviewButton
-                      menuItem={menuItems[itemId]}
-                      // TODO: going to prob remove this in big teardown of old system of discounts
-                      activeDiscount={menuItems[itemId]?.activeDiscount ?? null}
-                      listOrder={index}
-                      setIsDialogOpen={setIsDialogOpen}
-                      setIsDrawerOpen={setIsDrawerOpen}
-                      setItemToCustomize={setItemToCustomize}
-                    />
-                  </CarouselItem>
-                )}
-              </Fragment>
-            ))}
-          </CarouselContent>
-        </Carousel>
-
-        {userFavoriteItemIds.length > itemsPerSlide && (
-          <div className="baseFlex gap-2">
-            <>
-              {Array.from({
-                length: Math.ceil(userFavoriteItemIds.length / itemsPerSlide),
-              }).map((_, index) => (
-                <Button key={index} asChild>
-                  <div
-                    className={`!size-2 cursor-pointer rounded-full !p-0 ${
-                      favoriteItemsSlide === index
-                        ? "!bg-primary"
-                        : "!bg-stone-300"
-                    }`}
-                    onClick={() => favoriteItemsApi?.scrollTo(index)}
-                  />
-                </Button>
-              ))}
-            </>
-          </div>
-        )}
+      <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 px-2 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
+        {userFavoriteItemIds.slice(0, maxItemsToShow).map((itemId, index) => (
+          <MenuItemPreviewButton
+            key={itemId}
+            menuItem={menuItems[itemId]!}
+            // TODO: going to prob remove this in big teardown of old system of discounts
+            activeDiscount={menuItems[itemId]?.activeDiscount ?? null}
+            listOrder={index}
+            setIsDialogOpen={setIsDialogOpen}
+            setIsDrawerOpen={setIsDrawerOpen}
+            setItemToCustomize={setItemToCustomize}
+          />
+        ))}
       </div>
     </div>
   );
@@ -1091,100 +1067,62 @@ function FavoriteItems({
 
 interface RecentOrders {
   userRecentOrders: DBOrderSummary[];
-  itemsPerSlide: number;
+  viewportWidth: number;
 }
 
-function RecentOrders({ userRecentOrders, itemsPerSlide }: RecentOrders) {
-  const [recentOrdersApi, setRecentOrdersApi] = useState<CarouselApi>();
-  const [recentOrdersSlide, setRecentOrdersSlide] = useState(0);
-
-  useEffect(() => {
-    if (
-      !userRecentOrders ||
-      userRecentOrders.length === 0 ||
-      !recentOrdersApi
-    ) {
-      return;
-    }
-
-    setRecentOrdersSlide(recentOrdersApi.selectedScrollSnap());
-
-    recentOrdersApi.on("select", () => {
-      setRecentOrdersSlide(recentOrdersApi.selectedScrollSnap());
-    });
-
-    recentOrdersApi.on("resize", () => {
-      setRecentOrdersSlide(0);
-      recentOrdersApi.scrollTo(0);
-    });
-
-    // eventually add proper cleanup functions here
-  }, [userRecentOrders, recentOrdersApi]);
+function RecentOrders({ userRecentOrders, viewportWidth }: RecentOrders) {
+  const maxOrdersToShow = viewportWidth < 640 ? 3 : 4;
 
   return (
     <div
       id={"Recent ordersContainer"}
       className="baseVertFlex mt-4 w-full scroll-m-48 !items-start gap-2"
     >
-      <div className="baseFlex gap-3 pl-4 text-xl font-medium underline underline-offset-2">
-        <FaRedo className="size-4" />
-        <p>Recent orders</p>
+      <div className="baseFlex w-full !justify-between pl-4 text-xl font-medium underline underline-offset-2">
+        <div className="baseFlex gap-3">
+          <FaRedo className="size-4" />
+          <p>Recent orders</p>
+        </div>
+
+        {/* dialog to show full list of recent orders */}
+        {userRecentOrders.length > maxOrdersToShow && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="underline">View all</Button>
+            </DialogTrigger>
+            <DialogContent extraBottomSpacer={false} className="">
+              <VisuallyHidden>
+                <DialogTitle>Recent orders</DialogTitle>
+                <DialogDescription>Your recent orders</DialogDescription>
+              </VisuallyHidden>
+              <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
+
+              <div className="baseVertFlex w-full !items-start gap-4">
+                <div className="baseVertFlex w-full !items-start gap-2">
+                  <div className="baseFlex w-full !justify-start gap-2">
+                    <FaRedo className="size-3" />
+                    <p>Recent orders</p>
+                  </div>
+
+                  <Separator className="h-[1px] w-full" />
+
+                  <div className="baseVertFlex my-4 h-[70vh] w-full !justify-start gap-2 overflow-y-auto py-4">
+                    {userRecentOrders.map((order) => (
+                      <PreviousOrder key={order.id} order={order} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
-      <div className="baseVertFlex w-full gap-4">
-        <Carousel
-          setApi={setRecentOrdersApi}
-          opts={{
-            breakpoints: {
-              "(min-width: 640px)": {
-                slidesToScroll: 2,
-                active: userRecentOrders.length > itemsPerSlide,
-              },
-              "(min-width: 1280px)": {
-                slidesToScroll: 3,
-                active: userRecentOrders.length > itemsPerSlide,
-              },
-              "(min-width: 1700px)": {
-                slidesToScroll: 4,
-                active: userRecentOrders.length > itemsPerSlide,
-              },
-            },
-            // skipSnaps: true, play around with this
-          }}
-          className="baseFlex w-full !justify-start"
-        >
-          <CarouselContent className="w-full">
-            {userRecentOrders.map((order) => (
-              <CarouselItem
-                key={order.id}
-                className="basis-full md:basis-1/2 xl:basis-1/3 2xl:basis-1/4"
-              >
-                <PreviousOrder order={order} />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
-
-        {userRecentOrders.length > itemsPerSlide && (
-          <div className="baseFlex gap-2">
-            <>
-              {Array.from({
-                length: Math.ceil(userRecentOrders.length / itemsPerSlide),
-              }).map((_, index) => (
-                <Button key={index} asChild>
-                  <div
-                    className={`!size-2 cursor-pointer rounded-full !p-0 ${
-                      recentOrdersSlide === index
-                        ? "!bg-primary"
-                        : "!bg-stone-300"
-                    }`}
-                    onClick={() => recentOrdersApi?.scrollTo(index)}
-                  />
-                </Button>
-              ))}
-            </>
-          </div>
-        )}
+      <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 px-2 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
+        {userRecentOrders.slice(0, maxOrdersToShow).map((order) => (
+          <PreviousOrder key={order.id} order={order} />
+        ))}
       </div>
     </div>
   );

@@ -582,7 +582,7 @@ function MenuCategory({
       </div>
 
       {/* wrapping container for each food item in the category */}
-      <div className="grid w-full grid-cols-1 place-items-center p-1 sm:grid-cols-2 sm:place-items-start sm:gap-8 xl:grid-cols-3 3xl:grid-cols-4">
+      <div className="grid w-full grid-cols-1 items-start justify-items-center p-1 sm:grid-cols-2 sm:gap-8 xl:grid-cols-3 3xl:grid-cols-4">
         {menuItems.map((item) => (
           <MenuItemPreview
             key={item.id}
