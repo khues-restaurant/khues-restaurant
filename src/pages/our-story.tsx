@@ -17,6 +17,7 @@ import kare11InTheKitchen from "/public/media/kare11InTheKitchen.jpg";
 import kare11MothersDay from "/public/media/kare11MothersDay.jpg";
 import starTribune from "/public/media/starTribune.jpg";
 import mpr from "/public/media/mpr.jpg";
+import { useMainStore } from "~/stores/MainStore";
 
 // const TWEEN_FACTOR_BASE = 0.2;
 
@@ -44,6 +45,10 @@ const restaurantNamesAndBackstories = [
 ];
 
 function OurStory() {
+  const { viewportLabel } = useMainStore((state) => ({
+    viewportLabel: state.viewportLabel,
+  }));
+
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [carouselSlide, setCarouselSlide] = useState(0);
 
@@ -134,63 +139,6 @@ function OurStory() {
     };
   }, [ericBackdropControls, scrollDir]);
 
-  // const tweenFactor = useRef(0);
-  // const tweenNodes = useRef<HTMLElement[]>([]);
-
-  // const setTweenNodes = useCallback((carouselApi: CarouselApi): void => {
-  //   tweenNodes.current = carouselApi?.slideNodes().map((slideNode) => {
-  //     return slideNode.querySelector(".embla__parallax__layer") as HTMLElement;
-  //   });
-  // }, []);
-
-  // const setTweenFactor = useCallback((carouselApi: CarouselApi) => {
-  //   tweenFactor.current =
-  //     TWEEN_FACTOR_BASE * carouselApi?.scrollSnapList().length;
-  // }, []);
-
-  // const tweenParallax = useCallback(
-  //   (carouselApi: CarouselApi, eventName?: EmblaEventType) => {
-  //     const engine = carouselApi?.internalEngine();
-  //     const scrollProgress = carouselApi.scrollProgress();
-  //     const slidesInView = carouselApi.slidesInView();
-  //     const isScrollEvent = eventName === "scroll";
-
-  //     carouselApi.scrollSnapList().forEach((scrollSnap, snapIndex) => {
-  //       let diffToTarget = scrollSnap - scrollProgress;
-  //       const slidesInSnap = engine.slideRegistry[snapIndex];
-
-  //       slidesInSnap.forEach((slideIndex) => {
-  //         if (isScrollEvent && !slidesInView.includes(slideIndex)) return;
-
-  //         if (engine.options.loop) {
-  //           engine.slideLooper.loopPoints.forEach((loopItem) => {
-  //             const target = loopItem.target();
-
-  //             if (slideIndex === loopItem.index && target !== 0) {
-  //               const sign = Math.sign(target);
-
-  //               if (sign === -1) {
-  //                 diffToTarget = scrollSnap - (1 + scrollProgress);
-  //               }
-  //               if (sign === 1) {
-  //                 diffToTarget = scrollSnap + (1 - scrollProgress);
-  //               }
-  //             }
-  //           });
-  //         }
-
-  //         const translate = diffToTarget * (-1 * tweenFactor.current) * 100;
-  //         const tweenNode = tweenNodes.current[slideIndex];
-
-  //         if (tweenNode) {
-  //           tweenNode.style.transform = `translateX(${translate}%)`;
-  //         }
-  //       });
-  //     });
-  //   },
-  //   [],
-  // );
-
   useEffect(() => {
     if (!carouselApi) return;
 
@@ -200,21 +148,8 @@ function OurStory() {
       setCarouselSlide(carouselApi.selectedScrollSnap());
     });
 
-    // setTweenNodes(carouselApi);
-    // setTweenFactor(carouselApi);
-    // tweenParallax(carouselApi);
-
-    // carouselApi
-    //   .on("reInit", setTweenNodes)
-    //   .on("reInit", setTweenFactor)
-    //   .on("reInit", tweenParallax)
-    //   .on("scroll", tweenParallax);
-
     // eventually add proper cleanup functions here
-  }, [
-    carouselApi,
-    // , tweenParallax, setTweenFactor, setTweenNodes
-  ]);
+  }, [carouselApi]);
 
   return (
     <motion.div
@@ -275,10 +210,9 @@ function OurStory() {
         <div className="baseVertFlex mt-12 gap-4 tablet:!flex-row-reverse tablet:!items-start">
           <Carousel
             setApi={setCarouselApi}
-            // this was just not working at all for us on the first attempt, seems to be fine as is
-            // orientation={
-            //   viewportLabel.includes("mobile") ? "horizontal" : "vertical"
-            // }
+            orientation={
+              viewportLabel.includes("mobile") ? "horizontal" : "vertical"
+            }
             opts={{
               align: "start",
               breakpoints: {
@@ -290,34 +224,29 @@ function OurStory() {
                 },
               },
               loop: true,
-              // skipSnaps: true, play around with this
             }}
-            className="baseFlex rounded-md tablet:-mt-2 tablet:!flex-col tablet:p-0"
+            className="baseFlex rounded-md sm:-mt-2 sm:p-0 tablet:!flex-col"
           >
-            {/* touch-pan-x tablet:touch-pan-y*/}
-
-            {/* recently added !items-start and max-w-80 and tried to add bandaid fixes at higher viewport
-              but there are a few hiccups. Test and fix */}
-            <CarouselContent className="baseFlex max-w-80 !items-start !justify-start sm:max-w-full tablet:h-[500px] tablet:w-[600px] tablet:!flex-col tablet:!items-center tablet:!justify-start">
-              <CarouselItem className="embla__parallax__layer flex justify-center px-0 tablet:!items-start tablet:pt-2">
+            <CarouselContent className="baseFlex max-w-80 !items-start !justify-start sm:h-[450px] sm:w-[600px] sm:max-w-full tablet:h-[500px] tablet:!flex-col tablet:!items-center tablet:!justify-start">
+              <CarouselItem className="mb-2 flex justify-center px-2 sm:!items-start tablet:px-0 tablet:pt-2">
                 <RestaurantAndBackstory
                   name={restaurantNamesAndBackstories[0]!.name}
                   backstory={restaurantNamesAndBackstories[0]!.backstory}
                 />
               </CarouselItem>
-              <CarouselItem className="embla__parallax__layer flex justify-center px-0 tablet:!items-start tablet:pt-2">
+              <CarouselItem className="mb-2 flex justify-center px-2 sm:!items-start tablet:px-0 tablet:pt-2">
                 <RestaurantAndBackstory
                   name={restaurantNamesAndBackstories[1]!.name}
                   backstory={restaurantNamesAndBackstories[1]!.backstory}
                 />
               </CarouselItem>
-              <CarouselItem className="embla__parallax__layer flex justify-center px-0 tablet:!items-start tablet:pt-2">
+              <CarouselItem className="mb-2 flex justify-center px-2 sm:!items-start tablet:px-0 tablet:pt-2">
                 <RestaurantAndBackstory
                   name={restaurantNamesAndBackstories[2]!.name}
                   backstory={restaurantNamesAndBackstories[2]!.backstory}
                 />
               </CarouselItem>
-              <CarouselItem className="embla__parallax__layer flex justify-center px-0 tablet:!items-start tablet:pt-2">
+              <CarouselItem className="mb-2 flex justify-center px-2 sm:!items-start tablet:px-0 tablet:pt-2">
                 <RestaurantAndBackstory
                   name={restaurantNamesAndBackstories[3]!.name}
                   backstory={restaurantNamesAndBackstories[3]!.backstory}
@@ -336,7 +265,8 @@ function OurStory() {
                 src={khuesKitchen}
                 alt={"Quang's"}
                 sizes="(max-width: 1000px) 80px, 96px"
-                className="!relative !size-full rounded-md object-cover"
+                quality={100}
+                className="!relative !size-[80px] rounded-md object-cover tablet:!size-24"
                 onClick={() => carouselApi?.scrollTo(0)}
               />
             </Button>
@@ -348,7 +278,8 @@ function OurStory() {
                 src={khuesKitchen}
                 alt={"Quang's"}
                 sizes="(max-width: 1000px) 80px, 96px"
-                className="!relative !size-full rounded-md object-cover"
+                quality={100}
+                className="!relative !size-[80px] rounded-md object-cover tablet:!size-24"
                 onClick={() => carouselApi?.scrollTo(1)}
               />
             </Button>
@@ -360,7 +291,8 @@ function OurStory() {
                 src={khuesKitchen}
                 alt={"Quang's"}
                 sizes="(max-width: 1000px) 80px, 96px"
-                className="!relative !size-full rounded-md object-cover"
+                quality={100}
+                className="!relative !size-[80px] rounded-md object-cover tablet:!size-24"
                 onClick={() => carouselApi?.scrollTo(2)}
               />
             </Button>
@@ -372,7 +304,8 @@ function OurStory() {
                 src={khuesKitchen}
                 alt={"Quang's"}
                 sizes="(max-width: 1000px) 80px, 96px"
-                className="!relative !size-full rounded-md object-cover"
+                quality={100}
+                className="!relative !size-[80px] rounded-md object-cover tablet:!size-24"
                 onClick={() => carouselApi?.scrollTo(3)}
               />
             </Button>
@@ -391,20 +324,17 @@ function OurStory() {
           blends influential and traditional dishes from his childhood with a
           modern perspective to reimagine Vietnamese cuisine.
         </p>
+
         {/* Centerpiece of Eric */}
         <div className="mt-16 h-[1px] w-48 rounded-md bg-primary tablet:w-72"></div>
         <div className="baseVertFlex w-full gap-2 pt-16">
           <p className="text-2xl font-semibold text-primary">Meet the Chef</p>
-          {/* toy around with ideas of some kind of animated underline here. Either a real simple
-              left to right one, or some kind of animated svg path for a stylized underline. Look
-              for examples online of what could be considered a "fancy" underline */}
           <p className="text-xl">Eric Pham</p>
         </div>
         <div className="baseFlex relative w-full px-4 pb-8 pt-16 tablet:max-w-4xl">
           <motion.div
             ref={ericBackdropRef}
             initial={{ opacity: 0, y: 50 }}
-            // whileInView={{ opacity: 1, y: 0 }}
             animate={ericBackdropControls}
             transition={{
               opacity: { duration: 0.2 },
@@ -413,15 +343,13 @@ function OurStory() {
               damping: 20,
               mass: 0.75,
             }}
-            // viewport={{ once: true, amount: 0.35 }}
-            className="absolute bottom-0 left-0 h-3/4 w-full bg-gradient-to-br from-primary to-darkPrimary tablet:rounded-md"
+            className="absolute bottom-0 left-0 h-3/4 w-full bg-gradient-to-br from-primary to-darkPrimary shadow-md tablet:rounded-md"
           ></motion.div>
 
           <motion.div
             ref={ericImageRef}
             initial={{ opacity: 0, y: -75, filter: "blur(3px)" }}
             animate={ericImageControls}
-            // whileInView={{ opacity: 1, y: 0 }}
             transition={{
               opacity: { duration: 0.2 },
               type: "spring",
@@ -429,20 +357,20 @@ function OurStory() {
               damping: 20,
               mass: 0.75,
             }}
-            // viewport={{ once: true, amount: 0.75 }}
-            className="relative h-[425px] w-[300px] rounded-md tablet:h-[525px] tablet:w-[350px]"
+            className="relative h-[425px] w-[300px] rounded-md shadow-md tablet:h-[525px] tablet:w-[350px]"
           >
             <Image src={eric} alt="Eric" fill className="rounded-md" />
           </motion.div>
         </div>
+
         {/* Q&A w/ Eric */}
-        <div className="mt-16 text-lg italic">
+        <div className="mt-16 w-48 text-center text-lg italic xs:w-auto">
           Q/A Session with Chef/Owner Eric Pham
         </div>
 
         <div className="baseVertFlex mt-8 !items-start gap-8">
           <p className="pt-8 text-lg font-semibold">Why Cooking?</p>
-          <p className="max-w-72 tracking-wide tablet:max-w-xl">
+          <p className="max-w-72 tracking-wide sm:max-w-xl">
             &quot;I never truly appreciated the well-made home cooked meals. I
             was in my teens when I realized food was more than sustenance. Mom
             showed us affection in different ways. She always asked us, “Are you
@@ -459,7 +387,7 @@ function OurStory() {
           <p className="pt-8 text-lg font-semibold">
             Where did you learn how to cook?
           </p>
-          <p className="max-w-72 tracking-wide tablet:max-w-xl">
+          <p className="max-w-72 tracking-wide sm:max-w-xl">
             Where did you learn how to cook? In my teens, my parents wanted me
             to appreciate their hard work. I started working at Quang at an
             early age to gain some perspective. The only ordering system I knew
@@ -476,7 +404,7 @@ function OurStory() {
           <p className="pt-8 text-lg font-semibold">
             Any hobbies outside of cooking?
           </p>
-          <p className="max-w-72 tracking-wide tablet:max-w-xl">
+          <p className="max-w-72 tracking-wide sm:max-w-xl">
             Eating. When I&apos;m not cooking, I&apos;m usually trying other
             peoples&apos; cooking. There&apos;s nothing better than planning an
             entire day with friends around finding which restaurant has the best
@@ -485,10 +413,6 @@ function OurStory() {
         </div>
 
         <div className="mt-16 h-[1px] w-48 rounded-md bg-primary tablet:w-72"></div>
-
-        {/* TODO: should we add a section for "Our team", and have a left-justified list
-            of "Firstname Lastname - Role"? and if so, would it be *everyone*? including
-            the servers and dishwashers? */}
       </div>
     </motion.div>
   );
@@ -503,16 +427,16 @@ interface RestaurantAndBackstory {
 
 function RestaurantAndBackstory({ name, backstory }: RestaurantAndBackstory) {
   return (
-    <div className="baseVertFlex relative rounded-md border sm:pt-4 tablet:rounded-none tablet:border-none  tablet:pt-0 ">
+    <div className="baseVertFlex relative rounded-md border shadow-md sm:rounded-md sm:border-none">
       <Image
         src={khuesKitchen}
         alt="Khue's"
-        sizes="(max-width: 400px) 320px, (max-width: 640px) 384px, (max-width: 1000px) 600px, 33vw"
+        sizes="(max-width: 400px) 320px, (max-width: 1000px) 600px, 33vw"
         priority
-        className="!relative !w-80 rounded-t-md object-cover shadow-sm sm:!w-96 tablet:!h-[450px] tablet:!w-[600px] tablet:rounded-md"
+        className="!relative !w-80 select-none rounded-t-md object-cover shadow-sm sm:!h-[450px] sm:!w-[600px] sm:rounded-md sm:shadow-none"
       />
 
-      <div className="baseVertFlex w-full max-w-80 gap-2 rounded-b-md p-4 sm:max-w-lg tablet:absolute tablet:bottom-0 tablet:left-0 tablet:!items-start tablet:rounded-br-none tablet:rounded-tr-md tablet:bg-gradient-to-tr tablet:from-black tablet:to-black/50 tablet:text-offwhite">
+      <div className="baseVertFlex w-full max-w-80 select-none gap-2 rounded-b-md p-4 sm:absolute sm:bottom-0 sm:left-0 sm:max-w-lg sm:!items-start sm:rounded-br-none sm:rounded-tr-md sm:bg-gradient-to-tr sm:from-black sm:to-black/50 sm:text-offwhite">
         <p className="font-semibold underline underline-offset-2">{name}</p>
         <p className="text-sm">{backstory}</p>
       </div>
