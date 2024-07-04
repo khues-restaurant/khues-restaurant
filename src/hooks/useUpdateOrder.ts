@@ -81,7 +81,7 @@ function useUpdateOrder() {
         acc[existingItemIndex]?.quantity !== undefined
       ) {
         // If found, add quantities
-        acc[existingItemIndex]!.quantity += newItem.quantity;
+        acc[existingItemIndex].quantity += newItem.quantity;
       } else {
         // Otherwise, push the new item to the accumulator
         acc.push(newItem);
