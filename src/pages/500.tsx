@@ -6,7 +6,7 @@ import { Separator } from "~/components/ui/separator";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import StaticLotus from "~/components/ui/StaticLotus";
 
-function Custom404() {
+function Custom500() {
   return (
     <motion.div
       key={"500"}
@@ -48,4 +48,4 @@ function Custom404() {
   );
 }
 
-export default Custom404;
+export default Custom500;
