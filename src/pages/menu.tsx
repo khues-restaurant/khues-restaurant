@@ -727,13 +727,9 @@ function MenuItemPreview({
   activeDiscount,
   listOrder,
 }: MenuItemPreview) {
-  const { orderDetails, customizationChoices, discounts } = useMainStore(
-    (state) => ({
-      orderDetails: state.orderDetails,
-      customizationChoices: state.customizationChoices,
-      discounts: state.discounts,
-    }),
-  );
+  const { customizationChoices } = useMainStore((state) => ({
+    customizationChoices: state.customizationChoices,
+  }));
 
   return (
     <div

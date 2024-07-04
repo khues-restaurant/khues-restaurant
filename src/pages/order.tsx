@@ -53,13 +53,10 @@ function OrderNow() {
   const { isLoaded, isSignedIn } = useAuth();
   const userId = useGetUserId();
 
-  const { userFavoriteItemIds, viewportLabel, cartDrawerIsOpen } = useMainStore(
-    (state) => ({
-      userFavoriteItemIds: state.userFavoriteItemIds,
-      viewportLabel: state.viewportLabel,
-      cartDrawerIsOpen: state.cartDrawerIsOpen,
-    }),
-  );
+  const { userFavoriteItemIds, viewportLabel } = useMainStore((state) => ({
+    userFavoriteItemIds: state.userFavoriteItemIds,
+    viewportLabel: state.viewportLabel,
+  }));
 
   const { data: menuCategories } = api.menuCategory.getAll.useQuery({
     onlyOnlineOrderable: true,
@@ -1135,18 +1132,12 @@ function PreviousOrder({ order }: PreviousOrder) {
     orderDetails,
     getPrevOrderDetails,
     setPrevOrderDetails,
-    customizationChoices,
-    discounts,
     setItemNamesRemovedFromCart,
-    viewportLabel,
   } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
     getPrevOrderDetails: state.getPrevOrderDetails,
     setPrevOrderDetails: state.setPrevOrderDetails,
-    customizationChoices: state.customizationChoices,
-    discounts: state.discounts,
     setItemNamesRemovedFromCart: state.setItemNamesRemovedFromCart,
-    viewportLabel: state.viewportLabel,
   }));
 
   const {

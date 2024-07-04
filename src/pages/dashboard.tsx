@@ -49,14 +49,12 @@ function Dashboard({ children }: Dashboard) {
   >("orderManagement");
 
   const {
-    setOrderDetails,
     setMenuItems,
     customizationChoices,
     setCustomizationChoices,
     discounts,
     setDiscounts,
   } = useMainStore((state) => ({
-    setOrderDetails: state.setOrderDetails,
     setMenuItems: state.setMenuItems,
     customizationChoices: state.customizationChoices,
     setCustomizationChoices: state.setCustomizationChoices,

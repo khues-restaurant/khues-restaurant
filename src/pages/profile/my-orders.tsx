@@ -319,16 +319,12 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
     orderDetails,
     getPrevOrderDetails,
     setPrevOrderDetails,
-    customizationChoices,
-    discounts,
     setItemNamesRemovedFromCart,
     viewportLabel,
   } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
     getPrevOrderDetails: state.getPrevOrderDetails,
     setPrevOrderDetails: state.setPrevOrderDetails,
-    customizationChoices: state.customizationChoices,
-    discounts: state.discounts,
     setItemNamesRemovedFromCart: state.setItemNamesRemovedFromCart,
     viewportLabel: state.viewportLabel,
   }));

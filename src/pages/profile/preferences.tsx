@@ -120,9 +120,8 @@ function Preferences() {
   const ctx = api.useUtils();
   const { asPath, push } = useRouter();
 
-  const { resetStore, viewportLabel } = useMainStore((state) => ({
+  const { resetStore } = useMainStore((state) => ({
     resetStore: state.resetStore,
-    viewportLabel: state.viewportLabel,
   }));
 
   const { data: user } = api.user.get.useQuery(userId, {

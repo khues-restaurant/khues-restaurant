@@ -618,13 +618,9 @@ interface OrderItems {
 }
 
 function OrderItems({ order }: OrderItems) {
-  const { orderDetails, menuItems, customizationChoices, discounts } =
-    useMainStore((state) => ({
-      orderDetails: state.orderDetails,
-      menuItems: state.menuItems,
-      customizationChoices: state.customizationChoices,
-      discounts: state.discounts,
-    }));
+  const { customizationChoices } = useMainStore((state) => ({
+    customizationChoices: state.customizationChoices,
+  }));
 
   const [orderBeingReprinted, setOrderBeingReprinted] = useState(false);
 
