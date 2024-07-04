@@ -228,9 +228,7 @@ function DesktopHeader() {
 
       {/* order icon and auth buttons/user icon */}
       <div
-        className={`${classes.authentication} baseFlex relative transition-all
-        ${numberOfItems > 9 ? "gap-8" : "gap-4"}
-      `}
+        className={`${classes.authentication} baseFlex relative gap-4 transition-all`}
       >
         <Dialog>
           <DialogTrigger asChild>
@@ -372,102 +370,108 @@ function DesktopHeader() {
           </DialogContent>
         </Dialog>
 
-        <CartButton />
+        <div className={`baseFlex ${numberOfItems > 9 ? "gap-8" : "gap-6"}`}>
+          <CartButton />
 
-        {/* opting for double "&&" instead of ternary for better readability */}
-        {!isSignedIn && (
-          <div className={`${classes.authentication ?? ""} baseFlex gap-4`}>
-            {/* how to maybe get colors to match theme + also have an option to specify username? */}
-            <SignUpButton mode="modal">
-              <Button className="px-8">Sign up</Button>
-            </SignUpButton>
-            <SignInButton mode="modal">
-              <Button variant={"outline"}>Sign in</Button>
-            </SignInButton>
-          </div>
-        )}
+          {/* opting for double "&&" instead of ternary for better readability */}
+          {!isSignedIn && (
+            <div className={`${classes.authentication ?? ""} baseFlex gap-4`}>
+              {/* how to maybe get colors to match theme + also have an option to specify username? */}
+              <SignUpButton mode="modal">
+                <Button className="px-8">Sign up</Button>
+              </SignUpButton>
+              <SignInButton mode="modal">
+                <Button variant={"outline"}>Sign in</Button>
+              </SignInButton>
+            </div>
+          )}
 
-        {isSignedIn && user && (
-          <Popover
-            open={showUserPopoverLinks}
-            onOpenChange={(open) => {
-              if (!open) setShowUserPopoverLinks(false);
-            }}
-          >
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="baseFlex gap-2"
-                onClick={() => setShowUserPopoverLinks(true)}
-              >
-                <FaUserAlt />
-                <span className="max-w-[105px] truncate">{user.firstName}</span>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent side="bottom" align="end" className="w-64">
-              <div className="baseVertFlex gap-2">
+          {isSignedIn && user && (
+            <Popover
+              open={showUserPopoverLinks}
+              onOpenChange={(open) => {
+                if (!open) setShowUserPopoverLinks(false);
+              }}
+            >
+              <PopoverTrigger asChild>
                 <Button
-                  variant={
-                    asPath.includes("/profile/preferences")
-                      ? "activeLink"
-                      : "link"
-                  }
-                  asChild
+                  variant="outline"
+                  className="baseFlex gap-2"
+                  onClick={() => setShowUserPopoverLinks(true)}
                 >
-                  <Link
-                    href={"/profile/preferences"}
-                    className="baseFlex w-full !justify-between !text-lg"
-                  >
-                    Preferences
-                    <IoSettingsOutline />
-                  </Link>
+                  <FaUserAlt />
+                  <span className="max-w-[105px] truncate">
+                    {user.firstName}
+                  </span>
                 </Button>
-                <Button
-                  variant={
-                    asPath.includes("/profile/rewards") ? "activeLink" : "link"
-                  }
-                  asChild
-                >
-                  <Link
-                    href={"/profile/rewards"}
-                    className="baseFlex w-full !justify-between !text-lg"
+              </PopoverTrigger>
+              <PopoverContent side="bottom" align="end" className="w-64">
+                <div className="baseVertFlex gap-2">
+                  <Button
+                    variant={
+                      asPath.includes("/profile/preferences")
+                        ? "activeLink"
+                        : "link"
+                    }
+                    asChild
                   >
-                    Rewards
-                    <SlPresent />
-                  </Link>
-                </Button>
-                <Button
-                  variant={
-                    asPath.includes("/profile/my-orders")
-                      ? "activeLink"
-                      : "link"
-                  }
-                  asChild
-                >
-                  <Link
-                    href={"/profile/my-orders"}
-                    className="baseFlex w-full !justify-between !text-lg"
+                    <Link
+                      href={"/profile/preferences"}
+                      className="baseFlex w-full !justify-between !text-lg"
+                    >
+                      Preferences
+                      <IoSettingsOutline />
+                    </Link>
+                  </Button>
+                  <Button
+                    variant={
+                      asPath.includes("/profile/rewards")
+                        ? "activeLink"
+                        : "link"
+                    }
+                    asChild
                   >
-                    My orders
-                    <TfiReceipt />
-                  </Link>
-                </Button>
+                    <Link
+                      href={"/profile/rewards"}
+                      className="baseFlex w-full !justify-between !text-lg"
+                    >
+                      Rewards
+                      <SlPresent />
+                    </Link>
+                  </Button>
+                  <Button
+                    variant={
+                      asPath.includes("/profile/my-orders")
+                        ? "activeLink"
+                        : "link"
+                    }
+                    asChild
+                  >
+                    <Link
+                      href={"/profile/my-orders"}
+                      className="baseFlex w-full !justify-between !text-lg"
+                    >
+                      My orders
+                      <TfiReceipt />
+                    </Link>
+                  </Button>
 
-                <Button
-                  variant={"link"}
-                  className="mt-2 h-8"
-                  onClick={async () => {
-                    clearLocalStorage();
-                    resetStore();
-                    await signOut({ redirectUrl: "/" });
-                  }}
-                >
-                  Log out
-                </Button>
-              </div>
-            </PopoverContent>
-          </Popover>
-        )}
+                  <Button
+                    variant={"link"}
+                    className="mt-2 h-8"
+                    onClick={async () => {
+                      clearLocalStorage();
+                      resetStore();
+                      await signOut({ redirectUrl: "/" });
+                    }}
+                  >
+                    Log out
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
+        </div>
       </div>
     </nav>
   );
