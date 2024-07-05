@@ -1,6 +1,5 @@
 import { useAuth } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Noto_Sans } from "next/font/google";
 import { useEffect, useState, type ReactNode } from "react";
 import Chat from "~/components/Chat";
@@ -99,7 +98,6 @@ function GeneralLayout({ children }: GeneralLayout) {
 
         <Toaster />
 
-        <SpeedInsights />
         <Analytics />
       </main>
     </>
