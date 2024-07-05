@@ -194,7 +194,7 @@ interface StoreState {
   initViewportLabelSet: boolean;
   setInitViewportLabelSet: (initViewportLabelSet: boolean) => void;
 
-  // kind of deprecated: can just use one state for both cartSheets since we aren't
+  // mostly deprecated: can just use one state for both cartSheets since we aren't
   // using <Drawer> anymore
   cartDrawerIsOpen: boolean;
   setCartDrawerIsOpen: (cartDrawerIsOpen: boolean) => void;
