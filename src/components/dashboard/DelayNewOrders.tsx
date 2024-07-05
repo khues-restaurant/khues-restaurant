@@ -161,7 +161,7 @@ function DelayNewOrders() {
                           <>
                             {/* only show times in the future */}
                             {/* also excluding the second to last time slot since an order will never
-                                be able to be picked up 15 minutes from close. Just reduces confusion
+                                be able to be picked up 20 minutes from close. Just reduces confusion
                                 on dashboard side */}
                             {index !== times.length - 2 &&
                               currentDate.getTime() <

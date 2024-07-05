@@ -207,10 +207,10 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       let adjustedDatetimeToPickup = new Date(orderDetails.datetimeToPickup);
 
-      // add 15 minutes to current time if order is ASAP
+      // add 20 minutes to current time if order is ASAP
       if (orderDetails.isASAP) {
         const zonedCurrentDatetime = toZonedTime(new Date(), "America/Chicago");
-        adjustedDatetimeToPickup = addMinutes(zonedCurrentDatetime, 15);
+        adjustedDatetimeToPickup = addMinutes(zonedCurrentDatetime, 20);
       }
 
       // calculate/retrieve subtotal, tax, tip, total values here:

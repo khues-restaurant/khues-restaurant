@@ -4,7 +4,7 @@ import {
   isHoliday,
   isPastFinalPickupTimeForDay,
 } from "~/utils/dateHelpers/datesAndHoursOfOperation";
-import { isAtLeast15MinsFromDatetime } from "~/utils/dateHelpers/isAtLeast15MinsFromDatetime";
+import { isAtLeast20MinsFromDatetime } from "~/utils/dateHelpers/isAtLeast20MinsFromDatetime";
 
 interface IsSelectedTimeSlotValid {
   isASAP?: boolean;
@@ -75,8 +75,8 @@ export function isSelectedTimeSlotValid({
     }
   } else {
     // make sure that the passed in datetimeToPickup is later than the current time
-    // and more specifically, is >= 15 minutes from the current time
-    if (pickupTime <= now || !isAtLeast15MinsFromDatetime(pickupTime, now)) {
+    // and more specifically, is >= 20 minutes from the current time
+    if (pickupTime <= now || !isAtLeast20MinsFromDatetime(pickupTime, now)) {
       return false;
     }
   }
