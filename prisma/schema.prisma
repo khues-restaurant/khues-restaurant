@@ -102,14 +102,14 @@ model MenuItem {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
 
-    name         String
-    description  String
-    imageUrl     String
-    price        Int
-    altPrice     Int? // used for singular glass pricing of wine
-    available    Boolean @default(true) // whether item is able to be ordered (86'd or not)
-    discontinued Boolean @default(false) // whether item is no longer on the menu
-    listOrder    Int     @default(autoincrement())
+    name           String
+    description    String
+    price          Int
+    altPrice       Int? // used for singular glass pricing of wine
+    available      Boolean @default(true) // whether item is able to be ordered (86'd or not)
+    discontinued   Boolean @default(false) // whether item is no longer on the menu
+    listOrder      Int     @default(autoincrement())
+    hasImageOfItem Boolean @default(false)
 
     menuCategory     MenuCategory @relation(fields: [menuCategoryId], references: [id])
     menuCategoryId   String

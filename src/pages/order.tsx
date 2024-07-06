@@ -760,13 +760,15 @@ function MenuItemPreviewButton({
         }}
       >
         <div className="baseFlex mt-4 w-full !justify-around gap-4 tablet:mt-0">
-          <Image
-            src={"/menuItems/sampleImage.webp"}
-            alt={menuItem.name}
-            width={96}
-            height={96}
-            className="mt-2 !size-24 !self-start rounded-md drop-shadow-lg"
-          />
+          {menuItem.hasImageOfItem && (
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={menuItem.name}
+              width={96}
+              height={96}
+              className="mt-2 !size-24 !self-start rounded-md drop-shadow-lg"
+            />
+          )}
 
           <div className="baseVertFlex h-full w-48 !items-start">
             <div className="baseVertFlex !items-start gap-2">
