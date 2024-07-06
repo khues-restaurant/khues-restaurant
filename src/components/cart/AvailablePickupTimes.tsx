@@ -8,7 +8,7 @@ import {
   getOpenTimesForDay,
   hoursOpenPerDay,
   isHoliday,
-  isPastFinalPickupTimeForDay,
+  isPastFinalPickupPlacementTimeForDay,
   isRestaurantClosedToday,
 } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
@@ -83,7 +83,7 @@ function AvailablePickupTimes({
         minPickupTime.getHours() >= todaysHours.closeHour &&
         minPickupTime.getMinutes() >= todaysHours.closeMinute) ||
         // or if it's past the final pickup time for the day
-        isPastFinalPickupTimeForDay({
+        isPastFinalPickupPlacementTimeForDay({
           currentHour: now.getHours(),
           currentMinute: now.getMinutes(),
           closeHour: todaysHours.closeHour,
