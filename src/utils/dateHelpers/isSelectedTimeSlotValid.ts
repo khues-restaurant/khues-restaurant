@@ -2,7 +2,7 @@ import { getCSTDateInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import {
   hoursOpenPerDay,
   isHoliday,
-  isPastFinalPickupTimeForDay,
+  isPastFinalPickupPlacementTimeForDay,
 } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import { isAtLeast20MinsFromDatetime } from "~/utils/dateHelpers/isAtLeast20MinsFromDatetime";
 
@@ -18,7 +18,9 @@ export function isSelectedTimeSlotValid({
   minPickupDatetime,
 }: IsSelectedTimeSlotValid) {
   const now = getCSTDateInUTC(new Date());
+  console.log("original datetimeToPickup", datetimeToPickup);
   const pickupTime = getCSTDateInUTC(datetimeToPickup);
+  console.log("pickupTime", pickupTime);
   const minPickupTime = getCSTDateInUTC(minPickupDatetime);
 
   // FYI: all times are coerced into the CST time zone
@@ -140,13 +142,9 @@ export function isSelectedTimeSlotValid({
     return false;
   }
 
-  // if pickupTime > 30 mins from close or later, return false
-
-  // TODO: depending on what specific interaction that eric wants (either
-  // 30 mins from close is last time customer will be walking in to pickup their order,
-  // or 30 mins from close is last time customer can place an order for pickup that night)
+  // if pickupTime < 30 mins from close or later, return false
   if (
-    isPastFinalPickupTimeForDay({
+    isPastFinalPickupPlacementTimeForDay({
       currentHour: asapAdjustedPickupHour,
       currentMinute: asapAdjustedPickupMinute,
       closeHour: pickupDayHours.closeHour,
