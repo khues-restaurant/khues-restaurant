@@ -41,20 +41,11 @@ function validateTimeToPickup(
   orderDetails: OrderDetails,
   minOrderPickupDatetime: Date,
 ) {
-  const datetimeToPickup = toZonedTime(
-    orderDetails.datetimeToPickup,
-    "America/Chicago",
-  );
-  const minPickupDatetime = toZonedTime(
-    minOrderPickupDatetime,
-    "America/Chicago",
-  );
-
   if (
     isSelectedTimeSlotValid({
       isASAP: orderDetails.isASAP,
-      datetimeToPickup,
-      minPickupDatetime,
+      datetimeToPickup: orderDetails.datetimeToPickup,
+      minPickupDatetime: minOrderPickupDatetime,
     })
   ) {
     return;
