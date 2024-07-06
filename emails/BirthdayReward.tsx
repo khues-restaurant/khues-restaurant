@@ -64,7 +64,7 @@ function BirthdayReward(
       name: "Cream Cheese Wontons",
       description:
         "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-      imageUrl: "test",
+      hasImageOfItem: false,
       price: 1100,
       altPrice: null,
       available: true,
@@ -90,7 +90,7 @@ function BirthdayReward(
       name: "Vietnamese Bar Nuts",
       description:
         "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-      imageUrl: "test",
+      hasImageOfItem: false,
       price: 1200,
       altPrice: null,
       available: true,
@@ -116,7 +116,7 @@ function BirthdayReward(
       name: "Xiu Mai",
       description:
         "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-      imageUrl: "test",
+      hasImageOfItem: false,
       price: 1900,
       altPrice: null,
       available: true,
@@ -142,7 +142,7 @@ function BirthdayReward(
       name: "Grilled Pork Vermicelli",
       description:
         "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-      imageUrl: "test",
+      hasImageOfItem: false,
       price: 1900,
       altPrice: null,
       available: true,
@@ -168,7 +168,7 @@ function BirthdayReward(
       name: "Chicken Sandwich",
       description:
         "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-      imageUrl: "test",
+      hasImageOfItem: false,
       price: 1900,
       altPrice: null,
       available: true,

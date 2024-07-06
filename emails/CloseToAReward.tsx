@@ -50,7 +50,7 @@ function CloseToAReward(
       name: "Cream Cheese Wontons",
       description:
         "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-      imageUrl: "test",
+      hasImageOfItem: false,
       price: 1100,
       altPrice: null,
       available: true,
@@ -76,7 +76,7 @@ function CloseToAReward(
       name: "Vietnamese Bar Nuts",
       description:
         "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-      imageUrl: "test",
+      hasImageOfItem: false,
       price: 1200,
       altPrice: null,
       available: true,
@@ -102,7 +102,7 @@ function CloseToAReward(
       name: "Xiu Mai",
       description:
         "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-      imageUrl: "test",
+      hasImageOfItem: false,
       price: 1900,
       altPrice: null,
       available: true,
@@ -128,7 +128,7 @@ function CloseToAReward(
       name: "Grilled Pork Vermicelli",
       description:
         "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-      imageUrl: "test",
+      hasImageOfItem: false,
       price: 1900,
       altPrice: null,
       available: true,
@@ -154,7 +154,7 @@ function CloseToAReward(
       name: "Chicken Sandwich",
       description:
         "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-      imageUrl: "test",
+      hasImageOfItem: false,
       price: 1900,
       altPrice: null,
       available: true,
@@ -183,7 +183,7 @@ function CloseToAReward(
       name: "Drink Two",
       description:
         "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-      imageUrl: "test",
+      hasImageOfItem: false,
       price: 600,
       altPrice: null,
       available: true,
@@ -207,6 +207,7 @@ function CloseToAReward(
           name: "Size",
           description: "Select a size",
           defaultChoiceId: "e1f38eae-c3d1-41e4-9069-a84a76d456cc",
+          hasImageOfItem: false,
           internalName: "",
           customizationChoices: [
             {
@@ -214,6 +215,7 @@ function CloseToAReward(
               name: "Small",
               description: "12oz",
               priceAdjustment: -175,
+              hasImageOfItem: false,
               isAvailable: false,
               listOrder: 1,
               customizationCategoryId: "d58f86b3-d769-468e-9b5c-3e207438701f",
@@ -223,6 +225,7 @@ function CloseToAReward(
               name: "Medium",
               description: "16oz",
               priceAdjustment: 0,
+              hasImageOfItem: false,
               isAvailable: true,
               listOrder: 2,
               customizationCategoryId: "d58f86b3-d769-468e-9b5c-3e207438701f",
@@ -232,6 +235,7 @@ function CloseToAReward(
               name: "Large",
               description: "20oz",
               priceAdjustment: 175,
+              hasImageOfItem: false,
               isAvailable: true,
               listOrder: 3,
               customizationCategoryId: "d58f86b3-d769-468e-9b5c-3e207438701f",
@@ -246,7 +250,7 @@ function CloseToAReward(
       name: "Toffee Chocolate Chip Cookie",
       description:
         "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-      imageUrl: "test",
+      hasImageOfItem: false,
       price: 1100,
       altPrice: null,
       available: true,
@@ -272,7 +276,7 @@ function CloseToAReward(
       name: "Thai Tea Tres Leches",
       description:
         "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-      imageUrl: "test",
+      hasImageOfItem: false,
       price: 1100,
       altPrice: null,
       available: true,

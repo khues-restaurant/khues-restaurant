@@ -740,13 +740,15 @@ function MenuItemPreview({
     >
       <div className="baseVertFlex size-full !justify-between gap-4 py-1 tablet:py-4">
         <div className="baseFlex mt-4 w-full gap-4 tablet:mt-0">
-          <Image
-            src={"/menuItems/sampleImage.webp"}
-            alt={menuItem.name}
-            width={96}
-            height={96}
-            className="mt-2 !size-24 !self-start rounded-md drop-shadow-lg"
-          />
+          {menuItem.hasImageOfItem && (
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={menuItem.name}
+              width={96}
+              height={96}
+              className="mt-2 !size-24 !self-start rounded-md drop-shadow-lg"
+            />
+          )}
 
           <div className="baseVertFlex size-full !items-start">
             <div className="baseFlex w-full !justify-between">
