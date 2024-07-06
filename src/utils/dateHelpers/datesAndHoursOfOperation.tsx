@@ -95,7 +95,7 @@ function isHoliday(date: Date) {
 }
 
 // final pickup time for day is 30 minutes before close
-function isPastFinalPickupTimeForDay({
+function isPastFinalPickupPlacementTimeForDay({
   currentHour,
   currentMinute,
   closeHour,
@@ -109,7 +109,10 @@ function isPastFinalPickupTimeForDay({
   const currentTotalMinutes = currentHour * 60 + currentMinute;
   const closeTotalMinutes = closeHour * 60 + closeMinute;
 
-  const pastFinalPickupTime = currentTotalMinutes > closeTotalMinutes - 30;
+  // "-50" below is to account for the 30 minute buffer before close
+  // along with fact that orders take about 20 minutes to prepare.
+
+  const pastFinalPickupTime = currentTotalMinutes > closeTotalMinutes - 50;
 
   return pastFinalPickupTime;
 }
@@ -225,7 +228,7 @@ function getWeeklyHours() {
 export {
   holidays,
   hoursOpenPerDay,
-  isPastFinalPickupTimeForDay,
+  isPastFinalPickupPlacementTimeForDay,
   isRestaurantClosedToday,
   isHoliday,
   getWeeklyHours,

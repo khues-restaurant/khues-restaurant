@@ -18,8 +18,13 @@ function getMidnightCSTInUTC(date?: Date) {
 }
 
 function getCSTDateInUTC(date: Date) {
+  console.log("Original Date:", date);
+
   const cstDate = toZonedTime(date, "America/Chicago");
+  console.log("CST Date:", cstDate);
+
   const utcDate = fromZonedTime(cstDate, "America/Chicago");
+  console.log("UTC Date:", utcDate);
 
   return utcDate;
 }
