@@ -630,6 +630,7 @@ function formatMenuItemPrice(
                   isGlutenFree: menuItem.isGlutenFree,
                   showUndercookedOrRawDisclaimer:
                     menuItem.showUndercookedOrRawDisclaimer,
+                  hasImageOfItem: menuItem.hasImageOfItem,
                   birthdayReward: false,
                   pointReward: false,
                 },
@@ -665,6 +666,7 @@ function formatMenuItemPrice(
                   isGlutenFree: menuItem.isGlutenFree,
                   showUndercookedOrRawDisclaimer:
                     menuItem.showUndercookedOrRawDisclaimer,
+                  hasImageOfItem: menuItem.hasImageOfItem,
                   birthdayReward: false,
                   pointReward: false,
                 },
@@ -702,6 +704,7 @@ function formatMenuItemPrice(
               isGlutenFree: menuItem.isGlutenFree,
               showUndercookedOrRawDisclaimer:
                 menuItem.showUndercookedOrRawDisclaimer,
+              hasImageOfItem: menuItem.hasImageOfItem,
               birthdayReward: false,
               pointReward: false,
             },

@@ -893,12 +893,14 @@ function RewardMenuItem({
   return (
     <div className="relative w-full text-primary sm:max-w-96">
       <div className="baseFlex relative size-full !items-start gap-4 rounded-md px-2 py-4">
-        <Image
-          src={sampleImage}
-          alt={menuItem.name}
-          fill
-          className="!relative !size-16 rounded-md drop-shadow-md tablet:!size-24 tablet:drop-shadow-lg"
-        />
+        {menuItem.hasImageOfItem && (
+          <Image
+            src={sampleImage}
+            alt={menuItem.name}
+            fill
+            className="!relative !size-16 rounded-md drop-shadow-md tablet:!size-24 tablet:drop-shadow-lg"
+          />
+        )}
 
         <div className="baseVertFlex w-full !items-start">
           <div className="baseVertFlex size-full !items-start !justify-between">
@@ -1007,6 +1009,7 @@ function RewardMenuItem({
                         isGlutenFree: menuItem.isGlutenFree,
                         showUndercookedOrRawDisclaimer:
                           menuItem.showUndercookedOrRawDisclaimer,
+                        hasImageOfItem: menuItem.hasImageOfItem,
                         birthdayReward: forBirthdayReward,
                         pointReward: !forBirthdayReward,
                       },

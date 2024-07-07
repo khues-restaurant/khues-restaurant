@@ -216,6 +216,7 @@ model OrderItem {
     isVegan                        Boolean @default(false)
     isGlutenFree                   Boolean @default(false)
     showUndercookedOrRawDisclaimer Boolean @default(false)
+    hasImageOfItem                 Boolean @default(false)
 
     pointReward    Boolean @default(false)
     birthdayReward Boolean @default(false)

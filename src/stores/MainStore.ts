@@ -38,6 +38,7 @@ const itemSchema = z.object({
   isVegan: z.boolean(),
   isGlutenFree: z.boolean(),
   showUndercookedOrRawDisclaimer: z.boolean(),
+  hasImageOfItem: z.boolean(),
   pointReward: z.boolean(),
   birthdayReward: z.boolean(),
 });
@@ -78,6 +79,7 @@ export interface Item {
   isVegan: boolean;
   isGlutenFree: boolean;
   showUndercookedOrRawDisclaimer: boolean;
+  hasImageOfItem: boolean;
   pointReward: boolean;
   birthdayReward: boolean;
 }

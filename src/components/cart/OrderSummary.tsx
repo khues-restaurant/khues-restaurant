@@ -57,13 +57,15 @@ function OrderSummary({ order }: OrderSummary) {
               className="baseFlex w-full !items-start gap-4"
             >
               {/* preview image of item */}
-              <Image
-                src={"/menuItems/sampleImage.webp"}
-                alt={item.name}
-                width={48}
-                height={48}
-                className="!size-12 rounded-md drop-shadow-md"
-              />
+              {item.hasImageOfItem && (
+                <Image
+                  src={"/menuItems/sampleImage.webp"}
+                  alt={item.name}
+                  width={48}
+                  height={48}
+                  className="!size-12 rounded-md drop-shadow-md"
+                />
+              )}
 
               <div className="baseFlex w-full !items-start !justify-between">
                 <div className="baseVertFlex max-w-40 !items-start xs:max-w-80">

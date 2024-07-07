@@ -172,6 +172,7 @@ function ItemCustomizerDialogContent({
       isGlutenFree: itemToCustomize.isGlutenFree,
       showUndercookedOrRawDisclaimer:
         itemToCustomize.showUndercookedOrRawDisclaimer,
+      hasImageOfItem: itemToCustomize.hasImageOfItem,
       pointReward: false,
       birthdayReward: false,
     },
@@ -201,21 +202,30 @@ function ItemCustomizerDialogContent({
         <div className="baseFlex relative h-72 w-full !justify-end rounded-md bg-offwhite shadow-md">
           {/* primary diagonal bg */}
           <div
-            className="absolute left-0 top-0 size-full rounded-md bg-primary"
+            className="absolute left-0 top-0 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
             style={{
-              clipPath: "polygon(100% 0, 100% 24%, 32% 100%, 0 100%, 0 0)",
+              clipPath: itemToCustomize.hasImageOfItem
+                ? "polygon(100% 0, 100% 24%, 32% 100%, 0 100%, 0 0)"
+                : undefined,
             }}
           ></div>
 
-          <Image
-            src={"/menuItems/sampleImage.webp"}
-            alt={itemToCustomize.name}
-            width={240}
-            height={240}
-            className="z-10 my-4 mr-16 rounded-md drop-shadow-xl"
-          />
+          {itemToCustomize.hasImageOfItem && (
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={itemToCustomize.name}
+              width={240}
+              height={240}
+              className="z-10 my-4 mr-16 rounded-md drop-shadow-xl"
+            />
+          )}
 
-          <div className="baseFlex absolute bottom-0 left-4 gap-4 rounded-t-md border border-b-0 bg-offwhite px-4 py-2 text-xl font-semibold">
+          <div
+            style={{
+              bottom: itemToCustomize.hasImageOfItem ? "0px" : "-1px",
+            }}
+            className="baseFlex absolute left-4 gap-4 rounded-t-md border border-b-0 bg-offwhite px-4 py-2 text-xl font-semibold"
+          >
             <div className="baseFlex gap-2">{itemToCustomize.name}</div>
 
             {isSignedIn && (
@@ -726,7 +736,7 @@ function CustomizationOption({
           </div>
         )}
 
-        <div className="absolute bottom-2 right-4">
+        <div className="absolute bottom-2 right-4 text-sm">
           <AnimatePresence>
             {!isSelected && relativePrice !== 0 && (
               <AnimatedPrice
