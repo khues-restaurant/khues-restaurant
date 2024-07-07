@@ -504,6 +504,7 @@ interface SendEmailReceipt {
       isVegan: boolean;
       isGlutenFree: boolean;
       showUndercookedOrRawDisclaimer: boolean;
+      hasImageOfItem: boolean;
       pointReward: boolean;
       birthdayReward: boolean;
     }[];
@@ -582,6 +583,7 @@ async function SendEmailReceipt({
                 )
               : [],
             discount: item.discountId ? discounts[item.discountId]! : null,
+            hasImageOfItem: item.hasImageOfItem,
           })),
         },
         customizationChoices,
