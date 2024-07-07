@@ -3,7 +3,6 @@ import { type OrderDetails, orderDetailsSchema } from "~/stores/MainStore";
 import isEqual from "lodash.isequal";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import Decimal from "decimal.js";
-import { toZonedTime } from "date-fns-tz";
 import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
 import { loopToFindFirstOpenDay } from "~/utils/dateHelpers/loopToFindFirstOpenDay";
 import { isEligibleForBirthdayReward } from "~/utils/dateHelpers/isEligibleForBirthdayReward";
@@ -19,20 +18,11 @@ function validateDayOfDatetimeToPickup(orderDatetimeToPickup: Date) {
 
   const todayAtMidnight = getMidnightCSTInUTC();
 
-  console.log("validating day to pickup", datetimeToPickup, todayAtMidnight);
-
   // If datetimeToPickup is in the past, need to find the next valid day
   // (at midnight specifically) to set it to.
   if (datetimeToPickup < todayAtMidnight) {
-    console.log(
-      "datetimeToPickup is in the past",
-      datetimeToPickup,
-      todayAtMidnight,
-    );
     datetimeToPickup = loopToFindFirstOpenDay(todayAtMidnight);
   }
-
-  console.log("returning datetimeToPickup", datetimeToPickup);
 
   return datetimeToPickup;
 }
@@ -50,25 +40,6 @@ function validateTimeToPickup(
   ) {
     return;
   }
-
-  // Original Date: 2024-07-06T05:00:00.000Z
-  // CST Date: 2024-07-06T00:00:00.000Z
-  // UTC Date: 2024-07-06T05:00:00.000Z
-  // Original Date: 2024-07-06T08:40:25.165Z
-  // CST Date: 2024-07-06T03:40:25.165Z
-  // UTC Date: 2024-07-06T08:40:25.165Z
-  // original datetimeToPickup 2024-07-06T00:00:00.000Z
-  // Original Date: 2024-07-06T00:00:00.000Z
-  // CST Date: 2024-07-05T19:00:00.000Z
-  // UTC Date: 2024-07-06T00:00:00.000Z
-  // pickupTime 2024-07-06T00:00:00.000Z
-  // Original Date: 2024-07-06T00:00:00.000Z
-  // CST Date: 2024-07-05T19:00:00.000Z
-  // UTC Date: 2024-07-06T00:00:00.000Z
-  // returning true 1 now 2024-07-06T08:40:25.165Z pickupTime 2024-07-06T00:00:00.000Z minPickupTime 2024-07-06T00:00:00.000Z
-
-  // ^^^ how did datetimeToPickup become 2024-07-06T00:00:00.000Z?
-  // it should be 2024-07-06T05:00:00.000Z so idk what is going wrong here
 
   // at this point datetimeToPickup is invalid, so we need to find the next valid
   // day to set it to, and by convention we set isASAP to false as a precaution.
