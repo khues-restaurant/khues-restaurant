@@ -18,9 +18,7 @@ export function isSelectedTimeSlotValid({
   minPickupDatetime,
 }: IsSelectedTimeSlotValid) {
   const now = getCSTDateInUTC(new Date());
-  console.log("original datetimeToPickup", datetimeToPickup);
   const pickupTime = getCSTDateInUTC(datetimeToPickup);
-  console.log("pickupTime", pickupTime);
   const minPickupTime = getCSTDateInUTC(minPickupDatetime);
 
   // FYI: all times are coerced into the CST time zone
@@ -43,15 +41,6 @@ export function isSelectedTimeSlotValid({
       pickupDayHours.closeMinute === 0) ||
     isHoliday(pickupTime)
   ) {
-    console.log(
-      "returning false 1",
-      "now",
-      now,
-      "pickupTime",
-      pickupTime,
-      "minPickupTime",
-      minPickupTime,
-    );
     return false;
   }
 
@@ -67,15 +56,6 @@ export function isSelectedTimeSlotValid({
     // isASAP will by definition always be represented at midnight client side,
     // so making sure that it still passes through all the below checks
   ) {
-    console.log(
-      "returning true 1",
-      "now",
-      now,
-      "pickupTime",
-      pickupTime,
-      "minPickupTime",
-      minPickupTime,
-    );
     return true;
   }
 
@@ -85,60 +65,24 @@ export function isSelectedTimeSlotValid({
     (asapAdjustedPickupHour === pickupDayHours.openHour &&
       asapAdjustedPickupMinute < pickupDayHours.openMinute)
   ) {
-    console.log(
-      "returning false 2",
-      "now",
-      now,
-      "pickupTime",
-      pickupTime,
-      "minPickupTime",
-      minPickupTime,
-    );
     return false;
   }
 
   if (isASAP) {
     // make sure that the passed in datetimeToPickup is the current day
     if (pickupTime.getDate() !== now.getDate()) {
-      console.log(
-        "returning false 3",
-        "now",
-        now,
-        "pickupTime",
-        pickupTime,
-        "minPickupTime",
-        minPickupTime,
-      );
       return false;
     }
   } else {
     // make sure that the passed in datetimeToPickup is later than the current time
     // and more specifically, is >= 20 minutes from the current time
     if (pickupTime <= now || !isAtLeast20MinsFromDatetime(pickupTime, now)) {
-      console.log(
-        "returning false 4",
-        "now",
-        now,
-        "pickupTime",
-        pickupTime,
-        "minPickupTime",
-        minPickupTime,
-      );
       return false;
     }
   }
 
   // if pickupTime time is earlier than minPickupTime, return false
   if (pickupTime.getTime() < minPickupTime.getTime()) {
-    console.log(
-      "returning false 5",
-      "now",
-      now,
-      "pickupTime",
-      pickupTime,
-      "minPickupTime",
-      minPickupTime,
-    );
     return false;
   }
 
@@ -151,27 +95,8 @@ export function isSelectedTimeSlotValid({
       closeMinute: pickupDayHours.closeMinute,
     })
   ) {
-    console.log(
-      "returning false 6",
-      "now",
-      now,
-      "pickupTime",
-      pickupTime,
-      "minPickupTime",
-      minPickupTime,
-    );
     return false;
   }
-
-  console.log(
-    "returning true from isSelectedTimeSlotValid",
-    "now",
-    now,
-    "pickupTime",
-    pickupTime,
-    "minPickupTime",
-    minPickupTime,
-  );
 
   return true;
 }

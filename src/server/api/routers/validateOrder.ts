@@ -19,20 +19,11 @@ function validateDayOfDatetimeToPickup(orderDatetimeToPickup: Date) {
 
   const todayAtMidnight = getMidnightCSTInUTC();
 
-  console.log("validating day to pickup", datetimeToPickup, todayAtMidnight);
-
   // If datetimeToPickup is in the past, need to find the next valid day
   // (at midnight specifically) to set it to.
   if (datetimeToPickup < todayAtMidnight) {
-    console.log(
-      "datetimeToPickup is in the past",
-      datetimeToPickup,
-      todayAtMidnight,
-    );
     datetimeToPickup = loopToFindFirstOpenDay(todayAtMidnight);
   }
-
-  console.log("returning datetimeToPickup", datetimeToPickup);
 
   return datetimeToPickup;
 }
