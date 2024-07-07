@@ -759,7 +759,7 @@ function MenuItemPreviewButton({
           }
         }}
       >
-        <div className="baseFlex mt-4 w-full !justify-around gap-4 tablet:mt-0">
+        <div className="baseFlex mt-4 w-full !justify-start gap-4 tablet:mt-0">
           {menuItem.hasImageOfItem && (
             <Image
               src={"/menuItems/sampleImage.webp"}
@@ -770,7 +770,9 @@ function MenuItemPreviewButton({
             />
           )}
 
-          <div className="baseVertFlex h-full w-48 !items-start">
+          <div
+            className={`baseVertFlex h-full !items-start ${menuItem.hasImageOfItem ? "w-48" : "w-72"}`}
+          >
             <div className="baseVertFlex !items-start gap-2">
               <div className="baseVertFlex !items-start gap-1">
                 <p className="max-w-36 whitespace-normal text-left text-lg font-medium underline underline-offset-2 supports-[text-wrap]:text-wrap">
@@ -789,7 +791,9 @@ function MenuItemPreviewButton({
                 </div>
               </div>
 
-              <p className="line-clamp-3 max-w-48 whitespace-normal text-left text-stone-400 supports-[text-wrap]:text-wrap">
+              <p
+                className={`line-clamp-3 whitespace-normal text-left text-stone-400 supports-[text-wrap]:text-wrap ${menuItem.hasImageOfItem ? "max-w-48" : "max-w-72"}`}
+              >
                 {menuItem.description}
               </p>
             </div>
@@ -834,6 +838,7 @@ function MenuItemPreviewButton({
                     isGlutenFree: menuItem.isGlutenFree,
                     showUndercookedOrRawDisclaimer:
                       menuItem.showUndercookedOrRawDisclaimer,
+                    hasImageOfItem: menuItem.hasImageOfItem,
                     birthdayReward: false,
                     pointReward: false,
                   },
@@ -902,6 +907,7 @@ function MenuItemPreviewButton({
                     isGlutenFree: menuItem.isGlutenFree,
                     showUndercookedOrRawDisclaimer:
                       menuItem.showUndercookedOrRawDisclaimer,
+                    hasImageOfItem: menuItem.hasImageOfItem,
                     discountId: activeDiscount?.id ?? null,
                     birthdayReward: false,
                     pointReward: false,
@@ -1213,6 +1219,7 @@ function PreviousOrder({ order }: PreviousOrder) {
                 isGlutenFree: item.isGlutenFree,
                 showUndercookedOrRawDisclaimer:
                   item.showUndercookedOrRawDisclaimer,
+                hasImageOfItem: item.hasImageOfItem,
                 discountId: item.discountId,
                 birthdayReward: item.birthdayReward,
                 pointReward: item.pointReward,
@@ -1348,6 +1355,7 @@ function PreviousOrder({ order }: PreviousOrder) {
                     isGlutenFree: item.isGlutenFree,
                     showUndercookedOrRawDisclaimer:
                       item.showUndercookedOrRawDisclaimer,
+                    hasImageOfItem: item.hasImageOfItem,
                     discountId: item.discountId,
                     birthdayReward: item.birthdayReward,
                     pointReward: item.pointReward,

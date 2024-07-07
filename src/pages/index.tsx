@@ -1313,6 +1313,7 @@ function OurFavoriteMenuItemCard({ menuItem }: OurFavoriteMenuItemCard) {
                   isGlutenFree: menuItem.isGlutenFree,
                   showUndercookedOrRawDisclaimer:
                     menuItem.showUndercookedOrRawDisclaimer,
+                  hasImageOfItem: menuItem.hasImageOfItem,
                   discountId: menuItem.activeDiscount?.id ?? null,
                   birthdayReward: false,
                   pointReward: false,

@@ -394,6 +394,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                 isGlutenFree: item.isGlutenFree,
                 showUndercookedOrRawDisclaimer:
                   item.showUndercookedOrRawDisclaimer,
+                hasImageOfItem: item.hasImageOfItem,
                 discountId: item.discountId,
                 pointReward: item.pointReward,
                 birthdayReward: item.birthdayReward,
@@ -449,44 +450,48 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                   <div>{format(new Date(order.createdAt), "PPP")}</div>
                   {/* preview images */}
                   <div className="baseFlex gap-2">
-                    <Image
-                      src={"/menuItems/sampleImage.webp"}
-                      alt={order.orderItems[0]?.name ?? "First item image"}
-                      width={48}
-                      height={48}
-                      className="rounded-md drop-shadow-md"
-                    />
-
-                    {order.orderItems.length > 1 && (
+                    {order.orderItems[0]?.hasImageOfItem && (
                       <Image
                         src={"/menuItems/sampleImage.webp"}
-                        alt={order.orderItems[0]?.name ?? "Second item image"}
+                        alt={order.orderItems[0]?.name ?? "First item image"}
                         width={48}
                         height={48}
                         className="rounded-md drop-shadow-md"
                       />
                     )}
 
-                    {order.orderItems.length > 2 && (
-                      <>
-                        {order.orderItems.length > 3 ? (
-                          <div className="baseVertFlex size-12 text-sm">
-                            + {order.orderItems.length - 2}
-                            <span>more</span>
-                          </div>
-                        ) : (
-                          <Image
-                            src={"/menuItems/sampleImage.webp"}
-                            alt={
-                              order.orderItems[0]?.name ?? "Second item image"
-                            }
-                            width={48}
-                            height={48}
-                            className="rounded-md drop-shadow-md"
-                          />
-                        )}
-                      </>
-                    )}
+                    {order.orderItems.length > 1 &&
+                      order.orderItems[1]?.hasImageOfItem && (
+                        <Image
+                          src={"/menuItems/sampleImage.webp"}
+                          alt={order.orderItems[1]?.name ?? "Second item image"}
+                          width={48}
+                          height={48}
+                          className="rounded-md drop-shadow-md"
+                        />
+                      )}
+
+                    {order.orderItems.length > 2 &&
+                      order.orderItems[2]?.hasImageOfItem && (
+                        <>
+                          {order.orderItems.length > 3 ? (
+                            <div className="baseVertFlex size-12 text-sm">
+                              + {order.orderItems.length - 2}
+                              <span>more</span>
+                            </div>
+                          ) : (
+                            <Image
+                              src={"/menuItems/sampleImage.webp"}
+                              alt={
+                                order.orderItems[2]?.name ?? "Second item image"
+                              }
+                              width={48}
+                              height={48}
+                              className="rounded-md drop-shadow-md"
+                            />
+                          )}
+                        </>
+                      )}
                   </div>
                 </div>
 
@@ -536,6 +541,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                                 isGlutenFree: item.isGlutenFree,
                                 showUndercookedOrRawDisclaimer:
                                   item.showUndercookedOrRawDisclaimer,
+                                hasImageOfItem: item.hasImageOfItem,
                                 discountId: item.discountId,
                                 birthdayReward: item.birthdayReward,
                                 pointReward: item.pointReward,
@@ -629,42 +635,48 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                 </div>
                 {/* item image previews + (date + item names) */}
                 <div className="baseFlex relative w-full !justify-start gap-2">
-                  <Image
-                    src={"/menuItems/sampleImage.webp"}
-                    alt={order.orderItems[0]?.name ?? "First item image"}
-                    width={64}
-                    height={64}
-                    className="rounded-md drop-shadow-md"
-                  />
-
-                  {order.orderItems.length > 1 && (
+                  {order.orderItems[0]?.hasImageOfItem && (
                     <Image
                       src={"/menuItems/sampleImage.webp"}
-                      alt={order.orderItems[0]?.name ?? "Second item image"}
+                      alt={order.orderItems[0]?.name ?? "First item image"}
                       width={64}
                       height={64}
                       className="rounded-md drop-shadow-md"
                     />
                   )}
 
-                  {order.orderItems.length > 2 && (
-                    <>
-                      {order.orderItems.length > 3 ? (
-                        <div className="baseVertFlex size-12 text-sm">
-                          +{order.orderItems.length - 2}
-                          <span>more</span>
-                        </div>
-                      ) : (
-                        <Image
-                          src={"/menuItems/sampleImage.webp"}
-                          alt={order.orderItems[0]?.name ?? "Second item image"}
-                          width={64}
-                          height={64}
-                          className="rounded-md drop-shadow-md"
-                        />
-                      )}
-                    </>
-                  )}
+                  {order.orderItems.length > 1 &&
+                    order.orderItems[1]?.hasImageOfItem && (
+                      <Image
+                        src={"/menuItems/sampleImage.webp"}
+                        alt={order.orderItems[1]?.name ?? "Second item image"}
+                        width={64}
+                        height={64}
+                        className="rounded-md drop-shadow-md"
+                      />
+                    )}
+
+                  {order.orderItems.length > 2 &&
+                    order.orderItems[2]?.hasImageOfItem && (
+                      <>
+                        {order.orderItems.length > 3 ? (
+                          <div className="baseVertFlex size-12 text-sm">
+                            +{order.orderItems.length - 2}
+                            <span>more</span>
+                          </div>
+                        ) : (
+                          <Image
+                            src={"/menuItems/sampleImage.webp"}
+                            alt={
+                              order.orderItems[2]?.name ?? "Second item image"
+                            }
+                            width={64}
+                            height={64}
+                            className="rounded-md drop-shadow-md"
+                          />
+                        )}
+                      </>
+                    )}
                 </div>
               </div>
 
@@ -715,6 +727,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                                 isGlutenFree: item.isGlutenFree,
                                 showUndercookedOrRawDisclaimer:
                                   item.showUndercookedOrRawDisclaimer,
+                                hasImageOfItem: item.hasImageOfItem,
                                 discountId: item.discountId,
                                 birthdayReward: item.birthdayReward,
                                 pointReward: item.pointReward,

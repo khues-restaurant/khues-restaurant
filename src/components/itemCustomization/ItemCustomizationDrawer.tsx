@@ -125,6 +125,7 @@ function ItemCustomizationDrawer({
       isGlutenFree: itemToCustomize.isGlutenFree,
       showUndercookedOrRawDisclaimer:
         itemToCustomize.showUndercookedOrRawDisclaimer,
+      hasImageOfItem: itemToCustomize.hasImageOfItem,
       pointReward: false,
       birthdayReward: false,
     },
@@ -248,13 +249,15 @@ function ItemCustomizationDrawer({
             )}
           </div>
 
-          <Image
-            src={"/menuItems/sampleImage.webp"}
-            alt={itemToCustomize.name}
-            width={180}
-            height={180}
-            className="my-4 rounded-md drop-shadow-xl"
-          />
+          {itemToCustomize.hasImageOfItem && (
+            <Image
+              src={"/menuItems/sampleImage.webp"}
+              alt={itemToCustomize.name}
+              width={180}
+              height={180}
+              className="my-4 rounded-md drop-shadow-xl"
+            />
+          )}
         </div>
 
         <div className="baseVertFlex w-full gap-12 p-8 pt-4">
@@ -722,7 +725,7 @@ function CustomizationOption({
           </div>
         )}
 
-        <div className="absolute bottom-2 right-4">
+        <div className="absolute bottom-2 right-4 text-sm">
           <AnimatePresence>
             {!isSelected && relativePrice !== 0 && (
               <AnimatedPrice
