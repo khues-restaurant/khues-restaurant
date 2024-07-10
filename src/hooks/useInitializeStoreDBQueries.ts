@@ -32,9 +32,14 @@ function useInitializeStoreDBQueries() {
     setRefetchMinOrderPickupTime: state.setRefetchMinOrderPickupTime,
   }));
 
-  const { data: initStoreDBQueries } = api.storeDBQueries.getAll.useQuery({
-    userId: userId,
-  });
+  const { data: initStoreDBQueries } = api.storeDBQueries.getAll.useQuery(
+    {
+      userId: userId,
+    },
+    {
+      enabled: !!userId,
+    },
+  );
 
   const { refetch: getUpdatedMenuCategories } =
     api.menuCategory.getAll.useQuery(undefined, {

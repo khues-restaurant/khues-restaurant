@@ -90,7 +90,12 @@ function OrderNow() {
 
   // Effect to set menu category indices
   useEffect(() => {
-    if (!menuCategories || menuCategoryIndicies !== undefined) return;
+    if (
+      !menuCategories ||
+      menuCategoryIndicies !== undefined ||
+      userRecentOrders === undefined // waiting for userRecentOrders to be fetched
+    )
+      return;
 
     const categoryIndicies: Record<string, number> = {};
     let currentIndex = 0;
