@@ -427,7 +427,7 @@ function RewardMenuItem({
         {menuItem.hasImageOfItem && (
           <Image
             src={"/menuItems/sampleImage.webp"}
-            alt={menuItem.name}
+            alt={`${menuItem.name} - ${menuItem.description}`}
             width={64}
             height={64}
             className="rounded-md drop-shadow-md tablet:drop-shadow-lg"

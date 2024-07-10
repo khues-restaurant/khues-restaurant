@@ -97,7 +97,7 @@ function DesktopHeader() {
           {/* <p className="text-3xl font-semibold text-primary">Khue&apos;s</p> */}
           <Image
             src={"/logos/logo.svg"}
-            alt={"TODO: fill in w/ appropriate alt text"}
+            alt={"Khue's logo"}
             priority
             width={55}
             height={55}
@@ -361,7 +361,7 @@ function DesktopHeader() {
 
                 <Image
                   src={outsideOfRestaurant}
-                  alt={"TODO: fill in w/ appropriate alt text"}
+                  alt={"Exterior view of Khue's, located on University Ave W"}
                   sizes="550px"
                   className="!relative !h-64 !w-full rounded-md object-cover shadow-md"
                 />

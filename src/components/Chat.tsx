@@ -289,7 +289,7 @@ function Chat() {
             <div className="baseFlex relative z-20 w-full gap-4 rounded-t-xl bg-primary p-4 shadow-md sm:gap-6 sm:pl-6">
               <Image
                 src={khuesKitchenLogo}
-                alt={"TODO: fill in w/ appropriate alt text"}
+                alt={"Khue's logo"}
                 priority
                 className="h-[101.33px] w-[53.67px] drop-shadow-md"
               />
@@ -472,7 +472,7 @@ function Chat() {
             <div className="baseFlex z-20 gap-5 rounded-t-lg bg-primary p-4 shadow-md">
               <Image
                 src={khuesKitchenLogo}
-                alt={"TODO: fill in w/ appropriate alt text"}
+                alt={"Khue's logo"}
                 priority
                 className="ml-1 h-[101.33px] w-[53.67px] drop-shadow-md"
               />

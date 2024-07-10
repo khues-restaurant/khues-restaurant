@@ -34,7 +34,7 @@ function Media() {
         <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1 tablet:h-72">
           <Image
             src={kare11InTheKitchen}
-            alt="TODO"
+            alt="Chef Eric Pham, owner of Khue's Kitchen, with KARE 11's Jennifer Austin in a kitchen studio. Chef Eric Pham whips up a delicious, hot and juicy fried chicken sandwich with Jennifer Austin."
             fill
             // sizes="(max-width: 1000px) 400px, 320px"
             priority
@@ -42,7 +42,7 @@ function Media() {
           />
           <Image
             src={kare11MothersDay}
-            alt="TODO"
+            alt="Khue Pham, lead chef at Quang Restaurant in Minneapolis, converses with her two sons in the kitchen."
             fill
             // sizes="(max-width: 1000px) 400px, 320px"
             priority
@@ -50,7 +50,7 @@ function Media() {
           />
           <Image
             src={starTribune}
-            alt="TODO"
+            alt="Khue Pham, lead chef at Quang Restaurant, smiling and posing with her young son, Eric Pham, both dressed formally."
             fill
             // sizes="(max-width: 1000px) 400px, 320px"
             priority
@@ -58,7 +58,7 @@ function Media() {
           />
           <Image
             src={mpr}
-            alt="TODO"
+            alt="Chef Eric Pham, owner of Khue's Kitchen, smiling while cooking in a professional kitchen."
             fill
             // sizes="(max-width: 1000px) 400px, 320px"
             priority
@@ -84,7 +84,7 @@ function Media() {
             >
               <Image
                 src={kare11InTheKitchen}
-                alt="TODO"
+                alt="Chef Eric Pham, owner of Khue's Kitchen, with KARE 11's Jennifer Austin in a kitchen studio. Chef Eric Pham whips up a delicious, hot and juicy fried chicken sandwich with Jennifer Austin."
                 sizes="(max-width: 1000px) 400px, 320px"
                 className="!relative rounded-t-md bg-offwhite"
               />
@@ -98,7 +98,7 @@ function Media() {
               <a href="https://www.kare11.com/">
                 <Image
                   src={kare11Logo}
-                  alt="Kare 11 Logo"
+                  alt="Kare 11's logo"
                   width={86}
                   height={40}
                 />
@@ -130,7 +130,7 @@ function Media() {
             >
               <Image
                 src={kare11MothersDay}
-                alt="TODO"
+                alt="Khue Pham, lead chef at Quang Restaurant in Minneapolis, converses with her two sons in the kitchen."
                 sizes="(max-width: 1000px) 400px, 320px"
                 className="!relative rounded-t-md bg-offwhite"
               />
@@ -144,7 +144,7 @@ function Media() {
               <a href="https://www.kare11.com/">
                 <Image
                   src={kare11Logo}
-                  alt="Kare 11 Logo"
+                  alt="Kare 11's logo"
                   width={86}
                   height={40}
                 />
@@ -177,7 +177,7 @@ function Media() {
             >
               <Image
                 src={starTribune}
-                alt="TODO"
+                alt="Khue Pham, lead chef at Quang Restaurant, smiling and posing with her young son, Eric Pham, both dressed formally."
                 sizes="(max-width: 1000px) 400px, 320px"
                 className="!relative rounded-t-md bg-offwhite"
               />
@@ -191,7 +191,7 @@ function Media() {
               <a href="https://www.startribune.com/">
                 <Image
                   src={starTribuneLogo}
-                  alt="TODO"
+                  alt="Star Tribune's logo"
                   width={150}
                   height={35}
                   className="-ml-5"
@@ -227,7 +227,7 @@ function Media() {
             >
               <Image
                 src={mpr}
-                alt="TODO"
+                alt="Chef Eric Pham, owner of Khue's Kitchen, smiling while cooking in a professional kitchen."
                 sizes="(max-width: 1000px) 400px, 320px"
                 className="!relative rounded-t-md bg-offwhite"
               />
@@ -241,7 +241,7 @@ function Media() {
               <a href="https://www.mprnews.org/">
                 <Image
                   src={mprLogo}
-                  alt="TODO"
+                  alt="MPR's logo"
                   width={110}
                   height={85}
                   className="mb-3"
@@ -277,7 +277,7 @@ function Media() {
               <a href="https://www.kare11.com/">
                 <Image
                   src={kare11Logo}
-                  alt="Kare 11 Logo"
+                  alt="Kare 11's logo"
                   width={86}
                   height={40}
                 />
@@ -307,7 +307,7 @@ function Media() {
             >
               <Image
                 src={kare11InTheKitchen}
-                alt="TODO"
+                alt="Chef Eric Pham, owner of Khue's Kitchen, with KARE 11's Jennifer Austin in a kitchen studio. Chef Eric Pham whips up a delicious, hot and juicy fried chicken sandwich with Jennifer Austin."
                 sizes="(max-width: 1000px) 400px, 320px"
                 className="!relative rounded-r-md bg-offwhite"
               />
@@ -323,7 +323,7 @@ function Media() {
               <a href="https://www.kare11.com/">
                 <Image
                   src={kare11Logo}
-                  alt="Kare 11 Logo"
+                  alt="Kare 11's logo"
                   width={86}
                   height={40}
                 />
@@ -354,7 +354,7 @@ function Media() {
             >
               <Image
                 src={kare11MothersDay}
-                alt="TODO"
+                alt="Khue Pham, lead chef at Quang Restaurant in Minneapolis, converses with her two sons in the kitchen."
                 sizes="(max-width: 1000px) 400px, 320px"
                 className="!relative h-full rounded-r-md bg-offwhite"
               />
@@ -370,7 +370,7 @@ function Media() {
               <a href="https://www.startribune.com/">
                 <Image
                   src={starTribuneLogo}
-                  alt="TODO"
+                  alt="Star Tribune's logo"
                   width={150}
                   height={35}
                   className="-ml-5"
@@ -404,7 +404,7 @@ function Media() {
             >
               <Image
                 src={starTribune}
-                alt="TODO"
+                alt="Khue Pham, lead chef at Quang Restaurant, smiling and posing with her young son, Eric Pham, both dressed formally."
                 sizes="(max-width: 1000px) 400px, 320px"
                 className="!relative !h-full rounded-r-md bg-offwhite !object-cover"
               />
@@ -420,7 +420,7 @@ function Media() {
               <a href="https://www.mprnews.org/">
                 <Image
                   src={mprLogo}
-                  alt="TODO"
+                  alt="MPR's logo"
                   width={110}
                   height={85}
                   className="mb-2"
@@ -452,7 +452,7 @@ function Media() {
             >
               <Image
                 src={mpr}
-                alt="TODO"
+                alt="Chef Eric Pham, owner of Khue's Kitchen, smiling while cooking in a professional kitchen."
                 sizes="(max-width: 1000px) 400px, 415px"
                 className="!relative !h-full rounded-r-md bg-offwhite object-cover"
               />

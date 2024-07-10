@@ -171,7 +171,7 @@ function Receipt({
                   <Column align="center">
                     <Img
                       src={`${baseUrl}/emailOrderTracker.png`}
-                      alt="Image of the order tracker progress bar: with steps of 'Order placed', 'In progress', and 'Ready for pickup'"
+                      alt="An order tracker progress bar: with steps of 'Order placed', 'In progress', and 'Ready for pickup'"
                       className="mb-8 h-[59px] w-[348px] sm:h-[85px] sm:w-[520px]"
                     />
 
@@ -290,7 +290,7 @@ function Receipt({
                           <Column className="w-4">
                             <Img
                               src={`${baseUrl}/${order.includeNapkinsAndUtensils ? "utensilsRequested" : "noUtensilsRequested"}.png`}
-                              alt="Image of a fork and knife to represent napkins and utensils"
+                              alt="A fork and knife to represent napkins and utensils"
                               className="mr-2 h-4 w-4"
                             />
                           </Column>

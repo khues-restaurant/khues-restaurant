@@ -454,7 +454,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                     {order.orderItems[0]?.hasImageOfItem && (
                       <Image
                         src={"/menuItems/sampleImage.webp"}
-                        alt={order.orderItems[0]?.name ?? "First item image"}
+                        alt={order.orderItems[0]?.name ?? "First item"}
                         width={48}
                         height={48}
                         className="rounded-md drop-shadow-md"
@@ -465,7 +465,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                       order.orderItems[1]?.hasImageOfItem && (
                         <Image
                           src={"/menuItems/sampleImage.webp"}
-                          alt={order.orderItems[1]?.name ?? "Second item image"}
+                          alt={order.orderItems[1]?.name ?? "Second item"}
                           width={48}
                           height={48}
                           className="rounded-md drop-shadow-md"
@@ -483,9 +483,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                           ) : (
                             <Image
                               src={"/menuItems/sampleImage.webp"}
-                              alt={
-                                order.orderItems[2]?.name ?? "Second item image"
-                              }
+                              alt={order.orderItems[2]?.name ?? "Third item"}
                               width={48}
                               height={48}
                               className="rounded-md drop-shadow-md"
@@ -637,7 +635,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                   {order.orderItems[0]?.hasImageOfItem && (
                     <Image
                       src={"/menuItems/sampleImage.webp"}
-                      alt={order.orderItems[0]?.name ?? "First item image"}
+                      alt={order.orderItems[0]?.name ?? "First item"}
                       width={64}
                       height={64}
                       className="rounded-md drop-shadow-md"
@@ -648,7 +646,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                     order.orderItems[1]?.hasImageOfItem && (
                       <Image
                         src={"/menuItems/sampleImage.webp"}
-                        alt={order.orderItems[1]?.name ?? "Second item image"}
+                        alt={order.orderItems[1]?.name ?? "Second item"}
                         width={64}
                         height={64}
                         className="rounded-md drop-shadow-md"
@@ -666,9 +664,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                         ) : (
                           <Image
                             src={"/menuItems/sampleImage.webp"}
-                            alt={
-                              order.orderItems[2]?.name ?? "Second item image"
-                            }
+                            alt={order.orderItems[2]?.name ?? "Third item"}
                             width={64}
                             height={64}
                             className="rounded-md drop-shadow-md"

@@ -542,7 +542,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                 >
                   <Image
                     src={starTribuneLogo}
-                    alt="Star Tribune Logo"
+                    alt="Star Tribune's logo"
                     width={216}
                     height={91.8}
                   />
@@ -557,7 +557,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                 >
                   <Image
                     src={kare11Logo}
-                    alt="Kare 11 Logo"
+                    alt="Kare 11's logo"
                     width={150}
                     height={63.75}
                   />
@@ -572,7 +572,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                 >
                   <Image
                     src={mprLogo}
-                    alt="MPR Logo"
+                    alt="MPR's logo"
                     width={150}
                     height={63.75}
                   />
@@ -803,7 +803,9 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             <div className="relative h-60 w-full overflow-hidden shadow-md">
               <Image
                 src={eric}
-                alt={"TODO: fill in w/ appropriate alt text"}
+                alt={
+                  "Chef Eric Pham, owner of Khue's Kitchen, standing with arms crossed and smiling in front of a rustic door."
+                }
                 width={384}
                 className="!relative !top-0 !size-full !h-96 rounded-none object-cover !object-top !pb-16"
               />
@@ -861,7 +863,9 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
               >
                 <Image
                   src={eric}
-                  alt={"TODO: fill in w/ appropriate alt text"}
+                  alt={
+                    "Chef Eric Pham, owner of Khue's Kitchen, standing with arms crossed and smiling in front of a rustic door."
+                  }
                   sizes="288px"
                   className="!relative !top-0 !size-full !h-96 rounded-md object-cover object-top"
                 />
@@ -1248,7 +1252,7 @@ function OurFavoriteMenuItemCard({ menuItem }: OurFavoriteMenuItemCard) {
     <>
       <Image
         src={"/menuItems/sampleImage.webp"}
-        alt={"TODO: Fix later"}
+        alt={`${menuItem.name} - ${menuItem.description}`}
         width={160}
         height={160}
         className="select-none self-center rounded-md drop-shadow-md tablet:drop-shadow-lg"
