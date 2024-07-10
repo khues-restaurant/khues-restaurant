@@ -20,14 +20,12 @@ import AnimatedNumbers from "~/components/AnimatedNumbers";
 import DelayNewOrders from "~/components/dashboard/DelayNewOrders";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
+import { type DashboardViewStates } from "~/pages/dashboard";
+import { Separator } from "~/components/ui/separator";
 
 interface DashboardDesktopHeader {
-  viewState: "orderManagement" | "customerChats" | "itemManagement" | "stats";
-  setViewState: Dispatch<
-    SetStateAction<
-      "orderManagement" | "customerChats" | "itemManagement" | "stats"
-    >
-  >;
+  viewState: DashboardViewStates;
+  setViewState: Dispatch<SetStateAction<DashboardViewStates>>;
   socket: Socket;
 }
 
@@ -176,7 +174,18 @@ function DashboardDesktopHeader({
                 Stats
               </Button>
 
-              {/* <div>TODO: Reviews</div> */}
+              <Button
+                variant={"link"}
+                className="!text-xl"
+                onClick={() => {
+                  setViewState("reviews");
+                  setPopoverIsOpen(false);
+                }}
+              >
+                Reviews
+              </Button>
+
+              <Separator className="mt-2 h-[1px] w-full" />
 
               <Button
                 variant={"link"}

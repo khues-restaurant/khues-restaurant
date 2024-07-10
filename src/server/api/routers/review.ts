@@ -1,10 +1,20 @@
+import { type Review } from "@prisma/client";
 import { z } from "zod";
+import { type DBOrderSummary } from "~/server/api/routers/order";
 
 import {
   adminProcedure,
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc";
+
+export type DashboardReview = Review & {
+  user: {
+    firstName: string;
+    lastName: string;
+  } | null;
+  order: DBOrderSummary;
+};
 
 export const reviewRouter = createTRPCRouter({
   create: protectedProcedure
@@ -41,10 +51,54 @@ export const reviewRouter = createTRPCRouter({
     }),
 
   getAll: adminProcedure.query(async ({ ctx }) => {
-    return ctx.prisma.review.findMany({
+    const reviews = await ctx.prisma.review.findMany({
       include: {
-        order: true, // TODO: prob need the customizations here too but not right now
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+        order: {
+          include: {
+            orderItems: {
+              include: {
+                customizations: true,
+                discount: true,
+              },
+            },
+          },
+        },
+      },
+
+      orderBy: {
+        createdAt: "desc",
       },
     });
+
+    if (!reviews) return null;
+
+    // Iterate over each order to transform the item customizations
+    // into a Record<string, string> for each order's items
+    const transformedReviews = reviews.map((review) => {
+      review.order.orderItems = review.order.orderItems.map((item) => {
+        // @ts-expect-error asdf
+        item.customizations = item.customizations.reduce(
+          (acc, customization) => {
+            acc[customization.customizationCategoryId] =
+              customization.customizationChoiceId;
+            return acc;
+          },
+          {} as Record<string, string>,
+        );
+
+        return item;
+      });
+
+      return review;
+    });
+
+    // @ts-expect-error asdf
+    return transformedReviews as DashboardReview[];
   }),
 });
