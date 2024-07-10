@@ -21,6 +21,15 @@ export const reviewRouter = createTRPCRouter({
         throw new Error("Unauthorized");
       }
 
+      await ctx.prisma.order.update({
+        where: {
+          id: input.orderId,
+        },
+        data: {
+          userLeftFeedback: true,
+        },
+      });
+
       return ctx.prisma.review.create({
         data: {
           userId: input.userId,
