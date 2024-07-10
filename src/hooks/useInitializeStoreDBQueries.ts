@@ -1,11 +1,9 @@
-import { useAuth } from "@clerk/nextjs";
 import { useEffect } from "react";
 import useGetUserId from "~/hooks/useGetUserId";
 import { type StoreMenuItems, useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 
 function useInitializeStoreDBQueries() {
-  const { isSignedIn } = useAuth();
   const userId = useGetUserId();
 
   const {
@@ -34,23 +32,18 @@ function useInitializeStoreDBQueries() {
     setRefetchMinOrderPickupTime: state.setRefetchMinOrderPickupTime,
   }));
 
-  const { data: menuCategories, refetch: getUpdatedMenuCategories } =
-    api.menuCategory.getAll.useQuery();
+  const { data: initStoreDBQueries } = api.storeDBQueries.getAll.useQuery({
+    userId: userId,
+  });
+
+  const { refetch: getUpdatedMenuCategories } =
+    api.menuCategory.getAll.useQuery(undefined, {
+      refetchOnWindowFocus: false,
+    });
 
   const { refetch: getUpdatedMinOrderPickupTime } =
-    api.minimumOrderPickupTime.get.useQuery();
-
-  const { data: databaseCustomizationChoices } =
-    api.customizationChoice.getAll.useQuery();
-
-  const { data: databaseRewards } =
-    api.menuCategory.getRewardsCategories.useQuery();
-
-  const { data: databaseDiscounts } = api.discount.getAll.useQuery();
-
-  const { data: userFavoriteItemIds } =
-    api.favorite.getFavoriteItemIds.useQuery(userId, {
-      enabled: Boolean(userId && isSignedIn),
+    api.minimumOrderPickupTime.get.useQuery(undefined, {
+      refetchOnWindowFocus: false,
     });
 
   useEffect(() => {
@@ -68,9 +61,11 @@ function useInitializeStoreDBQueries() {
   ]);
 
   useEffect(() => {
-    if (!menuCategories) return;
+    if (!initStoreDBQueries?.menuCategories) return;
 
-    const menuItems = menuCategories.flatMap((category) => category.menuItems);
+    const menuItems = initStoreDBQueries.menuCategories.flatMap(
+      (category) => category.menuItems,
+    );
 
     const menuItemsObject = menuItems.reduce((acc, menuItem) => {
       acc[menuItem.id] = menuItem;
@@ -78,40 +73,36 @@ function useInitializeStoreDBQueries() {
     }, {} as StoreMenuItems);
 
     setMenuItems(menuItemsObject);
-  }, [menuCategories, setMenuItems]);
+  }, [initStoreDBQueries?.menuCategories, setMenuItems]);
 
   useEffect(() => {
-    if (!databaseRewards) return;
+    if (!initStoreDBQueries?.rewardMenuCategories) return;
 
-    setRewards(databaseRewards);
-  }, [databaseRewards, setRewards]);
-
-  useEffect(() => {
-    if (!userFavoriteItemIds) return;
-
-    setUserFavoriteItemIds(userFavoriteItemIds);
-  }, [userFavoriteItemIds, setUserFavoriteItemIds]);
+    setRewards(initStoreDBQueries.rewardMenuCategories);
+  }, [initStoreDBQueries?.rewardMenuCategories, setRewards]);
 
   useEffect(() => {
-    // TODO: is there any good reason why we are gating this on whether
-    // the store value is empty or not?
+    if (!initStoreDBQueries?.userFavoriteItemIds) return;
+
+    setUserFavoriteItemIds(initStoreDBQueries.userFavoriteItemIds);
+  }, [initStoreDBQueries?.userFavoriteItemIds, setUserFavoriteItemIds]);
+
+  useEffect(() => {
     if (
-      (Object.keys(customizationChoices).length !== 0 &&
-        Object.keys(discounts).length !== 0) ||
-      !databaseCustomizationChoices ||
-      !databaseDiscounts
+      !initStoreDBQueries?.customizationChoices ||
+      !initStoreDBQueries?.discounts
     )
       return;
 
-    setCustomizationChoices(databaseCustomizationChoices);
-    setDiscounts(databaseDiscounts);
+    setCustomizationChoices(initStoreDBQueries?.customizationChoices);
+    setDiscounts(initStoreDBQueries?.discounts);
   }, [
     customizationChoices,
     setCustomizationChoices,
     discounts,
     setDiscounts,
-    databaseCustomizationChoices,
-    databaseDiscounts,
+    initStoreDBQueries?.customizationChoices,
+    initStoreDBQueries?.discounts,
   ]);
 }
 
