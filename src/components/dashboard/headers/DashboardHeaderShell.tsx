@@ -3,15 +3,12 @@ import { type Socket } from "socket.io-client";
 import DashboardDesktopHeader from "~/components/dashboard/headers/DashboardDesktopHeader";
 import DashboardMobileHeader from "~/components/dashboard/headers/DashboardMobileHeader";
 import useViewportLabelResizeListener from "~/hooks/useViewportLabelResizeListener";
+import { type DashboardViewStates } from "~/pages/dashboard";
 import { useMainStore } from "~/stores/MainStore";
 
 interface DashboardHeaderShell {
-  viewState: "orderManagement" | "customerChats" | "itemManagement" | "stats";
-  setViewState: Dispatch<
-    SetStateAction<
-      "orderManagement" | "customerChats" | "itemManagement" | "stats"
-    >
-  >;
+  viewState: DashboardViewStates;
+  setViewState: Dispatch<SetStateAction<DashboardViewStates>>;
   socket: Socket;
 }
 

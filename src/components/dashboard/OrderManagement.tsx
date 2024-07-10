@@ -132,12 +132,12 @@ function OrderManagement({ orders, socket }: OrderManagement) {
       transition={{ duration: 0.5 }}
       className="baseVertFlex mt-32 size-full tablet:mt-28"
     >
-      <div className="baseFlex !justify-end rounded-lg border bg-offwhite p-1">
+      <div className="baseFlex !justify-end gap-4 rounded-lg border bg-offwhite p-1">
         <Button
           variant={
             selectedTab === "notStarted" || selectedTab === "started"
               ? "default"
-              : "text"
+              : "ghost"
           }
           className={`${selectedTab !== "notStarted" && selectedTab !== "started" ? "text-primary" : ""}`}
           onClick={() => setSelectedTab("notStarted")}
@@ -145,16 +145,20 @@ function OrderManagement({ orders, socket }: OrderManagement) {
           In progress
         </Button>
 
+        <Separator className="h-5 w-[1px] bg-stone-400" />
+
         <Button
-          variant={selectedTab === "completed" ? "default" : "text"}
+          variant={selectedTab === "completed" ? "default" : "ghost"}
           className={`${selectedTab !== "completed" ? "text-primary" : ""}`}
           onClick={() => setSelectedTab("completed")}
         >
           Completed
         </Button>
 
+        <Separator className="h-5 w-[1px] bg-stone-400" />
+
         <Button
-          variant={selectedTab === "future" ? "default" : "text"}
+          variant={selectedTab === "future" ? "default" : "ghost"}
           className={`${selectedTab !== "future" ? "text-primary" : ""}`}
           onClick={() => setSelectedTab("future")}
         >

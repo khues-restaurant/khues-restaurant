@@ -59,6 +59,7 @@ import { api } from "~/utils/api";
 import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
 
 import noOrders from "/public/menuItems/myOrders.jpg";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 function RecentOrders() {
   const userId = useGetUserId();
@@ -498,10 +499,13 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                 <div className="baseVertFlex gap-2">
                   {order.orderCompletedAt ? (
                     <>
+                      {!order.userLeftFeedback && (
+                        <RateDialog userId={userId} orderId={order.id} />
+                      )}
+
                       <Button
-                        size={"sm"}
                         disabled={keepSpinnerShowing || isValidatingOrder}
-                        className="w-20"
+                        className="w-24"
                         onClick={() => {
                           // TODO: maybe want to create dialog/modal for the summary of this order
 
@@ -584,11 +588,6 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                           </motion.div>
                         </AnimatePresence>
                       </Button>
-
-                      {/* TODO: only show this if !order.userLeftFeedback once added to schema */}
-                      {true && (
-                        <RateDialog userId={userId} orderId={order.id} />
-                      )}
                     </>
                   ) : (
                     <Button asChild className="baseFlex gap-2">
@@ -685,9 +684,8 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                   {order.orderCompletedAt ? (
                     <>
                       <Button
-                        size={"sm"}
                         disabled={keepSpinnerShowing || isValidatingOrder}
-                        className="w-20"
+                        className="w-24"
                         onClick={() => {
                           // TODO: maybe want to create dialog/modal for the summary of this order
 
@@ -771,8 +769,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                         </AnimatePresence>
                       </Button>
 
-                      {/* TODO: only show this if !order.userLeftFeedback once added to schema */}
-                      {true && (
+                      {!order.userLeftFeedback && (
                         <RateDialog userId={userId} orderId={order.id} />
                       )}
                     </>
@@ -832,9 +829,12 @@ function RateDialog({ userId, orderId }: RateDialog) {
 
   const { mutate: submitFeedback } = api.review.create.useMutation({
     onSuccess: async () => {
-      await ctx.order.getUsersOrders.invalidate();
+      setSubmitButtonText("Submitted");
 
-      setShowDialog(false);
+      setTimeout(() => {
+        void ctx.order.getUsersOrders.invalidate();
+        setShowDialog(false);
+      }, 1500);
     },
     onError: (e) => {
       console.error(e);
@@ -873,12 +873,15 @@ function RateDialog({ userId, orderId }: RateDialog) {
         message: values.feedback,
         allowedToBePublic: values.allowedToBePublic,
       });
+
+      setSubmitButtonText("Submitting");
     } catch (e) {
       console.error(e);
     }
   }
 
   const [showDialog, setShowDialog] = useState(false);
+  const [submitButtonText, setSubmitButtonText] = useState("Submit feedback");
 
   useEffect(() => {
     if (showDialog) {
@@ -886,14 +889,12 @@ function RateDialog({ userId, orderId }: RateDialog) {
     }
   }, [feedbackForm, showDialog]);
 
-  // TODO: add async stuff + also maybe baseVertFlex of [animated logo + "Thanks for your feedback!"]
-
   return (
     <AlertDialog open={showDialog}>
       <AlertDialogTrigger asChild>
         <Button
           variant={"secondary"}
-          className="w-[88px] tablet:w-auto"
+          className="w-24 tablet:w-auto"
           onClick={() => setShowDialog(true)}
         >
           Rate
@@ -903,8 +904,10 @@ function RateDialog({ userId, orderId }: RateDialog) {
       <AlertDialogContent>
         <div className="baseVertFlex gap-8">
           <AlertDialogHeader>
-            <AlertDialogTitle>Order feedback form</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogTitle className="text-left">
+              Order feedback form
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-left">
               Please let us know how you felt about this order. Your feedback is
               greatly appreciated and helps us improve our service.
             </AlertDialogDescription>
@@ -921,12 +924,16 @@ function RateDialog({ userId, orderId }: RateDialog) {
                 render={({ field, fieldState: { invalid, error } }) => (
                   <FormItem className="baseVertFlex relative w-full !items-start space-y-0">
                     <div className="baseVertFlex w-full !items-start gap-2">
-                      <FormLabel className="font-semibold">Feedback</FormLabel>
+                      <VisuallyHidden>
+                        <FormLabel className="font-semibold">
+                          Feedback
+                        </FormLabel>
+                      </VisuallyHidden>
                       <Textarea
                         {...field}
                         placeholder="How was your experience?"
                         maxLength={1000}
-                        className="w-full"
+                        className="max-h-64 min-h-32 w-full"
                       />
                       <p className="pointer-events-none absolute bottom-2 right-4 text-xs text-stone-400 tablet:bottom-1">
                         {1000 - feedbackForm.getValues("feedback").length}{" "}
@@ -955,7 +962,7 @@ function RateDialog({ userId, orderId }: RateDialog) {
                 )}
               />
 
-              <FormField
+              {/* <FormField
                 control={feedbackForm.control}
                 name="allowedToBePublic"
                 render={({ field }) => (
@@ -972,13 +979,17 @@ function RateDialog({ userId, orderId }: RateDialog) {
                     </FormLabel>
                   </FormItem>
                 )}
-              />
+              /> */}
             </form>
           </Form>
         </div>
-        <AlertDialogFooter className="mt-8">
+        <AlertDialogFooter className="mt-4">
           <AlertDialogCancel asChild>
-            <Button variant="secondary" onClick={() => setShowDialog(false)}>
+            <Button
+              disabled={submitButtonText !== "Submit feedback"}
+              variant="secondary"
+              onClick={() => setShowDialog(false)}
+            >
               Cancel
             </Button>
           </AlertDialogCancel>
@@ -986,14 +997,62 @@ function RateDialog({ userId, orderId }: RateDialog) {
             <Button
               disabled={
                 // !feedbackForm.formState.isValid // this should work but it's not
-                feedbackForm.getValues("feedback").trim().length === 0
+                feedbackForm.getValues("feedback").trim().length === 0 ||
+                submitButtonText !== "Submit feedback"
               }
               onClick={() => {
                 void feedbackForm.handleSubmit(onFormSubmit)();
               }}
             >
-              Submit feedback
-              {/* TODO: add spinner + checkmark for mutation */}
+              <AnimatePresence mode={"popLayout"} initial={false}>
+                <motion.div
+                  key={submitButtonText}
+                  layout
+                  // whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{
+                    duration: 0.25,
+                  }}
+                  className="baseFlex w-[112px] gap-2"
+                >
+                  {submitButtonText === "Submit feedback" && "Submit feedback"}
+
+                  {submitButtonText === "Submitting" && (
+                    <div
+                      className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
+                      role="status"
+                      aria-label="loading"
+                    >
+                      <span className="sr-only">Loading...</span>
+                    </div>
+                  )}
+                  {submitButtonText === "Submitted" && (
+                    <svg
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      className="size-5 text-offwhite"
+                    >
+                      <motion.path
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{
+                          delay: 0.2,
+                          type: "tween",
+                          ease: "easeOut",
+                          duration: 0.3,
+                        }}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  )}
+                </motion.div>
+              </AnimatePresence>
             </Button>
           </AlertDialogAction>
         </AlertDialogFooter>

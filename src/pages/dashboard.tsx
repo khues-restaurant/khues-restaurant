@@ -5,6 +5,7 @@ import { io } from "socket.io-client";
 import CustomerChats from "~/components/dashboard/CustomerChats";
 import ItemManagement from "~/components/dashboard/ItemManagement";
 import OrderManagement from "~/components/dashboard/OrderManagement";
+import Reviews from "~/components/dashboard/Reviews";
 import Stats from "~/components/dashboard/Stats";
 import DashboardHeaderShell from "~/components/dashboard/headers/DashboardHeaderShell";
 import { Toaster } from "~/components/ui/toaster";
@@ -12,6 +13,13 @@ import { env } from "~/env";
 import useClearToastsOnRefocus from "~/hooks/useClearToastsOnRefocus";
 import { useMainStore, type StoreMenuItems } from "~/stores/MainStore";
 import { api } from "~/utils/api";
+
+export type DashboardViewStates =
+  | "orderManagement"
+  | "customerChats"
+  | "itemManagement"
+  | "stats"
+  | "reviews";
 
 const notoSans = Noto_Sans({
   subsets: ["latin"],
@@ -44,9 +52,8 @@ function Dashboard({ children }: Dashboard) {
   const { data: customizationCategories, refetch: refetchCustomizations } =
     api.customizationCategory.getAll.useQuery();
 
-  const [viewState, setViewState] = useState<
-    "orderManagement" | "customerChats" | "itemManagement" | "stats"
-  >("orderManagement");
+  const [viewState, setViewState] =
+    useState<DashboardViewStates>("orderManagement");
 
   const {
     setMenuItems,
@@ -137,7 +144,7 @@ function Dashboard({ children }: Dashboard) {
 
             {viewState === "stats" && <Stats />}
 
-            {/* TODO: reviews component */}
+            {viewState === "reviews" && <Reviews />}
           </>
         </AnimatePresence>
 

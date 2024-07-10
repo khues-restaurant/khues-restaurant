@@ -19,16 +19,13 @@ import { DialogDescription, DialogTitle } from "~/components/ui/dialog";
 import { Separator } from "~/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import useGetUserId from "~/hooks/useGetUserId";
+import { type DashboardViewStates } from "~/pages/dashboard";
 import { api } from "~/utils/api";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 
 interface DashboardMobileHeader {
-  viewState: "orderManagement" | "customerChats" | "itemManagement" | "stats";
-  setViewState: Dispatch<
-    SetStateAction<
-      "orderManagement" | "customerChats" | "itemManagement" | "stats"
-    >
-  >;
+  viewState: DashboardViewStates;
+  setViewState: Dispatch<SetStateAction<DashboardViewStates>>;
 }
 
 function DashboardMobileHeader({

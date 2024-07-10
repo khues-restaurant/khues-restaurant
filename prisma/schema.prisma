@@ -59,7 +59,7 @@ model Review {
     createdAt DateTime @default(now())
 
     message           String
-    allowedToBePublic Boolean
+    allowedToBePublic Boolean @default(false)
 
     order   Order  @relation(fields: [orderId], references: [id])
     orderId String
