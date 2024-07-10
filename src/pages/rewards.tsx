@@ -24,7 +24,7 @@ function Rewards() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start gap-8 pb-24 tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)] tablet:pb-8"
+      className="baseVertFlex min-h-[calc(100dvh-6rem)] w-full !justify-start gap-8 pb-24 tablet:min-h-[calc(100dvh-7rem)] tablet:pb-8"
     >
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden bg-rewardsGradient shadow-md tablet:h-72 tablet:overflow-x-hidden">

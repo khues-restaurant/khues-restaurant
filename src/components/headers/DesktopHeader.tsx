@@ -86,7 +86,7 @@ function DesktopHeader() {
   return (
     <nav
       id="header"
-      className={`${classes.desktopHeader} fixed left-0 top-0 z-50 grid h-28 w-screen bg-offwhite shadow-md
+      className={`${classes.desktopHeader} sticky left-0 top-0 z-50 grid h-28 w-full bg-offwhite shadow-md
       `}
     >
       <Button variant="text" asChild>

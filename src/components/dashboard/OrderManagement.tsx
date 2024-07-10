@@ -130,7 +130,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex mt-32 size-full tablet:mt-28"
+      className="baseVertFlex size-full"
     >
       <div className="baseFlex !justify-end gap-4 rounded-lg border bg-offwhite p-1">
         <Button

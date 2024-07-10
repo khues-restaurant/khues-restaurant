@@ -115,8 +115,8 @@ function RecentOrders() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className={`baseVertFlex baseVertFlex relative mt-24
-      h-full min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]
+      className={`baseVertFlex baseVertFlex relative
+      h-full min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:min-h-[calc(100dvh-7rem)]
         ${sortedOrders && sortedOrders.length > 0 ? "!justify-start" : ""}
       `}
     >

@@ -174,7 +174,7 @@ function CustomerChats({ socket }: CustomerChats) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex mt-24 w-full gap-4 border-t-0 tablet:mt-28"
+      className="baseVertFlex w-full gap-4 border-t-0"
     >
       <div className="baseFlex rounded-lg border border-t-0 bg-offwhite">
         {((viewportLabel.includes("mobile") && !selectedUserId) ||
