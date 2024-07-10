@@ -252,7 +252,7 @@ function ItemCustomizationDrawer({
           {itemToCustomize.hasImageOfItem && (
             <Image
               src={"/menuItems/sampleImage.webp"}
-              alt={itemToCustomize.name}
+              alt={`${itemToCustomize.name} - ${itemToCustomize.description}`}
               width={180}
               height={180}
               className="my-4 rounded-md drop-shadow-xl"

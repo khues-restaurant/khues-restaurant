@@ -26,21 +26,28 @@ const restaurantNamesAndBackstories = [
     name: "Quang (2013 - 2018)",
     backstory:
       "During these formative years, Eric Pham honed his culinary skills at the family restaurant, Quang, under the watchful eye of his mother, Khue. Here, he absorbed traditional Vietnamese cooking techniques and learned the importance of dedication and hard work. This period laid the foundation for Eric's culinary journey, instilling in him a deep appreciation for his heritage and the craft of cooking.",
+    altText:
+      "Eric and his mother, Khue Pham, at Quang Restaurant in Minneapolis.",
   },
   {
     name: "Khue's Kitchen (2021 - 2022)",
     backstory:
       "In 2020, after a rigorous year at the prestigious Spoon and Stable, Eric launched Khue's Kitchen as a ghost kitchen. This venture was the first tangible step toward his dream of honoring his mother by creating a restaurant named after her. Despite its virtual nature, Khue's Kitchen was a significant milestone, allowing Eric to experiment with his vision and bring his innovative takes on Vietnamese cuisine to life.",
+    altText:
+      "Eric and his mother, Khue Pham, at Khue's Kitchen in Minneapolis.",
   },
   {
     name: "Khue's Kitchen @ Bar Brava (2022 - 2023)",
     backstory:
       "Eric's culinary journey progressed as he brought Khue's Kitchen to Bar Brava in downtown Minneapolis. This move allowed him to reach a broader audience and further refine his menu. The collaboration with Bar Brava not only expanded his culinary reach but also enriched his experience, enabling him to blend traditional Vietnamese flavors with contemporary dining trends.",
+    altText:
+      "Eric and his mother, Khue Pham, at Khue's Kitchen in Minneapolis.",
   },
   {
     name: "Khue's (2024 - Present)",
     backstory:
       "Now, Eric is on the brink of a new chapter with the opening of Khue's in St. Paul. This establishment marks the culmination of his dream: a dedicated space to celebrate his mother's legacy and showcase his unique interpretation of Vietnamese cuisine. Eric is poised to honor Khue Pham's enduring influence, ensuring her legacy continues to inspire and delight the community.",
+    altText: "Eric and his mother, Khue Pham, at Khue's in St. Paul.",
   },
 ];
 
@@ -165,7 +172,7 @@ function OurStory() {
         <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1 tablet:h-72">
           <Image
             src={kare11InTheKitchen}
-            alt="TODO"
+            alt="Chef Eric Pham, owner of Khue's Kitchen, with KARE 11's Jennifer Austin in a kitchen studio. Chef Eric Pham whips up a delicious, hot and juicy fried chicken sandwich with Jennifer Austin."
             fill
             // sizes="(max-width: 1000px) 400px, 320px"
             priority
@@ -173,7 +180,7 @@ function OurStory() {
           />
           <Image
             src={kare11MothersDay}
-            alt="TODO"
+            alt="Khue Pham, lead chef at Quang Restaurant in Minneapolis, converses with her two sons in the kitchen."
             fill
             // sizes="(max-width: 1000px) 400px, 320px"
             priority
@@ -181,7 +188,7 @@ function OurStory() {
           />
           <Image
             src={starTribune}
-            alt="TODO"
+            alt="Khue Pham, lead chef at Quang Restaurant, smiling and posing with her young son, Eric Pham, both dressed formally."
             fill
             // sizes="(max-width: 1000px) 400px, 320px"
             priority
@@ -189,7 +196,7 @@ function OurStory() {
           />
           <Image
             src={mpr}
-            alt="TODO"
+            alt="Chef Eric Pham, owner of Khue's Kitchen, smiling while cooking in a professional kitchen."
             fill
             // sizes="(max-width: 1000px) 400px, 320px"
             priority
@@ -232,24 +239,28 @@ function OurStory() {
                 <RestaurantAndBackstory
                   name={restaurantNamesAndBackstories[0]!.name}
                   backstory={restaurantNamesAndBackstories[0]!.backstory}
+                  altText={restaurantNamesAndBackstories[0]!.altText}
                 />
               </CarouselItem>
               <CarouselItem className="mb-2 flex justify-center px-2 sm:!items-start tablet:px-0 tablet:pt-2">
                 <RestaurantAndBackstory
                   name={restaurantNamesAndBackstories[1]!.name}
                   backstory={restaurantNamesAndBackstories[1]!.backstory}
+                  altText={restaurantNamesAndBackstories[1]!.altText}
                 />
               </CarouselItem>
               <CarouselItem className="mb-2 flex justify-center px-2 sm:!items-start tablet:px-0 tablet:pt-2">
                 <RestaurantAndBackstory
                   name={restaurantNamesAndBackstories[2]!.name}
                   backstory={restaurantNamesAndBackstories[2]!.backstory}
+                  altText={restaurantNamesAndBackstories[2]!.altText}
                 />
               </CarouselItem>
               <CarouselItem className="mb-2 flex justify-center px-2 sm:!items-start tablet:px-0 tablet:pt-2">
                 <RestaurantAndBackstory
                   name={restaurantNamesAndBackstories[3]!.name}
                   backstory={restaurantNamesAndBackstories[3]!.backstory}
+                  altText={restaurantNamesAndBackstories[3]!.altText}
                 />
               </CarouselItem>
             </CarouselContent>
@@ -263,7 +274,9 @@ function OurStory() {
             >
               <Image
                 src={khuesKitchen}
-                alt={"Quang's"}
+                alt={
+                  "Eric and his mother, Khue Pham, at Quang Restaurant in Minneapolis."
+                }
                 sizes="(max-width: 1000px) 80px, 96px"
                 quality={100}
                 className="!relative !size-[80px] rounded-md object-cover tablet:!size-24"
@@ -276,7 +289,9 @@ function OurStory() {
             >
               <Image
                 src={khuesKitchen}
-                alt={"Quang's"}
+                alt={
+                  "Eric and his mother, Khue Pham, at Khue's Kitchen in Minneapolis."
+                }
                 sizes="(max-width: 1000px) 80px, 96px"
                 quality={100}
                 className="!relative !size-[80px] rounded-md object-cover tablet:!size-24"
@@ -289,7 +304,9 @@ function OurStory() {
             >
               <Image
                 src={khuesKitchen}
-                alt={"Quang's"}
+                alt={
+                  "Eric and his mother, Khue Pham, at Khue's Kitchen in Minneapolis."
+                }
                 sizes="(max-width: 1000px) 80px, 96px"
                 quality={100}
                 className="!relative !size-[80px] rounded-md object-cover tablet:!size-24"
@@ -302,7 +319,7 @@ function OurStory() {
             >
               <Image
                 src={khuesKitchen}
-                alt={"Quang's"}
+                alt={"Eric and his mother, Khue Pham, at Khue's in St. Paul."}
                 sizes="(max-width: 1000px) 80px, 96px"
                 quality={100}
                 className="!relative !size-[80px] rounded-md object-cover tablet:!size-24"
@@ -359,7 +376,12 @@ function OurStory() {
             }}
             className="relative h-[425px] w-[300px] rounded-md shadow-md tablet:h-[525px] tablet:w-[350px]"
           >
-            <Image src={eric} alt="Eric" fill className="rounded-md" />
+            <Image
+              src={eric}
+              alt="Chef Eric Pham, owner of Khue's Kitchen, standing with arms crossed and smiling in front of a rustic door."
+              fill
+              className="rounded-md"
+            />
           </motion.div>
         </div>
 
@@ -423,14 +445,19 @@ export default OurStory;
 interface RestaurantAndBackstory {
   name: string;
   backstory: string;
+  altText: string;
 }
 
-function RestaurantAndBackstory({ name, backstory }: RestaurantAndBackstory) {
+function RestaurantAndBackstory({
+  name,
+  backstory,
+  altText,
+}: RestaurantAndBackstory) {
   return (
     <div className="baseVertFlex relative rounded-md border shadow-md sm:rounded-md sm:border-none">
       <Image
         src={khuesKitchen}
-        alt={name}
+        alt={altText}
         sizes="(max-width: 400px) 350px, (max-width: 1000px) 600px, 33vw"
         priority
         className="!relative !w-[350px] select-none rounded-t-md object-cover shadow-sm sm:!h-[450px] sm:!w-[600px] sm:rounded-md sm:shadow-none"

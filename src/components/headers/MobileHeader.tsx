@@ -108,7 +108,7 @@ function MobileHeader() {
           {/* <p className="text-2xl font-semibold text-primary">Khue&apos;s</p> */}
           <Image
             src={"/logos/logo.svg"}
-            alt={"TODO: fill in w/ appropriate alt text"}
+            alt={"Khue's logo"}
             priority
             width={45}
             height={45}
@@ -505,7 +505,9 @@ function MobileHeader() {
 
                             <Image
                               src={outsideOfRestaurant}
-                              alt={"TODO: fill in w/ appropriate alt text"}
+                              alt={
+                                "Exterior view of Khue's, located on University Ave W"
+                              }
                               sizes="(max-width: 640px) 60vw, 700px"
                               className="!relative !h-48 !w-full rounded-md object-cover shadow-sm"
                             />

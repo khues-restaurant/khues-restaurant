@@ -8,7 +8,7 @@ function Header() {
     <div className="relative rounded-t-lg bg-primary p-4">
       <Img
         src={`${baseUrl}/whiteLogo.png`}
-        alt="Image of the Khue's logo."
+        alt="Khue's logo"
         width="50"
         height="50"
       />

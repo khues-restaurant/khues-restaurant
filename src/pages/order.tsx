@@ -656,7 +656,7 @@ function MenuCategory({
       <div className="baseFlex relative w-full rounded-md">
         <Image
           src={wideAngleFoodShot}
-          alt={name}
+          alt={`A wide angle shot of a variety of ${name.toLowerCase()}`}
           sizes="(max-width: 1000px) 90vw, 75vw"
           priority={listOrder === 0} // only want the first category to be a priority
           className="!relative !h-48 w-full rounded-md object-cover shadow-md"
@@ -763,7 +763,7 @@ function MenuItemPreviewButton({
           {menuItem.hasImageOfItem && (
             <Image
               src={"/menuItems/sampleImage.webp"}
-              alt={menuItem.name}
+              alt={`${menuItem.name} - ${menuItem.description}`}
               width={96}
               height={96}
               className="mt-2 !size-24 !self-start rounded-md drop-shadow-lg"
@@ -1252,7 +1252,7 @@ function PreviousOrder({ order }: PreviousOrder) {
         <div className="grid w-28 grid-cols-2 grid-rows-2 !place-items-center gap-2">
           <Image
             src={"/menuItems/sampleImage.webp"}
-            alt={order.orderItems[0]?.name ?? "First item image"}
+            alt={order.orderItems[0]?.name ?? "First item"}
             width={32}
             height={32}
             className="rounded-md drop-shadow-sm"
@@ -1261,7 +1261,7 @@ function PreviousOrder({ order }: PreviousOrder) {
           {order.orderItems.length > 1 && (
             <Image
               src={"/menuItems/sampleImage.webp"}
-              alt={order.orderItems[0]?.name ?? "Second item image"}
+              alt={order.orderItems[1]?.name ?? "Second item"}
               width={32}
               height={32}
               className="rounded-md drop-shadow-sm"
@@ -1270,7 +1270,7 @@ function PreviousOrder({ order }: PreviousOrder) {
           {order.orderItems.length > 2 && (
             <Image
               src={"/menuItems/sampleImage.webp"}
-              alt={order.orderItems[0]?.name ?? "Third item image"}
+              alt={order.orderItems[2]?.name ?? "Third item"}
               width={32}
               height={32}
               className="rounded-md drop-shadow-sm"

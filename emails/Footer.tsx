@@ -92,7 +92,7 @@ function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
                 src={`${baseUrl}/socials/whiteTiktok.png`}
                 width="24"
                 height="24"
-                alt="Tiktok"
+                alt="Follow Khue's on TikTok"
                 className="m-4"
               />
             </Link>
@@ -103,7 +103,7 @@ function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
                 src={`${baseUrl}/socials/whiteInstagram.png`}
                 width="24"
                 height="24"
-                alt="Instagram"
+                alt="Follow Khue's on Instagram"
                 className="m-4"
               />
             </Link>
@@ -114,7 +114,7 @@ function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
                 src={`${baseUrl}/socials/whiteFacebook.png`}
                 width="24"
                 height="24"
-                alt="Facebook"
+                alt="Follow Khue's on Facebook"
                 className="m-4"
               />
             </Link>
@@ -125,7 +125,7 @@ function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
                 src={`${baseUrl}/socials/whiteTwitter.png`}
                 width="24"
                 height="24"
-                alt="Twitter"
+                alt="Follow Khue's on Twitter"
                 className="m-4 "
               />
             </Link>

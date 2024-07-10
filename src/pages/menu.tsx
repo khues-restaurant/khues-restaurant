@@ -559,7 +559,7 @@ function MenuCategory({
       <div className="baseFlex relative w-full rounded-md">
         <Image
           src={wideAngleFoodShot}
-          alt={name}
+          alt={`A wide angle shot of a variety of ${name.toLowerCase()}`}
           sizes="(max-width: 1000px) 90vw, 75vw"
           priority={listOrder === 0} // only want the first category to be a priority
           className="!relative !h-48 w-full rounded-md object-cover shadow-md"
@@ -746,7 +746,7 @@ function MenuItemPreview({
           {menuItem.hasImageOfItem && (
             <Image
               src={"/menuItems/sampleImage.webp"}
-              alt={menuItem.name}
+              alt={`${menuItem.name} - ${categoryName}`}
               width={96}
               height={96}
               className="mt-2 !size-24 !self-start rounded-md drop-shadow-lg"

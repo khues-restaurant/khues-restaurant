@@ -170,7 +170,7 @@ function OrderReady({
                   <Column align="center">
                     <Img
                       src={`${baseUrl}/emailOrderReadyForPickup.png`}
-                      alt="Image of the order tracker progress bar: with steps of 'Order placed', 'In progress', and 'Ready for pickup'"
+                      alt="An order tracker progress bar: with steps of 'Order placed', 'In progress', and 'Ready for pickup'"
                       className="mb-8 h-[57px] w-[348px] sm:h-[87px] sm:w-[528px]"
                     />
 
@@ -289,7 +289,7 @@ function OrderReady({
                           <Column className="w-4">
                             <Img
                               src={`${baseUrl}/${order.includeNapkinsAndUtensils ? "utensilsRequested" : "noUtensilsRequested"}.png`}
-                              alt="Image of a fork and knife to represent napkins and utensils"
+                              alt="A fork and knife to represent napkins and utensils"
                               className="mr-2 h-4 w-4"
                             />
                           </Column>

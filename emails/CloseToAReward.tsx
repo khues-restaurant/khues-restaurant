@@ -486,7 +486,7 @@ function Reward({ item, userPoints }: { item: MenuItem; userPoints?: number }) {
         <Column align="right">
           <Img
             src={`${menuItemBaseUrl}/menuItems/sampleImage.png`}
-            alt={`Image of ${item.name}`}
+            alt={`${item.name} - ${item.description}`}
             width="100"
             height="100"
             className="my-0 ml-2 text-right sm:ml-4"

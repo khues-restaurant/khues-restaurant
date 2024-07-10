@@ -63,7 +63,7 @@ function Welcome({ firstName, unsubscriptionToken }: Welcome) {
                   <Column align="center">
                     <Img
                       src={`${baseUrl}/myOrders.jpg`}
-                      alt="Promotional image for order now card"
+                      alt="TODO: Promotional image for order now card"
                       className="my-8 h-[176.4px] w-[336px] rounded-md sm:h-[252px] sm:w-[480px]"
                     />
 

@@ -15,7 +15,7 @@ function ogImageTemplate() {
       <div className="absolute inset-0 grid h-full w-full grid-cols-2 grid-rows-2">
         <Image
           src={masonryFoodOne}
-          alt="TODO"
+          alt=""
           fill
           // sizes="(max-width: 1000px) 400px, 320px"
           priority
@@ -23,7 +23,7 @@ function ogImageTemplate() {
         />
         <Image
           src={masonryFoodTwo}
-          alt="TODO"
+          alt=""
           fill
           // sizes="(max-width: 1000px) 400px, 320px"
           priority
@@ -31,7 +31,7 @@ function ogImageTemplate() {
         />
         <Image
           src={masonryFoodFive}
-          alt="TODO"
+          alt=""
           fill
           // sizes="(max-width: 1000px) 400px, 320px"
           priority
@@ -39,7 +39,7 @@ function ogImageTemplate() {
         />
         <Image
           src={masonryFoodFour}
-          alt="TODO"
+          alt=""
           fill
           // sizes="(max-width: 1000px) 400px, 320px"
           priority
@@ -50,7 +50,7 @@ function ogImageTemplate() {
       <div className="baseFlex z-50 gap-12 rounded-xl border bg-gradient-to-br from-offwhite to-offwhite/75 py-8 pl-12 pr-16 shadow-lightHeroContainer">
         <Image
           src={khuesKitchenLogo}
-          alt={"TODO: fill in w/ appropriate alt text"}
+          alt=""
           priority
           className="h-[228px] w-[120.75px] drop-shadow-md"
         />
