@@ -101,7 +101,7 @@ function MobileHeader() {
   return (
     <nav
       id="header"
-      className="baseFlex fixed left-0 top-0 z-50 h-24 w-full !justify-between bg-offwhite p-2 shadow-md"
+      className="baseFlex sticky left-0 top-0 z-50 h-24 w-full !justify-between bg-offwhite p-2 shadow-md"
     >
       <Button variant="text" asChild>
         <Link href={"/"}>

@@ -10,7 +10,7 @@ function Privacy() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
+      className="baseVertFlex min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:min-h-[calc(100dvh-7rem)]"
     >
       <div className="mx-auto mb-32 mt-8 max-w-2xl p-6 tablet:mb-24">
         <h1 className="mb-6 text-2xl font-bold tablet:text-3xl">

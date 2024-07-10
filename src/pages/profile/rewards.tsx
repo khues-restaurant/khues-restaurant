@@ -146,8 +146,8 @@ function Rewards() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex baseVertFlex relative mt-24
-      h-full min-h-[calc(100dvh-6rem-81px)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem-120px)]"
+      className="baseVertFlex baseVertFlex relative
+      h-full min-h-[calc(100dvh-6rem-81px)] w-full !justify-start tablet:min-h-[calc(100dvh-7rem-120px)]"
     >
       <div className="baseFlex my-12 !hidden gap-4 rounded-lg border border-stone-400 bg-offwhite p-1 tablet:!flex">
         <Button

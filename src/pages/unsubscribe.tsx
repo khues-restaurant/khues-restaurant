@@ -30,7 +30,7 @@ function Unsubscribe({ email }: { email?: string }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
+      className="baseVertFlex min-h-[calc(100dvh-6rem)] w-full tablet:min-h-[calc(100dvh-7rem)]"
     >
       <div className="baseVertFlex mb-24 max-w-80 gap-6 rounded-md border bg-offwhite p-4 tablet:max-w-3xl tablet:gap-8 tablet:p-8">
         <p className="text-center text-xl font-semibold">

@@ -28,7 +28,7 @@ function Reservations() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
+      className="baseVertFlex min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:min-h-[calc(100dvh-7rem)]"
     >
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden bg-darkPrimary shadow-md tablet:h-72">

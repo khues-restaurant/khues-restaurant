@@ -311,7 +311,7 @@ function Track() {
         transition={{ duration: 0.5 }}
         // TODO: find a way css wise so that you don't have any scrollbar on tablet+ since this is guarenteed
         // to be a tiny tiny element on this page
-        className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
+        className="baseVertFlex min-h-[calc(100dvh-6rem)] w-full tablet:min-h-[calc(100dvh-7rem)]"
       >
         <div className="baseVertFlex relative max-w-80 gap-4 overflow-hidden rounded-lg border bg-gradient-to-br from-offwhite to-primary/10 px-6 py-8 shadow-md tablet:max-w-2xl tablet:p-12 tablet:pb-8">
           <>
@@ -352,7 +352,7 @@ function Track() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex mt-24 min-h-[calc(100dvh-6rem)] w-full p-4 tablet:mt-28 tablet:min-h-[calc(100dvh-7rem)]"
+      className="baseVertFlex min-h-[calc(100dvh-6rem)] w-full p-4 tablet:min-h-[calc(100dvh-7rem)]"
     >
       <div className="baseVertFlex mb-8 w-full gap-4 px-0 py-4 tablet:max-w-2xl tablet:p-8">
         <AnimatePresence mode="popLayout">
