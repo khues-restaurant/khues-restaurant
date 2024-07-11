@@ -8,26 +8,25 @@ const isProfileRoute = createRouteMatcher(["/profile(.*)"]);
 export default clerkMiddleware(async (auth, req) => {
   const { redirectToSignIn, userId } = auth();
 
+  // Restrict profile routes to signed in users
+  if (isProfileRoute(req)) {
+    auth().protect();
+  }
+
   // Restrict admin route to users with specific role within privateMetadata
-  if (isDashboardRoute(req)) {
+  else if (isDashboardRoute(req)) {
     if (!userId) {
       return redirectToSignIn();
     }
 
     const user = await clerkClient.users.getUser(userId);
 
-    if (typeof user.privateMetadata !== "object") {
+    if (
+      typeof user.privateMetadata !== "object" ||
+      user.privateMetadata.role !== "admin"
+    ) {
       return NextResponse.redirect(new URL("/", req.url));
     }
-
-    if (user.privateMetadata.role !== "admin") {
-      return NextResponse.redirect(new URL("/", req.url));
-    }
-  }
-
-  // Restrict profile routes to signed in users
-  if (isProfileRoute(req)) {
-    auth().protect();
   }
 });
 
