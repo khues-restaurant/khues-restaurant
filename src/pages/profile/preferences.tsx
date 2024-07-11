@@ -583,7 +583,7 @@ function Preferences() {
                       name="allowsEmailReceipts"
                       render={({ field }) => (
                         <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                          <div className="baseFlex ml-1 gap-[1.15rem]">
+                          <div className="baseFlex ml-1 gap-4 sm:gap-3">
                             <FormControl>
                               <Checkbox
                                 checked={field.value}
@@ -605,7 +605,7 @@ function Preferences() {
                       name="allowsOrderCompleteEmails"
                       render={({ field }) => (
                         <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                          <div className="baseFlex ml-1 gap-[1.15rem]">
+                          <div className="baseFlex ml-1 gap-4 sm:gap-3">
                             <FormControl>
                               <Checkbox
                                 disabled={saveButtonText !== "Save changes"}
@@ -628,7 +628,7 @@ function Preferences() {
                       name="allowsPromotionalEmails"
                       render={({ field }) => (
                         <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                          <div className="baseFlex ml-1 gap-[1.15rem]">
+                          <div className="baseFlex ml-1 gap-4 sm:gap-3">
                             <FormControl>
                               <Checkbox
                                 disabled={saveButtonText !== "Save changes"}
@@ -651,7 +651,7 @@ function Preferences() {
                       name="allowsRewardAvailabilityReminderEmails"
                       render={({ field }) => (
                         <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                          <div className="baseFlex ml-1 gap-[1.15rem]">
+                          <div className="baseFlex ml-1 gap-4 sm:gap-3">
                             <FormControl>
                               <Checkbox
                                 disabled={saveButtonText !== "Save changes"}

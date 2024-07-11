@@ -364,8 +364,7 @@ function PostSignUpDialog({
   function getDynamicWidth() {
     if (step === 4) {
       return "100px";
-    } else if (step === 2) {
-      if (dietaryRestrictionsForm.formState.isDirty) return "175px";
+    } else if (step === 2 && !dietaryRestrictionsForm.formState.isDirty) {
       return "100px";
     }
 
@@ -981,7 +980,7 @@ function PostSignUpDialog({
                         name="allowsEmailReceipts"
                         render={({ field }) => (
                           <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                            <div className="baseFlex ml-1 gap-[1.15rem]">
+                            <div className="baseFlex ml-1 gap-4 sm:gap-3">
                               <FormControl>
                                 <Checkbox
                                   checked={field.value}
@@ -1002,7 +1001,7 @@ function PostSignUpDialog({
                         name="allowsOrderCompleteEmails"
                         render={({ field }) => (
                           <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                            <div className="baseFlex ml-1 gap-[1.15rem]">
+                            <div className="baseFlex ml-1 gap-4 sm:gap-3">
                               <FormControl>
                                 <Checkbox
                                   checked={field.value}
@@ -1024,7 +1023,7 @@ function PostSignUpDialog({
                         name="allowsRewardAvailabilityReminderEmails"
                         render={({ field }) => (
                           <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                            <div className="baseFlex ml-1 gap-[1.15rem]">
+                            <div className="baseFlex ml-1 gap-4 sm:gap-3">
                               <FormControl>
                                 <Checkbox
                                   checked={field.value}
@@ -1046,7 +1045,7 @@ function PostSignUpDialog({
                         name="allowsPromotionalEmails"
                         render={({ field }) => (
                           <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                            <div className="baseFlex ml-1 gap-[1.15rem]">
+                            <div className="baseFlex ml-1 gap-4 sm:gap-3">
                               <FormControl>
                                 <Checkbox
                                   checked={field.value}
