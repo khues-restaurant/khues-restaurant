@@ -1,5 +1,5 @@
 import { useAuth } from "@clerk/nextjs";
-import { type Discount } from "@prisma/client";
+import { type User, type Discount } from "@prisma/client";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { format } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
@@ -57,6 +57,10 @@ function OrderNow() {
     userFavoriteItemIds: state.userFavoriteItemIds,
     viewportLabel: state.viewportLabel,
   }));
+
+  const { data: user } = api.user.get.useQuery(userId, {
+    enabled: Boolean(isSignedIn && userId),
+  });
 
   const { data: menuCategories } = api.menuCategory.getAll.useQuery({
     onlyOnlineOrderable: true,
@@ -454,6 +458,7 @@ function OrderNow() {
                     setIsDialogOpen={setIsDialogOpen}
                     setItemToCustomize={setItemToCustomize}
                     viewportWidth={viewportWidth}
+                    user={user}
                   />
                 )}
 
@@ -461,6 +466,7 @@ function OrderNow() {
                   <RecentOrders
                     userRecentOrders={userRecentOrders}
                     viewportWidth={viewportWidth}
+                    user={user}
                   />
                 )}
 
@@ -474,6 +480,7 @@ function OrderNow() {
                     setIsDrawerOpen={setIsDrawerOpen}
                     setIsDialogOpen={setIsDialogOpen}
                     setItemToCustomize={setItemToCustomize}
+                    user={user}
                   />
                 ))}
 
@@ -636,6 +643,7 @@ interface MenuCategory {
   setIsDrawerOpen: Dispatch<SetStateAction<boolean>>;
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
   setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
+  user: User | null | undefined;
 }
 
 function MenuCategory({
@@ -646,6 +654,7 @@ function MenuCategory({
   setIsDrawerOpen,
   setIsDialogOpen,
   setItemToCustomize,
+  user,
 }: MenuCategory) {
   return (
     <motion.div
@@ -694,6 +703,7 @@ function MenuCategory({
             setIsDialogOpen={setIsDialogOpen}
             setIsDrawerOpen={setIsDrawerOpen}
             setItemToCustomize={setItemToCustomize}
+            user={user}
           />
         ))}
       </div>
@@ -708,6 +718,7 @@ interface MenuItemPreviewButton {
   setIsDrawerOpen: Dispatch<SetStateAction<boolean>>;
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
   setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
+  user: User | null | undefined;
 }
 
 function MenuItemPreviewButton({
@@ -717,6 +728,7 @@ function MenuItemPreviewButton({
   setIsDialogOpen,
   setIsDrawerOpen,
   setItemToCustomize,
+  user,
 }: MenuItemPreviewButton) {
   const {
     orderDetails,
@@ -902,7 +914,8 @@ function MenuItemPreviewButton({
                     name: menuItem.name,
                     customizations: getDefaultCustomizationChoices(menuItem),
                     specialInstructions: "",
-                    includeDietaryRestrictions: false,
+                    includeDietaryRestrictions:
+                      user?.autoApplyDietaryRestrictions ?? false,
                     quantity: 1,
                     price: menuItem.price,
                     isChefsChoice: menuItem.isChefsChoice,
@@ -978,6 +991,7 @@ interface FavoriteItems {
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
   setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
   viewportWidth: number;
+  user: User | null | undefined;
 }
 
 function FavoriteItems({
@@ -985,6 +999,7 @@ function FavoriteItems({
   setIsDialogOpen,
   setItemToCustomize,
   viewportWidth,
+  user,
 }: FavoriteItems) {
   const { menuItems, userFavoriteItemIds } = useMainStore((state) => ({
     menuItems: state.menuItems,
@@ -1041,6 +1056,7 @@ function FavoriteItems({
                         setIsDialogOpen={setIsDialogOpen}
                         setIsDrawerOpen={setIsDrawerOpen}
                         setItemToCustomize={setItemToCustomize}
+                        user={user}
                       />
                     ))}
                   </div>
@@ -1062,6 +1078,7 @@ function FavoriteItems({
             setIsDialogOpen={setIsDialogOpen}
             setIsDrawerOpen={setIsDrawerOpen}
             setItemToCustomize={setItemToCustomize}
+            user={user}
           />
         ))}
       </div>
@@ -1072,9 +1089,10 @@ function FavoriteItems({
 interface RecentOrders {
   userRecentOrders: DBOrderSummary[];
   viewportWidth: number;
+  user: User | null | undefined;
 }
 
-function RecentOrders({ userRecentOrders, viewportWidth }: RecentOrders) {
+function RecentOrders({ userRecentOrders, viewportWidth, user }: RecentOrders) {
   const maxOrdersToShow = viewportWidth < 640 ? 3 : 4;
 
   return (
@@ -1115,7 +1133,7 @@ function RecentOrders({ userRecentOrders, viewportWidth }: RecentOrders) {
 
                   <div className="baseVertFlex my-4 h-[60vh] w-full !justify-start gap-2 overflow-y-auto py-4 tablet:h-[70vh]">
                     {userRecentOrders.map((order) => (
-                      <PreviousOrder key={order.id} order={order} />
+                      <PreviousOrder key={order.id} order={order} user={user} />
                     ))}
                   </div>
                 </div>
@@ -1127,7 +1145,7 @@ function RecentOrders({ userRecentOrders, viewportWidth }: RecentOrders) {
 
       <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 px-2 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
         {userRecentOrders.slice(0, maxOrdersToShow).map((order) => (
-          <PreviousOrder key={order.id} order={order} />
+          <PreviousOrder key={order.id} order={order} user={user} />
         ))}
       </div>
     </div>
@@ -1136,9 +1154,10 @@ function RecentOrders({ userRecentOrders, viewportWidth }: RecentOrders) {
 
 interface PreviousOrder {
   order: DBOrderSummary;
+  user: User | null | undefined;
 }
 
-function PreviousOrder({ order }: PreviousOrder) {
+function PreviousOrder({ order, user }: PreviousOrder) {
   const userId = useGetUserId();
 
   const {
@@ -1214,7 +1233,8 @@ function PreviousOrder({ order }: PreviousOrder) {
                 name: item.name,
                 customizations: item.customizations,
                 specialInstructions: item.specialInstructions,
-                includeDietaryRestrictions: item.includeDietaryRestrictions,
+                includeDietaryRestrictions:
+                  user?.autoApplyDietaryRestrictions ?? false,
                 quantity: item.quantity,
                 price: item.price,
                 isChefsChoice: item.isChefsChoice,
@@ -1350,7 +1370,8 @@ function PreviousOrder({ order }: PreviousOrder) {
                     name: item.name,
                     customizations: item.customizations,
                     specialInstructions: item.specialInstructions,
-                    includeDietaryRestrictions: item.includeDietaryRestrictions,
+                    includeDietaryRestrictions:
+                      user?.autoApplyDietaryRestrictions ?? false,
                     quantity: item.quantity,
                     price: item.price,
                     isChefsChoice: item.isChefsChoice,

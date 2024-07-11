@@ -1,4 +1,5 @@
 import { useAuth } from "@clerk/nextjs";
+import { type User } from "@prisma/client";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import Decimal from "decimal.js";
@@ -355,6 +356,7 @@ function RewardsDialogContent({
                               rewardsPointsEarned - toBeDeductedRewardsPoints
                             }
                             forBirthdayReward={false}
+                            user={user}
                           />
 
                           {index !== category.menuItems.length - 1 && (
@@ -382,6 +384,7 @@ interface RewardMenuItem {
   currentlySelectedRewardId: string | null;
   userAvailablePoints: number;
   forBirthdayReward: boolean;
+  user: User | null | undefined;
 }
 
 function RewardMenuItem({
@@ -389,6 +392,7 @@ function RewardMenuItem({
   currentlySelectedRewardId,
   userAvailablePoints,
   forBirthdayReward,
+  user,
 }: RewardMenuItem) {
   // actually calls updateOrder() and shows toast(), but prob don't bother with the "undo" logic for this
   // right now
@@ -521,7 +525,8 @@ function RewardMenuItem({
                         customizations:
                           getDefaultCustomizationChoices(menuItem),
                         specialInstructions: "",
-                        includeDietaryRestrictions: false,
+                        includeDietaryRestrictions:
+                          user?.autoApplyDietaryRestrictions ?? false,
                         quantity: 1,
                         price: menuItem.price,
                         discountId: null,

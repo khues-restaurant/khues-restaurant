@@ -25,7 +25,7 @@ import useHomepageIntersectionObserver from "~/hooks/useHomepageIntersectionObse
 import StaticLotus from "~/components/ui/StaticLotus";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { useToast } from "~/components/ui/use-toast";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, type User } from "@prisma/client";
 import { ToastAction } from "~/components/ui/toast";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
@@ -57,6 +57,8 @@ import masonryInteriorTwo from "/public/interior/two.webp";
 import masonryInteriorThree from "/public/interior/three.webp";
 import masonryInteriorFour from "/public/interior/four.webp";
 import masonryInteriorFive from "/public/interior/five.webp";
+import { api } from "~/utils/api";
+import useGetUserId from "~/hooks/useGetUserId";
 
 interface Home {
   ourFavoriteMenuItems: FullMenuItem[];
@@ -64,6 +66,7 @@ interface Home {
 
 export default function Home({ ourFavoriteMenuItems }: Home) {
   const { isLoaded, isSignedIn } = useAuth();
+  const userId = useGetUserId();
 
   const {
     chatIsOpen,
@@ -76,6 +79,10 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
     setMobileHeroThresholdInView: state.setMobileHeroThresholdInView,
     viewportLabel: state.viewportLabel,
   }));
+
+  const { data: user } = api.user.get.useQuery(userId, {
+    enabled: Boolean(userId && isSignedIn),
+  });
 
   const mobileHeroRef = useRef<HTMLDivElement>(null);
 
@@ -1138,7 +1145,10 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                       key={menuItem.id}
                       className="baseVertFlex relative basis-full gap-4 rounded-md p-4 px-6 md:basis-1/2 xl:basis-1/4"
                     >
-                      <OurFavoriteMenuItemCard menuItem={menuItem} />
+                      <OurFavoriteMenuItemCard
+                        menuItem={menuItem}
+                        user={user}
+                      />
                     </CarouselItem>
                   ))}
                 </CarouselContent>
@@ -1232,9 +1242,10 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 
 interface OurFavoriteMenuItemCard {
   menuItem: FullMenuItem;
+  user: User | null | undefined;
 }
 
-function OurFavoriteMenuItemCard({ menuItem }: OurFavoriteMenuItemCard) {
+function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
   const { orderDetails, getPrevOrderDetails, setPrevOrderDetails } =
     useMainStore((state) => ({
       orderDetails: state.orderDetails,
@@ -1307,7 +1318,8 @@ function OurFavoriteMenuItemCard({ menuItem }: OurFavoriteMenuItemCard) {
                   name: menuItem.name,
                   customizations: getDefaultCustomizationChoices(menuItem),
                   specialInstructions: "",
-                  includeDietaryRestrictions: false,
+                  includeDietaryRestrictions:
+                    user?.autoApplyDietaryRestrictions ?? false,
                   quantity: 1,
                   price: menuItem.price,
                   isChefsChoice: menuItem.isChefsChoice,
