@@ -131,6 +131,24 @@ function ItemCustomizationDrawer({
     },
   );
 
+  // need to do this in async fashion since the user object isn't immediately available
+  // when initializing the localItemOrderDetails state
+  const [
+    initIncludeDietaryRestrictionsComplete,
+    setInitIncludeDietaryRestrictionsComplete,
+  ] = useState(false);
+
+  useEffect(() => {
+    if (initIncludeDietaryRestrictionsComplete || !user) return;
+
+    setLocalItemOrderDetails((prev) => ({
+      ...prev,
+      includeDietaryRestrictions: user.autoApplyDietaryRestrictions,
+    }));
+
+    setInitIncludeDietaryRestrictionsComplete(true);
+  }, [user, initIncludeDietaryRestrictionsComplete]);
+
   const initialItemState = itemOrderDetails;
 
   const { toast } = useToast();

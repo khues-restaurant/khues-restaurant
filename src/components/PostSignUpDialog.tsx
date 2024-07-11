@@ -135,6 +135,7 @@ const dietaryRestrictionsSchema = z.object({
     })
     .transform((value) => value.trim()) // Remove leading and trailing whitespace
     .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,
+  autoApplyDietaryRestrictions: z.boolean(),
 });
 
 const emailCommunicationsSchema = z.object({
@@ -231,6 +232,7 @@ function PostSignUpDialog({
     resolver: zodResolver(dietaryRestrictionsSchema),
     defaultValues: {
       dietaryRestrictions: "",
+      autoApplyDietaryRestrictions: false,
     },
   });
 
@@ -364,8 +366,7 @@ function PostSignUpDialog({
   function getDynamicWidth() {
     if (step === 4) {
       return "100px";
-    } else if (step === 2) {
-      if (dietaryRestrictionsForm.formState.isDirty) return "175px";
+    } else if (step === 2 && !dietaryRestrictionsForm.formState.isDirty) {
       return "100px";
     }
 
@@ -838,7 +839,7 @@ function PostSignUpDialog({
                   translateX: { duration: 0.25 },
                   ease: "easeInOut",
                 }}
-                className="baseVertFlex mt-8 h-full min-h-48 w-full gap-4 overflow-hidden tablet:mt-16 "
+                className="baseVertFlex mt-8 h-full min-h-48 w-full gap-2 overflow-hidden tablet:mt-12 "
               >
                 <Form {...dietaryRestrictionsForm}>
                   <form
@@ -847,12 +848,12 @@ function PostSignUpDialog({
                     )}
                     className="baseVertFlex w-full gap-16"
                   >
-                    <div className="baseVertFlex">
+                    <div className="baseVertFlex !items-start gap-2">
                       <FormField
                         control={dietaryRestrictionsForm.control}
                         name="dietaryRestrictions"
                         render={({ field, fieldState: { invalid, error } }) => (
-                          <FormItem className="px-2 tablet:w-[500px]">
+                          <FormItem className="baseVertFlex !items-start px-2 tablet:w-[500px]">
                             <FormLabel className="font-semibold">
                               Dietary preferences
                             </FormLabel>
@@ -864,8 +865,18 @@ function PostSignUpDialog({
                               <Textarea
                                 maxLength={100}
                                 placeholder="I am allergic to..."
-                                className="max-h-32 w-full"
                                 {...field}
+                                className="!mt-4 max-h-32 w-full"
+                                onChange={(e) => {
+                                  field.onChange(e.target.value);
+
+                                  if (e.target.value.length === 0) {
+                                    dietaryRestrictionsForm.setValue(
+                                      "autoApplyDietaryRestrictions",
+                                      false,
+                                    );
+                                  }
+                                }}
                               />
                             </FormControl>
 
@@ -894,17 +905,44 @@ function PostSignUpDialog({
                           </FormItem>
                         )}
                       />
+
+                      <FormField
+                        control={dietaryRestrictionsForm.control}
+                        name="autoApplyDietaryRestrictions"
+                        render={({ field }) => (
+                          <FormItem className="baseVertFlex relative ml-2 gap-2 space-y-0">
+                            <div className="baseFlex gap-[1.1rem] sm:gap-3">
+                              <FormControl>
+                                <Checkbox
+                                  disabled={
+                                    dietaryRestrictionsForm.getValues(
+                                      "dietaryRestrictions",
+                                    ).length === 0
+                                  }
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                  className="size-4"
+                                />
+                              </FormControl>
+                              <FormLabel className="leading-4">
+                                Automatically apply these preferences to your
+                                order&apos;s items.
+                              </FormLabel>
+                            </div>
+                          </FormItem>
+                        )}
+                      />
                     </div>
                   </form>
                 </Form>
 
-                <Separator className="my-2 h-[1px] max-w-sm" />
+                <Separator className="mt-2 h-[1px] max-w-sm sm:mb-2 sm:mt-4" />
 
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button
                       variant={"underline"}
-                      className="baseFlex gap-2 text-sm sm:text-base"
+                      className="baseFlex gap-2 text-xs sm:text-sm"
                     >
                       <HiOutlineInformationCircle className="size-4" />
                       How to add dietary restrictions
@@ -981,7 +1019,7 @@ function PostSignUpDialog({
                         name="allowsEmailReceipts"
                         render={({ field }) => (
                           <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                            <div className="baseFlex ml-1 gap-[1.15rem]">
+                            <div className="baseFlex ml-1 gap-4 sm:gap-3">
                               <FormControl>
                                 <Checkbox
                                   checked={field.value}
@@ -1002,7 +1040,7 @@ function PostSignUpDialog({
                         name="allowsOrderCompleteEmails"
                         render={({ field }) => (
                           <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                            <div className="baseFlex ml-1 gap-[1.15rem]">
+                            <div className="baseFlex ml-1 gap-4 sm:gap-3">
                               <FormControl>
                                 <Checkbox
                                   checked={field.value}
@@ -1024,7 +1062,7 @@ function PostSignUpDialog({
                         name="allowsRewardAvailabilityReminderEmails"
                         render={({ field }) => (
                           <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                            <div className="baseFlex ml-1 gap-[1.15rem]">
+                            <div className="baseFlex ml-1 gap-4 sm:gap-3">
                               <FormControl>
                                 <Checkbox
                                   checked={field.value}
@@ -1046,7 +1084,7 @@ function PostSignUpDialog({
                         name="allowsPromotionalEmails"
                         render={({ field }) => (
                           <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                            <div className="baseFlex ml-1 gap-[1.15rem]">
+                            <div className="baseFlex ml-1 gap-4 sm:gap-3">
                               <FormControl>
                                 <Checkbox
                                   checked={field.value}

@@ -341,12 +341,13 @@ model User {
     userId       String @unique // retrieved from Clerk
     stripeUserId String @unique
 
-    firstName           String
-    lastName            String
-    email               String   @unique
-    phoneNumber         String
-    birthday            DateTime
-    dietaryRestrictions String
+    firstName                    String
+    lastName                     String
+    email                        String   @unique
+    phoneNumber                  String
+    birthday                     DateTime
+    dietaryRestrictions          String
+    autoApplyDietaryRestrictions Boolean  @default(false)
 
     allowsEmailReceipts                    Boolean @default(true)
     allowsOrderCompleteEmails              Boolean @default(true)

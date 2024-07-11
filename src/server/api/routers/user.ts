@@ -49,6 +49,7 @@ export const userRouter = createTRPCRouter({
           .regex(/^\(\d{3}\) \d{3}-\d{4}$/),
         birthday: z.date(),
         dietaryRestrictions: z.string().max(100),
+        autoApplyDietaryRestrictions: z.boolean().default(false),
         currentOrder: orderDetailsSchema,
         orderIdBeingRedeemed: z.string().optional(),
         rewardsPointsBeingRedeemed: z.number().int().default(0),
@@ -63,6 +64,7 @@ export const userRouter = createTRPCRouter({
         phoneNumber,
         birthday,
         dietaryRestrictions,
+        autoApplyDietaryRestrictions,
         currentOrder,
         orderIdBeingRedeemed,
         rewardsPointsBeingRedeemed,
@@ -118,8 +120,8 @@ export const userRouter = createTRPCRouter({
       try {
         const { data, error } = await resend.emails.send({
           from: "onboarding@resend.dev", // FYI: can format as "Khue's <support@khueskitchen.com"> for production
-          to: "michael.ongaro.dev@gmail.com", // TODO: email,
-          subject: "Hello world",
+          to: "khues.dev@gmail.com", // TODO: email,
+          subject: "Welcome to Khue's Reward Program! 🎉",
           react: Welcome({
             firstName: firstName,
             unsubscriptionToken: unsubscriptionToken.id,
@@ -171,6 +173,7 @@ export const userRouter = createTRPCRouter({
           phoneNumber,
           birthday,
           dietaryRestrictions,
+          autoApplyDietaryRestrictions,
           currentOrder,
           rewardsPoints: 500 + rewardsPointsBeingRedeemed,
           lifetimeRewardPoints: 500 + rewardsPointsBeingRedeemed,
@@ -270,6 +273,7 @@ export const userRouter = createTRPCRouter({
           })
           .transform((value) => value.trim()) // Remove leading and trailing whitespace
           .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,,
+        autoApplyDietaryRestrictions: z.boolean(),
 
         allowsEmailReceipts: z.boolean(),
         allowsOrderCompleteEmails: z.boolean(),

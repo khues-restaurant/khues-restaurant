@@ -60,11 +60,16 @@ import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidn
 
 import noOrders from "/public/menuItems/myOrders.jpg";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { type User } from "@prisma/client";
 
 function RecentOrders() {
   const userId = useGetUserId();
   const { isSignedIn } = useAuth();
   const { asPath } = useRouter();
+
+  const { data: user } = api.user.get.useQuery(userId, {
+    enabled: Boolean(isSignedIn && userId),
+  });
 
   const { data: orders } = api.order.getUsersOrders.useQuery(
     { userId },
@@ -217,6 +222,7 @@ function RecentOrders() {
                       key={order.id}
                       userId={userId}
                       order={order}
+                      user={user}
                     />
                   ))}
                 </div>
@@ -313,9 +319,10 @@ export default RecentOrders;
 interface OrderAccordion {
   userId: string;
   order: DBOrderSummary;
+  user: User | null | undefined;
 }
 
-function OrderAccordion({ userId, order }: OrderAccordion) {
+function OrderAccordion({ userId, order, user }: OrderAccordion) {
   const {
     orderDetails,
     getPrevOrderDetails,
@@ -385,7 +392,8 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                 name: item.name,
                 customizations: item.customizations,
                 specialInstructions: item.specialInstructions,
-                includeDietaryRestrictions: item.includeDietaryRestrictions,
+                includeDietaryRestrictions:
+                  user?.autoApplyDietaryRestrictions ?? false,
                 quantity: item.quantity,
                 price: item.price,
                 isChefsChoice: item.isChefsChoice,
@@ -533,7 +541,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                                 customizations: item.customizations,
                                 specialInstructions: item.specialInstructions,
                                 includeDietaryRestrictions:
-                                  item.includeDietaryRestrictions,
+                                  user?.autoApplyDietaryRestrictions ?? false,
                                 quantity: item.quantity,
                                 price: item.price,
                                 isChefsChoice: item.isChefsChoice,
@@ -711,7 +719,7 @@ function OrderAccordion({ userId, order }: OrderAccordion) {
                                 customizations: item.customizations,
                                 specialInstructions: item.specialInstructions,
                                 includeDietaryRestrictions:
-                                  item.includeDietaryRestrictions,
+                                  user?.autoApplyDietaryRestrictions ?? false,
                                 quantity: item.quantity,
                                 price: item.price,
                                 isChefsChoice: item.isChefsChoice,

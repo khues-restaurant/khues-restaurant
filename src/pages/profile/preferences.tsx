@@ -45,6 +45,7 @@ import { Textarea } from "~/components/ui/textarea";
 import { useToast } from "~/components/ui/use-toast";
 import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
 import useGetUserId from "~/hooks/useGetUserId";
+import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
@@ -90,6 +91,7 @@ const formSchema = z.object({
       required_error: "Phone number cannot be empty",
     })
     .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Invalid phone number format"),
+
   dietaryRestrictions: z
     .string()
     .max(100, { message: "Must be at most 100 characters" })
@@ -101,6 +103,7 @@ const formSchema = z.object({
     })
     .transform((value) => value.trim()) // Remove leading and trailing whitespace
     .transform((value) => value.replace(/\s+/g, " ")), // Remove consecutive spaces,,
+  autoApplyDietaryRestrictions: z.boolean(),
 
   allowsEmailReceipts: z.boolean(),
   allowsOrderCompleteEmails: z.boolean(),
@@ -120,7 +123,8 @@ function Preferences() {
   const ctx = api.useUtils();
   const { asPath, push } = useRouter();
 
-  const { resetStore } = useMainStore((state) => ({
+  const { orderDetails, resetStore } = useMainStore((state) => ({
+    orderDetails: state.orderDetails,
     resetStore: state.resetStore,
   }));
 
@@ -130,7 +134,7 @@ function Preferences() {
 
   const { mutate: updateUser } = api.user.updatePreferences.useMutation({
     onSuccess: async () => {
-      await ctx.user.invalidate();
+      await ctx.user.get.invalidate();
 
       setTimeout(() => {
         setSaveButtonText("Saved");
@@ -173,7 +177,6 @@ function Preferences() {
 
   const { toast } = useToast();
 
-  // should be able to remove ?. and ?? from these now since we are using getServerSideProps
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     values: {
@@ -181,19 +184,7 @@ function Preferences() {
       lastName: user?.lastName ?? "",
       phoneNumber: user?.phoneNumber ?? "",
       dietaryRestrictions: user?.dietaryRestrictions ?? "",
-      email: user?.email ?? "",
-      birthday: user?.birthday ?? new Date(),
-      allowsEmailReceipts: user?.allowsEmailReceipts ?? false,
-      allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails ?? false,
-      allowsPromotionalEmails: user?.allowsPromotionalEmails ?? false,
-      allowsRewardAvailabilityReminderEmails:
-        user?.allowsRewardAvailabilityReminderEmails ?? false,
-    },
-    defaultValues: {
-      firstName: user?.firstName ?? "",
-      lastName: user?.lastName ?? "",
-      phoneNumber: user?.phoneNumber ?? "",
-      dietaryRestrictions: user?.dietaryRestrictions ?? "",
+      autoApplyDietaryRestrictions: user?.autoApplyDietaryRestrictions ?? false,
       email: user?.email ?? "",
       birthday: user?.birthday ?? new Date(),
       allowsEmailReceipts: user?.allowsEmailReceipts ?? false,
@@ -204,13 +195,34 @@ function Preferences() {
     },
   });
 
-  // do we need a useEffect w/ mainForm.watch() to update the form values when the user changes?
-  // on god it looks like we do. Weird that we either didn't notice this before or it came up randomly
+  const { updateOrder } = useUpdateOrder();
+
+  console.log(user?.autoApplyDietaryRestrictions);
 
   async function onFormSubmit(values: z.infer<typeof formSchema>) {
     if (!user) return;
 
     setSaveButtonText("Saving");
+
+    console.log(
+      "current value:",
+      user.autoApplyDietaryRestrictions,
+      "new value:",
+      values.autoApplyDietaryRestrictions,
+    );
+
+    if (
+      values.autoApplyDietaryRestrictions !== user.autoApplyDietaryRestrictions
+    ) {
+      const newOrderDetails = structuredClone(orderDetails);
+      newOrderDetails.items.forEach((item) => {
+        item.includeDietaryRestrictions = values.autoApplyDietaryRestrictions;
+      });
+
+      updateOrder({
+        newOrderDetails,
+      });
+    }
 
     updateUser({
       userId: user.userId,
@@ -541,8 +553,22 @@ function Preferences() {
                             <Textarea
                               maxLength={100}
                               placeholder="I am allergic to..."
-                              className="min-h-32 w-full resize-none tablet:min-h-24"
                               {...field}
+                              className="min-h-32 w-full resize-none tablet:min-h-24"
+                              onChange={(e) => {
+                                field.onChange(e.target.value);
+
+                                // checkbox field below didn't automatically re-enable itself if
+                                // this went from 0 to 1 characters, so we manually trigger it
+                                void form.trigger("dietaryRestrictions");
+
+                                if (e.target.value.length === 0) {
+                                  form.setValue(
+                                    "autoApplyDietaryRestrictions",
+                                    false,
+                                  );
+                                }
+                              }}
                             />
                           </FormControl>
 
@@ -572,6 +598,32 @@ function Preferences() {
                     )}
                   />
 
+                  <FormField
+                    control={form.control}
+                    name="autoApplyDietaryRestrictions"
+                    render={({ field }) => (
+                      <FormItem className="baseVertFlex relative ml-1 gap-2 space-y-0">
+                        <div className="baseFlex gap-[1.1rem] sm:gap-3">
+                          <FormControl>
+                            <Checkbox
+                              disabled={
+                                (form.getValues("dietaryRestrictions")
+                                  ?.length ?? 0) === 0
+                              }
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              className="size-4"
+                            />
+                          </FormControl>
+                          <FormLabel className="leading-4">
+                            Automatically apply these preferences to your
+                            order&apos;s items.
+                          </FormLabel>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+
                   <div className="baseFlex mt-20 gap-3.5 text-lg font-semibold text-primary underline underline-offset-2 tablet:mt-16">
                     <IoIosMail className="size-[24px]" />
                     Email communication
@@ -583,7 +635,7 @@ function Preferences() {
                       name="allowsEmailReceipts"
                       render={({ field }) => (
                         <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                          <div className="baseFlex ml-1 gap-[1.15rem]">
+                          <div className="baseFlex ml-1 gap-4 sm:gap-3">
                             <FormControl>
                               <Checkbox
                                 checked={field.value}
@@ -605,7 +657,7 @@ function Preferences() {
                       name="allowsOrderCompleteEmails"
                       render={({ field }) => (
                         <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                          <div className="baseFlex ml-1 gap-[1.15rem]">
+                          <div className="baseFlex ml-1 gap-4 sm:gap-3">
                             <FormControl>
                               <Checkbox
                                 disabled={saveButtonText !== "Save changes"}
@@ -628,7 +680,7 @@ function Preferences() {
                       name="allowsPromotionalEmails"
                       render={({ field }) => (
                         <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                          <div className="baseFlex ml-1 gap-[1.15rem]">
+                          <div className="baseFlex ml-1 gap-4 sm:gap-3">
                             <FormControl>
                               <Checkbox
                                 disabled={saveButtonText !== "Save changes"}
@@ -651,7 +703,7 @@ function Preferences() {
                       name="allowsRewardAvailabilityReminderEmails"
                       render={({ field }) => (
                         <FormItem className="baseVertFlex relative gap-2 space-y-0">
-                          <div className="baseFlex ml-1 gap-[1.15rem]">
+                          <div className="baseFlex ml-1 gap-4 sm:gap-3">
                             <FormControl>
                               <Checkbox
                                 disabled={saveButtonText !== "Save changes"}
@@ -861,6 +913,8 @@ function Preferences() {
                     email: user?.email,
                     birthday: user?.birthday,
                     dietaryRestrictions: user?.dietaryRestrictions,
+                    autoApplyDietaryRestrictions:
+                      user?.autoApplyDietaryRestrictions,
                     allowsEmailReceipts: user?.allowsEmailReceipts,
                     allowsOrderCompleteEmails: user?.allowsOrderCompleteEmails,
                     allowsPromotionalEmails: user?.allowsPromotionalEmails,
@@ -901,7 +955,7 @@ function Preferences() {
                         viewBox="0 0 24 24"
                         stroke="currentColor"
                         strokeWidth={2}
-                        className="size-4 text-offwhite"
+                        className="size-5 text-offwhite"
                       >
                         <motion.path
                           initial={{ pathLength: 0 }}

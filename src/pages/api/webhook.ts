@@ -225,13 +225,8 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const total = new Decimal(payment.amount_total);
 
-      console.log(
-        "Here!",
-        subtotal.toNumber(),
-        tax.toNumber(),
-        tipPercentage,
-        tipValue,
-        total.toNumber(),
+      const includeDietaryRestrictions = orderDetails.items.some(
+        (item) => item.includeDietaryRestrictions,
       );
 
       const orderData = {
@@ -241,7 +236,9 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         lastName: customerMetadata.lastName,
         email: customerMetadata.email,
         phoneNumber: customerMetadata.phoneNumber ?? null,
-        dietaryRestrictions: user?.dietaryRestrictions ?? null,
+        dietaryRestrictions: includeDietaryRestrictions
+          ? user?.dietaryRestrictions ?? null
+          : null,
         includeNapkinsAndUtensils: orderDetails.includeNapkinsAndUtensils,
         subtotal: subtotal.toNumber(),
         tax: tax.toNumber(),

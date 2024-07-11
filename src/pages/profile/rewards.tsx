@@ -48,6 +48,7 @@ import {
 } from "~/components/ui/select";
 import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
 import sampleImage from "/public/menuItems/sampleImage.webp";
+import { type User } from "@prisma/client";
 
 // TODO: honestly the logic within here is very hit or miss, comb through this for sure
 
@@ -671,6 +672,7 @@ function Rewards() {
                                     toBeDeductedRewardsPoints
                                   }
                                   forBirthdayReward={true}
+                                  user={user}
                                 />
                                 {index !== category.menuItems.length - 1 && (
                                   <Separator className="h-[1px] w-11/12 tablet:h-28 tablet:w-[1px]" />
@@ -719,6 +721,7 @@ function Rewards() {
                                 rewardsPointsEarned - toBeDeductedRewardsPoints
                               }
                               forBirthdayReward={false}
+                              user={user}
                             />
                             {index !== category.menuItems.length - 1 && (
                               <Separator className="h-[1px] w-[95%]" />
@@ -851,6 +854,7 @@ interface RewardMenuItem {
   currentlySelectedRewardId: string | null;
   userAvailablePoints: number;
   forBirthdayReward: boolean;
+  user: User | null | undefined;
 }
 
 function RewardMenuItem({
@@ -858,6 +862,7 @@ function RewardMenuItem({
   currentlySelectedRewardId,
   userAvailablePoints,
   forBirthdayReward,
+  user,
 }: RewardMenuItem) {
   // actually calls updateOrder() and shows toast(), but prob don't bother with the "undo" logic for this
   // right now
@@ -998,7 +1003,8 @@ function RewardMenuItem({
                         customizations:
                           getDefaultCustomizationChoices(menuItem),
                         specialInstructions: "",
-                        includeDietaryRestrictions: false,
+                        includeDietaryRestrictions:
+                          user?.autoApplyDietaryRestrictions ?? false,
                         quantity: 1,
                         price: menuItem.price,
                         discountId: null,
