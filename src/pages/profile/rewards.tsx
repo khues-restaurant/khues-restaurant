@@ -80,7 +80,6 @@ function Rewards() {
   >(null);
   const [toBeDeductedRewardsPoints, setToBeDeductedRewardsPoints] = useState(0);
 
-  // TODO: get rid of this right? just use user.rewardsPoints directly
   useEffect(() => {
     if (!user) return;
 
@@ -657,7 +656,7 @@ function Rewards() {
                         className="baseVertFlex w-full !items-start gap-4"
                       >
                         {/* Items */}
-                        <div className="baseVertFlex gap-4 tablet:!flex-row">
+                        <div className="baseVertFlex w-full gap-4 tablet:!grid tablet:grid-cols-2 tablet:gap-8 desktop:grid-cols-3">
                           {category.menuItems
                             .sort((a, b) => a.price - b.price)
                             .map((item, index) => (
@@ -674,9 +673,6 @@ function Rewards() {
                                   forBirthdayReward={true}
                                   user={user}
                                 />
-                                {index !== category.menuItems.length - 1 && (
-                                  <Separator className="h-[1px] w-11/12 tablet:h-28 tablet:w-[1px]" />
-                                )}
                               </Fragment>
                             ))}
                         </div>
@@ -686,56 +682,59 @@ function Rewards() {
                 </div>
               )}
 
-              <div className="baseFlex gap-2">
-                <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary sm:h-[18px]" />
-                <span className="text-center text-xl font-medium text-primary underline underline-offset-2 sm:text-2xl">
-                  Choose your reward
-                </span>
-                <SideAccentSwirls className="h-4 fill-primary sm:h-[18px]" />
-              </div>
+              <div className="baseVertFlex w-full gap-8">
+                <div className="baseFlex gap-2">
+                  <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary sm:h-[18px]" />
+                  <span className="text-center text-xl font-medium text-primary underline underline-offset-2 sm:text-2xl">
+                    Choose your reward
+                  </span>
+                  <SideAccentSwirls className="h-4 fill-primary sm:h-[18px]" />
+                </div>
 
-              {/* Regular reward options */}
-              <div className="grid w-full grid-cols-1 gap-4 text-primary lg:grid-cols-2 lg:!place-items-start lg:gap-8 2xl:grid-cols-3">
-                {/* Categories */}
-                {rewards.rewardMenuCategories.map((category) => (
-                  <div
-                    key={category.id}
-                    className="baseVertFlex w-full !items-start gap-2"
-                  >
-                    <p className="text-lg font-semibold underline underline-offset-2">
-                      {category.name}
-                    </p>
+                {/* Regular reward options */}
+                <div className="grid w-full grid-cols-1 gap-4 text-primary lg:grid-cols-2 lg:!place-items-start lg:gap-8 2xl:grid-cols-3">
+                  {/* Categories */}
+                  {rewards.rewardMenuCategories.map((category) => (
+                    <div
+                      key={category.id}
+                      className="baseVertFlex w-full !items-start gap-2"
+                    >
+                      <p className="text-lg font-semibold underline underline-offset-2">
+                        {category.name}
+                      </p>
 
-                    {/* Items */}
-                    <div className="baseVertFlex w-full gap-2">
-                      {category.menuItems
-                        .sort((a, b) => a.price - b.price)
-                        .map((item, index) => (
-                          <Fragment key={item.id}>
-                            <RewardMenuItem
-                              menuItem={item}
-                              currentlySelectedRewardId={
-                                regularSelectedRewardId
-                              }
-                              userAvailablePoints={
-                                rewardsPointsEarned - toBeDeductedRewardsPoints
-                              }
-                              forBirthdayReward={false}
-                              user={user}
-                            />
-                            {index !== category.menuItems.length - 1 && (
-                              <Separator className="h-[1px] w-[95%]" />
-                            )}
-                          </Fragment>
-                        ))}
+                      {/* Items */}
+                      <div className="baseVertFlex w-full gap-2">
+                        {category.menuItems
+                          .sort((a, b) => a.price - b.price)
+                          .map((item, index) => (
+                            <Fragment key={item.id}>
+                              <RewardMenuItem
+                                menuItem={item}
+                                currentlySelectedRewardId={
+                                  regularSelectedRewardId
+                                }
+                                userAvailablePoints={
+                                  rewardsPointsEarned -
+                                  toBeDeductedRewardsPoints
+                                }
+                                forBirthdayReward={false}
+                                user={user}
+                              />
+                              {index !== category.menuItems.length - 1 && (
+                                <Separator className="h-[1px] w-[95%]" />
+                              )}
+                            </Fragment>
+                          ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              <p className="text-sm italic text-stone-400">
-                * Only one reward is able to be redeemed per order.
-              </p>
+                <p className="text-sm italic text-stone-400">
+                  * Only one reward is able to be redeemed per order.
+                </p>
+              </div>
             </div>
 
             <div className="baseVertFlex mt-8 max-w-7xl gap-8 text-offwhite">
@@ -864,9 +863,6 @@ function RewardMenuItem({
   forBirthdayReward,
   user,
 }: RewardMenuItem) {
-  // actually calls updateOrder() and shows toast(), but prob don't bother with the "undo" logic for this
-  // right now
-
   const { orderDetails } = useMainStore((state) => ({
     orderDetails: state.orderDetails,
   }));
@@ -885,8 +881,9 @@ function RewardMenuItem({
       return false;
 
     if (
-      // conversion: item price (in cents) multiplied by 2
-      userAvailablePoints < new Decimal(menuItem.price).mul(2).toNumber() ||
+      (!forBirthdayReward &&
+        // conversion: item price (in cents) multiplied by 2
+        userAvailablePoints < new Decimal(menuItem.price).mul(2).toNumber()) ||
       currentlySelectedRewardId !== menuItem.id
     ) {
       return true;
