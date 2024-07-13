@@ -329,6 +329,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       // 5) if user exists, update their rewards points + reset their currentOrder
+      //    and update lastBirthdayRewardRedemptionYear if they redeemed a birthday reward
       if (user) {
         if (payment.metadata.userId) {
           const currentDate = new Date();
@@ -352,6 +353,16 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
           .add(earnedPoints)
           .sub(spentPoints);
 
+        const orderContainedBirthdayReward = orderDetails.items.some(
+          (item) => item.birthdayReward,
+        );
+
+        const zonedCurrentDatetime = toZonedTime(new Date(), "America/Chicago");
+
+        const lastBirthdayRewardRedemptionYear = orderContainedBirthdayReward
+          ? zonedCurrentDatetime.getFullYear()
+          : user.lastBirthdayRewardRedemptionYear;
+
         await prisma.user.update({
           where: {
             userId: payment.metadata.userId,
@@ -368,6 +379,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
               includeNapkinsAndUtensils: false,
               discountId: null,
             },
+            lastBirthdayRewardRedemptionYear,
             orderHasBeenPlacedSinceLastCloseToRewardEmail: true,
             // ^ gets set back to false whenever the next "close to reward"
             // email is sent out
