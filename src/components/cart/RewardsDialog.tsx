@@ -546,9 +546,7 @@ function RewardMenuItem({
                 });
               }}
             >
-              {currentlySelectedRewardId === menuItem.id
-                ? "Unselect"
-                : "Select"}
+              {currentlySelectedRewardId === menuItem.id ? "Remove" : "Select"}
             </Button>
           </div>
         </div>
