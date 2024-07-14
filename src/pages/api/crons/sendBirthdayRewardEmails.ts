@@ -7,7 +7,7 @@ import { addMonths, addWeeks } from "date-fns";
 import BirthdayReward from "emails/BirthdayReward";
 
 // This is set to run at "0 6 * * *",
-// meaning every first of the month at 6:00 AM, which
+// meaning every day at midnight/1 am CST,
 // allows for daylight savings time buffer
 
 const resend = new Resend(env.RESEND_API_KEY);
