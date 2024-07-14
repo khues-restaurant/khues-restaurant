@@ -97,7 +97,9 @@ function OrderNow() {
     if (
       !menuCategories ||
       menuCategoryIndicies !== undefined ||
-      userRecentOrders === undefined // waiting for userRecentOrders to be fetched
+      (isSignedIn && userRecentOrders === undefined)
+      // ^ waiting for userRecentOrders to be fetched
+      // (if the user is signed in)
     )
       return;
 
@@ -126,6 +128,7 @@ function OrderNow() {
     userRecentOrders,
     currentlyInViewCategory,
     menuCategoryIndicies,
+    isSignedIn,
   ]);
 
   // Effect to set category scroll Y values
