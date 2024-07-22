@@ -124,14 +124,18 @@ function ItemCustomizerDialogContent({
   const { mutate: favoriteItem, isLoading: favoritingItem } =
     api.favorite.addFavoriteItem.useMutation({
       onSuccess: () => {
-        void ctx.favorite.getFavoriteItemIds.invalidate();
+        // not my favorite, I guess alternative is to fetch user's favorites
+        // again, and then storeDBQueries.setData({ ...data, userFavoriteItemIds: fetchedData})?
+        void ctx.storeDBQueries.getAll.invalidate();
       },
     });
 
   const { mutate: unfavoriteItem, isLoading: unfavoritingItem } =
     api.favorite.removeFavoriteItem.useMutation({
       onSuccess: () => {
-        void ctx.favorite.getFavoriteItemIds.invalidate();
+        // not my favorite, I guess alternative is to fetch user's favorites
+        // again, and then storeDBQueries.setData({ ...data, userFavoriteItemIds: fetchedData})?
+        void ctx.storeDBQueries.getAll.invalidate();
       },
     });
 
