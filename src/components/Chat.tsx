@@ -253,10 +253,7 @@ function Chat() {
                   opacity: 0,
                 }}
                 transition={{ duration: 0.2 }}
-                style={{
-                  paddingBottom: asPath.includes("/profile") ? "18rem" : "8rem",
-                }}
-                className="relative z-20 size-10 tablet:hidden"
+                className="relative z-20 size-10 pb-32 tablet:hidden"
               >
                 <AlertDialogTrigger asChild>
                   <Button
