@@ -11,6 +11,42 @@ import {
   getMidnightCSTInUTC,
 } from "~/utils/dateHelpers/cstToUTCHelpers";
 
+/**
+ * Validation Flow and Checks Overview:
+ *
+ *
+ * 1. Date Validation:
+ *    - `datetimeToPickup` must be in the future.
+ *    - If `datetimeToPickup` is in the past, find the next valid day.
+ *    - Ensure the selected day is not a holiday or a day when the restaurant is closed.
+ *
+ * 2. Pickup Time Validation:
+ *    - `datetimeToPickup` must be greater than `minOrderPickupDatetime`.
+ *    - Ensure the selected pickup time is within operating hours.
+ *    - Ensure `datetimeToPickup` is at least 20 minutes from the current time.
+ *    - If `isASAP`, ensure `datetimeToPickup` is today and within operating hours.
+ *    - Ensure `datetimeToPickup` is not less than 30 minutes before closing time.
+ *
+ * 3. Item Validation:
+ *    - General item rules:
+ *      - Item must exist in the database and be available.
+ *      - Item's price must match the price in the database.
+ *      - Item's quantity must be greater than 0.
+ *      - Remove items that are unavailable or have an "isAlcoholic" field set to true.
+ *    - Customizations:
+ *      - Customization choice IDs must exist and be available in the database.
+ *      - If a customization choice ID is invalid, set to default or first available choice.
+ *      - Default to removing item from the order if no valid customization choice is found.
+ *    - Discounts (not implemented):
+ *      - Discount ID must exist, be active, and not expired.
+ *      - Remove invalid discount IDs from the order item.
+ *      - If the discount name includes "Points" or "Birthday", it must match the userId.
+ *    - Rewards:
+ *      - Validate point rewards based on user's available points.
+ *      - If `validatingAReorder` is true, keep the item but set `pointReward` and `birthdayReward` to false.
+ *      - For birthday rewards, check eligibility based on user's birthday and redemption year.
+ */
+
 function validateDayOfDatetimeToPickup(orderDatetimeToPickup: Date) {
   let datetimeToPickup = orderDatetimeToPickup
     ? getCSTDateInUTC(orderDatetimeToPickup)
@@ -60,46 +96,6 @@ export const validateOrderRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      // Date validation rules:
-      //  - datetimeToPickup must be in the future
-      //  - (potentially also check if it's not on a day the store is closed)
-
-      // Pickup time validation rules:
-      //  - pickup time must be greater than the minOrderPickupDatetime
-      //  - pickup time must be greater than current datetime
-      //  - not doing the +30 minutes here since we want the user to get that feedback on press of
-      //    the "proceed to checkout" button
-
-      // Item validation rules:
-      //  - General item rules:
-      //  - item must exist in the database and have an "available" field set to true
-      //  - item must have a price that matches the price in the database
-      //  - item must have a quantity that is greater than 0
-      //  - if an item is not available, it should be removed from the order, but it's Id should be
-      //    added to an array which gets returned at the end of this function
-      //  - shouldn't ever happen, but just remove item if it has "isAlcoholic" field set to true
-      //  - Customizations:
-      //    - customization choice ids must exist in the database, otherwise set to default choice id.
-      //      If the default choice id isn't available, cycle through the customization category's
-      //      choices and set it to the first one that is available
-      //    - similarly, if the current choice id isn't available, set it to the default choice id
-      //      or cycle to find the first available choice id
-      //  - Discount:
-      //    - discount id must exist in the database and it's "expirationDate" must be in the future,
-      //      and it must have an "active" field set to true
-      //    - if the discount id is not valid, it should be removed from the order item
-      //    - if discount name includes "Points" or "Birthday", it must have the same userId as the
-      //      userId passed in.
-      //  - Reward:
-      //    - if an item is a point reward, it should be checked if the user has enough points to
-      //      redeem the reward. If they aren't a user, remove the item from the order. If they don't
-      //      have enough points, remove the pointReward flag from the item.
-      //    - redeeming a reward conversion ratio: item price (in cents) multiplied by 2
-      //    - if validatingAReorder is true, the item should be kept in the order, but it's pointReward
-      //      and birthdayReward should be set to false
-
-      //  -? do we really need to check if menu item category exists in database? doesn't seem necessary
-
       const {
         userId,
         orderDetails: originalOrderDetails,
@@ -192,7 +188,7 @@ export const validateOrderRouter = createTRPCRouter({
               });
 
             // if the customization choice doesn't exist, or isn't available
-            // try to set to defaultChoiceId, if that isn't avail
+            // try to set to defaultChoiceId
             if (!dbCustomizationChoice?.isAvailable) {
               // need to query for the category's default choice id
               const dbCustomizationCategory =
