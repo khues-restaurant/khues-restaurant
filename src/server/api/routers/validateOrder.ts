@@ -144,6 +144,10 @@ export const validateOrderRouter = createTRPCRouter({
           where: {
             id: { in: itemIds },
           },
+
+          include: {
+            menuCategory: true,
+          },
         });
 
         const dbItemsMap = new Map(dbItems.map((item) => [item.id, item]));
@@ -157,6 +161,8 @@ export const validateOrderRouter = createTRPCRouter({
 
           if (
             !dbItem ||
+            !dbItem.menuCategory.active ||
+            !dbItem.menuCategory.orderableOnline ||
             !dbItem.available ||
             dbItem.price !== item.price ||
             dbItem.isAlcoholic ||
