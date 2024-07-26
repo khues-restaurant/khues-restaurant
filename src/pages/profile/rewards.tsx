@@ -149,6 +149,54 @@ function Rewards() {
       className="baseVertFlex baseVertFlex relative
       h-full min-h-[calc(100dvh-6rem-81px)] w-full !justify-start tablet:min-h-[calc(100dvh-7rem-120px)]"
     >
+      <div className="baseFlex sticky left-0 top-24 z-40 h-14 w-full gap-0 bg-offwhite shadow-sm tablet:hidden">
+        <Button
+          variant={
+            asPath.includes("/profile/preferences") ? "activeLink" : "text"
+          }
+          asChild
+        >
+          <Link
+            href="/profile/preferences"
+            className={`baseFlex h-14 w-full gap-2 !rounded-none text-xs
+            ${asPath.includes("/profile/preferences") ? "activeUnderline" : "border-b-2 border-stone-300"}`}
+          >
+            <IoSettingsOutline className="size-5" />
+            Preferences
+          </Link>
+        </Button>
+
+        <Button
+          variant={asPath.includes("/profile/rewards") ? "activeLink" : "text"}
+          asChild
+        >
+          <Link
+            href="/profile/rewards"
+            className={`baseFlex h-14 w-full gap-2 !rounded-none text-xs
+            ${asPath.includes("/profile/rewards") ? "activeUnderline" : "border-b-2 border-stone-300"}`}
+          >
+            <CiGift className="size-6" />
+            <span className="pb-0.5">Rewards</span>
+          </Link>
+        </Button>
+
+        <Button
+          variant={
+            asPath.includes("/profile/my-orders") ? "activeLink" : "text"
+          }
+          asChild
+        >
+          <Link
+            href="/profile/my-orders"
+            className={`baseFlex h-14 w-full gap-2 !rounded-none text-xs
+            ${asPath.includes("/profile/my-orders") ? "activeUnderline" : "border-b-2 border-stone-300"}`}
+          >
+            <TfiReceipt className="size-5" />
+            My orders
+          </Link>
+        </Button>
+      </div>
+
       <div className="baseFlex my-12 !hidden gap-4 rounded-lg border border-stone-400 bg-offwhite p-1 tablet:!flex">
         <Button
           variant={
@@ -791,57 +839,6 @@ function Rewards() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <div className="baseFlex sticky bottom-0 left-0 z-40 h-20 w-full gap-0 border-t border-stone-400 bg-offwhite tablet:hidden">
-        <Button
-          variant={
-            asPath.includes("/profile/preferences") ? "default" : "secondary"
-          }
-          asChild
-        >
-          <Link
-            href="/profile/preferences"
-            className="baseVertFlex h-20 w-full gap-2 !rounded-none text-xs"
-          >
-            <IoSettingsOutline className="size-5" />
-            Preferences
-          </Link>
-        </Button>
-
-        <Separator className="h-20 w-[1px] bg-stone-400" />
-
-        <Button
-          variant={
-            asPath.includes("/profile/rewards") ? "default" : "secondary"
-          }
-          asChild
-        >
-          <Link
-            href="/profile/rewards"
-            className="baseVertFlex h-20 w-full gap-2 !rounded-none text-xs"
-          >
-            <CiGift className="size-6" />
-            <span className="pb-0.5">Rewards</span>
-          </Link>
-        </Button>
-
-        <Separator className="h-20 w-[1px] bg-stone-400" />
-
-        <Button
-          variant={
-            asPath.includes("/profile/my-orders") ? "default" : "secondary"
-          }
-          asChild
-        >
-          <Link
-            href="/profile/my-orders"
-            className="baseVertFlex h-20 w-full gap-2 !rounded-none text-xs"
-          >
-            <TfiReceipt className="size-5" />
-            My orders
-          </Link>
-        </Button>
-      </div>
     </motion.div>
   );
 }

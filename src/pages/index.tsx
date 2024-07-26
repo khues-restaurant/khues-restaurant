@@ -691,10 +691,10 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
               <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
               <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
 
-              <p className="text-lg font-medium">
+              <p className="text-lg font-medium leading-6">
                 Enjoy exclusive benefits when you order direct
               </p>
-              <div className="baseVertFlex mt-2 !items-start gap-4 pl-4">
+              <div className="baseVertFlex mt-2 !items-start gap-4 pl-1">
                 <div className="baseFlex !items-start gap-4">
                   <MdOutlineMoneyOff className="size-6 shrink-0" />
                   <p>Shop our lowest menu prices</p>
