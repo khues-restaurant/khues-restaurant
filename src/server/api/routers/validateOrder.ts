@@ -135,8 +135,8 @@ export const validateOrderRouter = createTRPCRouter({
       }
 
       // Item validation
-      const items = orderDetails.items;
-      const removedItemNames = [];
+      let items = orderDetails.items;
+      let removedItemNames = [];
       const itemIds = items.map((item) => item.itemId);
 
       try {
@@ -330,10 +330,9 @@ export const validateOrderRouter = createTRPCRouter({
         }
       } catch (error) {
         console.error("Error validating items:", error);
-        return {
-          validItems: [],
-          removedItemNames: [],
-        };
+
+        items = [];
+        removedItemNames = [];
       }
 
       if (validatingAReorder) {
