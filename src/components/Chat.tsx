@@ -10,6 +10,8 @@ import { type Socket, io } from "socket.io-client";
 import {
   AlertDialog,
   AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
@@ -25,6 +27,7 @@ import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 
 import khuesKitchenLogo from "/public/logos/khuesKitchenLogo.png";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 function containsLetterOrNumber(str: string) {
   const regex = /[a-zA-Z0-9]/;
@@ -282,6 +285,14 @@ function Chat() {
           </AnimatePresence>
 
           <AlertDialogContent className="baseVertFlex h-[90dvh] max-h-[750px] w-[90vw] !gap-0 rounded-xl border-none !p-0 shadow-xl">
+            <VisuallyHidden>
+              <AlertDialogTitle>Khue&apos;s Chat</AlertDialogTitle>
+              <AlertDialogDescription>
+                Send a message directly to our team and we will respond as soon
+                as possible.
+              </AlertDialogDescription>
+            </VisuallyHidden>
+
             {/* header */}
             <div className="baseFlex relative z-20 w-full gap-4 rounded-t-xl bg-primary p-4 shadow-md sm:gap-6 sm:pl-6">
               <Image
