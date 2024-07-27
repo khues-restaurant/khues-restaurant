@@ -321,8 +321,9 @@ export const userRouter = createTRPCRouter({
         },
       });
 
-      // Delete user's transient order
-      await ctx.prisma.transientOrder.delete({
+      // Delete user's transient order (ideally should just be delete, but
+      // currently prisma throws an error if try to delete a row that doesn't exist)
+      await ctx.prisma.transientOrder.deleteMany({
         where: {
           userId,
         },
