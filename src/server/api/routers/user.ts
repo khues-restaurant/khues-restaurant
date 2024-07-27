@@ -222,8 +222,8 @@ export const userRouter = createTRPCRouter({
           .string({
             required_error: "First name cannot be empty",
           })
-          .min(1, { message: "Must be at least 1 character" })
-          .max(30, { message: "Must be at most 30 characters" })
+          .min(1, { message: "At least 1 character required" })
+          .max(30, { message: "Maximum 30 characters allowed" })
           .refine((value) => /^[A-Za-z'-]+$/.test(value), {
             message:
               "Only English characters, hyphens, and apostrophes are allowed",
@@ -240,8 +240,8 @@ export const userRouter = createTRPCRouter({
           .string({
             required_error: "Last name cannot be empty",
           })
-          .min(1, { message: "Must be at least 1 character" })
-          .max(30, { message: "Must be at most 30 characters" })
+          .min(1, { message: "At least 1 character required" })
+          .max(30, { message: "Maximum 30 characters allowed" })
           .refine((value) => /^[A-Za-z'-]+$/.test(value), {
             message:
               "Only English characters, hyphens, and apostrophes are allowed",
@@ -261,7 +261,7 @@ export const userRouter = createTRPCRouter({
           .regex(/^\(\d{3}\) \d{3}-\d{4}$/, "Invalid phone number format"),
         dietaryRestrictions: z
           .string()
-          .max(100, { message: "Must be at most 100 characters" })
+          .max(100, { message: "Maximum 100 characters allowed" })
           .refine(
             (value) => /^[A-Za-z0-9\s\-';.,!?:"(){}\[\]/\\_@]*$/.test(value),
             {
