@@ -27,6 +27,9 @@ const config = {
   },
 
   experimental: {
+    bundlePagesExternals: true, // replace with non-experimental "bundlePagesRouterDependencies: true"
+    // when you upgrade to Next 15
+
     swcPlugins: [
       [
         "next-superjson-plugin",
