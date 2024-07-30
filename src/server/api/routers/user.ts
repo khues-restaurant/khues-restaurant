@@ -362,7 +362,8 @@ export const userRouter = createTRPCRouter({
 
       await clerkClient.users.deleteUser(userId);
 
-      return ctx.prisma.user.delete({
+      // deleteMany instead of delete because prisma throws an error if the row doesn't exist
+      return ctx.prisma.user.deleteMany({
         where: {
           userId,
         },
