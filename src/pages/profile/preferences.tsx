@@ -156,12 +156,12 @@ function Preferences() {
 
   const { mutate: deleteUser } = api.user.delete.useMutation({
     onSuccess: async () => {
-      await ctx.user.invalidate();
-
       setTimeout(() => setDeleteButtonText("Account deleted"), 2000);
 
       setTimeout(() => {
-        void push("/");
+        clearLocalStorage();
+        resetStore();
+        void signOut({ redirectUrl: "/" });
       }, 4000);
     },
     onError: (error) => {
@@ -196,8 +196,6 @@ function Preferences() {
   });
 
   const { updateOrder } = useUpdateOrder();
-
-  console.log(user?.autoApplyDietaryRestrictions);
 
   async function onFormSubmit(values: z.infer<typeof formSchema>) {
     if (!user) return;

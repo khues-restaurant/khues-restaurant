@@ -477,7 +477,8 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       // }
 
       // 10) cleanup transient order, technically not necessary though right since we just upsert either way?
-      await prisma.transientOrder.delete({
+      // deleteMany instead of delete because prisma throws an error if the row doesn't exist
+      await prisma.transientOrder.deleteMany({
         where: {
           userId: payment.metadata.userId,
         },
