@@ -146,9 +146,10 @@ function Privacy() {
           7. International Users
         </h2>
         <p className="mb-4">
-          Our website is intended for use only within the country. Access to our
-          website from outside the country is restricted and not permitted. By
-          using our services, you agree to comply with this limitation.
+          Our website is intended for use only within the United States. Access
+          to our website from outside the United States is restricted and not
+          permitted. By using our services, you agree to comply with this
+          limitation.
         </p>
 
         <h2 className="mb-4 text-xl font-semibold tablet:text-2xl">
