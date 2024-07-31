@@ -104,7 +104,7 @@ function MobileHeader() {
       className="baseFlex sticky left-0 top-0 z-50 h-24 w-full !justify-between bg-offwhite p-2 shadow-md"
     >
       <Button variant="text" asChild>
-        <Link href={"/"}>
+        <Link href={"/"} className="ml-3 !px-0 !py-6">
           {/* <p className="text-2xl font-semibold text-primary">Khue&apos;s</p> */}
           <Image
             src={"/logos/logo.svg"}
