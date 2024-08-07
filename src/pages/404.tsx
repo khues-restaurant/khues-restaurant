@@ -19,6 +19,8 @@ function Custom404() {
       className="baseVertFlex min-h-[calc(100dvh-6rem)] w-full tablet:min-h-[calc(100dvh-7rem)]"
     >
       <div className="baseVertFlex relative max-w-80 gap-4 overflow-hidden rounded-lg border bg-gradient-to-br from-offwhite to-primary/10 px-6 py-8 shadow-md tablet:max-w-2xl tablet:p-12 tablet:pb-8">
+        <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-primary/50" />
+        <StaticLotus className="absolute -left-5 -top-5 size-16 rotate-[135deg] fill-primary/50" />
         <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
         <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
 
@@ -27,7 +29,7 @@ function Custom404() {
         <Separator />
 
         <div className="baseVertFlex gap-4 pb-6">
-          <p className="text-center font-medium">
+          <p className="text-center font-medium sm:text-lg">
             The page you&apos;re looking for doesn&apos;t exist.
           </p>
 
