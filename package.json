@@ -53,7 +53,7 @@
     "micro": "^10.0.1",
     "next": "^14.2.5",
     "next-superjson-plugin": "^0.6.3",
-    "openai": "^4.52.5",
+    "openai": "^4.55.1",
     "pluralize": "^8.0.0",
     "react": "18.2.0",
     "react-day-picker": "^9.0.4",
@@ -92,7 +92,7 @@
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "prisma": "^5.17.0",
-    "tailwindcss": "^3.4.7",
+    "tailwindcss": "^3.4.8",
     "typescript": "^5.5.4"
   },
   "ct3aMetadata": {
