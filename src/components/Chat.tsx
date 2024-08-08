@@ -270,7 +270,7 @@ function Chat() {
                       style={{
                         animationDuration: "2s",
                       }}
-                      className={`absolute left-1 top-1 z-[-1] size-8 rounded-full bg-primary ${
+                      className={`absolute left-1 top-1 z-[-1] size-10 rounded-full bg-primary ${
                         !chatIsOpen && chat?.userHasUnreadMessages
                           ? "animate-ping"
                           : ""

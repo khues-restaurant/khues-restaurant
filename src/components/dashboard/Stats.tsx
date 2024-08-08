@@ -138,7 +138,7 @@ function Stats() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex my-8 mb-24 h-full max-w-80 sm:max-w-md tablet:max-w-3xl desktop:max-w-6xl"
+      className="baseVertFlex my-8 mb-24 h-full max-w-[350px] sm:max-w-md md:max-w-xl tablet:max-w-3xl desktop:max-w-6xl"
     >
       {/* form + preset report buttons grid */}
 
@@ -658,7 +658,7 @@ function Stats() {
       )}
 
       {reportResults && (
-        <div className="baseVertFlex w-10/12 gap-4 sm:w-full">
+        <div className="baseVertFlex w-full gap-4">
           {/* .map() through results */}
           {reportResults.map((report) => (
             <StatsCategoryVisualReport
