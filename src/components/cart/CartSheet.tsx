@@ -1172,7 +1172,7 @@ function CartSheet({
           <div className="baseFlex mb-2 mt-auto w-full gap-2 !self-end">
             <div className="size-2 shrink-0 rounded-full bg-primary/75" />
             <p className="text-sm">
-              Item will be prepared according to your dietary restrictions
+              Item will be prepared following your dietary restrictions
             </p>
           </div>
         )}
