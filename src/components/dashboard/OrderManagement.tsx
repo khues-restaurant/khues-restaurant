@@ -744,7 +744,7 @@ function OrderItems({ order }: OrderItems) {
         <div className="baseVertFlex mt-2 w-full gap-2">
           <div className="baseFlex gap-2">
             <div className="size-2 shrink-0 rounded-full bg-primary/75" />
-            Item needs to follow these dietary restrictions:
+            Dietary restrictions:
           </div>
           <p className="text-sm font-semibold">
             &ldquo; {order.dietaryRestrictions} &rdquo;
@@ -763,35 +763,65 @@ function OrderItems({ order }: OrderItems) {
 
       <Separator className="mt-2 h-[1px] w-full" />
 
-      <div className="baseFlex w-full gap-8">
-        <p>Order #{getFirstSixNumbers(order.id)}</p>
+      <div className="baseVertFlex w-full gap-2">
+        <div className="baseFlex w-full gap-8">
+          <p>Order #{getFirstSixNumbers(order.id)}</p>
 
-        <Button
-          variant={"secondary"}
-          disabled={orderBeingReprinted}
-          size={"sm"}
-          className="!self-center text-sm"
-          onClick={() => {
-            setOrderBeingReprinted(true);
-            reprintOrder({ orderId: order.id });
-          }}
-        >
-          Reprint ticket
-        </Button>
+          <Button
+            variant={"secondary"}
+            disabled={orderBeingReprinted}
+            size={"sm"}
+            className="!self-center text-sm"
+            onClick={() => {
+              setOrderBeingReprinted(true);
+              reprintOrder({ orderId: order.id });
+            }}
+          >
+            Reprint ticket
+          </Button>
+        </div>
+        {order.phoneNumber && (
+          <a
+            href={`tel:${order.phoneNumber}`}
+            className="text-sm font-semibold text-primary"
+          >
+            {formatPhoneNumber(order.phoneNumber)}
+          </a>
+        )}
       </div>
     </div>
   );
 }
 
-function formatTime(datetime: Date) {
-  let hours = datetime.getHours();
-  const minutes = datetime.getMinutes();
-  const ampm = hours >= 12 ? "PM" : "AM";
+function formatPhoneNumber(phoneNumber: string): string {
+  // Remove any non-numeric characters (except for the leading "+")
+  const cleaned = phoneNumber.replace(/[^0-9]/g, "");
 
-  hours %= 12; // Convert to 12-hour format
-  hours = hours || 12; // Adjust midnight or noon
-  const strHours = hours < 10 ? `${hours}` : `${hours}`; // Omit leading 0 if < 10
-  const strMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+  // Handle optional country code (e.g., +1)
+  let normalizedNumber = cleaned;
 
-  return `${strHours}:${strMinutes} ${ampm}`;
+  // If the number starts with a "1" and is 11 digits long, strip the leading "1"
+  if (cleaned.length === 11 && cleaned.startsWith("1")) {
+    normalizedNumber = cleaned.slice(1);
+  } else if (cleaned.length > 10 && cleaned.startsWith("1")) {
+    // Handle the case where the number might have an international prefix (e.g., +1)
+    normalizedNumber = cleaned.slice(1);
+  }
+
+  // Check if the normalized number is of the correct length (10 digits)
+  if (normalizedNumber.length !== 10) {
+    throw new Error(
+      "Invalid phone number length. It should be 10 digits after country code normalization.",
+    );
+  }
+
+  // Extract the area code, the first three digits, and the last four digits
+  const areaCode = normalizedNumber.slice(0, 3);
+  const firstPart = normalizedNumber.slice(3, 6);
+  const secondPart = normalizedNumber.slice(6, 10);
+
+  // Format the phone number
+  const formattedPhoneNumber = `(${areaCode}) ${firstPart}-${secondPart}`;
+
+  return formattedPhoneNumber;
 }
