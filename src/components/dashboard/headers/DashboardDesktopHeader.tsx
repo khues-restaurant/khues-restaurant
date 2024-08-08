@@ -12,7 +12,6 @@ import { IoMdMore } from "react-icons/io";
 import useGetUserId from "~/hooks/useGetUserId";
 import { api } from "~/utils/api";
 
-import classes from "./DashboardDesktopHeader.module.css";
 // import DiscountManagement from "~/components/dashboard/DiscountManagement";
 import { addDays } from "date-fns";
 import { type Socket } from "socket.io-client";
@@ -34,13 +33,8 @@ function DashboardDesktopHeader({
   setViewState,
   socket,
 }: DashboardDesktopHeader) {
-  const { isSignedIn, signOut } = useAuth();
-  const { asPath, push } = useRouter();
-  const userId = useGetUserId();
-
-  const { data: user } = api.user.get.useQuery(userId, {
-    enabled: Boolean(userId && isSignedIn),
-  });
+  const { signOut } = useAuth();
+  const { push } = useRouter();
 
   const { data: orders } = api.order.getDashboardOrders.useQuery();
   const { data: databaseChats, refetch: refetchChats } =

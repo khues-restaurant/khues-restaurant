@@ -46,7 +46,7 @@ function ItemManagement({
       <p className="mt-8 pb-8 text-xl font-semibold underline underline-offset-2">
         Menu items
       </p>
-      <div className="baseVertFlex w-full !items-start gap-4">
+      <div className="baseVertFlex w-full !items-start gap-4 px-4">
         {menuCategories?.map((category) => (
           <MenuCategoryContainer
             key={category.id}
@@ -61,7 +61,7 @@ function ItemManagement({
       <p className="mt-8 pb-8 text-xl font-semibold underline underline-offset-2">
         Customizations
       </p>
-      <div className="baseVertFlex w-full !items-start gap-4">
+      <div className="baseVertFlex w-full !items-start gap-4 px-4">
         {customizationCategories?.map((category) => (
           <CustomizationCategoryContainer
             key={category.id}
@@ -125,14 +125,14 @@ function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
         {name}
       </p>
 
-      <div className="grid w-full grid-cols-2 !justify-start gap-4 desktop:grid-cols-3">
+      <div className="grid w-full grid-cols-1 !justify-start gap-4 sm:grid-cols-2 desktop:grid-cols-3">
         {menuItems.map((item) => (
           <div
             key={item.id}
             style={{
               order: item.listOrder,
             }}
-            className="baseFlex w-full !justify-between rounded-md border p-2"
+            className="baseFlex w-full !justify-between gap-2 rounded-md border p-2"
           >
             <p>{item.name}</p>
 
@@ -163,7 +163,7 @@ function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
                   {item.available ? "unable" : "able"} to be ordered online?
                 </AlertDialogDescription>
 
-                <AlertDialogFooter className="mt-4 gap-4">
+                <AlertDialogFooter className="baseFlex mt-8 w-full !flex-row gap-8">
                   <Button
                     variant="secondary"
                     disabled={itemIdBeingMutated === item.id}
@@ -238,14 +238,14 @@ function CustomizationCategoryContainer({
         {name}
       </p>
 
-      <div className="grid w-full grid-cols-2 !justify-start gap-4 desktop:grid-cols-3">
+      <div className="grid w-full grid-cols-1 !justify-start gap-4 sm:grid-cols-2 desktop:grid-cols-3">
         {customizationChoices.map((choice) => (
           <div
             key={choice.id}
             style={{
               order: choice.listOrder,
             }}
-            className="baseFlex w-full !justify-between rounded-md border p-2"
+            className="baseFlex w-full !justify-between gap-2 rounded-md border p-2"
           >
             <p>{choice.name}</p>
 
@@ -276,7 +276,7 @@ function CustomizationCategoryContainer({
                   {choice.isAvailable ? "unable" : "able"} to be ordered online?
                 </AlertDialogDescription>
 
-                <AlertDialogFooter className="mt-4 gap-4">
+                <AlertDialogFooter className="baseFlex mt-8 w-full !flex-row gap-8">
                   <Button
                     variant="secondary"
                     disabled={customizationIdBeingMutated === choice.id}

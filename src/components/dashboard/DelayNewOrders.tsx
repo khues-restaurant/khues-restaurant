@@ -139,7 +139,9 @@ function DelayNewOrders() {
                   </Button>
                 </div>
               ) : (
-                <p>Currently accepting new orders as normal.</p>
+                <p className="w-48 text-center sm:w-auto">
+                  Currently accepting new orders as normal.
+                </p>
               )}
 
               <Separator className="w-full bg-stone-400" />
@@ -186,7 +188,7 @@ function DelayNewOrders() {
           </div>
         )}
 
-        <AlertDialogFooter className="mt-4 gap-4">
+        <AlertDialogFooter className="baseFlex mt-8 w-full !flex-row !justify-between gap-8">
           <Button
             variant="secondary"
             disabled={isUpdatingNewMinOrderPickupTime}

@@ -98,9 +98,11 @@ function Reviews() {
           >
             {sortedReviews && sortedReviews.length > 0 && (
               <div className="baseVertFlex gap-2">
-                <div className="baseFlex w-full !justify-between font-medium">
-                  <p className="text-lg">Customer reviews</p>
-                  <div className="baseFlex gap-2">
+                <div className="baseFlex mx-4 w-full !justify-end font-medium tablet:!justify-between">
+                  <p className="ml-4 hidden text-lg tablet:flex">
+                    Customer reviews
+                  </p>
+                  <div className="baseFlex mr-4 gap-2">
                     <Label htmlFor="sortDirection" className="text-nowrap">
                       Sort by
                     </Label>
@@ -161,7 +163,7 @@ function ReviewAccordion({ review }: ReviewAccordion) {
       key={review.order.id}
       type="single"
       collapsible
-      className="w-full min-w-[340px] xs:min-w-[400px]"
+      className="w-full min-w-[340px] px-4 xs:min-w-[400px]"
       value={accordionOpen}
       onValueChange={(value) => {
         setAccordionOpen(value === "open" ? value : "closed");
@@ -173,7 +175,7 @@ function ReviewAccordion({ review }: ReviewAccordion) {
         data-state={accordionOpen}
       >
         <div className="baseFlex relative w-full gap-2 p-4 tablet:w-[650px]">
-          <div className="baseFlex w-full !justify-between">
+          <div className="baseVertFlex w-full !items-start">
             <div className="baseVertFlex !items-start">
               {review.user && (
                 <div className="baseFlex gap-1 font-medium">
@@ -209,7 +211,7 @@ function ReviewAccordion({ review }: ReviewAccordion) {
               <p className="mt-4">&ldquo;{review.message}&rdquo;</p>
             </div>
 
-            <div className="baseVertFlex absolute right-4 top-4">
+            <div className="baseVertFlex mt-4 tablet:absolute tablet:right-4 tablet:top-4 tablet:mt-0">
               {/* FYI: I am aware that this is a roundabout way of handling accessibility, but it's the
                     best method I can find for allowing arbitrary content (buttons) within the "Trigger"
                     of the accordion */}

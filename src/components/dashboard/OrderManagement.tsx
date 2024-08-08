@@ -132,7 +132,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
       transition={{ duration: 0.5 }}
       className="baseVertFlex size-full"
     >
-      <div className="baseFlex !justify-end gap-4 rounded-lg border bg-offwhite p-1">
+      <div className="baseFlex mt-4 !justify-end gap-4 rounded-lg border bg-offwhite p-1 md:mt-2">
         <Button
           variant={
             selectedTab === "notStarted" || selectedTab === "started"
@@ -168,7 +168,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
         <Button
           variant="outline"
           disabled={manuallyRefreshingOrders}
-          className="baseFlex absolute right-4 gap-2"
+          className="baseFlex absolute right-4 !hidden gap-2 md:!flex"
           onClick={() => {
             setManuallyRefreshingOrders(true);
 
@@ -188,15 +188,42 @@ function OrderManagement({ orders, socket }: OrderManagement) {
         </Button>
       </div>
 
+      <Button
+        variant="outline"
+        disabled={manuallyRefreshingOrders}
+        className="baseFlex mb-2 mt-4 gap-2 md:!hidden"
+        onClick={() => {
+          setManuallyRefreshingOrders(true);
+
+          void refetchOrders().then((e) => {
+            if (e.isSuccess) {
+              toast({
+                description: "Orders have been refreshed.",
+              });
+
+              setManuallyRefreshingOrders(false);
+            }
+          });
+        }}
+      >
+        <FaRedo className="size-4" />
+        Refresh orders
+      </Button>
+
       {(selectedTab === "notStarted" || selectedTab === "started") && (
-        <div className="baseFlex my-6 w-full !justify-around border-b-2 border-stone-300 pb-2">
+        <div className="baseFlex my-6 w-full !justify-around border-b-2 border-stone-300 pb-2 pr-8 sm:px-0">
           <div className="relative">
-            <p
-              onClick={() => setSelectedTab("notStarted")}
-              className="text-xl font-semibold text-primary"
-            >
+            <p className="hidden text-xl font-semibold text-primary sm:flex">
               Not started
             </p>
+
+            <Button
+              variant={selectedTab === "notStarted" ? "activeLink" : "link"}
+              onClick={() => setSelectedTab("notStarted")}
+              className="!px-0 text-lg font-semibold text-primary sm:!hidden"
+            >
+              Not started
+            </Button>
 
             {/* notification count */}
             {notStartedOrders.length > 0 && (
@@ -214,13 +241,23 @@ function OrderManagement({ orders, socket }: OrderManagement) {
             )}
           </div>
 
+          <Separator
+            orientation="vertical"
+            className="h-8 w-[2px] bg-stone-300 sm:hidden"
+          />
+
           <div className="relative">
-            <p
-              onClick={() => setSelectedTab("started")}
-              className="text-xl font-semibold text-primary"
-            >
+            <p className="hidden text-xl font-semibold text-primary sm:flex">
               Started
             </p>
+
+            <Button
+              variant={selectedTab === "started" ? "activeLink" : "link"}
+              onClick={() => setSelectedTab("started")}
+              className="!px-0 text-lg font-semibold text-primary sm:!hidden"
+            >
+              Started
+            </Button>
 
             {/* notification count */}
             {startedOrders.length > 0 && (
@@ -249,10 +286,10 @@ function OrderManagement({ orders, socket }: OrderManagement) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="baseFlex w-full"
+              className={`baseVertFlex min-h-[70dvh] w-full !justify-start ${selectedTab === "started" ? "!hidden sm:!flex" : ""}`}
             >
               <AnimatePresence>
-                <div className="baseVertFlex max-h-[70dvh] w-full !justify-start gap-2 overflow-y-auto px-4 pb-4">
+                <div className="baseVertFlex w-full !justify-start gap-2 overflow-y-auto px-4 pb-4 sm:max-h-[70dvh]">
                   {notStartedOrders.length > 0 ? (
                     <>
                       {notStartedOrders.map((order) => (
@@ -272,7 +309,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
 
             <Separator
               orientation="vertical"
-              className="h-[70dvh] w-[2px] bg-stone-300"
+              className="hidden h-[70dvh] w-[2px] bg-stone-300 sm:block"
             />
 
             <motion.div
@@ -281,10 +318,10 @@ function OrderManagement({ orders, socket }: OrderManagement) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="baseFlex w-full"
+              className={`baseVertFlex min-h-[70dvh] w-full !justify-start ${selectedTab === "notStarted" ? "!hidden sm:!flex" : ""}`}
             >
               <AnimatePresence>
-                <div className="baseVertFlex max-h-[70dvh] w-full !justify-start gap-2 overflow-y-auto px-4 pb-4">
+                <div className="baseVertFlex w-full !justify-start gap-2 overflow-y-auto px-4 pb-4 sm:max-h-[70dvh]">
                   {startedOrders.length > 0 ? (
                     <>
                       {startedOrders.map((order) => (
@@ -311,10 +348,10 @@ function OrderManagement({ orders, socket }: OrderManagement) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseFlex w-full"
+            className="baseVertFlex min-h-[70dvh] w-full !justify-start"
           >
             <AnimatePresence>
-              <div className="baseVertFlex mt-8 max-h-[70dvh] w-11/12 !justify-start gap-2 overflow-y-auto pb-4 tablet:w-full tablet:max-w-xl">
+              <div className="baseVertFlex mt-8 w-11/12 !justify-start gap-2 overflow-y-auto pb-4 sm:max-h-[70dvh] tablet:w-full tablet:max-w-xl">
                 {completedOrders.length > 0 ? (
                   <>
                     {completedOrders.map((order) => (
@@ -340,10 +377,10 @@ function OrderManagement({ orders, socket }: OrderManagement) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseFlex w-full"
+            className="baseVertFlex min-h-[70dvh] w-full !justify-start"
           >
             <AnimatePresence>
-              <div className="baseVertFlex mt-8 max-h-[70dvh] w-11/12 !justify-start gap-2 overflow-y-auto pb-4 tablet:w-full tablet:max-w-xl">
+              <div className="baseVertFlex mt-8 w-11/12 !justify-start gap-2 overflow-y-auto pb-4 sm:max-h-[70dvh] tablet:w-full tablet:max-w-xl">
                 {futureOrders.length > 0 ? (
                   <>
                     {futureOrders.map((order) => (
@@ -471,12 +508,12 @@ function CustomerOrder({ order, view }: CustomerOrder) {
             ${order.notableUserDescription ? "text-primary" : ""}
             `}
             >
-              <div className="baseFlex gap-1 text-lg font-semibold">
+              <div className="baseFlex gap-1 !self-start text-lg font-semibold">
                 <span>{order.firstName}</span>
                 <span>{order.lastName}</span>
               </div>
 
-              <p className="baseFlex gap-2 text-lg font-semibold">
+              <p className="baseFlex gap-2 text-right text-lg font-semibold">
                 <>
                   {(view === "notStarted" || view === "started") && (
                     <>
@@ -536,7 +573,7 @@ function CustomerOrder({ order, view }: CustomerOrder) {
                     </AlertDialogTrigger>
 
                     <AlertDialogContent>
-                      <AlertDialogHeader className="text-lg">
+                      <AlertDialogHeader className="text-lg font-semibold">
                         {view === "notStarted"
                           ? "Start order"
                           : "Complete order"}
@@ -550,7 +587,7 @@ function CustomerOrder({ order, view }: CustomerOrder) {
                         order?
                       </AlertDialogDescription>
 
-                      <AlertDialogFooter className="mt-4 gap-4">
+                      <AlertDialogFooter className="baseFlex mt-8 w-full !flex-row gap-8">
                         <Button
                           variant="secondary"
                           disabled={orderIdBeingMutated === order.id}
