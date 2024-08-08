@@ -7,6 +7,7 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { orderDetailsSchema } from "~/stores/MainStore";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 import { env } from "~/env";
+import { waitUntil } from "@vercel/functions";
 
 export const config = {
   api: {
@@ -15,7 +16,7 @@ export const config = {
 };
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  apiVersion: "2024-04-10",
+  apiVersion: "2024-06-20",
 });
 
 export const paymentRouter = createTRPCRouter({
@@ -252,6 +253,12 @@ export const paymentRouter = createTRPCRouter({
         });
       }
 
+      console.log("upserting transient order", input.userId);
+      console.log({
+        ...input.orderDetails,
+        tipValue: tipValue.toNumber(), // reminder: this is the calculated, final tip value in cents
+      });
+
       await ctx.prisma.transientOrder.upsert({
         where: {
           userId: input.userId,
@@ -283,6 +290,8 @@ export const paymentRouter = createTRPCRouter({
         }
       }
 
+      console.log("pickup time:", input.orderDetails.datetimeToPickup);
+
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
         payment_method_types: ["card"],
@@ -305,23 +314,7 @@ export const paymentRouter = createTRPCRouter({
         cancel_url: `${env.BASE_URL}/`,
       });
 
-      setTimeout(
-        () => {
-          // check if session is still active after 5 mins, if so expire it
-          void stripe.checkout.sessions.retrieve(session.id).then((session) => {
-            console.log("retrieved session", session.status);
-            if (session.status === "open") {
-              console.log("session is still open, expiring it");
-              void stripe.checkout.sessions
-                .expire(session.id)
-                .then((session) => {
-                  console.log("expired session", session);
-                });
-            }
-          });
-        },
-        1000 * 60 * 5,
-      );
+      waitUntil(waitForTimeoutAndExpireSession(session.id, 1000 * 60 * 5));
 
       return session; // TODO: okay shoot I believe when we return we will be ending the http request,
       // and therefore the setTimeout will not be able to run... maybe we need to make a separate tprc endpoint
@@ -347,3 +340,31 @@ export const paymentRouter = createTRPCRouter({
       };
     }),
 });
+
+function waitForTimeoutAndExpireSession(
+  sessionId: string,
+  delay: number,
+): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      expireSessionIfOpen(sessionId)
+        .then(resolve)
+        .catch((error) => {
+          console.error("Error retrieving or expiring session", error);
+          resolve(); // Resolve even in case of an error to avoid hanging promises
+        });
+    }, delay);
+  });
+}
+
+async function expireSessionIfOpen(sessionId: string): Promise<void> {
+  // Check if the session is still active after the specified delay
+  const session = await stripe.checkout.sessions.retrieve(sessionId);
+  console.log("retrieved session", session.status);
+
+  if (session.status === "open") {
+    console.log("session is still open, expiring it");
+    const expiredSession = await stripe.checkout.sessions.expire(sessionId);
+    console.log("expired session", expiredSession);
+  }
+}
