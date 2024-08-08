@@ -1,6 +1,5 @@
 import { customizationChoiceRouter } from "./routers/customizationChoice";
 import { minimumOrderPickupTimeRouter } from "./routers/minimumOrderPickupTime";
-import { transientOrderRouter } from "./routers/transientOrder";
 import { menuCategoryRouter } from "./routers/menuCategory";
 import { createTRPCRouter } from "~/server/api/trpc";
 import { userRouter } from "~/server/api/routers/user";
@@ -23,7 +22,6 @@ export const appRouter = createTRPCRouter({
   menuCategory: menuCategoryRouter,
   menuItem: menuItemRouter,
   payment: paymentRouter,
-  transientOrder: transientOrderRouter,
   order: orderRouter,
   minimumOrderPickupTime: minimumOrderPickupTimeRouter,
   customizationCategory: customizationCategoryRouter,
