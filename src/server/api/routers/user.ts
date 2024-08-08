@@ -16,7 +16,7 @@ import Welcome from "emails/Welcome";
 const resend = new Resend(env.RESEND_API_KEY);
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  apiVersion: "2024-04-10",
+  apiVersion: "2024-06-20",
 });
 
 export const userRouter = createTRPCRouter({

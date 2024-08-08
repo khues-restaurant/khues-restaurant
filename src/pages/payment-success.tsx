@@ -154,7 +154,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   // check stripe session to get the email address to be able to check
   // whether it is in EmailBlacklist model in prisma
   const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-    apiVersion: "2024-04-10",
+    apiVersion: "2024-06-20",
   });
 
   const session = await stripe.checkout.sessions.retrieve(

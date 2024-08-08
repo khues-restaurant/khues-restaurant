@@ -17,6 +17,7 @@ import OpenAI from "openai";
 import { io } from "socket.io-client";
 import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
 import { toZonedTime } from "date-fns-tz";
+import { getCSTDateInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 
 const resend = new Resend(env.RESEND_API_KEY);
 const openai = new OpenAI({
@@ -24,7 +25,7 @@ const openai = new OpenAI({
 });
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  apiVersion: "2024-04-10",
+  apiVersion: "2024-06-20",
 });
 
 export const config = {
@@ -58,6 +59,8 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
+  console.log("hit from webhook 1");
+
   const buf = await buffer(req);
   const sig = req.headers["stripe-signature"] as string;
   let event;
@@ -71,9 +74,15 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
+  console.log("got event:", event.type);
+
   switch (event.type) {
     case "checkout.session.completed":
       const payment = event.data.object;
+
+      console.log("payment id", payment.id);
+
+      // immediately check and return early if there is an order w/ stripeSessionId of payment.id
 
       if (payment.metadata === null || payment.amount_total === null) {
         console.log("returning early, metadata or amount_total is null");
@@ -128,6 +137,8 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         customerMetadata.lastName = user.lastName;
       }
 
+      console.log("trying to find transientOrder for", payment.metadata.userId);
+
       // 2) get transient order details
       const transientOrder = await prisma.transientOrder.findFirst({
         where: {
@@ -136,7 +147,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       });
 
       if (!transientOrder) {
-        console.log("No transient order found for user");
+        console.log("No transient order found for user", event.type);
         res.json({ received: true });
         return;
       }
@@ -205,12 +216,29 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         }),
       );
 
+      // this is fine even if it's on east coast right since it's stored in utc?
       let adjustedDatetimeToPickup = new Date(orderDetails.datetimeToPickup);
+
+      console.log(
+        "hit from webhook 2",
+        adjustedDatetimeToPickup, // should be midnight
+        orderDetails.datetimeToPickup, // should be midnight
+      );
 
       // add 20 minutes to current time if order is ASAP
       if (orderDetails.isASAP) {
-        const zonedCurrentDatetime = toZonedTime(new Date(), "America/Chicago");
-        adjustedDatetimeToPickup = addMinutes(zonedCurrentDatetime, 20);
+        // const zonedCurrentDatetime = toZonedTime(new Date(), "America/Chicago");
+        const utcCurrentDatetime = new Date();
+        console.log("utcCurrentDatetime", utcCurrentDatetime);
+        // adjustedDatetimeToPickup = addMinutes(zonedCurrentDatetime, 20);
+
+        adjustedDatetimeToPickup = addMinutes(utcCurrentDatetime, 20);
+
+        // is it possible that addMinutes is what is cooking you here??? ^^^ try with standard
+        // js date object instead of zoned time
+        // adjustedDatetimeToPickup = utcCurrentDatetime.setMinutes(utcCurrentDatetime.getMinutes() + 20);
+
+        console.log("adjustedDatetimeToPickup", adjustedDatetimeToPickup);
       }
 
       // calculate/retrieve subtotal, tax, tip, total values here:
@@ -228,6 +256,21 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       const includeDietaryRestrictions = orderDetails.items.some(
         (item) => item.includeDietaryRestrictions,
       );
+
+      console.log("final adjustedDatetimeToPickup", adjustedDatetimeToPickup);
+      console.log("stripeSessionId", payment.id);
+
+      const stripeIds = await prisma.order.findMany({
+        select: {
+          stripeSessionId: true,
+        },
+      });
+
+      console.dir(stripeIds, { depth: null });
+
+      if (stripeIds.some((id) => id.stripeSessionId === payment.id)) {
+        console.log("Stripe session ID already exists in database");
+      }
 
       const orderData = {
         stripeSessionId: payment.id,
@@ -478,6 +521,8 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       // 10) cleanup transient order, technically not necessary though right since we just upsert either way?
       // deleteMany instead of delete because prisma throws an error if the row doesn't exist
+
+      console.log("deleting transient order for", payment.metadata.userId);
       await prisma.transientOrder.deleteMany({
         where: {
           userId: payment.metadata.userId,
