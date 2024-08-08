@@ -360,7 +360,7 @@ export const userRouter = createTRPCRouter({
 
       if (user) await stripe.customers.del(user.stripeUserId);
 
-      await clerkClient.users.deleteUser(userId);
+      await clerkClient().users.deleteUser(userId);
 
       // deleteMany instead of delete because prisma throws an error if the row doesn't exist
       return ctx.prisma.user.deleteMany({

@@ -53,7 +53,7 @@
     "micro": "^10.0.1",
     "next": "^14.2.5",
     "next-superjson-plugin": "^0.6.3",
-    "openai": "^4.52.5",
+    "openai": "^4.55.1",
     "pluralize": "^8.0.0",
     "react": "18.2.0",
     "react-day-picker": "^9.0.4",
@@ -62,7 +62,6 @@
     "react-hook-form": "^7.52.1",
     "react-icons": "^5.2.1",
     "react-scroll-parallax": "^3.4.5",
-    "receiptline": "^1.16.1",
     "recharts": "^2.12.7",
     "resend": "^3.5.0",
     "socket.io": "^4.7.5",
@@ -92,7 +91,7 @@
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "prisma": "^5.17.0",
-    "tailwindcss": "^3.4.7",
+    "tailwindcss": "^3.4.8",
     "typescript": "^5.5.4"
   },
   "ct3aMetadata": {

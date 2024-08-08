@@ -75,7 +75,11 @@ function Digit({
   height: number;
 }) {
   const valueRoundedToPlace = Math.floor(value / place);
-  const animatedValue = useSpring(valueRoundedToPlace);
+  const animatedValue = useSpring(valueRoundedToPlace, {
+    stiffness: 150,
+    damping: 12,
+    mass: 1,
+  });
 
   const [startAnimation, setStartAnimation] = useState(false);
 

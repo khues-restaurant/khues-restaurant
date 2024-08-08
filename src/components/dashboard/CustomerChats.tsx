@@ -96,6 +96,9 @@ function CustomerChats({ socket }: CustomerChats) {
 
         // Sync with server once mutation has settled
         void ctx.chat.getAllMessages.invalidate();
+
+        // TODO: probably want to scroll to the bottom of the chat, just not sure of
+        // best way to do this without a lot of extra logic
       },
     });
 
@@ -176,11 +179,14 @@ function CustomerChats({ socket }: CustomerChats) {
       transition={{ duration: 0.5 }}
       className="baseVertFlex w-full gap-4 border-t-0"
     >
-      <div className="baseFlex rounded-lg border border-t-0 bg-offwhite">
+      <div className="baseFlex mt-8 w-11/12 rounded-lg border border-t-0 bg-offwhite tablet:mt-0 tablet:w-auto">
         {((viewportLabel.includes("mobile") && !selectedUserId) ||
           !viewportLabel.includes("mobile")) && (
           <div className="baseVertFlex h-[556px] w-full rounded-bl-lg tablet:!w-[320px] tablet:border-r tablet:border-stone-600">
-            <div className="w-full rounded-tl-lg border-b border-stone-600 bg-stone-200 p-4 text-center text-lg font-semibold">
+            {/* filler header for mobile */}
+            <div className="w-full rounded-t-lg border-b border-stone-600 bg-stone-200 p-4 text-center text-lg font-semibold tablet:hidden"></div>
+
+            <div className="hidden w-full rounded-tl-lg border-b border-stone-600 bg-stone-200 p-4 text-center text-lg font-semibold tablet:block">
               Chats
             </div>
 
@@ -235,8 +241,8 @@ function CustomerChats({ socket }: CustomerChats) {
 
         {((viewportLabel.includes("mobile") && selectedUserId) ||
           !viewportLabel.includes("mobile")) && (
-          <div className="baseVertFlex w-full sm:max-w-xl">
-            <div className="baseVertFlex relative h-[61px] w-full gap-2 rounded-tr-md border-b border-stone-600 bg-stone-200 p-4 shadow-md tablet:rounded-tr-md">
+          <div className="baseVertFlex w-full tablet:max-w-xl">
+            <div className="baseVertFlex relative h-[61px] w-full gap-2 rounded-t-lg border-b border-stone-600 bg-stone-200 p-4 shadow-md tablet:rounded-tr-md">
               <div className="text-lg font-semibold">
                 {
                   databaseChats.find((chat) => chat.userId === selectedUserId)
@@ -245,7 +251,7 @@ function CustomerChats({ socket }: CustomerChats) {
               </div>
               <Button
                 variant={"link"}
-                className="baseFlex !absolute left-0 top-2 gap-2 tablet:hidden"
+                className="baseFlex !absolute -left-2 top-0 gap-2 text-xs tablet:hidden"
                 onClick={() => setSelectedUserId("")}
               >
                 <IoIosArrowBack />
@@ -256,7 +262,7 @@ function CustomerChats({ socket }: CustomerChats) {
             {/* scroll-y-auto messages container */}
             <div
               ref={scrollableChatContainerRef}
-              className="baseVertFlex relative w-full !justify-start gap-2 overflow-y-auto bg-background p-2 sm:h-[391px] sm:w-[576px]"
+              className="baseVertFlex relative h-[391px] w-full !justify-start gap-2 overflow-y-auto bg-background p-2 tablet:w-[576px]"
             >
               {dateLabeledMessages ? (
                 <>
@@ -350,7 +356,7 @@ function CustomerChats({ socket }: CustomerChats) {
       <Button
         variant="outline"
         disabled={manuallyRefreshingChats}
-        className="baseFlex gap-3"
+        className="baseFlex mb-8 gap-3 tablet:mb-0"
         onClick={() => {
           setManuallyRefreshingChats(true);
 

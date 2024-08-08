@@ -1,187 +1,125 @@
 import { useAuth } from "@clerk/nextjs";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import Image from "next/image";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { FaUserAlt } from "react-icons/fa";
-import { LuLayoutDashboard } from "react-icons/lu";
+import { Button } from "~/components/ui/button";
+
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { DialogDescription, DialogTitle } from "~/components/ui/dialog";
+import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
+import { api } from "~/utils/api";
+
+// import DiscountManagement from "~/components/dashboard/DiscountManagement";
+import { addDays } from "date-fns";
+import { type Socket } from "socket.io-client";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import DelayNewOrders from "~/components/dashboard/DelayNewOrders";
-// import DiscountManagement from "~/components/dashboard/DiscountManagement";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "~/components/ui/accordion";
-import { Button } from "~/components/ui/button";
-import { DialogDescription, DialogTitle } from "~/components/ui/dialog";
 import { Separator } from "~/components/ui/separator";
-import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
-import useGetUserId from "~/hooks/useGetUserId";
 import { type DashboardViewStates } from "~/pages/dashboard";
-import { api } from "~/utils/api";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
+import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 
 interface DashboardMobileHeader {
   viewState: DashboardViewStates;
   setViewState: Dispatch<SetStateAction<DashboardViewStates>>;
+  socket: Socket;
 }
 
 function DashboardMobileHeader({
   viewState,
   setViewState,
+  socket,
 }: DashboardMobileHeader) {
-  const [mobileHeaderIsOpen, setDashboardMobileHeaderIsOpen] = useState(false);
-
-  const { isSignedIn, signOut } = useAuth();
-  const userId = useGetUserId();
-  const { asPath, events, push } = useRouter();
-
-  const { data: user } = api.user.get.useQuery(userId, {
-    enabled: Boolean(userId && isSignedIn),
-  });
-
-  const [sheetIsOpen, setSheetIsOpen] = useState(false);
+  const { signOut } = useAuth();
+  const { push } = useRouter();
 
   const { data: orders } = api.order.getDashboardOrders.useQuery();
+  const { data: databaseChats, refetch: refetchChats } =
+    api.chat.getAllMessages.useQuery();
 
+  const [sheetIsOpen, setSheetIsOpen] = useState(false);
   const [numberOfActiveOrders, setNumberOfActiveOrders] = useState(0);
+  const [numberOfUnreadMessages, setNumberOfUnreadMessages] = useState(0);
 
   useEffect(() => {
     if (!orders) return;
 
+    const futureDate = addDays(getMidnightCSTInUTC(new Date()), 1);
+
     const activeOrders = orders.filter(
-      (order) => order.orderCompletedAt === null,
+      (order) =>
+        order.orderCompletedAt === null && order.datetimeToPickup < futureDate,
     );
 
     setNumberOfActiveOrders(activeOrders.length);
   }, [orders]);
 
+  useEffect(() => {
+    if (!databaseChats) return;
+
+    const unreadMessages = databaseChats.filter(
+      (chat) => chat.dashboardHasUnreadMessages,
+    );
+
+    setNumberOfUnreadMessages(unreadMessages.length);
+  }, [databaseChats]);
+
+  useEffect(() => {
+    console.log("listener ran on customerChats");
+
+    socket.on("newDashboardMessage", (data) => {
+      console.log("newDashboardMessage", data);
+
+      void refetchChats();
+    });
+  }, [socket, refetchChats]);
+
   return (
     <nav
       id="header"
-      className="baseFlex sticky left-0 top-0 z-50 h-24 w-full !justify-between bg-offwhite p-2 shadow-md"
+      className="baseFlex sticky left-0 top-0 z-50 h-24 w-full bg-offwhite p-2 shadow-md"
     >
-      <div className="baseFlex gap-4">
-        <Image
-          src="/logos/logo.svg"
-          alt="Khue's logo"
-          style={{
-            filter: "drop-shadow(0px 1px 0.5px hsla(336, 84%, 17%, 0.25))", // keep this?
-          }}
-          width={100}
-          height={50}
-          priority
-        />
+      <div className="baseFlex w-full !justify-between gap-4">
+        {/* currently selected page title */}
+        <p className="ml-2 text-lg font-semibold">
+          {viewState === "orderManagement" && "Order management"}
+          {viewState === "customerChats" && "Customer chats"}
+          {viewState === "itemManagement" && "Item management"}
+          {viewState === "stats" && "Stats"}
+          {viewState === "reviews" && "Customer reviews"}
+        </p>
 
-        <div className="baseFlex gap-2 text-primary">
-          <LuLayoutDashboard className="size-6" />
-          <p className="text-2xl">Dashboard</p>
-        </div>
-      </div>
-
-      <div className="baseFlex gap-4">
         <Sheet open={sheetIsOpen} onOpenChange={(open) => setSheetIsOpen(open)}>
           <SheetTrigger asChild>
             <Button variant="ghost" className="relative mr-2">
-              {/* TODO: need to have the absolute combined chats + orders notification number here */}
-
               <span
                 aria-hidden="true"
-                style={
-                  {
-                    // rotate: sheetIsOpen ? "45deg" : "0",
-                    // transform: sheetIsOpen
-                    //   ? "translateY(-1.5px)"
-                    //   : "translateY(0)",
-                  }
-                }
                 className="ease-in-out absolute top-[12px] block h-0.5 w-6 bg-current transition duration-500"
               ></span>
               <span
                 aria-hidden="true"
-                style={
-                  {
-                    // opacity: sheetIsOpen ? "0" : "1",
-                  }
-                }
                 className="ease-in-out absolute block h-0.5 w-6 bg-current transition duration-500"
               ></span>
               <span
                 aria-hidden="true"
-                style={
-                  {
-                    // rotate: sheetIsOpen ? "-45deg" : "0",
-                    // transform: sheetIsOpen
-                    //   ? "translateY(1.5px)"
-                    //   : "translateY(0)",
-                  }
-                }
                 className="ease-in-out absolute top-[26px] block h-0.5 w-6 bg-current transition duration-500"
               ></span>
-
-              {/* TODO: combine numberOfActiveOrders with unreadMessages */}
-              <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite">
-                <AnimatedNumbers
-                  value={numberOfActiveOrders}
-                  fontSize={14}
-                  padding={6}
-                />
-              </div>
             </Button>
           </SheetTrigger>
           <SheetContent className="!h-dvh !overflow-auto p-6">
             <VisuallyHidden>
-              <DialogTitle>Extra links</DialogTitle>
+              <DialogTitle>Dashboard links</DialogTitle>
               <DialogDescription>
-                Extra links for the dashboard
+                Sheet containing dashboard links
               </DialogDescription>
             </VisuallyHidden>
 
-            <div className="baseVertFlex !justify-start gap-4 overflow-y-scroll pt-12">
-              {isSignedIn && user && (
-                <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="item-1" className="border-none">
-                    {/* maybe need specific variant or just some custom code here to  */}
-                    <AccordionTrigger className="baseFlex gap-2 py-2 text-lg text-primary !no-underline">
-                      <FaUserAlt className="!rotate-0" />
-                      {user.firstName}
-                    </AccordionTrigger>
-                    <AccordionContent className="pt-2">
-                      <div className="baseVertFlex gap-2">
-                        {user.email === "ericxpham@gmail.com" && (
-                          <Button
-                            variant={"link"}
-                            onClick={() => setViewState("stats")}
-                          >
-                            Stats
-                          </Button>
-                        )}
-
-                        <Button
-                          variant={"link"}
-                          onClick={async () => {
-                            await signOut(async () => {
-                              clearLocalStorage();
-                              await push("/");
-                            });
-                          }}
-                        >
-                          Log out
-                        </Button>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              )}
-
-              <Separator className="mt-2 w-4/5 self-center" />
-
+            <div className="baseVertFlex !justify-start gap-6 overflow-y-scroll pt-12">
               <div className="relative">
                 <Button
-                  variant={"link"}
-                  className=" text-lg"
+                  variant={
+                    viewState === "orderManagement" ? "activeLink" : "link"
+                  }
+                  className="text-lg"
                   onClick={() => {
                     setViewState("orderManagement");
                     setSheetIsOpen(false);
@@ -204,7 +142,9 @@ function DashboardMobileHeader({
 
               <div className="relative">
                 <Button
-                  variant={"link"}
+                  variant={
+                    viewState === "customerChats" ? "activeLink" : "link"
+                  }
                   className="text-lg"
                   onClick={() => {
                     setViewState("customerChats");
@@ -214,11 +154,14 @@ function DashboardMobileHeader({
                   Customer chats
                 </Button>
 
-                {/* unreadMessages > 0 && */}
-                {false && (
-                  <div className="absolute -right-2 -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite">
+                {numberOfUnreadMessages > 0 && (
+                  <div
+                    className={`absolute -top-2 rounded-full bg-primary px-2 py-0.5 text-offwhite
+                    ${numberOfUnreadMessages < 10 ? "-right-2" : "-right-4"}
+                  `}
+                  >
                     <AnimatedNumbers
-                      value={numberOfActiveOrders}
+                      value={numberOfUnreadMessages}
                       fontSize={14}
                       padding={6}
                     />
@@ -227,7 +170,7 @@ function DashboardMobileHeader({
               </div>
 
               <Button
-                variant={"link"}
+                variant={viewState === "itemManagement" ? "activeLink" : "link"}
                 className="text-lg"
                 onClick={() => {
                   setViewState("itemManagement");
@@ -238,6 +181,44 @@ function DashboardMobileHeader({
               </Button>
 
               <DelayNewOrders />
+
+              <Separator className="mt-2 w-4/5 self-center" />
+
+              <Button
+                variant={viewState === "stats" ? "activeLink" : "link"}
+                className="text-lg"
+                onClick={() => {
+                  setViewState("stats");
+                  setSheetIsOpen(false);
+                }}
+              >
+                Stats
+              </Button>
+
+              <Button
+                variant={viewState === "reviews" ? "activeLink" : "link"}
+                className="text-lg"
+                onClick={() => {
+                  setViewState("reviews");
+                  setSheetIsOpen(false);
+                }}
+              >
+                Reviews
+              </Button>
+
+              <Separator className="mt-2 w-4/5 self-center" />
+
+              <Button
+                variant={"link"}
+                onClick={async () => {
+                  await signOut(async () => {
+                    clearLocalStorage();
+                    await push("/");
+                  });
+                }}
+              >
+                Log out
+              </Button>
 
               {/* <DiscountManagement /> */}
             </div>

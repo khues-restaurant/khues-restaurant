@@ -576,11 +576,11 @@ function CartSheet({
                           value={format(field.value, "yyyy-MM-dd")}
                         >
                           <FormControl>
-                            <SelectTrigger className="w-[200px] pl-[14px]">
+                            <SelectTrigger className="w-[215px] pl-[14px]">
                               <CiCalendarDate className="h-5 w-5 shrink-0" />
                               <SelectValue
                                 placeholder="Select a day"
-                                className="w-[200px] placeholder:!text-muted-foreground"
+                                className="w-[215px] placeholder:!text-muted-foreground"
                               />
                             </SelectTrigger>
                           </FormControl>
@@ -700,7 +700,7 @@ function CartSheet({
                           <Input
                             {...field}
                             placeholder="John Smith"
-                            className="w-[200px]"
+                            className="w-[215px]"
                           />
                         </FormControl>
                       </div>
@@ -1172,7 +1172,7 @@ function CartSheet({
           <div className="baseFlex mb-2 mt-auto w-full gap-2 !self-end">
             <div className="size-2 shrink-0 rounded-full bg-primary/75" />
             <p className="text-sm">
-              Item will be prepared according to your dietary restrictions
+              Item will be prepared following your dietary restrictions
             </p>
           </div>
         )}

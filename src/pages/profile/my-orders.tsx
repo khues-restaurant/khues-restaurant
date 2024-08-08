@@ -984,7 +984,7 @@ function RateDialog({ userId, orderId }: RateDialog) {
             </form>
           </Form>
         </div>
-        <AlertDialogFooter className="mt-4">
+        <AlertDialogFooter className="baseFlex w-full !flex-row !justify-between gap-2">
           <AlertDialogCancel asChild>
             <Button
               disabled={submitButtonText !== "Submit feedback"}

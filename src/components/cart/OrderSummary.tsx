@@ -154,7 +154,7 @@ function OrderSummary({ order }: OrderSummary) {
               <div className="baseFlex gap-4">
                 <div className="size-2 shrink-0 rounded-full bg-primary/75" />
                 <p className="text-sm">
-                  Item will be prepared according to your dietary restrictions:
+                  Item will be prepared following your dietary restrictions:
                 </p>
               </div>
               <p className="text-sm italic">

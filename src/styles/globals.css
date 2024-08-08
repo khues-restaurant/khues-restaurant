@@ -43,6 +43,9 @@
     --borderGold: 49 61% 58%;
     --darkPrimary: 144 61% 15%;
     --body: 40 100% 98%;
+
+    --chart-1: 144 61% 20%;
+    --chart-2: 24 5% 64%;
   }
 
   .dark {
@@ -75,6 +78,9 @@
     --borderGold: 49 61% 52%;
     --darkPrimary: 144 61% 15%;
     --body: 40 100% 98%;
+
+    --chart-1: 144 61% 20%;
+    --chart-2: 24 5% 64%;
   }
 }
 

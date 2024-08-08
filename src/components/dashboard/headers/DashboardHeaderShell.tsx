@@ -36,6 +36,7 @@ function DashboardHeaderShell({
         <DashboardMobileHeader
           viewState={viewState}
           setViewState={setViewState}
+          socket={socket}
         />
       ) : (
         <DashboardDesktopHeader

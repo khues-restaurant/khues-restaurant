@@ -451,7 +451,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       //       content: `Given the name ${customerMetadata.firstName} ${customerMetadata.lastName}, provide a brief one-sentence summary indicating if they are a notable food critic, news reporter, writer, influential person related to the food industry, popular on social media, or a 'foodie'. Otherwise, reply with the response: "Person is not notable"`,
       //     },
       //   ],
-      //   model: "gpt-4o",
+      //   model: "gpt-4o-mini",
       // };
       // const chatCompletion: OpenAI.Chat.ChatCompletion =
       //   await openai.chat.completions.create(params);

@@ -16,17 +16,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { CiViewTable } from "react-icons/ci";
-import { IoStatsChart } from "react-icons/io5";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Legend,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, Legend, XAxis, YAxis } from "recharts";
 import { z } from "zod";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import { Button } from "~/components/ui/button";
@@ -47,6 +37,32 @@ import {
 } from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
 import { api } from "~/utils/api";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "~/components/ui/chart";
+
+const chartConfig: ChartConfig = {
+  prev: {
+    label: "Previous",
+    color: "hsl(var(--chart-2))", // stone-400
+  },
+  curr: {
+    label: "Current",
+    color: "hsl(var(--chart-1))", // primary
+  },
+};
 
 const customReportSchema = z.object({
   category: z.enum([
@@ -122,11 +138,11 @@ function Stats() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex my-8 mb-24 h-full max-w-3xl desktop:max-w-6xl"
+      className="baseVertFlex my-8 mb-24 h-full max-w-80 sm:max-w-md tablet:max-w-3xl desktop:max-w-6xl"
     >
       {/* form + preset report buttons grid */}
 
-      <div className="baseFlex size-full !items-start !justify-between">
+      <div className="baseVertFlex size-full !items-start !justify-between tablet:!flex-row">
         <div className="baseVertFlex w-full !items-start gap-4">
           <p className="font-medium underline underline-offset-2">
             Custom report
@@ -211,7 +227,7 @@ function Stats() {
                   disabled={orderYearRange === undefined || generatingReport}
                   render={({ field, fieldState: { invalid, error } }) => (
                     <FormItem className="baseVertFlex relative w-full !items-start space-y-0">
-                      <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
+                      <div className="baseVertFlex relative w-full max-w-64 !items-start gap-2 tablet:max-w-96">
                         <FormLabel className="font-semibold">Range</FormLabel>
                         <FormControl>
                           <RadioGroup
@@ -294,13 +310,13 @@ function Stats() {
                   )}
                 />
 
-                <div className="grid w-96 grid-cols-2 grid-rows-2 gap-2">
+                <div className="grid w-72 grid-cols-1 grid-rows-4 gap-2 tablet:w-96 tablet:grid-cols-2 tablet:grid-rows-2">
                   <FormField
                     control={customReportForm.control}
                     name="day"
                     render={({ field, fieldState: { invalid, error } }) => (
                       <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
-                        <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
+                        <div className="baseVertFlex relative w-full max-w-64 !items-start gap-2 tablet:max-w-96">
                           <FormLabel className="font-semibold">Day</FormLabel>
                           <Select
                             onValueChange={field.onChange}
@@ -360,7 +376,7 @@ function Stats() {
                     name="week"
                     render={({ field, fieldState: { invalid, error } }) => (
                       <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
-                        <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
+                        <div className="baseVertFlex relative w-full max-w-64 !items-start gap-2 tablet:max-w-96">
                           <FormLabel className="font-semibold">Week</FormLabel>
                           <Select
                             onValueChange={field.onChange}
@@ -421,7 +437,7 @@ function Stats() {
                     name="month"
                     render={({ field, fieldState: { invalid, error } }) => (
                       <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
-                        <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96">
+                        <div className="baseVertFlex relative w-full max-w-64 !items-start gap-2 tablet:max-w-96">
                           <FormLabel className="font-semibold">Month</FormLabel>
                           <Select
                             onValueChange={field.onChange}
@@ -487,7 +503,7 @@ function Stats() {
                     name="year"
                     render={({ field, fieldState: { invalid, error } }) => (
                       <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
-                        <div className="baseVertFlex w-full !items-start gap-2">
+                        <div className="baseVertFlex w-full max-w-64 !items-start gap-2">
                           <FormLabel className="font-semibold">Year</FormLabel>
                           <Select
                             onValueChange={field.onChange}
@@ -556,10 +572,10 @@ function Stats() {
           </Form>
         </div>
 
-        <Separator className="mx-4 h-[400px] w-[1px] bg-gray-300" />
+        <Separator className="my-4 h-[1px] w-full bg-gray-300 tablet:mx-4 tablet:h-[400px] tablet:w-[1px]" />
 
         {/* not the biggest fan of hardcoding the height here */}
-        <div className="baseVertFlex relative h-[416px] w-full !items-start !justify-start gap-4">
+        <div className="baseVertFlex relative w-full !items-start !justify-start gap-4 tablet:h-[416px]">
           <p className="font-medium underline underline-offset-2">
             Preset comparison reports
           </p>
@@ -613,7 +629,7 @@ function Stats() {
 
           <Button
             disabled={selectedPresetReport === null || generatingReport}
-            className="absolute bottom-0 left-0"
+            className="tablet:absolute tablet:bottom-0 tablet:left-0"
             onClick={() => {
               if (selectedPresetReport === null) return;
 
@@ -642,7 +658,7 @@ function Stats() {
       )}
 
       {reportResults && (
-        <div className="baseVertFlex w-full gap-4">
+        <div className="baseVertFlex w-10/12 gap-4 sm:w-full">
           {/* .map() through results */}
           {reportResults.map((report) => (
             <StatsCategoryVisualReport
@@ -681,49 +697,46 @@ function StatsCategoryVisualReport({
   totalCurr,
   totalPrev,
 }: StatsCategoryVisualReport) {
-  const [reportType, setReportType] = useState<"graph" | "table">("graph");
-  // ^ maybe end up having this be a prop passed in from parent component so it
-  // affects all rendered <StatsCategoryVisualReport /> components at once
-
   return (
     <div className="baseVertFlex w-full gap-4 border-b pb-4">
-      <div className="baseVertFlex w-full gap-2">
-        <div className="baseFlex w-full !justify-end gap-2">
-          <Button
-            variant={reportType === "graph" ? "default" : "outline"}
-            onClick={() => setReportType("graph")}
-          >
-            <IoStatsChart className="size-5" />
-          </Button>
-          <Button
-            variant={reportType === "table" ? "default" : "outline"}
-            onClick={() => setReportType("table")}
-          >
-            <CiViewTable className="size-5" />
-          </Button>
-        </div>
-        <p className="text-lg font-medium">{title}</p>
-        <p className="text-sm font-normal">{timeRange}</p>
-      </div>
-
-      {reportType === "graph" ? (
-        <BarChart width={700} height={400} data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          {/* ^ figure out the domain with this so that it automatically is a sensible amount based
-          on the data. maybe it's off since there are so few data points right now? */}
-          <Tooltip animationDuration={0} />
-          <Legend />
-          <Bar dataKey="prev" fill="#8884d8" minPointSize={5} />
-          <Bar dataKey="curr" fill="#82ca9d" minPointSize={5} />
-        </BarChart>
-      ) : null}
-
-      <div className="baseFlex gap-8 font-medium">
-        {totalPrev !== null && <p>Previous: {totalPrev}</p>}
-        <p>Current: {totalCurr} </p>
-      </div>
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="text-lg">{title}</CardTitle>
+          <CardDescription>{timeRange}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer config={chartConfig}>
+            <BarChart width={1000} height={400} data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent indicator="dot" />}
+              />
+              <Legend />
+              <Bar
+                dataKey="prev"
+                fill={chartConfig.prev!.color}
+                radius={4}
+                minPointSize={5}
+              />
+              <Bar
+                dataKey="curr"
+                fill={chartConfig.curr!.color}
+                radius={4}
+                minPointSize={5}
+              />
+            </BarChart>
+          </ChartContainer>
+        </CardContent>
+        <CardFooter className="text-sm">
+          <div className="baseFlex gap-8 font-medium">
+            {totalPrev !== null && <p>Previous: {totalPrev}</p>}
+            <p>Current: {totalCurr}</p>
+          </div>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

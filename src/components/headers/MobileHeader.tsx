@@ -76,6 +76,9 @@ function MobileHeader() {
 
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
 
+  // used to keep consistent spacing between user section and separator from main links
+  const [memberMenuIsOpen, setMemberMenuIsOpen] = useState(false);
+
   const [hoursAndLocationAccordionOpen, setHoursAndLocationAccordionOpen] =
     useState(false);
   const hoursAndLocationAccordionRef = useRef<HTMLDivElement>(null);
@@ -158,7 +161,7 @@ function MobileHeader() {
               <DialogDescription>Our navigation menu</DialogDescription>
             </VisuallyHidden>
 
-            <div className="baseVertFlex !justify-start gap-4 overflow-y-auto pt-12">
+            <div className="baseVertFlex !justify-start gap-2 overflow-y-auto pt-12">
               {!isSignedIn && (
                 <div className="baseFlex gap-4">
                   <Button
@@ -201,7 +204,14 @@ function MobileHeader() {
               )}
 
               {isSignedIn && (
-                <Accordion type="single" collapsible className="w-full">
+                <Accordion
+                  type="single"
+                  collapsible
+                  onValueChange={(value) => {
+                    setMemberMenuIsOpen(value === "item-1");
+                  }}
+                  className="w-full"
+                >
                   <AccordionItem value="item-1" className="border-none">
                     <AccordionTrigger className="baseFlex gap-4 py-2 text-xl font-semibold text-primary !no-underline">
                       <FaUserAlt className="!rotate-0" />
@@ -262,7 +272,7 @@ function MobileHeader() {
 
                         <Button
                           variant={"link"}
-                          className="mt-2 h-8"
+                          className="mb-1 mt-2 h-8"
                           onClick={async () => {
                             clearLocalStorage();
                             resetStore();
@@ -277,7 +287,9 @@ function MobileHeader() {
                 </Accordion>
               )}
 
-              <Separator className="mt-2 w-4/5 self-center bg-stone-300" />
+              <Separator
+                className={`w-4/5 self-center bg-stone-300 ${memberMenuIsOpen ? "mt-2" : "mt-4"}`}
+              />
 
               <motion.div
                 variants={linkContainer}
@@ -289,6 +301,7 @@ function MobileHeader() {
                   <Button
                     variant={asPath.includes("/menu") ? "activeLink" : "link"}
                     asChild
+                    className="mt-2"
                   >
                     <Link href={"/menu"} className="!text-xl">
                       Menu

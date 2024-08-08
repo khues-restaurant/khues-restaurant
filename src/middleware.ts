@@ -19,7 +19,7 @@ export default clerkMiddleware(async (auth, req) => {
       return redirectToSignIn();
     }
 
-    const user = await clerkClient.users.getUser(userId);
+    const user = await clerkClient().users.getUser(userId);
 
     if (
       typeof user.privateMetadata !== "object" ||
