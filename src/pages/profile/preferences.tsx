@@ -872,10 +872,9 @@ function Preferences() {
                         </p>
                       </AlertDialogDescription>
 
-                      <AlertDialogFooter className="baseFlex w-full !flex-row gap-2">
+                      <AlertDialogFooter className="baseFlex w-full !flex-row !justify-between gap-2">
                         <Button
                           variant="outline"
-                          className="w-full"
                           onClick={() => setShowDeleteUserDialog(false)}
                         >
                           Cancel
@@ -883,7 +882,6 @@ function Preferences() {
                         <Button
                           variant={"destructive"}
                           disabled={deleteButtonText !== "Delete account"}
-                          className="w-full"
                           onClick={() => {
                             setDeleteButtonText("Deleting account");
                             deleteUser(userId);
