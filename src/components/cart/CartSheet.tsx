@@ -1031,8 +1031,8 @@ function CartSheet({
                                 <Image
                                   src={"/menuItems/sampleImage.webp"}
                                   alt={item.name}
-                                  width={64}
-                                  height={64}
+                                  width={67}
+                                  height={67}
                                   className="rounded-md drop-shadow-md"
                                 />
                               </div>
