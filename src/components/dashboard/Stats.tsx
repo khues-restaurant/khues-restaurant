@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  addDays,
   addWeeks,
   endOfDay,
   endOfMonth,
@@ -12,6 +11,9 @@ import {
   startOfWeek,
   startOfYear,
   subDays,
+  subMonths,
+  subWeeks,
+  subYears,
 } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
@@ -90,10 +92,10 @@ function Stats() {
 
     periodicity: Periodicity;
 
-    currStartDate: Date;
-    currEndDate: Date;
-    prevStartDate?: Date;
-    prevEndDate?: Date;
+    currentStartDate: Date;
+    currentEndDate: Date;
+    previousStartDate?: Date;
+    previousEndDate?: Date;
   }>(getPresetReportParams("daily"));
 
   const { data: orderYearRange } = api.stats.getYearRange.useQuery();
@@ -120,8 +122,8 @@ function Stats() {
     setReportParams({
       [values.category]: true,
       periodicity: values.periodicity,
-      currStartDate: startDate,
-      currEndDate: endDate,
+      currentStartDate: startDate,
+      currentEndDate: endDate,
     });
   }
 
@@ -227,7 +229,7 @@ function Stats() {
                   disabled={orderYearRange === undefined || generatingReport}
                   render={({ field, fieldState: { invalid, error } }) => (
                     <FormItem className="baseVertFlex relative w-full !items-start space-y-0">
-                      <div className="baseVertFlex relative w-full max-w-64 !items-start gap-2 tablet:max-w-96">
+                      <div className="baseVertFlex relative w-full max-w-64 !items-start gap-2">
                         <FormLabel className="font-semibold">Range</FormLabel>
                         <FormControl>
                           <RadioGroup
@@ -316,7 +318,7 @@ function Stats() {
                     name="day"
                     render={({ field, fieldState: { invalid, error } }) => (
                       <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
-                        <div className="baseVertFlex relative w-full max-w-64 !items-start gap-2 tablet:max-w-96">
+                        <div className="baseVertFlex relative w-full max-w-64 !items-start gap-2">
                           <FormLabel className="font-semibold">Day</FormLabel>
                           <Select
                             onValueChange={field.onChange}
@@ -376,7 +378,7 @@ function Stats() {
                     name="week"
                     render={({ field, fieldState: { invalid, error } }) => (
                       <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
-                        <div className="baseVertFlex relative w-full max-w-64 !items-start gap-2 tablet:max-w-96">
+                        <div className="baseVertFlex relative w-full max-w-64 !items-start gap-2">
                           <FormLabel className="font-semibold">Week</FormLabel>
                           <Select
                             onValueChange={field.onChange}
@@ -384,10 +386,8 @@ function Stats() {
                             disabled={
                               orderYearRange === undefined ||
                               generatingReport ||
-                              customReportForm.getValues("periodicity") ===
-                                "monthly" ||
-                              customReportForm.getValues("periodicity") ===
-                                "yearly"
+                              customReportForm.getValues("periodicity") !==
+                                "weekly"
                             }
                           >
                             <FormControl>
@@ -437,7 +437,7 @@ function Stats() {
                     name="month"
                     render={({ field, fieldState: { invalid, error } }) => (
                       <FormItem className="baseVertFlex relative w-full !items-start gap-2 space-y-0">
-                        <div className="baseVertFlex relative w-full max-w-64 !items-start gap-2 tablet:max-w-96">
+                        <div className="baseVertFlex relative w-full max-w-64 !items-start gap-2">
                           <FormLabel className="font-semibold">Month</FormLabel>
                           <Select
                             onValueChange={field.onChange}
@@ -588,7 +588,7 @@ function Stats() {
                 setSelectedPresetReport("daily");
               }}
             >
-              Today / Yesterday
+              Yesterday & Today
             </Button>
             <Button
               variant={
@@ -599,7 +599,7 @@ function Stats() {
                 setSelectedPresetReport("weekly");
               }}
             >
-              This week / Last week
+              Last week & This week
             </Button>
 
             <Button
@@ -611,7 +611,7 @@ function Stats() {
                 setSelectedPresetReport("monthly");
               }}
             >
-              This month / Last month
+              Last month & This month
             </Button>
 
             <Button
@@ -623,7 +623,7 @@ function Stats() {
                 setSelectedPresetReport("yearly");
               }}
             >
-              This year / Last year
+              Last year & This year
             </Button>
           </div>
 
@@ -666,8 +666,8 @@ function Stats() {
               title={report.title}
               timeRange={report.timeRange}
               data={report.data}
-              totalCurr={report.totalCurr}
-              totalPrev={report.totalPrev}
+              totalCurrent={report.totalCurrent}
+              totalPrevious={report.totalPrevious}
             />
           ))}
         </div>
@@ -682,20 +682,20 @@ interface StatsCategoryVisualReport {
   title: string;
   timeRange: string;
   data: {
-    name: string;
-    curr: number;
-    prev: number;
+    xAxisLabel: string;
+    current: number;
+    previous: number | null;
   }[];
-  totalCurr: string;
-  totalPrev: string | null;
+  totalCurrent: string;
+  totalPrevious: string | null;
 }
 
 function StatsCategoryVisualReport({
   title,
   timeRange,
   data,
-  totalCurr,
-  totalPrev,
+  totalCurrent,
+  totalPrevious,
 }: StatsCategoryVisualReport) {
   return (
     <div className="baseVertFlex w-full gap-4 border-b pb-4">
@@ -708,23 +708,26 @@ function StatsCategoryVisualReport({
           <ChartContainer config={chartConfig}>
             <BarChart width={1000} height={400} data={data}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <XAxis dataKey="xAxisLabel" />
               <YAxis />
               <ChartTooltip
-                cursor={false}
+                animationDuration={100}
+                cursor={true}
                 content={<ChartTooltipContent indicator="dot" />}
               />
               <Legend />
               <Bar
-                dataKey="prev"
+                dataKey="previous"
                 fill={chartConfig.prev!.color}
                 radius={4}
+                name={"Previous"}
                 minPointSize={5}
               />
               <Bar
-                dataKey="curr"
+                dataKey="current"
                 fill={chartConfig.curr!.color}
                 radius={4}
+                name={"Current"}
                 minPointSize={5}
               />
             </BarChart>
@@ -732,8 +735,8 @@ function StatsCategoryVisualReport({
         </CardContent>
         <CardFooter className="text-sm">
           <div className="baseFlex gap-8 font-medium">
-            {totalPrev !== null && <p>Previous: {totalPrev}</p>}
-            <p>Current: {totalCurr}</p>
+            {totalPrevious !== null && <p>Previous: {totalPrevious}</p>}
+            <p>Current: {totalCurrent}</p>
           </div>
         </CardFooter>
       </Card>
@@ -744,43 +747,56 @@ function StatsCategoryVisualReport({
 type Periodicity = "daily" | "weekly" | "monthly" | "yearly";
 
 function getReportDateRanges(periodicity: Periodicity) {
-  const currEndDate = new Date();
-  let currStartDate = new Date();
-  let prevStartDate = new Date();
-  let prevEndDate = new Date();
+  let currentStartDate: Date;
+  let currentEndDate: Date;
+  let previousStartDate: Date;
+  let previousEndDate: Date;
+
+  const now = new Date();
 
   switch (periodicity) {
     case "daily":
-      currStartDate = startOfDay(currEndDate);
-      prevEndDate = subDays(currStartDate, 1);
-      prevStartDate = startOfDay(prevEndDate);
+      currentStartDate = startOfDay(now);
+      currentEndDate = endOfDay(now);
+
+      previousStartDate = startOfDay(subDays(currentStartDate, 1));
+      previousEndDate = endOfDay(previousStartDate);
       break;
 
     case "weekly":
-      currStartDate = startOfWeek(currEndDate);
-      prevEndDate = subDays(currStartDate, 1);
-      prevStartDate = startOfWeek(prevEndDate);
+      currentStartDate = startOfWeek(now);
+      currentEndDate = endOfWeek(now);
+
+      previousStartDate = startOfWeek(subWeeks(currentStartDate, 1));
+      previousEndDate = endOfWeek(previousStartDate);
       break;
 
     case "monthly":
-      currStartDate = startOfMonth(currEndDate);
-      prevEndDate = subDays(currStartDate, 1);
-      prevStartDate = startOfMonth(prevEndDate);
+      currentStartDate = startOfMonth(now);
+      currentEndDate = endOfMonth(now);
+
+      previousStartDate = startOfMonth(subMonths(currentStartDate, 1));
+      previousEndDate = endOfMonth(previousStartDate);
       break;
 
     case "yearly":
-      currStartDate = startOfYear(currEndDate);
-      prevEndDate = subDays(currStartDate, 1);
-      prevStartDate = startOfYear(prevEndDate);
+      currentStartDate = startOfYear(now);
+      currentEndDate = endOfYear(now);
+
+      previousStartDate = startOfYear(subYears(currentStartDate, 1));
+      previousEndDate = endOfYear(previousStartDate);
       break;
 
     default:
       throw new Error("Invalid periodicity");
   }
 
-  currEndDate.setHours(23, 59, 59, 999); // Ensure currEndDate is at the end of the day
-
-  return { currStartDate, currEndDate, prevStartDate, prevEndDate };
+  return {
+    currentStartDate,
+    currentEndDate,
+    previousStartDate,
+    previousEndDate,
+  };
 }
 
 function getSpecificDateRange({
@@ -805,15 +821,25 @@ function getSpecificDateRange({
   }
 
   if (month) {
-    startDate = parse(`${year}-${month}-01`, "yyyy-MMMM-dd", new Date());
-    endDate = endOfMonth(startDate);
+    const parsedMonth = parse(
+      `${year}-${month}-01`,
+      "yyyy-MMMM-dd",
+      new Date(),
+    );
+    if (!isNaN(parsedMonth.getTime())) {
+      startDate = parsedMonth;
+      endDate = endOfMonth(startDate);
+    } else {
+      startDate = parse(`${year}-${month}-01`, "yyyy-MM-dd", new Date());
+      endDate = endOfMonth(startDate);
+    }
   }
 
   switch (periodicity) {
     case "daily":
       if (day) {
         startDate = parse(
-          `${year}-${month}-${day}`,
+          `${year}-${month}-${parseInt(day) + 1}`,
           "yyyy-MMMM-dd",
           new Date(),
         );
@@ -827,9 +853,8 @@ function getSpecificDateRange({
     case "weekly":
       if (week) {
         const weekNumber = parseInt(week.split(" ")[0] ?? "1", 10) - 1; // Get week number (0-indexed)
-        const monthStartDate = startOfMonth(startDate);
-        startDate = addWeeks(monthStartDate, weekNumber);
-        endDate = addDays(startDate, 6);
+        startDate = addWeeks(startOfMonth(startDate), weekNumber);
+        endDate = endOfWeek(startDate);
       } else {
         startDate = startOfWeek(startDate);
         endDate = endOfWeek(endDate);
