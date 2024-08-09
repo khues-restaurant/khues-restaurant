@@ -10,6 +10,8 @@ import { env } from "~/env";
 import { waitUntil } from "@vercel/functions";
 
 export const config = {
+  runtime: "nodejs",
+  maxDuration: 270, // 4 minutes, 30 seconds to be safe regarding vercel pro function timeout of 5 minutes
   api: {
     bodyParser: false,
   },
@@ -253,12 +255,6 @@ export const paymentRouter = createTRPCRouter({
         });
       }
 
-      console.log("upserting transient order", input.userId);
-      console.log({
-        ...input.orderDetails,
-        tipValue: tipValue.toNumber(), // reminder: this is the calculated, final tip value in cents
-      });
-
       await ctx.prisma.transientOrder.upsert({
         where: {
           userId: input.userId,
@@ -290,8 +286,6 @@ export const paymentRouter = createTRPCRouter({
         }
       }
 
-      console.log("pickup time:", input.orderDetails.datetimeToPickup);
-
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
         payment_method_types: ["card"],
@@ -314,18 +308,9 @@ export const paymentRouter = createTRPCRouter({
         cancel_url: `${env.BASE_URL}/`,
       });
 
-      waitUntil(waitForTimeoutAndExpireSession(session.id, 1000 * 60 * 5));
+      waitUntil(waitForTimeoutAndExpireSession(session.id, 1000 * 60 * 4.5)); // 4 minutes, 30 seconds
 
-      return session; // TODO: okay shoot I believe when we return we will be ending the http request,
-      // and therefore the setTimeout will not be able to run... maybe we need to make a separate tprc endpoint
-      // that will be passed in the session id and simply just have the setTimeout in there?
-
-      // TODO: if this doesn't work in production, then prob have to make a cron job to handle this
-      // but what mess you would have to have the checking frequency be so often... hopefully this works
-
-      // ^^^ dang I don't think that you can use the "waitUntil()" vercel function method because
-      // on the pro plan I think the max function execution time you can have is 300ms (5 mins)...
-      // ^ maybe workaround would be to expire it at 4 mins 30 seconds instead? probably the easiest option imo
+      return session;
     }),
   getStripeSession: publicProcedure
     .input(

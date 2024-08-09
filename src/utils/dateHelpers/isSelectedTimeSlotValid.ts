@@ -82,6 +82,9 @@ export function isSelectedTimeSlotValid({
   }
 
   // if pickupTime time is earlier than minPickupTime, return false
+  // fyi: this still works for isASAP, since the pickupTime will be midnight of the current
+  // day, and by definition isASAP orders shouldn't be allowed when the minPickupTime is
+  // anything other than midnight of the current day (aka whenever a minPickupTime is set)
   if (pickupTime.getTime() < minPickupTime.getTime()) {
     return false;
   }

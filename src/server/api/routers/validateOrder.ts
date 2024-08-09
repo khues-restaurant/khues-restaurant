@@ -147,6 +147,8 @@ export const validateOrderRouter = createTRPCRouter({
         });
 
         const dbItemsMap = new Map(dbItems.map((item) => [item.id, item]));
+        let pointRewardFound = false; // only allow one point reward per order
+        let birthdayRewardFound = false; // only allow one birthday reward per order
 
         for (let i = items.length - 1; i >= 0; i--) {
           const item = items[i];
@@ -278,10 +280,12 @@ export const validateOrderRouter = createTRPCRouter({
           // fyi: probably only need to set pointReward/birthdayReward to false respectively, but just
           // being cautious here
           if (item.pointReward) {
-            if (validatingAReorder) {
+            if (pointRewardFound || validatingAReorder) {
               item.pointReward = false;
               item.birthdayReward = false;
             } else {
+              pointRewardFound = true;
+
               // check if the user has enough points to redeem the point reward
               if (item.pointReward) {
                 const itemRewardPoints = new Decimal(item.price)
@@ -305,10 +309,12 @@ export const validateOrderRouter = createTRPCRouter({
           }
 
           if (item.birthdayReward) {
-            if (validatingAReorder) {
+            if (birthdayRewardFound || validatingAReorder) {
               item.pointReward = false;
               item.birthdayReward = false;
             } else {
+              birthdayRewardFound = true;
+
               const user = await ctx.prisma.user.findFirst({
                 where: {
                   userId,

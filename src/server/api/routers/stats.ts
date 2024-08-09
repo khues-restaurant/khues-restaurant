@@ -1,8 +1,65 @@
-import { format } from "date-fns";
+import type { Prisma, PrismaClient } from "@prisma/client";
+import { type DefaultArgs } from "@prisma/client/runtime/library";
+import { format, formatDuration } from "date-fns";
 import Decimal from "decimal.js";
 import { z } from "zod";
-
+import { type getAuth } from "@clerk/nextjs/server";
 import { adminProcedure, createTRPCRouter } from "~/server/api/trpc";
+
+interface AuthContext {
+  auth: ReturnType<typeof getAuth>;
+}
+
+type Category =
+  | "totalOrders"
+  | "totalRevenue"
+  | "totalTips"
+  | "averageOrderValue"
+  | "averageOrderCompletionTime"
+  | "lateOrders";
+
+type Periodicity = "daily" | "weekly" | "monthly" | "yearly";
+
+interface Params {
+  category: Category;
+  periodicity: Periodicity;
+  currentStartDate: Date;
+  currentEndDate: Date;
+  previousStartDate?: Date;
+  previousEndDate?: Date;
+}
+
+interface ContextParams {
+  category: Category;
+  totalCurrent: number;
+  totalPrevious: number | null;
+}
+
+interface Order {
+  createdAt: Date;
+  total?: number;
+  tipValue?: number;
+  orderStartedAt?: Date | null;
+  orderCompletedAt?: Date | null;
+  datetimeToPickup?: Date | null;
+}
+
+interface QueryAndAggregateParams {
+  ctx: {
+    auth: AuthContext;
+    prisma: PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>;
+  };
+  startDate: Date;
+  endDate: Date;
+  periodicity: Periodicity;
+  queryField: keyof Order;
+  key: Category;
+}
+
+interface GroupByPeriodicityParams {
+  results: Array<{ createdAt: Date; value: number; count: number }>;
+  periodicity: Periodicity;
+}
 
 export const statsRouter = createTRPCRouter({
   getYearRange: adminProcedure.query(async ({ ctx }) => {
@@ -35,10 +92,10 @@ export const statsRouter = createTRPCRouter({
 
         periodicity: z.enum(["daily", "weekly", "monthly", "yearly"]),
 
-        currStartDate: z.date(),
-        currEndDate: z.date(),
-        prevStartDate: z.date().optional(),
-        prevEndDate: z.date().optional(),
+        currentStartDate: z.date(),
+        currentEndDate: z.date(),
+        previousStartDate: z.date().optional(),
+        previousEndDate: z.date().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -50,10 +107,10 @@ export const statsRouter = createTRPCRouter({
         averageOrderCompletionTime,
         lateOrders,
         periodicity,
-        currStartDate,
-        currEndDate,
-        prevStartDate,
-        prevEndDate,
+        currentStartDate,
+        currentEndDate,
+        previousStartDate,
+        previousEndDate,
       } = input;
 
       if (
@@ -70,1064 +127,249 @@ export const statsRouter = createTRPCRouter({
       }
 
       const results = [];
+      const categories = [
+        { key: "totalOrders", queryField: "createdAt" },
+        { key: "totalRevenue", queryField: "createdAt" },
+        { key: "totalTips", queryField: "createdAt" },
+        {
+          key: "averageOrderValue",
+          queryField: "createdAt",
+        },
+        {
+          key: "averageOrderCompletionTime",
+          queryField: "orderCompletedAt",
+        },
+        { key: "lateOrders", queryField: "orderCompletedAt" },
+      ] as const;
 
-      if (totalOrders) {
-        // I'm not sure if we can always type out this localResults array, but works for here
-        const currResults: number[] = [];
-
-        // get the total orders for the current period
-        const currPeriod = await ctx.prisma.order.findMany({
-          where: {
-            createdAt: {
-              gte: currStartDate,
-              lte: currEndDate,
-            },
-          },
-          select: {
-            createdAt: true,
-          },
-          orderBy: {
-            createdAt: "asc", // prob not necessary
-          },
-        });
-
-        let index = 0;
-
-        // group/aggregate the orders by the periodicity
-        for (const order of currPeriod) {
-          const createdAt = order.createdAt;
-
-          if (periodicity === "daily") {
-            index = createdAt.getHours();
-          } else if (periodicity === "weekly") {
-            index = createdAt.getDay();
-          } else if (periodicity === "monthly") {
-            index = createdAt.getDate(); // see how this looks, obv if you want to go back to the
-            // grouping into 4 weeks you'll need to change this
-          } else if (periodicity === "yearly") {
-            index = createdAt.getMonth();
-          }
-
-          currResults[index] = (currResults[index] || 0) + 1;
-        }
-
-        // prev period (if necessary)
-        const prevResults: number[] = [];
-
-        if (prevStartDate && prevEndDate) {
-          // get the total orders for the current period
-          const prevPeriod = await ctx.prisma.order.findMany({
-            where: {
-              createdAt: {
-                gte: prevStartDate,
-                lte: prevEndDate,
-              },
-            },
-            select: {
-              createdAt: true,
-            },
-            orderBy: {
-              createdAt: "asc", // prob not necessary
-            },
-          });
-
-          let index = 0;
-
-          // group/aggregate the orders by the periodicity
-          for (const order of prevPeriod) {
-            const createdAt = order.createdAt;
-
-            if (periodicity === "daily") {
-              index = createdAt.getHours();
-            } else if (periodicity === "weekly") {
-              index = createdAt.getDay();
-            } else if (periodicity === "monthly") {
-              index = createdAt.getDate(); // see how this looks, obv if you want to go back to the
-              // grouping into 4 weeks you'll need to change this
-            } else if (periodicity === "yearly") {
-              index = createdAt.getMonth();
-            }
-
-            prevResults[index] = (prevResults[index] || 0) + 1;
-          }
-        }
-
-        // format/combine the results (if necessary)
-        const combinedResults = [];
-
-        // name will be be dynamic based on the periodicity (6:00 PM, Monday, etc)
-
-        let iterationAmount = 24;
-
-        if (periodicity === "weekly") {
-          iterationAmount = 7;
-        } else if (periodicity === "monthly") {
-          iterationAmount = 31;
-        } else if (periodicity === "yearly") {
-          iterationAmount = 12;
-        }
-
-        for (let i = 0; i < iterationAmount; i++) {
-          // TODO: const name = getDynamicName(i, periodicity);
-
-          const curr = currResults[i] || 0;
-          const prev = prevResults[i] || 0;
-
-          combinedResults.push({
-            name: getPeriodName(i, periodicity),
-            curr,
-            prev,
-          });
-        }
-
-        // get total orders for the current period and the previous period (if necessary)
-        const totalCurr = currResults.reduce((a, b) => a + b, 0);
-        const totalPrev =
-          prevStartDate && prevEndDate
-            ? prevResults.reduce((a, b) => a + b, 0)
-            : null;
-
-        // add to the results under key of "totalOrders"
-        results.push({
-          ...generateTitleAndTimeRange({
-            category: "totalOrders",
+      for (const category of categories) {
+        if (input[category.key]) {
+          const currentResults = await queryAndAggregate({
+            // @ts-expect-error clerk didn't have proper export for SignedInAuthObject
+            ctx,
+            startDate: currentStartDate,
+            endDate: currentEndDate,
             periodicity,
-            currStartDate,
-            currEndDate,
-            prevStartDate,
-            prevEndDate,
-          }),
-          data: combinedResults,
-          ...generateContextStrings({
-            category: "totalOrders",
-            totalCurr,
-            totalPrev,
-          }),
-        });
-      }
-
-      if (totalRevenue) {
-        // get the total revenue for the current period
-        const currPeriod = await ctx.prisma.order.findMany({
-          where: {
-            createdAt: {
-              gte: currStartDate,
-              lte: currEndDate,
-            },
-          },
-          select: {
-            total: true,
-            createdAt: true,
-          },
-          orderBy: {
-            createdAt: "asc", // prob not necessary
-          },
-        });
-
-        let index = 0;
-
-        const currResults: number[] = [];
-
-        // group/aggregate the orders by the periodicity
-        for (const order of currPeriod) {
-          const createdAt = order.createdAt;
-
-          if (periodicity === "daily") {
-            index = createdAt.getHours();
-          } else if (periodicity === "weekly") {
-            index = createdAt.getDay();
-          } else if (periodicity === "monthly") {
-            index = createdAt.getDate(); // see how this looks, obv if you want to go back to the
-            // grouping into 4 weeks you'll need to change this
-          } else if (periodicity === "yearly") {
-            index = createdAt.getMonth();
-          }
-
-          currResults[index] = (currResults[index] || 0) + order.total;
-        }
-
-        // prev period (if necessary)
-        const prevResults: number[] = [];
-
-        if (prevStartDate && prevEndDate) {
-          // get the total orders for the current period
-          const prevPeriod = await ctx.prisma.order.findMany({
-            where: {
-              createdAt: {
-                gte: prevStartDate,
-                lte: prevEndDate,
-              },
-            },
-            select: {
-              total: true,
-              createdAt: true,
-            },
-            orderBy: {
-              createdAt: "asc", // prob not necessary
-            },
+            queryField: category.queryField,
+            key: category.key,
           });
 
-          let index = 0;
+          const previousResults =
+            previousStartDate && previousEndDate
+              ? await queryAndAggregate({
+                  // @ts-expect-error clerk didn't have proper export for SignedInAuthObject
+                  ctx,
+                  startDate: previousStartDate,
+                  endDate: previousEndDate,
+                  periodicity,
+                  queryField: category.queryField,
+                  key: category.key,
+                })
+              : null;
 
-          // group/aggregate the orders by the periodicity
-          for (const order of prevPeriod) {
-            const createdAt = order.createdAt;
-
-            if (periodicity === "daily") {
-              index = createdAt.getHours();
-            } else if (periodicity === "weekly") {
-              index = createdAt.getDay();
-            } else if (periodicity === "monthly") {
-              index = createdAt.getDate(); // see how this looks, obv if you want to go back to the
-              // grouping into 4 weeks you'll need to change this
-            } else if (periodicity === "yearly") {
-              index = createdAt.getMonth();
-            }
-
-            prevResults[index] = (prevResults[index] || 0) + order.total;
-          }
-        }
-
-        // format/combine the results (if necessary)
-        const combinedResults = [];
-
-        // name will be be dynamic based on the periodicity (6:00 PM, Monday, etc)
-
-        let iterationAmount = 24;
-
-        if (periodicity === "weekly") {
-          iterationAmount = 7;
-        } else if (periodicity === "monthly") {
-          iterationAmount = 31;
-        } else if (periodicity === "yearly") {
-          iterationAmount = 12;
-        }
-
-        for (let i = 0; i < iterationAmount; i++) {
-          // all database money values are stored as cents, so divide by 100 to get dollars
-          const curr = new Decimal(currResults[i] || 0).div(100).toNumber();
-          const prev = new Decimal(prevResults[i] || 0).div(100).toNumber();
-
-          combinedResults.push({
-            name: getPeriodName(i, periodicity),
-            curr,
-            prev,
-          });
-        }
-
-        // get total orders for the current period and the previous period (if necessary)
-        const totalCurrInCents = currResults.reduce((a, b) => a + b, 0);
-        const totalPrevInCents =
-          prevStartDate && prevEndDate
-            ? prevResults.reduce((a, b) => a + b, 0)
-            : null;
-
-        const totalCurr = new Decimal(totalCurrInCents).div(100).toNumber();
-        const totalPrev = totalPrevInCents
-          ? new Decimal(totalPrevInCents).div(100).toNumber()
-          : null;
-
-        // add to the results under key of "totalOrders"
-        results.push({
-          ...generateTitleAndTimeRange({
-            category: "totalRevenue",
+          const combinedResults = generateCombinedResults({
+            currentResults,
+            previousResults,
             periodicity,
-            currStartDate,
-            currEndDate,
-            prevStartDate,
-            prevEndDate,
-          }),
-          data: combinedResults,
-          ...generateContextStrings({
-            category: "totalRevenue",
-            totalCurr,
-            totalPrev,
-          }),
-        });
-      }
-
-      if (totalTips) {
-        // get the total tips for the current period
-        const currPeriod = await ctx.prisma.order.findMany({
-          where: {
-            createdAt: {
-              gte: currStartDate,
-              lte: currEndDate,
-            },
-          },
-          select: {
-            tipValue: true,
-            createdAt: true,
-          },
-          orderBy: {
-            createdAt: "asc", // prob not necessary
-          },
-        });
-
-        let index = 0;
-
-        const currResults: number[] = [];
-
-        // group/aggregate the orders by the periodicity
-        for (const order of currPeriod) {
-          const createdAt = order.createdAt;
-
-          if (periodicity === "daily") {
-            index = createdAt.getHours();
-          } else if (periodicity === "weekly") {
-            index = createdAt.getDay();
-          } else if (periodicity === "monthly") {
-            index = createdAt.getDate(); // see how this looks, obv if you want to go back to the
-            // grouping into 4 weeks you'll need to change this
-          } else if (periodicity === "yearly") {
-            index = createdAt.getMonth();
-          }
-
-          currResults[index] = (currResults[index] || 0) + order.tipValue;
-        }
-
-        // prev period (if necessary)
-        const prevResults: number[] = [];
-
-        if (prevStartDate && prevEndDate) {
-          // get the total orders for the current period
-          const prevPeriod = await ctx.prisma.order.findMany({
-            where: {
-              createdAt: {
-                gte: prevStartDate,
-                lte: prevEndDate,
-              },
-            },
-            select: {
-              tipValue: true,
-              createdAt: true,
-            },
-            orderBy: {
-              createdAt: "asc", // prob not necessary
-            },
           });
 
-          let index = 0;
+          const totalCurrent = sumResults(
+            currentResults,
+            category.key.includes("average"),
+            false, // FYI: hardcoded as false since both avg order value and avg order completion time are do not want to include zero values in average. Change this behavior later if needed.
+          );
+          const totalPrevious = previousResults
+            ? sumResults(
+                previousResults,
+                category.key.includes("average"),
+                false, // FYI: hardcoded as false since both avg order value and avg order completion time are do not want to include zero values in average. Change this behavior later if needed.
+              )
+            : null;
 
-          // group/aggregate the orders by the periodicity
-          for (const order of prevPeriod) {
-            const createdAt = order.createdAt;
-
-            if (periodicity === "daily") {
-              index = createdAt.getHours();
-            } else if (periodicity === "weekly") {
-              index = createdAt.getDay();
-            } else if (periodicity === "monthly") {
-              index = createdAt.getDate(); // see how this looks, obv if you want to go back to the
-              // grouping into 4 weeks you'll need to change this
-            } else if (periodicity === "yearly") {
-              index = createdAt.getMonth();
-            }
-
-            prevResults[index] = (prevResults[index] || 0) + order.tipValue;
-          }
-        }
-
-        // format/combine the results (if necessary)
-        const combinedResults = [];
-
-        // name will be be dynamic based on the periodicity (6:00 PM, Monday, etc)
-
-        let iterationAmount = 24;
-
-        if (periodicity === "weekly") {
-          iterationAmount = 7;
-        } else if (periodicity === "monthly") {
-          iterationAmount = 31;
-        } else if (periodicity === "yearly") {
-          iterationAmount = 12;
-        }
-
-        for (let i = 0; i < iterationAmount; i++) {
-          // all database money values are stored as cents, so divide by 100 to get dollars
-          const curr = new Decimal(currResults[i] || 0).div(100).toNumber();
-          const prev = new Decimal(prevResults[i] || 0).div(100).toNumber();
-
-          combinedResults.push({
-            name: getPeriodName(i, periodicity),
-            curr,
-            prev,
+          results.push({
+            ...generateTitleAndTimeRange({
+              category: category.key,
+              periodicity,
+              currentStartDate,
+              currentEndDate,
+              previousStartDate,
+              previousEndDate,
+            }),
+            data: combinedResults,
+            ...generateContextStrings({
+              category: category.key,
+              totalCurrent,
+              totalPrevious,
+            }),
           });
         }
-
-        // get total orders for the current period and the previous period (if necessary)
-        const totalCurrInCents = currResults.reduce((a, b) => a + b, 0);
-        const totalPrevInCents =
-          prevStartDate && prevEndDate
-            ? prevResults.reduce((a, b) => a + b, 0)
-            : null;
-
-        const totalCurr = new Decimal(totalCurrInCents).div(100).toNumber();
-        const totalPrev = totalPrevInCents
-          ? new Decimal(totalPrevInCents).div(100).toNumber()
-          : null;
-
-        // add to the results under key of "totalOrders"
-        results.push({
-          ...generateTitleAndTimeRange({
-            category: "totalTips",
-            periodicity,
-            currStartDate,
-            currEndDate,
-            prevStartDate,
-            prevEndDate,
-          }),
-          data: combinedResults,
-          ...generateContextStrings({
-            category: "totalTips",
-            totalCurr,
-            totalPrev,
-          }),
-        });
-      }
-
-      if (averageOrderValue) {
-        // get the average order value for the current period
-        const currPeriod = await ctx.prisma.order.findMany({
-          where: {
-            createdAt: {
-              gte: currStartDate,
-              lte: currEndDate,
-            },
-          },
-          select: {
-            total: true,
-            createdAt: true,
-          },
-          orderBy: {
-            createdAt: "asc", // prob not necessary
-          },
-        });
-
-        let index = 0;
-
-        const currResults: number[] = [];
-        const currOrderCounts: number[] = [];
-
-        // group/aggregate the orders by the periodicity
-        for (const order of currPeriod) {
-          const createdAt = order.createdAt;
-
-          if (periodicity === "daily") {
-            index = createdAt.getHours();
-          } else if (periodicity === "weekly") {
-            index = createdAt.getDay();
-          } else if (periodicity === "monthly") {
-            index = createdAt.getDate(); // see how this looks, obv if you want to go back to the
-            // grouping into 4 weeks you'll need to change this
-          } else if (periodicity === "yearly") {
-            index = createdAt.getMonth();
-          }
-
-          currResults[index] = (currResults[index] || 0) + order.total;
-          currOrderCounts[index] = (currOrderCounts[index] || 0) + 1;
-        }
-
-        // prev period (if necessary)
-        const prevResults: number[] = [];
-        const prevOrderCounts: number[] = [];
-
-        if (prevStartDate && prevEndDate) {
-          // get the total orders for the current period
-          const prevPeriod = await ctx.prisma.order.findMany({
-            where: {
-              createdAt: {
-                gte: prevStartDate,
-                lte: prevEndDate,
-              },
-            },
-            select: {
-              total: true,
-              createdAt: true,
-            },
-            orderBy: {
-              createdAt: "asc", // prob not necessary
-            },
-          });
-
-          let index = 0;
-
-          // group/aggregate the orders by the periodicity
-          for (const order of prevPeriod) {
-            const createdAt = order.createdAt;
-
-            if (periodicity === "daily") {
-              index = createdAt.getHours();
-            } else if (periodicity === "weekly") {
-              index = createdAt.getDay();
-            } else if (periodicity === "monthly") {
-              index = createdAt.getDate(); // see how this looks, obv if you want to go back to the
-              // grouping into 4 weeks you'll need to change this
-            } else if (periodicity === "yearly") {
-              index = createdAt.getMonth();
-            }
-
-            prevResults[index] = (prevResults[index] || 0) + order.total;
-            prevOrderCounts[index] = (prevOrderCounts[index] || 0) + 1;
-          }
-        }
-
-        // format/combine the results (if necessary)
-        const combinedResults = [];
-
-        // name will be be dynamic based on the periodicity (6:00 PM, Monday, etc)
-
-        let iterationAmount = 24;
-
-        if (periodicity === "weekly") {
-          iterationAmount = 7;
-        } else if (periodicity === "monthly") {
-          iterationAmount = 31;
-        } else if (periodicity === "yearly") {
-          iterationAmount = 12;
-        }
-
-        for (let i = 0; i < iterationAmount; i++) {
-          const curr = new Decimal(currResults[i] || 0).div(100).toNumber();
-          const prev = new Decimal(prevResults[i] || 0).div(100).toNumber();
-
-          // divide by 100 to get the average order value in dollars
-          const currOrderCount = currOrderCounts[i] || 0;
-          const prevOrderCount = prevOrderCounts[i] || 0;
-
-          combinedResults.push({
-            name: getPeriodName(i, periodicity),
-            curr: new Decimal(curr / currOrderCount).toNumber(),
-            prev: new Decimal(prev / prevOrderCount).toNumber(),
-          });
-        }
-
-        // get total average order value for the current period and the previous period (if necessary)
-        const totalCurrValueInCents = currResults.reduce((a, b) => a + b, 0);
-        const totalPrevValueInCents =
-          prevStartDate && prevEndDate
-            ? prevResults.reduce((a, b) => a + b, 0)
-            : null;
-
-        const totalCurrValue = new Decimal(totalCurrValueInCents)
-          .div(100)
-          .toNumber();
-        const totalPrevValue = totalPrevValueInCents
-          ? new Decimal(totalPrevValueInCents).div(100).toNumber()
-          : null;
-
-        const totalCurrOrderCount = currOrderCounts.reduce((a, b) => a + b, 0);
-        const totalPrevOrderCount =
-          prevStartDate && prevEndDate
-            ? prevOrderCounts.reduce((a, b) => a + b, 0)
-            : null;
-
-        const totalCurr = new Decimal(
-          totalCurrValue / totalCurrOrderCount,
-        ).toNumber();
-        const totalPrev =
-          totalPrevValue && totalPrevOrderCount
-            ? new Decimal(totalPrevValue / totalPrevOrderCount).toNumber()
-            : null;
-
-        // add to the results under key of "totalOrders"
-        results.push({
-          ...generateTitleAndTimeRange({
-            category: "averageOrderValue",
-            periodicity,
-            currStartDate,
-            currEndDate,
-            prevStartDate,
-            prevEndDate,
-          }),
-          data: combinedResults,
-          ...generateContextStrings({
-            category: "averageOrderValue",
-            totalCurr,
-            totalPrev,
-          }),
-        });
-      }
-
-      if (averageOrderCompletionTime) {
-        // get the average order completion time for the current period
-        const currPeriod = await ctx.prisma.order
-          .findMany({
-            where: {
-              orderCompletedAt: {
-                gte: currStartDate,
-                lte: currEndDate,
-              },
-            },
-            select: {
-              orderStartedAt: true,
-              orderCompletedAt: true,
-            },
-            orderBy: {
-              orderCompletedAt: "asc", // prob not necessary
-            },
-          })
-          .then((orders) => {
-            return orders.filter((order) => order.orderStartedAt !== null);
-          });
-
-        let index = 0;
-
-        const currResults: number[] = [];
-        const currOrderCounts: number[] = [];
-
-        // group/aggregate the orders by the periodicity
-        for (const order of currPeriod) {
-          const orderStartedAt = order.orderStartedAt!;
-          const orderCompletedAt = order.orderCompletedAt!;
-
-          if (periodicity === "daily") {
-            index = orderCompletedAt.getHours();
-          } else if (periodicity === "weekly") {
-            index = orderCompletedAt.getDay();
-          } else if (periodicity === "monthly") {
-            index = orderCompletedAt.getDate(); // see how this looks, obv if you want to go back to the
-            // grouping into 4 weeks you'll need to change this
-          } else if (periodicity === "yearly") {
-            index = orderCompletedAt.getMonth();
-          }
-
-          currResults[index] =
-            (currResults[index] || 0) +
-            (orderCompletedAt.getTime() - orderStartedAt.getTime());
-          currOrderCounts[index] = (currOrderCounts[index] || 0) + 1;
-        }
-
-        // prev period (if necessary)
-        const prevResults: number[] = [];
-        const prevOrderCounts: number[] = [];
-
-        if (prevStartDate && prevEndDate) {
-          // get the total orders for the current period
-          const prevPeriod = await ctx.prisma.order
-            .findMany({
-              where: {
-                orderCompletedAt: {
-                  gte: prevStartDate,
-                  lte: prevEndDate,
-                },
-              },
-              select: {
-                orderStartedAt: true,
-                orderCompletedAt: true,
-              },
-              orderBy: {
-                orderCompletedAt: "asc", // prob not necessary
-              },
-            })
-            .then((orders) => {
-              return orders.filter((order) => order.orderStartedAt !== null);
-            });
-
-          let index = 0;
-
-          // group/aggregate the orders by the periodicity
-          for (const order of prevPeriod) {
-            const orderStartedAt = order.orderStartedAt!;
-            const orderCompletedAt = order.orderCompletedAt!;
-
-            if (periodicity === "daily") {
-              index = orderCompletedAt.getHours();
-            } else if (periodicity === "weekly") {
-              index = orderCompletedAt.getDay();
-            } else if (periodicity === "monthly") {
-              index = orderCompletedAt.getDate(); // see how this looks, obv if you want to go back to the
-              // grouping into 4 weeks you'll need to change this
-            } else if (periodicity === "yearly") {
-              index = orderCompletedAt.getMonth();
-            }
-
-            prevResults[index] =
-              (prevResults[index] || 0) +
-              (orderCompletedAt.getTime() - orderStartedAt.getTime());
-            prevOrderCounts[index] = (prevOrderCounts[index] || 0) + 1;
-          }
-        }
-
-        // format/combine the results (if necessary)
-        const combinedResults = [];
-
-        // name will be be dynamic based on the periodicity (6:00 PM, Monday, etc)
-
-        let iterationAmount = 24;
-
-        if (periodicity === "weekly") {
-          iterationAmount = 7;
-        } else if (periodicity === "monthly") {
-          iterationAmount = 31;
-        } else if (periodicity === "yearly") {
-          iterationAmount = 12;
-        }
-
-        for (let i = 0; i < iterationAmount; i++) {
-          const curr = currResults[i] || 0;
-          const prev = prevResults[i] || 0;
-
-          const currOrderCount = currOrderCounts[i] || 0;
-          const prevOrderCount = prevOrderCounts[i] || 0;
-
-          combinedResults.push({
-            name: getPeriodName(i, periodicity),
-            curr: new Decimal(
-              millisecondsToMinutes(curr) / currOrderCount,
-            ).toNumber(),
-            prev: new Decimal(
-              millisecondsToMinutes(prev) / prevOrderCount,
-            ).toNumber(),
-          });
-        }
-
-        // get total order completion time average for the current period and the previous period (if necessary)
-        const totalCurrValueInMilliseconds = currResults.reduce(
-          (a, b) => a + b,
-          0,
-        );
-        const totalPrevValueInMilliseconds =
-          prevStartDate && prevEndDate
-            ? prevResults.reduce((a, b) => a + b, 0)
-            : null;
-
-        const totalCurrValue = new Decimal(
-          millisecondsToMinutes(totalCurrValueInMilliseconds),
-        ).toNumber();
-        const totalPrevValue = totalPrevValueInMilliseconds
-          ? new Decimal(
-              millisecondsToMinutes(totalPrevValueInMilliseconds),
-            ).toNumber()
-          : null;
-
-        const totalCurrOrderCount = currOrderCounts.reduce((a, b) => a + b, 0);
-        const totalPrevOrderCount =
-          prevStartDate && prevEndDate
-            ? prevOrderCounts.reduce((a, b) => a + b, 0)
-            : null;
-
-        const totalCurr = new Decimal(
-          totalCurrValue / totalCurrOrderCount,
-        ).toNumber();
-        const totalPrev =
-          totalPrevValue && totalPrevOrderCount
-            ? new Decimal(totalPrevValue / totalPrevOrderCount).toNumber()
-            : null;
-
-        // add to the results under key of "totalOrders"
-        results.push({
-          ...generateTitleAndTimeRange({
-            category: "averageOrderCompletionTime",
-            periodicity,
-            currStartDate,
-            currEndDate,
-            prevStartDate,
-            prevEndDate,
-          }),
-          data: combinedResults,
-          ...generateContextStrings({
-            category: "averageOrderCompletionTime",
-            totalCurr,
-            totalPrev,
-          }),
-        });
-      }
-
-      if (lateOrders) {
-        // get the late orders for the current period
-        const currPeriod = await ctx.prisma.order
-          .findMany({
-            where: {
-              orderCompletedAt: {
-                gte: currStartDate,
-                lte: currEndDate,
-              },
-            },
-            select: {
-              datetimeToPickup: true,
-              orderCompletedAt: true,
-            },
-            orderBy: {
-              orderCompletedAt: "asc", // prob not necessary
-            },
-          })
-          .then((orders) => {
-            return orders.filter((order) => {
-              const completedAt = order.orderCompletedAt;
-              if (!completedAt) return false;
-
-              return completedAt.getTime() > order.datetimeToPickup.getTime();
-            });
-          });
-
-        let index = 0;
-
-        const currResults: number[] = [];
-
-        // group/aggregate the orders by the periodicity
-        for (const order of currPeriod) {
-          const orderCompletedAt = order.orderCompletedAt!;
-
-          if (periodicity === "daily") {
-            index = orderCompletedAt.getHours();
-          } else if (periodicity === "weekly") {
-            index = orderCompletedAt.getDay();
-          } else if (periodicity === "monthly") {
-            index = orderCompletedAt.getDate(); // see how this looks, obv if you want to go back to the
-            // grouping into 4 weeks you'll need to change this
-          } else if (periodicity === "yearly") {
-            index = orderCompletedAt.getMonth();
-          }
-
-          currResults[index] = (currResults[index] || 0) + 1;
-        }
-
-        // prev period (if necessary)
-        const prevResults: number[] = [];
-
-        if (prevStartDate && prevEndDate) {
-          // get the total orders for the current period
-          const prevPeriod = await ctx.prisma.order
-            .findMany({
-              where: {
-                orderCompletedAt: {
-                  gte: prevStartDate,
-                  lte: prevEndDate,
-                },
-              },
-              select: {
-                datetimeToPickup: true,
-                orderCompletedAt: true,
-              },
-              orderBy: {
-                orderCompletedAt: "asc", // prob not necessary
-              },
-            })
-            .then((orders) => {
-              return orders.filter((order) => {
-                const completedAt = order.orderCompletedAt;
-                if (!completedAt) return false;
-
-                return completedAt.getTime() > order.datetimeToPickup.getTime();
-              });
-            });
-
-          let index = 0;
-
-          // group/aggregate the orders by the periodicity
-          for (const order of prevPeriod) {
-            const orderCompletedAt = order.orderCompletedAt!;
-
-            if (periodicity === "daily") {
-              index = orderCompletedAt.getHours();
-            } else if (periodicity === "weekly") {
-              index = orderCompletedAt.getDay();
-            } else if (periodicity === "monthly") {
-              index = orderCompletedAt.getDate(); // see how this looks, obv if you want to go back to the
-              // grouping into 4 weeks you'll need to change this
-            } else if (periodicity === "yearly") {
-              index = orderCompletedAt.getMonth();
-            }
-
-            prevResults[index] = (prevResults[index] || 0) + 1;
-          }
-        }
-
-        // format/combine the results (if necessary)
-        const combinedResults = [];
-
-        // name will be be dynamic based on the periodicity (6:00 PM, Monday, etc)
-
-        let iterationAmount = 24;
-
-        if (periodicity === "weekly") {
-          iterationAmount = 7;
-        } else if (periodicity === "monthly") {
-          iterationAmount = 31;
-        } else if (periodicity === "yearly") {
-          iterationAmount = 12;
-        }
-
-        for (let i = 0; i < iterationAmount; i++) {
-          const curr = currResults[i] || 0;
-          const prev = prevResults[i] || 0;
-
-          combinedResults.push({
-            name: getPeriodName(i, periodicity),
-            curr,
-            prev,
-          });
-        }
-
-        // get total late orders for the current period and the previous period (if necessary)
-        const totalCurr = currResults.reduce((a, b) => a + b, 0);
-        const totalPrev =
-          prevStartDate && prevEndDate
-            ? prevResults.reduce((a, b) => a + b, 0)
-            : null;
-
-        // add to the results under key of "totalOrders"
-        results.push({
-          ...generateTitleAndTimeRange({
-            category: "lateOrders",
-            periodicity,
-            currStartDate,
-            currEndDate,
-            prevStartDate,
-            prevEndDate,
-          }),
-          data: combinedResults,
-          ...generateContextStrings({
-            category: "lateOrders",
-            totalCurr,
-            totalPrev,
-          }),
-        });
       }
 
       return results;
     }),
 });
 
-////////////////////////////////////////////////////////////////////
-
-type Category =
-  | "totalOrders"
-  | "totalRevenue"
-  | "totalTips"
-  | "averageOrderValue"
-  | "averageOrderCompletionTime"
-  | "lateOrders";
-
-type Periodicity = "daily" | "weekly" | "monthly" | "yearly";
-
-interface Params {
-  category: Category;
-  periodicity: Periodicity;
-  currStartDate: Date;
-  currEndDate: Date;
-  prevStartDate?: Date;
-  prevEndDate?: Date;
-}
-
-function formatDate(date: Date): string {
-  return format(date, "MM/dd/yyyy");
-}
-
-function capitalizeFirstLetter(string: string): string {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-function generateTitleAndTimeRange({
-  category,
+async function queryAndAggregate({
+  ctx,
+  startDate,
+  endDate,
   periodicity,
-  currStartDate,
-  currEndDate,
-  prevStartDate,
-  prevEndDate,
-}: Params): { title: string; timeRange: string } {
-  const categoryMap: { [key in Category]: string } = {
-    totalOrders: "Total orders",
-    totalRevenue: "Total revenue",
-    totalTips: "Total tips",
-    averageOrderValue: "Average order value",
-    averageOrderCompletionTime: "Average order completion time",
-    lateOrders: "Late orders",
-  };
+  queryField,
+  key,
+}: QueryAndAggregateParams): Promise<number[]> {
+  const results: Array<{ createdAt: Date; value: number; count: number }> = [];
+  const orders = await ctx.prisma.order.findMany({
+    where: {
+      [queryField]: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+    select: {
+      createdAt: true,
+      orderStartedAt: key === "averageOrderCompletionTime" ? true : undefined,
+      orderCompletedAt:
+        key === "averageOrderCompletionTime" || key === "lateOrders"
+          ? true
+          : undefined,
+      datetimeToPickup: key === "lateOrders" ? true : undefined,
+      total:
+        key === "totalRevenue" || key === "averageOrderValue"
+          ? true
+          : undefined,
+      tipValue: key === "totalTips" ? true : undefined,
+    },
+    orderBy: {
+      [queryField]: "asc",
+    },
+  });
 
-  const periodicityToLabel: { [key in Periodicity]: string } = {
-    daily: "yesterday",
-    weekly: "last week",
-    monthly: "last month",
-    yearly: "last year",
-  };
+  orders.forEach((order) => {
+    let value = 0;
+    const count = 1;
 
-  const currentPeriod = `${formatDate(currStartDate)} - ${formatDate(currEndDate)}`;
+    if (key === "lateOrders" && order.datetimeToPickup) {
+      if (
+        order.orderCompletedAt &&
+        order.orderCompletedAt > order.datetimeToPickup
+      ) {
+        value = 1;
+      }
+    } else if (
+      key === "averageOrderCompletionTime" &&
+      order.orderStartedAt &&
+      order.orderCompletedAt
+    ) {
+      value = order.orderCompletedAt.getTime() - order.orderStartedAt.getTime();
+    } else if (key === "totalRevenue" || key === "averageOrderValue") {
+      value = new Decimal(order.total || 0).div(100).toNumber(); // Convert cents to dollars
+    } else if (key === "totalTips") {
+      value = new Decimal(order.tipValue || 0).div(100).toNumber(); // Convert cents to dollars
+    } else if (key === "totalOrders") {
+      value = 1;
+    }
 
-  let title = `${categoryMap[category]} - ${capitalizeFirstLetter(periodicity)}`;
-  let timeRange = `(${currentPeriod})`;
+    results.push({ createdAt: order[queryField] as Date, value, count });
+  });
 
-  if (prevStartDate && prevEndDate) {
-    const previousPeriod = `${formatDate(prevStartDate)} - ${formatDate(prevEndDate)}`;
-    title = `${categoryMap[category]} - Compared to ${periodicityToLabel[periodicity]}`;
-    timeRange = `(${previousPeriod} | ${currentPeriod})`;
+  return groupByPeriodicity({ results, periodicity, key });
+}
+
+function groupByPeriodicity({
+  results,
+  periodicity,
+  key,
+}: GroupByPeriodicityParams & { key: Category }): number[] {
+  const grouped = new Map<
+    number,
+    { sum: number; count: number; dates: Date[] }
+  >();
+
+  results.forEach(({ createdAt, value, count }) => {
+    let index: number;
+    if (periodicity === "daily") {
+      index = createdAt.getHours();
+    } else if (periodicity === "weekly") {
+      index = createdAt.getDay();
+    } else if (periodicity === "monthly") {
+      index = createdAt.getDate();
+    } else if (periodicity === "yearly") {
+      index = createdAt.getMonth();
+    } else {
+      throw new Error("Invalid periodicity");
+    }
+
+    const existing = grouped.get(index) || { sum: 0, count: 0, dates: [] };
+    grouped.set(index, {
+      sum: existing.sum + value,
+      count: existing.count + count,
+      dates: [...existing.dates, createdAt],
+    });
+  });
+
+  const size =
+    periodicity === "daily"
+      ? 24
+      : periodicity === "weekly"
+        ? 7
+        : periodicity === "monthly"
+          ? 31
+          : 12;
+
+  return Array.from({ length: size }, (_, i) => {
+    const group = grouped.get(i) || { sum: 0, count: 0, dates: [] };
+    const value =
+      (key === "averageOrderValue" || key === "averageOrderCompletionTime") &&
+      group.count > 0
+        ? group.sum / group.count // Correctly calculate the average
+        : group.sum;
+
+    return value;
+  });
+}
+
+function generateCombinedResults({
+  currentResults,
+  previousResults,
+  periodicity,
+}: {
+  currentResults: number[];
+  previousResults: number[] | null;
+  periodicity: Periodicity;
+}): Array<{
+  xAxisLabel: string;
+  current: number;
+  previous: number | null;
+}> {
+  const combinedResults = currentResults.map((current, i) => ({
+    xAxisLabel: getPeriodName(i, periodicity),
+    current,
+    previous: previousResults ? previousResults[i] || 0 : null,
+  }));
+
+  return combinedResults;
+}
+
+function sumResults(
+  results: number[],
+  calculateAverage: boolean,
+  includeZeroValuesInAverage?: boolean,
+): number {
+  const totalSum = results.reduce((a, b) => a + b, 0);
+
+  if (calculateAverage) {
+    // const totalCount = results.length;
+    const totalCount = includeZeroValuesInAverage
+      ? results.length
+      : results.filter((result) => result > 0).length;
+
+    return new Decimal(totalSum).div(totalCount).toDecimalPlaces(2).toNumber(); // Calculate the average across the entire period
   }
 
-  return { title, timeRange };
+  return totalSum;
 }
 
-////////////////////////////////////////////////////////////////////
-
-interface ContextParams {
-  category: Category;
-  totalCurr: number;
-  totalPrev: number | null;
-}
-
-function formatNumber(value: number, decimals = 2): string {
-  return value.toFixed(decimals);
-}
-
-function formatTime(value: number): string {
-  const minutes = Math.floor(value);
-  const seconds = Math.round((value - minutes) * 60);
-  return `${minutes} minutes and ${seconds} seconds`;
-}
-
-function generateContextStrings({
-  category,
-  totalCurr,
-  totalPrev,
-}: ContextParams): { totalCurr: string; totalPrev: string | null } {
-  const categoryMap: {
-    [key in Category]: (
-      curr: number,
-      prev: number | null,
-    ) => { totalCurr: string; totalPrev: string | null };
-  } = {
-    totalOrders: (curr, prev) => ({
-      totalCurr: `${curr} orders made`,
-      totalPrev: prev !== null ? `${prev} orders made` : null,
-    }),
-    totalRevenue: (curr, prev) => ({
-      totalCurr: `$${formatNumber(curr)} in revenue`,
-      totalPrev: prev !== null ? `$${formatNumber(prev)} in revenue` : null,
-    }),
-    totalTips: (curr, prev) => ({
-      totalCurr: `$${formatNumber(curr)} in tips`,
-      totalPrev: prev !== null ? `$${formatNumber(prev)} in tips` : null,
-    }),
-    averageOrderValue: (curr, prev) => ({
-      totalCurr: `$${formatNumber(curr)} per order`,
-      totalPrev: prev !== null ? `$${formatNumber(prev)} per order` : null,
-    }),
-    averageOrderCompletionTime: (curr, prev) => ({
-      totalCurr: `${formatTime(curr)} per order`,
-      totalPrev: prev !== null ? `${formatTime(prev)} per order` : null,
-    }),
-    lateOrders: (curr, prev) => ({
-      totalCurr: `${curr} late orders`,
-      totalPrev: prev !== null ? `${prev} late orders` : null,
-    }),
-  };
-
-  return categoryMap[category](totalCurr, totalPrev);
-}
-
-////////////////////////////////////////////////////////////////////
-
-function millisecondsToMinutes(milliseconds: number) {
-  const minutes = new Decimal(milliseconds).div(60000).toNumber();
-  return minutes;
-}
-
-////////////////////////////////////////////////////////////////////
-
-function getPeriodName(
-  index: number,
-  periodicity: "daily" | "weekly" | "monthly" | "yearly",
-): string {
+function getPeriodName(index: number, periodicity: Periodicity): string {
   const daysOfWeek = [
     "Sunday",
     "Monday",
@@ -1169,7 +411,7 @@ function getPeriodName(
 }
 
 function getOrdinalSuffix(day: number): string {
-  if (day > 3 && day < 21) return "th"; // covers 11th to 19th
+  if (day > 3 && day < 21) return "th";
   switch (day % 10) {
     case 1:
       return "st";
@@ -1180,4 +422,112 @@ function getOrdinalSuffix(day: number): string {
     default:
       return "th";
   }
+}
+
+function generateTitleAndTimeRange({
+  category,
+  periodicity,
+  currentStartDate,
+  currentEndDate,
+  previousStartDate,
+  previousEndDate,
+}: Params): { title: string; timeRange: string } {
+  const categoryMap: { [key in Category]: string } = {
+    totalOrders: "Total orders",
+    totalRevenue: "Total revenue",
+    totalTips: "Total tips",
+    averageOrderValue: "Average order value",
+    averageOrderCompletionTime: "Average order completion time",
+    lateOrders: "Late orders",
+  };
+
+  const periodicityToLabel: { [key in Periodicity]: string } = {
+    daily: "yesterday",
+    weekly: "last week",
+    monthly: "last month",
+    yearly: "last year",
+  };
+
+  const currententPeriod = `${formatDate(currentStartDate)} - ${formatDate(currentEndDate)}`;
+
+  let title = `${categoryMap[category]} - ${capitalizeFirstLetter(periodicity)}`;
+  let timeRange = `(${currententPeriod})`;
+
+  if (previousStartDate && previousEndDate) {
+    const previousiousPeriod = `${formatDate(previousStartDate)} - ${formatDate(previousEndDate)}`;
+    title = `${categoryMap[category]} - Compared to ${periodicityToLabel[periodicity]}`;
+    timeRange = `(${previousiousPeriod} | ${currententPeriod})`;
+  }
+
+  return { title, timeRange };
+}
+
+function formatDate(date: Date): string {
+  return format(date, "MM/dd/yyyy");
+}
+
+function capitalizeFirstLetter(string: string): string {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function formatNumber(value: number, decimals = 2): string {
+  return value.toFixed(decimals);
+}
+
+function formatTime(totalSeconds: number): string {
+  const days = Math.floor(totalSeconds / (60 * 60 * 24));
+  const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+  const seconds = totalSeconds % 60;
+
+  return formatDuration({
+    days,
+    hours,
+    minutes,
+    seconds,
+  });
+}
+
+function generateContextStrings({
+  category,
+  totalCurrent,
+  totalPrevious,
+}: ContextParams): { totalCurrent: string; totalPrevious: string | null } {
+  const categoryMap: {
+    [key in Category]: (
+      current: number,
+      previous: number | null,
+    ) => { totalCurrent: string; totalPrevious: string | null };
+  } = {
+    totalOrders: (current, previous) => ({
+      totalCurrent: `${current} orders made`,
+      totalPrevious: previous !== null ? `${previous} orders made` : null,
+    }),
+    totalRevenue: (current, previous) => ({
+      totalCurrent: `$${formatNumber(current)} in revenue`,
+      totalPrevious:
+        previous !== null ? `$${formatNumber(previous)} in revenue` : null,
+    }),
+    totalTips: (current, previous) => ({
+      totalCurrent: `$${formatNumber(current)} in tips`,
+      totalPrevious:
+        previous !== null ? `$${formatNumber(previous)} in tips` : null,
+    }),
+    averageOrderValue: (current, previous) => ({
+      totalCurrent: `$${formatNumber(current)} per order`,
+      totalPrevious:
+        previous !== null ? `$${formatNumber(previous)} per order` : null,
+    }),
+    averageOrderCompletionTime: (current, previous) => ({
+      totalCurrent: `${formatTime(current)} per order`,
+      totalPrevious:
+        previous !== null ? `${formatTime(previous)} per order` : null,
+    }),
+    lateOrders: (current, previous) => ({
+      totalCurrent: `${current} late orders`,
+      totalPrevious: previous !== null ? `${previous} late orders` : null,
+    }),
+  };
+
+  return categoryMap[category](totalCurrent, totalPrevious);
 }
