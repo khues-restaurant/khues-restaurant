@@ -155,20 +155,37 @@ function Track() {
   useEffect(() => {
     if (!order || !minTimeoutElapsed) return;
 
+    let timeout: NodeJS.Timeout | null = null;
+
+    if (order.orderStartedAt === null && order.orderCompletedAt === null) {
+      timeout = setTimeout(() => {
+        if (orderStatus === "orderPlaced") return;
+        setOrderStatus("orderPlaced");
+      }, 500); // allowing for undefined state/ui to render first, then quickly aligning w/ proper state
+    }
+
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
+  });
+
+  useEffect(() => {
+    if (!order || !minTimeoutElapsed) return;
+
     if (order.orderCompletedAt && orderStatus !== "readyForPickup") {
       setPrevOrderStatus(orderStatus);
       setOrderStatus("readyForPickup");
       return;
-    } else if (order.orderStartedAt && orderStatus !== "inProgress") {
+    } else if (
+      order.orderStartedAt &&
+      order.orderCompletedAt === null &&
+      orderStatus !== "inProgress" &&
+      orderStatus !== "readyForPickup"
+    ) {
       setPrevOrderStatus(orderStatus);
       setOrderStatus("inProgress");
       return;
     }
-
-    if (orderStatus === "orderPlaced") return;
-    setTimeout(() => {
-      setOrderStatus("orderPlaced");
-    }, 500); // allowing for undefined state/ui to render first, then quickly aligning w/ proper state
   }, [order, minTimeoutElapsed, orderStatus]);
 
   const [rewardsPointsEarned, setRewardsPointsEarned] = useState(0);
@@ -533,7 +550,7 @@ function Track() {
                         animate={{ x: 0, opacity: 1 }}
                         exit={{ x: "-75%", opacity: 0 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="font-medium tablet:text-lg"
+                        className="whitespace-nowrap text-nowrap font-medium tablet:text-lg"
                       >
                         Your order has been received
                       </motion.p>
@@ -547,7 +564,7 @@ function Track() {
                         animate={{ x: 0, opacity: 1 }}
                         exit={{ x: "-75%", opacity: 0 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="font-medium tablet:text-lg"
+                        className="whitespace-nowrap text-nowrap font-medium tablet:text-lg"
                       >
                         Your order is being prepared
                       </motion.p>
@@ -561,7 +578,7 @@ function Track() {
                         animate={{ x: 0, opacity: 1 }}
                         exit={{ x: "-75%", opacity: 0 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="font-medium tablet:text-lg"
+                        className="whitespace-nowrap text-nowrap font-medium tablet:text-lg"
                       >
                         Your order is ready to be picked up!
                       </motion.p>
