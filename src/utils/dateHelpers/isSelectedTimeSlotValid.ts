@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { getCSTDateInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import {
   hoursOpenPerDay,
@@ -32,6 +33,21 @@ export function isSelectedTimeSlotValid({
   const asapAdjustedPickupMinute = isASAP
     ? now.getMinutes()
     : pickupTime.getMinutes();
+
+  console.log(
+    "isASAP",
+    isASAP,
+    "| now",
+    format(now, "yyyy-MM-dd HH:mm:ss"),
+    "| full pickupTime",
+    format(pickupTime, "yyyy-MM-dd HH:mm:ss"),
+    "| minPickupTime",
+    format(minPickupTime, "yyyy-MM-dd HH:mm:ss"),
+    asapAdjustedPickupHour,
+    asapAdjustedPickupMinute,
+    now.getHours(),
+    now.getMinutes(),
+  );
 
   // if restaurant is closed today, immediately return false
   if (
