@@ -274,7 +274,7 @@ function ItemCustomizationDrawer({
           {itemToCustomize.hasImageOfItem && (
             <Image
               src={"/menuItems/sampleImage.webp"}
-              alt={`${itemToCustomize.name} - ${itemToCustomize.description}`}
+              alt={`${itemToCustomize.name} at Khue's in St. Paul`}
               width={180}
               height={180}
               className="my-4 rounded-md drop-shadow-xl"

@@ -519,7 +519,7 @@ function MobileHeader() {
                             <Image
                               src={outsideOfRestaurant}
                               alt={
-                                "Exterior view of Khue's, located on University Ave W"
+                                "Exterior view of Khue's, located on 799 University Ave W in St. Paul, MN"
                               }
                               sizes="(max-width: 640px) 60vw, 700px"
                               className="!relative !h-48 !w-full rounded-md object-cover shadow-sm"

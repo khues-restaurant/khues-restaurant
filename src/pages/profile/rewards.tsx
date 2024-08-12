@@ -895,7 +895,7 @@ function RewardMenuItem({
         {menuItem.hasImageOfItem && (
           <Image
             src={sampleImage}
-            alt={`${menuItem.name} - ${menuItem.description}`}
+            alt={`${menuItem.name} at Khue's in St. Paul`}
             fill
             className="!relative !size-16 rounded-md drop-shadow-md tablet:!size-24 tablet:drop-shadow-lg"
           />

@@ -783,7 +783,7 @@ function MenuItemPreviewButton({
           {menuItem.hasImageOfItem && (
             <Image
               src={"/menuItems/sampleImage.webp"}
-              alt={`${menuItem.name} - ${menuItem.description}`}
+              alt={`${menuItem.name} at Khue's in St. Paul`}
               width={96}
               height={96}
               className="mt-2 !size-24 !self-start rounded-md drop-shadow-lg"

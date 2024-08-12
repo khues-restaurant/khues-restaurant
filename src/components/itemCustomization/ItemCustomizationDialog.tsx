@@ -235,7 +235,7 @@ function ItemCustomizerDialogContent({
           {itemToCustomize.hasImageOfItem && (
             <Image
               src={"/menuItems/sampleImage.webp"}
-              alt={`${itemToCustomize.name} - ${itemToCustomize.description}`}
+              alt={`${itemToCustomize.name} at Khue's in St. Paul`}
               width={240}
               height={240}
               className="z-10 my-4 mr-16 rounded-md drop-shadow-xl"
