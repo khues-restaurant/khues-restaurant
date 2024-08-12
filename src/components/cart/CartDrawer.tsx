@@ -868,7 +868,7 @@ function CartDrawer({
                       {item.hasImageOfItem && (
                         <Image
                           src={"/menuItems/sampleImage.webp"}
-                          alt={item.name}
+                          alt={`${item.name} at Khue's in St. Paul`}
                           width={64}
                           height={64}
                           className="rounded-md drop-shadow-md"
@@ -1050,7 +1050,7 @@ function CartDrawer({
                               <div className="!size-16 min-h-16 min-w-16 rounded-md bg-rewardsGradient !p-1">
                                 <Image
                                   src={"/menuItems/sampleImage.webp"}
-                                  alt={item.name}
+                                  alt={`${item.name} at Khue's in St. Paul`}
                                   width={56}
                                   height={56}
                                   className="!size-14 rounded-md drop-shadow-md"

@@ -8,6 +8,7 @@ import { MdNoMeals } from "react-icons/md";
 import { type DBOrderSummary } from "~/server/api/routers/order";
 import { useMainStore } from "~/stores/MainStore";
 import { formatPrice } from "~/utils/formatters/formatPrice";
+import { getFirstSixNumbers } from "~/utils/formatters/getFirstSixNumbers";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 
 interface OrderSummary {
@@ -34,9 +35,14 @@ function OrderSummary({ order }: OrderSummary) {
       className="baseVertFlex w-full !items-start gap-4 rounded-md border-2 bg-gradient-to-br from-stone-100  
     to-stone-200/80 p-4"
     >
-      <div className="baseFlex gap-1 text-base font-medium">
-        <span>{numberOfItems}</span>
-        <span>Items</span>
+      <div className="baseFlex w-full !items-end !justify-between border-b border-stone-300 pb-1">
+        <div className="baseFlex gap-1 text-base font-medium">
+          <span>{numberOfItems}</span>
+          <span>Items</span>
+        </div>
+        <div className="baseFlex gap-1 text-sm font-medium text-stone-500">
+          Order #{getFirstSixNumbers(order.id)}
+        </div>
       </div>
 
       <div className="baseVertFlex mt-2 size-full !items-start !justify-start gap-2 rounded-md">
@@ -60,7 +66,7 @@ function OrderSummary({ order }: OrderSummary) {
               {item.hasImageOfItem && (
                 <Image
                   src={"/menuItems/sampleImage.webp"}
-                  alt={item.name}
+                  alt={`${item.name} at Khue's in St. Paul`}
                   width={48}
                   height={48}
                   className="!size-12 rounded-md drop-shadow-md"

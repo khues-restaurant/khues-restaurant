@@ -1263,7 +1263,7 @@ function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
     <>
       <Image
         src={"/menuItems/sampleImage.webp"}
-        alt={`${menuItem.name} - ${menuItem.description}`}
+        alt={`${menuItem.name} at Khue's in St. Paul`}
         width={160}
         height={160}
         className="select-none self-center rounded-md drop-shadow-md tablet:drop-shadow-lg"

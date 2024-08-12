@@ -408,7 +408,7 @@ function RewardMenuItem({
         {menuItem.hasImageOfItem && (
           <Image
             src={"/menuItems/sampleImage.webp"}
-            alt={`${menuItem.name} - ${menuItem.description}`}
+            alt={`${menuItem.name} at Khue's in St. Paul`}
             width={64}
             height={64}
             className="rounded-md drop-shadow-md tablet:drop-shadow-lg"

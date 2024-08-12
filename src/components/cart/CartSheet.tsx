@@ -847,7 +847,7 @@ function CartSheet({
                       {item.hasImageOfItem && (
                         <Image
                           src={"/menuItems/sampleImage.webp"}
-                          alt={item.name}
+                          alt={`${item.name} at Khue's in St. Paul`}
                           width={64}
                           height={64}
                           className="rounded-md drop-shadow-md"
@@ -1030,7 +1030,7 @@ function CartSheet({
                               <div className="rounded-md bg-rewardsGradient p-1">
                                 <Image
                                   src={"/menuItems/sampleImage.webp"}
-                                  alt={item.name}
+                                  alt={`${item.name} at Khue's in St. Paul`}
                                   width={67}
                                   height={67}
                                   className="rounded-md drop-shadow-md"
