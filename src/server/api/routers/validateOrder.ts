@@ -57,6 +57,11 @@ function validateDayOfDatetimeToPickup(orderDatetimeToPickup: Date) {
   // If datetimeToPickup is in the past, need to find the next valid day
   // (at midnight specifically) to set it to.
   if (datetimeToPickup < todayAtMidnight) {
+    console.log(
+      "day is in the past, finding next valid day",
+      datetimeToPickup,
+      todayAtMidnight,
+    );
     datetimeToPickup = loopToFindFirstOpenDay(todayAtMidnight);
   }
 
@@ -74,6 +79,7 @@ function validateTimeToPickup(
       minPickupDatetime: minOrderPickupDatetime,
     })
   ) {
+    console.log("time is valid", orderDetails.datetimeToPickup);
     return;
   }
 
@@ -82,6 +88,7 @@ function validateTimeToPickup(
   orderDetails.isASAP = false;
 
   const nowAtMidnight = getMidnightCSTInUTC();
+  console.log("time is invalid, finding next valid day", nowAtMidnight);
   orderDetails.datetimeToPickup = loopToFindFirstOpenDay(nowAtMidnight);
 }
 
