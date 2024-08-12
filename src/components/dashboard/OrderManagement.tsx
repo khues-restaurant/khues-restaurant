@@ -508,12 +508,12 @@ function CustomerOrder({ order, view }: CustomerOrder) {
             ${order.notableUserDescription ? "text-primary" : ""}
             `}
             >
-              <div className="baseFlex gap-1 !self-start text-lg font-semibold">
+              <div className="baseFlex gap-1 !self-start text-lg font-medium">
                 <span>{order.firstName}</span>
                 <span>{order.lastName}</span>
               </div>
 
-              <p className="baseFlex gap-2 text-right text-lg font-semibold">
+              <p className="baseFlex gap-2 text-right text-lg font-medium">
                 <>
                   {(view === "notStarted" || view === "started") && (
                     <>
@@ -702,7 +702,7 @@ function OrderItems({ order }: OrderItems) {
           {/* TODO: idk why I couldn't just generically have this be h-full... 
               setting h-12 but don't want this to be hardcoded */}
           <div className="baseVertFlex h-full !items-start !justify-start gap-2">
-            <div className="baseFlex gap-2 text-xl font-semibold">
+            <div className="baseFlex gap-2 text-xl font-medium">
               <p>{item.quantity}</p>
               <p>{item.name}</p>
               {item.includeDietaryRestrictions && (
@@ -732,7 +732,7 @@ function OrderItems({ order }: OrderItems) {
                 )}
 
                 {item.specialInstructions && (
-                  <p>- {item.specialInstructions}</p>
+                  <p>- &ldquo; {item.specialInstructions}&rdquo;</p>
                 )}
               </div>
             )}
@@ -741,10 +741,10 @@ function OrderItems({ order }: OrderItems) {
       ))}
 
       {order.orderItems.some((item) => item.includeDietaryRestrictions) && (
-        <div className="baseVertFlex mt-2 w-full gap-2">
-          <div className="baseFlex gap-2">
+        <div className="baseVertFlex my-4 w-full gap-2">
+          <div className="baseFlex gap-2 font-medium underline underline-offset-2">
             <div className="size-2 shrink-0 rounded-full bg-primary/75" />
-            Dietary restrictions:
+            Contains dietary restrictions:
           </div>
           <p className="text-sm font-semibold">
             &ldquo; {order.dietaryRestrictions} &rdquo;
