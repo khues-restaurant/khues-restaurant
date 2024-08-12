@@ -228,11 +228,6 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       // calculate/retrieve subtotal, tax, tip, total values here:
       const tax = new Decimal(payment.total_details?.amount_tax ?? 0);
-      // ^ TODO: thouroughly test this once Stripe tax information is all set up
-      // ideally we would just rely on stripe's calculation of tax and not have to
-      // calculate it ourselves. Otherwise we would need to calculate it at
-      // this step.
-
       const tipPercentage = orderDetails.tipPercentage;
       const tipValue = orderDetails.tipValue;
 
