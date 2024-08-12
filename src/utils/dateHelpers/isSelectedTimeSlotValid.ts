@@ -41,6 +41,14 @@ export function isSelectedTimeSlotValid({
       pickupDayHours.closeMinute === 0) ||
     isHoliday(pickupTime)
   ) {
+    console.log(
+      "returning false 1",
+      pickupDayHours.openHour,
+      pickupDayHours.openMinute,
+      pickupDayHours.closeHour,
+      pickupDayHours.closeMinute,
+      isHoliday(pickupTime),
+    );
     return false;
   }
 
@@ -56,6 +64,7 @@ export function isSelectedTimeSlotValid({
     // isASAP will by definition always be represented at midnight client side,
     // so making sure that it still passes through all the below checks
   ) {
+    console.log("returning true 1");
     return true;
   }
 
@@ -65,18 +74,27 @@ export function isSelectedTimeSlotValid({
     (asapAdjustedPickupHour === pickupDayHours.openHour &&
       asapAdjustedPickupMinute < pickupDayHours.openMinute)
   ) {
+    console.log(
+      "returning false 2",
+      asapAdjustedPickupHour,
+      asapAdjustedPickupMinute,
+      pickupDayHours.openHour,
+      pickupDayHours.openMinute,
+    );
     return false;
   }
 
   if (isASAP) {
     // make sure that the passed in datetimeToPickup is the current day
     if (pickupTime.getDate() !== now.getDate()) {
+      console.log("returning false 3", pickupTime.getDate(), now.getDate());
       return false;
     }
   } else {
     // make sure that the passed in datetimeToPickup is later than the current time
     // and more specifically, is >= 20 minutes from the current time
     if (pickupTime <= now || !isAtLeast20MinsFromDatetime(pickupTime, now)) {
+      console.log("returning false 4", pickupTime, now);
       return false;
     }
   }
@@ -86,6 +104,11 @@ export function isSelectedTimeSlotValid({
   // day, and by definition isASAP orders shouldn't be allowed when the minPickupTime is
   // anything other than midnight of the current day (aka whenever a minPickupTime is set)
   if (pickupTime.getTime() < minPickupTime.getTime()) {
+    console.log(
+      "returning false 5",
+      pickupTime.getTime(),
+      minPickupTime.getTime(),
+    );
     return false;
   }
 
@@ -98,6 +121,13 @@ export function isSelectedTimeSlotValid({
       closeMinute: pickupDayHours.closeMinute,
     })
   ) {
+    console.log(
+      "returning false 6",
+      asapAdjustedPickupHour,
+      asapAdjustedPickupMinute,
+      pickupDayHours.closeHour,
+      pickupDayHours.closeMinute,
+    );
     return false;
   }
 
