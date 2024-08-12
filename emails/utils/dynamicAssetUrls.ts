@@ -1,6 +1,6 @@
 const baseUrl =
   process.env.NODE_ENV === "production"
-    ? process.env.BASE_URL
+    ? `${process.env.BASE_URL}/emails`
     : "http://localhost:3000/emails";
 
 const menuItemBaseUrl =
