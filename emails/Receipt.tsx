@@ -229,9 +229,21 @@ function Receipt({
 
                     {/* loop through items to make an order summary section */}
                     <Section className="mt-4 w-80 rounded-md border border-solid border-stone-300 bg-stone-200 p-4 text-left sm:w-[350px]">
-                      <Text className="mb-4 mt-0 text-base font-medium">
-                        {totalItems} {totalItems > 1 ? "Items" : "Item"}
-                      </Text>
+                      <Row align="center" className="mb-2 w-80">
+                        <Column className="w-5 align-top">
+                          <Text className="mb-0 mt-0 text-left text-base font-medium">
+                            {totalItems} {totalItems > 1 ? "Items" : "Item"}
+                          </Text>
+                        </Column>
+
+                        <Column className="w-5 align-bottom text-stone-500">
+                          <Text className="mb-0 mt-0 text-right text-sm font-medium">
+                            Order #{getFirstSixNumbers(order.id)}
+                          </Text>
+                        </Column>
+                      </Row>
+
+                      <Hr className="mb-4 border-stone-400" />
 
                       {order.orderItems.map((item, index) => (
                         <Row key={index} align="center" className="my-2 w-80">
