@@ -7,6 +7,7 @@ import {
   setSeconds,
   startOfDay,
 } from "date-fns";
+import { getCSTDateInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 
 enum DayOfWeek {
   Sunday = 0,
@@ -25,15 +26,14 @@ const holidays = [
   new Date("2025-01-01"),
 ];
 
-const hoursOpenPerDay: Record<
-  DayOfWeek,
-  {
-    openHour: number;
-    openMinute: number;
-    closeHour: number;
-    closeMinute: number;
-  }
-> = {
+interface OperatingHours {
+  openHour: number;
+  openMinute: number;
+  closeHour: number;
+  closeMinute: number;
+}
+
+const hoursOpenPerDay: Record<DayOfWeek, OperatingHours> = {
   [DayOfWeek.Sunday]: {
     openHour: 0,
     openMinute: 0,
@@ -110,7 +110,7 @@ function isPastFinalPickupPlacementTimeForDay({
   const closeTotalMinutes = closeHour * 60 + closeMinute;
 
   // "-50" below is to account for the 30 minute buffer before close
-  // along with fact that orders take about 20 minutes to prepare.
+  // along with fact that orders take ~20 minutes to prepare.
 
   const pastFinalPickupTime = currentTotalMinutes > closeTotalMinutes - 50;
 
@@ -225,6 +225,34 @@ function getWeeklyHours() {
   );
 }
 
+function convertOperatingHoursToUTC(hours: OperatingHours): OperatingHours {
+  const convertTime = (hour: number, minute: number) => {
+    const currentDate = new Date();
+    const dateInCST = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate(),
+      hour,
+      minute,
+    );
+    const utcDate = getCSTDateInUTC(dateInCST);
+    return {
+      hour: utcDate.getUTCHours(),
+      minute: utcDate.getUTCMinutes(),
+    };
+  };
+
+  const openUTC = convertTime(hours.openHour, hours.openMinute);
+  const closeUTC = convertTime(hours.closeHour, hours.closeMinute);
+
+  return {
+    openHour: openUTC.hour,
+    openMinute: openUTC.minute,
+    closeHour: closeUTC.hour,
+    closeMinute: closeUTC.minute,
+  };
+}
+
 export {
   holidays,
   hoursOpenPerDay,
@@ -233,4 +261,5 @@ export {
   isHoliday,
   getWeeklyHours,
   getOpenTimesForDay,
+  convertOperatingHoursToUTC,
 };
