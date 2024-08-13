@@ -1,6 +1,8 @@
+import { toZonedTime } from "date-fns-tz";
 import { format } from "date-fns";
 import { getCSTDateInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import {
+  convertOperatingHoursToUTC,
   hoursOpenPerDay,
   isHoliday,
   isPastFinalPickupPlacementTimeForDay,
@@ -18,18 +20,49 @@ export function isSelectedTimeSlotValid({
   datetimeToPickup,
   minPickupDatetime,
 }: IsSelectedTimeSlotValid) {
+  // console.log(new Date(), datetimeToPickup, minPickupDatetime);
+
   const now = getCSTDateInUTC(new Date());
   const pickupTime = getCSTDateInUTC(datetimeToPickup);
   const minPickupTime = getCSTDateInUTC(minPickupDatetime);
 
-  // FYI: all times are coerced into the CST time zone
+  // console.log(now, pickupTime, minPickupTime);
+
+  // console.log("----------------------");
+
+  // FYI: all times are coerced into the CST time zone, and then converted to UTC
+  // for consistent comparison
 
   const pickupDayHours =
     hoursOpenPerDay[pickupTime.getDay() as keyof typeof hoursOpenPerDay];
 
+  // const pickupDayStart = getCSTDateInUTC(
+  //   new Date(
+  //     now.getUTCFullYear(),
+  //     now.getUTCMonth(),
+  //     now.getUTCDate(),
+  //     pickupDayHours.openHour,
+  //     pickupDayHours.openMinute,
+  //   ),
+  // );
+
+  // const pickupDayEnd = getCSTDateInUTC(
+  //   new Date(
+  //     now.getUTCFullYear(),
+  //     now.getUTCMonth(),
+  //     now.getUTCDate(),
+  //     pickupDayHours.closeHour,
+  //     pickupDayHours.closeMinute,
+  //   ),
+  // );
+
+  // these are CST values, since the hoursOpenPerDay object is in CST and conversion
+  // to UTC proved to be problematic/not straightforward
   const asapAdjustedPickupHour = isASAP
-    ? now.getHours()
-    : pickupTime.getHours();
+    ? toZonedTime(now, "America/Chicago").getHours()
+    : toZonedTime(pickupTime, "America/Chicago").getHours();
+
+  // don't need to convert minutes since they are the same in CST and UTC
   const asapAdjustedPickupMinute = isASAP
     ? now.getMinutes()
     : pickupTime.getMinutes();
@@ -47,6 +80,7 @@ export function isSelectedTimeSlotValid({
     asapAdjustedPickupMinute,
     now.getHours(),
     now.getMinutes(),
+    pickupDayHours,
   );
 
   // if restaurant is closed today, immediately return false
