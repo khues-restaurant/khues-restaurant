@@ -1,8 +1,6 @@
 import { toZonedTime } from "date-fns-tz";
-import { format } from "date-fns";
 import { getCSTDateInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import {
-  convertOperatingHoursToUTC,
   hoursOpenPerDay,
   isHoliday,
   isPastFinalPickupPlacementTimeForDay,
@@ -20,43 +18,18 @@ export function isSelectedTimeSlotValid({
   datetimeToPickup,
   minPickupDatetime,
 }: IsSelectedTimeSlotValid) {
-  // console.log(new Date(), datetimeToPickup, minPickupDatetime);
-
   const now = getCSTDateInUTC(new Date());
   const pickupTime = getCSTDateInUTC(datetimeToPickup);
   const minPickupTime = getCSTDateInUTC(minPickupDatetime);
 
-  // console.log(now, pickupTime, minPickupTime);
-
-  // console.log("----------------------");
-
-  // FYI: all times are coerced into the CST time zone, and then converted to UTC
-  // for consistent comparison
+  // FYI: Above times are coerced into the CST time zone, and then converted to UTC
+  // for consistent comparison. Need to convert to CST first since functions are executed
+  // in Ohio (EST) and the restaurant hours are in CST.
 
   const pickupDayHours =
     hoursOpenPerDay[pickupTime.getDay() as keyof typeof hoursOpenPerDay];
 
-  // const pickupDayStart = getCSTDateInUTC(
-  //   new Date(
-  //     now.getUTCFullYear(),
-  //     now.getUTCMonth(),
-  //     now.getUTCDate(),
-  //     pickupDayHours.openHour,
-  //     pickupDayHours.openMinute,
-  //   ),
-  // );
-
-  // const pickupDayEnd = getCSTDateInUTC(
-  //   new Date(
-  //     now.getUTCFullYear(),
-  //     now.getUTCMonth(),
-  //     now.getUTCDate(),
-  //     pickupDayHours.closeHour,
-  //     pickupDayHours.closeMinute,
-  //   ),
-  // );
-
-  // these are CST values, since the hoursOpenPerDay object is in CST and conversion
+  // these are CST values, since the hoursOpenPerDay object values are in CST and conversion
   // to UTC proved to be problematic/not straightforward
   const asapAdjustedPickupHour = isASAP
     ? toZonedTime(now, "America/Chicago").getHours()
@@ -67,22 +40,6 @@ export function isSelectedTimeSlotValid({
     ? now.getMinutes()
     : pickupTime.getMinutes();
 
-  console.log(
-    "isASAP",
-    isASAP,
-    "| now",
-    format(now, "yyyy-MM-dd HH:mm:ss"),
-    "| full pickupTime",
-    format(pickupTime, "yyyy-MM-dd HH:mm:ss"),
-    "| minPickupTime",
-    format(minPickupTime, "yyyy-MM-dd HH:mm:ss"),
-    asapAdjustedPickupHour,
-    asapAdjustedPickupMinute,
-    now.getHours(),
-    now.getMinutes(),
-    pickupDayHours,
-  );
-
   // if restaurant is closed today, immediately return false
   if (
     (pickupDayHours.openHour === 0 &&
@@ -91,14 +48,6 @@ export function isSelectedTimeSlotValid({
       pickupDayHours.closeMinute === 0) ||
     isHoliday(pickupTime)
   ) {
-    console.log(
-      "returning false 1",
-      pickupDayHours.openHour,
-      pickupDayHours.openMinute,
-      pickupDayHours.closeHour,
-      pickupDayHours.closeMinute,
-      isHoliday(pickupTime),
-    );
     return false;
   }
 
@@ -114,7 +63,6 @@ export function isSelectedTimeSlotValid({
     // isASAP will by definition always be represented at midnight client side,
     // so making sure that it still passes through all the below checks
   ) {
-    console.log("returning true 1");
     return true;
   }
 
@@ -124,27 +72,18 @@ export function isSelectedTimeSlotValid({
     (asapAdjustedPickupHour === pickupDayHours.openHour &&
       asapAdjustedPickupMinute < pickupDayHours.openMinute)
   ) {
-    console.log(
-      "returning false 2",
-      asapAdjustedPickupHour,
-      asapAdjustedPickupMinute,
-      pickupDayHours.openHour,
-      pickupDayHours.openMinute,
-    );
     return false;
   }
 
   if (isASAP) {
     // make sure that the passed in datetimeToPickup is the current day
     if (pickupTime.getDate() !== now.getDate()) {
-      console.log("returning false 3", pickupTime.getDate(), now.getDate());
       return false;
     }
   } else {
     // make sure that the passed in datetimeToPickup is later than the current time
     // and more specifically, is >= 20 minutes from the current time
     if (pickupTime <= now || !isAtLeast20MinsFromDatetime(pickupTime, now)) {
-      console.log("returning false 4", pickupTime, now);
       return false;
     }
   }
@@ -154,11 +93,6 @@ export function isSelectedTimeSlotValid({
   // day, and by definition isASAP orders shouldn't be allowed when the minPickupTime is
   // anything other than midnight of the current day (aka whenever a minPickupTime is set)
   if (pickupTime.getTime() < minPickupTime.getTime()) {
-    console.log(
-      "returning false 5",
-      pickupTime.getTime(),
-      minPickupTime.getTime(),
-    );
     return false;
   }
 
@@ -171,13 +105,6 @@ export function isSelectedTimeSlotValid({
       closeMinute: pickupDayHours.closeMinute,
     })
   ) {
-    console.log(
-      "returning false 6",
-      asapAdjustedPickupHour,
-      asapAdjustedPickupMinute,
-      pickupDayHours.closeHour,
-      pickupDayHours.closeMinute,
-    );
     return false;
   }
 
