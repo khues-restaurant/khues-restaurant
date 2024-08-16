@@ -16,7 +16,10 @@ function Custom500() {
       transition={{ duration: 0.5 }}
       // TODO: find a way css wise so that you don't have any scrollbar on tablet+ since this is guarenteed
       // to be a tiny tiny element on this page
-      className="baseVertFlex min-h-[calc(100dvh-6rem)] w-full tablet:min-h-[calc(100dvh-7rem)]"
+
+      // TODO:
+
+      className="baseVertFlex min-h-[100dvh] w-full"
     >
       <div className="baseVertFlex relative max-w-80 gap-4 overflow-hidden rounded-lg border bg-gradient-to-br from-offwhite to-primary/10 px-6 py-8 shadow-md tablet:max-w-2xl tablet:p-12 tablet:pb-8">
         <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-primary/50" />
