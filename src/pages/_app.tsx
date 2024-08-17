@@ -63,46 +63,44 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Khue&apos;s</title>
+        <title>Khue&apos;s Kitchen</title>
 
         <meta
           name="description"
           content={
-            "Discover the modern Vietnamese flavors at Khue's, where Chef Eric Pham brings a fresh perspective to traditional dishes inspired by his mother's legacy."
+            "Discover the modern Vietnamese flavors at Khue's Kitchen, where Chef Eric Pham brings a fresh perspective to traditional dishes inspired by his mother's legacy."
           }
         />
-        <meta property="og:title" content={"Khue's"}></meta>
+        <meta property="og:title" content={"Khue's Kitchen"}></meta>
         <meta property="og:url" content={"https://www.khueskitchen.com"} />
-        <meta name="twitter:title" content={"Khue's"} />
+        <meta name="twitter:title" content={"Khue's Kitchen"} />
         <meta
           property="og:description"
           content={
-            "Discover the modern Vietnamese flavors at Khue's, where Chef Eric Pham brings a fresh perspective to traditional dishes inspired by his mother's legacy."
+            "Discover the modern Vietnamese flavors at Khue's Kitchen, where Chef Eric Pham brings a fresh perspective to traditional dishes inspired by his mother's legacy."
           }
         />
         <meta
           name="twitter:description"
           content={
-            "Discover the modern Vietnamese flavors at Khue's, where Chef Eric Pham brings a fresh perspective to traditional dishes inspired by his mother's legacy."
+            "Discover the modern Vietnamese flavors at Khue's Kitchen, where Chef Eric Pham brings a fresh perspective to traditional dishes inspired by his mother's legacy."
           }
         />
 
         {/* default tags */}
-        <meta property="og:site_name" content="Khue's" />
+        <meta property="og:site_name" content="Khue's Kitchen" />
         <meta property="og:type" content="website" />
         <meta
           property="og:image"
-          content={
-            "https://khues-restaurant.vercel.app/openGraph/opengraphImage.png"
-          }
+          content={`${window.location.origin}/openGraph/opengraphImage.png`}
         ></meta>
         <meta
           property="og:image:alt"
-          content="Welcome to Khue's - A modern take on classic Vietnamese cuisine. The image features a welcoming character in traditional Vietnamese attire, set against a background of delicious Vietnamese dishes."
+          content="Welcome to Khue's Kitchen - A modern take on classic Vietnamese cuisine. The image features a welcoming character in traditional Vietnamese attire, set against a background of delicious Vietnamese dishes."
         ></meta>
         <meta
           property="twitter:image"
-          content="https://khues-restaurant.vercel.app/openGraph/opengraphImage.png"
+          content={`${window.location.origin}/openGraph/opengraphImage.png`}
         />
         <meta property="twitter:card" content="summary_large_image" />
       </Head>
