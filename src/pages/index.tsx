@@ -18,6 +18,7 @@ import { Input } from "~/components/ui/input";
 import { Separator } from "~/components/ui/separator";
 import buildingFireImage from "/public/exterior/buildingFire.jpg";
 import eric from "/public/ourStory/eric.webp";
+import bringMeTheNewsLogo from "/public/media/bringMeTheNewsLogo.jpg";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -119,15 +120,35 @@ function TempHomepage() {
               recover from this devastating setback.
             </p>
 
-            <Button size={"lg"} asChild>
-              <Link
-                href="https://www.gofundme.com/f/help-rebuild-khues-kitchen-after-devastating-fire"
-                className="baseFlex !shrink-0 gap-2"
-              >
-                Visit our GoFundMe
-                <LuExternalLink className="mb-[1px]" />
-              </Link>
-            </Button>
+            <div className="baseVertFlex w-full !items-start gap-4 sm:!flex-row sm:!items-center sm:!justify-between">
+              <Button variant={"outline"} size={"lg"} asChild>
+                <Link
+                  href="https://bringmethenews.com/minnesota-lifestyle/heartbreaking-fire-destroys-khues-kitchen-days-before-opening-but-chef-eric-pham-is-moving-forward"
+                  className="baseFlex !shrink-0 gap-2 tracking-tight"
+                >
+                  <Image
+                    src={bringMeTheNewsLogo}
+                    alt="Bring Me The News logo"
+                    priority
+                    fill
+                    unoptimized
+                    className="!relative !h-8 !w-8"
+                  />
+                  Read the full story
+                  <LuExternalLink className="mb-[1px]" />
+                </Link>
+              </Button>
+
+              <Button size={"lg"} asChild>
+                <Link
+                  href="https://www.gofundme.com/f/help-rebuild-khues-kitchen-after-devastating-fire"
+                  className="baseFlex !shrink-0 gap-2 tracking-tight"
+                >
+                  Visit our GoFundMe
+                  <LuExternalLink className="mb-[1px]" />
+                </Link>
+              </Button>
+            </div>
           </div>
 
           <Separator className="my-4 h-[1px] w-full bg-stone-300 sm:my-0 sm:h-[480px] sm:w-[1px]" />
@@ -174,6 +195,7 @@ function TempHomepage() {
                       className="baseFlex gap-2"
                     >
                       Visit our Instagram
+                      <LuExternalLink className="mb-[1px]" />
                     </a>
                   </Button>
                 </div>
@@ -187,6 +209,7 @@ function TempHomepage() {
                       className="baseFlex gap-2"
                     >
                       Visit our Facebook
+                      <LuExternalLink className="mb-[1px]" />
                     </a>
                   </Button>
                 </div>
@@ -213,16 +236,16 @@ function TempHomepage() {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onFormSubmit)}
-              className="baseVertFlex my-4 !items-start gap-2 tablet:!flex-row"
+              className="baseVertFlex my-4 !items-start gap-4 tablet:!flex-row"
             >
-              <div className="baseVertFlex w-full min-w-80 !items-start gap-8">
+              <div className="baseVertFlex w-full !items-start gap-8">
                 <FormField
                   control={form.control}
                   name="email"
                   disabled={signUpButtonText !== "Sign up"}
                   render={({ field, fieldState: { invalid, error } }) => (
                     <FormItem className="baseVertFlex relative w-full !items-start space-y-0">
-                      <div className="baseVertFlex relative w-full max-w-80 !items-start gap-2 tablet:max-w-96 tablet:!flex-row tablet:!items-center">
+                      <div className="baseVertFlex relative w-full min-w-64 max-w-80 !items-start gap-2 tablet:max-w-96 tablet:!flex-row tablet:!items-center">
                         <FormLabel className="font-semibold">Email</FormLabel>
                         <FormControl>
                           <Input
