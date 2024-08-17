@@ -9,6 +9,8 @@ import GeneralLayout from "~/components/layouts/GeneralLayout";
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
 import { Noto_Sans } from "next/font/google";
+import { env } from "~/env";
+
 const notoSans = Noto_Sans({
   subsets: ["latin"],
   display: "swap",
@@ -92,7 +94,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta property="og:type" content="website" />
         <meta
           property="og:image"
-          content={`${window.location.origin}/openGraph/opengraphImage.png`}
+          content={`${env.NEXT_PUBLIC_BASE_URL}/openGraph/opengraphImage.png`}
         ></meta>
         <meta
           property="og:image:alt"
@@ -100,7 +102,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         ></meta>
         <meta
           property="twitter:image"
-          content={`${window.location.origin}/openGraph/opengraphImage.png`}
+          content={`${env.NEXT_PUBLIC_BASE_URL}/openGraph/opengraphImage.png`}
         />
         <meta property="twitter:card" content="summary_large_image" />
       </Head>
