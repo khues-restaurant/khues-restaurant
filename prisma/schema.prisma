@@ -10,13 +10,6 @@ datasource db {
 // FYI: all prices/finacial fields are stored in cents to avoid floating point errors
 // FYI: id fields and "@unique" fields are automatically indexed
 
-model TemporaryCustomerEmailSignUp {
-    id        String   @id @default(uuid())
-    createdAt DateTime @default(now())
-
-    emailAddress String @unique
-}
-
 model BlacklistedEmail {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())

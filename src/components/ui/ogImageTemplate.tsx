@@ -7,19 +7,14 @@ import masonryFoodThree from "/public/food/three.jpg";
 import masonryFoodFour from "/public/food/four.png";
 import masonryFoodFive from "/public/food/five.jpg";
 
-import first from "/public/openGraph/first.jpg";
-import second from "/public/openGraph/second.webp";
-import third from "/public/openGraph/third.jpg";
-import fourth from "/public/openGraph/fourth.webp";
-
-function OGImageTemplate() {
+function ogImageTemplate() {
   return (
     <div className="baseFlex relative mb-64 h-[630px] w-[1200px] overflow-hidden bg-darkPrimary">
       {/* below: pick one or the other, or neither but they can't work together for sure */}
 
       <div className="absolute inset-0 grid h-full w-full grid-cols-2 grid-rows-2">
         <Image
-          src={first}
+          src={masonryFoodOne}
           alt=""
           fill
           // sizes="(max-width: 1000px) 400px, 320px"
@@ -27,7 +22,7 @@ function OGImageTemplate() {
           className="!relative !size-full object-cover object-top opacity-20"
         />
         <Image
-          src={second}
+          src={masonryFoodTwo}
           alt=""
           fill
           // sizes="(max-width: 1000px) 400px, 320px"
@@ -35,15 +30,15 @@ function OGImageTemplate() {
           className="!relative !size-full object-cover object-top opacity-20"
         />
         <Image
-          src={third}
+          src={masonryFoodFive}
           alt=""
           fill
           // sizes="(max-width: 1000px) 400px, 320px"
           priority
-          className="!relative !size-full object-cover object-center opacity-20"
+          className="!relative !size-full object-cover object-top opacity-20"
         />
         <Image
-          src={fourth}
+          src={masonryFoodFour}
           alt=""
           fill
           // sizes="(max-width: 1000px) 400px, 320px"
@@ -87,4 +82,4 @@ function OGImageTemplate() {
   );
 }
 
-export default OGImageTemplate;
+export default ogImageTemplate;
