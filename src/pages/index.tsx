@@ -76,7 +76,7 @@ function TempHomepage() {
   return (
     <motion.div
       key={"main"}
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 0.01 }} // trying to get around lighthouse opacity content detection issue
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
@@ -90,9 +90,6 @@ function TempHomepage() {
             alt="Khue's Kitchen building on fire"
             priority
             fill
-            // width={1290}
-            // height={859}
-            // need sizes={} for responsive images
             className="!relative !h-96 !w-full rounded-t-lg border-b border-stone-300 object-cover"
           />
         </div>
