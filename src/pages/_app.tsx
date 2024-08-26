@@ -39,6 +39,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
 
         {/* default tags */}
+        <link rel="canonical" href="https://www.khueskitchen.com/" />
+
         <meta property="og:site_name" content="Khue's Kitchen" />
         <meta property="og:type" content="website" />
         <meta
