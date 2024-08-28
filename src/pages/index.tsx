@@ -246,6 +246,7 @@ function TempHomepage() {
                         <FormLabel className="font-semibold">Email</FormLabel>
                         <FormControl>
                           <Input
+                            type={"email"}
                             placeholder="Enter your email address"
                             {...field}
                           />
