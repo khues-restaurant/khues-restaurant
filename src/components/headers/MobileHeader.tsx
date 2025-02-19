@@ -5,6 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { CiCalendarDate } from "react-icons/ci";
+import { FaFacebook } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import { IoLogoInstagram } from "react-icons/io5";
+import { SiTiktok } from "react-icons/si";
 import { MdAccessTime } from "react-icons/md";
 import { TbLocation } from "react-icons/tb";
 import {
@@ -129,18 +133,18 @@ function MobileHeader() {
               ></span>
             </Button>
           </SheetTrigger>
-          <SheetContent className="!h-dvh !overflow-auto p-6">
+          <SheetContent className="baseVertFlex !h-dvh !justify-between gap-0 !overflow-auto p-6">
             <VisuallyHidden>
               <DialogTitle>Navigation menu</DialogTitle>
               <DialogDescription>Our navigation menu</DialogDescription>
             </VisuallyHidden>
 
-            <div className="baseVertFlex !justify-start gap-2 overflow-y-auto pt-12">
+            <div className="baseVertFlex w-full !justify-start gap-2 overflow-y-auto pt-12">
               <motion.div
                 variants={linkContainer}
                 initial="hidden"
                 animate="visible"
-                className="baseVertFlex w-full gap-4 overflow-x-hidden"
+                className="baseVertFlex w-full !justify-start gap-4 overflow-x-hidden"
               >
                 <motion.div variants={linkVariants}>
                   <Button
@@ -202,7 +206,7 @@ function MobileHeader() {
                   </Button>
                 </motion.div>
 
-                <motion.div variants={linkVariants} className="w-full">
+                <motion.div variants={linkVariants} className="mb-auto w-full">
                   <Accordion
                     value={hoursAndLocationAccordionOpen ? "item-1" : ""}
                     onValueChange={(value) => {
@@ -236,7 +240,7 @@ function MobileHeader() {
                               <MdAccessTime />
                               Hours
                             </div>
-                            <div className="grid w-full grid-cols-2">
+                            <div className="grid grid-cols-2 pr-4">
                               <div className="baseVertFlex w-full !items-start">
                                 <p>Monday</p>
                                 <p>Tuesday</p>
@@ -251,7 +255,7 @@ function MobileHeader() {
                               </div>
                             </div>
 
-                            <Dialog>
+                            {/* <Dialog>
                               <DialogTrigger asChild>
                                 <Button
                                   variant={"underline"}
@@ -309,7 +313,7 @@ function MobileHeader() {
                             <p className=" text-center text-xs italic text-stone-400">
                               * Pickup orders must be placed at least 30 minutes
                               before closing.
-                            </p>
+                            </p> */}
                           </div>
 
                           <Separator className="w-4/5 self-center" />
@@ -321,10 +325,11 @@ function MobileHeader() {
                                 Location
                               </div>
                               <p className="w-[55vw] sm:w-auto">
-                                We are conveniently located next to the Green
-                                Line light rail, offering easy access for all
-                                visitors. Parking space is also available for
-                                your convenience.
+                                Close to University Avenue and the Raymond
+                                Avenue Green Line Station, our restaurant is
+                                well-connected to Minneapolis and downtown Saint
+                                Paul. We offer a small on-site parking lot, with
+                                additional street parking nearby.
                               </p>
 
                               <div className="baseFlex gap-2">
@@ -363,6 +368,48 @@ function MobileHeader() {
                 </motion.div>
               </motion.div>
             </div>
+
+            <motion.div variants={linkVariants} className="relative bottom-0">
+              <Separator className="mb-4 w-full" />
+
+              <div className="baseFlex gap-2">
+                <Button variant="ghost" asChild>
+                  <a
+                    aria-label="Visit our Instagram page"
+                    href="https://www.instagram.com/khueskitchen/"
+                  >
+                    <IoLogoInstagram className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
+                  </a>
+                </Button>
+
+                <Button variant="ghost" asChild>
+                  <a
+                    aria-label="Visit our Facebook page"
+                    href="https://www.facebook.com/khueskitchen/"
+                  >
+                    <FaFacebook className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
+                  </a>
+                </Button>
+
+                <Button variant="ghost" asChild>
+                  <a
+                    aria-label="Visit our Tiktok page"
+                    href="https://www.tiktok.com/@khues_kitchen"
+                  >
+                    <SiTiktok className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
+                  </a>
+                </Button>
+
+                <Button variant="ghost" asChild>
+                  <a
+                    aria-label="Visit our X page"
+                    href="https://x.com/Khues_Kitchen"
+                  >
+                    <FaXTwitter className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
+                  </a>
+                </Button>
+              </div>
+            </motion.div>
           </SheetContent>
         </Sheet>
       </div>

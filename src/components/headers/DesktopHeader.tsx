@@ -179,7 +179,7 @@ function DesktopHeader() {
             </VisuallyHidden>
 
             <div className="baseFlex w-[850px] !items-start">
-              <div className="baseVertFlex w-max !items-start gap-2">
+              <div className="baseVertFlex w-[273px] !items-start gap-2">
                 <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
                   <MdAccessTime />
                   Hours
@@ -199,7 +199,7 @@ function DesktopHeader() {
                   </div>
                 </div>
 
-                <Dialog>
+                {/* <Dialog>
                   <DialogTrigger asChild>
                     <Button variant={"underline"} className="mt-2 !self-center">
                       Holiday hours
@@ -251,7 +251,7 @@ function DesktopHeader() {
                 <p className="mt-2 w-[273px] text-center text-sm italic text-stone-400">
                   * Pickup orders must be placed at least 30 minutes before
                   closing.
-                </p>
+                </p> */}
               </div>
 
               <Separator
@@ -266,9 +266,10 @@ function DesktopHeader() {
                     Location
                   </div>
                   <p className="w-[536px]">
-                    We are conveniently located next to the Green Line light
-                    rail, offering easy access for all visitors. Parking space
-                    is also available for your convenience.
+                    Close to University Avenue and the Raymond Avenue Green Line
+                    Station, our restaurant is well-connected to Minneapolis and
+                    downtown Saint Paul. We offer a small on-site parking lot,
+                    with additional street parking nearby.
                   </p>
 
                   <div className="baseFlex gap-2">
@@ -276,12 +277,12 @@ function DesktopHeader() {
 
                     <Button variant={"link"} className="h-8 !p-0" asChild>
                       <a
-                        href="https://facebook.com"
+                        href="https://maps.app.goo.gl/AtBZUUydNtVvxR7e9"
                         target="_blank"
                         rel="noreferrer"
                         className="text-primary"
                       >
-                        799 University Ave W, St Paul, MN 55104
+                        693 Raymond Ave, St Paul, MN 55114
                       </a>
                     </Button>
                   </div>
@@ -293,7 +294,7 @@ function DesktopHeader() {
                     "Exterior view of Khue's, located on 799 University Ave W in St. Paul, MN"
                   }
                   sizes="550px"
-                  className="!relative !h-64 !w-full rounded-md object-cover shadow-md"
+                  className="!relative !h-52 !w-full rounded-md object-cover shadow-md"
                 />
               </div>
             </div>
@@ -302,28 +303,34 @@ function DesktopHeader() {
 
         <div className="baseFlex gap-2">
           <Button variant="ghost" asChild>
-            <a aria-label="Visit our Tiktok page" href="https://instagram.com">
-              <SiTiktok className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-            </a>
-          </Button>
-
-          <Button variant="ghost" asChild>
             <a
               aria-label="Visit our Instagram page"
-              href="https://instagram.com"
+              href="https://www.instagram.com/khueskitchen/"
             >
               <IoLogoInstagram className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
             </a>
           </Button>
 
           <Button variant="ghost" asChild>
-            <a aria-label="Visit our Facebook page" href="https://facebook.com">
+            <a
+              aria-label="Visit our Facebook page"
+              href="https://www.facebook.com/khueskitchen/"
+            >
               <FaFacebook className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
             </a>
           </Button>
 
           <Button variant="ghost" asChild>
-            <a aria-label="Visit our Twitter page" href="https://twitter.com">
+            <a
+              aria-label="Visit our Tiktok page"
+              href="https://www.tiktok.com/@khues_kitchen"
+            >
+              <SiTiktok className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
+            </a>
+          </Button>
+
+          <Button variant="ghost" asChild>
+            <a aria-label="Visit our X page" href="https://x.com/Khues_Kitchen">
               <FaXTwitter className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
             </a>
           </Button>

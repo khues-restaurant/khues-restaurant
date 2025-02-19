@@ -57,16 +57,19 @@ p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tab
           <div className="baseFlex gap-2 tablet:gap-[9px]">
             <FaPhone size={"0.8rem"} className="tablet:ml-[1px]" />
             <Button variant="link" className="h-8 px-1" asChild>
-              <a href="tel:+1234567890" className="!text-offwhite">
-                (234) 567-8900
+              <a href="tel:+6122220712" className="!text-offwhite">
+                (612) 222-0712
               </a>
             </Button>
           </div>
           <div className="baseFlex gap-2">
             <MdOutlineMail size={"0.95rem"} />
             <Button variant="link" className="h-8 px-1" asChild>
-              <a href="mailto:example@example.com" className="!text-offwhite">
-                example@example.com
+              <a
+                href="mailto:khueskitchen@gmail.com"
+                className="!text-offwhite"
+              >
+                khueskitchen@gmail.com
               </a>
             </Button>
           </div>
@@ -92,28 +95,34 @@ p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tab
 
         <div className="baseFlex gap-2">
           <Button variant="ghost" asChild>
-            <a aria-label="Visit our Tiktok page" href="https://instagram.com">
-              <SiTiktok className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-            </a>
-          </Button>
-
-          <Button variant="ghost" asChild>
             <a
               aria-label="Visit our Instagram page"
-              href="https://instagram.com"
+              href="https://www.instagram.com/khueskitchen/"
             >
               <IoLogoInstagram className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
             </a>
           </Button>
 
           <Button variant="ghost" asChild>
-            <a aria-label="Visit our Facebook page" href="https://facebook.com">
+            <a
+              aria-label="Visit our Facebook page"
+              href="https://www.facebook.com/khueskitchen/"
+            >
               <FaFacebook className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
             </a>
           </Button>
 
           <Button variant="ghost" asChild>
-            <a aria-label="Visit our Twitter page" href="https://twitter.com">
+            <a
+              aria-label="Visit our Tiktok page"
+              href="https://www.tiktok.com/@khues_kitchen"
+            >
+              <SiTiktok className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
+            </a>
+          </Button>
+
+          <Button variant="ghost" asChild>
+            <a aria-label="Visit our X page" href="https://x.com/Khues_Kitchen">
               <FaXTwitter className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
             </a>
           </Button>
