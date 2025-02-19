@@ -1,20 +1,18 @@
-import { SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CiCalendarDate } from "react-icons/ci";
-import { FaUserAlt } from "react-icons/fa";
 import { HiOutlineInformationCircle } from "react-icons/hi";
 import { IoMdMore } from "react-icons/io";
-import { IoSettingsOutline } from "react-icons/io5";
 import { MdAccessTime } from "react-icons/md";
-import { SlPresent } from "react-icons/sl";
 import { TbLocation } from "react-icons/tb";
-import { TfiReceipt } from "react-icons/tfi";
-import CartButton from "~/components/cart/CartButton";
+import { FaFacebook } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import { IoLogoInstagram } from "react-icons/io5";
+import { SiTiktok } from "react-icons/si";
 import {
   Dialog,
   DialogContent,
@@ -27,10 +25,6 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import { Separator } from "~/components/ui/separator";
-import useGetUserId from "~/hooks/useGetUserId";
-import { useMainStore } from "~/stores/MainStore";
-import { api } from "~/utils/api";
-import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import { Button } from "../ui/button";
 import classes from "./DesktopHeader.module.css";
@@ -39,49 +33,9 @@ import StaticLotus from "~/components/ui/StaticLotus";
 import outsideOfRestaurant from "/public/exterior/one.webp";
 
 function DesktopHeader() {
-  const { isLoaded, isSignedIn, signOut } = useAuth();
-  const { asPath, events } = useRouter();
-  const userId = useGetUserId();
-
-  const { resetStore, orderDetails } = useMainStore((state) => ({
-    resetStore: state.resetStore,
-    orderDetails: state.orderDetails,
-  }));
-
-  const { data: user } = api.user.get.useQuery(userId, {
-    enabled: Boolean(userId && isSignedIn),
-  });
-
+  const { asPath } = useRouter();
   const [showSmallViewportPopoverLinks, setShowSmallViewportPopoverLinks] =
     useState(false);
-  const [showUserPopoverLinks, setShowUserPopoverLinks] = useState(false);
-  const [numberOfItems, setNumberOfItems] = useState(0);
-
-  useEffect(() => {
-    // add up all the quantities of the items in the order
-    let sum = 0;
-    orderDetails.items.forEach((item) => {
-      sum += item.quantity;
-    });
-
-    if (orderDetails.rewardBeingRedeemed) {
-      sum++;
-    }
-
-    setNumberOfItems(sum);
-  }, [orderDetails.items, orderDetails.rewardBeingRedeemed]);
-
-  useEffect(() => {
-    const handleRouteChange = () => {
-      setShowUserPopoverLinks(false);
-    };
-
-    events.on("routeChangeStart", handleRouteChange);
-
-    return () => {
-      events.off("routeChangeStart", handleRouteChange);
-    };
-  }, [events]);
 
   return (
     <nav
@@ -139,20 +93,6 @@ function DesktopHeader() {
           </Link>
         </Button>
 
-        {isLoaded && !isSignedIn && (
-          <Button
-            variant={asPath.includes("/rewards") ? "activeLink" : "link"}
-            asChild
-          >
-            <Link
-              href={"/rewards"}
-              className="block !text-xl smallDesktopHeader:hidden"
-            >
-              Rewards
-            </Link>
-          </Button>
-        )}
-
         <Button
           variant={asPath.includes("/our-story") ? "activeLink" : "link"}
           asChild
@@ -199,18 +139,6 @@ function DesktopHeader() {
                   Reservations
                 </Link>
               </Button>
-
-              {isLoaded && !isSignedIn && (
-                <Button
-                  variant={asPath.includes("/rewards") ? "activeLink" : "link"}
-                  onClick={() => setShowSmallViewportPopoverLinks(false)}
-                  asChild
-                >
-                  <Link href={"/rewards"} className="!text-xl">
-                    Rewards
-                  </Link>
-                </Button>
-              )}
 
               <Button
                 variant={asPath.includes("/media") ? "activeLink" : "link"}
@@ -372,107 +300,33 @@ function DesktopHeader() {
           </DialogContent>
         </Dialog>
 
-        <div className={`baseFlex ${numberOfItems > 9 ? "gap-8" : "gap-6"}`}>
-          <CartButton />
+        <div className="baseFlex gap-2">
+          <Button variant="ghost" asChild>
+            <a aria-label="Visit our Tiktok page" href="https://instagram.com">
+              <SiTiktok className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
+            </a>
+          </Button>
 
-          {/* opting for double "&&" instead of ternary for better readability */}
-          {!isSignedIn && (
-            <div className={`${classes.authentication ?? ""} baseFlex gap-4`}>
-              {/* how to maybe get colors to match theme + also have an option to specify username? */}
-              <SignUpButton mode="modal">
-                <Button className="px-8">Sign up</Button>
-              </SignUpButton>
-              <SignInButton mode="modal">
-                <Button variant={"outline"}>Sign in</Button>
-              </SignInButton>
-            </div>
-          )}
-
-          {isSignedIn && user && (
-            <Popover
-              open={showUserPopoverLinks}
-              onOpenChange={(open) => {
-                if (!open) setShowUserPopoverLinks(false);
-              }}
+          <Button variant="ghost" asChild>
+            <a
+              aria-label="Visit our Instagram page"
+              href="https://instagram.com"
             >
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="baseFlex gap-2"
-                  onClick={() => setShowUserPopoverLinks(true)}
-                >
-                  <FaUserAlt />
-                  <span className="max-w-[105px] truncate">
-                    {user.firstName}
-                  </span>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent side="bottom" align="end" className="w-64">
-                <div className="baseVertFlex gap-2">
-                  <Button
-                    variant={
-                      asPath.includes("/profile/preferences")
-                        ? "activeLink"
-                        : "link"
-                    }
-                    asChild
-                  >
-                    <Link
-                      href={"/profile/preferences"}
-                      className="baseFlex w-full !justify-between !text-lg"
-                    >
-                      Preferences
-                      <IoSettingsOutline />
-                    </Link>
-                  </Button>
-                  <Button
-                    variant={
-                      asPath.includes("/profile/rewards")
-                        ? "activeLink"
-                        : "link"
-                    }
-                    asChild
-                  >
-                    <Link
-                      href={"/profile/rewards"}
-                      className="baseFlex w-full !justify-between !text-lg"
-                    >
-                      Rewards
-                      <SlPresent />
-                    </Link>
-                  </Button>
-                  <Button
-                    variant={
-                      asPath.includes("/profile/my-orders")
-                        ? "activeLink"
-                        : "link"
-                    }
-                    asChild
-                  >
-                    <Link
-                      href={"/profile/my-orders"}
-                      className="baseFlex w-full !justify-between !text-lg"
-                    >
-                      My orders
-                      <TfiReceipt />
-                    </Link>
-                  </Button>
+              <IoLogoInstagram className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
+            </a>
+          </Button>
 
-                  <Button
-                    variant={"link"}
-                    className="mt-2 h-8"
-                    onClick={async () => {
-                      clearLocalStorage();
-                      resetStore();
-                      await signOut({ redirectUrl: "/" });
-                    }}
-                  >
-                    Log out
-                  </Button>
-                </div>
-              </PopoverContent>
-            </Popover>
-          )}
+          <Button variant="ghost" asChild>
+            <a aria-label="Visit our Facebook page" href="https://facebook.com">
+              <FaFacebook className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
+            </a>
+          </Button>
+
+          <Button variant="ghost" asChild>
+            <a aria-label="Visit our Twitter page" href="https://twitter.com">
+              <FaXTwitter className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
+            </a>
+          </Button>
         </div>
       </div>
     </nav>

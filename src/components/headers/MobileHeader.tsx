@@ -1,4 +1,3 @@
-import { useAuth, useClerk } from "@clerk/nextjs";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -6,13 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { CiCalendarDate } from "react-icons/ci";
-import { FaUserAlt } from "react-icons/fa";
-import { IoSettingsOutline } from "react-icons/io5";
 import { MdAccessTime } from "react-icons/md";
-import { SlPresent } from "react-icons/sl";
 import { TbLocation } from "react-icons/tb";
-import { TfiReceipt } from "react-icons/tfi";
-import CartButton from "~/components/cart/CartButton";
 import {
   Accordion,
   AccordionContent,
@@ -31,10 +25,6 @@ import { Separator } from "~/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import StaticLotus from "~/components/ui/StaticLotus";
 import { useToast } from "~/components/ui/use-toast";
-import useGetUserId from "~/hooks/useGetUserId";
-import { useMainStore } from "~/stores/MainStore";
-import { api } from "~/utils/api";
-import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 
 import outsideOfRestaurant from "/public/exterior/one.webp";
@@ -61,23 +51,9 @@ const linkVariants = {
 };
 
 function MobileHeader() {
-  const { isLoaded, isSignedIn, signOut } = useAuth();
-  const userId = useGetUserId();
   const { asPath, events } = useRouter();
-  const { openSignUp, openSignIn } = useClerk();
-
-  const { data: user } = api.user.get.useQuery(userId, {
-    enabled: Boolean(userId && isSignedIn),
-  });
-
-  const { resetStore } = useMainStore((state) => ({
-    resetStore: state.resetStore,
-  }));
 
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
-
-  // used to keep consistent spacing between user section and separator from main links
-  const [memberMenuIsOpen, setMemberMenuIsOpen] = useState(false);
 
   const [hoursAndLocationAccordionOpen, setHoursAndLocationAccordionOpen] =
     useState(false);
@@ -121,8 +97,6 @@ function MobileHeader() {
       </Button>
 
       <div className="baseFlex gap-4">
-        <CartButton />
-
         <Sheet
           open={sheetIsOpen}
           onOpenChange={(open) => {
@@ -162,135 +136,6 @@ function MobileHeader() {
             </VisuallyHidden>
 
             <div className="baseVertFlex !justify-start gap-2 overflow-y-auto pt-12">
-              {!isSignedIn && (
-                <div className="baseFlex gap-4">
-                  <Button
-                    className="px-8"
-                    onClick={() => {
-                      setSheetIsOpen(false);
-
-                      setTimeout(() => {
-                        setHoursAndLocationAccordionOpen(false);
-                      }, 275);
-
-                      // overflow: hidden would stay stuck on <body>
-                      // unless we wait for the sheet to fully close first
-                      setTimeout(() => {
-                        openSignUp();
-                      }, 500);
-                    }}
-                  >
-                    Sign up
-                  </Button>
-                  <Button
-                    variant={"outline"}
-                    onClick={() => {
-                      setSheetIsOpen(false);
-
-                      setTimeout(() => {
-                        setHoursAndLocationAccordionOpen(false);
-                      }, 275);
-
-                      // overflow: hidden would stay stuck on <body>
-                      // unless we wait for the sheet to fully close first
-                      setTimeout(() => {
-                        openSignIn();
-                      }, 500);
-                    }}
-                  >
-                    Sign in
-                  </Button>
-                </div>
-              )}
-
-              {isSignedIn && (
-                <Accordion
-                  type="single"
-                  collapsible
-                  onValueChange={(value) => {
-                    setMemberMenuIsOpen(value === "item-1");
-                  }}
-                  className="w-full"
-                >
-                  <AccordionItem value="item-1" className="border-none">
-                    <AccordionTrigger className="baseFlex gap-4 py-2 text-xl font-semibold text-primary !no-underline">
-                      <FaUserAlt className="!rotate-0" />
-                      <span className="max-w-[60%] truncate">
-                        {user?.firstName}
-                      </span>
-                    </AccordionTrigger>
-                    <AccordionContent className="pb-0 pt-2">
-                      <div className="baseVertFlex gap-2">
-                        <Button
-                          variant={
-                            asPath.includes("/profile/preferences")
-                              ? "activeLink"
-                              : "link"
-                          }
-                          asChild
-                        >
-                          <Link
-                            href={"/profile/preferences"}
-                            className="baseFlex w-52 !justify-between !text-lg"
-                          >
-                            Preferences
-                            <IoSettingsOutline />
-                          </Link>
-                        </Button>
-                        <Button
-                          variant={
-                            asPath.includes("/profile/rewards")
-                              ? "activeLink"
-                              : "link"
-                          }
-                          asChild
-                        >
-                          <Link
-                            href={"/profile/rewards"}
-                            className="baseFlex w-52 !justify-between !text-lg"
-                          >
-                            Rewards
-                            <SlPresent />
-                          </Link>
-                        </Button>
-                        <Button
-                          variant={
-                            asPath.includes("/profile/my-orders")
-                              ? "activeLink"
-                              : "link"
-                          }
-                          asChild
-                        >
-                          <Link
-                            href={"/profile/my-orders"}
-                            className="baseFlex w-52 !justify-between !text-lg"
-                          >
-                            My orders
-                            <TfiReceipt />
-                          </Link>
-                        </Button>
-
-                        <Button
-                          variant={"link"}
-                          className="mb-1 mt-2 h-8"
-                          onClick={async () => {
-                            clearLocalStorage();
-                            resetStore();
-                            await signOut({ redirectUrl: "/" });
-                          }}
-                        >
-                          Log out
-                        </Button>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              )}
-
-              <Separator
-                className={`w-4/5 self-center bg-stone-300 ${memberMenuIsOpen ? "mt-2" : "mt-4"}`}
-              />
-
               <motion.div
                 variants={linkContainer}
                 initial="hidden"
@@ -332,20 +177,6 @@ function MobileHeader() {
                     </Link>
                   </Button>
                 </motion.div>
-                {isLoaded && !isSignedIn && (
-                  <motion.div variants={linkVariants}>
-                    <Button
-                      variant={
-                        asPath.includes("/rewards") ? "activeLink" : "link"
-                      }
-                      asChild
-                    >
-                      <Link href={"/rewards"} className="!text-xl">
-                        Rewards
-                      </Link>
-                    </Button>
-                  </motion.div>
-                )}
 
                 <motion.div variants={linkVariants}>
                   <Button

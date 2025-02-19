@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import { MdOutlineMoneyOff } from "react-icons/md";
 import { BsSpeedometer2 } from "react-icons/bs";
 import { TfiReceipt } from "react-icons/tfi";
-import { SignUpButton, useAuth } from "@clerk/nextjs";
 import { Parallax, ParallaxProvider } from "react-scroll-parallax";
 import WideFancySwirls from "~/components/ui/wideFancySwirls";
 import { HiOutlineNewspaper } from "react-icons/hi2";
@@ -65,9 +64,6 @@ interface Home {
 }
 
 export default function Home({ ourFavoriteMenuItems }: Home) {
-  const { isLoaded, isSignedIn } = useAuth();
-  const userId = useGetUserId();
-
   const {
     chatIsOpen,
     setChatIsOpen,
@@ -79,10 +75,6 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
     setMobileHeroThresholdInView: state.setMobileHeroThresholdInView,
     viewportLabel: state.viewportLabel,
   }));
-
-  const { data: user } = api.user.get.useQuery(userId, {
-    enabled: Boolean(userId && isSignedIn),
-  });
 
   const mobileHeroRef = useRef<HTMLDivElement>(null);
 
@@ -1083,43 +1075,8 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
             </div>
           </div>
 
-          {/* Rewards program promo section */}
-          {isLoaded && !isSignedIn && (
-            <div className="baseVertFlex relative my-4 w-screen max-w-xl gap-4 overflow-hidden border-y-4 border-y-gold bg-offwhite !p-6 !pb-8 text-primary shadow-md sm:rounded-sm sm:!p-8 sm:!pb-5 tablet:my-12">
-              <StaticLotus className="absolute right-[-21px] top-[-21px] size-16 rotate-[-135deg] fill-gold/80" />
-              <StaticLotus className="absolute left-[-21px] top-[-21px] size-16 rotate-[135deg] fill-gold/80" />
-              <StaticLotus className="absolute bottom-[-21px] right-[-21px] size-16 rotate-[-45deg] fill-gold/80" />
-              <StaticLotus className="absolute bottom-[-21px] left-[-21px] size-16 rotate-[45deg] fill-gold/80" />
-
-              <span className="mt-4 w-64 text-center font-semibold sm:mt-0 sm:w-auto">
-                Join Khue&apos;s Rewards and unlock exclusive benefits!
-              </span>
-              <span className="mt-2 text-center text-sm tablet:text-base">
-                With every order, you&apos;ll earn points which can be redeemed
-                for complimentary meals. Plus, get early access to new dishes
-                and celebrate your birthday with a free dessert of your choice!
-              </span>
-
-              <SignUpButton mode="modal">
-                <Button
-                  variant={"rewards"}
-                  size={"lg"}
-                  className="mt-4 text-base shadow-md"
-                >
-                  Join now
-                </Button>
-              </SignUpButton>
-
-              <WideFancySwirls className="h-14 fill-primary sm:h-16" />
-            </div>
-          )}
-
           {/* Explore Our Favorites section */}
-          <div
-            className={`baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-6xl tablet:max-w-2xl
-              ${isLoaded && !isSignedIn ? "" : "tablet:mt-10"}
-            `}
-          >
+          <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-6xl tablet:max-w-2xl">
             <p className="text-lg font-medium tablet:text-xl">
               Explore Our Favorites
             </p>
@@ -1145,10 +1102,11 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                       key={menuItem.id}
                       className="baseVertFlex relative basis-full gap-4 rounded-md p-4 px-6 md:basis-1/2 xl:basis-1/4"
                     >
-                      <OurFavoriteMenuItemCard
+                      {/* <OurFavoriteMenuItemCard
                         menuItem={menuItem}
                         user={user}
-                      />
+                      /> */}
+                      todo
                     </CarouselItem>
                   ))}
                 </CarouselContent>
@@ -1240,150 +1198,150 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   };
 };
 
-interface OurFavoriteMenuItemCard {
-  menuItem: FullMenuItem;
-  user: User | null | undefined;
-}
+// interface OurFavoriteMenuItemCard {
+//   menuItem: FullMenuItem;
+//   user: User | null | undefined;
+// }
+//
+// function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
+//   const { orderDetails, getPrevOrderDetails, setPrevOrderDetails } =
+//     useMainStore((state) => ({
+//       orderDetails: state.orderDetails,
+//       getPrevOrderDetails: state.getPrevOrderDetails,
+//       setPrevOrderDetails: state.setPrevOrderDetails,
+//     }));
 
-function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
-  const { orderDetails, getPrevOrderDetails, setPrevOrderDetails } =
-    useMainStore((state) => ({
-      orderDetails: state.orderDetails,
-      getPrevOrderDetails: state.getPrevOrderDetails,
-      setPrevOrderDetails: state.setPrevOrderDetails,
-    }));
+//   const { updateOrder } = useUpdateOrder();
 
-  const { updateOrder } = useUpdateOrder();
+//   const { toast, dismiss: dismissToasts } = useToast();
 
-  const { toast, dismiss: dismissToasts } = useToast();
+//   const [addToOrderText, setAddToOrderText] = useState("Add to order");
 
-  const [addToOrderText, setAddToOrderText] = useState("Add to order");
+//   return (
+//     <>
+//       <Image
+//         src={"/menuItems/sampleImage.webp"}
+//         alt={`${menuItem.name} at Khue's in St. Paul`}
+//         width={160}
+//         height={160}
+//         className="select-none self-center rounded-md drop-shadow-md tablet:drop-shadow-lg"
+//       />
+//       <p className="select-none font-semibold">{menuItem.name}</p>
+//       <p className="line-clamp-3 select-none text-center text-sm">
+//         {menuItem.description}
+//       </p>
+//       <Button
+//         disabled={!menuItem.available || addToOrderText === "Added to order"}
+//         className="w-full select-none"
+//         onClick={async () => {
+//           setAddToOrderText("Added to order");
 
-  return (
-    <>
-      <Image
-        src={"/menuItems/sampleImage.webp"}
-        alt={`${menuItem.name} at Khue's in St. Paul`}
-        width={160}
-        height={160}
-        className="select-none self-center rounded-md drop-shadow-md tablet:drop-shadow-lg"
-      />
-      <p className="select-none font-semibold">{menuItem.name}</p>
-      <p className="line-clamp-3 select-none text-center text-sm">
-        {menuItem.description}
-      </p>
-      <Button
-        disabled={!menuItem.available || addToOrderText === "Added to order"}
-        className="w-full select-none"
-        onClick={async () => {
-          setAddToOrderText("Added to order");
+//           // set prev order details so we can revert if necessary
+//           // with toast's undo button
+//           setPrevOrderDetails(orderDetails);
 
-          // set prev order details so we can revert if necessary
-          // with toast's undo button
-          setPrevOrderDetails(orderDetails);
+//           const pluralize = (await import("pluralize")).default;
+//           const isPlural = pluralize.isPlural(menuItem.name);
+//           const contextAwarePlural = isPlural ? "were" : "was";
 
-          const pluralize = (await import("pluralize")).default;
-          const isPlural = pluralize.isPlural(menuItem.name);
-          const contextAwarePlural = isPlural ? "were" : "was";
+//           toast({
+//             description: `${menuItem.name} ${contextAwarePlural} added to your order.`,
+//             action: (
+//               <ToastAction
+//                 altText={`Undo the addition of ${menuItem.name} to your order.`}
+//                 onClick={() => {
+//                   updateOrder({
+//                     newOrderDetails: getPrevOrderDetails(),
+//                   });
+//                 }}
+//               >
+//                 Undo
+//               </ToastAction>
+//             ),
+//           });
 
-          toast({
-            description: `${menuItem.name} ${contextAwarePlural} added to your order.`,
-            action: (
-              <ToastAction
-                altText={`Undo the addition of ${menuItem.name} to your order.`}
-                onClick={() => {
-                  updateOrder({
-                    newOrderDetails: getPrevOrderDetails(),
-                  });
-                }}
-              >
-                Undo
-              </ToastAction>
-            ),
-          });
+//           // directly add to order w/ defaults + trigger toast notification
 
-          // directly add to order w/ defaults + trigger toast notification
+//           updateOrder({
+//             newOrderDetails: {
+//               ...orderDetails,
+//               items: [
+//                 ...orderDetails.items,
+//                 {
+//                   id:
+//                     orderDetails.items.length === 0
+//                       ? 0
+//                       : orderDetails.items.at(-1)!.id + 1,
+//                   itemId: menuItem.id,
+//                   name: menuItem.name,
+//                   customizations: getDefaultCustomizationChoices(menuItem),
+//                   specialInstructions: "",
+//                   includeDietaryRestrictions:
+//                     user?.autoApplyDietaryRestrictions ?? false,
+//                   quantity: 1,
+//                   price: menuItem.price,
+//                   isChefsChoice: menuItem.isChefsChoice,
+//                   isAlcoholic: menuItem.isAlcoholic,
+//                   isVegetarian: menuItem.isVegetarian,
+//                   isVegan: menuItem.isVegan,
+//                   isGlutenFree: menuItem.isGlutenFree,
+//                   showUndercookedOrRawDisclaimer:
+//                     menuItem.showUndercookedOrRawDisclaimer,
+//                   hasImageOfItem: menuItem.hasImageOfItem,
+//                   discountId: menuItem.activeDiscount?.id ?? null,
+//                   birthdayReward: false,
+//                   pointReward: false,
+//                 },
+//               ],
+//             },
+//           });
 
-          updateOrder({
-            newOrderDetails: {
-              ...orderDetails,
-              items: [
-                ...orderDetails.items,
-                {
-                  id:
-                    orderDetails.items.length === 0
-                      ? 0
-                      : orderDetails.items.at(-1)!.id + 1,
-                  itemId: menuItem.id,
-                  name: menuItem.name,
-                  customizations: getDefaultCustomizationChoices(menuItem),
-                  specialInstructions: "",
-                  includeDietaryRestrictions:
-                    user?.autoApplyDietaryRestrictions ?? false,
-                  quantity: 1,
-                  price: menuItem.price,
-                  isChefsChoice: menuItem.isChefsChoice,
-                  isAlcoholic: menuItem.isAlcoholic,
-                  isVegetarian: menuItem.isVegetarian,
-                  isVegan: menuItem.isVegan,
-                  isGlutenFree: menuItem.isGlutenFree,
-                  showUndercookedOrRawDisclaimer:
-                    menuItem.showUndercookedOrRawDisclaimer,
-                  hasImageOfItem: menuItem.hasImageOfItem,
-                  discountId: menuItem.activeDiscount?.id ?? null,
-                  birthdayReward: false,
-                  pointReward: false,
-                },
-              ],
-            },
-          });
+//           setTimeout(() => {
+//             setAddToOrderText("Add to order");
+//           }, 1500);
+//         }}
+//       >
+//         <AnimatePresence mode={"popLayout"} initial={false}>
+//           <motion.div
+//             key={`${menuItem.id}-${addToOrderText}`}
+//             layout
+//             // whileTap={{ scale: 0.95 }}
+//             initial={{ opacity: 0, y: -20 }}
+//             animate={{ opacity: 1, y: 0 }}
+//             exit={{ opacity: 0, y: 20 }}
+//             transition={{
+//               duration: 0.25,
+//             }}
+//             className="baseFlex w-[122.75px] gap-2"
+//           >
+//             {addToOrderText === "Add to order" && "Add to order"}
 
-          setTimeout(() => {
-            setAddToOrderText("Add to order");
-          }, 1500);
-        }}
-      >
-        <AnimatePresence mode={"popLayout"} initial={false}>
-          <motion.div
-            key={`${menuItem.id}-${addToOrderText}`}
-            layout
-            // whileTap={{ scale: 0.95 }}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{
-              duration: 0.25,
-            }}
-            className="baseFlex w-[122.75px] gap-2"
-          >
-            {addToOrderText === "Add to order" && "Add to order"}
-
-            {addToOrderText === "Added to order" && (
-              <svg
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-                className="size-6 text-offwhite"
-              >
-                <motion.path
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{
-                    delay: 0.2,
-                    type: "tween",
-                    ease: "easeOut",
-                    duration: 0.3,
-                  }}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </Button>
-    </>
-  );
-}
+//             {addToOrderText === "Added to order" && (
+//               <svg
+//                 fill="none"
+//                 viewBox="0 0 24 24"
+//                 stroke="currentColor"
+//                 strokeWidth={2}
+//                 className="size-6 text-offwhite"
+//               >
+//                 <motion.path
+//                   initial={{ pathLength: 0 }}
+//                   animate={{ pathLength: 1 }}
+//                   transition={{
+//                     delay: 0.2,
+//                     type: "tween",
+//                     ease: "easeOut",
+//                     duration: 0.3,
+//                   }}
+//                   strokeLinecap="round"
+//                   strokeLinejoin="round"
+//                   d="M5 13l4 4L19 7"
+//                 />
+//               </svg>
+//             )}
+//           </motion.div>
+//         </AnimatePresence>
+//       </Button>
+//     </>
+//   );
+// }
