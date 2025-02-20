@@ -31,6 +31,17 @@ import { useMainStore } from "~/stores/MainStore";
 import { formatPrice } from "~/utils/formatters/formatPrice";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 
+import { STIX_Two_Text } from "next/font/google";
+const stix = STIX_Two_Text({
+  subsets: ["latin"],
+});
+
+import { Charis_SIL } from "next/font/google";
+const charis = Charis_SIL({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";
 
@@ -196,7 +207,7 @@ function Menu() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:min-h-[calc(100dvh-7rem)]"
+      className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem)]"
     >
       {/* Hero */}
       <div
@@ -227,7 +238,7 @@ function Menu() {
           <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-offwhite p-2 shadow-heroContainer tablet:!flex">
             <div className="baseFlex gap-2 font-semibold text-primary tablet:p-2 tablet:text-xl desktop:text-2xl">
               <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
-              <h1>Menu</h1>
+              <h1 className={`${charis.className}`}>Menu</h1>
               <SideAccentSwirls className="h-5 fill-primary" />
             </div>
           </div>
@@ -248,7 +259,7 @@ function Menu() {
         <div className="baseFlex z-10 rounded-md bg-offwhite p-2 shadow-heroContainer tablet:hidden">
           <div className="baseFlex gap-2 p-2 text-xl font-semibold text-primary tablet:px-8 tablet:py-3 tablet:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary" />
-            <h1>Menu</h1>
+            <h1 className={`${charis.className}`}>Menu</h1>
             <SideAccentSwirls className="h-4 fill-primary" />
           </div>
         </div>
@@ -261,7 +272,7 @@ function Menu() {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.5 }}
         // bg is background color of the <body>, 1% off from what bg-offwhite is
-        className="baseFlex sticky left-0 top-24 z-10 size-full h-16 w-full overflow-x-hidden bg-body shadow-lg tablet:top-28 tablet:h-16 tablet:w-3/4 tablet:shadow-none"
+        className="baseFlex sticky left-0 top-20 z-10 size-full h-16 w-full overflow-x-hidden bg-body shadow-lg tablet:top-24 tablet:h-16 tablet:w-3/4 tablet:shadow-none"
       >
         <Carousel
           setApi={setStickyCategoriesApi}

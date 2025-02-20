@@ -28,9 +28,20 @@ import { Separator } from "~/components/ui/separator";
 import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import { Button } from "../ui/button";
 import classes from "./DesktopHeader.module.css";
+import { STIX_Two_Text } from "next/font/google";
+import { Charis_SIL } from "next/font/google";
 
 import StaticLotus from "~/components/ui/StaticLotus";
 import outsideOfRestaurant from "/public/exterior/one.webp";
+
+const stix = STIX_Two_Text({
+  subsets: ["latin"],
+});
+
+const charis = Charis_SIL({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
 
 function DesktopHeader() {
   const { asPath } = useRouter();
@@ -40,28 +51,23 @@ function DesktopHeader() {
   return (
     <nav
       id="header"
-      className={`${classes.desktopHeader} sticky left-0 top-0 z-50 grid h-28 w-full bg-offwhite shadow-md
+      className={`${classes.desktopHeader} sticky left-0 top-0 z-50 grid h-24 w-full bg-offwhite shadow-md
       `}
     >
       <Button variant="text" asChild>
-        <Link
-          href={"/"}
-          className={`${classes.logo ?? ""} mr-4 !size-[55px] justify-self-start !p-0`}
-        >
-          {/* <p className="text-3xl font-semibold text-primary">Khue&apos;s</p> */}
-          <Image
-            src={"/logos/logo.svg"}
-            alt={"Khue's logo"}
-            priority
-            width={55}
-            height={55}
-            className="!size-[55px]"
-          />
+        <Link href={"/"} className={`${classes.logo ?? ""} mr-4 !px-0 !py-8`}>
+          <div className="baseVertFlex gap-0">
+            <StaticLotus className="size-10 fill-primary" />
+
+            <p className={`${stix.className} text-lg leading-5 text-black`}>
+              KHUE&apos;S
+            </p>
+          </div>
         </Link>
       </Button>
 
       <div
-        className={`${classes.mainLinks} baseFlex w-full !justify-start gap-2 2xl:gap-4`}
+        className={`${classes.mainLinks} ${charis.className} baseFlex w-full !justify-start gap-2`}
       >
         <Button
           variant={asPath.includes("/menu") ? "activeLink" : "link"}

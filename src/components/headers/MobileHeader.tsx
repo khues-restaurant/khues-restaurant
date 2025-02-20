@@ -31,6 +31,23 @@ import StaticLotus from "~/components/ui/StaticLotus";
 import { useToast } from "~/components/ui/use-toast";
 import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 
+import { Noto_Sans } from "next/font/google";
+const notoSans = Noto_Sans({
+  subsets: ["latin"],
+  display: "swap",
+});
+
+import { STIX_Two_Text } from "next/font/google";
+const stix = STIX_Two_Text({
+  subsets: ["latin"],
+});
+
+import { Charis_SIL } from "next/font/google";
+const charis = Charis_SIL({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
 import outsideOfRestaurant from "/public/exterior/one.webp";
 
 const linkContainer = {
@@ -84,19 +101,17 @@ function MobileHeader() {
   return (
     <nav
       id="header"
-      className="baseFlex sticky left-0 top-0 z-50 h-24 w-full !justify-between bg-offwhite p-2 shadow-md"
+      className="baseFlex sticky left-0 top-0 z-50 h-20 w-full !justify-between bg-offwhite p-2 shadow-md"
     >
       <Button variant="text" asChild>
-        <Link href={"/"} className="ml-3 !px-0 !py-6">
-          {/* <p className="text-2xl font-semibold text-primary">Khue&apos;s</p> */}
-          <Image
-            src={"/logos/logo.svg"}
-            alt={"Khue's logo"}
-            priority
-            width={45}
-            height={45}
-            className="!size-[45px]"
-          />
+        <Link href={"/"} className={`ml-3 !px-0 !py-8`}>
+          <div className="baseVertFlex gap-0">
+            <StaticLotus className="size-10 fill-primary" />
+
+            <p className={`${stix.className} text-lg leading-4 text-black`}>
+              KHUE&apos;S
+            </p>
+          </div>
         </Link>
       </Button>
 
@@ -133,18 +148,20 @@ function MobileHeader() {
               ></span>
             </Button>
           </SheetTrigger>
-          <SheetContent className="baseVertFlex !h-dvh !justify-between gap-0 !overflow-auto p-6">
+          <SheetContent
+            className={`${charis.className} baseVertFlex !h-dvh !justify-between gap-0 !overflow-auto p-6`}
+          >
             <VisuallyHidden>
               <DialogTitle>Navigation menu</DialogTitle>
               <DialogDescription>Our navigation menu</DialogDescription>
             </VisuallyHidden>
 
-            <div className="baseVertFlex w-full !justify-start gap-2 overflow-y-auto pt-12">
+            <div className="baseVertFlex w-full !justify-start gap-2 overflow-y-auto">
               <motion.div
                 variants={linkContainer}
                 initial="hidden"
                 animate="visible"
-                className="baseVertFlex w-full !justify-start gap-4 overflow-x-hidden"
+                className="baseVertFlex  w-full !justify-start gap-4 overflow-x-hidden pt-12"
               >
                 <motion.div variants={linkVariants}>
                   <Button
@@ -233,7 +250,9 @@ function MobileHeader() {
                       <AccordionTrigger className="baseFlex py-2 text-xl text-primary !no-underline">
                         Hours & Location
                       </AccordionTrigger>
-                      <AccordionContent className="pt-2">
+                      <AccordionContent
+                        className={`${notoSans.className} pr-1 pt-2`}
+                      >
                         <div className="baseVertFlex !items-start gap-8 rounded-md border bg-offwhite p-4 shadow-sm">
                           <div className="baseVertFlex !items-start gap-4">
                             <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
@@ -341,12 +360,12 @@ function MobileHeader() {
                                   asChild
                                 >
                                   <a
-                                    href="https://facebook.com"
+                                    href="https://maps.app.goo.gl/AtBZUUydNtVvxR7e9"
                                     target="_blank"
                                     rel="noreferrer"
                                     className="my-2 whitespace-normal text-primary supports-[text-wrap]:text-wrap"
                                   >
-                                    799 University Ave W, St Paul, MN 55104
+                                    693 Raymond Ave, St Paul, MN 55114
                                   </a>
                                 </Button>
                               </div>

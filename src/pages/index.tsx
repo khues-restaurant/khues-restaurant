@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { MdOutlineMoneyOff } from "react-icons/md";
 import { BsSpeedometer2 } from "react-icons/bs";
 import { TfiReceipt } from "react-icons/tfi";
+import { Clock, MapPin } from "lucide-react";
 import { Parallax, ParallaxProvider } from "react-scroll-parallax";
 import WideFancySwirls from "~/components/ui/wideFancySwirls";
 import { HiOutlineNewspaper } from "react-icons/hi2";
@@ -15,6 +16,7 @@ import {
   type CarouselApi,
   CarouselItem,
 } from "~/components/ui/carousel";
+import { IoCalendarOutline } from "react-icons/io5";
 import { Separator } from "~/components/ui/separator";
 import { IoChatbox } from "react-icons/io5";
 import { FaPhone } from "react-icons/fa6";
@@ -56,14 +58,13 @@ import masonryInteriorTwo from "/public/interior/two.webp";
 import masonryInteriorThree from "/public/interior/three.webp";
 import masonryInteriorFour from "/public/interior/four.webp";
 import masonryInteriorFive from "/public/interior/five.webp";
-import { api } from "~/utils/api";
-import useGetUserId from "~/hooks/useGetUserId";
 
-interface Home {
-  ourFavoriteMenuItems: FullMenuItem[];
-}
+// interface Home {
+//   ourFavoriteMenuItems: FullMenuItem[];
+// }
 
-export default function Home({ ourFavoriteMenuItems }: Home) {
+export default function Home() {
+  // { ourFavoriteMenuItems }: Home
   const {
     chatIsOpen,
     setChatIsOpen,
@@ -196,12 +197,12 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:min-h-[calc(100dvh-7rem)]"
+      className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem)]"
     >
       {/* Hero */}
       <div
         ref={mobileHeroRef}
-        className="baseVertFlex relative h-[calc(100svh-6rem)] w-full gap-4 p-4 md:!hidden tablet:h-[calc(100svh-7rem)]"
+        className="baseVertFlex relative h-[calc(100svh-5rem)] w-full gap-4 p-4 md:!hidden tablet:h-[calc(100svh-6rem)]"
       >
         <div className="relative grid size-full grid-cols-3 grid-rows-1 gap-4">
           {/* top left */}
@@ -299,6 +300,16 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                   />
                 </Link>
               </Button>
+
+              <Button size={"lg"} variant={"outline"} asChild>
+                <Link
+                  href="/order"
+                  className="baseFlex mt-2 w-[186px] gap-2 !px-4 shadow-md"
+                >
+                  Make a reservation
+                  <IoCalendarOutline className="size-4 shrink-0" />
+                </Link>
+              </Button>
             </div>
           </section>
         </motion.div>
@@ -354,7 +365,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
         </div>
       </div>
 
-      <div className="baseFlex relative !hidden h-[calc(100svh-6rem)] w-full p-4 md:!flex tablet:h-[calc(100svh-7rem)]">
+      <div className="baseFlex relative !hidden h-[calc(100svh-5rem)] w-full p-4 md:!flex tablet:h-[calc(100svh-6rem)]">
         <div className="relative grid size-full grid-cols-3 grid-rows-3 gap-4">
           {/* top left */}
           <motion.div
@@ -430,26 +441,54 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                 <h1 className="text-3xl font-bold text-stone-800 tablet:text-4xl">
                   Welcome to Khue&apos;s
                 </h1>
-                <p className="w-72 text-xl text-stone-500 tablet:text-2xl">
+                <p className=" text-xl text-stone-500 tablet:text-2xl">
                   A modern take on classic Vietnamese cuisine.
                 </p>
 
-                <Button size={"lg"} asChild>
-                  <Link
-                    href="/order"
-                    className="baseFlex mt-6 gap-2 !px-4 !py-6 !text-lg shadow-md "
-                  >
-                    <SideAccentSwirls
-                      delay={1.6}
-                      className="h-4 scale-x-[-1] fill-offwhite"
-                    />
-                    Order now
-                    <SideAccentSwirls
-                      delay={1.6}
-                      className="h-4 fill-offwhite"
-                    />
-                  </Link>
-                </Button>
+                <div className="baseFlex mt-6 gap-4">
+                  <Button size={"lg"} asChild>
+                    <Link
+                      href="/order"
+                      className="baseFlex gap-2 !px-4 !py-6 !text-lg shadow-md"
+                    >
+                      <SideAccentSwirls
+                        delay={1.6}
+                        className="h-4 scale-x-[-1] fill-offwhite"
+                      />
+                      Order now
+                      <SideAccentSwirls
+                        delay={1.6}
+                        className="h-4 fill-offwhite"
+                      />
+                    </Link>
+                  </Button>
+
+                  <Button size={"lg"} variant={"outline"} asChild>
+                    <Link
+                      href="/order"
+                      className="baseFlex gap-2 !px-8 !py-6 !text-lg shadow-sm"
+                    >
+                      Make a reservation
+                      <IoCalendarOutline />
+                    </Link>
+                  </Button>
+                </div>
+
+                <div className="baseFlex mt-4 gap-8">
+                  <div className="baseFlex gap-2">
+                    <Clock className="size-5 text-primary" />
+                    <p className="text-sm text-stone-500">
+                      Open 4:30pm - 9:30pm Wed-Sat
+                    </p>
+                  </div>
+
+                  <div className="baseFlex gap-2">
+                    <MapPin className="size-5 text-primary" />
+                    <p className="text-sm text-stone-500">
+                      St. Anthony Park, MN
+                    </p>
+                  </div>
+                </div>
               </div>
             </section>
           </motion.div>
@@ -510,7 +549,7 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
         <StaticLotus className="absolute -bottom-8 -left-8 size-24 rotate-[45deg] fill-primary/50 " />
 
         <div className="baseFlex gap-3 rounded-md rounded-t-none border border-t-0 bg-offwhite/40 p-2 px-8 font-medium shadow-sm tablet:text-xl">
-          <HiOutlineNewspaper />
+          <HiOutlineNewspaper className="size-5" />
           Find us on
         </div>
         <Carousel
@@ -910,13 +949,14 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
               <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
 
               <p className="text-lg font-medium leading-6">
-                Planning a birthday dinner or get together with your friends?
+                Celebrate with Us!
               </p>
 
               <p className="mt-4">
-                Secure your spot for larger parties. For parties of 4 or less,
-                reservations are usually not needed. However, to guarantee your
-                seats for larger groups, please get in touch with us.
+                Whether it&apos;s a birthday dinner or a casual catch-up,
+                we&apos;re ready to host. Smaller parties are generally walk-in
+                friendly, however we recommend booking ahead for larger groups.
+                Reserve now and let us take care of the rest!
               </p>
 
               <div className="baseVertFlex mt-8 w-full gap-4">
@@ -924,20 +964,8 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                   className="baseFlex gap-2"
                   onClick={() => setChatIsOpen(true)}
                 >
-                  Send us a message
-                  <IoChatbox className="size-4 drop-shadow-md" />
-                </Button>
-
-                <Separator
-                  orientation="vertical"
-                  className="mt-2 h-[1px] w-1/2 bg-stone-400"
-                />
-
-                <Button variant="link" className="h-8 px-1" asChild>
-                  <a href="tel:+1234567890" className="baseFlex gap-2">
-                    <FaPhone size={"0.75rem"} />
-                    (234) 567-8900
-                  </a>
+                  Make a reservation
+                  <IoCalendarOutline className="size-4 drop-shadow-md" />
                 </Button>
               </div>
             </div>
@@ -949,13 +977,14 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
               <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
 
               <p className="text-left text-lg font-medium">
-                Planning a birthday dinner or get together with your friends?
+                Celebrate with Us!
               </p>
 
               <p className="mt-2 text-left">
-                Secure your spot for larger parties. For parties of 4 or less,
-                reservations are usually not needed. However, to guarantee your
-                seats for larger groups, please get in touch with us.
+                Whether it&apos;s a birthday dinner or a casual catch-up,
+                we&apos;re ready to host. Smaller parties are generally walk-in
+                friendly, however we recommend booking ahead for larger groups.
+                Reserve now and let us take care of the rest!
               </p>
 
               <div className="baseFlex mt-8 gap-4">
@@ -963,20 +992,8 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                   className="baseFlex gap-2"
                   onClick={() => setChatIsOpen(!chatIsOpen)}
                 >
-                  Send us a message
-                  <IoChatbox className="size-4 drop-shadow-md" />
-                </Button>
-
-                <Separator
-                  orientation="vertical"
-                  className="h-6 w-[1px] bg-stone-400"
-                />
-
-                <Button variant="link" className="h-8 px-1" asChild>
-                  <a href="tel:+1234567890" className="baseFlex gap-2">
-                    <FaPhone size={"0.75rem"} />
-                    (234) 567-8900
-                  </a>
+                  Make a reservation
+                  <IoCalendarOutline className="size-4 drop-shadow-md" />
                 </Button>
               </div>
             </div>
@@ -1102,11 +1119,10 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
                       key={menuItem.id}
                       className="baseVertFlex relative basis-full gap-4 rounded-md p-4 px-6 md:basis-1/2 xl:basis-1/4"
                     >
-                      {/* <OurFavoriteMenuItemCard
+                      <OurFavoriteMenuItemCard
                         menuItem={menuItem}
-                        user={user}
-                      /> */}
-                      todo
+                        user={null}
+                      />
                     </CarouselItem>
                   ))}
                 </CarouselContent>
@@ -1163,185 +1179,381 @@ export default function Home({ ourFavoriteMenuItems }: Home) {
   );
 }
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
-  const prisma = new PrismaClient();
+// export const getStaticProps: GetStaticProps = async (ctx) => {
+//   const prisma = new PrismaClient();
 
-  const ourFavoriteMenuItems = await prisma.menuItem.findMany({
-    where: {
-      isChefsChoice: true,
-    },
-    include: {
-      activeDiscount: true,
-      customizationCategories: {
-        include: {
-          customizationCategory: {
-            include: {
-              customizationChoices: {
-                orderBy: {
-                  listOrder: "asc",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    orderBy: {
-      listOrder: "asc",
-    },
-  });
-
-  return {
-    props: {
-      ourFavoriteMenuItems,
-    },
-  };
-};
-
-// interface OurFavoriteMenuItemCard {
-//   menuItem: FullMenuItem;
-//   user: User | null | undefined;
-// }
-//
-// function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
-//   const { orderDetails, getPrevOrderDetails, setPrevOrderDetails } =
-//     useMainStore((state) => ({
-//       orderDetails: state.orderDetails,
-//       getPrevOrderDetails: state.getPrevOrderDetails,
-//       setPrevOrderDetails: state.setPrevOrderDetails,
-//     }));
-
-//   const { updateOrder } = useUpdateOrder();
-
-//   const { toast, dismiss: dismissToasts } = useToast();
-
-//   const [addToOrderText, setAddToOrderText] = useState("Add to order");
-
-//   return (
-//     <>
-//       <Image
-//         src={"/menuItems/sampleImage.webp"}
-//         alt={`${menuItem.name} at Khue's in St. Paul`}
-//         width={160}
-//         height={160}
-//         className="select-none self-center rounded-md drop-shadow-md tablet:drop-shadow-lg"
-//       />
-//       <p className="select-none font-semibold">{menuItem.name}</p>
-//       <p className="line-clamp-3 select-none text-center text-sm">
-//         {menuItem.description}
-//       </p>
-//       <Button
-//         disabled={!menuItem.available || addToOrderText === "Added to order"}
-//         className="w-full select-none"
-//         onClick={async () => {
-//           setAddToOrderText("Added to order");
-
-//           // set prev order details so we can revert if necessary
-//           // with toast's undo button
-//           setPrevOrderDetails(orderDetails);
-
-//           const pluralize = (await import("pluralize")).default;
-//           const isPlural = pluralize.isPlural(menuItem.name);
-//           const contextAwarePlural = isPlural ? "were" : "was";
-
-//           toast({
-//             description: `${menuItem.name} ${contextAwarePlural} added to your order.`,
-//             action: (
-//               <ToastAction
-//                 altText={`Undo the addition of ${menuItem.name} to your order.`}
-//                 onClick={() => {
-//                   updateOrder({
-//                     newOrderDetails: getPrevOrderDetails(),
-//                   });
-//                 }}
-//               >
-//                 Undo
-//               </ToastAction>
-//             ),
-//           });
-
-//           // directly add to order w/ defaults + trigger toast notification
-
-//           updateOrder({
-//             newOrderDetails: {
-//               ...orderDetails,
-//               items: [
-//                 ...orderDetails.items,
-//                 {
-//                   id:
-//                     orderDetails.items.length === 0
-//                       ? 0
-//                       : orderDetails.items.at(-1)!.id + 1,
-//                   itemId: menuItem.id,
-//                   name: menuItem.name,
-//                   customizations: getDefaultCustomizationChoices(menuItem),
-//                   specialInstructions: "",
-//                   includeDietaryRestrictions:
-//                     user?.autoApplyDietaryRestrictions ?? false,
-//                   quantity: 1,
-//                   price: menuItem.price,
-//                   isChefsChoice: menuItem.isChefsChoice,
-//                   isAlcoholic: menuItem.isAlcoholic,
-//                   isVegetarian: menuItem.isVegetarian,
-//                   isVegan: menuItem.isVegan,
-//                   isGlutenFree: menuItem.isGlutenFree,
-//                   showUndercookedOrRawDisclaimer:
-//                     menuItem.showUndercookedOrRawDisclaimer,
-//                   hasImageOfItem: menuItem.hasImageOfItem,
-//                   discountId: menuItem.activeDiscount?.id ?? null,
-//                   birthdayReward: false,
-//                   pointReward: false,
+//   const ourFavoriteMenuItems = await prisma.menuItem.findMany({
+//     where: {
+//       isChefsChoice: true,
+//     },
+//     include: {
+//       activeDiscount: true,
+//       customizationCategories: {
+//         include: {
+//           customizationCategory: {
+//             include: {
+//               customizationChoices: {
+//                 orderBy: {
+//                   listOrder: "asc",
 //                 },
-//               ],
+//               },
 //             },
-//           });
+//           },
+//         },
+//       },
+//     },
+//     orderBy: {
+//       listOrder: "asc",
+//     },
+//   });
 
-//           setTimeout(() => {
-//             setAddToOrderText("Add to order");
-//           }, 1500);
-//         }}
-//       >
-//         <AnimatePresence mode={"popLayout"} initial={false}>
-//           <motion.div
-//             key={`${menuItem.id}-${addToOrderText}`}
-//             layout
-//             // whileTap={{ scale: 0.95 }}
-//             initial={{ opacity: 0, y: -20 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             exit={{ opacity: 0, y: 20 }}
-//             transition={{
-//               duration: 0.25,
-//             }}
-//             className="baseFlex w-[122.75px] gap-2"
-//           >
-//             {addToOrderText === "Add to order" && "Add to order"}
+//   return {
+//     props: {
+//       ourFavoriteMenuItems,
+//     },
+//   };
+// };
 
-//             {addToOrderText === "Added to order" && (
-//               <svg
-//                 fill="none"
-//                 viewBox="0 0 24 24"
-//                 stroke="currentColor"
-//                 strokeWidth={2}
-//                 className="size-6 text-offwhite"
-//               >
-//                 <motion.path
-//                   initial={{ pathLength: 0 }}
-//                   animate={{ pathLength: 1 }}
-//                   transition={{
-//                     delay: 0.2,
-//                     type: "tween",
-//                     ease: "easeOut",
-//                     duration: 0.3,
-//                   }}
-//                   strokeLinecap="round"
-//                   strokeLinejoin="round"
-//                   d="M5 13l4 4L19 7"
-//                 />
-//               </svg>
-//             )}
-//           </motion.div>
-//         </AnimatePresence>
-//       </Button>
-//     </>
-//   );
-// }
+interface OurFavoriteMenuItemCard {
+  menuItem: FullMenuItem;
+  user: User | null | undefined;
+}
+
+function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
+  // const { orderDetails, getPrevOrderDetails, setPrevOrderDetails } =
+  //   useMainStore((state) => ({
+  //     orderDetails: state.orderDetails,
+  //     getPrevOrderDetails: state.getPrevOrderDetails,
+  //     setPrevOrderDetails: state.setPrevOrderDetails,
+  //   }));
+
+  // const { updateOrder } = useUpdateOrder();
+
+  // const { toast, dismiss: dismissToasts } = useToast();
+
+  const [addToOrderText, setAddToOrderText] = useState("Add to order");
+
+  return (
+    <>
+      <Image
+        src={"/menuItems/sampleImage.webp"}
+        alt={`${menuItem.name} at Khue's in St. Paul`}
+        width={160}
+        height={160}
+        className="select-none self-center rounded-md drop-shadow-md tablet:drop-shadow-lg"
+      />
+      <p className="select-none font-semibold">{menuItem.name}</p>
+      <p className="line-clamp-3 select-none text-center text-sm">
+        {menuItem.description}
+      </p>
+      <Button
+        disabled={!menuItem.available || addToOrderText === "Added to order"}
+        className="w-full select-none"
+      >
+        <AnimatePresence mode={"popLayout"} initial={false}>
+          <motion.div
+            key={`${menuItem.id}-${addToOrderText}`}
+            layout
+            // whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{
+              duration: 0.25,
+            }}
+            className="baseFlex w-[122.75px] gap-2"
+          >
+            {addToOrderText === "Add to order" && "Add to order"}
+
+            {addToOrderText === "Added to order" && (
+              <svg
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+                className="size-6 text-offwhite"
+              >
+                <motion.path
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{
+                    delay: 0.2,
+                    type: "tween",
+                    ease: "easeOut",
+                    duration: 0.3,
+                  }}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </Button>
+    </>
+  );
+}
+
+const ourFavoriteMenuItems = [
+  {
+    id: "702b5c80-7d63-43ef-a80f-948c64c21575",
+    createdAt: "2024-05-15T21:32:32.217Z",
+    name: "Stir-fried String Beans",
+    description:
+      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+    price: 1400,
+    altPrice: null,
+    available: true,
+    discontinued: false,
+    listOrder: 15,
+    hasImageOfItem: true,
+    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+    activeDiscountId: null,
+    isChefsChoice: false,
+    isAlcoholic: false,
+    isVegetarian: false,
+    isVegan: false,
+    isGlutenFree: false,
+    showUndercookedOrRawDisclaimer: false,
+    pointReward: false,
+    birthdayReward: false,
+    reviews: null,
+    activeDiscount: null,
+    customizationCategories: [],
+  },
+  {
+    id: "2315135f-19f4-4ede-9af7-0ffccadd2557",
+    createdAt: "2024-05-15T21:28:07.340Z",
+    name: "Chili Crunch Wings",
+    description:
+      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+    price: 1200,
+    altPrice: null,
+    available: true,
+    discontinued: false,
+    listOrder: 28,
+    hasImageOfItem: true,
+    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+    activeDiscountId: null,
+    isChefsChoice: false,
+    isAlcoholic: false,
+    isVegetarian: false,
+    isVegan: false,
+    isGlutenFree: false,
+    showUndercookedOrRawDisclaimer: false,
+    pointReward: false,
+    birthdayReward: false,
+    reviews: null,
+    activeDiscount: null,
+    customizationCategories: [],
+  },
+  {
+    id: "77207783-b518-45f5-b43d-9c058dc0994f",
+    createdAt: "2024-05-15T21:32:32.217Z",
+    name: "Fresh Bread",
+    description:
+      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+    price: 1200,
+    altPrice: null,
+    available: true,
+    discontinued: false,
+    listOrder: 12,
+    hasImageOfItem: true,
+    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+    activeDiscountId: null,
+    isChefsChoice: false,
+    isAlcoholic: false,
+    isVegetarian: false,
+    isVegan: false,
+    isGlutenFree: false,
+    showUndercookedOrRawDisclaimer: false,
+    pointReward: false,
+    birthdayReward: false,
+    reviews: null,
+    activeDiscount: null,
+    customizationCategories: [],
+  },
+  {
+    id: "7b0aa9eb-2a87-48cd-8c98-67b3f5a4b74f",
+    createdAt: "2024-02-21T03:51:47.000Z",
+    name: "Vietnamese Bar Nuts",
+    description:
+      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+    price: 1200,
+    altPrice: null,
+    available: true,
+    discontinued: false,
+    listOrder: 1,
+    hasImageOfItem: true,
+    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+    activeDiscountId: null,
+    isChefsChoice: false,
+    isAlcoholic: false,
+    isVegetarian: true,
+    isVegan: false,
+    isGlutenFree: true,
+    showUndercookedOrRawDisclaimer: false,
+    pointReward: true,
+    birthdayReward: false,
+    reviews: null,
+    activeDiscount: null,
+    customizationCategories: [],
+  },
+  {
+    id: "bca28f28-839f-4891-a147-95176dec9341",
+    createdAt: "2024-05-15T11:32:32.000Z",
+    name: "Crispy Pork Bao",
+    description:
+      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+    price: 1400,
+    altPrice: null,
+    available: true,
+    discontinued: false,
+    listOrder: 14,
+    hasImageOfItem: true,
+    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+    activeDiscountId: null,
+    isChefsChoice: false,
+    isAlcoholic: false,
+    isVegetarian: false,
+    isVegan: false,
+    isGlutenFree: false,
+    showUndercookedOrRawDisclaimer: false,
+    pointReward: false,
+    birthdayReward: false,
+    reviews: null,
+    activeDiscount: null,
+    customizationCategories: [],
+  },
+  {
+    id: "cab3e737-7b07-423f-9d9c-8bce07a9e3e2",
+    createdAt: "2024-02-20T15:53:09.000Z",
+    name: "Cream Cheese Wontons",
+    description:
+      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+    price: 1100,
+    altPrice: null,
+    available: true,
+    discontinued: false,
+    listOrder: 2,
+    hasImageOfItem: true,
+    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+    activeDiscountId: null,
+    isChefsChoice: true,
+    isAlcoholic: false,
+    isVegetarian: false,
+    isVegan: true,
+    isGlutenFree: true,
+    showUndercookedOrRawDisclaimer: false,
+    pointReward: true,
+    birthdayReward: false,
+    reviews: null,
+    activeDiscount: null,
+    customizationCategories: [],
+  },
+  {
+    id: "d531e6f4-7625-46c4-9fd2-c30d912c9025",
+    createdAt: "2024-02-21T15:53:33.000Z",
+    name: "Egg Rolls",
+    description:
+      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+    price: 800,
+    altPrice: null,
+    available: true,
+    discontinued: false,
+    listOrder: 3,
+    hasImageOfItem: true,
+    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+    activeDiscountId: null,
+    isChefsChoice: false,
+    isAlcoholic: false,
+    isVegetarian: false,
+    isVegan: false,
+    isGlutenFree: false,
+    showUndercookedOrRawDisclaimer: false,
+    pointReward: false,
+    birthdayReward: false,
+    reviews: null,
+    activeDiscount: null,
+    customizationCategories: [],
+  },
+  {
+    id: "d6fce425-ebd9-4022-99a4-babe0a5a81b1",
+    createdAt: "2024-05-15T21:32:32.217Z",
+    name: "Chicken Salad",
+    description:
+      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+    price: 1400,
+    altPrice: null,
+    available: true,
+    discontinued: false,
+    listOrder: 13,
+    hasImageOfItem: true,
+    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+    activeDiscountId: null,
+    isChefsChoice: false,
+    isAlcoholic: false,
+    isVegetarian: false,
+    isVegan: false,
+    isGlutenFree: false,
+    showUndercookedOrRawDisclaimer: false,
+    pointReward: false,
+    birthdayReward: false,
+    reviews: null,
+    activeDiscount: null,
+    customizationCategories: [],
+  },
+  {
+    id: "f61bf41d-ef94-428f-8a27-e979d8218690",
+    createdAt: "2024-05-15T21:32:32.217Z",
+    name: "Fried Shrimp",
+    description:
+      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+    price: 1200,
+    altPrice: null,
+    available: true,
+    discontinued: false,
+    listOrder: 11,
+    hasImageOfItem: true,
+    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+    activeDiscountId: null,
+    isChefsChoice: false,
+    isAlcoholic: false,
+    isVegetarian: false,
+    isVegan: false,
+    isGlutenFree: false,
+    showUndercookedOrRawDisclaimer: false,
+    pointReward: false,
+    birthdayReward: false,
+    reviews: null,
+    activeDiscount: null,
+    customizationCategories: [],
+  },
+  {
+    id: "f651ed75-a596-4a9f-8ba8-6dafd8ddd9de",
+    createdAt: "2024-05-15T21:32:32.217Z",
+    name: "Asian Fries",
+    description:
+      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+    price: 1200,
+    altPrice: null,
+    available: true,
+    discontinued: false,
+    listOrder: 10,
+    hasImageOfItem: true,
+    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+    activeDiscountId: null,
+    isChefsChoice: false,
+    isAlcoholic: false,
+    isVegetarian: false,
+    isVegan: false,
+    isGlutenFree: false,
+    showUndercookedOrRawDisclaimer: false,
+    pointReward: false,
+    birthdayReward: false,
+    reviews: null,
+    activeDiscount: null,
+    customizationCategories: [],
+  },
+];

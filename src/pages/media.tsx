@@ -3,6 +3,17 @@ import Image from "next/image";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
 import { Button } from "~/components/ui/button";
 
+import { STIX_Two_Text } from "next/font/google";
+const stix = STIX_Two_Text({
+  subsets: ["latin"],
+});
+
+import { Charis_SIL } from "next/font/google";
+const charis = Charis_SIL({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
 import kare11InTheKitchen from "/public/media/kare11InTheKitchen.jpg";
 import kare11MothersDay from "/public/media/kare11MothersDay.jpg";
 import starTribune from "/public/media/starTribune.jpg";
@@ -20,7 +31,7 @@ function Media() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex min-h-[calc(100dvh-6rem)] w-full !justify-start tablet:min-h-[calc(100dvh-7rem)]"
+      className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem)]"
     >
       {/* Hero */}
 
@@ -69,7 +80,7 @@ function Media() {
         <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-heroContainer tablet:!flex">
           <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
-            <h1>Media</h1>
+            <h1 className={`${charis.className}`}>Media</h1>
             <SideAccentSwirls className="h-4 fill-primary desktop:h-5" />
           </div>
         </div>
