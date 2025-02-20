@@ -15,7 +15,7 @@ const buttonVariants = cva(
         outline: "border border-input bg-offwhite",
         secondary: "bg-secondary text-secondary-foreground",
         ghost: "",
-        link: "underlineAnimation text-primary",
+        link: "underlineAnimation text-primary tracking-wide",
         activeLink: "activeUnderline text-primary font-semibold",
         underline: "text-primary underline underline-offset-2",
         text: "text-neutral-400",
