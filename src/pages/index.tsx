@@ -466,7 +466,7 @@ export default function Home() {
                   <Button size={"lg"} variant={"outline"} asChild>
                     <Link
                       href="/order"
-                      className="baseFlex gap-2 !px-8 !py-6 !text-lg shadow-sm"
+                      className="baseFlex gap-3 !px-8 !py-6 !text-lg shadow-sm"
                     >
                       Make a reservation
                       <IoCalendarOutline />
