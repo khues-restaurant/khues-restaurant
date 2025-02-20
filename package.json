@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
-    "@prisma/client": "^5.18.0",
+    "@prisma/client": "^6.4.1",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-checkbox": "^1.1.1",
@@ -85,7 +85,7 @@
     "postcss": "^8.4.39",
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.5.14",
-    "prisma": "^5.18.0",
+    "prisma": "^6.4.1",
     "tailwindcss": "^3.4.8",
     "typescript": "^5.5.4"
   },
