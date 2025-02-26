@@ -34,6 +34,7 @@ import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTo
 import { STIX_Two_Text } from "next/font/google";
 const stix = STIX_Two_Text({
   subsets: ["latin"],
+  style: ["normal", "italic"],
 });
 
 import { Charis_SIL } from "next/font/google";
@@ -42,8 +43,15 @@ const charis = Charis_SIL({
   weight: ["400", "700"],
 });
 
+import masonryFoodOne from "/public/food/one.jpg";
+import masonryFoodTwo from "/public/food/two.webp";
+import masonryFoodThree from "/public/food/three.jpg";
+import masonryFoodFour from "/public/food/four.png";
+import masonryFoodFive from "/public/food/five.jpg";
+
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";
+import SingleLotusLeaf from "~/components/ui/SingleLotusLeaf";
 
 function Menu() {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -378,12 +386,12 @@ function Menu() {
                 <span>GF</span>-<span>Gluten Free</span>
               </div>
             </div>
-            <p className="text-center text-xs italic text-stone-400 tablet:text-sm">
+            <p className="text-center text-xs italic text-stone-500 tablet:text-sm">
               <span className="not-italic">* </span>
               Consuming raw or undercooked meats, poultry, seafood, shellfish,
               or eggs may increase your risk of foodborne illness.
             </p>
-            <div className="baseFlex w-full gap-2 text-stone-400 ">
+            <div className="baseFlex w-full gap-2 text-stone-500 ">
               <FaWineBottle className="shrink-0 -rotate-45" />
               <p className="text-xs italic tablet:text-sm">
                 All alcoholic beverages must be purchased on-site.
@@ -392,7 +400,7 @@ function Menu() {
           </div>
         </motion.div>
 
-        <Button size={"lg"} asChild>
+        {/* <Button size={"lg"} asChild>
           <Link
             href="/order"
             style={{
@@ -406,7 +414,7 @@ function Menu() {
             Order now
             <SideAccentSwirls className="h-4 fill-offwhite" />
           </Link>
-        </Button>
+        </Button> */}
       </div>
     </motion.div>
   );
@@ -554,45 +562,114 @@ function MenuCategory({
       style={{
         order: listOrder,
       }}
-      className="baseVertFlex w-full scroll-m-48 !items-start gap-4 p-2"
+      className={`baseVertFlex w-full scroll-m-48 !items-start p-2 ${name === "Beverages" || name === "Beer" || name === "Wine" ? "gap-0" : "gap-0 tablet:gap-4"}`}
     >
-      <div className="baseFlex relative w-full rounded-md">
-        <Image
-          src={wideAngleFoodShot}
-          alt={`A wide angle shot of a variety of ${name.toLowerCase()}`}
-          sizes="(max-width: 1000px) 90vw, 75vw"
-          priority={listOrder === 0} // only want the first category to be a priority
-          className="!relative !h-48 w-full rounded-md object-cover shadow-md"
-        />
+      {name === "Beverages" || name === "Beer" || name === "Wine" ? (
+        <>
+          {/* cateogry header */}
+          <div className="baseVertFlex w-full !items-start border-b-2 border-primary">
+            <p
+              className={`${stix.className} baseFlex gap-2 pl-3 text-xl font-medium italic tracking-tight tablet:text-2xl`}
+            >
+              {name}
+            </p>
+          </div>
 
-        <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md bg-offwhite px-4 py-2 shadow-heavyInner tablet:!flex-row tablet:!items-center tablet:gap-4">
-          <p className="ml-1 text-xl font-semibold underline underline-offset-2">
-            {name}
-          </p>
+          {/* wrapping container for each food item in the category */}
+          <div className="grid w-full grid-cols-1 items-start justify-items-center p-1 sm:grid-cols-2 sm:gap-x-8 xl:grid-cols-3 3xl:grid-cols-4">
+            {menuItems.map((item) => (
+              <MenuItemPreview
+                key={item.id}
+                categoryName={name}
+                menuItem={item}
+                activeDiscount={activeDiscount} // TODO: should prob also add ?? item.activeDiscount too right? was giving type error w/ createdAt but 99% sure this should be on there
+                listOrder={item.listOrder}
+              />
+            ))}
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="baseFlex relative h-36 w-full !justify-end overflow-hidden rounded-md bg-offwhite shadow-md tablet:h-48">
+            {/* primary diagonal bg */}
+            <div className="absolute left-0 top-0 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"></div>
 
-          {/* {activeDiscount && (
-            <div className="rewardsGoldBorder baseFlex gap-1 rounded-md bg-primary px-4 py-0.5 text-sm font-medium text-yellow-500">
-              <span>{activeDiscount.name}</span>
-              <span>
-                until {format(activeDiscount.expirationDate, "MM/dd")}
-              </span>
+            <div className="absolute left-[35%] h-full w-[65%] overflow-hidden">
+              <div
+                style={{
+                  filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+                }}
+                className="absolute left-[10%] top-0 h-full w-[100%] tablet:left-[2%] tablet:w-3/4"
+              >
+                <Image
+                  src={masonryFoodOne}
+                  alt={`${name} at Khue's in St. Paul`}
+                  fill
+                  style={{
+                    clipPath: "polygon(0 0, 35% 0, 50% 100%, 15% 100%)",
+                  }}
+                  className="object-cover "
+                />
+              </div>
+
+              <div
+                style={{
+                  filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+                }}
+                className="absolute left-[50%] top-0 h-full w-[100%] tablet:left-[32.5%] tablet:w-3/4"
+              >
+                <Image
+                  src={masonryFoodTwo}
+                  alt={`${name} at Khue's in St. Paul`}
+                  fill
+                  style={{
+                    clipPath: "polygon(0 0, 35% 0, 50% 100%, 15% 100%)",
+                  }}
+                  className="object-cover"
+                />
+              </div>
+
+              <div
+                style={{
+                  filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+                }}
+                className="absolute top-0 hidden h-full w-[100%] tablet:left-[63%] tablet:block tablet:w-3/4"
+              >
+                <Image
+                  src={masonryFoodFour}
+                  alt={`${name} at Khue's in St. Paul`}
+                  fill
+                  style={{
+                    clipPath: "polygon(0 0, 35% 0, 50% 100%, 15% 100%)",
+                  }}
+                  className="object-cover"
+                />
+              </div>
             </div>
-          )} */}
-        </div>
-      </div>
 
-      {/* wrapping container for each food item in the category */}
-      <div className="grid w-full grid-cols-1 items-start justify-items-center p-1 sm:grid-cols-2 sm:gap-8 xl:grid-cols-3 3xl:grid-cols-4">
-        {menuItems.map((item) => (
-          <MenuItemPreview
-            key={item.id}
-            categoryName={name}
-            menuItem={item}
-            activeDiscount={activeDiscount} // TODO: should prob also add ?? item.activeDiscount too right? was giving type error w/ createdAt but 99% sure this should be on there
-            listOrder={item.listOrder}
-          />
-        ))}
-      </div>
+            <div className="baseFlex absolute bottom-4 left-4 gap-4 rounded-md bg-offwhite px-4 py-2">
+              <div
+                className={`${stix.className} baseFlex gap-2 text-xl font-medium italic tracking-tight tablet:text-2xl`}
+              >
+                {name}
+              </div>
+            </div>
+          </div>
+
+          {/* wrapping container for each food item in the category */}
+          <div className="grid w-full grid-cols-1 items-start justify-items-center p-1 sm:grid-cols-2 sm:gap-8 xl:grid-cols-3">
+            {menuItems.map((item) => (
+              <MenuItemPreview
+                key={item.id}
+                categoryName={name}
+                menuItem={item}
+                activeDiscount={activeDiscount} // TODO: should prob also add ?? item.activeDiscount too right? was giving type error w/ createdAt but 99% sure this should be on there
+                listOrder={item.listOrder}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </motion.div>
   );
 }
@@ -739,9 +816,11 @@ function MenuItemPreview({
       style={{
         order: listOrder + 1,
       }}
-      className="relative w-full max-w-96 px-2"
+      className="relative w-full max-w-[400px] px-2"
     >
-      <div className="baseVertFlex size-full !justify-between gap-4 py-1 tablet:py-4">
+      <div
+        className={`${menuItem.description ? "flex-row" : "flex-row"} flex size-full items-center !justify-between gap-4 py-1`}
+      >
         <div className="baseFlex mt-4 w-full gap-4 tablet:mt-0">
           {menuItem.hasImageOfItem && (
             <Image
@@ -753,42 +832,41 @@ function MenuItemPreview({
             />
           )}
 
-          <div className="baseVertFlex size-full !items-start">
-            <div className="baseFlex w-full !justify-between">
-              <div className="baseVertFlex !items-start gap-1">
-                <p className="whitespace-normal text-left text-lg font-medium supports-[text-wrap]:text-wrap ">
-                  <span className="underline underline-offset-2">
-                    {menuItem.name}
-                  </span>
-                  {menuItem.showUndercookedOrRawDisclaimer ? "*" : ""}
-                </p>
-
-                <div className="baseFlex !justify-start gap-1">
-                  {menuItem.isChefsChoice && (
-                    <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
-                      K
-                    </p>
-                  )}
-                  {menuItem.isVegetarian && <SiLeaflet className="size-4" />}
-                  {menuItem.isVegan && <LuVegan className="size-4" />}
-                  {menuItem.isGlutenFree && <p className="text-sm">GF</p>}
-                </div>
-
-                <p className="max-w-72 whitespace-normal text-left text-sm text-stone-400 supports-[text-wrap]:text-wrap">
-                  {menuItem.description}
-                </p>
+          <div className="baseVertFlex w-full !items-start gap-1">
+            <div className="baseFlex w-full !items-baseline !justify-between gap-4">
+              <p className="whitespace-normal text-left font-medium supports-[text-wrap]:text-wrap tablet:text-lg ">
+                <span
+                  className={`${menuItem.description ? "underline underline-offset-2" : ""}`}
+                >
+                  {menuItem.name}
+                </span>
+                {menuItem.showUndercookedOrRawDisclaimer ? "*" : ""}
+              </p>
+              <div>
+                {formatMenuItemPrice(
+                  categoryName,
+                  menuItem,
+                  activeDiscount,
+                  customizationChoices,
+                )}
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="self-end">
-          {formatMenuItemPrice(
-            categoryName,
-            menuItem,
-            activeDiscount,
-            customizationChoices,
-          )}
+            <div className="baseFlex !justify-start gap-1">
+              {menuItem.isChefsChoice && (
+                <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
+                  K
+                </p>
+              )}
+              {menuItem.isVegetarian && <SiLeaflet className="size-4" />}
+              {menuItem.isVegan && <LuVegan className="size-4" />}
+              {menuItem.isGlutenFree && <p className="text-sm">GF</p>}
+            </div>
+
+            {menuItem.description && (
+              <p className="text-sm text-stone-500">{menuItem.description}</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -1430,8 +1508,7 @@ const menuCategories = [
         id: "717349d0-4829-4e4a-98ab-a9e00a67768a",
         createdAt: "2024-02-20T21:56:02.000Z",
         name: "Coke",
-        description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+        description: "",
         price: 300,
         altPrice: null,
         available: true,
@@ -1493,8 +1570,7 @@ const menuCategories = [
         id: "b883736a-314d-4b19-a9e2-582a2a543790",
         createdAt: "2024-02-20T21:57:13.000Z",
         name: "Diet Coke",
-        description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+        description: "",
         price: 300,
         altPrice: null,
         available: true,
@@ -1556,8 +1632,7 @@ const menuCategories = [
         id: "f5adc265-dc7c-47ad-aead-cdad3d111de8",
         createdAt: "2024-02-20T21:56:45.000Z",
         name: "Pepsi",
-        description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+        description: "",
         price: 300,
         altPrice: null,
         available: true,
@@ -1616,11 +1691,10 @@ const menuCategories = [
         ],
       },
       {
-        id: "f5adc265-dc7c-47ad-aead-cdad3d111de8",
+        id: "70fcfc51-cf3d-42ff-8454-e9cbe0a82f42",
         createdAt: "2024-02-20T21:56:45.000Z",
         name: "Diet Pepsi",
-        description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+        description: "",
         price: 300,
         altPrice: null,
         available: true,
@@ -1679,11 +1753,10 @@ const menuCategories = [
         ],
       },
       {
-        id: "f5adc265-dc7c-47ad-aead-cdad3d111de8",
+        id: "9f94ae0c-df69-40a8-9890-50cc96f30f7c",
         createdAt: "2024-02-20T21:56:45.000Z",
         name: "Mountain Dew",
-        description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+        description: "",
         price: 600,
         altPrice: null,
         available: true,
@@ -1742,11 +1815,10 @@ const menuCategories = [
         ],
       },
       {
-        id: "f5adc265-dc7c-47ad-aead-cdad3d111de8",
+        id: "92e8ec25-618f-43e1-8b9e-2f985effe324",
         createdAt: "2024-02-20T21:56:45.000Z",
         name: "Club Soda",
-        description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+        description: "",
         price: 300,
         altPrice: null,
         available: true,
@@ -1805,11 +1877,10 @@ const menuCategories = [
         ],
       },
       {
-        id: "f5adc265-dc7c-47ad-aead-cdad3d111de8",
+        id: "e3a94e81-db5d-49b6-9546-d2e59902f994",
         createdAt: "2024-02-20T21:56:45.000Z",
         name: "Coffee",
-        description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+        description: "",
         price: 200,
         altPrice: null,
         available: true,
@@ -1868,11 +1939,10 @@ const menuCategories = [
         ],
       },
       {
-        id: "f5adc265-dc7c-47ad-aead-cdad3d111de8",
+        id: "ef57412f-c533-4dce-9d96-7355555cf268",
         createdAt: "2024-02-20T21:56:45.000Z",
         name: "Coffee (Decaf)",
-        description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+        description: "",
         price: 200,
         altPrice: null,
         available: true,
@@ -1931,11 +2001,10 @@ const menuCategories = [
         ],
       },
       {
-        id: "f5adc265-dc7c-47ad-aead-cdad3d111de8",
+        id: "74534b64-0f9e-42ca-bb16-cf025d99781a",
         createdAt: "2024-02-20T21:56:45.000Z",
         name: "Water",
-        description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+        description: "",
         price: 200,
         altPrice: null,
         available: true,
@@ -2006,10 +2075,10 @@ const menuCategories = [
     activeDiscount: null,
     menuItems: [
       {
-        id: "92e8ec25-618f-43e1-8b9e-2f985effe324",
+        id: "aaea55ae-8889-4d8a-81b5-0bc48f24a721",
         createdAt: "2024-03-29T16:10:10.000Z",
         name: "Bud Light",
-        description: "Lorem ipsum dolor sit amet, consectetur. (16oz bottle)",
+        description: "",
         price: 600,
         altPrice: null,
         available: true,
@@ -2031,10 +2100,10 @@ const menuCategories = [
         customizationCategories: [],
       },
       {
-        id: "e3a94e81-db5d-49b6-9546-d2e59902f994",
+        id: "dcb19f40-b0d1-4bb1-95aa-60912b76c385",
         createdAt: "2024-03-29T16:09:49.000Z",
         name: "Budweiser",
-        description: "Lorem ipsum dolor sit amet, consectetur. (16oz bottle)",
+        description: "",
         price: 600,
         altPrice: null,
         available: true,
@@ -2056,10 +2125,10 @@ const menuCategories = [
         customizationCategories: [],
       },
       {
-        id: "ef57412f-c533-4dce-9d96-7355555cf268",
+        id: "4a027a04-3fe6-440a-a860-3c0c9e0ef0a0",
         createdAt: "2024-03-29T21:09:27.000Z",
         name: "Coors",
-        description: "Lorem ipsum dolor sit amet, consectetur. (16oz bottle)",
+        description: "",
         price: 600,
         altPrice: null,
         available: true,
@@ -2081,10 +2150,10 @@ const menuCategories = [
         customizationCategories: [],
       },
       {
-        id: "ef57412f-c533-4dce-9d96-7355555cf268",
+        id: "8349fe66-81b0-4d04-8291-4ab60641676d",
         createdAt: "2024-03-29T21:09:27.000Z",
         name: "Coors Light",
-        description: "Lorem ipsum dolor sit amet, consectetur. (16oz bottle)",
+        description: "",
         price: 600,
         altPrice: null,
         available: true,
@@ -2118,10 +2187,10 @@ const menuCategories = [
     activeDiscount: null,
     menuItems: [
       {
-        id: "1e409626-05ae-4404-b089-d7b1e1748b7e",
+        id: "f8779458-2869-4d42-ac11-7770f84cea8b",
         createdAt: "2024-03-29T16:10:53.000Z",
         name: "Red Wine",
-        description: "Lorem ipsum dolor sit amet, consectetur. (48oz bottle)",
+        description: "",
         price: 3500,
         altPrice: 800,
         available: true,
@@ -2143,10 +2212,10 @@ const menuCategories = [
         customizationCategories: [],
       },
       {
-        id: "66f46985-08b3-411c-9896-103cb8092c34",
+        id: "8e3b95a4-d6c5-4020-86a0-e88023076840",
         createdAt: "2024-03-29T16:10:53.000Z",
         name: "White Wine",
-        description: "Lorem ipsum dolor sit amet. (64oz bottle)",
+        description: "",
         price: 3500,
         altPrice: 800,
         available: true,
