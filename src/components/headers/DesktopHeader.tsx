@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { CiCalendarDate } from "react-icons/ci";
+import { Clock, MapPin } from "lucide-react";
 import { HiOutlineInformationCircle } from "react-icons/hi";
 import { IoMdMore } from "react-icons/io";
 import { MdAccessTime } from "react-icons/md";
@@ -78,25 +79,25 @@ function DesktopHeader() {
           </Link>
         </Button>
 
-        <Button
+        {/* <Button
           variant={asPath.includes("/order") ? "activeLink" : "link"}
           asChild
         >
           <Link href={"/order"} className="!text-xl">
             Order
           </Link>
-        </Button>
+        </Button> */}
 
         <Button
           variant={asPath.includes("/reservations") ? "activeLink" : "link"}
           asChild
         >
-          <Link
-            href={"/reservations"}
+          <a
+            href="https://reservations.shift4payments.com/#/1814c327-a884-4b86-bc26-915ce9eadbb8"
             className="block !text-xl smallDesktopHeader:hidden"
           >
             Reservations
-          </Link>
+          </a>
         </Button>
 
         <Button
@@ -186,8 +187,8 @@ function DesktopHeader() {
 
             <div className="baseFlex w-[850px] !items-start">
               <div className="baseVertFlex w-[273px] !items-start gap-2">
-                <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
-                  <MdAccessTime />
+                <div className="baseFlex gap-2 text-lg font-semibold">
+                  <Clock className="size-5" />
                   Hours
                 </div>
                 <div className="baseFlex mt-1 w-full">
@@ -267,8 +268,8 @@ function DesktopHeader() {
 
               <div className="baseVertFlex relative ml-4 !items-start gap-4">
                 <div className="baseVertFlex !items-start gap-2">
-                  <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
-                    <TbLocation />
+                  <div className="baseFlex gap-2 text-lg font-semibold">
+                    <MapPin className="size-5" />
                     Location
                   </div>
                   <p className="w-[536px]">
@@ -279,7 +280,7 @@ function DesktopHeader() {
                   </p>
 
                   <div className="baseFlex gap-2">
-                    <TbLocation className="text-primary" />
+                    <MapPin className="size-5 text-primary" />
 
                     <Button variant={"link"} className="h-8 !p-0" asChild>
                       <a

@@ -284,7 +284,7 @@ export default function Home() {
                 A modern take on classic Vietnamese cuisine.
               </p>
 
-              <Button size={"lg"} asChild>
+              {/* <Button size={"lg"} asChild>
                 <Link
                   href="/order"
                   className="baseFlex mt-4 gap-2 !px-4 shadow-md"
@@ -299,16 +299,34 @@ export default function Home() {
                     className="h-[14px] fill-offwhite"
                   />
                 </Link>
+              </Button> */}
+
+              <Button size={"lg"} asChild>
+                <Link
+                  href="/order"
+                  className="baseFlex mt-4 gap-2 !px-4 shadow-md"
+                >
+                  <SideAccentSwirls
+                    delay={1.6}
+                    className="h-[12px] scale-x-[-1] fill-offwhite"
+                  />
+                  View our menu
+                  <SideAccentSwirls
+                    delay={1.6}
+                    className="h-[12px] fill-offwhite"
+                  />
+                </Link>
               </Button>
 
               <Button size={"lg"} variant={"outline"} asChild>
-                <Link
-                  href="/order"
-                  className="baseFlex mt-2 w-[186px] gap-2 !px-4 shadow-md"
+                <a
+                  href="https://reservations.shift4payments.com/#/1814c327-a884-4b86-bc26-915ce9eadbb8"
+                  // TODO: was 186px width btw
+                  className="baseFlex mt-2 w-[206px] gap-2 !px-4 shadow-md"
                 >
                   Make a reservation
                   <IoCalendarOutline className="size-4 shrink-0" />
-                </Link>
+                </a>
               </Button>
             </div>
           </section>
@@ -448,14 +466,14 @@ export default function Home() {
                 <div className="baseFlex mt-6 gap-4">
                   <Button size={"lg"} asChild>
                     <Link
-                      href="/order"
+                      href="/menu"
                       className="baseFlex gap-2 !px-4 !py-6 !text-lg shadow-md"
                     >
                       <SideAccentSwirls
                         delay={1.6}
                         className="h-4 scale-x-[-1] fill-offwhite"
                       />
-                      Order now
+                      View our menu
                       <SideAccentSwirls
                         delay={1.6}
                         className="h-4 fill-offwhite"
@@ -464,13 +482,13 @@ export default function Home() {
                   </Button>
 
                   <Button size={"lg"} variant={"outline"} asChild>
-                    <Link
-                      href="/order"
+                    <a
+                      href="https://reservations.shift4payments.com/#/1814c327-a884-4b86-bc26-915ce9eadbb8"
                       className="baseFlex gap-3 !px-8 !py-6 !text-lg shadow-sm"
                     >
                       Make a reservation
                       <IoCalendarOutline />
-                    </Link>
+                    </a>
                   </Button>
                 </div>
 
@@ -703,136 +721,6 @@ export default function Home() {
                   className="!relative !size-full rounded-md object-cover"
                 />
               </Parallax>
-            </div>
-          </div>
-
-          {/* "Order directly through us" promo section */}
-          <div className="baseVertFlex w-full max-w-sm overflow-hidden rounded-md border shadow-md tablet:hidden">
-            {/* maybe have stock image of person holding a phone and you would have a proportionally
-                tilted screenshot of the order page showing on their phone? think about it */}
-            <div className="relative h-60 w-full overflow-hidden shadow-md">
-              <Image
-                src={rewardsPromo}
-                alt={"TODO: fill in w/ appropriate alt text"}
-                width={384}
-                className="!relative !top-0 !size-full !h-96 object-cover !pb-32"
-              />
-            </div>
-            <div className="baseVertFlex relative gap-4 overflow-hidden rounded-b-md bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
-              <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
-              <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
-
-              <p className="text-lg font-medium leading-6">
-                Enjoy exclusive benefits when you order direct
-              </p>
-              <div className="baseVertFlex mt-2 !items-start gap-4 pl-1">
-                <div className="baseFlex !items-start gap-4">
-                  <MdOutlineMoneyOff className="size-6 shrink-0" />
-                  <p>Shop our lowest menu prices</p>
-                </div>
-                <div className="baseFlex !items-start gap-4">
-                  <BsSpeedometer2 className="mt-2 size-6 shrink-0" />
-                  <p>
-                    Priority order processing over third-party delivery services
-                  </p>
-                </div>
-                <div className="baseFlex !items-start gap-4">
-                  <TfiReceipt className="mt-2 size-6 shrink-0" />
-                  <p>
-                    Rewards members earn points towards free meals with every
-                    order
-                  </p>
-                </div>
-              </div>
-
-              <Button size={"lg"} asChild>
-                <Link
-                  href="/order"
-                  className="baseFlex my-2 mt-4 gap-2 !px-4 !text-base shadow-md"
-                >
-                  <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
-                  Order now
-                  <SideAccentSwirls className="h-[14px] fill-offwhite" />
-                </Link>
-              </Button>
-            </div>
-          </div>
-
-          <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
-            <div className="baseVertFlex relative mt-6 !items-start gap-4 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
-              <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-primary/50" />
-              <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
-
-              <p className="text-lg font-medium">
-                Enjoy exclusive benefits when you order direct
-              </p>
-              <div className="baseVertFlex mt-2 !items-start gap-4">
-                <div className="baseFlex gap-4">
-                  <MdOutlineMoneyOff className="size-6 shrink-0" />
-                  <p>Shop our lowest menu prices</p>
-                </div>
-                <div className="baseFlex gap-4">
-                  <BsSpeedometer2 className="size-6 shrink-0" />
-                  <p>
-                    Priority order processing over third-party delivery services
-                  </p>
-                </div>
-                <div className="baseFlex gap-4">
-                  <TfiReceipt className="size-6 shrink-0" />
-                  <p className="max-w-lg">
-                    Rewards members earn points towards free meals with every
-                    order
-                  </p>
-                </div>
-              </div>
-
-              <Button size={"lg"} asChild>
-                <Link
-                  href="/order"
-                  className="baseFlex mt-4 gap-2 self-center !px-4 !text-base shadow-md"
-                >
-                  <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
-                  Order now
-                  <SideAccentSwirls className="h-[14px] fill-offwhite" />
-                </Link>
-              </Button>
-            </div>
-
-            <div className="baseFlex relative size-72">
-              <motion.div
-                ref={firstBackdropAnimation.elementRef}
-                initial={{ opacity: 0, x: 50 }}
-                animate={firstBackdropAnimation.controls}
-                transition={{
-                  opacity: { duration: 0.2 },
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 15,
-                }}
-                className="absolute right-4 top-4 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
-              ></motion.div>
-
-              {/* maybe have stock image of person holding a phone and you would have a proportionally
-                tilted screenshot of the order page showing on their phone? think about it */}
-              <motion.div
-                ref={firstPromoImageAnimation.elementRef}
-                initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
-                animate={firstPromoImageAnimation.controls}
-                transition={{
-                  opacity: { duration: 0.2 },
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 15,
-                }}
-                className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
-              >
-                <Image
-                  src={rewardsPromo}
-                  alt={"TODO: fill in w/ appropriate alt text"}
-                  sizes="500px"
-                  className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-8"
-                />
-              </motion.div>
             </div>
           </div>
 
@@ -1246,7 +1134,7 @@ function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
       <p className="line-clamp-3 select-none text-center text-sm">
         {menuItem.description}
       </p>
-      <Button
+      {/* <Button
         disabled={!menuItem.available || addToOrderText === "Added to order"}
         className="w-full select-none"
       >
@@ -1290,7 +1178,7 @@ function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
             )}
           </motion.div>
         </AnimatePresence>
-      </Button>
+      </Button> */}
     </>
   );
 }
@@ -1452,108 +1340,136 @@ const ourFavoriteMenuItems = [
     activeDiscount: null,
     customizationCategories: [],
   },
-  {
-    id: "d531e6f4-7625-46c4-9fd2-c30d912c9025",
-    createdAt: "2024-02-21T15:53:33.000Z",
-    name: "Egg Rolls",
-    description:
-      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-    price: 800,
-    altPrice: null,
-    available: true,
-    discontinued: false,
-    listOrder: 3,
-    hasImageOfItem: true,
-    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    activeDiscountId: null,
-    isChefsChoice: false,
-    isAlcoholic: false,
-    isVegetarian: false,
-    isVegan: false,
-    isGlutenFree: false,
-    showUndercookedOrRawDisclaimer: false,
-    pointReward: false,
-    birthdayReward: false,
-    reviews: null,
-    activeDiscount: null,
-    customizationCategories: [],
-  },
-  {
-    id: "d6fce425-ebd9-4022-99a4-babe0a5a81b1",
-    createdAt: "2024-05-15T21:32:32.217Z",
-    name: "Chicken Salad",
-    description:
-      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-    price: 1400,
-    altPrice: null,
-    available: true,
-    discontinued: false,
-    listOrder: 13,
-    hasImageOfItem: true,
-    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    activeDiscountId: null,
-    isChefsChoice: false,
-    isAlcoholic: false,
-    isVegetarian: false,
-    isVegan: false,
-    isGlutenFree: false,
-    showUndercookedOrRawDisclaimer: false,
-    pointReward: false,
-    birthdayReward: false,
-    reviews: null,
-    activeDiscount: null,
-    customizationCategories: [],
-  },
-  {
-    id: "f61bf41d-ef94-428f-8a27-e979d8218690",
-    createdAt: "2024-05-15T21:32:32.217Z",
-    name: "Fried Shrimp",
-    description:
-      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-    price: 1200,
-    altPrice: null,
-    available: true,
-    discontinued: false,
-    listOrder: 11,
-    hasImageOfItem: true,
-    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    activeDiscountId: null,
-    isChefsChoice: false,
-    isAlcoholic: false,
-    isVegetarian: false,
-    isVegan: false,
-    isGlutenFree: false,
-    showUndercookedOrRawDisclaimer: false,
-    pointReward: false,
-    birthdayReward: false,
-    reviews: null,
-    activeDiscount: null,
-    customizationCategories: [],
-  },
-  {
-    id: "f651ed75-a596-4a9f-8ba8-6dafd8ddd9de",
-    createdAt: "2024-05-15T21:32:32.217Z",
-    name: "Asian Fries",
-    description:
-      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-    price: 1200,
-    altPrice: null,
-    available: true,
-    discontinued: false,
-    listOrder: 10,
-    hasImageOfItem: true,
-    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    activeDiscountId: null,
-    isChefsChoice: false,
-    isAlcoholic: false,
-    isVegetarian: false,
-    isVegan: false,
-    isGlutenFree: false,
-    showUndercookedOrRawDisclaimer: false,
-    pointReward: false,
-    birthdayReward: false,
-    reviews: null,
-    activeDiscount: null,
-    customizationCategories: [],
-  },
 ];
+
+// TODO: readd once online ordering is back
+
+// {/* "Order directly through us" promo section */}
+// <div className="baseVertFlex w-full max-w-sm overflow-hidden rounded-md border shadow-md tablet:hidden">
+//   {/* maybe have stock image of person holding a phone and you would have a proportionally
+//       tilted screenshot of the order page showing on their phone? think about it */}
+//   <div className="relative h-60 w-full overflow-hidden shadow-md">
+//     <Image
+//       src={rewardsPromo}
+//       alt={"TODO: fill in w/ appropriate alt text"}
+//       width={384}
+//       className="!relative !top-0 !size-full !h-96 object-cover !pb-32"
+//     />
+//   </div>
+//   <div className="baseVertFlex relative gap-4 overflow-hidden rounded-b-md bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
+//     <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+//     <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
+
+//     <p className="text-lg font-medium leading-6">
+//       Enjoy exclusive benefits when you order direct
+//     </p>
+//     <div className="baseVertFlex mt-2 !items-start gap-4 pl-1">
+//       <div className="baseFlex !items-start gap-4">
+//         <MdOutlineMoneyOff className="size-6 shrink-0" />
+//         <p>Shop our lowest menu prices</p>
+//       </div>
+//       <div className="baseFlex !items-start gap-4">
+//         <BsSpeedometer2 className="mt-2 size-6 shrink-0" />
+//         <p>
+//           Priority order processing over third-party delivery services
+//         </p>
+//       </div>
+//       <div className="baseFlex !items-start gap-4">
+//         <TfiReceipt className="mt-2 size-6 shrink-0" />
+//         <p>
+//           Rewards members earn points towards free meals with every
+//           order
+//         </p>
+//       </div>
+//     </div>
+
+//     <Button size={"lg"} asChild>
+//       <Link
+//         href="/order"
+//         className="baseFlex my-2 mt-4 gap-2 !px-4 !text-base shadow-md"
+//       >
+//         <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
+//         Order now
+//         <SideAccentSwirls className="h-[14px] fill-offwhite" />
+//       </Link>
+//     </Button>
+//   </div>
+// </div>
+
+// <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
+//   <div className="baseVertFlex relative mt-6 !items-start gap-4 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
+//     <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-primary/50" />
+//     <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+
+//     <p className="text-lg font-medium">
+//       Enjoy exclusive benefits when you order direct
+//     </p>
+//     <div className="baseVertFlex mt-2 !items-start gap-4">
+//       <div className="baseFlex gap-4">
+//         <MdOutlineMoneyOff className="size-6 shrink-0" />
+//         <p>Shop our lowest menu prices</p>
+//       </div>
+//       <div className="baseFlex gap-4">
+//         <BsSpeedometer2 className="size-6 shrink-0" />
+//         <p>
+//           Priority order processing over third-party delivery services
+//         </p>
+//       </div>
+//       <div className="baseFlex gap-4">
+//         <TfiReceipt className="size-6 shrink-0" />
+//         <p className="max-w-lg">
+//           Rewards members earn points towards free meals with every
+//           order
+//         </p>
+//       </div>
+//     </div>
+
+//     <Button size={"lg"} asChild>
+//       <Link
+//         href="/order"
+//         className="baseFlex mt-4 gap-2 self-center !px-4 !text-base shadow-md"
+//       >
+//         <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
+//         Order now
+//         <SideAccentSwirls className="h-[14px] fill-offwhite" />
+//       </Link>
+//     </Button>
+//   </div>
+
+//   <div className="baseFlex relative size-72">
+//     <motion.div
+//       ref={firstBackdropAnimation.elementRef}
+//       initial={{ opacity: 0, x: 50 }}
+//       animate={firstBackdropAnimation.controls}
+//       transition={{
+//         opacity: { duration: 0.2 },
+//         type: "spring",
+//         stiffness: 100,
+//         damping: 15,
+//       }}
+//       className="absolute right-4 top-4 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
+//     ></motion.div>
+
+//     {/* maybe have stock image of person holding a phone and you would have a proportionally
+//       tilted screenshot of the order page showing on their phone? think about it */}
+//     <motion.div
+//       ref={firstPromoImageAnimation.elementRef}
+//       initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
+//       animate={firstPromoImageAnimation.controls}
+//       transition={{
+//         opacity: { duration: 0.2 },
+//         type: "spring",
+//         stiffness: 100,
+//         damping: 15,
+//       }}
+//       className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
+//     >
+//       <Image
+//         src={rewardsPromo}
+//         alt={"TODO: fill in w/ appropriate alt text"}
+//         sizes="500px"
+//         className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-8"
+//       />
+//     </motion.div>
+//   </div>
+// </div>

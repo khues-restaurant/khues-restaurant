@@ -9,6 +9,7 @@ import { FaFacebook } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { IoLogoInstagram } from "react-icons/io5";
 import { SiTiktok } from "react-icons/si";
+import { Clock, MapPin } from "lucide-react";
 import { MdAccessTime } from "react-icons/md";
 import { TbLocation } from "react-icons/tb";
 import {
@@ -175,7 +176,7 @@ function MobileHeader() {
                   </Button>
                 </motion.div>
 
-                <motion.div variants={linkVariants}>
+                {/* <motion.div variants={linkVariants}>
                   <Button
                     variant={asPath.includes("/order") ? "activeLink" : "link"}
                     asChild
@@ -184,7 +185,7 @@ function MobileHeader() {
                       Order
                     </Link>
                   </Button>
-                </motion.div>
+                </motion.div> */}
 
                 <motion.div variants={linkVariants}>
                   <Button
@@ -193,9 +194,12 @@ function MobileHeader() {
                     }
                     asChild
                   >
-                    <Link href={"/reservations"} className="!text-xl">
+                    <a
+                      href="https://reservations.shift4payments.com/#/1814c327-a884-4b86-bc26-915ce9eadbb8"
+                      className="!text-xl"
+                    >
                       Reservations
-                    </Link>
+                    </a>
                   </Button>
                 </motion.div>
 
@@ -255,8 +259,8 @@ function MobileHeader() {
                       >
                         <div className="baseVertFlex !items-start gap-8 rounded-md border bg-offwhite p-4 shadow-sm">
                           <div className="baseVertFlex !items-start gap-4">
-                            <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
-                              <MdAccessTime />
+                            <div className="baseFlex gap-2 text-lg font-semibold">
+                              <Clock className="size-5" />
                               Hours
                             </div>
                             <div className="grid grid-cols-2 pr-4">
@@ -339,8 +343,8 @@ function MobileHeader() {
 
                           <div className="baseVertFlex relative w-full !items-start gap-4">
                             <div className="baseVertFlex !items-start gap-4">
-                              <div className="baseFlex gap-2 text-lg font-semibold underline underline-offset-2">
-                                <TbLocation />
+                              <div className="baseFlex gap-2 text-lg font-semibold">
+                                <MapPin className="size-[22px]" />
                                 Location
                               </div>
                               <p className="w-[55vw] sm:w-auto">
@@ -352,7 +356,7 @@ function MobileHeader() {
                               </p>
 
                               <div className="baseFlex gap-2">
-                                <TbLocation className="size-6 text-primary sm:size-4" />
+                                <MapPin className="size-5 shrink-0 text-primary" />
 
                                 <Button
                                   variant={"link"}
