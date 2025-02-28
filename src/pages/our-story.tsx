@@ -55,7 +55,7 @@ const restaurantNamesAndBackstories = [
       "Eric and his mother, Khue Pham, at Khue's Kitchen in Minneapolis.",
   },
   {
-    name: "Khue's (2024 - Present)",
+    name: "Khue's (2025 - Present)",
     backstory:
       "Now, Eric is on the brink of a new chapter with the opening of Khue's in St. Paul. This establishment marks the culmination of his dream: a dedicated space to celebrate his mother's legacy and showcase his unique interpretation of Vietnamese cuisine. Eric is poised to honor Khue Pham's enduring influence, ensuring her legacy continues to inspire and delight the community.",
     altText: "Eric and his mother, Khue Pham, at Khue's in St. Paul.",
