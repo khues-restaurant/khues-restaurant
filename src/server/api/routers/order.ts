@@ -441,7 +441,7 @@ async function SendOrderReadyEmail({
     const { data, error } = await resend.emails.send({
       from: "onboarding@resend.dev",
       to: "khues.dev@gmail.com", // order.email,
-      subject: "Hello world",
+      subject: "Your order is ready for pickup!",
       react: OrderReady({
         order: {
           ...order,
