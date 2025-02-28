@@ -94,9 +94,6 @@ function MobileHeader() {
 
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
 
-  // used to keep consistent spacing between user section and separator from main links
-  const [memberMenuIsOpen, setMemberMenuIsOpen] = useState(false);
-
   const [hoursAndLocationAccordionOpen, setHoursAndLocationAccordionOpen] =
     useState(false);
   const hoursAndLocationAccordionRef = useRef<HTMLDivElement>(null);
@@ -184,12 +181,12 @@ function MobileHeader() {
                 variants={linkContainer}
                 initial="hidden"
                 animate="visible"
-                className="baseVertFlex  w-full !justify-start gap-4 overflow-x-hidden pt-12"
+                className="baseVertFlex  w-full !justify-start gap-4 overflow-x-hidden pt-8"
               >
                 {!isSignedIn && (
                   <div className="baseFlex gap-4">
                     <Button
-                      className="px-8"
+                      className={`${notoSans.className} px-8`}
                       onClick={() => {
                         setSheetIsOpen(false);
 
@@ -208,6 +205,7 @@ function MobileHeader() {
                     </Button>
                     <Button
                       variant={"outline"}
+                      className={`${notoSans.className}`}
                       onClick={() => {
                         setSheetIsOpen(false);
 
@@ -231,10 +229,7 @@ function MobileHeader() {
                   <Accordion
                     type="single"
                     collapsible
-                    onValueChange={(value) => {
-                      setMemberMenuIsOpen(value === "item-1");
-                    }}
-                    className="w-full"
+                    className={`${notoSans.className} w-full`}
                   >
                     <AccordionItem value="item-1" className="border-none">
                       <AccordionTrigger className="baseFlex gap-4 py-2 text-xl font-semibold text-primary !no-underline">
@@ -311,9 +306,7 @@ function MobileHeader() {
                   </Accordion>
                 )}
 
-                <Separator
-                  className={`w-4/5 self-center bg-stone-300 ${memberMenuIsOpen ? "mt-2" : "mt-4"}`}
-                />
+                <Separator className="w-4/5 self-center bg-stone-300" />
 
                 <motion.div variants={linkVariants}>
                   <Button
@@ -353,6 +346,24 @@ function MobileHeader() {
                     </a>
                   </Button>
                 </motion.div>
+
+                {isLoaded && !isSignedIn && (
+                  <motion.div variants={linkVariants}>
+                    <Button
+                      variant={
+                        asPath.includes("/rewards") ? "activeLink" : "link"
+                      }
+                      asChild
+                    >
+                      <Link
+                        href={"/rewards"}
+                        className="block !text-xl smallDesktopHeader:hidden"
+                      >
+                        Rewards
+                      </Link>
+                    </Button>
+                  </motion.div>
+                )}
 
                 <motion.div variants={linkVariants}>
                   <Button

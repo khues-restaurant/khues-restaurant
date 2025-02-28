@@ -147,9 +147,9 @@ function Rewards() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
       className="baseVertFlex baseVertFlex relative
-      h-full min-h-[calc(100dvh-6rem-81px)] w-full !justify-start tablet:min-h-[calc(100dvh-7rem-120px)]"
+      h-full min-h-[calc(100dvh-5rem-81px)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem-120px)]"
     >
-      <div className="baseFlex sticky left-0 top-24 z-40 h-14 w-full gap-0 bg-offwhite shadow-sm tablet:hidden">
+      <div className="baseFlex sticky left-0 top-20 z-40 h-14 w-full gap-0 bg-offwhite shadow-sm tablet:hidden">
         <Button
           variant={
             asPath.includes("/profile/preferences") ? "activeLink" : "text"

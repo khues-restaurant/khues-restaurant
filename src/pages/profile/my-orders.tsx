@@ -125,7 +125,7 @@ function RecentOrders() {
         ${sortedOrders && sortedOrders.length > 0 ? "!justify-start" : ""}
       `}
     >
-      <div className="baseFlex sticky left-0 top-24 z-40 h-14 w-full gap-0 bg-offwhite shadow-sm tablet:hidden">
+      <div className="baseFlex sticky left-0 top-20 z-40 h-14 w-full gap-0 bg-offwhite shadow-sm tablet:hidden">
         <Button
           variant={
             asPath.includes("/profile/preferences") ? "activeLink" : "text"
