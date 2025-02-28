@@ -277,7 +277,7 @@ function Chat() {
                       }`}
                     ></div>
 
-                    <IoChatbox className="size-5 drop-shadow-md" />
+                    <IoChatbox className="size-5 shrink-0 drop-shadow-md" />
                   </Button>
                 </AlertDialogTrigger>
               </motion.div>
@@ -302,7 +302,7 @@ function Chat() {
                 className="h-[101.33px] w-[53.67px] drop-shadow-md"
               />
 
-              <div className="baseVertFlex w-full !items-start gap-2">
+              <div className="baseVertFlex w-full !items-start gap-1">
                 <p className="text-lg font-medium text-offwhite">
                   Have a question?
                 </p>
@@ -333,7 +333,7 @@ function Chat() {
                   }
                 >
                   {message instanceof Date ? (
-                    <p className="pt-4 text-center text-xs text-stone-400">
+                    <p className="pt-4 text-center text-xs text-stone-500">
                       {format(message, "EEEE, MMMM do")}
                     </p>
                   ) : (
@@ -343,7 +343,7 @@ function Chat() {
                                `}
                     >
                       <p
-                        className={`mb-0.5 text-xs text-stone-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
+                        className={`mb-0.5 text-xs text-stone-500 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
                       >
                         {format(message.createdAt, "h:mm a")}
                       </p>
@@ -382,7 +382,7 @@ function Chat() {
                     });
                   }
                 }}
-                className="max-h-12 flex-grow border-2 border-stone-500 bg-transparent placeholder-stone-400"
+                className="max-h-12 flex-grow border-2 border-stone-500 bg-transparent placeholder-stone-500"
               />
               <Button
                 disabled={
@@ -508,7 +508,7 @@ function Chat() {
                   }
                 >
                   {message instanceof Date ? (
-                    <p className="pt-4 text-center text-xs text-stone-400">
+                    <p className="pt-4 text-center text-xs text-stone-500">
                       {format(message, "EEEE, MMMM do")}
                     </p>
                   ) : (
@@ -518,7 +518,7 @@ function Chat() {
                                `}
                     >
                       <p
-                        className={`mb-0.5 text-xs text-stone-400 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
+                        className={`mb-0.5 text-xs text-stone-500 ${message.senderId === userId ? "mr-2" : "ml-2"}`}
                       >
                         {format(message.createdAt, "h:mm a")}
                       </p>
@@ -557,7 +557,7 @@ function Chat() {
                     });
                   }
                 }}
-                className="max-h-12 flex-grow border-2 border-stone-500 bg-transparent placeholder-stone-400"
+                className="max-h-12 flex-grow border-2 border-stone-500 bg-transparent placeholder-stone-500"
               />
               <Button
                 disabled={

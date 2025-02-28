@@ -3,17 +3,13 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import CartButton from "~/components/cart/CartButton";
 import { CiCalendarDate } from "react-icons/ci";
 import { Clock, MapPin } from "lucide-react";
+import { SlPresent } from "react-icons/sl";
 import { HiOutlineInformationCircle } from "react-icons/hi";
 import { IoMdMore } from "react-icons/io";
-import { MdAccessTime } from "react-icons/md";
-import { TbLocation } from "react-icons/tb";
-import { FaFacebook } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
-import { IoLogoInstagram } from "react-icons/io5";
-import { SiTiktok } from "react-icons/si";
 import {
   Dialog,
   DialogContent,
@@ -34,6 +30,14 @@ import { Charis_SIL } from "next/font/google";
 
 import StaticLotus from "~/components/ui/StaticLotus";
 import outsideOfRestaurant from "/public/exterior/one.webp";
+import { SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
+import useGetUserId from "~/hooks/useGetUserId";
+import { useMainStore } from "~/stores/MainStore";
+import { api } from "~/utils/api";
+import { IoSettingsOutline } from "react-icons/io5";
+import { FaUserAlt } from "react-icons/fa";
+import { TfiReceipt } from "react-icons/tfi";
+import { clearLocalStorage } from "~/utils/clearLocalStorage";
 
 const stix = STIX_Two_Text({
   subsets: ["latin"],
@@ -45,9 +49,49 @@ const charis = Charis_SIL({
 });
 
 function DesktopHeader() {
-  const { asPath } = useRouter();
+  const { isLoaded, isSignedIn, signOut } = useAuth();
+  const { asPath, events } = useRouter();
+  const userId = useGetUserId();
+
+  const { resetStore, orderDetails } = useMainStore((state) => ({
+    resetStore: state.resetStore,
+    orderDetails: state.orderDetails,
+  }));
+
+  const { data: user } = api.user.get.useQuery(userId, {
+    enabled: Boolean(userId && isSignedIn),
+  });
+
   const [showSmallViewportPopoverLinks, setShowSmallViewportPopoverLinks] =
     useState(false);
+  const [showUserPopoverLinks, setShowUserPopoverLinks] = useState(false);
+  const [numberOfItems, setNumberOfItems] = useState(0);
+
+  useEffect(() => {
+    // add up all the quantities of the items in the order
+    let sum = 0;
+    orderDetails.items.forEach((item) => {
+      sum += item.quantity;
+    });
+
+    if (orderDetails.rewardBeingRedeemed) {
+      sum++;
+    }
+
+    setNumberOfItems(sum);
+  }, [orderDetails.items, orderDetails.rewardBeingRedeemed]);
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setShowUserPopoverLinks(false);
+    };
+
+    events.on("routeChangeStart", handleRouteChange);
+
+    return () => {
+      events.off("routeChangeStart", handleRouteChange);
+    };
+  }, [events]);
 
   return (
     <nav
@@ -79,14 +123,14 @@ function DesktopHeader() {
           </Link>
         </Button>
 
-        {/* <Button
+        <Button
           variant={asPath.includes("/order") ? "activeLink" : "link"}
           asChild
         >
           <Link href={"/order"} className="!text-xl">
             Order
           </Link>
-        </Button> */}
+        </Button>
 
         <Button
           variant={asPath.includes("/reservations") ? "activeLink" : "link"}
@@ -99,6 +143,20 @@ function DesktopHeader() {
             Reservations
           </a>
         </Button>
+
+        {isLoaded && !isSignedIn && (
+          <Button
+            variant={asPath.includes("/rewards") ? "activeLink" : "link"}
+            asChild
+          >
+            <Link
+              href={"/rewards"}
+              className="block !text-xl smallDesktopHeader:hidden"
+            >
+              Rewards
+            </Link>
+          </Button>
+        )}
 
         <Button
           variant={asPath.includes("/our-story") ? "activeLink" : "link"}
@@ -146,6 +204,20 @@ function DesktopHeader() {
                   Reservations
                 </Link>
               </Button>
+
+              {isLoaded && !isSignedIn && (
+                <Button
+                  variant={asPath.includes("/rewards") ? "activeLink" : "link"}
+                  asChild
+                >
+                  <Link
+                    href={"/rewards"}
+                    className="block !text-xl smallDesktopHeader:hidden"
+                  >
+                    Rewards
+                  </Link>
+                </Button>
+              )}
 
               <Button
                 variant={asPath.includes("/media") ? "activeLink" : "link"}
@@ -254,11 +326,12 @@ function DesktopHeader() {
                     </div>
                   </DialogContent>
                 </Dialog>
+                 */}
 
                 <p className="mt-2 w-[273px] text-center text-sm italic text-stone-400">
                   * Pickup orders must be placed at least 30 minutes before
                   closing.
-                </p> */}
+                </p>
               </div>
 
               <Separator
@@ -308,39 +381,107 @@ function DesktopHeader() {
           </DialogContent>
         </Dialog>
 
-        <div className="baseFlex gap-2">
-          <Button variant="ghost" asChild>
-            <a
-              aria-label="Visit our Instagram page"
-              href="https://www.instagram.com/khueskitchen/"
-            >
-              <IoLogoInstagram className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-            </a>
-          </Button>
+        <div className={`baseFlex ${numberOfItems > 9 ? "gap-8" : "gap-6"}`}>
+          <CartButton />
 
-          <Button variant="ghost" asChild>
-            <a
-              aria-label="Visit our Facebook page"
-              href="https://www.facebook.com/khueskitchen/"
-            >
-              <FaFacebook className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-            </a>
-          </Button>
+          {/* opting for double "&&" instead of ternary for better readability */}
+          {!isSignedIn && (
+            <div className={`${classes.authentication ?? ""} baseFlex gap-4`}>
+              {/* how to maybe get colors to match theme + also have an option to specify username? */}
+              <SignUpButton mode="modal">
+                <Button className="px-8">Sign up</Button>
+              </SignUpButton>
+              <SignInButton mode="modal">
+                <Button variant={"outline"}>Sign in</Button>
+              </SignInButton>
+            </div>
+          )}
 
-          <Button variant="ghost" asChild>
-            <a
-              aria-label="Visit our Tiktok page"
-              href="https://www.tiktok.com/@khues_kitchen"
+          {isSignedIn && user && (
+            <Popover
+              open={showUserPopoverLinks}
+              onOpenChange={(open) => {
+                if (!open) setShowUserPopoverLinks(false);
+              }}
             >
-              <SiTiktok className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-            </a>
-          </Button>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="baseFlex gap-2"
+                  onClick={() => setShowUserPopoverLinks(true)}
+                >
+                  <FaUserAlt />
+                  <span className="max-w-[105px] truncate">
+                    {user.firstName}
+                  </span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent side="bottom" align="end" className="w-64">
+                <div className="baseVertFlex gap-2">
+                  <Button
+                    variant={
+                      asPath.includes("/profile/preferences")
+                        ? "activeLink"
+                        : "link"
+                    }
+                    asChild
+                  >
+                    <Link
+                      href={"/profile/preferences"}
+                      className="baseFlex w-full !justify-between !text-lg"
+                    >
+                      Preferences
+                      <IoSettingsOutline />
+                    </Link>
+                  </Button>
+                  <Button
+                    variant={
+                      asPath.includes("/profile/rewards")
+                        ? "activeLink"
+                        : "link"
+                    }
+                    asChild
+                  >
+                    <Link
+                      href={"/profile/rewards"}
+                      className="baseFlex w-full !justify-between !text-lg"
+                    >
+                      Rewards
+                      <SlPresent />
+                    </Link>
+                  </Button>
+                  <Button
+                    variant={
+                      asPath.includes("/profile/my-orders")
+                        ? "activeLink"
+                        : "link"
+                    }
+                    asChild
+                  >
+                    <Link
+                      href={"/profile/my-orders"}
+                      className="baseFlex w-full !justify-between !text-lg"
+                    >
+                      My orders
+                      <TfiReceipt />
+                    </Link>
+                  </Button>
 
-          <Button variant="ghost" asChild>
-            <a aria-label="Visit our X page" href="https://x.com/Khues_Kitchen">
-              <FaXTwitter className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-            </a>
-          </Button>
+                  <Button
+                    variant={"link"}
+                    className="mt-2 h-8"
+                    onClick={async () => {
+                      clearLocalStorage();
+                      resetStore();
+                      await signOut({ redirectUrl: "/" });
+                    }}
+                  >
+                    Log out
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
         </div>
       </div>
     </nav>

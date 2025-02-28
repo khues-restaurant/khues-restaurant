@@ -5,6 +5,7 @@ import Decimal from "decimal.js";
 import { AnimatePresence, motion } from "framer-motion";
 import isEqual from "lodash.isequal";
 import { X } from "lucide-react";
+import { Clock, MapPin } from "lucide-react";
 import Image from "next/image";
 import {
   useEffect,
@@ -521,7 +522,7 @@ function CartSheet({
 
       <div className="baseVertFlex size-full !justify-start overflow-y-auto">
         {/* location + date & time picker + pickup name form */}
-        <div className="baseFlex relative my-4 w-min flex-wrap gap-2 rounded-md border border-stone-300 bg-gradient-to-br from-stone-200 to-stone-300/70 p-4 px-8 shadow-sm">
+        <div className="baseFlex relative my-4 w-min flex-wrap rounded-md border border-stone-300 bg-gradient-to-br from-stone-200 to-stone-300/70 p-4 px-8 shadow-sm">
           <div className="absolute inset-0 size-full overflow-hidden rounded-md">
             <StaticLotus className="absolute -bottom-9 -right-9 size-28 rotate-[-45deg] fill-primary/50" />
           </div>
@@ -531,15 +532,15 @@ function CartSheet({
           </span>
 
           <div className="baseFlex gap-2">
-            <TbLocation className="text-primary" />
+            <MapPin className="size-4 text-primary" />
             <Button variant={"link"} className="h-6" asChild>
               <a
-                href="https://www.google.com/maps/place/Ngon+Bistro/@44.9560024,-93.1337998,15z/data=!4m6!3m5!1s0x87f62a8194b9460f:0x51ed0108f30095d4!8m2!3d44.9560024!4d-93.1337998!16s%2Fg%2F1tk6wglq?entry=ttu"
+                href="https://maps.app.goo.gl/AtBZUUydNtVvxR7e9"
                 target="_blank"
                 rel="noreferrer"
                 className="!p-0 !text-sm"
               >
-                2100 Snelling Ave Roseville, MN 55113
+                693 Raymond Ave, St Paul, MN 55114
               </a>
             </Button>
           </div>
@@ -554,7 +555,7 @@ function CartSheet({
                   })();
                 })();
               }}
-              className="baseVertFlex mt-2 !items-start gap-2"
+              className="baseVertFlex mt-4 !items-start gap-2"
             >
               <div className="baseFlex !items-start gap-2">
                 <FormField

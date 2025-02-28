@@ -58,6 +58,9 @@ import masonryInteriorTwo from "/public/interior/two.webp";
 import masonryInteriorThree from "/public/interior/three.webp";
 import masonryInteriorFour from "/public/interior/four.webp";
 import masonryInteriorFive from "/public/interior/five.webp";
+import { SignUpButton, useAuth } from "@clerk/nextjs";
+import useGetUserId from "~/hooks/useGetUserId";
+import { api } from "~/utils/api";
 
 // interface Home {
 //   ourFavoriteMenuItems: FullMenuItem[];
@@ -65,6 +68,9 @@ import masonryInteriorFive from "/public/interior/five.webp";
 
 export default function Home() {
   // { ourFavoriteMenuItems }: Home
+  const { isLoaded, isSignedIn } = useAuth();
+  const userId = useGetUserId();
+
   const {
     chatIsOpen,
     setChatIsOpen,
@@ -76,6 +82,10 @@ export default function Home() {
     setMobileHeroThresholdInView: state.setMobileHeroThresholdInView,
     viewportLabel: state.viewportLabel,
   }));
+
+  const { data: user } = api.user.get.useQuery(userId, {
+    enabled: Boolean(userId && isSignedIn),
+  });
 
   const mobileHeroRef = useRef<HTMLDivElement>(null);
 
@@ -724,6 +734,136 @@ export default function Home() {
             </div>
           </div>
 
+          {/* "Order directly through us" promo section */}
+          <div className="baseVertFlex w-full max-w-sm overflow-hidden rounded-md border shadow-md tablet:hidden">
+            {/* maybe have stock image of person holding a phone and you would have a proportionally
+      tilted screenshot of the order page showing on their phone? think about it */}
+            <div className="relative h-60 w-full overflow-hidden shadow-md">
+              <Image
+                src={rewardsPromo}
+                alt={"TODO: fill in w/ appropriate alt text"}
+                width={384}
+                className="!relative !top-0 !size-full !h-96 object-cover !pb-32"
+              />
+            </div>
+            <div className="baseVertFlex relative gap-4 overflow-hidden rounded-b-md bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
+              <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
+
+              <p className="text-lg font-medium leading-6">
+                Enjoy exclusive benefits when you order direct
+              </p>
+              <div className="baseVertFlex mt-2 !items-start gap-4 pl-1">
+                <div className="baseFlex !items-start gap-4">
+                  <MdOutlineMoneyOff className="size-6 shrink-0" />
+                  <p>Shop our lowest menu prices</p>
+                </div>
+                <div className="baseFlex !items-start gap-4">
+                  <BsSpeedometer2 className="mt-2 size-6 shrink-0" />
+                  <p>
+                    Priority order processing over third-party delivery services
+                  </p>
+                </div>
+                <div className="baseFlex !items-start gap-4">
+                  <TfiReceipt className="mt-2 size-6 shrink-0" />
+                  <p>
+                    Rewards members earn points towards free meals with every
+                    order
+                  </p>
+                </div>
+              </div>
+
+              <Button size={"lg"} asChild>
+                <Link
+                  href="/order"
+                  className="baseFlex my-2 mt-4 gap-2 !px-4 !text-base shadow-md"
+                >
+                  <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
+                  Order now
+                  <SideAccentSwirls className="h-[14px] fill-offwhite" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+
+          <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
+            <div className="baseVertFlex relative mt-6 !items-start gap-4 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
+              <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+
+              <p className="text-lg font-medium">
+                Enjoy exclusive benefits when you order direct
+              </p>
+              <div className="baseVertFlex mt-2 !items-start gap-4">
+                <div className="baseFlex gap-4">
+                  <MdOutlineMoneyOff className="size-6 shrink-0" />
+                  <p>Shop our lowest menu prices</p>
+                </div>
+                <div className="baseFlex gap-4">
+                  <BsSpeedometer2 className="size-6 shrink-0" />
+                  <p>
+                    Priority order processing over third-party delivery services
+                  </p>
+                </div>
+                <div className="baseFlex gap-4">
+                  <TfiReceipt className="size-6 shrink-0" />
+                  <p className="max-w-lg">
+                    Rewards members earn points towards free meals with every
+                    order
+                  </p>
+                </div>
+              </div>
+
+              <Button size={"lg"} asChild>
+                <Link
+                  href="/order"
+                  className="baseFlex mt-4 gap-2 self-center !px-4 !text-base shadow-md"
+                >
+                  <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
+                  Order now
+                  <SideAccentSwirls className="h-[14px] fill-offwhite" />
+                </Link>
+              </Button>
+            </div>
+
+            <div className="baseFlex relative size-72">
+              <motion.div
+                ref={firstBackdropAnimation.elementRef}
+                initial={{ opacity: 0, x: 50 }}
+                animate={firstBackdropAnimation.controls}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 15,
+                }}
+                className="absolute right-4 top-4 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
+              ></motion.div>
+
+              {/* maybe have stock image of person holding a phone and you would have a proportionally
+      tilted screenshot of the order page showing on their phone? think about it */}
+              <motion.div
+                ref={firstPromoImageAnimation.elementRef}
+                initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
+                animate={firstPromoImageAnimation.controls}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 15,
+                }}
+                className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
+              >
+                <Image
+                  src={rewardsPromo}
+                  alt={"TODO: fill in w/ appropriate alt text"}
+                  sizes="500px"
+                  className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-8"
+                />
+              </motion.div>
+            </div>
+          </div>
+
           {/* Meet the Chef promo section */}
           <div className="baseVertFlex w-full max-w-sm overflow-hidden rounded-md border shadow-md tablet:hidden">
             <div className="relative h-60 w-full overflow-hidden shadow-md">
@@ -979,6 +1119,37 @@ export default function Home() {
               </Parallax>
             </div>
           </div>
+
+          {/* Rewards program promo section */}
+          {isLoaded && !isSignedIn && (
+            <div className="baseVertFlex relative my-4 w-screen max-w-xl gap-4 overflow-hidden border-y-4 border-y-gold bg-offwhite !p-6 !pb-8 text-primary shadow-md sm:rounded-sm sm:!p-8 sm:!pb-5 tablet:my-12">
+              <StaticLotus className="absolute right-[-21px] top-[-21px] size-16 rotate-[-135deg] fill-gold/80" />
+              <StaticLotus className="absolute left-[-21px] top-[-21px] size-16 rotate-[135deg] fill-gold/80" />
+              <StaticLotus className="absolute bottom-[-21px] right-[-21px] size-16 rotate-[-45deg] fill-gold/80" />
+              <StaticLotus className="absolute bottom-[-21px] left-[-21px] size-16 rotate-[45deg] fill-gold/80" />
+
+              <span className="mt-4 w-64 text-center font-semibold sm:mt-0 sm:w-auto">
+                Join Khue&apos;s Rewards and unlock exclusive benefits!
+              </span>
+              <span className="mt-2 text-center text-sm tablet:text-base">
+                With every order, you&apos;ll earn points which can be redeemed
+                for complimentary meals. Plus, get early access to new dishes
+                and celebrate your birthday with a free dessert of your choice!
+              </span>
+
+              <SignUpButton mode="modal">
+                <Button
+                  variant={"rewards"}
+                  size={"lg"}
+                  className="mt-4 text-base shadow-md"
+                >
+                  Join now
+                </Button>
+              </SignUpButton>
+
+              <WideFancySwirls className="h-14 fill-primary sm:h-16" />
+            </div>
+          )}
 
           {/* Explore Our Favorites section */}
           <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-6xl tablet:max-w-2xl">
@@ -1341,135 +1512,3 @@ const ourFavoriteMenuItems = [
     customizationCategories: [],
   },
 ];
-
-// TODO: readd once online ordering is back
-
-// {/* "Order directly through us" promo section */}
-// <div className="baseVertFlex w-full max-w-sm overflow-hidden rounded-md border shadow-md tablet:hidden">
-//   {/* maybe have stock image of person holding a phone and you would have a proportionally
-//       tilted screenshot of the order page showing on their phone? think about it */}
-//   <div className="relative h-60 w-full overflow-hidden shadow-md">
-//     <Image
-//       src={rewardsPromo}
-//       alt={"TODO: fill in w/ appropriate alt text"}
-//       width={384}
-//       className="!relative !top-0 !size-full !h-96 object-cover !pb-32"
-//     />
-//   </div>
-//   <div className="baseVertFlex relative gap-4 overflow-hidden rounded-b-md bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
-//     <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
-//     <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
-
-//     <p className="text-lg font-medium leading-6">
-//       Enjoy exclusive benefits when you order direct
-//     </p>
-//     <div className="baseVertFlex mt-2 !items-start gap-4 pl-1">
-//       <div className="baseFlex !items-start gap-4">
-//         <MdOutlineMoneyOff className="size-6 shrink-0" />
-//         <p>Shop our lowest menu prices</p>
-//       </div>
-//       <div className="baseFlex !items-start gap-4">
-//         <BsSpeedometer2 className="mt-2 size-6 shrink-0" />
-//         <p>
-//           Priority order processing over third-party delivery services
-//         </p>
-//       </div>
-//       <div className="baseFlex !items-start gap-4">
-//         <TfiReceipt className="mt-2 size-6 shrink-0" />
-//         <p>
-//           Rewards members earn points towards free meals with every
-//           order
-//         </p>
-//       </div>
-//     </div>
-
-//     <Button size={"lg"} asChild>
-//       <Link
-//         href="/order"
-//         className="baseFlex my-2 mt-4 gap-2 !px-4 !text-base shadow-md"
-//       >
-//         <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
-//         Order now
-//         <SideAccentSwirls className="h-[14px] fill-offwhite" />
-//       </Link>
-//     </Button>
-//   </div>
-// </div>
-
-// <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
-//   <div className="baseVertFlex relative mt-6 !items-start gap-4 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
-//     <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-primary/50" />
-//     <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
-
-//     <p className="text-lg font-medium">
-//       Enjoy exclusive benefits when you order direct
-//     </p>
-//     <div className="baseVertFlex mt-2 !items-start gap-4">
-//       <div className="baseFlex gap-4">
-//         <MdOutlineMoneyOff className="size-6 shrink-0" />
-//         <p>Shop our lowest menu prices</p>
-//       </div>
-//       <div className="baseFlex gap-4">
-//         <BsSpeedometer2 className="size-6 shrink-0" />
-//         <p>
-//           Priority order processing over third-party delivery services
-//         </p>
-//       </div>
-//       <div className="baseFlex gap-4">
-//         <TfiReceipt className="size-6 shrink-0" />
-//         <p className="max-w-lg">
-//           Rewards members earn points towards free meals with every
-//           order
-//         </p>
-//       </div>
-//     </div>
-
-//     <Button size={"lg"} asChild>
-//       <Link
-//         href="/order"
-//         className="baseFlex mt-4 gap-2 self-center !px-4 !text-base shadow-md"
-//       >
-//         <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
-//         Order now
-//         <SideAccentSwirls className="h-[14px] fill-offwhite" />
-//       </Link>
-//     </Button>
-//   </div>
-
-//   <div className="baseFlex relative size-72">
-//     <motion.div
-//       ref={firstBackdropAnimation.elementRef}
-//       initial={{ opacity: 0, x: 50 }}
-//       animate={firstBackdropAnimation.controls}
-//       transition={{
-//         opacity: { duration: 0.2 },
-//         type: "spring",
-//         stiffness: 100,
-//         damping: 15,
-//       }}
-//       className="absolute right-4 top-4 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
-//     ></motion.div>
-
-//     {/* maybe have stock image of person holding a phone and you would have a proportionally
-//       tilted screenshot of the order page showing on their phone? think about it */}
-//     <motion.div
-//       ref={firstPromoImageAnimation.elementRef}
-//       initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
-//       animate={firstPromoImageAnimation.controls}
-//       transition={{
-//         opacity: { duration: 0.2 },
-//         type: "spring",
-//         stiffness: 100,
-//         damping: 15,
-//       }}
-//       className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
-//     >
-//       <Image
-//         src={rewardsPromo}
-//         alt={"TODO: fill in w/ appropriate alt text"}
-//         sizes="500px"
-//         className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-8"
-//       />
-//     </motion.div>
-//   </div>
-// </div>

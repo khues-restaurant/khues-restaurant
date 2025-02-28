@@ -31,15 +31,10 @@ import { useMainStore } from "~/stores/MainStore";
 import { formatPrice } from "~/utils/formatters/formatPrice";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 
-import { STIX_Two_Text } from "next/font/google";
-const stix = STIX_Two_Text({
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-});
-
 import { Charis_SIL } from "next/font/google";
 const charis = Charis_SIL({
   subsets: ["latin"],
+  style: ["normal", "italic"],
   weight: ["400", "700"],
 });
 
@@ -569,7 +564,7 @@ function MenuCategory({
           {/* category header */}
           <div className="baseVertFlex w-full !items-start border-b-2 border-primary">
             <p
-              className={`${stix.className} baseFlex gap-2 pl-3 text-xl font-medium italic tracking-tight tablet:text-2xl`}
+              className={`${charis.className} baseFlex gap-2 pl-3 text-xl font-medium italic tablet:text-2xl`}
             >
               {name}
             </p>
@@ -649,7 +644,7 @@ function MenuCategory({
 
             <div className="baseFlex absolute bottom-4 left-4 gap-4 rounded-md bg-offwhite px-4 py-2">
               <div
-                className={`${stix.className} baseFlex gap-2 text-xl font-medium italic tracking-tight tablet:text-2xl`}
+                className={`${charis.className} baseFlex gap-2 pb-[1px] text-xl font-medium italic tablet:text-2xl`}
               >
                 {name}
               </div>

@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import { type AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -26,12 +27,33 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <>
+    <ClerkProvider
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+      appearance={{
+        variables: {
+          colorPrimary: "hsl(144deg, 61%, 20%)",
+          colorInputBackground: "hsl(40deg, 100%, 99%)",
+          colorTextSecondary: "rgb(128, 128, 128)", // gray
+          fontFamily: "'Noto Sans', sans-serif",
+          borderRadius: "0.375rem",
+          colorDanger: "#dc2626", // red-600
+          colorSuccess: "#16a34a", // green-600
+          colorInputText: "rgb(64, 64, 64)", // dark gray
+          colorBackground: "hsl(40deg, 100%, 99%)",
+          colorText: "rgb(64, 64, 64)", // dark gray
+        },
+      }}
+      {...pageProps}
+    >
       <DynamicHead currentPath={pathname} />
-      <GeneralLayout>
+      {pathname === "/dashboard" ? (
         <Component {...pageProps} />
-      </GeneralLayout>
-    </>
+      ) : (
+        <GeneralLayout>
+          <Component {...pageProps} />
+        </GeneralLayout>
+      )}
+    </ClerkProvider>
   );
 }
 

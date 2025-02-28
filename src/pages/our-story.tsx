@@ -10,11 +10,6 @@ import {
   type CarouselApi,
 } from "~/components/ui/carousel";
 
-import { STIX_Two_Text } from "next/font/google";
-const stix = STIX_Two_Text({
-  subsets: ["latin"],
-});
-
 import { Charis_SIL } from "next/font/google";
 const charis = Charis_SIL({
   subsets: ["latin"],
