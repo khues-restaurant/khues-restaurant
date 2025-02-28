@@ -46,7 +46,6 @@ import masonryFoodFive from "/public/food/five.jpg";
 
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";
-import SingleLotusLeaf from "~/components/ui/SingleLotusLeaf";
 
 function Menu() {
   const [scrollProgress, setScrollProgress] = useState(0);
