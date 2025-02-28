@@ -13,7 +13,6 @@ import {
 import { IoIosArrowBack, IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { LuMinus, LuPlus, LuVegan } from "react-icons/lu";
 import { SiLeaflet } from "react-icons/si";
-import AnimatedPrice from "~/components/AnimatedPrice";
 import {
   Accordion,
   AccordionContent,
@@ -571,17 +570,16 @@ function ItemCustomizationDrawer({
             }}
           >
             <div className="baseFlex gap-2">
-              <span>{itemOrderDetails ? "Update" : "Add to order"}</span>
-              -
-              <AnimatedPrice
-                price={formatPrice(
+              <span>{itemOrderDetails ? "Update" : "Add to order"}</span>-
+              <p>
+                {formatPrice(
                   calculateRelativeTotal({
                     items: [localItemOrderDetails],
                     customizationChoices,
                     discounts,
                   }),
                 )}
-              />
+              </p>
             </div>
           </Button>
         </div>
@@ -748,14 +746,9 @@ function CustomizationOption({
         )}
 
         <div className="absolute bottom-2 right-4 text-sm">
-          <AnimatePresence>
-            {!isSelected && relativePrice !== 0 && (
-              <AnimatedPrice
-                price={formatPrice(relativePrice)}
-                excludeAnimatePresence={true}
-              />
-            )}
-          </AnimatePresence>
+          {!isSelected && relativePrice !== 0 && (
+            <p>{formatPrice(relativePrice)}</p>
+          )}
         </div>
       </div>
     </div>

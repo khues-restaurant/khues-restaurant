@@ -22,7 +22,6 @@ import { LuCakeSlice, LuMinus, LuPlus } from "react-icons/lu";
 import { TbLocation } from "react-icons/tb";
 import { z } from "zod";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
-import AnimatedPrice from "~/components/AnimatedPrice";
 import AvailablePickupDays from "~/components/cart/AvailablePickupDays";
 import AvailablePickupTimes from "~/components/cart/AvailablePickupTimes";
 import { Button } from "~/components/ui/button";
@@ -906,10 +905,10 @@ function CartSheet({
                             </div>
                             <Button
                               variant="outline"
-                              disabled={item.quantity > 20}
+                              disabled={item.quantity >= 20}
                               className="size-7 rounded-none border-none p-0"
                               onClick={() => {
-                                if (item.quantity > 20) return;
+                                if (item.quantity >= 20) return;
                                 const newOrderDetails =
                                   structuredClone(orderDetails);
 
@@ -958,21 +957,15 @@ function CartSheet({
                               </div>
                             )}
 
-                            {/* completely unsure as to why this is necessary to wrap like this,
-                                but otherwise caused extremely odd overflow issues with animating out
-                                text... */}
-                            <AnimatePresence mode={"popLayout"}>
-                              <AnimatedPrice
-                                price={formatPrice(
-                                  calculateRelativeTotal({
-                                    items: [item],
-                                    customizationChoices,
-                                    discounts,
-                                  }),
-                                )}
-                                excludeAnimatePresence={true}
-                              />
-                            </AnimatePresence>
+                            <p>
+                              {formatPrice(
+                                calculateRelativeTotal({
+                                  items: [item],
+                                  customizationChoices,
+                                  discounts,
+                                }),
+                              )}
+                            </p>
                           </div>
 
                           <Button
@@ -1125,21 +1118,15 @@ function CartSheet({
                               </div>
 
                               <div className="baseVertFlex !items-end">
-                                {/* completely unsure as to why this is necessary to wrap like this,
-                                but otherwise caused extremely odd overflow issues with animating out
-                                text... */}
-                                <AnimatePresence mode={"popLayout"}>
-                                  <AnimatedPrice
-                                    price={formatPrice(
-                                      calculateRelativeTotal({
-                                        items: [item],
-                                        customizationChoices,
-                                        discounts,
-                                      }),
-                                    )}
-                                    excludeAnimatePresence={true}
-                                  />
-                                </AnimatePresence>
+                                <p>
+                                  {formatPrice(
+                                    calculateRelativeTotal({
+                                      items: [item],
+                                      customizationChoices,
+                                      discounts,
+                                    }),
+                                  )}
+                                </p>
 
                                 <Button
                                   variant={"underline"}
@@ -1442,34 +1429,22 @@ function CartSheet({
             <div className="baseVertFlex w-1/2">
               <div className="baseFlex mt-1 w-full !justify-between text-sm">
                 <p>Subtotal</p>
-                <AnimatedPrice price={formatPrice(orderCost.subtotal)} />
+                <p>{formatPrice(orderCost.subtotal)}</p>
               </div>
-
-              {/* TODO: ask eric if this threshold should apply based on subtotal or total */}
-              {/* {isSignedIn &&
-                orderDetails.discountId &&
-                orderCost.subtotal >= 35 &&
-                discounts[orderDetails.discountId]?.name ===
-                  "Spend $35, Save $5" && (
-                  <div className="baseFlex w-full !justify-between text-sm text-primary">
-                    <p>Spend $35, Save $5</p>
-                    <AnimatedPrice price={formatPrice(-5)} />
-                  </div>
-                )} */}
 
               <div className="baseFlex w-full !justify-between text-sm">
                 <p>Est. tax</p>
-                <AnimatedPrice price={formatPrice(orderCost.tax)} />
+                <p>{formatPrice(orderCost.tax)}</p>
               </div>
 
               <div className="baseFlex w-full !justify-between text-sm">
                 <p>{`Tip${orderDetails.tipPercentage !== null ? ` (${orderDetails.tipPercentage}%)` : ""}`}</p>
-                <AnimatedPrice price={formatPrice(orderCost.tip)} />
+                <p>{formatPrice(orderCost.tip)}</p>
               </div>
 
               <div className="baseFlex w-full !justify-between gap-2 text-lg font-semibold">
                 <p>Total</p>
-                <AnimatedPrice price={formatPrice(orderCost.total)} />
+                <p>{formatPrice(orderCost.total)}</p>
               </div>
             </div>
 
