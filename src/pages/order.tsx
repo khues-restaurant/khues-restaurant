@@ -46,6 +46,13 @@ import { formatPrice } from "~/utils/formatters/formatPrice";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 
+import { Charis_SIL } from "next/font/google";
+const charis = Charis_SIL({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  weight: ["400", "700"],
+});
+
 import sampleImage from "/public/menuItems/sampleImage.webp";
 import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";
 
@@ -329,7 +336,7 @@ function OrderNow() {
           <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-offwhite p-2 shadow-heroContainer tablet:!flex">
             <div className="baseFlex gap-2 font-semibold text-primary tablet:p-2 tablet:text-xl desktop:text-2xl">
               <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
-              <h1>Order</h1>
+              <h1 className={`${charis.className}`}>Order</h1>
               <SideAccentSwirls className="h-5 fill-primary" />
             </div>
           </div>
@@ -350,7 +357,7 @@ function OrderNow() {
         <div className="baseFlex z-10 rounded-md bg-offwhite p-2 shadow-heroContainer tablet:hidden">
           <div className="baseFlex gap-2 p-2 text-xl font-semibold text-primary tablet:px-8 tablet:py-3 tablet:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary" />
-            <h1>Order</h1>
+            <h1 className={`${charis.className}`}>Order</h1>
             <SideAccentSwirls className="h-4 fill-primary" />
           </div>
         </div>
