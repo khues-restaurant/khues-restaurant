@@ -194,7 +194,7 @@ function DynamicHead({ currentPath }: DynamicHead) {
       <meta property="og:type" content="website" />
       <meta
         property="og:image"
-        content={`${window.location.origin}/openGraph/opengraphImage.png`}
+        content="https://www.khueskitchen.com/openGraph/opengraphImage.png"
       ></meta>
       <meta
         property="og:image:alt"
@@ -202,7 +202,7 @@ function DynamicHead({ currentPath }: DynamicHead) {
       ></meta>
       <meta
         property="twitter:image"
-        content={`${window.location.origin}/openGraph/opengraphImage.png`}
+        content="https://www.khueskitchen.com/openGraph/opengraphImage.png"
       />
       <meta property="twitter:card" content="summary_large_image" />
     </Head>
