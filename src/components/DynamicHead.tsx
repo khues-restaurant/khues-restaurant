@@ -23,7 +23,7 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
       return {
         title: "Menu | Khue's",
         description:
-          "Explore Khue's Kitchen in the media, featuring interviews, articles, and videos showcasing Chef Eric Pham's culinary journey and Vietnamese cuisine.",
+          "Explore our menu at Khue's, where Chef Eric Pham merges traditional Vietnamese recipes with modern culinary innovation. Indulge in signature dishes and seasonal specials that pay homage to his mother's legacy.",
         ogTitle: "Menu | Khue's",
         ogUrl: "https://www.khueskitchen.com/menu",
       };
