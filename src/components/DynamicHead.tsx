@@ -23,7 +23,7 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
       return {
         title: "Menu | Khue's",
         description:
-          "Explore Khue's Kitchen in the media, featuring interviews, articles, and videos showcasing Chef Eric Pham's culinary journey and Vietnamese cuisine.",
+          "Explore our menu at Khue's, where Chef Eric Pham merges traditional Vietnamese recipes with modern culinary innovation. Indulge in signature dishes and seasonal specials that pay homage to his mother's legacy.",
         ogTitle: "Menu | Khue's",
         ogUrl: "https://www.khueskitchen.com/menu",
       };
@@ -39,7 +39,7 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
       return {
         title: "Reservations | Khue's",
         description:
-          "Secure your reservations at Khue's Kitchen. Learn about our policies for larger parties and how to guarantee your spot for an unforgettable dining experience.",
+          "Secure your reservations at Khue's. Learn about our policies for larger parties and how to guarantee your spot for an unforgettable dining experience.",
         ogTitle: "Reservations | Khue's",
         ogUrl: "https://www.khueskitchen.com/reservations",
       };
@@ -162,6 +162,9 @@ function DynamicHead({ currentPath }: DynamicHead) {
       {dynamicHeadJSON.description && (
         <meta name="description" content={dynamicHeadJSON.description} />
       )}
+      {dynamicHeadJSON.ogUrl && (
+        <link rel="canonical" href={dynamicHeadJSON.ogUrl} />
+      )}
       {dynamicHeadJSON.ogTitle && (
         <meta property="og:title" content={dynamicHeadJSON.ogTitle}></meta>
       )}
@@ -191,18 +194,15 @@ function DynamicHead({ currentPath }: DynamicHead) {
       <meta property="og:type" content="website" />
       <meta
         property="og:image"
-        // TODO: Change for production
-        content={
-          "https://khues-restaurant.vercel.app/openGraph/opengraphImage.png"
-        }
+        content={"https://www.khueskitchen.com/openGraph/opengraphImage.png"}
       ></meta>
       <meta
         property="og:image:alt"
-        content="Welcome to Khue's - A modern take on classic Vietnamese cuisine. The image features a welcoming character in traditional Vietnamese attire, set against a background of delicious Vietnamese dishes."
+        content="Welcome to Khue's - A modern take on classic Vietnamese cuisine. The image features a welcoming character in traditional Vietnamese attire, set against a background showing Chef Eric Pham and his mother, Khue Pham."
       ></meta>
       <meta
         property="twitter:image"
-        content="https://khues-restaurant.vercel.app/openGraph/opengraphImage.png"
+        content="https://www.khueskitchen.com/openGraph/opengraphImage.png"
       />
       <meta property="twitter:card" content="summary_large_image" />
     </Head>
