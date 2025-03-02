@@ -62,12 +62,11 @@ import { SignUpButton, useAuth } from "@clerk/nextjs";
 import useGetUserId from "~/hooks/useGetUserId";
 import { api } from "~/utils/api";
 
-// interface Home {
-//   ourFavoriteMenuItems: FullMenuItem[];
-// }
+interface Home {
+  ourFavoriteMenuItems: FullMenuItem[];
+}
 
-export default function Home() {
-  // { ourFavoriteMenuItems }: Home
+function Home({ ourFavoriteMenuItems }: Home) {
   const { isLoaded, isSignedIn } = useAuth();
   const userId = useGetUserId();
 
@@ -294,10 +293,10 @@ export default function Home() {
                 A modern take on classic Vietnamese cuisine.
               </p>
 
-              {/* <Button size={"lg"} asChild>
+              <Button size={"lg"} asChild>
                 <Link
                   href="/order"
-                  className="baseFlex mt-4 gap-2 !px-4 shadow-md"
+                  className="baseFlex mt-4 w-[206px] gap-2 !px-6 shadow-md"
                 >
                   <SideAccentSwirls
                     delay={1.6}
@@ -307,23 +306,6 @@ export default function Home() {
                   <SideAccentSwirls
                     delay={1.6}
                     className="h-[14px] fill-offwhite"
-                  />
-                </Link>
-              </Button> */}
-
-              <Button size={"lg"} asChild>
-                <Link
-                  href="/order"
-                  className="baseFlex mt-4 gap-2 !px-4 shadow-md"
-                >
-                  <SideAccentSwirls
-                    delay={1.6}
-                    className="h-[12px] scale-x-[-1] fill-offwhite"
-                  />
-                  View our menu
-                  <SideAccentSwirls
-                    delay={1.6}
-                    className="h-[12px] fill-offwhite"
                   />
                 </Link>
               </Button>
@@ -476,14 +458,14 @@ export default function Home() {
                 <div className="baseFlex mt-6 gap-4">
                   <Button size={"lg"} asChild>
                     <Link
-                      href="/menu"
+                      href="/order"
                       className="baseFlex gap-2 !px-4 !py-6 !text-lg shadow-md"
                     >
                       <SideAccentSwirls
                         delay={1.6}
                         className="h-4 scale-x-[-1] fill-offwhite"
                       />
-                      View our menu
+                      Order now
                       <SideAccentSwirls
                         delay={1.6}
                         className="h-4 fill-offwhite"
@@ -1180,7 +1162,7 @@ export default function Home() {
                     >
                       <OurFavoriteMenuItemCard
                         menuItem={menuItem}
-                        user={null}
+                        user={user}
                       />
                     </CarouselItem>
                   ))}
@@ -1238,40 +1220,42 @@ export default function Home() {
   );
 }
 
-// export const getStaticProps: GetStaticProps = async (ctx) => {
-//   const prisma = new PrismaClient();
+export default Home;
 
-//   const ourFavoriteMenuItems = await prisma.menuItem.findMany({
-//     where: {
-//       isChefsChoice: true,
-//     },
-//     include: {
-//       activeDiscount: true,
-//       customizationCategories: {
-//         include: {
-//           customizationCategory: {
-//             include: {
-//               customizationChoices: {
-//                 orderBy: {
-//                   listOrder: "asc",
-//                 },
-//               },
-//             },
-//           },
-//         },
-//       },
-//     },
-//     orderBy: {
-//       listOrder: "asc",
-//     },
-//   });
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const prisma = new PrismaClient();
 
-//   return {
-//     props: {
-//       ourFavoriteMenuItems,
-//     },
-//   };
-// };
+  const ourFavoriteMenuItems = await prisma.menuItem.findMany({
+    where: {
+      isChefsChoice: true,
+    },
+    include: {
+      activeDiscount: true,
+      customizationCategories: {
+        include: {
+          customizationCategory: {
+            include: {
+              customizationChoices: {
+                orderBy: {
+                  listOrder: "asc",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    orderBy: {
+      listOrder: "asc",
+    },
+  });
+
+  return {
+    props: {
+      ourFavoriteMenuItems,
+    },
+  };
+};
 
 interface OurFavoriteMenuItemCard {
   menuItem: FullMenuItem;
@@ -1279,16 +1263,16 @@ interface OurFavoriteMenuItemCard {
 }
 
 function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
-  // const { orderDetails, getPrevOrderDetails, setPrevOrderDetails } =
-  //   useMainStore((state) => ({
-  //     orderDetails: state.orderDetails,
-  //     getPrevOrderDetails: state.getPrevOrderDetails,
-  //     setPrevOrderDetails: state.setPrevOrderDetails,
-  //   }));
+  const { orderDetails, getPrevOrderDetails, setPrevOrderDetails } =
+    useMainStore((state) => ({
+      orderDetails: state.orderDetails,
+      getPrevOrderDetails: state.getPrevOrderDetails,
+      setPrevOrderDetails: state.setPrevOrderDetails,
+    }));
 
-  // const { updateOrder } = useUpdateOrder();
+  const { updateOrder } = useUpdateOrder();
 
-  // const { toast, dismiss: dismissToasts } = useToast();
+  const { toast, dismiss: dismissToasts } = useToast();
 
   const [addToOrderText, setAddToOrderText] = useState("Add to order");
 
@@ -1305,7 +1289,7 @@ function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
       <p className="line-clamp-3 select-none text-center text-sm">
         {menuItem.description}
       </p>
-      {/* <Button
+      <Button
         disabled={!menuItem.available || addToOrderText === "Added to order"}
         className="w-full select-none"
       >
@@ -1319,6 +1303,73 @@ function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
             exit={{ opacity: 0, y: 20 }}
             transition={{
               duration: 0.25,
+            }}
+            onClick={async () => {
+              setAddToOrderText("Added to order");
+
+              // set prev order details so we can revert if necessary
+              // with toast's undo button
+              setPrevOrderDetails(orderDetails);
+
+              const pluralize = (await import("pluralize")).default;
+              const isPlural = pluralize.isPlural(menuItem.name);
+              const contextAwarePlural = isPlural ? "were" : "was";
+
+              toast({
+                description: `${menuItem.name} ${contextAwarePlural} added to your order.`,
+                action: (
+                  <ToastAction
+                    altText={`Undo the addition of ${menuItem.name} to your order.`}
+                    onClick={() => {
+                      updateOrder({
+                        newOrderDetails: getPrevOrderDetails(),
+                      });
+                    }}
+                  >
+                    Undo
+                  </ToastAction>
+                ),
+              });
+
+              // directly add to order w/ defaults + trigger toast notification
+
+              updateOrder({
+                newOrderDetails: {
+                  ...orderDetails,
+                  items: [
+                    ...orderDetails.items,
+                    {
+                      id:
+                        orderDetails.items.length === 0
+                          ? 0
+                          : orderDetails.items.at(-1)!.id + 1,
+                      itemId: menuItem.id,
+                      name: menuItem.name,
+                      customizations: getDefaultCustomizationChoices(menuItem),
+                      specialInstructions: "",
+                      includeDietaryRestrictions:
+                        user?.autoApplyDietaryRestrictions ?? false,
+                      quantity: 1,
+                      price: menuItem.price,
+                      isChefsChoice: menuItem.isChefsChoice,
+                      isAlcoholic: menuItem.isAlcoholic,
+                      isVegetarian: menuItem.isVegetarian,
+                      isVegan: menuItem.isVegan,
+                      isGlutenFree: menuItem.isGlutenFree,
+                      showUndercookedOrRawDisclaimer:
+                        menuItem.showUndercookedOrRawDisclaimer,
+                      hasImageOfItem: menuItem.hasImageOfItem,
+                      discountId: menuItem.activeDiscount?.id ?? null,
+                      birthdayReward: false,
+                      pointReward: false,
+                    },
+                  ],
+                },
+              });
+
+              setTimeout(() => {
+                setAddToOrderText("Add to order");
+              }, 1500);
             }}
             className="baseFlex w-[122.75px] gap-2"
           >
@@ -1349,166 +1400,7 @@ function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
             )}
           </motion.div>
         </AnimatePresence>
-      </Button> */}
+      </Button>
     </>
   );
 }
-
-const ourFavoriteMenuItems = [
-  {
-    id: "702b5c80-7d63-43ef-a80f-948c64c21575",
-    createdAt: "2024-05-15T21:32:32.217Z",
-    name: "Stir-fried String Beans",
-    description:
-      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-    price: 1400,
-    altPrice: null,
-    available: true,
-    discontinued: false,
-    listOrder: 15,
-    hasImageOfItem: true,
-    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    activeDiscountId: null,
-    isChefsChoice: false,
-    isAlcoholic: false,
-    isVegetarian: false,
-    isVegan: false,
-    isGlutenFree: false,
-    showUndercookedOrRawDisclaimer: false,
-    pointReward: false,
-    birthdayReward: false,
-    reviews: null,
-    activeDiscount: null,
-    customizationCategories: [],
-  },
-  {
-    id: "2315135f-19f4-4ede-9af7-0ffccadd2557",
-    createdAt: "2024-05-15T21:28:07.340Z",
-    name: "Chili Crunch Wings",
-    description:
-      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-    price: 1200,
-    altPrice: null,
-    available: true,
-    discontinued: false,
-    listOrder: 28,
-    hasImageOfItem: true,
-    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    activeDiscountId: null,
-    isChefsChoice: false,
-    isAlcoholic: false,
-    isVegetarian: false,
-    isVegan: false,
-    isGlutenFree: false,
-    showUndercookedOrRawDisclaimer: false,
-    pointReward: false,
-    birthdayReward: false,
-    reviews: null,
-    activeDiscount: null,
-    customizationCategories: [],
-  },
-  {
-    id: "77207783-b518-45f5-b43d-9c058dc0994f",
-    createdAt: "2024-05-15T21:32:32.217Z",
-    name: "Fresh Bread",
-    description:
-      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-    price: 1200,
-    altPrice: null,
-    available: true,
-    discontinued: false,
-    listOrder: 12,
-    hasImageOfItem: true,
-    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    activeDiscountId: null,
-    isChefsChoice: false,
-    isAlcoholic: false,
-    isVegetarian: false,
-    isVegan: false,
-    isGlutenFree: false,
-    showUndercookedOrRawDisclaimer: false,
-    pointReward: false,
-    birthdayReward: false,
-    reviews: null,
-    activeDiscount: null,
-    customizationCategories: [],
-  },
-  {
-    id: "7b0aa9eb-2a87-48cd-8c98-67b3f5a4b74f",
-    createdAt: "2024-02-21T03:51:47.000Z",
-    name: "Vietnamese Bar Nuts",
-    description:
-      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-    price: 1200,
-    altPrice: null,
-    available: true,
-    discontinued: false,
-    listOrder: 1,
-    hasImageOfItem: true,
-    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    activeDiscountId: null,
-    isChefsChoice: false,
-    isAlcoholic: false,
-    isVegetarian: true,
-    isVegan: false,
-    isGlutenFree: true,
-    showUndercookedOrRawDisclaimer: false,
-    pointReward: true,
-    birthdayReward: false,
-    reviews: null,
-    activeDiscount: null,
-    customizationCategories: [],
-  },
-  {
-    id: "bca28f28-839f-4891-a147-95176dec9341",
-    createdAt: "2024-05-15T11:32:32.000Z",
-    name: "Crispy Pork Bao",
-    description:
-      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-    price: 1400,
-    altPrice: null,
-    available: true,
-    discontinued: false,
-    listOrder: 14,
-    hasImageOfItem: true,
-    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    activeDiscountId: null,
-    isChefsChoice: false,
-    isAlcoholic: false,
-    isVegetarian: false,
-    isVegan: false,
-    isGlutenFree: false,
-    showUndercookedOrRawDisclaimer: false,
-    pointReward: false,
-    birthdayReward: false,
-    reviews: null,
-    activeDiscount: null,
-    customizationCategories: [],
-  },
-  {
-    id: "cab3e737-7b07-423f-9d9c-8bce07a9e3e2",
-    createdAt: "2024-02-20T15:53:09.000Z",
-    name: "Cream Cheese Wontons",
-    description:
-      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-    price: 1100,
-    altPrice: null,
-    available: true,
-    discontinued: false,
-    listOrder: 2,
-    hasImageOfItem: true,
-    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    activeDiscountId: null,
-    isChefsChoice: true,
-    isAlcoholic: false,
-    isVegetarian: false,
-    isVegan: true,
-    isGlutenFree: true,
-    showUndercookedOrRawDisclaimer: false,
-    pointReward: true,
-    birthdayReward: false,
-    reviews: null,
-    activeDiscount: null,
-    customizationCategories: [],
-  },
-];
