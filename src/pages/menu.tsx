@@ -304,7 +304,7 @@ function Menu() {
       </div> */}
 
       <div className="baseFlex relative h-56 w-full overflow-hidden bg-darkPrimary shadow-md md:bg-gradient-to-br md:from-primary md:to-darkPrimary tablet:h-72">
-        <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 gap-4 p-4 md:grid-cols-[1fr_1fr_auto_1fr_1fr] md:grid-rows-1 md:gap-4 md:px-8 md:py-0 tablet:h-72">
+        <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 gap-4 p-4 md:grid-cols-[1fr_1fr_auto_1fr_1fr] md:grid-rows-1 md:gap-0 md:px-8 md:py-0 tablet:h-72 tablet:gap-12">
           <div
             style={{
               filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
@@ -702,7 +702,7 @@ function MenuCategory({
       ) : (
         <>
           <div className="baseFlex relative h-36 w-full !justify-end overflow-hidden rounded-md bg-gradient-to-br from-primary to-darkPrimary shadow-md tablet:h-48">
-            <div className="absolute left-[35%] h-full w-[65%] overflow-hidden">
+            <div className="absolute left-[30%] h-full w-[70%] overflow-hidden">
               {/* {(viewportLabel.includes("mobile") ||
                 (!viewportLabel.includes("mobile") && name !== "Desserts")) && ( */}
 
@@ -712,7 +712,7 @@ function MenuCategory({
                   style={{
                     filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
                   }}
-                  className="absolute left-[55%] top-0 h-full w-[45%] tablet:left-[67%] tablet:w-1/3"
+                  className="absolute left-[52%] top-0 h-full w-[40%] tablet:left-[62%] tablet:w-1/3"
                 >
                   <Image
                     src={menuItemCategoryImages[name]![0] ?? ""}
@@ -734,7 +734,7 @@ function MenuCategory({
                   style={{
                     filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
                   }}
-                  className="absolute left-[10%] top-0 h-full w-[45%] tablet:left-[36.5%] tablet:w-1/3"
+                  className="absolute left-[10%] top-0 h-full w-[40%] tablet:left-[31%] tablet:w-1/3"
                 >
                   <Image
                     src={menuItemCategoryImages[name]![1]!}
@@ -754,7 +754,7 @@ function MenuCategory({
                   style={{
                     filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
                   }}
-                  className="absolute left-[10%] top-0 hidden h-full w-1/3 tablet:left-[6%] tablet:block tablet:w-1/3"
+                  className="absolute left-[10%] top-0 hidden h-full w-[40%] tablet:left-[0%] tablet:block tablet:w-1/3"
                 >
                   <Image
                     src={menuItemCategoryImages[name]![2]!}
