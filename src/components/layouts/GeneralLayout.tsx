@@ -5,6 +5,7 @@ import Footer from "~/components/Footer";
 import HeaderShell from "~/components/headers/HeaderShell";
 import { Toaster } from "~/components/ui/toaster";
 import useViewportLabelResizeListener from "~/hooks/useViewportLabelResizeListener";
+import { useMainStore } from "~/stores/MainStore";
 
 const notoSans = Noto_Sans({
   subsets: ["latin"],
@@ -16,7 +17,13 @@ interface GeneralLayout {
 }
 
 function GeneralLayout({ children }: GeneralLayout) {
+  const { viewportLabel } = useMainStore((state) => ({
+    viewportLabel: state.viewportLabel,
+  }));
+
   useViewportLabelResizeListener();
+
+  if (!viewportLabel) return null;
 
   return (
     <>

@@ -1,5 +1,5 @@
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -31,6 +31,7 @@ import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import StaticLotus from "~/components/ui/StaticLotus";
 import { useToast } from "~/components/ui/use-toast";
 import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
+import { X } from "lucide-react";
 
 import { Noto_Sans } from "next/font/google";
 const notoSans = Noto_Sans({
@@ -49,7 +50,7 @@ const charis = Charis_SIL({
   weight: ["400", "700"],
 });
 
-import outsideOfRestaurant from "/public/exterior/one.webp";
+import outsideOfRestaurant from "/public/exterior/instaTwo.jpg";
 
 const linkContainer = {
   visible: {
@@ -79,6 +80,9 @@ function MobileHeader() {
 
   const [hoursAndLocationAccordionOpen, setHoursAndLocationAccordionOpen] =
     useState(false);
+
+  const [showBanner, setShowBanner] = useState(true);
+
   const hoursAndLocationAccordionRef = useRef<HTMLDivElement>(null);
 
   const { dismiss: dismissToasts } = useToast();
@@ -100,83 +104,118 @@ function MobileHeader() {
   }, [events]);
 
   return (
-    <nav
-      id="header"
-      className="baseFlex sticky left-0 top-0 z-50 h-20 w-full !justify-between bg-offwhite p-2 shadow-md"
-    >
-      <Button variant="text" asChild>
-        <Link href={"/"} className={`ml-3 !px-0 !py-8`}>
-          <div className="baseVertFlex gap-0">
-            <StaticLotus className="size-10 fill-primary" />
-
-            <p className={`${stix.className} text-lg leading-4 text-black`}>
-              KHUE&apos;S
-            </p>
-          </div>
-        </Link>
-      </Button>
-
-      <div className="baseFlex gap-4">
-        <Sheet
-          open={sheetIsOpen}
-          onOpenChange={(open) => {
-            setSheetIsOpen(open);
-
-            if (open === true) {
-              dismissToasts();
-            }
-
-            if (open === false) {
-              setTimeout(() => {
-                setHoursAndLocationAccordionOpen(false);
-              }, 275);
-            }
-          }}
-        >
-          <SheetTrigger asChild>
-            <Button variant="ghost" size={"icon"} className="relative mx-2">
-              <span
-                aria-hidden="true"
-                className="ease-in-out absolute top-[12px] block h-0.5 w-6 bg-current transition duration-500"
-              ></span>
-              <span
-                aria-hidden="true"
-                className="ease-in-out absolute block h-0.5 w-6 bg-current transition duration-500"
-              ></span>
-              <span
-                aria-hidden="true"
-                className="ease-in-out absolute top-[26px] block h-0.5 w-6 bg-current transition duration-500"
-              ></span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent
-            className={`${charis.className} baseVertFlex !h-dvh !justify-between gap-0 !overflow-auto p-6`}
+    <>
+      <AnimatePresence mode="sync">
+        {showBanner && (
+          <motion.div
+            initial={{ opacity: 0, y: -100, height: "144px" }}
+            animate={{ opacity: 1, y: 0, height: "144px" }}
+            exit={{ opacity: 0, y: -100, height: 0 }}
+            transition={{ duration: 0.5 }}
+            className="baseVertFlex relative h-36 w-full gap-2 bg-primary text-primary-foreground"
           >
-            <VisuallyHidden>
-              <DialogTitle>Navigation menu</DialogTitle>
-              <DialogDescription>Our navigation menu</DialogDescription>
-            </VisuallyHidden>
-
-            <div className="baseVertFlex w-full !justify-start gap-2 overflow-y-auto">
-              <motion.div
-                variants={linkContainer}
-                initial="hidden"
-                animate="visible"
-                className="baseVertFlex  w-full !justify-start gap-4 overflow-x-hidden pt-12"
+            <p className="mt-8 !text-sm font-semibold">
+              We&apos;ve Moved! Come visit us at our new location:
+            </p>
+            <Button variant={"underline"} className="h-8 !p-0" asChild>
+              <a
+                href="https://maps.app.goo.gl/AtBZUUydNtVvxR7e9"
+                target="_blank"
+                rel="noreferrer"
+                className="!text-sm text-primary-foreground hover:!text-primary-foreground"
               >
-                <motion.div variants={linkVariants}>
-                  <Button
-                    variant={asPath.includes("/menu") ? "activeLink" : "link"}
-                    asChild
-                    className="mt-2"
-                  >
-                    <Link href={"/menu"} className="!text-xl">
-                      Menu
-                    </Link>
-                  </Button>
-                </motion.div>
+                693 Raymond Ave, St Paul, MN 55114
+              </a>
+            </Button>
+            <Button
+              variant={"underline"}
+              className="absolute right-4 top-3 cursor-pointer rounded-sm !p-0 text-primary-foreground opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+              asChild
+              onClick={() => setShowBanner(false)}
+            >
+              <X className="size-5.5" />
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-                {/* <motion.div variants={linkVariants}>
+      <nav
+        id="header"
+        className="baseFlex sticky left-0 top-0 z-50 h-20 w-full !justify-between bg-offwhite p-2 shadow-md"
+      >
+        <Button variant="text" asChild>
+          <Link href={"/"} className={`ml-3 !px-0 !py-8`}>
+            <div className="baseVertFlex gap-0">
+              <StaticLotus className="size-10 fill-primary" />
+
+              <p className={`${stix.className} text-lg leading-4 text-black`}>
+                KHUE&apos;S
+              </p>
+            </div>
+          </Link>
+        </Button>
+
+        <div className="baseFlex gap-4">
+          <Sheet
+            open={sheetIsOpen}
+            onOpenChange={(open) => {
+              setSheetIsOpen(open);
+
+              if (open === true) {
+                dismissToasts();
+              }
+
+              if (open === false) {
+                setTimeout(() => {
+                  setHoursAndLocationAccordionOpen(false);
+                }, 275);
+              }
+            }}
+          >
+            <SheetTrigger asChild>
+              <Button variant="ghost" size={"icon"} className="relative mx-2">
+                <span
+                  aria-hidden="true"
+                  className="ease-in-out absolute top-[12px] block h-0.5 w-6 bg-current transition duration-500"
+                ></span>
+                <span
+                  aria-hidden="true"
+                  className="ease-in-out absolute block h-0.5 w-6 bg-current transition duration-500"
+                ></span>
+                <span
+                  aria-hidden="true"
+                  className="ease-in-out absolute top-[26px] block h-0.5 w-6 bg-current transition duration-500"
+                ></span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              className={`${charis.className} baseVertFlex !h-dvh !justify-between gap-0 !overflow-auto p-6`}
+            >
+              <VisuallyHidden>
+                <DialogTitle>Navigation menu</DialogTitle>
+                <DialogDescription>Our navigation menu</DialogDescription>
+              </VisuallyHidden>
+
+              <div className="baseVertFlex w-full !justify-start gap-2 overflow-y-auto">
+                <motion.div
+                  variants={linkContainer}
+                  initial="hidden"
+                  animate="visible"
+                  className="baseVertFlex  w-full !justify-start gap-4 overflow-x-hidden pt-12"
+                >
+                  <motion.div variants={linkVariants}>
+                    <Button
+                      variant={asPath.includes("/menu") ? "activeLink" : "link"}
+                      asChild
+                      className="mt-2"
+                    >
+                      <Link href={"/menu"} className="!text-xl">
+                        Menu
+                      </Link>
+                    </Button>
+                  </motion.div>
+
+                  {/* <motion.div variants={linkVariants}>
                   <Button
                     variant={asPath.includes("/order") ? "activeLink" : "link"}
                     asChild
@@ -187,98 +226,105 @@ function MobileHeader() {
                   </Button>
                 </motion.div> */}
 
-                <motion.div variants={linkVariants}>
-                  <Button
-                    variant={
-                      asPath.includes("/reservations") ? "activeLink" : "link"
-                    }
-                    asChild
-                  >
-                    <a
-                      href="https://reservations.shift4payments.com/#/1814c327-a884-4b86-bc26-915ce9eadbb8"
-                      className="!text-xl"
+                  <motion.div variants={linkVariants}>
+                    <Button
+                      variant={
+                        asPath.includes("/reservations") ? "activeLink" : "link"
+                      }
+                      asChild
                     >
-                      Reservations
-                    </a>
-                  </Button>
-                </motion.div>
-
-                <motion.div variants={linkVariants}>
-                  <Button
-                    variant={
-                      asPath.includes("/our-story") ? "activeLink" : "link"
-                    }
-                    asChild
-                  >
-                    <Link href={"/our-story"} className="!text-xl">
-                      Our story
-                    </Link>
-                  </Button>
-                </motion.div>
-
-                <motion.div variants={linkVariants}>
-                  <Button
-                    variant={asPath.includes("/media") ? "activeLink" : "link"}
-                    asChild
-                  >
-                    <Link href={"/media"} className="!text-xl">
-                      Media
-                    </Link>
-                  </Button>
-                </motion.div>
-
-                <motion.div variants={linkVariants} className="mb-auto w-full">
-                  <Accordion
-                    value={hoursAndLocationAccordionOpen ? "item-1" : ""}
-                    onValueChange={(value) => {
-                      setHoursAndLocationAccordionOpen(value === "item-1");
-                    }}
-                    type="single"
-                    collapsible
-                    className="w-full"
-                  >
-                    <AccordionItem
-                      ref={hoursAndLocationAccordionRef}
-                      value="item-1"
-                      className="scroll-m-4 border-none"
-                      onClick={() => {
-                        if (hoursAndLocationAccordionOpen) return;
-
-                        setTimeout(() => {
-                          hoursAndLocationAccordionRef.current?.scrollIntoView({
-                            behavior: "smooth",
-                          });
-                        }, 275);
-                      }}
-                    >
-                      <AccordionTrigger className="baseFlex py-2 text-xl text-primary !no-underline">
-                        Hours & Location
-                      </AccordionTrigger>
-                      <AccordionContent
-                        className={`${notoSans.className} pr-1 pt-2`}
+                      <a
+                        href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul"
+                        className="!text-xl"
                       >
-                        <div className="baseVertFlex !items-start gap-8 rounded-md border bg-offwhite p-4 shadow-sm">
-                          <div className="baseVertFlex !items-start gap-4">
-                            <div className="baseFlex gap-2 text-lg font-semibold">
-                              <Clock className="size-5" />
-                              Hours
-                            </div>
-                            <div className="grid grid-cols-2 pr-4">
-                              <div className="baseVertFlex w-full !items-start">
-                                <p>Monday</p>
-                                <p>Tuesday</p>
-                                <p>Wednesday</p>
-                                <p>Thursday</p>
-                                <p>Friday</p>
-                                <p>Saturday</p>
-                                <p>Sunday</p>
-                              </div>
-                              <div className="baseVertFlex w-full !items-start">
-                                {getWeeklyHours()}
-                              </div>
-                            </div>
+                        Reservations
+                      </a>
+                    </Button>
+                  </motion.div>
 
-                            {/* <Dialog>
+                  <motion.div variants={linkVariants}>
+                    <Button
+                      variant={
+                        asPath.includes("/our-story") ? "activeLink" : "link"
+                      }
+                      asChild
+                    >
+                      <Link href={"/our-story"} className="!text-xl">
+                        Our story
+                      </Link>
+                    </Button>
+                  </motion.div>
+
+                  <motion.div variants={linkVariants}>
+                    <Button
+                      variant={
+                        asPath.includes("/media") ? "activeLink" : "link"
+                      }
+                      asChild
+                    >
+                      <Link href={"/media"} className="!text-xl">
+                        Media
+                      </Link>
+                    </Button>
+                  </motion.div>
+
+                  <motion.div
+                    variants={linkVariants}
+                    className="mb-auto w-full"
+                  >
+                    <Accordion
+                      value={hoursAndLocationAccordionOpen ? "item-1" : ""}
+                      onValueChange={(value) => {
+                        setHoursAndLocationAccordionOpen(value === "item-1");
+                      }}
+                      type="single"
+                      collapsible
+                      className="w-full"
+                    >
+                      <AccordionItem
+                        ref={hoursAndLocationAccordionRef}
+                        value="item-1"
+                        className="scroll-m-4 border-none"
+                        onClick={() => {
+                          if (hoursAndLocationAccordionOpen) return;
+
+                          setTimeout(() => {
+                            hoursAndLocationAccordionRef.current?.scrollIntoView(
+                              {
+                                behavior: "smooth",
+                              },
+                            );
+                          }, 275);
+                        }}
+                      >
+                        <AccordionTrigger className="baseFlex py-2 text-xl text-primary !no-underline">
+                          Hours & Location
+                        </AccordionTrigger>
+                        <AccordionContent
+                          className={`${notoSans.className} pr-1 pt-2`}
+                        >
+                          <div className="baseVertFlex !items-start gap-8 rounded-md border bg-offwhite p-4 shadow-sm">
+                            <div className="baseVertFlex !items-start gap-4">
+                              <div className="baseFlex gap-2 text-lg font-semibold">
+                                <Clock className="size-5" />
+                                Hours
+                              </div>
+                              <div className="grid grid-cols-2 pr-4">
+                                <div className="baseVertFlex w-full !items-start">
+                                  <p>Monday</p>
+                                  <p>Tuesday</p>
+                                  <p>Wednesday</p>
+                                  <p>Thursday</p>
+                                  <p>Friday</p>
+                                  <p>Saturday</p>
+                                  <p>Sunday</p>
+                                </div>
+                                <div className="baseVertFlex w-full !items-start">
+                                  {getWeeklyHours()}
+                                </div>
+                              </div>
+
+                              {/* <Dialog>
                               <DialogTrigger asChild>
                                 <Button
                                   variant={"underline"}
@@ -337,106 +383,98 @@ function MobileHeader() {
                               * Pickup orders must be placed at least 30 minutes
                               before closing.
                             </p> */}
-                          </div>
-
-                          <Separator className="w-4/5 self-center" />
-
-                          <div className="baseVertFlex relative w-full !items-start gap-4">
-                            <div className="baseVertFlex !items-start gap-4">
-                              <div className="baseFlex gap-2 text-lg font-semibold">
-                                <MapPin className="size-[22px]" />
-                                Location
-                              </div>
-                              <p className="w-[55vw] sm:w-auto">
-                                Close to University Avenue and the Raymond
-                                Avenue Green Line Station, our restaurant is
-                                well-connected to Minneapolis and downtown Saint
-                                Paul. We offer a small on-site parking lot, with
-                                additional street parking nearby.
-                              </p>
-
-                              <div className="baseFlex gap-2">
-                                <MapPin className="size-5 shrink-0 text-primary" />
-
-                                <Button
-                                  variant={"link"}
-                                  className="h-12 !rounded-t-none !p-0 xs:h-8"
-                                  asChild
-                                >
-                                  <a
-                                    href="https://maps.app.goo.gl/AtBZUUydNtVvxR7e9"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="my-2 whitespace-normal text-primary supports-[text-wrap]:text-wrap"
-                                  >
-                                    693 Raymond Ave, St Paul, MN 55114
-                                  </a>
-                                </Button>
-                              </div>
                             </div>
 
-                            <Image
-                              src={outsideOfRestaurant}
-                              alt={
-                                "Exterior view of Khue's, located on 799 University Ave W in St. Paul, MN"
-                              }
-                              sizes="(max-width: 640px) 60vw, 700px"
-                              className="!relative !h-48 !w-full rounded-md object-cover shadow-sm"
-                            />
+                            <Separator className="w-4/5 self-center" />
+
+                            <div className="baseVertFlex relative w-full !items-start gap-4">
+                              <div className="baseVertFlex !items-start gap-4">
+                                <div className="baseFlex gap-2 text-lg font-semibold">
+                                  <MapPin className="size-[22px]" />
+                                  Location
+                                </div>
+                                <p className="w-[55vw] sm:w-auto">
+                                  Close to University Avenue and the Raymond
+                                  Avenue Green Line Station, our restaurant is
+                                  well-connected to Minneapolis and downtown
+                                  Saint Paul. We offer a small on-site parking
+                                  lot, with additional street parking nearby.
+                                </p>
+
+                                <div className="baseFlex gap-2">
+                                  <MapPin className="size-5 shrink-0 text-primary" />
+
+                                  <Button
+                                    variant={"link"}
+                                    className="h-12 !rounded-t-none !p-0 xs:h-8"
+                                    asChild
+                                  >
+                                    <a
+                                      href="https://maps.app.goo.gl/AtBZUUydNtVvxR7e9"
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="my-2 whitespace-normal text-primary supports-[text-wrap]:text-wrap"
+                                    >
+                                      693 Raymond Ave, St Paul, MN 55114
+                                    </a>
+                                  </Button>
+                                </div>
+                              </div>
+
+                              <Image
+                                src={outsideOfRestaurant}
+                                alt={
+                                  "Interior view of Khue's, located on 799 University Ave W in St. Paul, MN"
+                                }
+                                sizes="(max-width: 640px) 60vw, 700px"
+                                className="!relative !h-72 !w-full rounded-md object-cover shadow-sm"
+                              />
+                            </div>
                           </div>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </motion.div>
                 </motion.div>
-              </motion.div>
-            </div>
-
-            <motion.div variants={linkVariants} className="relative bottom-0">
-              <Separator className="mb-4 w-full" />
-
-              <div className="baseFlex gap-2">
-                <Button variant="ghost" asChild>
-                  <a
-                    aria-label="Visit our Instagram page"
-                    href="https://www.instagram.com/khueskitchen/"
-                  >
-                    <IoLogoInstagram className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-                  </a>
-                </Button>
-
-                <Button variant="ghost" asChild>
-                  <a
-                    aria-label="Visit our Facebook page"
-                    href="https://www.facebook.com/khueskitchen/"
-                  >
-                    <FaFacebook className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-                  </a>
-                </Button>
-
-                <Button variant="ghost" asChild>
-                  <a
-                    aria-label="Visit our Tiktok page"
-                    href="https://www.tiktok.com/@khues_kitchen"
-                  >
-                    <SiTiktok className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-                  </a>
-                </Button>
-
-                <Button variant="ghost" asChild>
-                  <a
-                    aria-label="Visit our X page"
-                    href="https://x.com/Khues_Kitchen"
-                  >
-                    <FaXTwitter className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-                  </a>
-                </Button>
               </div>
-            </motion.div>
-          </SheetContent>
-        </Sheet>
-      </div>
-    </nav>
+
+              <motion.div variants={linkVariants} className="relative bottom-0">
+                <Separator className="mb-4 w-full" />
+
+                <div className="baseFlex gap-2">
+                  <Button variant="ghost" asChild>
+                    <a
+                      aria-label="Visit our Instagram page"
+                      href="https://www.instagram.com/khueskitchen/"
+                    >
+                      <IoLogoInstagram className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
+                    </a>
+                  </Button>
+
+                  <Button variant="ghost" asChild>
+                    <a
+                      aria-label="Visit our Facebook page"
+                      href="https://www.facebook.com/khueskitchen/"
+                    >
+                      <FaFacebook className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
+                    </a>
+                  </Button>
+
+                  <Button variant="ghost" asChild>
+                    <a
+                      aria-label="Visit our Tiktok page"
+                      href="https://www.tiktok.com/@khues_kitchen"
+                    >
+                      <SiTiktok className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
+                    </a>
+                  </Button>
+                </div>
+              </motion.div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </nav>
+    </>
   );
 }
 

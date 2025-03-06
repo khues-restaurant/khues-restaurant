@@ -31,9 +31,11 @@ import { Button } from "../ui/button";
 import classes from "./DesktopHeader.module.css";
 import { STIX_Two_Text } from "next/font/google";
 import { Charis_SIL } from "next/font/google";
+import { X } from "lucide-react";
 
 import StaticLotus from "~/components/ui/StaticLotus";
-import outsideOfRestaurant from "/public/exterior/one.webp";
+import outsideOfRestaurant from "/public/interior/MidCityKitchen_11.jpg";
+import { AnimatePresence, motion } from "framer-motion";
 
 const stix = STIX_Two_Text({
   subsets: ["latin"],
@@ -49,37 +51,74 @@ function DesktopHeader() {
   const [showSmallViewportPopoverLinks, setShowSmallViewportPopoverLinks] =
     useState(false);
 
+  const [showBanner, setShowBanner] = useState(true);
+
   return (
-    <nav
-      id="header"
-      className={`${classes.desktopHeader} sticky left-0 top-0 z-50 grid h-24 w-full bg-offwhite shadow-md
-      `}
-    >
-      <Button variant="text" asChild>
-        <Link href={"/"} className={`${classes.logo ?? ""} mr-4 !px-0 !py-8`}>
-          <div className="baseVertFlex gap-0">
-            <StaticLotus className="size-10 fill-primary" />
-
-            <p className={`${stix.className} text-lg leading-5 text-black`}>
-              KHUE&apos;S
+    <>
+      <AnimatePresence mode="sync">
+        {showBanner && (
+          <motion.div
+            initial={{ opacity: 0, y: -100, height: "64px" }}
+            animate={{ opacity: 1, y: 0, height: "64px" }}
+            exit={{ opacity: 0, y: -100, height: 0 }}
+            transition={{ duration: 0.5 }}
+            className="baseFlex relative h-16 w-full gap-2 bg-primary text-primary-foreground"
+          >
+            <p className="!text-base font-semibold">
+              We&apos;ve Moved! Come visit us at our new spot:
             </p>
-          </div>
-        </Link>
-      </Button>
+            <Button variant={"underline"} className="h-8 !p-0" asChild>
+              <a
+                href="https://maps.app.goo.gl/AtBZUUydNtVvxR7e9"
+                target="_blank"
+                rel="noreferrer"
+                className="!text-base text-primary-foreground hover:!text-primary-foreground"
+              >
+                693 Raymond Ave, St Paul, MN 55114
+              </a>
+            </Button>
+            <Button
+              variant={"underline"}
+              className="absolute right-4 top-3 cursor-pointer rounded-sm !p-0 text-primary-foreground opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+              asChild
+              onClick={() => setShowBanner(false)}
+            >
+              <X className="size-6" />
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div
-        className={`${classes.mainLinks} ${charis.className} baseFlex w-full !justify-start gap-2`}
+      <nav
+        id="header"
+        className={`${classes.desktopHeader} sticky left-0 top-0 z-50 grid h-24 w-full bg-offwhite shadow-md
+      `}
       >
-        <Button
-          variant={asPath.includes("/menu") ? "activeLink" : "link"}
-          asChild
-        >
-          <Link href={"/menu"} className="!text-xl">
-            Menu
+        <Button variant="text" asChild>
+          <Link href={"/"} className={`${classes.logo ?? ""} mr-4 !px-0 !py-8`}>
+            <div className="baseVertFlex h-[60px] w-[65.39px] gap-0">
+              <StaticLotus className="size-10 fill-primary" />
+
+              <p className={`${stix.className} text-lg leading-5 text-black`}>
+                KHUE&apos;S
+              </p>
+            </div>
           </Link>
         </Button>
 
-        {/* <Button
+        <div
+          className={`${classes.mainLinks} ${charis.className} baseFlex w-full !justify-start gap-2`}
+        >
+          <Button
+            variant={asPath.includes("/menu") ? "activeLink" : "link"}
+            asChild
+          >
+            <Link href={"/menu"} className="!text-xl">
+              Menu
+            </Link>
+          </Button>
+
+          {/* <Button
           variant={asPath.includes("/order") ? "activeLink" : "link"}
           asChild
         >
@@ -88,125 +127,127 @@ function DesktopHeader() {
           </Link>
         </Button> */}
 
-        <Button
-          variant={asPath.includes("/reservations") ? "activeLink" : "link"}
-          asChild
-        >
-          <a
-            href="https://reservations.shift4payments.com/#/1814c327-a884-4b86-bc26-915ce9eadbb8"
-            className="block !text-xl smallDesktopHeader:hidden"
+          <Button
+            variant={asPath.includes("/reservations") ? "activeLink" : "link"}
+            asChild
           >
-            Reservations
-          </a>
-        </Button>
+            <a
+              href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul"
+              className="block !text-xl smallDesktopHeader:hidden"
+            >
+              Reservations
+            </a>
+          </Button>
 
-        <Button
-          variant={asPath.includes("/our-story") ? "activeLink" : "link"}
-          asChild
-        >
-          <Link href={"/our-story"} className="block !text-xl">
-            Our story
-          </Link>
-        </Button>
-
-        <Button
-          variant={asPath.includes("/media") ? "activeLink" : "link"}
-          asChild
-        >
-          <Link
-            href={"/media"}
-            className="block !text-xl smallDesktopHeader:hidden"
+          <Button
+            variant={asPath.includes("/our-story") ? "activeLink" : "link"}
+            asChild
           >
-            Media
-          </Link>
-        </Button>
+            <Link href={"/our-story"} className="block !text-xl">
+              Our story
+            </Link>
+          </Button>
 
-        <Popover
-          open={showSmallViewportPopoverLinks}
-          onOpenChange={(open) => setShowSmallViewportPopoverLinks(open)}
+          <Button
+            variant={asPath.includes("/media") ? "activeLink" : "link"}
+            asChild
+          >
+            <Link
+              href={"/media"}
+              className="block !text-xl smallDesktopHeader:hidden"
+            >
+              Media
+            </Link>
+          </Button>
+
+          <Popover
+            open={showSmallViewportPopoverLinks}
+            onOpenChange={(open) => setShowSmallViewportPopoverLinks(open)}
+          >
+            <PopoverTrigger asChild>
+              <Button
+                variant="ghost"
+                size={"icon"}
+                className="baseFlex !hidden gap-2 smallDesktopHeader:!flex"
+              >
+                <IoMdMore className="!hidden size-7 text-primary smallDesktopHeader:!flex" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent side="bottom" className="w-auto">
+              <div className="baseVertFlex !items-start gap-2">
+                <Button
+                  variant={
+                    asPath.includes("/reservations") ? "activeLink" : "link"
+                  }
+                  asChild
+                >
+                  <Link href={"/reservations"} className="!text-xl">
+                    Reservations
+                  </Link>
+                </Button>
+
+                <Button
+                  variant={asPath.includes("/media") ? "activeLink" : "link"}
+                  onClick={() => setShowSmallViewportPopoverLinks(false)}
+                  asChild
+                >
+                  <Link href={"/media"} className="!text-xl">
+                    Media
+                  </Link>
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        {/* order icon and auth buttons/user icon */}
+        <div
+          className={`${classes.authentication} baseFlex relative gap-4 transition-all`}
         >
-          <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              size={"icon"}
-              className="baseFlex !hidden gap-2 smallDesktopHeader:!flex"
-            >
-              <IoMdMore className="!hidden size-7 text-primary smallDesktopHeader:!flex" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent side="bottom" className="w-auto">
-            <div className="baseVertFlex !items-start gap-2">
+          <Dialog>
+            <DialogTrigger asChild>
               <Button
-                variant={
-                  asPath.includes("/reservations") ? "activeLink" : "link"
-                }
-                asChild
+                variant="outline"
+                className="mr-4 !flex-nowrap gap-2 text-primary smallDesktopHeader:mr-0"
               >
-                <Link href={"/reservations"} className="!text-xl">
-                  Reservations
-                </Link>
+                <HiOutlineInformationCircle className="size-[17px]" />
+                Hours & Location
               </Button>
+            </DialogTrigger>
+            <DialogContent extraBottomSpacer={false} className="max-w-[900px]">
+              <VisuallyHidden>
+                <DialogTitle>
+                  Hours of operation and location information
+                </DialogTitle>
+                <DialogDescription>
+                  Our hours of operation and location information
+                </DialogDescription>
+              </VisuallyHidden>
 
-              <Button
-                variant={asPath.includes("/media") ? "activeLink" : "link"}
-                onClick={() => setShowSmallViewportPopoverLinks(false)}
-                asChild
-              >
-                <Link href={"/media"} className="!text-xl">
-                  Media
-                </Link>
-              </Button>
-            </div>
-          </PopoverContent>
-        </Popover>
-      </div>
+              <div className="baseFlex relative !items-start">
+                <StaticLotus className="absolute -bottom-20 -left-20 size-36 rotate-[-315deg] fill-primary/50 " />
 
-      {/* order icon and auth buttons/user icon */}
-      <div
-        className={`${classes.authentication} baseFlex relative gap-4 transition-all`}
-      >
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button
-              variant="outline"
-              className="mr-4 !flex-nowrap gap-2 text-primary smallDesktopHeader:mr-0"
-            >
-              <HiOutlineInformationCircle className="size-[17px]" />
-              Hours & Location
-            </Button>
-          </DialogTrigger>
-          <DialogContent extraBottomSpacer={false} className="max-w-[900px]">
-            <VisuallyHidden>
-              <DialogTitle>
-                Hours of operation and location information
-              </DialogTitle>
-              <DialogDescription>
-                Our hours of operation and location information
-              </DialogDescription>
-            </VisuallyHidden>
-
-            <div className="baseFlex w-[850px] !items-start">
-              <div className="baseVertFlex w-[273px] !items-start gap-2">
-                <div className="baseFlex gap-2 text-lg font-semibold">
-                  <Clock className="size-5" />
-                  Hours
-                </div>
-                <div className="baseFlex mt-1 w-full">
-                  <div className="baseVertFlex w-full !items-start gap-2">
-                    <p>Monday</p>
-                    <p>Tuesday</p>
-                    <p>Wednesday</p>
-                    <p>Thursday</p>
-                    <p>Friday</p>
-                    <p>Saturday</p>
-                    <p>Sunday</p>
+                <div className="baseVertFlex w-[273px] !shrink-0 !items-start gap-2">
+                  <div className="baseFlex gap-2 text-lg font-semibold">
+                    <Clock className="size-5" />
+                    Hours
                   </div>
-                  <div className="baseVertFlex w-full !items-start gap-2 pr-4">
-                    {getWeeklyHours()}
+                  <div className="baseFlex mt-1 w-full">
+                    <div className="baseVertFlex w-full !items-start gap-2">
+                      <p>Monday</p>
+                      <p>Tuesday</p>
+                      <p>Wednesday</p>
+                      <p>Thursday</p>
+                      <p>Friday</p>
+                      <p>Saturday</p>
+                      <p>Sunday</p>
+                    </div>
+                    <div className="baseVertFlex w-full !items-start gap-2 pr-4">
+                      {getWeeklyHours()}
+                    </div>
                   </div>
-                </div>
 
-                {/* <Dialog>
+                  {/* <Dialog>
                   <DialogTrigger asChild>
                     <Button variant={"underline"} className="mt-2 !self-center">
                       Holiday hours
@@ -259,91 +300,87 @@ function DesktopHeader() {
                   * Pickup orders must be placed at least 30 minutes before
                   closing.
                 </p> */}
-              </div>
-
-              <Separator
-                orientation="vertical"
-                className="mx-4 h-4/5 self-center"
-              />
-
-              <div className="baseVertFlex relative ml-4 !items-start gap-4">
-                <div className="baseVertFlex !items-start gap-2">
-                  <div className="baseFlex gap-2 text-lg font-semibold">
-                    <MapPin className="size-5" />
-                    Location
-                  </div>
-                  <p className="w-[536px]">
-                    Close to University Avenue and the Raymond Avenue Green Line
-                    Station, our restaurant is well-connected to Minneapolis and
-                    downtown Saint Paul. We offer a small on-site parking lot,
-                    with additional street parking nearby.
-                  </p>
-
-                  <div className="baseFlex gap-2">
-                    <MapPin className="size-5 text-primary" />
-
-                    <Button variant={"link"} className="h-8 !p-0" asChild>
-                      <a
-                        href="https://maps.app.goo.gl/AtBZUUydNtVvxR7e9"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-primary"
-                      >
-                        693 Raymond Ave, St Paul, MN 55114
-                      </a>
-                    </Button>
-                  </div>
                 </div>
 
-                <Image
-                  src={outsideOfRestaurant}
-                  alt={
-                    "Exterior view of Khue's, located on 799 University Ave W in St. Paul, MN"
-                  }
-                  sizes="550px"
-                  className="!relative !h-52 !w-full rounded-md object-cover shadow-md"
+                <Separator
+                  orientation="vertical"
+                  className="mx-4 h-4/5 self-center"
                 />
+
+                <div className="baseVertFlex relative ml-4 !items-start gap-4">
+                  <div className="baseVertFlex !items-start gap-2">
+                    <div className="baseFlex gap-2 text-lg font-semibold">
+                      <MapPin className="size-5" />
+                      Location
+                    </div>
+                    <p className="w-[536px]">
+                      Close to University Avenue and the Raymond Avenue Green
+                      Line Station, our restaurant is well-connected to
+                      Minneapolis and downtown Saint Paul. We offer a small
+                      on-site parking lot, with additional street parking
+                      nearby.
+                    </p>
+
+                    <div className="baseFlex gap-2">
+                      <MapPin className="size-5 text-primary" />
+
+                      <Button variant={"link"} className="h-8 !p-0" asChild>
+                        <a
+                          href="https://maps.app.goo.gl/AtBZUUydNtVvxR7e9"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-primary"
+                        >
+                          693 Raymond Ave, St Paul, MN 55114
+                        </a>
+                      </Button>
+                    </div>
+                  </div>
+
+                  <Image
+                    src={outsideOfRestaurant}
+                    alt={
+                      "Interior view of Khue's, located on 799 University Ave W in St. Paul, MN"
+                    }
+                    sizes="550px"
+                    className="!relative !h-52 !w-full rounded-md object-cover shadow-md"
+                  />
+                </div>
               </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+            </DialogContent>
+          </Dialog>
 
-        <div className="baseFlex gap-2">
-          <Button variant="ghost" asChild>
-            <a
-              aria-label="Visit our Instagram page"
-              href="https://www.instagram.com/khueskitchen/"
-            >
-              <IoLogoInstagram className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-            </a>
-          </Button>
+          <div className="baseFlex gap-2">
+            <Button variant="ghost" asChild>
+              <a
+                aria-label="Visit our Instagram page"
+                href="https://www.instagram.com/khueskitchen/"
+              >
+                <IoLogoInstagram className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
+              </a>
+            </Button>
 
-          <Button variant="ghost" asChild>
-            <a
-              aria-label="Visit our Facebook page"
-              href="https://www.facebook.com/khueskitchen/"
-            >
-              <FaFacebook className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-            </a>
-          </Button>
+            <Button variant="ghost" asChild>
+              <a
+                aria-label="Visit our Facebook page"
+                href="https://www.facebook.com/khueskitchen/"
+              >
+                <FaFacebook className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
+              </a>
+            </Button>
 
-          <Button variant="ghost" asChild>
-            <a
-              aria-label="Visit our Tiktok page"
-              href="https://www.tiktok.com/@khues_kitchen"
-            >
-              <SiTiktok className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-            </a>
-          </Button>
-
-          <Button variant="ghost" asChild>
-            <a aria-label="Visit our X page" href="https://x.com/Khues_Kitchen">
-              <FaXTwitter className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-            </a>
-          </Button>
+            <Button variant="ghost" asChild>
+              <a
+                aria-label="Visit our Tiktok page"
+                href="https://www.tiktok.com/@khues_kitchen"
+              >
+                <SiTiktok className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
+              </a>
+            </Button>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 }
 

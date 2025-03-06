@@ -304,9 +304,14 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
         set({ refetchMinOrderPickupTime });
       },
 
-      viewportLabel: "mobile",
+      viewportLabel: undefined,
       setViewportLabel: (
-        viewportLabel: "mobile" | "mobileLarge" | "tablet" | "desktop",
+        viewportLabel:
+          | "mobile"
+          | "mobileLarge"
+          | "tablet"
+          | "desktop"
+          | undefined,
       ) => {
         set({ viewportLabel });
       },

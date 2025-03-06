@@ -32,32 +32,43 @@ import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationC
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { type GetStaticProps } from "next";
 
-import topLeftHero from "/public/exterior/one.webp";
-import topRightHero from "/public/food/heroOne.jpeg";
-import bottomLeftHero from "/public/food/heroThree.webp";
-import bottomRightHero from "/public/food/heroFour.jpg";
-
 import khuesKitchenLogo from "/public/logos/khuesKitchenLogo.png";
 
 import starTribuneLogo from "/public/media/starTribuneLogo.png";
 import kare11Logo from "/public/media/kare11Logo.png";
 import mprLogo from "/public/media/mprLogo.png";
 
-import masonryFoodOne from "/public/food/one.jpg";
-import masonryFoodTwo from "/public/food/two.webp";
-import masonryFoodThree from "/public/food/three.jpg";
-import masonryFoodFour from "/public/food/four.png";
-import masonryFoodFive from "/public/food/five.jpg";
-
 import rewardsPromo from "/public/homepage/rewardsPromo.jpg";
 import eric from "/public/ourStory/eric.webp";
-import reservations from "/public/reservations/reservations.webp";
+import reservations from "/public/interior/reservations.jpg";
 
 import masonryInteriorOne from "/public/interior/one.webp";
 import masonryInteriorTwo from "/public/interior/two.webp";
 import masonryInteriorThree from "/public/interior/three.webp";
 import masonryInteriorFour from "/public/interior/four.webp";
 import masonryInteriorFive from "/public/interior/five.webp";
+
+import topLeftHero from "/public/ourStory/cropped-khues-kitchen.png";
+import topRightHero from "/public/food/spicy-chicken-sando.jpg";
+import bottomLeftHero from "/public/food/bottomLeftHero.png";
+import bottomRightHero from "/public/interior/instaOne.jpg";
+
+import masonryFoodOne from "/public/food/grilled-sirloin-rotated.png";
+import masonryFoodTwo from "/public/food/cream-cheese-wantons.png";
+import masonryFoodThree from "/public/food/sticky-jicama-ribs.png";
+import masonryFoodFour from "/public/food/thai-tea-tres-leches.png";
+import masonryFoodFive from "/public/food/roast-pork-fried-rice.png";
+import masonryFoodSix from "/public/food/affogato.png";
+
+import masonryInteriorSix from "/public/interior/midCityKitchen_1.jpg";
+import masonryInteriorSeven from "/public/interior/midCityKitchen_19.jpg";
+import masonryInteriorEight from "/public/interior/midCityKitchen_2.jpg";
+import masonryInteriorNine from "/public/interior/instaFive.jpg";
+
+import masonryInteriorTen from "/public/interior/instaOne.jpg";
+import masonryInteriorEleven from "/public/interior/instaTwo.jpg";
+import masonryInteriorTwelve from "/public/interior/instaThree.jpg";
+import masonryInteriorThirteen from "/public/interior/instaFour.jpg";
 
 // interface Home {
 //   ourFavoriteMenuItems: FullMenuItem[];
@@ -199,12 +210,12 @@ export default function Home() {
       transition={{ duration: 0.5 }}
       className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem)]"
     >
-      {/* Hero */}
+      {/* Mobile Hero */}
       <div
         ref={mobileHeroRef}
         className="baseVertFlex relative h-[calc(100svh-5rem)] w-full gap-4 p-4 md:!hidden tablet:h-[calc(100svh-6rem)]"
       >
-        <div className="relative grid size-full grid-cols-3 grid-rows-1 gap-4">
+        <div className="relative grid size-full min-h-0 flex-1 grid-cols-3 grid-rows-1 gap-4">
           {/* top left */}
           <motion.div
             initial={{ filter: "blur(5px)", opacity: 0, scale: 0.75 }}
@@ -222,7 +233,9 @@ export default function Home() {
           >
             <Image
               src={topLeftHero}
-              alt={"TODO: fill in w/ appropriate alt text"}
+              alt={
+                "Khue Pham, lead chef at Quang Restaurant, smiling and posing with her son, Eric Pham, in a professional kitchen."
+              }
               priority
               sizes="33vw"
               className="!relative !size-full rounded-md object-cover"
@@ -246,7 +259,7 @@ export default function Home() {
           >
             <Image
               src={topRightHero}
-              alt={"TODO: fill in w/ appropriate alt text"}
+              alt={"Spicy Chicken Sando at Khue's in St. Paul"}
               priority
               sizes="66vw"
               className="!relative !size-full rounded-md object-cover"
@@ -268,15 +281,14 @@ export default function Home() {
           }}
           className="baseVertFlex w-full"
         >
-          <section className="baseFlex w-full rounded-md border bg-gradient-to-br from-offwhite to-primary/10 py-4 pl-6 shadow-sm ">
+          <section className="baseFlex w-full rounded-md border bg-gradient-to-br from-offwhite to-primary/10 py-4 pl-6 shadow-sm">
             <Image
               src={khuesKitchenLogo}
-              alt={"TODO: fill in w/ appropriate alt text"}
+              alt={"Khue's Kitchen logo"}
               priority
               className="h-[152px] w-[80.5px] drop-shadow-md sm:h-[190px] sm:w-[100.625px]"
             />
             <div className="baseVertFlex gap-1 rounded-md">
-              {/* experimenting with stone-800 instead of black */}
               <h1 className="text-center text-xl font-bold text-stone-800 sm:text-2xl">
                 Welcome to Khue&apos;s
               </h1>
@@ -284,26 +296,9 @@ export default function Home() {
                 A modern take on classic Vietnamese cuisine.
               </p>
 
-              {/* <Button size={"lg"} asChild>
-                <Link
-                  href="/order"
-                  className="baseFlex mt-4 gap-2 !px-4 shadow-md"
-                >
-                  <SideAccentSwirls
-                    delay={1.6}
-                    className="h-[14px] scale-x-[-1] fill-offwhite"
-                  />
-                  Order now
-                  <SideAccentSwirls
-                    delay={1.6}
-                    className="h-[14px] fill-offwhite"
-                  />
-                </Link>
-              </Button> */}
-
               <Button size={"lg"} asChild>
                 <Link
-                  href="/order"
+                  href="/menu"
                   className="baseFlex mt-4 gap-2 !px-4 shadow-md"
                 >
                   <SideAccentSwirls
@@ -320,7 +315,7 @@ export default function Home() {
 
               <Button size={"lg"} variant={"outline"} asChild>
                 <a
-                  href="https://reservations.shift4payments.com/#/1814c327-a884-4b86-bc26-915ce9eadbb8"
+                  href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul"
                   // TODO: was 186px width btw
                   className="baseFlex mt-2 w-[206px] gap-2 !px-4 shadow-md"
                 >
@@ -332,7 +327,7 @@ export default function Home() {
           </section>
         </motion.div>
 
-        <div className="relative grid size-full grid-cols-3 grid-rows-1 gap-4">
+        <div className="relative grid size-full min-h-0 flex-1 grid-cols-3 grid-rows-1 gap-4">
           {/* bottom left */}
           <motion.div
             initial={{ filter: "blur(5px)", opacity: 0, scale: 0.75 }}
@@ -350,7 +345,7 @@ export default function Home() {
           >
             <Image
               src={bottomLeftHero}
-              alt={"TODO: fill in w/ appropriate alt text"}
+              alt={"Bánh Mì Xíu Mại at Khue's in St. Paul"}
               priority
               sizes="66vw"
               className="!relative !size-full rounded-md object-cover"
@@ -374,7 +369,9 @@ export default function Home() {
           >
             <Image
               src={bottomRightHero}
-              alt={"TODO: fill in w/ appropriate alt text"}
+              alt={
+                "Interior view of Khue's, located on 799 University Ave W in St. Paul, MN"
+              }
               priority
               sizes="33vw"
               className="!relative !size-full rounded-md object-cover"
@@ -383,6 +380,7 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Desktop Hero */}
       <div className="baseFlex relative !hidden h-[calc(100svh-5rem)] w-full p-4 md:!flex tablet:h-[calc(100svh-6rem)]">
         <div className="relative grid size-full grid-cols-3 grid-rows-3 gap-4">
           {/* top left */}
@@ -402,7 +400,9 @@ export default function Home() {
           >
             <Image
               src={topLeftHero}
-              alt={"TODO: fill in w/ appropriate alt text"}
+              alt={
+                "Khue Pham, lead chef at Quang Restaurant, smiling and posing with her son, Eric Pham, in a professional kitchen."
+              }
               priority
               sizes="33vw"
               className="!relative !size-full rounded-md object-cover"
@@ -426,7 +426,7 @@ export default function Home() {
           >
             <Image
               src={topRightHero}
-              alt={"TODO: fill in w/ appropriate alt text"}
+              alt={"Spicy Chicken Sando at Khue's in St. Paul"}
               priority
               sizes="66vw"
               className="!relative !size-full rounded-md object-cover"
@@ -450,7 +450,7 @@ export default function Home() {
             <section className="baseFlex gap-12 rounded-md border bg-offwhite bg-gradient-to-br from-offwhite to-primary/10 py-8 pl-12 pr-16 shadow-lightHeroContainer">
               <Image
                 src={khuesKitchenLogo}
-                alt={"TODO: fill in w/ appropriate alt text"}
+                alt={"Khue's Kitchen logo"}
                 priority
                 className="h-[228px] w-[120.75px] drop-shadow-md"
               />
@@ -483,7 +483,7 @@ export default function Home() {
 
                   <Button size={"lg"} variant={"outline"} asChild>
                     <a
-                      href="https://reservations.shift4payments.com/#/1814c327-a884-4b86-bc26-915ce9eadbb8"
+                      href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul"
                       className="baseFlex gap-3 !px-8 !py-6 !text-lg shadow-sm"
                     >
                       Make a reservation
@@ -528,7 +528,7 @@ export default function Home() {
           >
             <Image
               src={bottomLeftHero}
-              alt={"TODO: fill in w/ appropriate alt text"}
+              alt={"Bánh Mì Xíu Mại at Khue's in St. Paul"}
               priority
               sizes="33vw"
               className="!relative !size-full rounded-md object-cover "
@@ -552,10 +552,12 @@ export default function Home() {
           >
             <Image
               src={bottomRightHero}
-              alt={"TODO: fill in w/ appropriate alt text"}
+              alt={
+                "Interior view of Khue's, located on 799 University Ave W in St. Paul, MN"
+              }
               priority
               sizes="66vw"
-              className="!relative !size-full rounded-md object-cover"
+              className="!relative !size-full rounded-md object-cover object-bottom"
             />
           </motion.div>
         </div>
@@ -670,7 +672,7 @@ export default function Home() {
               <Parallax speed={-3} className="!absolute !top-0 !size-[120%]">
                 <Image
                   src={masonryFoodOne}
-                  alt={"TODO: fill in w/ appropriate alt text"}
+                  alt={"Grilled Sirloin at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 384px, 500px"
                   className="!relative !size-full rounded-md object-cover"
                 />
@@ -678,10 +680,10 @@ export default function Home() {
             </div>
 
             <div className="secondMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[150%] ">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[120%] ">
                 <Image
                   src={masonryFoodTwo}
-                  alt={"TODO: fill in w/ appropriate alt text"}
+                  alt={"Cream Cheese Wantons at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 159px, 500px"
                   className="!relative !size-full rounded-md object-cover"
                 />
@@ -689,10 +691,10 @@ export default function Home() {
             </div>
 
             <div className="thirdMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[150%]">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[105%]">
                 <Image
                   src={masonryFoodThree}
-                  alt={"TODO: fill in w/ appropriate alt text"}
+                  alt={"Sticky Jicama Ribs at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 159px, 500px"
                   className="!relative !size-full rounded-md object-cover"
                 />
@@ -700,10 +702,10 @@ export default function Home() {
             </div>
 
             <div className="fourthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[150%]">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[120%]">
                 <Image
                   src={masonryFoodFour}
-                  alt={"TODO: fill in w/ appropriate alt text"}
+                  alt={"Thai Tea Tres Leches at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 159px, 500px"
                   className="!relative !size-full rounded-md object-cover"
                 />
@@ -711,12 +713,25 @@ export default function Home() {
             </div>
 
             <div className="fifthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[120%]">
                 <Image
                   src={masonryFoodFive}
                   priority // I feel like this shouldn't be necessary, but the image wasn't auto-loading
                   // when it came into the viewport otherwise
-                  alt={"TODO: fill in w/ appropriate alt text"}
+                  alt={"Roast Pork Fried Rice at Khue's in St. Paul"}
+                  sizes="(max-width: 1000px) 384px, 500px"
+                  className="!relative !size-full rounded-md object-cover"
+                />
+              </Parallax>
+            </div>
+
+            <div className="sixthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[120%]">
+                <Image
+                  src={masonryFoodSix}
+                  priority // I feel like this shouldn't be necessary, but the image wasn't auto-loading
+                  // when it came into the viewport otherwise
+                  alt={"Cà Phê Sữa Đá Affogato at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 384px, 500px"
                   className="!relative !size-full rounded-md object-cover"
                 />
@@ -827,7 +842,9 @@ export default function Home() {
             <div className="relative h-60 w-full overflow-hidden shadow-md">
               <Image
                 src={reservations}
-                alt={"TODO: fill in w/ appropriate alt text"}
+                alt={
+                  "Table ready for a party of twelve at Khue's in St. Paul, MN"
+                }
                 width={384}
                 className="!relative !top-0 !size-full !h-96 object-cover !pb-24"
               />
@@ -851,9 +868,12 @@ export default function Home() {
                 <Button
                   className="baseFlex gap-2"
                   onClick={() => setChatIsOpen(true)}
+                  asChild
                 >
-                  Make a reservation
-                  <IoCalendarOutline className="size-4 drop-shadow-md" />
+                  <a href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul">
+                    Make a reservation
+                    <IoCalendarOutline className="size-4 drop-shadow-md" />
+                  </a>
                 </Button>
               </div>
             </div>
@@ -879,9 +899,12 @@ export default function Home() {
                 <Button
                   className="baseFlex gap-2"
                   onClick={() => setChatIsOpen(!chatIsOpen)}
+                  asChild
                 >
-                  Make a reservation
-                  <IoCalendarOutline className="size-4 drop-shadow-md" />
+                  <a href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul">
+                    Make a reservation
+                    <IoCalendarOutline className="size-4 drop-shadow-md" />
+                  </a>
                 </Button>
               </div>
             </div>
@@ -914,7 +937,9 @@ export default function Home() {
               >
                 <Image
                   src={reservations}
-                  alt={"TODO: fill in w/ appropriate alt text"}
+                  alt={
+                    "Table ready for a party of twelve at Khue's in St. Paul, MN"
+                  }
                   sizes="750px"
                   className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-16"
                 />
@@ -925,10 +950,12 @@ export default function Home() {
           {/* masonry but prob more of just inside/outside the restaurant */}
           <div className="homepageInteriorMasonry h-[700px] w-full max-w-sm tablet:h-[450px] tablet:max-w-4xl">
             <div className="firstMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[110%]">
                 <Image
-                  src={masonryInteriorOne}
-                  alt={"TODO: fill in w/ appropriate alt text"}
+                  src={masonryInteriorSix} /* horiz rectangle */
+                  alt={
+                    "Bright industrial-chic dining space featuring a long wooden table, cross-back chairs, exposed brick walls, and lush green plants."
+                  }
                   sizes="(max-width: 1000px) 384px, 500px"
                   className="!relative !size-full rounded-md object-cover object-bottom"
                 />
@@ -936,10 +963,12 @@ export default function Home() {
             </div>
 
             <div className="secondMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[110%]">
                 <Image
-                  src={masonryInteriorTwo}
-                  alt={"TODO: fill in w/ appropriate alt text"}
+                  src={masonryInteriorEight} /* square */
+                  alt={
+                    "Contemporary bar area with a sleek countertop, stylish liquor display, and tall potted plants adding a touch of greenery."
+                  }
                   sizes="(max-width: 1000px) 159px, 500px"
                   className="!relative !size-full rounded-md object-cover object-bottom"
                 />
@@ -947,10 +976,12 @@ export default function Home() {
             </div>
 
             <div className="thirdMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[105%]">
                 <Image
-                  src={masonryInteriorThree}
-                  alt={"TODO: fill in w/ appropriate alt text"}
+                  src={masonryInteriorTen} /* vert rectangle */
+                  alt={
+                    "Sunlit corner of a restaurant featuring wooden tables, red chairs, a wall-mounted floral art piece, and potted greenery."
+                  }
                   sizes="(max-width: 1000px) 159px, 500px"
                   className="!relative !size-full rounded-md object-cover object-bottom"
                 />
@@ -958,10 +989,12 @@ export default function Home() {
             </div>
 
             <div className="fourthMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[110%]">
                 <Image
-                  src={masonryInteriorFour}
-                  alt={"TODO: fill in w/ appropriate alt text"}
+                  src={masonryInteriorNine} /* square */
+                  alt={
+                    "Cozy dining area with wooden tables, matching chairs, warm lighting, and a few potted plants along the wall."
+                  }
                   sizes="(max-width: 1000px) 159px, 500px"
                   className="!relative !size-full rounded-md object-cover object-bottom"
                 />
@@ -969,10 +1002,12 @@ export default function Home() {
             </div>
 
             <div className="fifthMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[125%]">
+              <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
                 <Image
-                  src={masonryInteriorFive}
-                  alt={"TODO: fill in w/ appropriate alt text"}
+                  src={masonryInteriorSeven} /* horiz rectangle */
+                  alt={
+                    "Small private dining room with a large rectangular table, black chairs, natural light from tall windows, and a blue geometric rug."
+                  }
                   sizes="(max-width: 1000px) 384px, 500px"
                   className="!relative !size-full rounded-md object-cover object-bottom"
                 />
@@ -981,7 +1016,7 @@ export default function Home() {
           </div>
 
           {/* Explore Our Favorites section */}
-          <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-6xl tablet:max-w-2xl">
+          {/* <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-6xl tablet:max-w-2xl">
             <p className="text-lg font-medium tablet:text-xl">
               Explore Our Favorites
             </p>
@@ -1058,7 +1093,7 @@ export default function Home() {
                 </Button>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* maybe a gallary/slideshow section? Prob not though */}
         </div>
@@ -1183,164 +1218,164 @@ function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
   );
 }
 
-const ourFavoriteMenuItems = [
-  {
-    id: "702b5c80-7d63-43ef-a80f-948c64c21575",
-    createdAt: "2024-05-15T21:32:32.217Z",
-    name: "Stir-fried String Beans",
-    description:
-      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-    price: 1400,
-    altPrice: null,
-    available: true,
-    discontinued: false,
-    listOrder: 15,
-    hasImageOfItem: true,
-    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    activeDiscountId: null,
-    isChefsChoice: false,
-    isAlcoholic: false,
-    isVegetarian: false,
-    isVegan: false,
-    isGlutenFree: false,
-    showUndercookedOrRawDisclaimer: false,
-    pointReward: false,
-    birthdayReward: false,
-    reviews: null,
-    activeDiscount: null,
-    customizationCategories: [],
-  },
-  {
-    id: "2315135f-19f4-4ede-9af7-0ffccadd2557",
-    createdAt: "2024-05-15T21:28:07.340Z",
-    name: "Chili Crunch Wings",
-    description:
-      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-    price: 1200,
-    altPrice: null,
-    available: true,
-    discontinued: false,
-    listOrder: 28,
-    hasImageOfItem: true,
-    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    activeDiscountId: null,
-    isChefsChoice: false,
-    isAlcoholic: false,
-    isVegetarian: false,
-    isVegan: false,
-    isGlutenFree: false,
-    showUndercookedOrRawDisclaimer: false,
-    pointReward: false,
-    birthdayReward: false,
-    reviews: null,
-    activeDiscount: null,
-    customizationCategories: [],
-  },
-  {
-    id: "77207783-b518-45f5-b43d-9c058dc0994f",
-    createdAt: "2024-05-15T21:32:32.217Z",
-    name: "Fresh Bread",
-    description:
-      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-    price: 1200,
-    altPrice: null,
-    available: true,
-    discontinued: false,
-    listOrder: 12,
-    hasImageOfItem: true,
-    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    activeDiscountId: null,
-    isChefsChoice: false,
-    isAlcoholic: false,
-    isVegetarian: false,
-    isVegan: false,
-    isGlutenFree: false,
-    showUndercookedOrRawDisclaimer: false,
-    pointReward: false,
-    birthdayReward: false,
-    reviews: null,
-    activeDiscount: null,
-    customizationCategories: [],
-  },
-  {
-    id: "7b0aa9eb-2a87-48cd-8c98-67b3f5a4b74f",
-    createdAt: "2024-02-21T03:51:47.000Z",
-    name: "Vietnamese Bar Nuts",
-    description:
-      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-    price: 1200,
-    altPrice: null,
-    available: true,
-    discontinued: false,
-    listOrder: 1,
-    hasImageOfItem: true,
-    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    activeDiscountId: null,
-    isChefsChoice: false,
-    isAlcoholic: false,
-    isVegetarian: true,
-    isVegan: false,
-    isGlutenFree: true,
-    showUndercookedOrRawDisclaimer: false,
-    pointReward: true,
-    birthdayReward: false,
-    reviews: null,
-    activeDiscount: null,
-    customizationCategories: [],
-  },
-  {
-    id: "bca28f28-839f-4891-a147-95176dec9341",
-    createdAt: "2024-05-15T11:32:32.000Z",
-    name: "Crispy Pork Bao",
-    description:
-      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-    price: 1400,
-    altPrice: null,
-    available: true,
-    discontinued: false,
-    listOrder: 14,
-    hasImageOfItem: true,
-    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    activeDiscountId: null,
-    isChefsChoice: false,
-    isAlcoholic: false,
-    isVegetarian: false,
-    isVegan: false,
-    isGlutenFree: false,
-    showUndercookedOrRawDisclaimer: false,
-    pointReward: false,
-    birthdayReward: false,
-    reviews: null,
-    activeDiscount: null,
-    customizationCategories: [],
-  },
-  {
-    id: "cab3e737-7b07-423f-9d9c-8bce07a9e3e2",
-    createdAt: "2024-02-20T15:53:09.000Z",
-    name: "Cream Cheese Wontons",
-    description:
-      "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-    price: 1100,
-    altPrice: null,
-    available: true,
-    discontinued: false,
-    listOrder: 2,
-    hasImageOfItem: true,
-    menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    activeDiscountId: null,
-    isChefsChoice: true,
-    isAlcoholic: false,
-    isVegetarian: false,
-    isVegan: true,
-    isGlutenFree: true,
-    showUndercookedOrRawDisclaimer: false,
-    pointReward: true,
-    birthdayReward: false,
-    reviews: null,
-    activeDiscount: null,
-    customizationCategories: [],
-  },
-];
+// const ourFavoriteMenuItems = [
+//   {
+//     id: "702b5c80-7d63-43ef-a80f-948c64c21575",
+//     createdAt: "2024-05-15T21:32:32.217Z",
+//     name: "Stir-fried String Beans",
+//     description:
+//       "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+//     price: 1400,
+//     altPrice: null,
+//     available: true,
+//     discontinued: false,
+//     listOrder: 15,
+//     hasImageOfItem: true,
+//     menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+//     activeDiscountId: null,
+//     isChefsChoice: false,
+//     isAlcoholic: false,
+//     isVegetarian: false,
+//     isVegan: false,
+//     isGlutenFree: false,
+//     showUndercookedOrRawDisclaimer: false,
+//     pointReward: false,
+//     birthdayReward: false,
+//     reviews: null,
+//     activeDiscount: null,
+//     customizationCategories: [],
+//   },
+//   {
+//     id: "2315135f-19f4-4ede-9af7-0ffccadd2557",
+//     createdAt: "2024-05-15T21:28:07.340Z",
+//     name: "Chili Crunch Wings",
+//     description:
+//       "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+//     price: 1200,
+//     altPrice: null,
+//     available: true,
+//     discontinued: false,
+//     listOrder: 28,
+//     hasImageOfItem: true,
+//     menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+//     activeDiscountId: null,
+//     isChefsChoice: false,
+//     isAlcoholic: false,
+//     isVegetarian: false,
+//     isVegan: false,
+//     isGlutenFree: false,
+//     showUndercookedOrRawDisclaimer: false,
+//     pointReward: false,
+//     birthdayReward: false,
+//     reviews: null,
+//     activeDiscount: null,
+//     customizationCategories: [],
+//   },
+//   {
+//     id: "77207783-b518-45f5-b43d-9c058dc0994f",
+//     createdAt: "2024-05-15T21:32:32.217Z",
+//     name: "Fresh Bread",
+//     description:
+//       "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+//     price: 1200,
+//     altPrice: null,
+//     available: true,
+//     discontinued: false,
+//     listOrder: 12,
+//     hasImageOfItem: true,
+//     menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+//     activeDiscountId: null,
+//     isChefsChoice: false,
+//     isAlcoholic: false,
+//     isVegetarian: false,
+//     isVegan: false,
+//     isGlutenFree: false,
+//     showUndercookedOrRawDisclaimer: false,
+//     pointReward: false,
+//     birthdayReward: false,
+//     reviews: null,
+//     activeDiscount: null,
+//     customizationCategories: [],
+//   },
+//   {
+//     id: "7b0aa9eb-2a87-48cd-8c98-67b3f5a4b74f",
+//     createdAt: "2024-02-21T03:51:47.000Z",
+//     name: "Vietnamese Bar Nuts",
+//     description:
+//       "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+//     price: 1200,
+//     altPrice: null,
+//     available: true,
+//     discontinued: false,
+//     listOrder: 1,
+//     hasImageOfItem: true,
+//     menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+//     activeDiscountId: null,
+//     isChefsChoice: false,
+//     isAlcoholic: false,
+//     isVegetarian: true,
+//     isVegan: false,
+//     isGlutenFree: true,
+//     showUndercookedOrRawDisclaimer: false,
+//     pointReward: true,
+//     birthdayReward: false,
+//     reviews: null,
+//     activeDiscount: null,
+//     customizationCategories: [],
+//   },
+//   {
+//     id: "bca28f28-839f-4891-a147-95176dec9341",
+//     createdAt: "2024-05-15T11:32:32.000Z",
+//     name: "Crispy Pork Bao",
+//     description:
+//       "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+//     price: 1400,
+//     altPrice: null,
+//     available: true,
+//     discontinued: false,
+//     listOrder: 14,
+//     hasImageOfItem: true,
+//     menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+//     activeDiscountId: null,
+//     isChefsChoice: false,
+//     isAlcoholic: false,
+//     isVegetarian: false,
+//     isVegan: false,
+//     isGlutenFree: false,
+//     showUndercookedOrRawDisclaimer: false,
+//     pointReward: false,
+//     birthdayReward: false,
+//     reviews: null,
+//     activeDiscount: null,
+//     customizationCategories: [],
+//   },
+//   {
+//     id: "cab3e737-7b07-423f-9d9c-8bce07a9e3e2",
+//     createdAt: "2024-02-20T15:53:09.000Z",
+//     name: "Cream Cheese Wontons",
+//     description:
+//       "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+//     price: 1100,
+//     altPrice: null,
+//     available: true,
+//     discontinued: false,
+//     listOrder: 2,
+//     hasImageOfItem: true,
+//     menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+//     activeDiscountId: null,
+//     isChefsChoice: true,
+//     isAlcoholic: false,
+//     isVegetarian: false,
+//     isVegan: true,
+//     isGlutenFree: true,
+//     showUndercookedOrRawDisclaimer: false,
+//     pointReward: true,
+//     birthdayReward: false,
+//     reviews: null,
+//     activeDiscount: null,
+//     customizationCategories: [],
+//   },
+// ];
 
 // TODO: readd once online ordering is back
 

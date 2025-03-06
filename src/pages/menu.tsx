@@ -1,6 +1,6 @@
 import { type Discount } from "@prisma/client";
 import { motion } from "framer-motion";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import {
   useEffect,
@@ -38,14 +38,16 @@ const charis = Charis_SIL({
   weight: ["400", "700"],
 });
 
-import masonryFoodOne from "/public/food/one.jpg";
-import masonryFoodTwo from "/public/food/two.webp";
-import masonryFoodThree from "/public/food/three.jpg";
-import masonryFoodFour from "/public/food/four.png";
-import masonryFoodFive from "/public/food/five.jpg";
+import headerThaiTeaTresLeches from "/public/food/header-thai-tea-tres-leches.png";
+import headerBanhMiXiuMai from "/public/food/header-banh-mi-xiu-mai.png";
 
-import sampleImage from "/public/menuItems/sampleImage.webp";
-import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";
+import creamCheeseWantons from "/public/food/cream-cheese-wantons.png";
+import roastPorkFriedRice from "/public/food/roast-pork-fried-rice.png";
+import spicyChickenSando from "/public/food/spicy-chicken-sando.jpg";
+import stickyJicamaRibs from "/public/food/sticky-jicama-ribs.png";
+import grilledSirloin from "/public/food/grilled-sirloin.png";
+import affogato from "/public/food/affogato.png";
+import thaiTeaTresLeches from "/public/food/thai-tea-tres-leches.png";
 
 function Menu() {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -58,37 +60,6 @@ function Menu() {
     useState(false);
 
   const [stickyCategoriesApi, setStickyCategoriesApi] = useState<CarouselApi>();
-
-  const [ableToShowOrderNowButton, setAbleToShowOrderNowButton] =
-    useState(false);
-  const heroRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setAbleToShowOrderNowButton(!entry?.isIntersecting ?? false);
-      },
-      {
-        root: null,
-        rootMargin: "0px 0px 0px 0px",
-        threshold: 0.5,
-      },
-    );
-
-    if (heroRef.current) {
-      observer.observe(heroRef.current);
-    }
-
-    const internalHeroRef = heroRef.current;
-
-    return () => {
-      if (internalHeroRef) {
-        observer.unobserve(internalHeroRef);
-      }
-
-      setAbleToShowOrderNowButton(false);
-    };
-  }, []);
 
   // Effect to set category scroll Y values
   useEffect(() => {
@@ -118,7 +89,7 @@ function Menu() {
     return () => {
       window.removeEventListener("resize", getCategoryScrollYValues);
     };
-  }, [menuCategoryIndicies]);
+  }, []);
 
   // Effect to dynamically set currently in view category
   useEffect(() => {
@@ -212,7 +183,7 @@ function Menu() {
       className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem)]"
     >
       {/* Hero */}
-      <div
+      {/* <div
         ref={heroRef}
         className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72"
       >
@@ -226,16 +197,16 @@ function Menu() {
           />
 
           <Image
-            src={sampleImage}
+            src={foodOne}
             alt={"TODO: fill in w/ appropriate alt text"}
             sizes="(max-width: 1000px) 160px, 192px"
-            className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
+            className="!relative !hidden !size-40 rounded-md object-cover drop-shadow-xl tablet:!block desktop:!size-48"
           />
           <Image
-            src={sampleImage}
+            src={foodTwo}
             alt={"TODO: fill in w/ appropriate alt text"}
             sizes="(max-width: 1000px) 160px, 192px"
-            className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
+            className="!relative !hidden !size-40 rounded-md object-cover drop-shadow-xl tablet:!block desktop:!size-48"
           />
           <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-offwhite p-2 shadow-heroContainer tablet:!flex">
             <div className="baseFlex gap-2 font-semibold text-primary tablet:p-2 tablet:text-xl desktop:text-2xl">
@@ -245,24 +216,166 @@ function Menu() {
             </div>
           </div>
           <Image
-            src={sampleImage}
+            src={foodThree}
             alt={"TODO: fill in w/ appropriate alt text"}
             sizes="(max-width: 1000px) 160px, 192px"
-            className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
+            className="!relative !hidden !size-40 rounded-md object-cover drop-shadow-xl tablet:!block desktop:!size-48"
           />
           <Image
-            src={sampleImage}
+            src={foodFour}
             alt={"TODO: fill in w/ appropriate alt text"}
             sizes="(max-width: 1000px) 160px, 192px"
-            className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
+            className="!relative !hidden !size-40 rounded-md object-cover drop-shadow-xl tablet:!block desktop:!size-48"
           />
         </div>
 
-        <div className="baseFlex z-10 rounded-md bg-offwhite p-2 shadow-heroContainer tablet:hidden">
-          <div className="baseFlex gap-2 p-2 text-xl font-semibold text-primary tablet:px-8 tablet:py-3 tablet:text-2xl">
-            <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary" />
+        <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-heroContainer tablet:!flex">
+          <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
+            <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
             <h1 className={`${charis.className}`}>Menu</h1>
-            <SideAccentSwirls className="h-4 fill-primary" />
+            <SideAccentSwirls className="h-4 fill-primary desktop:h-5" />
+          </div>
+        </div>
+      </div> */}
+
+      {/* testing hero */}
+      {/* <div className="baseFlex relative h-56 w-full overflow-hidden bg-darkPrimary shadow-md md:bg-gradient-to-br md:from-primary md:to-darkPrimary tablet:h-72">
+        <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 gap-4 p-4 md:grid-cols-[1fr_1fr_auto_1fr_1fr] md:grid-rows-1 md:gap-8 md:p-8 tablet:h-72">
+          <Image
+            src={foodOne}
+            alt="Chef Eric Pham, owner of Khue's Kitchen, with KARE 11's Jennifer Austin in a kitchen studio. Chef Eric Pham whips up a delicious, hot and juicy fried chicken sandwich with Jennifer Austin."
+            fill
+            // sizes="(max-width: 1000px) 400px, 320px"
+            priority
+            style={{
+              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+            }}
+            className="!relative !size-full rounded-2xl object-cover object-top opacity-35 md:opacity-100"
+          />
+          <Image
+            src={foodTwo}
+            alt="Khue Pham, lead chef at Quang Restaurant in Minneapolis, converses with her two sons in the kitchen."
+            fill
+            // sizes="(max-width: 1000px) 400px, 320px"
+            priority
+            style={{
+              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+            }}
+            className="!relative !size-full rounded-2xl object-cover object-top opacity-35 md:opacity-100"
+          />
+          <div className="baseFlex z-10 mx-8 !hidden self-center justify-self-center rounded-md bg-offwhite p-4 shadow-heroContainer md:!flex">
+            <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
+              <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
+              <h1 className={`${charis.className}`}>Menu</h1>
+              <SideAccentSwirls className="h-4 fill-primary desktop:h-5" />
+            </div>
+          </div>
+          <Image
+            src={foodThree}
+            alt="Khue Pham, lead chef at Quang Restaurant, smiling and posing with her young son, Eric Pham, both dressed formally."
+            fill
+            // sizes="(max-width: 1000px) 400px, 320px"
+            priority
+            style={{
+              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+            }}
+            className="!relative !size-full rounded-2xl object-cover object-top opacity-35 md:opacity-100"
+          />
+          <Image
+            src={foodFour}
+            alt="Chef Eric Pham, owner of Khue's Kitchen, smiling while cooking in a professional kitchen."
+            fill
+            // sizes="(max-width: 1000px) 400px, 320px"
+            priority
+            style={{
+              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+            }}
+            className="!relative !size-full rounded-2xl object-cover object-top opacity-35 md:opacity-100"
+          />
+        </div>
+
+        <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-heroContainer md:!hidden">
+          <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
+            <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
+            <h1 className={`${charis.className}`}>Menu</h1>
+            <SideAccentSwirls className="h-4 fill-primary desktop:h-5" />
+          </div>
+        </div>
+      </div> */}
+
+      <div className="baseFlex relative h-56 w-full overflow-hidden bg-darkPrimary shadow-md md:bg-gradient-to-br md:from-primary md:to-darkPrimary tablet:h-72">
+        <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 gap-4 p-4 md:grid-cols-[1fr_1fr_auto_1fr_1fr] md:grid-rows-1 md:gap-4 md:px-8 md:py-0 tablet:h-72">
+          <div
+            style={{
+              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+            }}
+          >
+            <Image
+              src={roastPorkFriedRice}
+              alt="Roast Pork Fried Rice at Khue's in St. Paul"
+              fill
+              // sizes="(max-width: 1000px) 400px, 320px"
+              priority
+              className="!relative !size-full rounded-md object-cover object-center opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(0_0,85%_0,100%_100%,15%_100%)]"
+            />
+          </div>
+          <div
+            style={{
+              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+            }}
+          >
+            <Image
+              src={spicyChickenSando}
+              alt="Spicy Chicken Sando at Khue's in St. Paul"
+              // sizes="(max-width: 1000px) 400px, 320px"
+              priority
+              className="!relative !size-full rounded-md object-cover object-center opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(0_0,85%_0,100%_100%,15%_100%)]"
+            />
+          </div>
+
+          <div className="baseFlex z-10 mx-8 !hidden self-center justify-self-center rounded-md bg-offwhite p-4 shadow-heroContainer md:!flex">
+            <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
+              <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
+              <h1 className={`${charis.className}`}>Menu</h1>
+              <SideAccentSwirls className="h-4 fill-primary desktop:h-5" />
+            </div>
+          </div>
+
+          <div
+            style={{
+              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+            }}
+          >
+            <Image
+              src={headerBanhMiXiuMai}
+              alt="Bánh Mì Xíu Mại at Khue's in St. Paul"
+              fill
+              // sizes="(max-width: 1000px) 400px, 320px"
+              priority
+              className="!relative !size-full rounded-md object-cover object-center opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(100%_0,15%_0,0%_100%,85%_100%)]"
+            />
+          </div>
+          <div
+            style={{
+              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+            }}
+          >
+            <Image
+              src={headerThaiTeaTresLeches}
+              alt="Thai Tea Tres Leches at Khue's in St. Paul"
+              fill
+              // sizes="(max-width: 1000px) 400px, 320px"
+              priority
+              className="!relative !size-full rounded-md object-cover object-top opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(100%_0,15%_0,0%_100%,85%_100%)]"
+            />
+          </div>
+        </div>
+
+        <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-heroContainer md:!hidden">
+          <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
+            <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
+            <h1 className={`${charis.className}`}>Menu</h1>
+            <SideAccentSwirls className="h-4 fill-primary desktop:h-5" />
           </div>
         </div>
       </div>
@@ -360,13 +473,13 @@ function Menu() {
 
           <div className="baseVertFlex order-[999] mt-8 w-full gap-4 px-4 ">
             <div className="baseFlex w-full flex-wrap gap-4 text-sm tablet:text-base">
-              <div className="baseFlex gap-2">
+              {/* <div className="baseFlex gap-2">
                 <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
                   K
                 </p>
                 -<p>Chef&apos;s Choice</p>
               </div>
-              |
+              | */}
               <div className="baseFlex gap-2">
                 <SiLeaflet className="size-4" />
                 <p>Vegetarian</p>
@@ -588,64 +701,72 @@ function MenuCategory({
         </>
       ) : (
         <>
-          <div className="baseFlex relative h-36 w-full !justify-end overflow-hidden rounded-md bg-offwhite shadow-md tablet:h-48">
-            {/* primary diagonal bg */}
-            <div className="absolute left-0 top-0 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"></div>
-
+          <div className="baseFlex relative h-36 w-full !justify-end overflow-hidden rounded-md bg-gradient-to-br from-primary to-darkPrimary shadow-md tablet:h-48">
             <div className="absolute left-[35%] h-full w-[65%] overflow-hidden">
-              {(viewportLabel.includes("mobile") ||
-                (!viewportLabel.includes("mobile") && name !== "Desserts")) && (
+              {/* {(viewportLabel.includes("mobile") ||
+                (!viewportLabel.includes("mobile") && name !== "Desserts")) && ( */}
+
+              {/* Right-most */}
+              {menuItemCategoryImages[name]!.length >= 1 && (
                 <div
                   style={{
                     filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
                   }}
-                  className="absolute left-[10%] top-0 h-full w-[100%] tablet:left-[2%] tablet:w-3/4"
+                  className="absolute left-[55%] top-0 h-full w-[45%] tablet:left-[67%] tablet:w-1/3"
                 >
                   <Image
-                    src={masonryFoodOne}
+                    src={menuItemCategoryImages[name]![0] ?? ""}
                     alt={`${name} at Khue's in St. Paul`}
                     fill
                     style={{
-                      clipPath: "polygon(0 0, 35% 0, 50% 100%, 15% 100%)",
+                      clipPath: "polygon(0 0, 85% 0, 100% 100%, 15% 100%)",
+                    }}
+                    className="object-cover"
+                  />
+                </div>
+              )}
+
+              {/* // )} */}
+
+              {/* Middle */}
+              {menuItemCategoryImages[name]!.length >= 2 && (
+                <div
+                  style={{
+                    filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+                  }}
+                  className="absolute left-[10%] top-0 h-full w-[45%] tablet:left-[36.5%] tablet:w-1/3"
+                >
+                  <Image
+                    src={menuItemCategoryImages[name]![1]!}
+                    alt={`${name} at Khue's in St. Paul`}
+                    fill
+                    style={{
+                      clipPath: "polygon(0 0, 85% 0, 100% 100%, 15% 100%)",
+                    }}
+                    className="object-cover"
+                  />
+                </div>
+              )}
+
+              {/* Left-most */}
+              {menuItemCategoryImages[name]!.length >= 3 && (
+                <div
+                  style={{
+                    filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+                  }}
+                  className="absolute left-[10%] top-0 hidden h-full w-1/3 tablet:left-[6%] tablet:block tablet:w-1/3"
+                >
+                  <Image
+                    src={menuItemCategoryImages[name]![2]!}
+                    alt={`${name} at Khue's in St. Paul`}
+                    fill
+                    style={{
+                      clipPath: "polygon(0 0, 85% 0, 100% 100%, 15% 100%)",
                     }}
                     className="object-cover "
                   />
                 </div>
               )}
-
-              <div
-                style={{
-                  filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
-                }}
-                className="absolute left-[50%] top-0 h-full w-[100%] tablet:left-[32.5%] tablet:w-3/4"
-              >
-                <Image
-                  src={masonryFoodTwo}
-                  alt={`${name} at Khue's in St. Paul`}
-                  fill
-                  style={{
-                    clipPath: "polygon(0 0, 35% 0, 50% 100%, 15% 100%)",
-                  }}
-                  className="object-cover"
-                />
-              </div>
-
-              <div
-                style={{
-                  filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
-                }}
-                className="absolute top-0 hidden h-full w-[100%] tablet:left-[63%] tablet:block tablet:w-3/4"
-              >
-                <Image
-                  src={masonryFoodFour}
-                  alt={`${name} at Khue's in St. Paul`}
-                  fill
-                  style={{
-                    clipPath: "polygon(0 0, 35% 0, 50% 100%, 15% 100%)",
-                  }}
-                  className="object-cover"
-                />
-              </div>
             </div>
 
             <div className="baseFlex absolute bottom-4 left-4 gap-4 rounded-md bg-offwhite px-4 py-2">
@@ -790,6 +911,7 @@ function formatMenuItemPrice(
           customizationChoices,
           discounts: {},
         }),
+        true,
       )}
     </p>
   );
@@ -822,14 +944,18 @@ function MenuItemPreview({
       <div
         className={`${menuItem.description ? "flex-row" : "flex-row"} flex size-full items-center !justify-between gap-4 py-1`}
       >
-        <div className="baseFlex mt-4 w-full gap-4 tablet:mt-0">
+        <div className="baseFlex mt-4 w-full !items-start gap-4 tablet:mt-0">
           {menuItem.hasImageOfItem && (
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              // src={"/menuItems/sampleImage.webp"}
+              src={menuItemImages[menuItem.name] ?? ""}
               alt={`${menuItem.name} at Khue's in St. Paul`}
-              width={96}
-              height={96}
-              className="mt-2 !size-24 !self-start rounded-md drop-shadow-lg"
+              width={500}
+              height={500}
+              // layout="intrinsic"
+              quality={100}
+              // unoptimized
+              className="mt-1 !size-28 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md sm:!size-32"
             />
           )}
 
@@ -874,6 +1000,23 @@ function MenuItemPreview({
   );
 }
 
+const menuItemCategoryImages: Record<string, StaticImageData[]> = {
+  Starters: [creamCheeseWantons],
+  Entrees: [roastPorkFriedRice, spicyChickenSando, grilledSirloin],
+  Desserts: [affogato, thaiTeaTresLeches],
+};
+
+const menuItemImages: Record<string, StaticImageData> = {
+  "Cream Cheese Wontons": creamCheeseWantons,
+  "Roast Pork Fried Rice": roastPorkFriedRice,
+  "Bánh Mì Xíu Mại": headerBanhMiXiuMai,
+  "Spicy Chicken Sando": spicyChickenSando,
+  "Sticky Jicama Ribs": stickyJicamaRibs,
+  "Grilled Sirloin": grilledSirloin,
+  "Cà Phê Sữa Đá Affogato": affogato,
+  "Thai Tea Tres Leches": thaiTeaTresLeches,
+};
+
 const menuCategories = [
   {
     id: "60f90b72-e44a-4775-b071-97ed5dc020d3",
@@ -886,94 +1029,15 @@ const menuCategories = [
     activeDiscount: null,
     menuItems: [
       {
-        id: "702b5c80-7d63-43ef-a80f-948c64c21575",
-        createdAt: "2024-05-15T21:32:32.217Z",
-        name: "Crispy Pork Lettuce Wraps",
-        description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-        price: 1500,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 1, // first in array
-        hasImageOfItem: true,
-        menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "2315135f-19f4-4ede-9af7-0ffccadd2557",
-        createdAt: "2024-05-15T21:28:07.340Z",
-        name: "Chicken Salad",
-        description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-        price: 1400,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: true,
-        menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "77207783-b518-45f5-b43d-9c058dc0994f",
-        createdAt: "2024-05-15T21:32:32.217Z",
-        name: "Pork Eggroll",
-        description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-        price: 1400,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 3,
-        hasImageOfItem: true,
-        menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
         id: "7b0aa9eb-2a87-48cd-8c98-67b3f5a4b74f",
         createdAt: "2024-02-21T03:51:47.000Z",
         name: "Cream Cheese Wontons",
-        description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+        description: "Savory cream cheese, sweet and sour sauce",
         price: 1200,
         altPrice: null,
         available: true,
         discontinued: false,
-        listOrder: 4,
+        listOrder: 1,
         hasImageOfItem: true,
         menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
         activeDiscountId: null,
@@ -990,24 +1054,24 @@ const menuCategories = [
         customizationCategories: [],
       },
       {
-        id: "bca28f28-839f-4891-a147-95176dec9341",
-        createdAt: "2024-05-15T11:32:32.000Z",
-        name: "Shrimp Poppers",
+        id: "702b5c80-7d63-43ef-a80f-948c64c21575",
+        createdAt: "2024-05-15T21:32:32.217Z",
+        name: "Crispy Pork Lettuce Wraps",
         description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+          "Vietnamese roast pork, woven noodles, butter lettuce, cucumbers, herb salad, fish sauce vinaigrette",
         price: 1500,
         altPrice: null,
         available: true,
         discontinued: false,
-        listOrder: 5,
-        hasImageOfItem: true,
+        listOrder: 2, // first in array
+        hasImageOfItem: false,
         menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
         activeDiscountId: null,
         isChefsChoice: false,
         isAlcoholic: false,
         isVegetarian: false,
         isVegan: false,
-        isGlutenFree: false,
+        isGlutenFree: true,
         showUndercookedOrRawDisclaimer: false,
         pointReward: false,
         birthdayReward: false,
@@ -1016,26 +1080,26 @@ const menuCategories = [
         customizationCategories: [],
       },
       {
-        id: "cab3e737-7b07-423f-9d9c-8bce07a9e3e2",
-        createdAt: "2024-02-20T15:53:09.000Z",
-        name: "Sticky Jicama Ribs",
+        id: "2315135f-19f4-4ede-9af7-0ffccadd2557",
+        createdAt: "2024-05-15T21:28:07.340Z",
+        name: "Chicken Salad",
         description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+          "Taiwanese cabbage, rau ram, thai chilis, toasted peanuts, fish sauce vinaigrette",
         price: 1400,
         altPrice: null,
         available: true,
         discontinued: false,
-        listOrder: 6,
-        hasImageOfItem: true,
+        listOrder: 3,
+        hasImageOfItem: false,
         menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
         activeDiscountId: null,
-        isChefsChoice: true,
+        isChefsChoice: false,
         isAlcoholic: false,
         isVegetarian: false,
-        isVegan: true,
+        isVegan: false,
         isGlutenFree: true,
         showUndercookedOrRawDisclaimer: false,
-        pointReward: true,
+        pointReward: false,
         birthdayReward: false,
         reviews: null,
         activeDiscount: null,
@@ -1054,12 +1118,12 @@ const menuCategories = [
     activeDiscount: null,
     menuItems: [
       {
-        id: "32ca68b1-ec1b-4bdc-b853-51b63d73cb26",
-        createdAt: "2024-02-21T15:54:46.000Z",
-        name: "Five Spice Tofu",
+        id: "e12641a9-7264-4b04-bf50-632992467e7c",
+        createdAt: "2024-05-15T21:36:35.209Z",
+        name: "Bánh Mì Xíu Mại",
         description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-        price: 1900,
+          "Pork meatball, tomato sauce, toasted bánh mì, chili oil, scallions, cilantro",
+        price: 1500,
         altPrice: null,
         available: true,
         discontinued: false,
@@ -1080,12 +1144,12 @@ const menuCategories = [
         customizationCategories: [],
       },
       {
-        id: "7bd980fe-a447-401d-8880-03ec4773a9b2",
-        createdAt: "2024-02-20T21:54:12.000Z",
-        name: "Grilled Sirloin",
+        id: "1663442b-e4a2-4bac-a5ab-b7d2edb7cfd9",
+        createdAt: "2024-05-15T21:36:35.209Z",
+        name: "Roast Pork Fried Rice",
         description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-        price: 3200,
+          "Scallion oil, crispy pork, lap xuong, fried egg, chili crunch",
+        price: 1500,
         altPrice: null,
         available: true,
         discontinued: false,
@@ -1099,6 +1163,32 @@ const menuCategories = [
         isVegan: false,
         isGlutenFree: false,
         showUndercookedOrRawDisclaimer: true,
+        pointReward: false,
+        birthdayReward: false,
+        reviews: null,
+        activeDiscount: null,
+        customizationCategories: [],
+      },
+      {
+        id: "7bd980fe-a447-401d-8880-03ec4773a9b2",
+        createdAt: "2024-02-20T21:54:12.000Z",
+        name: "Grilled Sirloin",
+        description:
+          "Traditional Vietnamese marinade, jasmine rice, yu choy, scallions",
+        price: 3200,
+        altPrice: null,
+        available: true,
+        discontinued: false,
+        listOrder: 3,
+        hasImageOfItem: true,
+        menuCategoryId: "98b3d4ba-4689-4372-a206-448f7eb5ebf4",
+        activeDiscountId: null,
+        isChefsChoice: false,
+        isAlcoholic: false,
+        isVegetarian: false,
+        isVegan: false,
+        isGlutenFree: true,
+        showUndercookedOrRawDisclaimer: true,
         pointReward: true,
         birthdayReward: false,
         reviews: null,
@@ -1106,16 +1196,16 @@ const menuCategories = [
         customizationCategories: [],
       },
       {
-        id: "1663442b-e4a2-4bac-a5ab-b7d2edb7cfd9",
-        createdAt: "2024-05-15T21:36:35.209Z",
-        name: "Roast Pork Fried Rice",
+        id: "a44bfc71-facd-4ce6-a576-afbac6e2b2f3",
+        createdAt: "2024-05-15T16:36:35.000Z",
+        name: "Spicy Chicken Sando",
         description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+          "Brioche bun, lettuce, tomato, house pickles, herb aioli, chili crunch",
         price: 1700,
         altPrice: null,
         available: true,
         discontinued: false,
-        listOrder: 3,
+        listOrder: 4,
         hasImageOfItem: true,
         menuCategoryId: "98b3d4ba-4689-4372-a206-448f7eb5ebf4",
         activeDiscountId: null,
@@ -1132,24 +1222,50 @@ const menuCategories = [
         customizationCategories: [],
       },
       {
-        id: "a44bfc71-facd-4ce6-a576-afbac6e2b2f3",
-        createdAt: "2024-05-15T16:36:35.000Z",
-        name: "Spicy Chicken Sando",
+        id: "cab3e737-7b07-423f-9d9c-8bce07a9e3e2",
+        createdAt: "2024-02-20T15:53:09.000Z",
+        name: "Sticky Jicama Ribs",
         description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-        price: 1700,
+          "Jasmine rice, marinated tofu, fried jicama, soy glaze, toasted sesame seeds, carrot-daikon pickles, herb salad",
+        price: 2000,
         altPrice: null,
         available: true,
         discontinued: false,
-        listOrder: 4,
+        listOrder: 5,
         hasImageOfItem: true,
+        menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+        activeDiscountId: null,
+        isChefsChoice: false,
+        isAlcoholic: false,
+        isVegetarian: true,
+        isVegan: true,
+        isGlutenFree: false,
+        showUndercookedOrRawDisclaimer: false,
+        pointReward: true,
+        birthdayReward: false,
+        reviews: null,
+        activeDiscount: null,
+        customizationCategories: [],
+      },
+      {
+        id: "32ca68b1-ec1b-4bdc-b853-51b63d73cb26",
+        createdAt: "2024-02-21T15:54:46.000Z",
+        name: "Five Spice Tofu",
+        description:
+          "Jasmine rice, battered tofu, five spice glaze, kimchi, herb salad",
+        price: 1900,
+        altPrice: null,
+        available: true,
+        discontinued: false,
+        listOrder: 6,
+        hasImageOfItem: false,
         menuCategoryId: "98b3d4ba-4689-4372-a206-448f7eb5ebf4",
         activeDiscountId: null,
-        isChefsChoice: true,
+        isChefsChoice: false,
         isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
+        isVegetarian: true,
+        isVegan: true,
+        isGlutenFree: true,
         showUndercookedOrRawDisclaimer: false,
         pointReward: false,
         birthdayReward: false,
@@ -1172,9 +1288,9 @@ const menuCategories = [
       {
         id: "3581eac7-f105-486e-97de-2aa234bb6e0c",
         createdAt: "2024-05-15T21:38:58.971Z",
-        name: "Ca Phe Sua De Affogato",
+        name: "Cà Phê Sữa Đá Affogato",
         description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+          "Vietnamese coffee, vanilla ice cream, black sesame coconut tuile",
         price: 900,
         altPrice: null,
         available: true,
@@ -1185,9 +1301,9 @@ const menuCategories = [
         activeDiscountId: null,
         isChefsChoice: false,
         isAlcoholic: false,
-        isVegetarian: false,
+        isVegetarian: true,
         isVegan: false,
-        isGlutenFree: false,
+        isGlutenFree: true,
         showUndercookedOrRawDisclaimer: false,
         pointReward: true,
         birthdayReward: true,
@@ -1200,7 +1316,7 @@ const menuCategories = [
         createdAt: "2024-02-21T09:58:09.000Z",
         name: "Thai Tea Tres Leches",
         description:
-          "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
+          "Milk-soaked chiffon cake, whipped cream, coconut crumble, boba",
         price: 1100,
         altPrice: null,
         available: true,
@@ -1236,7 +1352,7 @@ const menuCategories = [
       {
         id: "717349d0-4829-4e4a-98ab-a9e00a67768a",
         createdAt: "2024-02-20T21:56:02.000Z",
-        name: "Negroni Spritz (Non-Alcoholic)",
+        name: "Negroni Spritz (N/A)",
         description: "",
         price: 800,
         altPrice: null,
@@ -1483,118 +1599,118 @@ const menuCategories = [
       },
     ],
   },
-  {
-    id: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
-    createdAt: "2024-03-29T16:02:56.000Z",
-    name: "Beer",
-    active: true,
-    orderableOnline: false,
-    listOrder: 6, // was 7
-    activeDiscountId: null,
-    activeDiscount: null,
-    menuItems: [
-      {
-        id: "aaea55ae-8889-4d8a-81b5-0bc48f24a721",
-        createdAt: "2024-03-29T16:10:10.000Z",
-        name: "Bud Light",
-        description: "",
-        price: 600,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 1,
-        hasImageOfItem: false,
-        menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "dcb19f40-b0d1-4bb1-95aa-60912b76c385",
-        createdAt: "2024-03-29T16:09:49.000Z",
-        name: "Budweiser",
-        description: "",
-        price: 600,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "4a027a04-3fe6-440a-a860-3c0c9e0ef0a0",
-        createdAt: "2024-03-29T21:09:27.000Z",
-        name: "Coors",
-        description: "",
-        price: 600,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 3,
-        hasImageOfItem: false,
-        menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "8349fe66-81b0-4d04-8291-4ab60641676d",
-        createdAt: "2024-03-29T21:09:27.000Z",
-        name: "Coors Light",
-        description: "",
-        price: 600,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 4,
-        hasImageOfItem: false,
-        menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-    ],
-  },
+  // {
+  //   id: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
+  //   createdAt: "2024-03-29T16:02:56.000Z",
+  //   name: "Beer",
+  //   active: true,
+  //   orderableOnline: false,
+  //   listOrder: 6, // was 7
+  //   activeDiscountId: null,
+  //   activeDiscount: null,
+  //   menuItems: [
+  //     {
+  //       id: "aaea55ae-8889-4d8a-81b5-0bc48f24a721",
+  //       createdAt: "2024-03-29T16:10:10.000Z",
+  //       name: "Bud Light",
+  //       description: "",
+  //       price: 600,
+  //       altPrice: null,
+  //       available: true,
+  //       discontinued: false,
+  //       listOrder: 1,
+  //       hasImageOfItem: false,
+  //       menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
+  //       activeDiscountId: null,
+  //       isChefsChoice: false,
+  //       isAlcoholic: true,
+  //       isVegetarian: false,
+  //       isVegan: false,
+  //       isGlutenFree: false,
+  //       showUndercookedOrRawDisclaimer: false,
+  //       pointReward: false,
+  //       birthdayReward: false,
+  //       reviews: null,
+  //       activeDiscount: null,
+  //       customizationCategories: [],
+  //     },
+  //     {
+  //       id: "dcb19f40-b0d1-4bb1-95aa-60912b76c385",
+  //       createdAt: "2024-03-29T16:09:49.000Z",
+  //       name: "Budweiser",
+  //       description: "",
+  //       price: 600,
+  //       altPrice: null,
+  //       available: true,
+  //       discontinued: false,
+  //       listOrder: 2,
+  //       hasImageOfItem: false,
+  //       menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
+  //       activeDiscountId: null,
+  //       isChefsChoice: false,
+  //       isAlcoholic: true,
+  //       isVegetarian: false,
+  //       isVegan: false,
+  //       isGlutenFree: false,
+  //       showUndercookedOrRawDisclaimer: false,
+  //       pointReward: false,
+  //       birthdayReward: false,
+  //       reviews: null,
+  //       activeDiscount: null,
+  //       customizationCategories: [],
+  //     },
+  //     {
+  //       id: "4a027a04-3fe6-440a-a860-3c0c9e0ef0a0",
+  //       createdAt: "2024-03-29T21:09:27.000Z",
+  //       name: "Coors",
+  //       description: "",
+  //       price: 600,
+  //       altPrice: null,
+  //       available: true,
+  //       discontinued: false,
+  //       listOrder: 3,
+  //       hasImageOfItem: false,
+  //       menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
+  //       activeDiscountId: null,
+  //       isChefsChoice: false,
+  //       isAlcoholic: false,
+  //       isVegetarian: false,
+  //       isVegan: false,
+  //       isGlutenFree: false,
+  //       showUndercookedOrRawDisclaimer: false,
+  //       pointReward: false,
+  //       birthdayReward: false,
+  //       reviews: null,
+  //       activeDiscount: null,
+  //       customizationCategories: [],
+  //     },
+  //     {
+  //       id: "8349fe66-81b0-4d04-8291-4ab60641676d",
+  //       createdAt: "2024-03-29T21:09:27.000Z",
+  //       name: "Coors Light",
+  //       description: "",
+  //       price: 600,
+  //       altPrice: null,
+  //       available: true,
+  //       discontinued: false,
+  //       listOrder: 4,
+  //       hasImageOfItem: false,
+  //       menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
+  //       activeDiscountId: null,
+  //       isChefsChoice: false,
+  //       isAlcoholic: false,
+  //       isVegetarian: false,
+  //       isVegan: false,
+  //       isGlutenFree: false,
+  //       showUndercookedOrRawDisclaimer: false,
+  //       pointReward: false,
+  //       birthdayReward: false,
+  //       reviews: null,
+  //       activeDiscount: null,
+  //       customizationCategories: [],
+  //     },
+  //   ],
+  // },
   {
     id: "05746714-f1d3-4a77-914d-75780fa98d60",
     createdAt: "2024-03-29T16:03:43.000Z",
@@ -1606,62 +1722,12 @@ const menuCategories = [
     activeDiscount: null,
     menuItems: [
       {
-        id: "f8779458-2869-4d42-ac11-7770f84cea8b",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Avinyo Cava",
-        description: "",
-        price: 3500,
-        altPrice: 1300,
-        available: true,
-        discontinued: false,
-        listOrder: 1,
-        hasImageOfItem: false,
-        menuCategoryId: "05746714-f1d3-4a77-914d-75780fa98d60",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
         id: "8e3b95a4-d6c5-4020-86a0-e88023076840",
         createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Ciello Nero D'Avola",
+        name: "Ciello Nero d'Avola",
         description: "",
         price: 3500,
         altPrice: 1200,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "05746714-f1d3-4a77-914d-75780fa98d60",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "2fc66d54-5fa7-468c-9157-56d0486c59c9",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Deep Down Sauvingon Blanc",
-        description: "",
-        price: 3500,
-        altPrice: 1600,
         available: true,
         discontinued: false,
         listOrder: 2,
@@ -1706,6 +1772,57 @@ const menuCategories = [
         customizationCategories: [],
       },
       {
+        id: "19e561b0-2a8a-45b8-9907-322bf11532ad",
+        createdAt: "2024-03-29T16:10:53.000Z",
+        name: "Torre Alle Tolfe",
+        description: "",
+        price: 3500,
+        altPrice: 1600,
+        available: true,
+        discontinued: false,
+        listOrder: 2,
+        hasImageOfItem: false,
+        menuCategoryId: "05746714-f1d3-4a77-914d-75780fa98d60",
+        activeDiscountId: null,
+        isChefsChoice: false,
+        isAlcoholic: true,
+        isVegetarian: false,
+        isVegan: false,
+        isGlutenFree: false,
+        showUndercookedOrRawDisclaimer: false,
+        pointReward: false,
+        birthdayReward: false,
+        reviews: null,
+        activeDiscount: null,
+        customizationCategories: [],
+      },
+      {
+        id: "f8779458-2869-4d42-ac11-7770f84cea8b",
+        createdAt: "2024-03-29T16:10:53.000Z",
+        name: "Avinyo Cava",
+        description: "",
+        price: 3500,
+        altPrice: 1300,
+        available: true,
+        discontinued: false,
+        listOrder: 1,
+        hasImageOfItem: false,
+        menuCategoryId: "05746714-f1d3-4a77-914d-75780fa98d60",
+        activeDiscountId: null,
+        isChefsChoice: false,
+        isAlcoholic: true,
+        isVegetarian: false,
+        isVegan: false,
+        isGlutenFree: false,
+        showUndercookedOrRawDisclaimer: false,
+        pointReward: false,
+        birthdayReward: false,
+        reviews: null,
+        activeDiscount: null,
+        customizationCategories: [],
+      },
+
+      {
         id: "2a286186-cf76-4103-8118-19a375c815b3",
         createdAt: "2024-03-29T16:10:53.000Z",
         name: "Muscadet et Maine",
@@ -1730,31 +1847,7 @@ const menuCategories = [
         activeDiscount: null,
         customizationCategories: [],
       },
-      {
-        id: "d42a3968-2f38-43b2-b33f-6b1d48057e3f",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Newfound Rose",
-        description: "",
-        price: 3500,
-        altPrice: 1400,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "05746714-f1d3-4a77-914d-75780fa98d60",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
+
       {
         id: "f7a13949-af41-42ea-974d-ae8a695713be",
         createdAt: "2024-03-29T16:10:53.000Z",
@@ -1805,56 +1898,7 @@ const menuCategories = [
         activeDiscount: null,
         customizationCategories: [],
       },
-      {
-        id: "7704a46f-d6c3-4f89-97fa-c252b5b765dc",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Rodica Pet-Nat Rose",
-        description: "",
-        price: 3500,
-        altPrice: 1600,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "05746714-f1d3-4a77-914d-75780fa98d60",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "19e561b0-2a8a-45b8-9907-322bf11532ad",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Torre Alle Tolfe",
-        description: "",
-        price: 3500,
-        altPrice: 1600,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "05746714-f1d3-4a77-914d-75780fa98d60",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
+
       {
         id: "e050bf5a-b75b-4eb9-975e-871c36e639bd",
         createdAt: "2024-03-29T16:10:53.000Z",
@@ -1862,6 +1906,81 @@ const menuCategories = [
         description: "",
         price: 3500,
         altPrice: 1400,
+        available: true,
+        discontinued: false,
+        listOrder: 2,
+        hasImageOfItem: false,
+        menuCategoryId: "05746714-f1d3-4a77-914d-75780fa98d60",
+        activeDiscountId: null,
+        isChefsChoice: false,
+        isAlcoholic: true,
+        isVegetarian: false,
+        isVegan: false,
+        isGlutenFree: false,
+        showUndercookedOrRawDisclaimer: false,
+        pointReward: false,
+        birthdayReward: false,
+        reviews: null,
+        activeDiscount: null,
+        customizationCategories: [],
+      },
+      {
+        id: "2fc66d54-5fa7-468c-9157-56d0486c59c9",
+        createdAt: "2024-03-29T16:10:53.000Z",
+        name: "Deep Down Sauvignon Blanc",
+        description: "",
+        price: 3500,
+        altPrice: 1600,
+        available: true,
+        discontinued: false,
+        listOrder: 2,
+        hasImageOfItem: false,
+        menuCategoryId: "05746714-f1d3-4a77-914d-75780fa98d60",
+        activeDiscountId: null,
+        isChefsChoice: false,
+        isAlcoholic: true,
+        isVegetarian: false,
+        isVegan: false,
+        isGlutenFree: false,
+        showUndercookedOrRawDisclaimer: false,
+        pointReward: false,
+        birthdayReward: false,
+        reviews: null,
+        activeDiscount: null,
+        customizationCategories: [],
+      },
+      {
+        id: "d42a3968-2f38-43b2-b33f-6b1d48057e3f",
+        createdAt: "2024-03-29T16:10:53.000Z",
+        name: "Newfound Rosé",
+        description: "",
+        price: 3500,
+        altPrice: 1400,
+        available: true,
+        discontinued: false,
+        listOrder: 2,
+        hasImageOfItem: false,
+        menuCategoryId: "05746714-f1d3-4a77-914d-75780fa98d60",
+        activeDiscountId: null,
+        isChefsChoice: false,
+        isAlcoholic: true,
+        isVegetarian: false,
+        isVegan: false,
+        isGlutenFree: false,
+        showUndercookedOrRawDisclaimer: false,
+        pointReward: false,
+        birthdayReward: false,
+        reviews: null,
+        activeDiscount: null,
+        customizationCategories: [],
+      },
+      {
+        id: "7704a46f-d6c3-4f89-97fa-c252b5b765dc",
+        createdAt: "2024-03-29T16:10:53.000Z",
+        name: "Rodica Pet-Nat Rosé",
+        description: "",
+        price: 3500,
+        altPrice: 1600,
         available: true,
         discontinued: false,
         listOrder: 2,
@@ -1889,6 +2008,6 @@ const menuCategoryIndicies = {
   Entrees: 1,
   Desserts: 2,
   Beverages: 3,
-  Beer: 4,
-  Wine: 5,
+  // Beer: 4,
+  Wine: 4,
 };

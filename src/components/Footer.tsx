@@ -120,12 +120,6 @@ p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tab
               <SiTiktok className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
             </a>
           </Button>
-
-          <Button variant="ghost" asChild>
-            <a aria-label="Visit our X page" href="https://x.com/Khues_Kitchen">
-              <FaXTwitter className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-            </a>
-          </Button>
         </div>
       </div>
     </footer>
