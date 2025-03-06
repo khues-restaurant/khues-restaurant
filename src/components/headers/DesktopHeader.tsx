@@ -65,7 +65,7 @@ function DesktopHeader() {
             className="baseFlex relative h-16 w-full gap-2 bg-primary text-primary-foreground"
           >
             <p className="!text-base font-semibold">
-              We&apos;ve Moved! Come visit us at our new spot:
+              We&apos;ve Moved! Come visit us at our new location:
             </p>
             <Button variant={"underline"} className="h-8 !p-0" asChild>
               <a
