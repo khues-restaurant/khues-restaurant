@@ -1,73 +1,50 @@
-import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
-import { Button } from "~/components/ui/button";
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { MdOutlineMoneyOff } from "react-icons/md";
-import { BsSpeedometer2 } from "react-icons/bs";
-import { TfiReceipt } from "react-icons/tfi";
+import { motion } from "framer-motion";
 import { Clock, MapPin } from "lucide-react";
-import { Parallax, ParallaxProvider } from "react-scroll-parallax";
-import WideFancySwirls from "~/components/ui/wideFancySwirls";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { HiOutlineNewspaper } from "react-icons/hi2";
+import { IoCalendarOutline } from "react-icons/io5";
+import { Parallax, ParallaxProvider } from "react-scroll-parallax";
+import { Button } from "~/components/ui/button";
 import {
   Carousel,
   CarouselContent,
-  type CarouselApi,
   CarouselItem,
+  type CarouselApi,
 } from "~/components/ui/carousel";
-import { IoCalendarOutline } from "react-icons/io5";
-import { Separator } from "~/components/ui/separator";
-import { IoChatbox } from "react-icons/io5";
-import { FaPhone } from "react-icons/fa6";
-import { useMainStore } from "~/stores/MainStore";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
-import useHomepageIntersectionObserver from "~/hooks/useHomepageIntersectionObserver";
 import StaticLotus from "~/components/ui/StaticLotus";
-import useUpdateOrder from "~/hooks/useUpdateOrder";
-import { useToast } from "~/components/ui/use-toast";
-import { PrismaClient, type User } from "@prisma/client";
-import { ToastAction } from "~/components/ui/toast";
-import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
-import { type GetStaticProps } from "next";
+import useHomepageIntersectionObserver from "~/hooks/useHomepageIntersectionObserver";
+import { useMainStore } from "~/stores/MainStore";
 
 import khuesKitchenLogo from "/public/logos/khuesKitchenLogo.png";
 
-import starTribuneLogo from "/public/media/starTribuneLogo.png";
 import kare11Logo from "/public/media/kare11Logo.png";
 import mprLogo from "/public/media/mprLogo.png";
+import starTribuneLogo from "/public/media/starTribuneLogo.png";
 
-import rewardsPromo from "/public/homepage/rewardsPromo.jpg";
-import eric from "/public/ourStory/eric.webp";
 import reservations from "/public/interior/reservations.jpg";
+import eric from "/public/ourStory/eric.webp";
 
-import masonryInteriorOne from "/public/interior/one.webp";
-import masonryInteriorTwo from "/public/interior/two.webp";
-import masonryInteriorThree from "/public/interior/three.webp";
-import masonryInteriorFour from "/public/interior/four.webp";
-import masonryInteriorFive from "/public/interior/five.webp";
-
-import topLeftHero from "/public/ourStory/cropped-khues-kitchen.png";
-import topRightHero from "/public/food/spicy-chicken-sando.jpg";
 import bottomLeftHero from "/public/food/bottomLeftHero.png";
+import topRightHero from "/public/food/spicy-chicken-sando.jpg";
 import bottomRightHero from "/public/interior/instaOne.jpg";
+import topLeftHero from "/public/ourStory/cropped-khues-kitchen.png";
 
-import masonryFoodOne from "/public/food/grilled-sirloin-rotated.png";
+import masonryFoodSix from "/public/food/affogato.png";
 import masonryFoodTwo from "/public/food/cream-cheese-wantons.png";
+import masonryFoodOne from "/public/food/grilled-sirloin-rotated.png";
+import masonryFoodFive from "/public/food/roast-pork-fried-rice.png";
 import masonryFoodThree from "/public/food/sticky-jicama-ribs.png";
 import masonryFoodFour from "/public/food/thai-tea-tres-leches.png";
-import masonryFoodFive from "/public/food/roast-pork-fried-rice.png";
-import masonryFoodSix from "/public/food/affogato.png";
 
-import masonryInteriorSix from "/public/interior/midCityKitchen_1.jpg";
-import masonryInteriorSeven from "/public/interior/midCityKitchen_19.jpg";
-import masonryInteriorEight from "/public/interior/midCityKitchen_2.jpg";
 import masonryInteriorNine from "/public/interior/instaFive.jpg";
+import masonryInteriorSix from "/public/interior/MidCityKitchen_1.jpg";
+import masonryInteriorSeven from "/public/interior/MidCityKitchen_19.jpg";
+import masonryInteriorEight from "/public/interior/MidCityKitchen_2.jpg";
 
 import masonryInteriorTen from "/public/interior/instaOne.jpg";
-import masonryInteriorEleven from "/public/interior/instaTwo.jpg";
-import masonryInteriorTwelve from "/public/interior/instaThree.jpg";
-import masonryInteriorThirteen from "/public/interior/instaFour.jpg";
 
 // interface Home {
 //   ourFavoriteMenuItems: FullMenuItem[];
