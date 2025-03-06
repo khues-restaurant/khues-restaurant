@@ -69,32 +69,19 @@ export default function Home() {
   const [pressReviewsApi, setPressReviewsApi] = useState<CarouselApi>();
   const [pressReviewsSlide, setPressReviewsSlide] = useState(0);
 
-  const [chefSpecialsApi, setChefSpecialsApi] = useState<CarouselApi>();
-  const [chefSpecialsSlide, setChefSpecialsSlide] = useState(0);
-
   useEffect(() => {
-    if (!pressReviewsApi || !chefSpecialsApi) {
+    if (!pressReviewsApi) {
       return;
     }
 
     setPressReviewsSlide(pressReviewsApi.selectedScrollSnap());
-    setChefSpecialsSlide(chefSpecialsApi.selectedScrollSnap());
 
     pressReviewsApi.on("select", () => {
       setPressReviewsSlide(pressReviewsApi.selectedScrollSnap());
     });
 
-    chefSpecialsApi.on("select", () => {
-      setChefSpecialsSlide(chefSpecialsApi.selectedScrollSnap());
-    });
-
-    chefSpecialsApi.on("resize", () => {
-      setChefSpecialsSlide(0);
-      chefSpecialsApi.scrollTo(0);
-    });
-
     // eventually add proper cleanup functions here
-  }, [pressReviewsApi, chefSpecialsApi]);
+  }, [pressReviewsApi]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
