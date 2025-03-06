@@ -29,7 +29,6 @@ import { useToast } from "~/components/ui/use-toast";
 import { PrismaClient, type User } from "@prisma/client";
 import { ToastAction } from "~/components/ui/toast";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
-import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { type GetStaticProps } from "next";
 
 import khuesKitchenLogo from "/public/logos/khuesKitchenLogo.png";
@@ -1137,86 +1136,86 @@ export default function Home() {
 //   };
 // };
 
-interface OurFavoriteMenuItemCard {
-  menuItem: FullMenuItem;
-  user: User | null | undefined;
-}
+// interface OurFavoriteMenuItemCard {
+//   menuItem: FullMenuItem;
+//   user: User | null | undefined;
+// }
 
-function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
-  // const { orderDetails, getPrevOrderDetails, setPrevOrderDetails } =
-  //   useMainStore((state) => ({
-  //     orderDetails: state.orderDetails,
-  //     getPrevOrderDetails: state.getPrevOrderDetails,
-  //     setPrevOrderDetails: state.setPrevOrderDetails,
-  //   }));
+// function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
+//   // const { orderDetails, getPrevOrderDetails, setPrevOrderDetails } =
+//   //   useMainStore((state) => ({
+//   //     orderDetails: state.orderDetails,
+//   //     getPrevOrderDetails: state.getPrevOrderDetails,
+//   //     setPrevOrderDetails: state.setPrevOrderDetails,
+//   //   }));
 
-  // const { updateOrder } = useUpdateOrder();
+//   // const { updateOrder } = useUpdateOrder();
 
-  // const { toast, dismiss: dismissToasts } = useToast();
+//   // const { toast, dismiss: dismissToasts } = useToast();
 
-  const [addToOrderText, setAddToOrderText] = useState("Add to order");
+//   const [addToOrderText, setAddToOrderText] = useState("Add to order");
 
-  return (
-    <>
-      <Image
-        src={"/menuItems/sampleImage.webp"}
-        alt={`${menuItem.name} at Khue's in St. Paul`}
-        width={160}
-        height={160}
-        className="select-none self-center rounded-md drop-shadow-md tablet:drop-shadow-lg"
-      />
-      <p className="select-none font-semibold">{menuItem.name}</p>
-      <p className="line-clamp-3 select-none text-center text-sm">
-        {menuItem.description}
-      </p>
-      {/* <Button
-        disabled={!menuItem.available || addToOrderText === "Added to order"}
-        className="w-full select-none"
-      >
-        <AnimatePresence mode={"popLayout"} initial={false}>
-          <motion.div
-            key={`${menuItem.id}-${addToOrderText}`}
-            layout
-            // whileTap={{ scale: 0.95 }}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{
-              duration: 0.25,
-            }}
-            className="baseFlex w-[122.75px] gap-2"
-          >
-            {addToOrderText === "Add to order" && "Add to order"}
+//   return (
+//     <>
+//       <Image
+//         src={"/menuItems/sampleImage.webp"}
+//         alt={`${menuItem.name} at Khue's in St. Paul`}
+//         width={160}
+//         height={160}
+//         className="select-none self-center rounded-md drop-shadow-md tablet:drop-shadow-lg"
+//       />
+//       <p className="select-none font-semibold">{menuItem.name}</p>
+//       <p className="line-clamp-3 select-none text-center text-sm">
+//         {menuItem.description}
+//       </p>
+//       {/* <Button
+//         disabled={!menuItem.available || addToOrderText === "Added to order"}
+//         className="w-full select-none"
+//       >
+//         <AnimatePresence mode={"popLayout"} initial={false}>
+//           <motion.div
+//             key={`${menuItem.id}-${addToOrderText}`}
+//             layout
+//             // whileTap={{ scale: 0.95 }}
+//             initial={{ opacity: 0, y: -20 }}
+//             animate={{ opacity: 1, y: 0 }}
+//             exit={{ opacity: 0, y: 20 }}
+//             transition={{
+//               duration: 0.25,
+//             }}
+//             className="baseFlex w-[122.75px] gap-2"
+//           >
+//             {addToOrderText === "Add to order" && "Add to order"}
 
-            {addToOrderText === "Added to order" && (
-              <svg
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-                className="size-6 text-offwhite"
-              >
-                <motion.path
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{
-                    delay: 0.2,
-                    type: "tween",
-                    ease: "easeOut",
-                    duration: 0.3,
-                  }}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </Button> */}
-    </>
-  );
-}
+//             {addToOrderText === "Added to order" && (
+//               <svg
+//                 fill="none"
+//                 viewBox="0 0 24 24"
+//                 stroke="currentColor"
+//                 strokeWidth={2}
+//                 className="size-6 text-offwhite"
+//               >
+//                 <motion.path
+//                   initial={{ pathLength: 0 }}
+//                   animate={{ pathLength: 1 }}
+//                   transition={{
+//                     delay: 0.2,
+//                     type: "tween",
+//                     ease: "easeOut",
+//                     duration: 0.3,
+//                   }}
+//                   strokeLinecap="round"
+//                   strokeLinejoin="round"
+//                   d="M5 13l4 4L19 7"
+//                 />
+//               </svg>
+//             )}
+//           </motion.div>
+//         </AnimatePresence>
+//       </Button> */}
+//     </>
+//   );
+// }
 
 // const ourFavoriteMenuItems = [
 //   {
