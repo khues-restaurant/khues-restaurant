@@ -8,10 +8,7 @@ import { CiCalendarDate } from "react-icons/ci";
 import { Clock, MapPin } from "lucide-react";
 import { HiOutlineInformationCircle } from "react-icons/hi";
 import { IoMdMore } from "react-icons/io";
-import { MdAccessTime } from "react-icons/md";
-import { TbLocation } from "react-icons/tb";
 import { FaFacebook } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
 import { IoLogoInstagram } from "react-icons/io5";
 import { SiTiktok } from "react-icons/si";
 import {
@@ -32,10 +29,10 @@ import classes from "./DesktopHeader.module.css";
 import { STIX_Two_Text } from "next/font/google";
 import { Charis_SIL } from "next/font/google";
 import { X } from "lucide-react";
-
-import StaticLotus from "~/components/ui/StaticLotus";
-import outsideOfRestaurant from "/public/interior/MidCityKitchen_11.jpg";
 import { AnimatePresence, motion } from "framer-motion";
+import StaticLotus from "~/components/ui/StaticLotus";
+
+import outsideOfRestaurant from "/public/interior/ten.jpg";
 
 const stix = STIX_Two_Text({
   subsets: ["latin"],

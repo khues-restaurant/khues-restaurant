@@ -38,16 +38,16 @@ const charis = Charis_SIL({
   weight: ["400", "700"],
 });
 
-import headerThaiTeaTresLeches from "/public/food/header-thai-tea-tres-leches.png";
-import headerBanhMiXiuMai from "/public/food/header-banh-mi-xiu-mai.png";
+import headerThaiTeaTresLeches from "/public/miscFood/header-thai-tea-tres-leches.png";
+import headerBanhMiXiuMai from "/public/miscFood/header-banh-mi-xiu-mai.png";
 
-import creamCheeseWantons from "/public/food/cream-cheese-wantons.png";
-import roastPorkFriedRice from "/public/food/roast-pork-fried-rice.png";
-import spicyChickenSando from "/public/food/spicy-chicken-sando.jpg";
-import stickyJicamaRibs from "/public/food/sticky-jicama-ribs.png";
-import grilledSirloin from "/public/food/grilled-sirloin.png";
-import affogato from "/public/food/affogato.png";
-import thaiTeaTresLeches from "/public/food/thai-tea-tres-leches.png";
+import creamCheeseWantons from "/public/menuItems/cream-cheese-wantons.png";
+import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
+import spicyChickenSando from "/public/menuItems/spicy-chicken-sando.jpg";
+import stickyJicamaRibs from "/public/menuItems/sticky-jicama-ribs.png";
+import grilledSirloin from "/public/menuItems/grilled-sirloin.png";
+import affogato from "/public/menuItems/affogato.png";
+import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
 
 function Menu() {
   const [scrollProgress, setScrollProgress] = useState(0);

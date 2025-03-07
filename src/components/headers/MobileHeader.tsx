@@ -6,12 +6,9 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { CiCalendarDate } from "react-icons/ci";
 import { FaFacebook } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
 import { IoLogoInstagram } from "react-icons/io5";
 import { SiTiktok } from "react-icons/si";
 import { Clock, MapPin } from "lucide-react";
-import { MdAccessTime } from "react-icons/md";
-import { TbLocation } from "react-icons/tb";
 import {
   Accordion,
   AccordionContent,
@@ -50,7 +47,7 @@ const charis = Charis_SIL({
   weight: ["400", "700"],
 });
 
-import outsideOfRestaurant from "/public/exterior/instaTwo.jpg";
+import outsideOfRestaurant from "/public/exterior/one.jpg";
 
 const linkContainer = {
   visible: {
