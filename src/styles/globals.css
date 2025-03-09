@@ -179,7 +179,7 @@ body {
 
   grid-template-areas:
     "firstFood firstFood"
-    "secondFood thirdFood"
+    "secondFood sixthFood"
     "fourthFood thirdFood"
     "fifthFood fifthFood";
 
@@ -192,7 +192,7 @@ body {
 
     grid-template-areas:
       "thirdFood secondFood firstFood firstFood"
-      "thirdFood fifthFood fifthFood fourthFood";
+      "thirdFood fifthFood sixthFood fourthFood";
   }
 }
 
@@ -214,6 +214,10 @@ body {
 
 .fifthMasonryFood {
   grid-area: fifthFood;
+}
+
+.sixthMasonryFood {
+  grid-area: sixthFood;
 }
 
 .homepageInteriorMasonry {

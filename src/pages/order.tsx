@@ -4,7 +4,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { format } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { FaRedo } from "react-icons/fa";
 import { FaWineBottle } from "react-icons/fa6";
@@ -53,8 +53,33 @@ const charis = Charis_SIL({
   weight: ["400", "700"],
 });
 
-import sampleImage from "/public/menuItems/sampleImage.webp";
-import wideAngleFoodShot from "/public/menuItems/wideAngleFoodShot.webp";
+import headerThaiTeaTresLeches from "/public/miscFood/header-thai-tea-tres-leches.png";
+import headerBanhMiXiuMai from "/public/miscFood/header-banh-mi-xiu-mai.png";
+
+import creamCheeseWantons from "/public/menuItems/cream-cheese-wantons.png";
+import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
+import spicyChickenSando from "/public/menuItems/spicy-chicken-sando.jpg";
+import stickyJicamaRibs from "/public/menuItems/sticky-jicama-ribs.png";
+import grilledSirloin from "/public/menuItems/grilled-sirloin.png";
+import affogato from "/public/menuItems/affogato.png";
+import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
+
+const menuItemCategoryImages: Record<string, StaticImageData[]> = {
+  Starters: [creamCheeseWantons],
+  Entrees: [roastPorkFriedRice, spicyChickenSando, grilledSirloin],
+  Desserts: [affogato, thaiTeaTresLeches],
+};
+
+const menuItemImages: Record<string, StaticImageData> = {
+  "Cream Cheese Wontons": creamCheeseWantons,
+  "Roast Pork Fried Rice": roastPorkFriedRice,
+  "Bánh Mì Xíu Mại": headerBanhMiXiuMai,
+  "Spicy Chicken Sando": spicyChickenSando,
+  "Sticky Jicama Ribs": stickyJicamaRibs,
+  "Grilled Sirloin": grilledSirloin,
+  "Cà Phê Sữa Đá Affogato": affogato,
+  "Thai Tea Tres Leches": thaiTeaTresLeches,
+};
 
 function OrderNow() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -303,62 +328,79 @@ function OrderNow() {
       className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem)]"
     >
       {/* Hero */}
-      <div className="baseFlex relative h-56 w-full overflow-hidden shadow-md tablet:h-72">
-        <div className="baseFlex absolute left-0 top-0 size-full bg-gradient-to-br from-primary to-darkPrimary tablet:gap-8 desktop:gap-16">
-          {/* assuming you can get the bowls/plates to line up perfectly w/ the actual images,
-              I think having a combo of pretty varied items would look great for the mobile hero.
-              ^ implied, but this means you need to edit the images to line up into one cohesive image
-              with some software
-              
-              also obv have different dishes displayed between /menu and /order
-              */}
+      <div className="baseFlex relative h-56 w-full overflow-hidden bg-darkPrimary shadow-md md:bg-gradient-to-br md:from-primary md:to-darkPrimary tablet:h-72">
+        <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 gap-4 p-4 md:grid-cols-[1fr_1fr_auto_1fr_1fr] md:grid-rows-1 md:gap-0 md:px-8 md:py-0 tablet:h-72 tablet:gap-12">
+          <div
+            style={{
+              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+            }}
+          >
+            <Image
+              src={roastPorkFriedRice}
+              alt="Roast Pork Fried Rice at Khue's in St. Paul"
+              fill
+              // sizes="(max-width: 1000px) 400px, 320px"
+              priority
+              className="!relative !size-full rounded-md object-cover object-center opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(0_0,85%_0,100%_100%,15%_100%)]"
+            />
+          </div>
+          <div
+            style={{
+              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+            }}
+          >
+            <Image
+              src={spicyChickenSando}
+              alt="Spicy Chicken Sando at Khue's in St. Paul"
+              // sizes="(max-width: 1000px) 400px, 320px"
+              priority
+              className="!relative !size-full rounded-md object-cover object-center opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(0_0,85%_0,100%_100%,15%_100%)]"
+            />
+          </div>
 
-          <Image
-            src={sampleImage}
-            alt={"TODO: fill in w/ appropriate alt text"}
-            width={204}
-            height={204}
-            className="!relative rounded-md drop-shadow-lg tablet:!hidden"
-          />
-
-          <Image
-            src={sampleImage}
-            alt={"TODO: fill in w/ appropriate alt text"}
-            sizes="(max-width: 1000px) 160px, 192px"
-            className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
-          />
-          <Image
-            src={sampleImage}
-            alt={"TODO: fill in w/ appropriate alt text"}
-            sizes="(max-width: 1000px) 160px, 192px"
-            className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
-          />
-          <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-offwhite p-2 shadow-heroContainer tablet:!flex">
-            <div className="baseFlex gap-2 font-semibold text-primary tablet:p-2 tablet:text-xl desktop:text-2xl">
-              <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
+          <div className="baseFlex z-10 mx-8 !hidden self-center justify-self-center rounded-md bg-offwhite p-4 shadow-heroContainer md:!flex">
+            <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
+              <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
               <h1 className={`${charis.className}`}>Order</h1>
-              <SideAccentSwirls className="h-5 fill-primary" />
+              <SideAccentSwirls className="h-4 fill-primary desktop:h-5" />
             </div>
           </div>
-          <Image
-            src={sampleImage}
-            alt={"TODO: fill in w/ appropriate alt text"}
-            sizes="(max-width: 1000px) 160px, 192px"
-            className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
-          />
-          <Image
-            src={sampleImage}
-            alt={"TODO: fill in w/ appropriate alt text"}
-            sizes="(max-width: 1000px) 160px, 192px"
-            className="!relative !hidden !size-40 rounded-md drop-shadow-xl tablet:!block desktop:!size-48"
-          />
+
+          <div
+            style={{
+              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+            }}
+          >
+            <Image
+              src={headerBanhMiXiuMai}
+              alt="Bánh Mì Xíu Mại at Khue's in St. Paul"
+              fill
+              // sizes="(max-width: 1000px) 400px, 320px"
+              priority
+              className="!relative !size-full rounded-md object-cover object-center opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(100%_0,15%_0,0%_100%,85%_100%)]"
+            />
+          </div>
+          <div
+            style={{
+              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+            }}
+          >
+            <Image
+              src={headerThaiTeaTresLeches}
+              alt="Thai Tea Tres Leches at Khue's in St. Paul"
+              fill
+              // sizes="(max-width: 1000px) 400px, 320px"
+              priority
+              className="!relative !size-full rounded-md object-cover object-top opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(100%_0,15%_0,0%_100%,85%_100%)]"
+            />
+          </div>
         </div>
 
-        <div className="baseFlex z-10 rounded-md bg-offwhite p-2 shadow-heroContainer tablet:hidden">
-          <div className="baseFlex gap-2 p-2 text-xl font-semibold text-primary tablet:px-8 tablet:py-3 tablet:text-2xl">
-            <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary" />
-            <h1 className={`${charis.className}`}>Order</h1>
-            <SideAccentSwirls className="h-4 fill-primary" />
+        <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-heroContainer md:!hidden">
+          <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
+            <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
+            <h1 className={`${charis.className}`}>Menu</h1>
+            <SideAccentSwirls className="h-4 fill-primary desktop:h-5" />
           </div>
         </div>
       </div>
@@ -677,46 +719,123 @@ function MenuCategory({
       }}
       className="baseVertFlex w-full scroll-m-48 !items-start gap-4 p-2"
     >
-      <div className="baseFlex relative w-full rounded-md">
-        <Image
-          src={wideAngleFoodShot}
-          alt={`A wide angle shot of a variety of ${name.toLowerCase()}`}
-          sizes="(max-width: 1000px) 90vw, 75vw"
-          priority={listOrder === 0} // only want the first category to be a priority
-          className="!relative !h-48 w-full rounded-md object-cover shadow-md"
-        />
+      {name === "Beverages" || name === "Beer" || name === "Wine" ? (
+        <>
+          {/* category header */}
+          <div className="baseVertFlex w-full !items-start border-b-2 border-primary">
+            <p
+              className={`${charis.className} baseFlex gap-2 pl-3 text-xl font-medium italic tablet:text-2xl`}
+            >
+              {name}
+            </p>
+          </div>
 
-        <div className="baseVertFlex absolute bottom-4 left-4 !items-start gap-2 rounded-md bg-offwhite px-4 py-2 shadow-heavyInner tablet:!flex-row tablet:!items-center tablet:gap-4">
-          <p className="ml-1 text-xl font-semibold underline underline-offset-2">
-            {name}
-          </p>
+          {/* wrapping container for each food item in the category */}
+          <div className="grid w-full grid-cols-1 items-start justify-items-center p-1 sm:grid-cols-2 sm:gap-x-16 xl:grid-cols-3 3xl:grid-cols-4">
+            {menuItems.map((item) => (
+              <MenuItemPreviewButton
+                key={item.id}
+                menuItem={item}
+                activeDiscount={activeDiscount} // TODO: should prob also add ?? item.activeDiscount too right? was giving type error w/ createdAt but 99% sure this should be on there
+                listOrder={item.listOrder}
+                setIsDialogOpen={setIsDialogOpen}
+                setIsDrawerOpen={setIsDrawerOpen}
+                setItemToCustomize={setItemToCustomize}
+                user={user}
+              />
+            ))}
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="baseFlex relative h-36 w-full !justify-end overflow-hidden rounded-md bg-gradient-to-br from-primary to-darkPrimary shadow-md tablet:h-48">
+            <div className="absolute left-[30%] h-full w-[70%] overflow-hidden">
+              {/* Right-most */}
+              {menuItemCategoryImages[name]!.length >= 1 && (
+                <div
+                  style={{
+                    filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+                  }}
+                  className="absolute left-[52%] top-0 h-full w-[40%] tablet:left-[62%] tablet:w-1/3"
+                >
+                  <Image
+                    src={menuItemCategoryImages[name]![0] ?? ""}
+                    alt={`${name} at Khue's in St. Paul`}
+                    fill
+                    style={{
+                      clipPath: "polygon(0 0, 85% 0, 100% 100%, 15% 100%)",
+                    }}
+                    className="object-cover"
+                  />
+                </div>
+              )}
 
-          {/* {activeDiscount && (
-            <div className="rewardsGoldBorder baseFlex gap-1 rounded-md bg-primary px-4 py-0.5 text-sm font-medium text-yellow-500">
-              <span>{activeDiscount.name}</span>
-              <span>
-                until {format(activeDiscount.expirationDate, "MM/dd")}
-              </span>
+              {/* Middle */}
+              {menuItemCategoryImages[name]!.length >= 2 && (
+                <div
+                  style={{
+                    filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+                  }}
+                  className="absolute left-[10%] top-0 h-full w-[40%] tablet:left-[31%] tablet:w-1/3"
+                >
+                  <Image
+                    src={menuItemCategoryImages[name]![1]!}
+                    alt={`${name} at Khue's in St. Paul`}
+                    fill
+                    style={{
+                      clipPath: "polygon(0 0, 85% 0, 100% 100%, 15% 100%)",
+                    }}
+                    className="object-cover"
+                  />
+                </div>
+              )}
+
+              {/* Left-most */}
+              {menuItemCategoryImages[name]!.length >= 3 && (
+                <div
+                  style={{
+                    filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+                  }}
+                  className="absolute left-[10%] top-0 hidden h-full w-[40%] tablet:left-[0%] tablet:block tablet:w-1/3"
+                >
+                  <Image
+                    src={menuItemCategoryImages[name]![2]!}
+                    alt={`${name} at Khue's in St. Paul`}
+                    fill
+                    style={{
+                      clipPath: "polygon(0 0, 85% 0, 100% 100%, 15% 100%)",
+                    }}
+                    className="object-cover "
+                  />
+                </div>
+              )}
             </div>
-          )} */}
-        </div>
-      </div>
 
-      {/* wrapping container for each food item in the category */}
-      <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
-        {menuItems.map((item) => (
-          <MenuItemPreviewButton
-            key={item.id}
-            menuItem={item}
-            activeDiscount={activeDiscount} // TODO: should prob also add ?? item.activeDiscount too right? was giving type error w/ createdAt but 99% sure this should be on there
-            listOrder={item.listOrder}
-            setIsDialogOpen={setIsDialogOpen}
-            setIsDrawerOpen={setIsDrawerOpen}
-            setItemToCustomize={setItemToCustomize}
-            user={user}
-          />
-        ))}
-      </div>
+            <div className="baseFlex absolute bottom-4 left-4 gap-4 rounded-md bg-offwhite px-4 py-2">
+              <div
+                className={`${charis.className} baseFlex gap-2 text-xl font-medium italic tablet:text-2xl`}
+              >
+                {name}
+              </div>
+            </div>
+          </div>
+          {/* wrapping container for each food item in the category */}
+          <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
+            {menuItems.map((item) => (
+              <MenuItemPreviewButton
+                key={item.id}
+                menuItem={item}
+                activeDiscount={activeDiscount} // TODO: should prob also add ?? item.activeDiscount too right? was giving type error w/ createdAt but 99% sure this should be on there
+                listOrder={item.listOrder}
+                setIsDialogOpen={setIsDialogOpen}
+                setIsDrawerOpen={setIsDrawerOpen}
+                setItemToCustomize={setItemToCustomize}
+                user={user}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </motion.div>
   );
 }

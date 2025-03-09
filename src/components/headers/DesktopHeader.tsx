@@ -27,9 +27,7 @@ import { Button } from "../ui/button";
 import classes from "./DesktopHeader.module.css";
 import { STIX_Two_Text } from "next/font/google";
 import { Charis_SIL } from "next/font/google";
-
 import StaticLotus from "~/components/ui/StaticLotus";
-import outsideOfRestaurant from "/public/exterior/one.webp";
 import { SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
 import useGetUserId from "~/hooks/useGetUserId";
 import { useMainStore } from "~/stores/MainStore";
@@ -38,6 +36,8 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { FaUserAlt } from "react-icons/fa";
 import { TfiReceipt } from "react-icons/tfi";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
+
+import outsideOfRestaurant from "/public/interior/ten.jpg";
 
 const stix = STIX_Two_Text({
   subsets: ["latin"],
@@ -137,7 +137,7 @@ function DesktopHeader() {
           asChild
         >
           <a
-            href="https://reservations.shift4payments.com/#/1814c327-a884-4b86-bc26-915ce9eadbb8"
+            href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul"
             className="block !text-xl smallDesktopHeader:hidden"
           >
             Reservations

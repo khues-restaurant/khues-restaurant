@@ -30,6 +30,13 @@ import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import StaticLotus from "~/components/ui/StaticLotus";
 import { useToast } from "~/components/ui/use-toast";
 import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
+import { useAuth, useClerk } from "@clerk/nextjs";
+import useGetUserId from "~/hooks/useGetUserId";
+import { api } from "~/utils/api";
+import { useMainStore } from "~/stores/MainStore";
+import { clearLocalStorage } from "~/utils/clearLocalStorage";
+import { TfiReceipt } from "react-icons/tfi";
+import { SlPresent } from "react-icons/sl";
 
 import { Noto_Sans } from "next/font/google";
 const notoSans = Noto_Sans({
@@ -48,14 +55,7 @@ const charis = Charis_SIL({
   weight: ["400", "700"],
 });
 
-import outsideOfRestaurant from "/public/exterior/one.webp";
-import { useAuth, useClerk } from "@clerk/nextjs";
-import useGetUserId from "~/hooks/useGetUserId";
-import { api } from "~/utils/api";
-import { useMainStore } from "~/stores/MainStore";
-import { clearLocalStorage } from "~/utils/clearLocalStorage";
-import { TfiReceipt } from "react-icons/tfi";
-import { SlPresent } from "react-icons/sl";
+import outsideOfRestaurant from "/public/exterior/one.jpg";
 
 const linkContainer = {
   visible: {
@@ -339,7 +339,7 @@ function MobileHeader() {
                     asChild
                   >
                     <a
-                      href="https://reservations.shift4payments.com/#/1814c327-a884-4b86-bc26-915ce9eadbb8"
+                      href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul"
                       className="!text-xl"
                     >
                       Reservations

@@ -88,7 +88,7 @@ function OpenGraphTemplate() {
 
             <Button size={"lg"} variant={"outline"} asChild>
               <a
-                href="https://reservations.shift4payments.com/#/1814c327-a884-4b86-bc26-915ce9eadbb8"
+                href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul"
                 className="baseFlex gap-3 !px-8 !py-6 !text-lg shadow-sm"
               >
                 Make a reservation
