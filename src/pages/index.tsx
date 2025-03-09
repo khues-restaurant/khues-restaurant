@@ -30,6 +30,8 @@ import mprLogo from "/public/media/mprLogo.png";
 import starTribuneLogo from "/public/media/starTribuneLogo.png";
 
 import eric from "/public/ourStory/eric.webp";
+import ericUpscaled from "/public/ourStory/ericUpscaled.jpg";
+
 import reservations from "/public/interior/reservations.jpg";
 
 import masonryFoodOne from "/public/miscFood/grilled-sirloin-rotated.png";
@@ -705,12 +707,13 @@ export default function Home() {
           <div className="baseVertFlex w-full max-w-sm overflow-hidden rounded-md border shadow-md tablet:hidden">
             <div className="relative h-60 w-full overflow-hidden shadow-md">
               <Image
-                src={eric}
+                src={ericUpscaled}
                 alt={
                   "Chef Eric Pham, owner of Khue's Kitchen, standing with arms crossed and smiling in front of a rustic door."
                 }
-                width={384}
-                className="!relative !top-0 !size-full !h-96 rounded-none object-cover !object-top !pb-16"
+                // width={384}
+                unoptimized
+                className="!relative !top-0 !size-full rounded-none object-cover !object-top"
               />
             </div>
             <div className="baseVertFlex relative !items-start gap-4 overflow-hidden rounded-b-md bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-12">
@@ -769,8 +772,8 @@ export default function Home() {
                   alt={
                     "Chef Eric Pham, owner of Khue's Kitchen, standing with arms crossed and smiling in front of a rustic door."
                   }
-                  sizes="288px"
-                  className="!relative !top-0 !size-full !h-96 rounded-md object-cover object-top"
+                  sizes="324px"
+                  className="!relative !top-0 !size-full rounded-md object-cover object-top"
                 />
               </motion.div>
             </div>
