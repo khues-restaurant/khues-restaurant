@@ -30,7 +30,7 @@ const mediaArticles: MediaCard[] = [
       "https://www.kare11.com/article/news/local/eric-phams-culinary-dream-reignites-khues-kitchen-st-paul/89-9b917801-8af4-431c-adc4-50ffa1a87a42",
     imageSrc: kare11CulinaryDream,
     imageAlt:
-      "Chef Eric Pham, owner of Khue's Kitchen, smiling while cooking in a professional kitchen.",
+      "Chef Eric Pham, wearing a white chef's coat and apron, seated inside the dining room of Khue's Kitchen while discussing the reopening after a devastating fire.",
     imageHeight: 288,
     brandUrl: "https://www.kare11.com/",
     brandLogo: kare11Logo,
@@ -49,7 +49,7 @@ const mediaArticles: MediaCard[] = [
       "https://www.cbsnews.com/minnesota/news/khues-kitchen-reopens-midcity-kitchen/",
     imageSrc: wccoImage,
     imageAlt:
-      "Chef Eric Pham, owner of Khue's Kitchen, smiling while cooking in a professional kitchen.",
+      "Chef Eric Pham, in a white chef's coat and apron, standing in the dining room of Khue's Kitchen and gesturing as he describes his restaurant's comeback story.",
     imageHeight: 288,
     brandUrl: "https://www.cbsnews.com/minnesota/",
     BrandLogoComponent: <WCCOLogo className="mb-1 h-[85px] w-[110px]" />,
@@ -151,7 +151,7 @@ function Media() {
         <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1 tablet:h-72">
           <Image
             src={kare11CulinaryDream}
-            alt="Chef Eric Pham cooking in a professional kitchen"
+            alt="Chef Eric Pham, wearing a white chef's coat and apron, seated inside the dining room of Khue's Kitchen while discussing the reopening after a devastating fire."
             fill
             priority
             className="!relative !size-full object-cover object-top opacity-20"
@@ -159,7 +159,7 @@ function Media() {
 
           <Image
             src={kare11InTheKitchen}
-            alt="Chef Eric Pham with KARE 11"
+            alt="Chef Eric Pham with KARE 11's Jennifer Austin."
             fill
             priority
             className="!relative !size-full object-cover object-top opacity-20"
@@ -167,7 +167,7 @@ function Media() {
 
           <Image
             src={starTribune}
-            alt="Khue Pham and young Eric Pham"
+            alt="Khue Pham and young Eric Pham."
             fill
             priority
             className="!relative !size-full object-cover object-top opacity-20"
@@ -175,7 +175,7 @@ function Media() {
 
           <Image
             src={kare11MothersDay}
-            alt="Khue Pham in conversation with family"
+            alt="Khue Pham in conversation with family."
             fill
             priority
             className="!relative !size-full object-cover object-top opacity-20"
@@ -260,23 +260,25 @@ function Media() {
             </div>
 
             {/* Right side image */}
-            <a
-              href={article.articleUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                height: `${article.imageHeight}px`,
-              }}
-              className="baseVertFlex relative w-[650px] !rounded-l-none rounded-r-md bg-primary !p-0 shadow-md"
-            >
-              <Image
-                src={article.imageSrc}
-                alt={article.imageAlt}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 650px, 650px"
-                className="!relative !h-full rounded-r-md bg-offwhite object-cover"
-              />
-            </a>
+            <Button variant={"text"} asChild>
+              <a
+                href={article.articleUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  height: `${article.imageHeight}px`,
+                }}
+                className="baseVertFlex relative w-[650px] !rounded-l-none rounded-r-md bg-primary !p-0 shadow-md"
+              >
+                <Image
+                  src={article.imageSrc}
+                  alt={article.imageAlt}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 650px, 650px"
+                  className="!relative !h-full rounded-r-md bg-offwhite object-cover"
+                />
+              </a>
+            </Button>
           </div>
         ))}
       </div>
