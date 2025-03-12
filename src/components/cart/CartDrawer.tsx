@@ -569,7 +569,7 @@ function CartDrawer({
 
           <Button variant={"link"} className="h-6" asChild>
             <a
-              href="https://maps.app.goo.gl/AtBZUUydNtVvxR7e9"
+              href="https://maps.app.goo.gl/CF5wv5oK1SBhsme56"
               target="_blank"
               rel="noreferrer"
               className="!p-0 !text-sm"
