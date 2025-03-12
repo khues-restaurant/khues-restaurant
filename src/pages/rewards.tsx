@@ -19,7 +19,17 @@ const charis = Charis_SIL({
   weight: ["400", "700"],
 });
 
-import sampleImage from "/public/menuItems/sampleImage.webp";
+import headerThaiTeaTresLeches from "/public/miscFood/header-thai-tea-tres-leches.png";
+import headerBanhMiXiuMai from "/public/miscFood/header-banh-mi-xiu-mai.png";
+
+import creamCheeseWantons from "/public/menuItems/cream-cheese-wantons.png";
+import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
+import spicyChickenSando from "/public/menuItems/spicy-chicken-sando.jpg";
+import stickyJicamaRibs from "/public/menuItems/sticky-jicama-ribs.png";
+import grilledSirloin from "/public/menuItems/grilled-sirloin.png";
+import affogato from "/public/menuItems/affogato.png";
+import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
+
 import StaticLotus from "~/components/ui/StaticLotus";
 
 function Rewards() {
@@ -61,7 +71,7 @@ function Rewards() {
           className="absolute -left-10 -top-10 tablet:hidden"
         >
           <Image
-            src={sampleImage}
+            src={grilledSirloin}
             alt={"TODO: replace with proper alt tag text"}
             width={96}
             height={96}
@@ -96,7 +106,7 @@ function Rewards() {
           className="absolute -bottom-10 -left-10 tablet:hidden"
         >
           <Image
-            src={sampleImage}
+            src={roastPorkFriedRice}
             alt={"TODO: replace with proper alt tag text"}
             width={96}
             height={96}
@@ -125,7 +135,7 @@ function Rewards() {
           className="absolute -top-1 left-24 hidden tablet:flex"
         >
           <Image
-            src={sampleImage}
+            src={creamCheeseWantons}
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
@@ -153,7 +163,7 @@ function Rewards() {
           className="absolute -left-16 bottom-10 hidden tablet:flex"
         >
           <Image
-            src={sampleImage}
+            src={roastPorkFriedRice}
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
@@ -181,7 +191,7 @@ function Rewards() {
           className="absolute -bottom-14 left-36 hidden tablet:flex"
         >
           <Image
-            src={sampleImage}
+            src={spicyChickenSando}
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
@@ -209,7 +219,7 @@ function Rewards() {
           className="absolute left-72 top-14 hidden xl:flex"
         >
           <Image
-            src={sampleImage}
+            src={stickyJicamaRibs}
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
@@ -253,7 +263,7 @@ function Rewards() {
           className="absolute -right-10 -top-10 tablet:hidden"
         >
           <Image
-            src={sampleImage}
+            src={affogato}
             alt={"TODO: replace with proper alt tag text"}
             width={96}
             height={96}
@@ -288,7 +298,7 @@ function Rewards() {
           className="absolute -bottom-10 -right-10 tablet:hidden"
         >
           <Image
-            src={sampleImage}
+            src={thaiTeaTresLeches}
             alt={"TODO: replace with proper alt tag text"}
             width={96}
             height={96}
@@ -317,11 +327,11 @@ function Rewards() {
           className="absolute -top-1 right-24 hidden tablet:flex"
         >
           <Image
-            src={sampleImage}
+            src={grilledSirloin}
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
-            className="!relative "
+            className="!relative !size-36 rounded-2xl"
           />
         </motion.div>
 
@@ -339,7 +349,7 @@ function Rewards() {
           className="absolute -right-16 bottom-10 hidden tablet:flex"
         >
           <Image
-            src={sampleImage}
+            src={headerBanhMiXiuMai}
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
@@ -362,7 +372,7 @@ function Rewards() {
           className="absolute -bottom-14 right-36 hidden tablet:flex"
         >
           <Image
-            src={sampleImage}
+            src={headerThaiTeaTresLeches}
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
@@ -390,7 +400,7 @@ function Rewards() {
           className="absolute right-72 top-14 hidden xl:flex"
         >
           <Image
-            src={sampleImage}
+            src={stickyJicamaRibs}
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
@@ -471,7 +481,7 @@ function Rewards() {
       <div className="baseVertFlex relative my-8 gap-12 text-primary lg:my-28 lg:!flex-row lg:gap-28">
         <div className="baseVertFlex gap-4 tablet:gap-6">
           <Image
-            src={sampleImage}
+            src={creamCheeseWantons}
             alt={"TODO: replace with proper alt tag text"}
             sizes="(max-width: 1000px) 192px, 256px"
             className="!relative size-48 rounded-md drop-shadow-xl tablet:size-64"
@@ -485,7 +495,7 @@ function Rewards() {
 
         <div className="baseVertFlex gap-4 tablet:gap-6">
           <Image
-            src={sampleImage}
+            src={spicyChickenSando}
             alt={"TODO: replace with proper alt tag text"}
             sizes="(max-width: 1000px) 192px, 256px"
             className="!relative size-48 rounded-md drop-shadow-xl tablet:size-64"
@@ -499,7 +509,7 @@ function Rewards() {
 
         <div className="baseVertFlex gap-4 tablet:gap-6">
           <Image
-            src={sampleImage}
+            src={grilledSirloin}
             alt={"TODO: replace with proper alt tag text"}
             sizes="(max-width: 1000px) 192px, 256px"
             className="!relative size-48 rounded-md drop-shadow-xl tablet:size-64"

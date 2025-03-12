@@ -880,7 +880,6 @@ function MenuItemPreview({
         <div className="baseFlex mt-4 w-full !items-start gap-4 tablet:mt-0">
           {menuItem.hasImageOfItem && (
             <Image
-              // src={"/menuItems/sampleImage.webp"}
               src={menuItemImages[menuItem.name] ?? ""}
               alt={`${menuItem.name} at Khue's in St. Paul`}
               width={500}

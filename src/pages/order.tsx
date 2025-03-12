@@ -399,7 +399,7 @@ function OrderNow() {
         <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-heroContainer md:!hidden">
           <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
-            <h1 className={`${charis.className}`}>Menu</h1>
+            <h1 className={`${charis.className}`}>Order</h1>
             <SideAccentSwirls className="h-4 fill-primary desktop:h-5" />
           </div>
         </div>
@@ -731,7 +731,7 @@ function MenuCategory({
           </div>
 
           {/* wrapping container for each food item in the category */}
-          <div className="grid w-full grid-cols-1 items-start justify-items-center p-1 sm:grid-cols-2 sm:gap-x-16 xl:grid-cols-3 3xl:grid-cols-4">
+          <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 p-1 sm:grid-cols-2 sm:gap-x-16 xl:grid-cols-3 3xl:grid-cols-4">
             {menuItems.map((item) => (
               <MenuItemPreviewButton
                 key={item.id}
@@ -820,7 +820,7 @@ function MenuCategory({
             </div>
           </div>
           {/* wrapping container for each food item in the category */}
-          <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
+          <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {menuItems.map((item) => (
               <MenuItemPreviewButton
                 key={item.id}
@@ -886,12 +886,12 @@ function MenuItemPreviewButton({
       style={{
         order: listOrder,
       }}
-      className="relative w-full max-w-96"
+      className="relative w-full"
     >
       <Button
         variant="outline"
         disabled={!menuItem.available}
-        className="baseVertFlex size-full !justify-between gap-4 border border-stone-300 !p-4"
+        className="baseVertFlex size-full !justify-between gap-3 border border-stone-300 !p-4"
         onClick={() => {
           dismissToasts();
 
@@ -905,23 +905,11 @@ function MenuItemPreviewButton({
           }
         }}
       >
-        <div className="baseFlex mt-4 w-full !justify-start gap-4 tablet:mt-0">
-          {menuItem.hasImageOfItem && (
-            <Image
-              src={"/menuItems/sampleImage.webp"}
-              alt={`${menuItem.name} at Khue's in St. Paul`}
-              width={96}
-              height={96}
-              className="mt-2 !size-24 !self-start rounded-md drop-shadow-lg"
-            />
-          )}
-
-          <div
-            className={`baseVertFlex h-full !items-start ${menuItem.hasImageOfItem ? "w-48" : "w-72"}`}
-          >
+        <div className="baseFlex w-full !items-start !justify-start gap-4 tablet:mt-0">
+          <div className={`baseVertFlex h-full !items-start`}>
             <div className="baseVertFlex !items-start gap-2">
               <div className="baseVertFlex !items-start gap-1">
-                <p className="max-w-36 whitespace-normal text-left text-lg font-medium underline underline-offset-2 supports-[text-wrap]:text-wrap">
+                <p className="whitespace-normal text-left text-lg font-medium underline underline-offset-2 supports-[text-wrap]:text-wrap">
                   {menuItem.name}
                 </p>
 
@@ -938,24 +926,25 @@ function MenuItemPreviewButton({
               </div>
 
               <p
-                className={`line-clamp-3 whitespace-normal text-left text-sm text-stone-500 supports-[text-wrap]:text-wrap ${menuItem.hasImageOfItem ? "max-w-48" : "max-w-72"}`}
+                className={`line-clamp-3 whitespace-normal text-left text-sm text-stone-500 supports-[text-wrap]:text-wrap`}
               >
                 {menuItem.description}
               </p>
             </div>
           </div>
+          {menuItem.hasImageOfItem && (
+            <Image
+              src={menuItemImages[menuItem.name] ?? ""}
+              alt={`${menuItem.name} at Khue's in St. Paul`}
+              width={500}
+              height={500}
+              quality={100}
+              className="mt-1 !size-28 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md sm:!size-28"
+            />
+          )}
         </div>
 
-        <div
-          className={`baseFlex w-full gap-4 
-          ${!menuItem.available ? "!justify-between" : "!justify-end"}
-        `}
-        >
-          {!menuItem.available && (
-            <div className="rounded-md bg-stone-200 px-2 py-0.5 text-stone-600">
-              <p className="text-xs italic">Currently unavailable</p>
-            </div>
-          )}
+        <div className={`baseFlex w-full !justify-between gap-4`}>
           <p
             className={`text-base ${activeDiscount ? "rounded-md bg-rewardsGradient !py-0.5 px-4 text-offwhite" : ""}`}
           >
@@ -992,125 +981,135 @@ function MenuItemPreviewButton({
                 customizationChoices,
                 discounts,
               }),
+              true,
             )}
           </p>
+
+          {!menuItem.available && (
+            <div className="rounded-md bg-stone-200 px-2 py-0.5 text-stone-600">
+              <p className="text-xs italic">Currently unavailable</p>
+            </div>
+          )}
+
+          {menuItem.available && (
+            <Button
+              variant={"outline"}
+              size={"icon"}
+              disabled={showCheckmark}
+              className="baseFlex !size-8 rounded-md border border-stone-300 !p-0 text-primary"
+              onClick={async (e) => {
+                e.stopPropagation(); // Add this line to prevent event bubbling
+
+                // set prev order details so we can revert if necessary
+                // with toast's undo button
+                setPrevOrderDetails(orderDetails);
+
+                const pluralize = (await import("pluralize")).default;
+                const isPlural = pluralize.isPlural(menuItem.name);
+                const contextAwarePlural = isPlural ? "were" : "was";
+
+                toast({
+                  description: `${menuItem.name} ${contextAwarePlural} added to your order.`,
+                  action: (
+                    <ToastAction
+                      altText={`Undo the addition of ${menuItem.name} to your order.`}
+                      onClick={() => {
+                        updateOrder({ newOrderDetails: getPrevOrderDetails() });
+                      }}
+                    >
+                      Undo
+                    </ToastAction>
+                  ),
+                });
+
+                // directly add to order w/ defaults + trigger toast notification
+                setShowCheckmark(true);
+
+                updateOrder({
+                  newOrderDetails: {
+                    ...orderDetails,
+                    items: [
+                      ...orderDetails.items,
+                      {
+                        id:
+                          orderDetails.items.length === 0
+                            ? 0
+                            : orderDetails.items.at(-1)!.id + 1,
+                        itemId: menuItem.id,
+                        name: menuItem.name,
+                        customizations:
+                          getDefaultCustomizationChoices(menuItem),
+                        specialInstructions: "",
+                        includeDietaryRestrictions:
+                          user?.autoApplyDietaryRestrictions ?? false,
+                        quantity: 1,
+                        price: menuItem.price,
+                        isChefsChoice: menuItem.isChefsChoice,
+                        isAlcoholic: menuItem.isAlcoholic,
+                        isVegetarian: menuItem.isVegetarian,
+                        isVegan: menuItem.isVegan,
+                        isGlutenFree: menuItem.isGlutenFree,
+                        showUndercookedOrRawDisclaimer:
+                          menuItem.showUndercookedOrRawDisclaimer,
+                        hasImageOfItem: menuItem.hasImageOfItem,
+                        discountId: activeDiscount?.id ?? null,
+                        birthdayReward: false,
+                        pointReward: false,
+                      },
+                    ],
+                  },
+                });
+
+                setTimeout(() => {
+                  setShowCheckmark(false);
+                }, 1000);
+              }}
+            >
+              <AnimatePresence mode="wait">
+                {showCheckmark ? (
+                  <motion.svg
+                    key={`quickAddToOrderCheckmark-${menuItem.id}`}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="size-5 text-primary"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <motion.path
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{
+                        delay: 0.2,
+                        type: "tween",
+                        ease: "easeOut",
+                        duration: 0.3,
+                      }}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </motion.svg>
+                ) : (
+                  <motion.div
+                    key={`quickAddToOrder-${menuItem.id}`}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="baseFlex h-10 w-10 rounded-md"
+                  >
+                    <LuPlus />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </Button>
+          )}
         </div>
       </Button>
-
-      {menuItem.available && (
-        <Button
-          variant={"outline"}
-          size={"icon"}
-          disabled={showCheckmark}
-          className="baseFlex absolute right-0 top-0 h-10 w-10 rounded-none rounded-bl-md rounded-tr-md border border-stone-300 text-primary"
-          onClick={async () => {
-            // set prev order details so we can revert if necessary
-            // with toast's undo button
-            setPrevOrderDetails(orderDetails);
-
-            const pluralize = (await import("pluralize")).default;
-            const isPlural = pluralize.isPlural(menuItem.name);
-            const contextAwarePlural = isPlural ? "were" : "was";
-
-            toast({
-              description: `${menuItem.name} ${contextAwarePlural} added to your order.`,
-              action: (
-                <ToastAction
-                  altText={`Undo the addition of ${menuItem.name} to your order.`}
-                  onClick={() => {
-                    updateOrder({ newOrderDetails: getPrevOrderDetails() });
-                  }}
-                >
-                  Undo
-                </ToastAction>
-              ),
-            });
-
-            // directly add to order w/ defaults + trigger toast notification
-            setShowCheckmark(true);
-
-            updateOrder({
-              newOrderDetails: {
-                ...orderDetails,
-                items: [
-                  ...orderDetails.items,
-                  {
-                    id:
-                      orderDetails.items.length === 0
-                        ? 0
-                        : orderDetails.items.at(-1)!.id + 1,
-                    itemId: menuItem.id,
-                    name: menuItem.name,
-                    customizations: getDefaultCustomizationChoices(menuItem),
-                    specialInstructions: "",
-                    includeDietaryRestrictions:
-                      user?.autoApplyDietaryRestrictions ?? false,
-                    quantity: 1,
-                    price: menuItem.price,
-                    isChefsChoice: menuItem.isChefsChoice,
-                    isAlcoholic: menuItem.isAlcoholic,
-                    isVegetarian: menuItem.isVegetarian,
-                    isVegan: menuItem.isVegan,
-                    isGlutenFree: menuItem.isGlutenFree,
-                    showUndercookedOrRawDisclaimer:
-                      menuItem.showUndercookedOrRawDisclaimer,
-                    hasImageOfItem: menuItem.hasImageOfItem,
-                    discountId: activeDiscount?.id ?? null,
-                    birthdayReward: false,
-                    pointReward: false,
-                  },
-                ],
-              },
-            });
-
-            setTimeout(() => {
-              setShowCheckmark(false);
-            }, 1000);
-          }}
-        >
-          <AnimatePresence mode="wait">
-            {showCheckmark ? (
-              <motion.svg
-                key={`quickAddToOrderCheckmark-${menuItem.id}`}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-                transition={{ duration: 0.2 }}
-                className="size-6 text-primary"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <motion.path
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{
-                    delay: 0.2,
-                    type: "tween",
-                    ease: "easeOut",
-                    duration: 0.3,
-                  }}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 13l4 4L19 7"
-                />
-              </motion.svg>
-            ) : (
-              <motion.div
-                key={`quickAddToOrder-${menuItem.id}`}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-                transition={{ duration: 0.2 }}
-                className="baseFlex h-10 w-10 rounded-md"
-              >
-                <LuPlus />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </Button>
-      )}
     </div>
   );
 }
