@@ -116,7 +116,7 @@ function MobileHeader() {
             </p>
             <Button variant={"underline"} className="h-8 !p-0" asChild>
               <a
-                href="https://maps.app.goo.gl/AtBZUUydNtVvxR7e9"
+                href="https://maps.app.goo.gl/CF5wv5oK1SBhsme56"
                 target="_blank"
                 rel="noreferrer"
                 className="!text-sm text-primary-foreground hover:!text-primary-foreground"
@@ -407,7 +407,7 @@ function MobileHeader() {
                                     asChild
                                   >
                                     <a
-                                      href="https://maps.app.goo.gl/AtBZUUydNtVvxR7e9"
+                                      href="https://maps.app.goo.gl/CF5wv5oK1SBhsme56"
                                       target="_blank"
                                       rel="noreferrer"
                                       className="my-2 whitespace-normal text-primary supports-[text-wrap]:text-wrap"

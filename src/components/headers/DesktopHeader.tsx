@@ -66,7 +66,7 @@ function DesktopHeader() {
             </p>
             <Button variant={"underline"} className="h-8 !p-0" asChild>
               <a
-                href="https://maps.app.goo.gl/AtBZUUydNtVvxR7e9"
+                href="https://maps.app.goo.gl/CF5wv5oK1SBhsme56"
                 target="_blank"
                 rel="noreferrer"
                 className="!text-base text-primary-foreground hover:!text-primary-foreground"
@@ -323,7 +323,7 @@ function DesktopHeader() {
 
                       <Button variant={"link"} className="h-8 !p-0" asChild>
                         <a
-                          href="https://maps.app.goo.gl/AtBZUUydNtVvxR7e9"
+                          href="https://maps.app.goo.gl/CF5wv5oK1SBhsme56"
                           target="_blank"
                           rel="noreferrer"
                           className="text-primary"
