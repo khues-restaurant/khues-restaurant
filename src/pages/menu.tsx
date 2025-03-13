@@ -1085,7 +1085,7 @@ const menuCategories = [
         name: "Chicken Salad",
         description:
           "Taiwanese cabbage, rau ram, thai chilis, toasted peanuts, fish sauce vinaigrette",
-        price: 1400,
+        price: 1500,
         altPrice: null,
         available: true,
         discontinued: false,
@@ -1175,7 +1175,7 @@ const menuCategories = [
         name: "Grilled Sirloin",
         description:
           "Traditional Vietnamese marinade, jasmine rice, yu choy, scallions",
-        price: 3200,
+        price: 3700,
         altPrice: null,
         available: true,
         discontinued: false,
