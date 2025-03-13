@@ -889,7 +889,7 @@ function MenuItemPreviewButton({
       className="relative w-full"
     >
       <Button
-        variant="outline"
+        variant="orderOutline"
         disabled={!menuItem.available}
         className="baseVertFlex size-full !justify-between gap-3 border border-stone-300 !p-4"
         onClick={() => {
@@ -996,7 +996,8 @@ function MenuItemPreviewButton({
               variant={"outline"}
               size={"icon"}
               disabled={showCheckmark}
-              className="baseFlex !size-8 rounded-md border border-stone-300 !p-0 text-primary"
+              // mr-6 w-16
+              className="baseFlex !h-8 !w-28 rounded-md border border-stone-300 !p-0 text-primary"
               onClick={async (e) => {
                 e.stopPropagation(); // Add this line to prevent event bubbling
 
@@ -1069,9 +1070,9 @@ function MenuItemPreviewButton({
                 {showCheckmark ? (
                   <motion.svg
                     key={`quickAddToOrderCheckmark-${menuItem.id}`}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0 }}
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.5, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                     className="size-5 text-primary"
                     fill="none"
@@ -1096,13 +1097,14 @@ function MenuItemPreviewButton({
                 ) : (
                   <motion.div
                     key={`quickAddToOrder-${menuItem.id}`}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0 }}
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.5, opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="baseFlex h-10 w-10 rounded-md"
+                    className="baseFlex h-10 w-10 gap-2 rounded-md"
                   >
-                    <LuPlus />
+                    Add
+                    <LuPlus className="shrink-0" />
                   </motion.div>
                 )}
               </AnimatePresence>

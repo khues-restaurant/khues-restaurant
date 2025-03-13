@@ -13,6 +13,9 @@ const buttonVariants = cva(
         default: "bg-primary text-primary-foreground",
         destructive: "bg-destructive text-destructive-foreground",
         outline: "border border-input bg-offwhite",
+        orderOutline:
+          // darker outline
+          "outline border-none outline-input outline-1 bg-offwhite transition-all",
         secondary: "bg-secondary text-secondary-foreground",
         ghost: "",
         link: "underlineAnimation text-primary tracking-wide",
@@ -57,6 +60,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         return `${brightness !== 1 ? "" : ""}`; // had /90
       } else if (variant === "outline") {
         return `${brightness !== 1 ? "bg-offwhite text-accent-foreground" : ""}`; // is text-accent-foreground what we want btw?
+      } else if (variant === "orderOutline") {
+        return `${brightness !== 1 ? "bg-offwhite text-accent-foreground" : ""}`; // is text-accent-foreground what we want btw?
       } else if (variant === "secondary") {
         return `${brightness !== 1 ? "" : ""}`; // had /80
       } else if (variant === "ghost") {
@@ -90,7 +95,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(
           buttonVariants({ variant, size, className }),
           getDynamicStyles(),
-          "hover:brightness-90 active:brightness-75",
+          variant === "orderOutline"
+            ? "hover:outline-4 active:brightness-90"
+            : "hover:brightness-90 active:brightness-75",
         )}
         ref={ref}
         {...props}
