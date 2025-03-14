@@ -874,7 +874,7 @@ function CartSheet({
                             <Button
                               variant="outline"
                               size="icon"
-                              className="size-7 rounded-none border-none p-0"
+                              className="size-7 rounded-none p-0 !outline-none"
                               onClick={() => {
                                 const newOrderDetails =
                                   structuredClone(orderDetails);
@@ -910,7 +910,7 @@ function CartSheet({
                             <Button
                               variant="outline"
                               disabled={item.quantity >= 20}
-                              className="size-7 rounded-none border-none p-0"
+                              className="size-7 rounded-none p-0 !outline-none"
                               onClick={() => {
                                 if (item.quantity >= 20) return;
                                 const newOrderDetails =

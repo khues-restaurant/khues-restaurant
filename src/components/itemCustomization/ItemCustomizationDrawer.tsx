@@ -470,12 +470,12 @@ function ItemCustomizationDrawer({
             !itemOrderDetails?.pointReward && (
               <div className="baseFlex gap-2">
                 <span className="text-sm font-medium">Quantity</span>
-                <div className="baseFlex h-8 rounded-md border-2 border-stone-500">
+                <div className="baseFlex h-8 overflow-hidden rounded-md border-2 border-stone-500">
                   <Button
                     variant="outline"
                     size="icon"
                     disabled={localItemOrderDetails.quantity <= 1}
-                    className="size-7 rounded-r-none border-none p-0"
+                    className="size-7 rounded-none p-0 !outline-none"
                     onClick={() => {
                       if (localItemOrderDetails.quantity <= 1) return;
 
@@ -495,7 +495,7 @@ function ItemCustomizationDrawer({
                   <Button
                     variant="outline"
                     disabled={localItemOrderDetails.quantity > 20}
-                    className="size-7 rounded-l-none border-none p-0"
+                    className="size-7 rounded-none p-0 !outline-none"
                     onClick={() => {
                       if (localItemOrderDetails.quantity > 20) return;
 
