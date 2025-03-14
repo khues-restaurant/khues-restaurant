@@ -56,6 +56,7 @@ import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
 import { formatPrice } from "~/utils/formatters/formatPrice";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 import { calculateTotalCartPrices } from "~/utils/priceHelpers/calculateTotalCartPrices";
+import { menuItemImagePaths } from "~/utils/menuItemImagePaths";
 
 interface OrderCost {
   subtotal: number;
@@ -844,14 +845,17 @@ function CartSheet({
                       className="baseFlex w-full !items-start gap-4"
                     >
                       {/* preview image of item */}
-                      {item.hasImageOfItem && (
+                      {item.hasImageOfItem ? (
                         <Image
-                          src={"/menuItems/sampleImage.webp"}
+                          src={menuItemImagePaths[item.name] ?? ""}
                           alt={`${item.name} at Khue's in St. Paul`}
-                          width={64}
-                          height={64}
-                          className="rounded-md drop-shadow-md"
+                          width={200}
+                          height={200}
+                          quality={100}
+                          className="!size-16 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md"
                         />
+                      ) : (
+                        <div className="size-16 shrink-0"></div>
                       )}
 
                       <div className="baseFlex w-full !items-start !justify-between">
@@ -1020,16 +1024,19 @@ function CartSheet({
                             className="baseFlex w-full !items-start gap-4"
                           >
                             {/* preview image of item */}
-                            {item.hasImageOfItem && (
-                              <div className="rounded-md bg-rewardsGradient p-1">
+                            {item.hasImageOfItem ? (
+                              <div className="size-14 rounded-xl bg-rewardsGradient p-1">
                                 <Image
-                                  src={"/menuItems/sampleImage.webp"}
+                                  src={menuItemImagePaths[item.name] ?? ""}
                                   alt={`${item.name} at Khue's in St. Paul`}
-                                  width={67}
-                                  height={67}
-                                  className="rounded-md drop-shadow-md"
+                                  width={200}
+                                  height={200}
+                                  quality={100}
+                                  className="size-14 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md"
                                 />
                               </div>
+                            ) : (
+                              <div className="size-16 shrink-0"></div>
                             )}
 
                             <div className="baseFlex w-full !items-start !justify-between">

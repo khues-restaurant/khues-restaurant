@@ -45,6 +45,7 @@ import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidn
 import { formatPrice } from "~/utils/formatters/formatPrice";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
+import { menuItemImagePaths } from "~/utils/menuItemImagePaths";
 
 import { Charis_SIL } from "next/font/google";
 const charis = Charis_SIL({
@@ -68,17 +69,6 @@ const menuItemCategoryImages: Record<string, StaticImageData[]> = {
   Starters: [creamCheeseWantons],
   Entrees: [roastPorkFriedRice, spicyChickenSando, grilledSirloin],
   Desserts: [affogato, thaiTeaTresLeches],
-};
-
-const menuItemImages: Record<string, StaticImageData> = {
-  "Cream Cheese Wontons": creamCheeseWantons,
-  "Roast Pork Fried Rice": roastPorkFriedRice,
-  "Bánh Mì Xíu Mại": headerBanhMiXiuMai,
-  "Spicy Chicken Sando": spicyChickenSando,
-  "Sticky Jicama Ribs": stickyJicamaRibs,
-  "Grilled Sirloin": grilledSirloin,
-  "Cà Phê Sữa Đá Affogato": affogato,
-  "Thai Tea Tres Leches": thaiTeaTresLeches,
 };
 
 function OrderNow() {
@@ -934,7 +924,7 @@ function MenuItemPreviewButton({
           </div>
           {menuItem.hasImageOfItem && (
             <Image
-              src={menuItemImages[menuItem.name] ?? ""}
+              src={menuItemImagePaths[menuItem.name] ?? ""}
               alt={`${menuItem.name} at Khue's in St. Paul`}
               width={500}
               height={500}

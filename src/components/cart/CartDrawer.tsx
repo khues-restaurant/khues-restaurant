@@ -57,6 +57,7 @@ import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
 import { formatPrice } from "~/utils/formatters/formatPrice";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 import { calculateTotalCartPrices } from "~/utils/priceHelpers/calculateTotalCartPrices";
+import { menuItemImagePaths } from "~/utils/menuItemImagePaths";
 
 function getSafeAreaInsetBottom() {
   // Create a temporary element to get the CSS variable
@@ -865,14 +866,17 @@ function CartDrawer({
                       className="baseFlex w-full !items-start gap-4"
                     >
                       {/* preview image of item */}
-                      {item.hasImageOfItem && (
+                      {item.hasImageOfItem ? (
                         <Image
-                          src={"/menuItems/sampleImage.webp"}
+                          src={menuItemImagePaths[item.name] ?? ""}
                           alt={`${item.name} at Khue's in St. Paul`}
-                          width={64}
-                          height={64}
-                          className="rounded-md drop-shadow-md"
+                          width={200}
+                          height={200}
+                          quality={100}
+                          className="!size-16 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md"
                         />
+                      ) : (
+                        <div className="size-16 shrink-0"></div>
                       )}
 
                       <div className="baseFlex w-full !items-start !justify-between">

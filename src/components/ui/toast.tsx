@@ -5,7 +5,6 @@ import { X } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { cn } from "~/utils/shadcnuiUtils";
-import { useMainStore } from "~/stores/MainStore";
 import { HiOutlineInformationCircle } from "react-icons/hi";
 
 const ToastProvider = ToastPrimitives.Provider;
@@ -49,19 +48,13 @@ const Toast = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
     VariantProps<typeof toastVariants>
 >(({ className, variant, ...props }, ref) => {
-  const { viewportLabel } = useMainStore((state) => ({
-    viewportLabel: state.viewportLabel,
-  }));
-
   return (
     <ToastPrimitives.Root
       ref={ref}
       className={cn(
         toastVariants({ variant }),
         className,
-        viewportLabel.includes("mobile")
-          ? "bottom-2 data-[swipe=cancel]:translate-y-0 data-[swipe=end]:translate-y-[var(--radix-toast-swipe-end-y)] data-[swipe=move]:translate-y-[var(--radix-toast-swipe-move-y)] data-[state=closed]:slide-out-to-bottom-[135%] data-[state=open]:slide-in-from-bottom-full"
-          : "data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[state=closed]:slide-out-to-right-[110%] data-[state=open]:slide-in-from-right-full",
+        "bottom-2 data-[swipe=cancel]:translate-y-0 data-[swipe=end]:translate-y-[var(--radix-toast-swipe-end-y)] data-[swipe=move]:translate-y-[var(--radix-toast-swipe-move-y)] data-[state=closed]:slide-out-to-bottom-[135%] data-[state=open]:slide-in-from-bottom-full",
       )}
       {...props}
       duration={3500} // radix-ui default was 5000
@@ -72,7 +65,7 @@ const Toast = React.forwardRef<
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           exit={{ scale: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.3, delay: 0.15 }}
           className="size-6 shrink-0 opacity-90"
           fill="none"
           viewBox="0 0 24 24"
@@ -83,7 +76,7 @@ const Toast = React.forwardRef<
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}
             transition={{
-              delay: 0.2,
+              delay: 0.35,
               type: "tween",
               ease: "easeOut",
               duration: 0.3,

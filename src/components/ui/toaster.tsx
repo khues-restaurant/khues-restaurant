@@ -7,19 +7,12 @@ import {
   ToastViewport,
 } from "~/components/ui/toast";
 import { useToast } from "~/components/ui/use-toast";
-import { useMainStore } from "~/stores/MainStore";
 
 export function Toaster() {
-  const { viewportLabel } = useMainStore((state) => ({
-    viewportLabel: state.viewportLabel,
-  }));
-
   const { toasts } = useToast();
 
   return (
-    <ToastProvider
-      swipeDirection={viewportLabel.includes("mobile") ? "down" : "right"}
-    >
+    <ToastProvider swipeDirection="down">
       {toasts.map(function ({ id, title, description, action, ...props }) {
         return (
           <Toast key={id} {...props}>

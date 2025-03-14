@@ -13,9 +13,7 @@ const buttonVariants = cva(
         default: "bg-primary text-primary-foreground",
         destructive: "bg-destructive text-destructive-foreground",
         outline: "border border-input bg-offwhite",
-        orderOutline:
-          // darker outline
-          "outline border-none outline-input outline-1 bg-offwhite transition-all",
+        orderOutline: "border border-input bg-offwhite",
         secondary: "bg-secondary text-secondary-foreground",
         ghost: "",
         link: "underlineAnimation text-primary tracking-wide",
@@ -96,7 +94,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           buttonVariants({ variant, size, className }),
           getDynamicStyles(),
           variant === "orderOutline"
-            ? "hover:outline-4 active:brightness-90"
+            ? "hover:shadow-[0px_0px_0px_3px_hsl(144,61%,20%)] active:brightness-90"
             : "hover:brightness-90 active:brightness-75",
         )}
         ref={ref}
