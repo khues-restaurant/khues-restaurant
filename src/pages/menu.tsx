@@ -332,9 +332,9 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
             dragFree: true,
             align: "end",
           }}
-          className="baseFlex mb-1 w-full"
+          className="baseFlex mb-1 h-12 w-full"
         >
-          <CarouselContent>
+          <CarouselContent className="h-12">
             {menuCategories?.map((category) => {
               if (category.name === "Beer") {
                 return (

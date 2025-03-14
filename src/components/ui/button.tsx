@@ -12,8 +12,8 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary text-primary-foreground",
         destructive: "bg-destructive text-destructive-foreground",
-        outline: "border border-input bg-offwhite",
-        orderOutline: "border border-input bg-offwhite",
+        outline: "outline outline-1 outline-input bg-offwhite",
+        orderOutline: "outline outline-1 outline-input bg-offwhite",
         secondary: "bg-secondary text-secondary-foreground",
         ghost: "",
         link: "underlineAnimation text-primary tracking-wide",

@@ -1044,16 +1044,19 @@ function CartDrawer({
                             className="baseFlex w-full !items-start gap-4"
                           >
                             {/* preview image of item */}
-                            {item.hasImageOfItem && (
+                            {item.hasImageOfItem ? (
                               <div className="!size-16 min-h-16 min-w-16 rounded-md bg-rewardsGradient !p-1">
                                 <Image
-                                  src={"/menuItems/sampleImage.webp"}
+                                  src={menuItemImagePaths[item.name] ?? ""}
                                   alt={`${item.name} at Khue's in St. Paul`}
-                                  width={56}
-                                  height={56}
-                                  className="!size-14 rounded-md drop-shadow-md"
+                                  width={200}
+                                  height={200}
+                                  quality={100}
+                                  className="!size-16 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md"
                                 />
                               </div>
+                            ) : (
+                              <div className="size-16 shrink-0"></div>
                             )}
 
                             <div className="baseFlex w-full !items-start !justify-between">

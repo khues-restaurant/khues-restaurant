@@ -419,9 +419,9 @@ function OrderNow() {
                     dragFree: true,
                     align: "end",
                   }}
-                  className="baseFlex mb-1 w-full"
+                  className="baseFlex mb-1 h-12 w-full "
                 >
-                  <CarouselContent>
+                  <CarouselContent className="h-12">
                     {userFavoriteItemIds.length > 0 && (
                       <CarouselItem className="baseFlex basis-auto first:ml-2">
                         <MenuCategoryButton
@@ -881,7 +881,7 @@ function MenuItemPreviewButton({
       <Button
         variant="orderOutline"
         disabled={!menuItem.available}
-        className="baseVertFlex size-full !justify-between gap-3 border border-stone-300 !p-4"
+        className="baseVertFlex size-full !justify-between gap-3 !p-4"
         onClick={() => {
           dismissToasts();
 
@@ -895,7 +895,7 @@ function MenuItemPreviewButton({
           }
         }}
       >
-        <div className="baseFlex w-full !items-start !justify-start gap-4 tablet:mt-0">
+        <div className="baseFlex w-full !items-start !justify-between gap-4 tablet:mt-0">
           <div className={`baseVertFlex h-full !items-start`}>
             <div className="baseVertFlex !items-start gap-2">
               <div className="baseVertFlex !items-start gap-1">
@@ -922,6 +922,7 @@ function MenuItemPreviewButton({
               </p>
             </div>
           </div>
+
           {menuItem.hasImageOfItem && (
             <Image
               src={menuItemImagePaths[menuItem.name] ?? ""}
@@ -986,8 +987,7 @@ function MenuItemPreviewButton({
               variant={"outline"}
               size={"icon"}
               disabled={showCheckmark}
-              // mr-6 w-16
-              className="baseFlex !h-8 !w-28 rounded-md border border-stone-300 !p-0 text-primary"
+              className="baseFlex !h-8 !w-28 rounded-md !p-0 text-primary"
               onClick={async (e) => {
                 e.stopPropagation(); // Add this line to prevent event bubbling
 
