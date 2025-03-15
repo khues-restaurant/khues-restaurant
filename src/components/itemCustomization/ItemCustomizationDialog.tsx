@@ -45,7 +45,7 @@ import { api } from "~/utils/api";
 import { formatPrice } from "~/utils/formatters/formatPrice";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
-
+import { menuItemImagePaths } from "~/utils/menuItemImagePaths";
 interface ItemCustomizationDialog {
   isDialogOpen: boolean;
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
@@ -220,25 +220,21 @@ function ItemCustomizerDialogContent({
       </VisuallyHidden>
 
       <div className="baseVertFlex relative w-full !justify-start overflow-y-auto pr-4 pt-4 tablet:max-h-[75vh]">
-        <div className="baseFlex relative h-72 w-full !justify-end rounded-md bg-offwhite shadow-md">
-          {/* primary diagonal bg */}
-          <div
-            className="absolute left-0 top-0 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
-            style={{
-              clipPath: itemToCustomize.hasImageOfItem
-                ? "polygon(100% 0, 100% 24%, 32% 100%, 0 100%, 0 0)"
-                : undefined,
-            }}
-          ></div>
-
+        <div className="baseFlex relative h-72 w-full shrink-0 !justify-end overflow-hidden rounded-md bg-gradient-to-br from-primary to-darkPrimary shadow-md">
           {itemToCustomize.hasImageOfItem && (
-            <Image
-              src={"/menuItems/sampleImage.webp"}
-              alt={`${itemToCustomize.name} at Khue's in St. Paul`}
-              width={240}
-              height={240}
-              className="z-10 my-4 mr-16 rounded-md drop-shadow-xl"
-            />
+            <div
+              style={{
+                filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
+              }}
+            >
+              <Image
+                src={menuItemImagePaths[itemToCustomize.name] ?? ""}
+                alt="Spicy Chicken Sando at Khue's in St. Paul"
+                // sizes="(max-width: 1000px) 400px, 320px"
+                priority
+                className="!relative mr-8 h-72 w-[500px] rounded-md object-cover object-center opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(0_0,85%_0,100%_100%,15%_100%)]"
+              />
+            </div>
           )}
 
           <div
@@ -247,7 +243,10 @@ function ItemCustomizerDialogContent({
             }}
             className="baseFlex absolute left-4 gap-4 rounded-t-md border border-b-0 bg-offwhite px-4 py-2 text-xl font-semibold"
           >
-            <div className="baseFlex gap-2">{itemToCustomize.name}</div>
+            <div className="baseFlex gap-2">
+              {itemToCustomize.name}
+              {itemToCustomize.showUndercookedOrRawDisclaimer && "*"}
+            </div>
 
             {isSignedIn && (
               <AnimatePresence>
@@ -311,14 +310,14 @@ function ItemCustomizerDialogContent({
           {/* Description */}
           <div className="baseVertFlex w-full !items-start gap-2">
             <p className="text-lg underline underline-offset-2">Description</p>
-            <p className="max-w-96 whitespace-normal text-left text-stone-400 supports-[text-wrap]:text-wrap tablet:max-w-2xl">
+            <p className="max-w-96 whitespace-normal text-left text-stone-500 supports-[text-wrap]:text-wrap tablet:max-w-2xl">
               {itemToCustomize.description}
             </p>
 
-            <div className="baseFlex mt-2 w-full flex-wrap !justify-start gap-2 text-sm text-stone-400">
+            <div className="baseFlex mt-2 w-full flex-wrap !justify-start gap-2 text-sm text-stone-500">
               {itemToCustomize.isChefsChoice && (
                 <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
-                  <p className="baseFlex size-4 rounded-full border border-stone-400 bg-offwhite p-2">
+                  <p className="baseFlex size-4 rounded-full border border-stone-500 bg-offwhite p-2">
                     K
                   </p>
                   -<p>Chef&apos;s Choice</p>
@@ -401,7 +400,7 @@ function ItemCustomizerDialogContent({
                   <p className="text-lg text-black underline underline-offset-2">
                     Special instructions
                   </p>
-                  <span className="mt-1 text-sm italic text-stone-400">
+                  <span className="mt-1 text-sm italic text-stone-500">
                     - Optional
                   </span>
                 </div>
@@ -442,12 +441,12 @@ function ItemCustomizerDialogContent({
                       });
                     }}
                   />
-                  <p className="pointer-events-none absolute bottom-9 right-4 text-xs text-stone-400">
+                  <p className="pointer-events-none absolute bottom-9 right-4 text-xs text-stone-500">
                     {100 - localItemOrderDetails.specialInstructions.length}{" "}
                     characters remaining
                   </p>
 
-                  <p className="relative left-0 top-0 gap-2 text-sm italic text-stone-400">
+                  <p className="relative left-0 top-0 gap-2 text-sm italic text-stone-500">
                     * No price altering substitutions/additions are allowed.
                   </p>
                 </div>
@@ -456,7 +455,7 @@ function ItemCustomizerDialogContent({
           </Accordion>
 
           {itemToCustomize.showUndercookedOrRawDisclaimer && (
-            <p className="text-center text-xs italic text-stone-400">
+            <p className="text-center text-xs italic text-stone-500">
               * Consuming raw or undercooked meats, poultry, seafood, shellfish,
               or eggs may increase your risk of foodborne illness.
             </p>
@@ -633,7 +632,7 @@ function CustomizationGroup({
   return (
     <div key={category.id} className="baseVertFlex w-full !items-start">
       <p className="font-medium">{category.name}</p>
-      <p className="text-sm text-stone-400">{category.description}</p>
+      <p className="text-sm text-stone-500">{category.description}</p>
       <div className="baseFlex mt-2 gap-2">
         <RadioGroup
           value={localItemOrderDetails.customizations[category.id]}
@@ -745,7 +744,7 @@ function CustomizationOption({
 
         {/* conditional pr-12 to provide room for the conditional price */}
         <p
-          className={`${!isSelected && relativePrice !== 0 ? "pr-12" : ""} w-64 self-start text-sm text-stone-400`}
+          className={`${!isSelected && relativePrice !== 0 ? "pr-12" : ""} w-64 self-start text-sm text-stone-500`}
         >
           {choice.description}
         </p>

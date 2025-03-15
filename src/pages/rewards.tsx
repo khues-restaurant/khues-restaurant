@@ -76,7 +76,7 @@ function Rewards() {
             width={96}
             height={96}
             priority
-            className="!relative drop-shadow-md tablet:drop-shadow-lg"
+            className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -111,7 +111,7 @@ function Rewards() {
             width={96}
             height={96}
             priority
-            className="!relative drop-shadow-md tablet:drop-shadow-lg"
+            className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -140,7 +140,7 @@ function Rewards() {
             width={144}
             height={144}
             priority
-            className="!relative drop-shadow-md tablet:drop-shadow-lg"
+            className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -168,7 +168,7 @@ function Rewards() {
             width={144}
             height={144}
             priority
-            className="!relative drop-shadow-md tablet:drop-shadow-lg"
+            className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -196,7 +196,7 @@ function Rewards() {
             width={144}
             height={144}
             priority
-            className="!relative drop-shadow-md tablet:drop-shadow-lg"
+            className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -224,7 +224,7 @@ function Rewards() {
             width={144}
             height={144}
             priority
-            className="!relative drop-shadow-md tablet:drop-shadow-lg"
+            className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -268,7 +268,7 @@ function Rewards() {
             width={96}
             height={96}
             priority
-            className="!relative drop-shadow-md tablet:drop-shadow-lg"
+            className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -303,7 +303,7 @@ function Rewards() {
             width={96}
             height={96}
             priority
-            className="!relative drop-shadow-md tablet:drop-shadow-lg"
+            className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -331,7 +331,7 @@ function Rewards() {
             alt={"TODO: replace with proper alt tag text"}
             width={144}
             height={144}
-            className="!relative !size-36 rounded-2xl"
+            className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -354,7 +354,7 @@ function Rewards() {
             width={144}
             height={144}
             priority
-            className="!relative drop-shadow-md tablet:drop-shadow-lg"
+            className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -377,7 +377,7 @@ function Rewards() {
             width={144}
             height={144}
             priority
-            className="!relative drop-shadow-md tablet:drop-shadow-lg"
+            className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
           />
         </motion.div>
 
@@ -405,7 +405,7 @@ function Rewards() {
             width={144}
             height={144}
             priority
-            className="!relative drop-shadow-md tablet:drop-shadow-lg"
+            className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
           />
         </motion.div>
       </div>
@@ -483,8 +483,8 @@ function Rewards() {
           <Image
             src={creamCheeseWantons}
             alt={"TODO: replace with proper alt tag text"}
-            sizes="(max-width: 1000px) 192px, 256px"
-            className="!relative size-48 rounded-md drop-shadow-xl tablet:size-64"
+            sizes="(max-width: 1000px) 500px, 800px"
+            className="!relative size-48 rounded-xl object-cover drop-shadow-xl tablet:size-64"
           />
 
           <div className="baseVertFlex">
@@ -497,8 +497,8 @@ function Rewards() {
           <Image
             src={spicyChickenSando}
             alt={"TODO: replace with proper alt tag text"}
-            sizes="(max-width: 1000px) 192px, 256px"
-            className="!relative size-48 rounded-md drop-shadow-xl tablet:size-64"
+            sizes="(max-width: 1000px) 500px, 800px"
+            className="!relative size-48 rounded-xl object-cover drop-shadow-xl tablet:size-64"
           />
 
           <div className="baseVertFlex">
@@ -511,8 +511,8 @@ function Rewards() {
           <Image
             src={grilledSirloin}
             alt={"TODO: replace with proper alt tag text"}
-            sizes="(max-width: 1000px) 192px, 256px"
-            className="!relative size-48 rounded-md drop-shadow-xl tablet:size-64"
+            sizes="(max-width: 1000px) 500px, 800px"
+            className="!relative size-48 rounded-xl object-cover drop-shadow-xl tablet:size-64"
           />
 
           <div className="baseVertFlex">
