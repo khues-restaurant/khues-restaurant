@@ -932,66 +932,81 @@ export default function Home() {
           {/* masonry but prob more of just inside/outside the restaurant */}
           <div className="homepageInteriorMasonry h-[700px] w-full max-w-sm tablet:h-[450px] tablet:max-w-4xl">
             <div className="firstMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[110%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryInteriorSix} /* horiz rectangle */
                   alt={
                     "Bright industrial-chic dining space featuring a long wooden table, cross-back chairs, exposed brick walls, and lush green plants."
                   }
                   sizes="(max-width: 1000px) 384px, 500px"
-                  className="!relative !size-full rounded-md object-cover object-bottom"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover object-bottom"
                 />
               </Parallax>
             </div>
 
             <div className="secondMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[110%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryInteriorEight} /* square */
                   alt={
                     "Contemporary bar area with a sleek countertop, stylish liquor display, and tall potted plants adding a touch of greenery."
                   }
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !size-full rounded-md object-cover object-bottom"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover object-bottom"
                 />
               </Parallax>
             </div>
 
             <div className="thirdMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[105%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryInteriorTen} /* vert rectangle */
                   alt={
                     "Sunlit corner of a restaurant featuring wooden tables, red chairs, a wall-mounted floral art piece, and potted greenery."
                   }
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !size-full rounded-md object-cover object-bottom"
+                  className="!relative !h-[110%] !w-full rounded-md object-cover object-bottom"
                 />
               </Parallax>
             </div>
 
             <div className="fourthMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[110%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryInteriorNine} /* square */
                   alt={
                     "Cozy dining area with wooden tables, matching chairs, warm lighting, and a few potted plants along the wall."
                   }
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !size-full rounded-md object-cover object-bottom"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover object-bottom"
                 />
               </Parallax>
             </div>
 
             <div className="fifthMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryInteriorSeven} /* horiz rectangle */
                   alt={
                     "Small private dining room with a large rectangular table, black chairs, natural light from tall windows, and a blue geometric rug."
                   }
                   sizes="(max-width: 1000px) 384px, 500px"
-                  className="!relative !size-full rounded-md object-cover object-bottom"
+                  className="!relative !h-[125%] !w-full rounded-md object-cover object-bottom"
                 />
               </Parallax>
             </div>
