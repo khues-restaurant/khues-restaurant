@@ -689,7 +689,10 @@ function Home({ ourFavoriteMenuItems }: Home) {
           {/* masonry of featured food items */}
           <div className="homepageFoodMasonry h-[700px] w-full max-w-sm tablet:h-[450px] tablet:max-w-4xl">
             <div className="firstMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[120%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[120%]"
+              >
                 <Image
                   src={masonryFoodOne}
                   alt={"Grilled Sirloin at Khue's in St. Paul"}
@@ -700,60 +703,75 @@ function Home({ ourFavoriteMenuItems }: Home) {
             </div>
 
             <div className="secondMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[120%] ">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%] "
+              >
                 <Image
                   src={masonryFoodTwo}
                   alt={"Cream Cheese Wantons at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !size-full rounded-md object-cover"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover"
                 />
               </Parallax>
             </div>
 
             <div className="thirdMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[105%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryFoodThree}
                   alt={"Sticky Jicama Ribs at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !size-full rounded-md object-cover"
+                  className="!relative !h-[110%] !w-full rounded-md object-cover"
                 />
               </Parallax>
             </div>
 
             <div className="fourthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[120%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryFoodFour}
                   alt={"Thai Tea Tres Leches at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !size-full rounded-md object-cover"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover"
                 />
               </Parallax>
             </div>
 
             <div className="fifthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[120%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryFoodFive}
                   priority // I feel like this shouldn't be necessary, but the image wasn't auto-loading
                   // when it came into the viewport otherwise
                   alt={"Roast Pork Fried Rice at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 384px, 500px"
-                  className="!relative !size-full rounded-md object-cover"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover"
                 />
               </Parallax>
             </div>
 
             <div className="sixthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[120%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryFoodSix}
                   priority // I feel like this shouldn't be necessary, but the image wasn't auto-loading
                   // when it came into the viewport otherwise
                   alt={"Cà Phê Sữa Đá Affogato at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 384px, 500px"
-                  className="!relative !size-full rounded-md object-cover"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover"
                 />
               </Parallax>
             </div>
@@ -1093,66 +1111,81 @@ function Home({ ourFavoriteMenuItems }: Home) {
           {/* masonry but prob more of just inside/outside the restaurant */}
           <div className="homepageInteriorMasonry h-[700px] w-full max-w-sm tablet:h-[450px] tablet:max-w-4xl">
             <div className="firstMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[110%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryInteriorOne} /* horiz rectangle */
                   alt={
                     "Bright industrial-chic dining space featuring a long wooden table, cross-back chairs, exposed brick walls, and lush green plants."
                   }
                   sizes="(max-width: 1000px) 384px, 500px"
-                  className="!relative !size-full rounded-md object-cover object-bottom"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover object-bottom"
                 />
               </Parallax>
             </div>
 
             <div className="secondMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[110%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryInteriorTwo} /* square */
                   alt={
                     "Contemporary bar area with a sleek countertop, stylish liquor display, and tall potted plants adding a touch of greenery."
                   }
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !size-full rounded-md object-cover object-bottom"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover object-bottom"
                 />
               </Parallax>
             </div>
 
             <div className="thirdMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[105%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryInteriorThree} /* vert rectangle */
                   alt={
                     "Sunlit corner of a restaurant featuring wooden tables, red chairs, a wall-mounted floral art piece, and potted greenery."
                   }
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !size-full rounded-md object-cover object-bottom"
+                  className="!relative !h-[110%] !w-full rounded-md object-cover object-bottom"
                 />
               </Parallax>
             </div>
 
             <div className="fourthMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[110%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryInteriorFour} /* square */
                   alt={
                     "Cozy dining area with wooden tables, matching chairs, warm lighting, and a few potted plants along the wall."
                   }
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !size-full rounded-md object-cover object-bottom"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover object-bottom"
                 />
               </Parallax>
             </div>
 
             <div className="fifthMasonryInterior relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[115%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryInteriorFive} /* horiz rectangle */
                   alt={
                     "Small private dining room with a large rectangular table, black chairs, natural light from tall windows, and a blue geometric rug."
                   }
                   sizes="(max-width: 1000px) 384px, 500px"
-                  className="!relative !size-full rounded-md object-cover object-bottom"
+                  className="!relative !h-[125%] !w-full rounded-md object-cover object-bottom"
                 />
               </Parallax>
             </div>
