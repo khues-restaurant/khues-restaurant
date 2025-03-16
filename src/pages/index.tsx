@@ -650,7 +650,10 @@ export default function Home() {
           {/* masonry of featured food items */}
           <div className="homepageFoodMasonry h-[700px] w-full max-w-sm tablet:h-[450px] tablet:max-w-4xl">
             <div className="firstMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[120%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[120%]"
+              >
                 <Image
                   src={masonryFoodOne}
                   alt={"Grilled Sirloin at Khue's in St. Paul"}
@@ -661,60 +664,75 @@ export default function Home() {
             </div>
 
             <div className="secondMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[120%] ">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%] "
+              >
                 <Image
                   src={masonryFoodTwo}
                   alt={"Cream Cheese Wantons at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !size-full rounded-md object-cover"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover"
                 />
               </Parallax>
             </div>
 
             <div className="thirdMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[105%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryFoodThree}
                   alt={"Sticky Jicama Ribs at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !size-full rounded-md object-cover"
+                  className="!relative !h-[110%] !w-full rounded-md object-cover"
                 />
               </Parallax>
             </div>
 
             <div className="fourthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[120%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryFoodFour}
                   alt={"Thai Tea Tres Leches at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !size-full rounded-md object-cover"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover"
                 />
               </Parallax>
             </div>
 
             <div className="fifthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[120%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryFoodFive}
                   priority // I feel like this shouldn't be necessary, but the image wasn't auto-loading
                   // when it came into the viewport otherwise
                   alt={"Roast Pork Fried Rice at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 384px, 500px"
-                  className="!relative !size-full rounded-md object-cover"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover"
                 />
               </Parallax>
             </div>
 
             <div className="sixthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
-              <Parallax speed={-3} className="!absolute !top-0 !size-[120%]">
+              <Parallax
+                speed={-3}
+                className="!absolute !top-[-1rem] !size-[100%]"
+              >
                 <Image
                   src={masonryFoodSix}
                   priority // I feel like this shouldn't be necessary, but the image wasn't auto-loading
                   // when it came into the viewport otherwise
                   alt={"Cà Phê Sữa Đá Affogato at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 384px, 500px"
-                  className="!relative !size-full rounded-md object-cover"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover"
                 />
               </Parallax>
             </div>
