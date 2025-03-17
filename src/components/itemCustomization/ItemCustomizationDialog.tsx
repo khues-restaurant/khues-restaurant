@@ -46,6 +46,7 @@ import { formatPrice } from "~/utils/formatters/formatPrice";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 import { menuItemImagePaths } from "~/utils/menuItemImagePaths";
+
 interface ItemCustomizationDialog {
   isDialogOpen: boolean;
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
@@ -306,51 +307,51 @@ function ItemCustomizerDialogContent({
           </div>
         </div>
 
-        <div className="baseVertFlex w-full gap-12 p-8 pt-4">
+        <div className="baseVertFlex w-full gap-12 p-8 pt-6">
           {/* Description */}
-          <div className="baseVertFlex w-full !items-start gap-2">
-            <p className="text-lg underline underline-offset-2">Description</p>
-            <p className="max-w-96 whitespace-normal text-left text-stone-500 supports-[text-wrap]:text-wrap tablet:max-w-2xl">
-              {itemToCustomize.description}
-            </p>
+          {itemToCustomize.description && (
+            <div className="baseVertFlex w-full !items-start gap-1">
+              <p className="font-medium">Description</p>
+              <p className="max-w-96 whitespace-normal text-left text-stone-500 supports-[text-wrap]:text-wrap tablet:max-w-2xl">
+                {itemToCustomize.description}
+              </p>
 
-            <div className="baseFlex mt-2 w-full flex-wrap !justify-start gap-2 text-sm text-stone-500">
-              {itemToCustomize.isChefsChoice && (
-                <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
-                  <p className="baseFlex size-4 rounded-full border border-stone-500 bg-offwhite p-2">
-                    K
-                  </p>
-                  -<p>Chef&apos;s Choice</p>
-                </div>
-              )}
+              <div className="baseFlex mt-2 w-full flex-wrap !justify-start gap-2 text-sm text-stone-500">
+                {itemToCustomize.isChefsChoice && (
+                  <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                    <p className="baseFlex size-4 rounded-full border border-stone-500 bg-offwhite p-2">
+                      K
+                    </p>
+                    -<p>Chef&apos;s Choice</p>
+                  </div>
+                )}
 
-              {itemToCustomize.isVegetarian && (
-                <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
-                  <SiLeaflet className="size-4" />
-                  <p>Vegetarian</p>
-                </div>
-              )}
+                {itemToCustomize.isVegetarian && (
+                  <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                    <SiLeaflet className="size-4" />
+                    <p>Vegetarian</p>
+                  </div>
+                )}
 
-              {itemToCustomize.isVegan && (
-                <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
-                  <LuVegan className="size-4" />-<p>Vegan</p>
-                </div>
-              )}
+                {itemToCustomize.isVegan && (
+                  <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                    <LuVegan className="size-4" />-<p>Vegan</p>
+                  </div>
+                )}
 
-              {itemToCustomize.isGlutenFree && (
-                <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
-                  <span>GF</span>-<span>Gluten Free</span>
-                </div>
-              )}
+                {itemToCustomize.isGlutenFree && (
+                  <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                    <span>GF</span>-<span>Gluten Free</span>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Customizations */}
           {itemToCustomize.customizationCategories.length > 0 && (
             <div className="baseVertFlex w-full !items-start gap-2">
-              <p className="text-lg underline underline-offset-2">
-                Customizations
-              </p>
+              <p className="font-medium">Customizations</p>
 
               <div className="baseVertFlex w-full gap-2">
                 {itemToCustomize.customizationCategories.map((category) => (
@@ -397,12 +398,12 @@ function ItemCustomizerDialogContent({
             >
               <AccordionTrigger className="baseFlex !justify-start gap-2 py-2 text-lg text-primary !no-underline">
                 <div className="baseFlex gap-2 font-normal">
-                  <p className="text-lg text-black underline underline-offset-2">
+                  <p className="text-base font-medium text-black ">
                     Special instructions
                   </p>
-                  <span className="mt-1 text-sm italic text-stone-500">
-                    - Optional
-                  </span>
+                  <div className="baseFlex gap-2 text-sm italic text-stone-500">
+                    -<span>Optional</span>
+                  </div>
                 </div>
               </AccordionTrigger>
 

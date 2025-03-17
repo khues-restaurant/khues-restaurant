@@ -38,6 +38,7 @@ import { api } from "~/utils/api";
 import { formatPrice } from "~/utils/formatters/formatPrice";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
+import { menuItemImagePaths } from "~/utils/menuItemImagePaths";
 
 function getSafeAreaInsetBottom() {
   // Create a temporary element to get the CSS variable
@@ -185,7 +186,7 @@ function ItemCustomizationDrawer({
       }}
       className="baseVertFlex h-[85dvh] w-full !justify-start"
     >
-      <div className="baseVertFlex relative h-full w-full max-w-xl !justify-start overflow-y-auto pb-16">
+      <div className="baseVertFlex relative h-full w-full max-w-xl !justify-start gap-4 overflow-y-auto pb-16">
         {forCart && (
           <Button
             variant="underline"
@@ -200,16 +201,13 @@ function ItemCustomizationDrawer({
           </Button>
         )}
         <div
-          className={`baseVertFlex relative w-full gap-2 ${forCart ? "mt-12" : "mt-8"}`}
+          className={`baseVertFlex relative w-full gap-3 px-8 ${forCart ? "mt-12" : "mt-8"}`}
         >
-          <div className="baseFlex relative w-full !items-start !justify-between px-8">
+          <div className="baseVertFlex relative w-full !items-start gap-2">
             <div className="baseFlex gap-2">
-              <p
-                className={`text-xl font-semibold underline underline-offset-2
-                  ${isSignedIn ? "max-w-52" : "max-w-72"}
-                `}
-              >
+              <p className="text-lg font-semibold">
                 {itemToCustomize.name}
+                {itemToCustomize.showUndercookedOrRawDisclaimer && "*"}
               </p>
             </div>
 
@@ -272,60 +270,60 @@ function ItemCustomizationDrawer({
 
           {itemToCustomize.hasImageOfItem && (
             <Image
-              src={"/menuItems/sampleImage.webp"}
-              alt={`${itemToCustomize.name} at Khue's in St. Paul`}
-              width={180}
-              height={180}
-              className="my-4 rounded-md drop-shadow-xl"
+              src={menuItemImagePaths[itemToCustomize.name] ?? ""}
+              alt="Spicy Chicken Sando at Khue's in St. Paul"
+              // sizes="(max-width: 1000px) 400px, 320px"
+              priority
+              className="h-64 w-full rounded-lg object-cover object-center shadow-md"
             />
           )}
         </div>
 
-        <div className="baseVertFlex w-full gap-12 p-8 pt-4">
+        <div className="baseVertFlex w-full gap-4 px-8 py-4">
           {/* Description */}
-          <div className="baseVertFlex w-full !items-start gap-2">
-            <p className="text-lg underline underline-offset-2">Description</p>
-            <p className="max-w-96 whitespace-normal text-left text-sm text-stone-400 supports-[text-wrap]:text-wrap tablet:max-w-2xl">
-              {itemToCustomize.description}
-            </p>
+          {itemToCustomize.description && (
+            <div className="baseVertFlex w-full !items-start gap-1">
+              <p className="font-medium">Description</p>
+              <p className="max-w-96 whitespace-normal text-left text-sm text-stone-500 supports-[text-wrap]:text-wrap tablet:max-w-2xl">
+                {itemToCustomize.description}
+              </p>
 
-            <div className="baseFlex mt-2 w-full flex-wrap !justify-start gap-2 text-sm text-stone-400">
-              {itemToCustomize.isChefsChoice && (
-                <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
-                  <p className="baseFlex size-4 rounded-full border border-stone-400 bg-offwhite p-2">
-                    K
-                  </p>
-                  -<p>Chef&apos;s Choice</p>
-                </div>
-              )}
+              <div className="baseFlex mt-2 w-full flex-wrap !justify-start gap-2 text-sm text-stone-500">
+                {itemToCustomize.isChefsChoice && (
+                  <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                    <p className="baseFlex size-4 rounded-full border border-stone-500 bg-offwhite p-2">
+                      K
+                    </p>
+                    -<p>Chef&apos;s Choice</p>
+                  </div>
+                )}
 
-              {itemToCustomize.isVegetarian && (
-                <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
-                  <SiLeaflet className="size-4" />
-                  <p>Vegetarian</p>
-                </div>
-              )}
+                {itemToCustomize.isVegetarian && (
+                  <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                    <SiLeaflet className="size-4" />
+                    <p>Vegetarian</p>
+                  </div>
+                )}
 
-              {itemToCustomize.isVegan && (
-                <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
-                  <LuVegan className="size-4" />-<p>Vegan</p>
-                </div>
-              )}
+                {itemToCustomize.isVegan && (
+                  <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                    <LuVegan className="size-4" />-<p>Vegan</p>
+                  </div>
+                )}
 
-              {itemToCustomize.isGlutenFree && (
-                <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
-                  <span>GF</span>-<span>Gluten Free</span>
-                </div>
-              )}
+                {itemToCustomize.isGlutenFree && (
+                  <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                    <span>GF</span>-<span>Gluten Free</span>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Customizations */}
           {itemToCustomize.customizationCategories.length > 0 && (
             <div className="baseVertFlex w-full !items-start gap-2">
-              <p className="text-lg underline underline-offset-2">
-                Customizations
-              </p>
+              <p className="font-medium">Customizations</p>
 
               <div className="baseVertFlex w-full gap-2">
                 {itemToCustomize.customizationCategories.map((category) => (
@@ -369,12 +367,12 @@ function ItemCustomizationDrawer({
             >
               <AccordionTrigger className="baseFlex !justify-start gap-2 py-2 text-lg text-primary !no-underline">
                 <div className="baseFlex gap-2 font-normal">
-                  <p className="text-lg text-black underline underline-offset-2">
+                  <p className="text-base font-medium text-black ">
                     Special instructions
                   </p>
-                  <span className="mt-1 text-sm italic text-stone-400">
-                    - Optional
-                  </span>
+                  <div className="baseFlex gap-2 text-sm italic text-stone-500">
+                    -<span>Optional</span>
+                  </div>
                 </div>
               </AccordionTrigger>
 
@@ -418,13 +416,13 @@ function ItemCustomizationDrawer({
                       }}
                     />
 
-                    <p className="pointer-events-none absolute bottom-4 right-4 text-xs text-stone-400">
+                    <p className="pointer-events-none absolute bottom-4 right-4 text-xs text-stone-500">
                       {100 - localItemOrderDetails.specialInstructions.length}{" "}
                       characters remaining
                     </p>
                   </div>
 
-                  <p className="pl-1 text-xs italic text-stone-400">
+                  <p className="pl-1 text-xs italic text-stone-500">
                     * No price altering substitutions/additions are allowed.
                   </p>
                 </div>
@@ -432,16 +430,16 @@ function ItemCustomizationDrawer({
             </AccordionItem>
           </Accordion>
 
-          <div className="baseVertFlex w-full gap-2">
+          <div className="baseVertFlex mt-4 w-full gap-2">
             {itemToCustomize.isAlcoholic && (
-              <p className="text-center text-xs italic text-stone-400">
+              <p className="text-center text-xs italic text-stone-500">
                 * Orders that contain alcoholic beverages must include at least
                 one food item.
               </p>
             )}
 
             {itemToCustomize.showUndercookedOrRawDisclaimer && (
-              <p className="text-center text-xs italic text-stone-400">
+              <p className="text-center text-xs italic text-stone-500">
                 * Consuming raw or undercooked meats, poultry, seafood,
                 shellfish, or eggs may increase your risk of foodborne illness.
               </p>
@@ -620,8 +618,8 @@ function CustomizationGroup({
 
   return (
     <div key={category.id} className="baseVertFlex w-full !items-start">
-      <p className="font-medium">{category.name}</p>
-      <p className="text-sm text-stone-400">{category.description}</p>
+      <p className="text-base">{category.name}</p>
+      <p className="text-sm text-stone-500">{category.description}</p>
       <div className="baseFlex mt-2 w-full !justify-start gap-2">
         <RadioGroup
           value={localItemOrderDetails.customizations[category.id]}
@@ -734,7 +732,7 @@ function CustomizationOption({
 
         {/* conditional pr-12 to provide room for the conditional price */}
         <p
-          className={`${!isSelected && relativePrice !== 0 ? "pr-12" : ""} w-64 self-start text-sm text-stone-400`}
+          className={`${!isSelected && relativePrice !== 0 ? "pr-12" : ""} w-64 self-start text-sm text-stone-500`}
         >
           {choice.description}
         </p>
