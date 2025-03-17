@@ -16,7 +16,7 @@ import {
 import { Clock, MapPin } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { CiCalendarDate, CiGift } from "react-icons/ci";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaTrashAlt, FaUserAlt } from "react-icons/fa";
 import { FaRegClock } from "react-icons/fa6";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { LuCakeSlice, LuMinus, LuPlus } from "react-icons/lu";
@@ -601,7 +601,10 @@ function CartDrawer({
                   className="baseVertFlex relative scroll-mt-16 !items-start space-y-0"
                 >
                   <div className="baseVertFlex !items-start gap-2">
-                    <FormLabel className="font-semibold">Pickup date</FormLabel>
+                    <FormLabel className="baseFlex gap-2 font-semibold">
+                      <CiCalendarDate className="h-5 w-5 shrink-0" />
+                      Pickup date
+                    </FormLabel>
                     <Select
                       onValueChange={(stringifiedDate) =>
                         field.onChange(parseISO(stringifiedDate))
@@ -610,7 +613,6 @@ function CartDrawer({
                     >
                       <FormControl>
                         <SelectTrigger className="pl-[14px]">
-                          <CiCalendarDate className="h-5 w-5 shrink-0" />
                           <SelectValue
                             placeholder="Select a day"
                             className="placeholder:!text-muted-foreground"
@@ -653,11 +655,13 @@ function CartDrawer({
                   className="baseVertFlex relative scroll-mt-16 !items-start space-y-0"
                 >
                   <div className="baseVertFlex !items-start gap-2">
-                    <FormLabel className="font-semibold">Pickup time</FormLabel>
+                    <FormLabel className="baseFlex h-5 gap-2 font-semibold">
+                      <Clock className="mx-0.5 w-4 shrink-0" />
+                      Pickup time
+                    </FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger className="w-max gap-2 pl-4">
-                          <FaRegClock className="shrink-0" />
                           <SelectValue
                             placeholder="Select a time"
                             className="placeholder:!text-muted-foreground"
@@ -711,7 +715,8 @@ function CartDrawer({
                   className="baseVertFlex relative scroll-mt-16 !items-start space-y-0"
                 >
                   <div className="baseVertFlex !items-start gap-2">
-                    <FormLabel className="text-nowrap font-semibold">
+                    <FormLabel className="baseFlex h-5 gap-2 font-semibold">
+                      <FaUserAlt className="w-5 shrink-0" />
                       Pickup name
                     </FormLabel>
                     <FormControl>
@@ -876,10 +881,12 @@ function CartDrawer({
                           className="!size-16 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md"
                         />
                       ) : (
-                        <div className="size-16 shrink-0"></div>
+                        <div className="baseFlex size-16 shrink-0 rounded-2xl border">
+                          <StaticLotus className="size-12 fill-primary/50" />
+                        </div>
                       )}
 
-                      <div className="baseFlex w-full !items-start !justify-between">
+                      <div className="baseFlex w-full !items-start !justify-between gap-2">
                         <div className="baseVertFlex !items-start">
                           {/* item name, dietary restrictions, and edit button */}
                           <div className="baseFlex gap-2">
@@ -1056,7 +1063,9 @@ function CartDrawer({
                                 />
                               </div>
                             ) : (
-                              <div className="size-16 shrink-0"></div>
+                              <div className="baseFlex size-16 shrink-0 rounded-2xl border">
+                                <StaticLotus className="size-12 fill-primary/50" />
+                              </div>
                             )}
 
                             <div className="baseFlex w-full !items-start !justify-between">

@@ -16,7 +16,7 @@ import {
 } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { CiCalendarDate, CiGift } from "react-icons/ci";
-import { FaRegClock, FaTrashAlt } from "react-icons/fa";
+import { FaRegClock, FaTrashAlt, FaUserAlt } from "react-icons/fa";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { LuCakeSlice, LuMinus, LuPlus } from "react-icons/lu";
 import { TbLocation } from "react-icons/tb";
@@ -567,7 +567,8 @@ function CartSheet({
                       className="baseVertFlex relative scroll-mt-16 !items-start space-y-0"
                     >
                       <div className="baseVertFlex !items-start gap-2">
-                        <FormLabel className="font-semibold">
+                        <FormLabel className="baseFlex gap-2 font-semibold">
+                          <CiCalendarDate className="h-5 w-5 shrink-0" />
                           Pickup date
                         </FormLabel>
                         <Select
@@ -578,7 +579,6 @@ function CartSheet({
                         >
                           <FormControl>
                             <SelectTrigger className="w-[215px] pl-[14px]">
-                              <CiCalendarDate className="h-5 w-5 shrink-0" />
                               <SelectValue
                                 placeholder="Select a day"
                                 className="w-[215px] placeholder:!text-muted-foreground"
@@ -629,7 +629,8 @@ function CartSheet({
                       className="baseVertFlex relative scroll-mt-16 !items-start space-y-0 transition-[width]"
                     >
                       <div className="baseVertFlex !items-start gap-2">
-                        <FormLabel className="font-semibold">
+                        <FormLabel className="baseFlex h-5 gap-2 font-semibold">
+                          <Clock className="w-[15px] shrink-0" />
                           Pickup time
                         </FormLabel>
                         <Select
@@ -638,7 +639,6 @@ function CartSheet({
                         >
                           <FormControl>
                             <SelectTrigger className="w-max gap-2 pl-4">
-                              <FaRegClock className="shrink-0" />
                               <SelectValue
                                 placeholder="Select a time"
                                 className="placeholder:!text-muted-foreground"
@@ -694,7 +694,8 @@ function CartSheet({
                       className="baseVertFlex relative scroll-mt-16 !items-start space-y-0"
                     >
                       <div className="baseVertFlex !items-start gap-2">
-                        <FormLabel className="text-nowrap font-semibold">
+                        <FormLabel className="baseFlex h-5 gap-2 font-semibold">
+                          <FaUserAlt className="w-5 shrink-0" />
                           Pickup name
                         </FormLabel>
                         <FormControl>
@@ -855,7 +856,9 @@ function CartSheet({
                           className="!size-16 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md"
                         />
                       ) : (
-                        <div className="size-16 shrink-0"></div>
+                        <div className="baseFlex size-16 shrink-0 rounded-2xl border">
+                          <StaticLotus className="size-12 fill-primary/50" />
+                        </div>
                       )}
 
                       <div className="baseFlex w-full !items-start !justify-between">
@@ -1036,7 +1039,9 @@ function CartSheet({
                                 />
                               </div>
                             ) : (
-                              <div className="size-16 shrink-0"></div>
+                              <div className="baseFlex size-16 shrink-0 rounded-2xl border">
+                                <StaticLotus className="size-12 fill-primary/50" />
+                              </div>
                             )}
 
                             <div className="baseFlex w-full !items-start !justify-between">
