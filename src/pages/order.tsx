@@ -406,7 +406,7 @@ function OrderNow() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
                 // bg is background color of the <body>, 1% off from what bg-offwhite is
-                className="baseFlex sticky left-0 top-20 z-10 size-full h-16 w-full overflow-x-hidden bg-body shadow-lg tablet:top-24 tablet:h-16 tablet:shadow-none"
+                className="baseFlex sticky left-0 top-20 z-20 size-full h-16 w-full overflow-x-hidden bg-body shadow-lg tablet:top-24 tablet:h-16 tablet:shadow-none"
               >
                 <Carousel
                   setApi={setStickyCategoriesApi}
@@ -866,6 +866,8 @@ function MenuItemPreviewButton({
   }));
 
   const [showCheckmark, setShowCheckmark] = useState(false);
+  const [pressingMainButton, setPressingMainButton] = useState(false);
+  const [pressingAddButton, setPressingAddButton] = useState(false);
 
   const { updateOrder } = useUpdateOrder();
 
@@ -881,7 +883,10 @@ function MenuItemPreviewButton({
       <Button
         variant="orderOutline"
         disabled={!menuItem.available}
-        className="baseVertFlex size-full !justify-between gap-3 !p-4"
+        className="baseVertFlex z-1 size-full !justify-between gap-3 !p-4"
+        onPointerDown={() => setPressingMainButton(true)}
+        onPointerUp={() => setPressingMainButton(false)}
+        onPointerLeave={() => setPressingMainButton(false)}
         onClick={() => {
           dismissToasts();
 
@@ -895,6 +900,13 @@ function MenuItemPreviewButton({
           }
         }}
       >
+        <div
+          style={{
+            opacity: pressingMainButton && !pressingAddButton ? 1 : 0,
+          }}
+          className="absolute left-0 top-0 z-10 size-full bg-black/10 transition-opacity"
+        ></div>
+
         <div className="baseFlex w-full !items-start !justify-between gap-4 tablet:mt-0">
           <div className={`baseVertFlex h-full !items-start`}>
             <div className="baseVertFlex !items-start gap-2">
@@ -987,7 +999,15 @@ function MenuItemPreviewButton({
               variant={"outline"}
               size={"icon"}
               disabled={showCheckmark}
-              className="baseFlex !h-8 !w-28 rounded-md !p-0 text-primary"
+              style={{
+                filter: pressingMainButton
+                  ? "brightness(0.9)"
+                  : "brightness(1)",
+              }}
+              className="baseFlex !z-10 !h-8 !w-28 rounded-md !p-0 text-primary"
+              onPointerDown={() => setPressingAddButton(true)}
+              onPointerUp={() => setPressingAddButton(false)}
+              onPointerLeave={() => setPressingAddButton(false)}
               onClick={async (e) => {
                 e.stopPropagation(); // Add this line to prevent event bubbling
 

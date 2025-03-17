@@ -94,8 +94,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           buttonVariants({ variant, size, className }),
           getDynamicStyles(),
           variant === "orderOutline"
-            ? "hover:shadow-[0px_0px_0px_3px_hsl(144,61%,20%)] active:brightness-90"
-            : "hover:brightness-90 active:brightness-75",
+            ? "hover:shadow-[0px_0px_0px_3px_hsl(144,61%,20%)]"
+            : // making these !important as a result of order button specific UX that I want. Might
+              // cause other issues though
+              "hover:!brightness-90 active:!brightness-75",
         )}
         ref={ref}
         {...props}
