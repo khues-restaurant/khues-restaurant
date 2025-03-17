@@ -58,7 +58,7 @@ import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
 
-import noOrders from "/public/menuItems/myOrders.jpg";
+import noOrders from "/public/interior/six.jpg";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { type User } from "@prisma/client";
 

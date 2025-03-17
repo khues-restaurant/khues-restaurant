@@ -47,8 +47,19 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
-import sampleImage from "/public/menuItems/sampleImage.webp";
 import { type User } from "@prisma/client";
+import { menuItemImagePaths } from "~/utils/menuItemImagePaths";
+
+import headerThaiTeaTresLeches from "/public/miscFood/header-thai-tea-tres-leches.png";
+import headerBanhMiXiuMai from "/public/miscFood/header-banh-mi-xiu-mai.png";
+
+import creamCheeseWantons from "/public/menuItems/cream-cheese-wantons.png";
+import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
+import spicyChickenSando from "/public/menuItems/spicy-chicken-sando.jpg";
+import stickyJicamaRibs from "/public/menuItems/sticky-jicama-ribs.png";
+import grilledSirloin from "/public/menuItems/grilled-sirloin.png";
+import affogato from "/public/menuItems/affogato.png";
+import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
 
 // TODO: honestly the logic within here is very hit or miss, comb through this for sure
 
@@ -258,7 +269,8 @@ function Rewards() {
             transition={{ duration: 0.5 }}
             className="baseVertFlex relative mb-24 w-full gap-8 bg-offwhite transition-all md:w-3/4 tablet:mb-32 tablet:mt-0 tablet:rounded-xl tablet:border tablet:shadow-md"
           >
-            <div className="baseFlex relative h-56 w-full overflow-hidden bg-rewardsGradient shadow-md tablet:h-72 tablet:overflow-x-hidden tablet:rounded-t-lg">
+            {/* Hero */}
+            <div className="baseFlex relative h-56 w-full overflow-hidden bg-rewardsGradient shadow-md tablet:h-72 tablet:overflow-x-hidden">
               {/* mobile images */}
               <motion.div
                 key={"rewardsHeroMobileImageOne"}
@@ -286,11 +298,12 @@ function Rewards() {
                 className="absolute -left-10 -top-10 tablet:hidden"
               >
                 <Image
-                  src={sampleImage}
+                  src={grilledSirloin}
                   alt={"TODO: replace with proper alt tag text"}
                   width={96}
                   height={96}
-                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
+                  priority
+                  className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -320,11 +333,12 @@ function Rewards() {
                 className="absolute -bottom-10 -left-10 tablet:hidden"
               >
                 <Image
-                  src={sampleImage}
+                  src={roastPorkFriedRice}
                   alt={"TODO: replace with proper alt tag text"}
                   width={96}
                   height={96}
-                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
+                  priority
+                  className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -353,11 +367,12 @@ function Rewards() {
                 className="absolute -top-1 left-24 hidden tablet:flex"
               >
                 <Image
-                  src={sampleImage}
+                  src={creamCheeseWantons}
                   alt={"TODO: replace with proper alt tag text"}
                   width={144}
                   height={144}
-                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
+                  priority
+                  className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -385,11 +400,12 @@ function Rewards() {
                 className="absolute -left-16 bottom-10 hidden tablet:flex"
               >
                 <Image
-                  src={sampleImage}
+                  src={roastPorkFriedRice}
                   alt={"TODO: replace with proper alt tag text"}
                   width={144}
                   height={144}
-                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
+                  priority
+                  className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -417,11 +433,12 @@ function Rewards() {
                 className="absolute -bottom-14 left-36 hidden tablet:flex"
               >
                 <Image
-                  src={sampleImage}
+                  src={spicyChickenSando}
                   alt={"TODO: replace with proper alt tag text"}
                   width={144}
                   height={144}
-                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
+                  priority
+                  className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -449,11 +466,12 @@ function Rewards() {
                 className="absolute left-72 top-14 hidden xl:flex"
               >
                 <Image
-                  src={sampleImage}
+                  src={stickyJicamaRibs}
                   alt={"TODO: replace with proper alt tag text"}
                   width={144}
                   height={144}
-                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
+                  priority
+                  className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -511,11 +529,12 @@ function Rewards() {
                 className="absolute -right-10 -top-10 tablet:hidden"
               >
                 <Image
-                  src={sampleImage}
+                  src={affogato}
                   alt={"TODO: replace with proper alt tag text"}
                   width={96}
                   height={96}
-                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
+                  priority
+                  className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -545,11 +564,12 @@ function Rewards() {
                 className="absolute -bottom-10 -right-10 tablet:hidden"
               >
                 <Image
-                  src={sampleImage}
+                  src={thaiTeaTresLeches}
                   alt={"TODO: replace with proper alt tag text"}
                   width={96}
                   height={96}
-                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
+                  priority
+                  className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -578,11 +598,11 @@ function Rewards() {
                 className="absolute -top-1 right-24 hidden tablet:flex"
               >
                 <Image
-                  src={sampleImage}
+                  src={grilledSirloin}
                   alt={"TODO: replace with proper alt tag text"}
                   width={144}
                   height={144}
-                  className="!relative "
+                  className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -610,11 +630,12 @@ function Rewards() {
                 className="absolute -right-16 bottom-10 hidden tablet:flex"
               >
                 <Image
-                  src={sampleImage}
+                  src={headerBanhMiXiuMai}
                   alt={"TODO: replace with proper alt tag text"}
                   width={144}
                   height={144}
-                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
+                  priority
+                  className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -642,11 +663,12 @@ function Rewards() {
                 className="absolute -bottom-14 right-36 hidden tablet:flex"
               >
                 <Image
-                  src={sampleImage}
+                  src={headerThaiTeaTresLeches}
                   alt={"TODO: replace with proper alt tag text"}
                   width={144}
                   height={144}
-                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
+                  priority
+                  className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
                 />
               </motion.div>
 
@@ -674,11 +696,12 @@ function Rewards() {
                 className="absolute right-72 top-14 hidden xl:flex"
               >
                 <Image
-                  src={sampleImage}
+                  src={stickyJicamaRibs}
                   alt={"TODO: replace with proper alt tag text"}
                   width={144}
                   height={144}
-                  className="!relative drop-shadow-md tablet:drop-shadow-lg"
+                  priority
+                  className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
                 />
               </motion.div>
             </div>
@@ -740,7 +763,7 @@ function Rewards() {
                 </div>
 
                 {/* Regular reward options */}
-                <div className="grid w-full grid-cols-1 gap-4 text-primary lg:grid-cols-2 lg:!place-items-start lg:gap-8 2xl:grid-cols-3">
+                <div className="grid w-full grid-cols-1 gap-4 text-primary lg:grid-cols-2 lg:!place-items-start lg:gap-12 2xl:grid-cols-3">
                   {/* Categories */}
                   {rewards.rewardMenuCategories.map((category) => (
                     <div
@@ -891,13 +914,15 @@ function RewardMenuItem({
 
   return (
     <div className="relative w-full text-primary sm:max-w-96">
-      <div className="baseFlex relative size-full !items-start gap-4 rounded-md px-2 py-4">
+      <div className="baseFlex relative size-full !items-start gap-4 rounded-md py-4">
         {menuItem.hasImageOfItem && (
           <Image
-            src={sampleImage}
+            src={menuItemImagePaths[menuItem.name] ?? ""}
             alt={`${menuItem.name} at Khue's in St. Paul`}
-            fill
-            className="!relative !size-16 rounded-md drop-shadow-md tablet:!size-24 tablet:drop-shadow-lg"
+            width={500}
+            height={500}
+            quality={100}
+            className="mt-1 !size-28 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md sm:!size-28"
           />
         )}
 
