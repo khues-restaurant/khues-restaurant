@@ -428,10 +428,12 @@ function DesktopHeader() {
                   >
                     <Link
                       href={"/profile/preferences"}
-                      className="baseFlex w-full !justify-between !text-lg"
+                      className="baseFlex w-48 !justify-start gap-4 !text-lg"
                     >
+                      <IoSettingsOutline
+                        className={`${asPath.includes("/profile/preferences") ? "[&>path]:stroke-[55px]" : "[&>path]:stroke-[40px]"}`}
+                      />
                       Preferences
-                      <IoSettingsOutline />
                     </Link>
                   </Button>
                   <Button
@@ -444,10 +446,12 @@ function DesktopHeader() {
                   >
                     <Link
                       href={"/profile/rewards"}
-                      className="baseFlex w-full !justify-between !text-lg"
+                      className="baseFlex w-48 !justify-start gap-4 !text-lg"
                     >
+                      <SlPresent
+                        className={`${asPath.includes("/profile/rewards") ? "[&>path]:stroke-[30px]" : ""}`}
+                      />
                       Rewards
-                      <SlPresent />
                     </Link>
                   </Button>
                   <Button
@@ -460,10 +464,12 @@ function DesktopHeader() {
                   >
                     <Link
                       href={"/profile/my-orders"}
-                      className="baseFlex w-full !justify-between !text-lg"
+                      className="baseFlex w-48 !justify-start gap-4 !text-lg"
                     >
+                      <TfiReceipt
+                        className={`${asPath.includes("/profile/my-orders") ? "[&>path]:stroke-[0.5px]" : ""}`}
+                      />
                       My orders
-                      <TfiReceipt />
                     </Link>
                   </Button>
 

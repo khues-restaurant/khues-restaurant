@@ -226,11 +226,7 @@ function MobileHeader() {
                 )}
 
                 {isSignedIn && (
-                  <Accordion
-                    type="single"
-                    collapsible
-                    className={`${notoSans.className} w-full`}
-                  >
+                  <Accordion type="single" collapsible className={` w-full`}>
                     <AccordionItem value="item-1" className="border-none">
                       <AccordionTrigger className="baseFlex gap-4 py-2 text-xl font-semibold text-primary !no-underline">
                         <FaUserAlt className="!rotate-0" />
@@ -250,10 +246,12 @@ function MobileHeader() {
                           >
                             <Link
                               href={"/profile/preferences"}
-                              className="baseFlex w-52 !justify-between !text-lg"
+                              className="baseFlex w-48 !justify-start gap-4 !text-lg"
                             >
+                              <IoSettingsOutline
+                                className={`${asPath.includes("/profile/preferences") ? "[&>path]:stroke-[55px]" : "[&>path]:stroke-[40px]"}`}
+                              />
                               Preferences
-                              <IoSettingsOutline />
                             </Link>
                           </Button>
                           <Button
@@ -266,10 +264,12 @@ function MobileHeader() {
                           >
                             <Link
                               href={"/profile/rewards"}
-                              className="baseFlex w-52 !justify-between !text-lg"
+                              className="baseFlex w-48 !justify-start gap-4 !text-lg"
                             >
+                              <SlPresent
+                                className={`${asPath.includes("/profile/rewards") ? "[&>path]:stroke-[30px]" : ""}`}
+                              />
                               Rewards
-                              <SlPresent />
                             </Link>
                           </Button>
                           <Button
@@ -282,16 +282,18 @@ function MobileHeader() {
                           >
                             <Link
                               href={"/profile/my-orders"}
-                              className="baseFlex w-52 !justify-between !text-lg"
+                              className="baseFlex w-48 !justify-start gap-4 !text-lg"
                             >
+                              <TfiReceipt
+                                className={`${asPath.includes("/profile/my-orders") ? "[&>path]:stroke-[0.5px]" : ""}`}
+                              />
                               My orders
-                              <TfiReceipt />
                             </Link>
                           </Button>
 
                           <Button
                             variant={"link"}
-                            className="mb-1 mt-2 h-8"
+                            className="mt-2 h-8"
                             onClick={async () => {
                               clearLocalStorage();
                               resetStore();
