@@ -17,10 +17,9 @@ import { Clock, MapPin } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { CiCalendarDate, CiGift } from "react-icons/ci";
 import { FaTrashAlt, FaUserAlt } from "react-icons/fa";
-import { FaRegClock } from "react-icons/fa6";
+import { FaArrowRight } from "react-icons/fa6";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { LuCakeSlice, LuMinus, LuPlus } from "react-icons/lu";
-import { TbLocation } from "react-icons/tb";
 import { z } from "zod";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import AvailablePickupDays from "~/components/cart/AvailablePickupDays";
@@ -124,6 +123,7 @@ function CartDrawer({
   const [checkoutButtonText, setCheckoutButtonText] = useState(
     "Proceed to checkout",
   );
+  const [slideCheckoutArrow, setSlideCheckoutArrow] = useState(false);
 
   const { updateOrder } = useUpdateOrder();
 
@@ -853,8 +853,8 @@ function CartDrawer({
                       animate={{
                         opacity: 1,
                         height: "auto",
-                        marginTop: "0.25rem",
-                        marginBottom: "0.25rem",
+                        marginTop: "0.5rem",
+                        marginBottom: "0.5rem",
                       }}
                       exit={{
                         opacity: 0,
@@ -887,7 +887,7 @@ function CartDrawer({
                       )}
 
                       <div className="baseFlex w-full !items-start !justify-between gap-2">
-                        <div className="baseVertFlex !items-start">
+                        <div className="baseVertFlex !items-start gap-1">
                           {/* item name, dietary restrictions, and edit button */}
                           <div className="baseFlex gap-2">
                             <p className="text-lg">{item.name}</p>
@@ -960,25 +960,29 @@ function CartDrawer({
                             </Button>
                           </div>
 
-                          <div className="baseVertFlex ml-1 mt-2 w-full !items-start text-sm">
-                            {Object.values(item.customizations).map(
-                              (choiceId, idx) => (
-                                <p key={idx}>
-                                  -{" "}
-                                  {
-                                    customizationChoices[choiceId]
-                                      ?.customizationCategory.name
-                                  }
-                                  : {customizationChoices[choiceId]?.name}
+                          {/* customization choices and special instructions */}
+                          {(Object.values(item.customizations).length > 0 ||
+                            item.specialInstructions) && (
+                            <div className="baseVertFlex ml-1 mt-2 w-full !items-start text-sm">
+                              {Object.values(item.customizations).map(
+                                (choiceId, idx) => (
+                                  <p key={idx}>
+                                    -{" "}
+                                    {
+                                      customizationChoices[choiceId]
+                                        ?.customizationCategory.name
+                                    }
+                                    : {customizationChoices[choiceId]?.name}
+                                  </p>
+                                ),
+                              )}
+                              {item.specialInstructions && (
+                                <p className="max-w-48 break-all">
+                                  - {item.specialInstructions}
                                 </p>
-                              ),
-                            )}
-                            {item.specialInstructions && (
-                              <p className="max-w-48 break-all">
-                                - {item.specialInstructions}
-                              </p>
-                            )}
-                          </div>
+                              )}
+                            </div>
+                          )}
                         </div>
 
                         <div className="baseVertFlex !items-end">
@@ -1504,7 +1508,16 @@ function CartDrawer({
                     checkoutButtonText !== "Proceed to checkout" ||
                     orderDetails.items.length === 0
                   }
-                  className="!w-full text-xs font-semibold tablet:text-sm"
+                  className="!w-full text-sm font-semibold"
+                  onPointerEnter={() => {
+                    setSlideCheckoutArrow(true);
+                  }}
+                  onPointerLeave={() => {
+                    setSlideCheckoutArrow(false);
+                  }}
+                  onPointerCancel={() => {
+                    setSlideCheckoutArrow(false);
+                  }}
                   onClick={() => {
                     // FYI: manually scrolling to these inputs since react-hook-form isn't
                     // able to scroll to <select> elements it seems, and also the scrolling
@@ -1573,7 +1586,8 @@ function CartDrawer({
                       className="baseFlex !w-full gap-2"
                     >
                       {checkoutButtonText}
-                      {checkoutButtonText === "Loading" && (
+
+                      {checkoutButtonText === "Loading" ? (
                         <div
                           className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
                           role="status"
@@ -1581,6 +1595,15 @@ function CartDrawer({
                         >
                           <span className="sr-only">Loading...</span>
                         </div>
+                      ) : (
+                        <FaArrowRight
+                          style={{
+                            transform: slideCheckoutArrow
+                              ? "translateX(3px)"
+                              : "translateX(0)",
+                          }}
+                          className="size-4 transition-all"
+                        />
                       )}
                     </motion.div>
                   </AnimatePresence>
