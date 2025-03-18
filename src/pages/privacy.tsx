@@ -195,7 +195,7 @@ function Privacy() {
           <div className="baseFlex gap-2">
             Phone number:
             <Button variant="link" className="h-6 !px-1" asChild>
-              <a href="tel:+6122220712">(612) 222-0712</a>
+              <a href="tel:+6126009139">(612) 600-9139</a>
             </Button>
           </div>
         </p>
