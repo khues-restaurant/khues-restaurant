@@ -57,7 +57,7 @@ p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tab
           <div className="baseFlex gap-2 tablet:gap-[9px]">
             <FaPhone size={"0.8rem"} className="tablet:ml-[1px]" />
             <Button variant="link" className="h-8 px-1" asChild>
-              <a href="tel:+6126009139" className="!text-offwhite">
+              <a href="tel:+16126009139" className="!text-offwhite">
                 (612) 600-9139
               </a>
             </Button>
