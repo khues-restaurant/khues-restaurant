@@ -54,14 +54,14 @@ p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tab
       <div className="baseVertFlex gap-3 tablet:!items-start tablet:!justify-start tablet:gap-0">
         <p className="font-semibold underline underline-offset-2">Contact</p>
         <div className="baseVertFlex gap-1 tablet:!items-start tablet:!justify-start tablet:gap-0">
-          {/* <div className="baseFlex gap-2 tablet:gap-[9px]">
+          <div className="baseFlex gap-2 tablet:gap-[9px]">
             <FaPhone size={"0.8rem"} className="tablet:ml-[1px]" />
             <Button variant="link" className="h-8 px-1" asChild>
-              <a href="tel:+6122220712" className="!text-offwhite">
-                (612) 222-0712
+              <a href="tel:+6126009139" className="!text-offwhite">
+                (612) 600-9139
               </a>
             </Button>
-          </div> */}
+          </div>
           <div className="baseFlex gap-2">
             <MdOutlineMail size={"0.95rem"} />
             <Button variant="link" className="h-8 px-1" asChild>
