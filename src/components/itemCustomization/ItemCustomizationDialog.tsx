@@ -316,7 +316,7 @@ function ItemCustomizerDialogContent({
                 {itemToCustomize.description}
               </p>
 
-              <div className="baseFlex mt-2 w-full flex-wrap !justify-start gap-2 text-sm text-stone-500">
+              <div className="baseFlex mt-2 w-full flex-wrap !justify-start gap-3 text-sm text-stone-500">
                 {itemToCustomize.isChefsChoice && (
                   <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
                     <p className="baseFlex size-4 rounded-full border border-stone-500 bg-offwhite p-2">

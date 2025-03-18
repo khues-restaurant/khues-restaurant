@@ -186,7 +186,7 @@ function ItemCustomizationDrawer({
       }}
       className="baseVertFlex h-[85dvh] w-full !justify-start"
     >
-      <div className="baseVertFlex relative h-full w-full max-w-xl !justify-start gap-4 overflow-y-auto pb-16">
+      <div className="baseVertFlex relative h-full w-full max-w-xl !justify-start overflow-y-auto pb-16">
         {forCart && (
           <Button
             variant="underline"
@@ -288,7 +288,7 @@ function ItemCustomizationDrawer({
                 {itemToCustomize.description}
               </p>
 
-              <div className="baseFlex mt-2 w-full flex-wrap !justify-start gap-2 text-sm text-stone-500">
+              <div className="baseFlex mt-2 w-full flex-wrap !justify-start gap-3 text-sm text-stone-500">
                 {itemToCustomize.isChefsChoice && (
                   <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
                     <p className="baseFlex size-4 rounded-full border border-stone-500 bg-offwhite p-2">
