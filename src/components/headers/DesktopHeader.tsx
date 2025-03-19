@@ -71,7 +71,7 @@ function DesktopHeader() {
                 rel="noreferrer"
                 className="!text-base text-primary-foreground hover:!text-primary-foreground"
               >
-                693 Raymond Ave, St Paul, MN 55114
+                693 Raymond Ave, St. Paul, MN 55114
               </a>
             </Button>
             <Button
@@ -328,7 +328,7 @@ function DesktopHeader() {
                           rel="noreferrer"
                           className="text-primary"
                         >
-                          693 Raymond Ave, St Paul, MN 55114
+                          693 Raymond Ave, St. Paul, MN 55114
                         </a>
                       </Button>
                     </div>
