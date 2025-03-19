@@ -533,7 +533,7 @@ function MobileHeader() {
                                     rel="noreferrer"
                                     className="my-2 whitespace-normal text-primary supports-[text-wrap]:text-wrap"
                                   >
-                                    693 Raymond Ave, St Paul, MN 55114
+                                    693 Raymond Ave, St. Paul, MN 55114
                                   </a>
                                 </Button>
                               </div>

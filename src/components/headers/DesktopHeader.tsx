@@ -362,7 +362,7 @@ function DesktopHeader() {
                         rel="noreferrer"
                         className="text-primary"
                       >
-                        693 Raymond Ave, St Paul, MN 55114
+                        693 Raymond Ave, St. Paul, MN 55114
                       </a>
                     </Button>
                   </div>

@@ -541,7 +541,7 @@ function CartSheet({
                 rel="noreferrer"
                 className="!p-0 !text-sm"
               >
-                693 Raymond Ave, St Paul, MN 55114
+                693 Raymond Ave, St. Paul, MN 55114
               </a>
             </Button>
           </div>
