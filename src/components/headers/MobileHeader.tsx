@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { CiCalendarDate } from "react-icons/ci";
 import { FaFacebook, FaUserAlt } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
 import { IoLogoInstagram, IoSettingsOutline } from "react-icons/io5";
 import { SiTiktok } from "react-icons/si";
 import { Clock, MapPin } from "lucide-react";
@@ -585,15 +584,6 @@ function MobileHeader() {
                     href="https://www.tiktok.com/@khues_kitchen"
                   >
                     <SiTiktok className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-                  </a>
-                </Button>
-
-                <Button variant="ghost" asChild>
-                  <a
-                    aria-label="Visit our X page"
-                    href="https://x.com/Khues_Kitchen"
-                  >
-                    <FaXTwitter className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
                   </a>
                 </Button>
               </div>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { FaFacebook } from "react-icons/fa";
-import { FaPhone, FaXTwitter } from "react-icons/fa6";
+import { FaPhone } from "react-icons/fa6";
 import { IoLogoInstagram } from "react-icons/io5";
 import { MdOutlineMail } from "react-icons/md";
 import { SiTiktok } from "react-icons/si";
@@ -118,12 +118,6 @@ p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tab
               href="https://www.tiktok.com/@khues_kitchen"
             >
               <SiTiktok className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
-            </a>
-          </Button>
-
-          <Button variant="ghost" asChild>
-            <a aria-label="Visit our X page" href="https://x.com/Khues_Kitchen">
-              <FaXTwitter className="h-5 w-5 mobileLarge:h-6 mobileLarge:w-6" />
             </a>
           </Button>
         </div>
