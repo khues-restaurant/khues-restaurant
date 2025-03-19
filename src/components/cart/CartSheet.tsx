@@ -865,12 +865,11 @@ function CartSheet({
                       <div className="baseFlex w-full !items-start !justify-between">
                         <div className="baseVertFlex !items-start gap-1">
                           {/* item name, dietary restrictions, and edit button */}
-                          <div className="baseFlex gap-2">
-                            <p className="text-lg">{item.name}</p>
-
+                          <div className="baseFlex !items-start gap-2">
                             {item.includeDietaryRestrictions && (
-                              <div className="size-2 shrink-0 rounded-full bg-primary/75" />
+                              <div className="mt-[11px] size-2 shrink-0 rounded-full bg-primary/75" />
                             )}
+                            <p className="text-lg">{item.name}</p>
                           </div>
 
                           {/* quantity adjustment */}
@@ -908,9 +907,11 @@ function CartSheet({
                                 <LuMinus className="size-4" />
                               )}
                             </Button>
+
                             <div className="baseFlex h-full w-8 bg-offwhite font-semibold">
                               {item.quantity}
                             </div>
+
                             <Button
                               variant="outline"
                               disabled={item.quantity >= 20}
@@ -1052,12 +1053,11 @@ function CartSheet({
                             <div className="baseFlex w-full !items-start !justify-between">
                               <div className="baseVertFlex !items-start">
                                 {/* item name, dietary restrictions, and edit button */}
-                                <div className="baseFlex gap-2">
-                                  <p className="text-lg">{item.name}</p>
-
+                                <div className="baseFlex !items-start gap-2">
                                   {item.includeDietaryRestrictions && (
-                                    <div className="size-2 shrink-0 rounded-full bg-primary/75" />
+                                    <div className="mt-[11px] size-2 shrink-0 rounded-full bg-primary/75" />
                                   )}
+                                  <p className="text-lg">{item.name}</p>
                                 </div>
 
                                 <div className="baseFlex my-1 gap-2 rounded-md border border-primary !px-2 !py-0.5 text-xs text-primary">
