@@ -14,9 +14,13 @@ function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
       <Column align="center">
         <Row className="w-[350px] sm:hidden">
           <Column className="text-center">
-            <Link href="tel:+1234567890">
+            <Link
+              href="https://maps.app.goo.gl/CF5wv5oK1SBhsme56"
+              target="_blank"
+              rel="noreferrer"
+            >
               <Text className="mb-0 text-xs text-offwhite">
-                1234 Lorem Ipsum Dr. Roseville, MN 12345
+                693 Raymond Ave, St. Paul, MN 55114
               </Text>
             </Link>
           </Column>
@@ -24,60 +28,65 @@ function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
 
         <Row className="w-[350px] sm:hidden">
           <Column className="text-center">
-            <Link href="tel:+1234567890">
-              <Text className="mb-0 pl-2 text-xs text-offwhite">
-                (123) 456-7890
+            <Link href="tel:+16126009139">
+              <Text className="!mb-6 !mt-2 text-xs text-offwhite">
+                (612) 600-9139
               </Text>
             </Link>
           </Column>
         </Row>
 
-        <Row className="hidden w-[363px] sm:inline-table">
-          <Column className="w-[256px]">
-            <Link href="tel:+1234567890">
+        <Row className="hidden w-auto sm:inline-table">
+          <Column>
+            <Link
+              href="https://maps.app.goo.gl/CF5wv5oK1SBhsme56"
+              target="_blank"
+              rel="noreferrer"
+            >
               <Text className="mb-0 text-xs text-offwhite">
-                1234 Lorem Ipsum Dr. Roseville, MN 12345
+                693 Raymond Ave, St. Paul, MN 55114
               </Text>
             </Link>
           </Column>
 
-          <Column className="">
+          <Column className="px-3">
             <Text className="mb-0">|</Text>
           </Column>
 
-          <Column className="w-[91px]">
-            <Link href="tel:+1234567890">
-              <Text className="mb-0 pl-2 text-xs text-offwhite">
-                (123) 456-7890
-              </Text>
+          <Column>
+            <Link href="tel:+16126009139">
+              <Text className="mb-0 text-xs text-offwhite">(612) 600-9139</Text>
             </Link>
           </Column>
         </Row>
 
-        <Row className="mt-3 w-52">
-          <Column className="text-left">
-            <Link href="https://khueskitchen.com">
-              <Text className="my-0 text-xs text-offwhite">
+        <Row className="!my-0 w-auto !py-0">
+          <Column className="!my-0 !py-0 text-left">
+            <Link href="https://www.khueskitchen.com" className="!my-0 !py-0">
+              <Text className="!my-0 !py-0 text-xs text-offwhite">
                 Visit our website
               </Text>
             </Link>
           </Column>
 
-          <Column className="text-center">
-            <Text className="my-0 pl-1">|</Text>
+          <Column className="!my-0 !py-0 text-center">
+            <Text className="!my-0 !py-0 px-3">|</Text>
           </Column>
 
-          <Column className="text-right">
-            <Link href="https://khueskitchen.com/privacy">
-              <Text className="my-0 pl-2 text-xs text-offwhite">
+          <Column className="!my-0 !py-0 text-right">
+            <Link
+              href="https://www.khueskitchen.com/privacy"
+              className="!my-0 !py-0"
+            >
+              <Text className="!my-0 !py-0 text-xs text-offwhite">
                 Privacy Policy
               </Text>
             </Link>
           </Column>
         </Row>
 
-        <Text className="mb-0 text-sm font-medium">
-          Follow us on social media
+        <Text className="!mt-6 mb-0 text-sm font-medium">
+          Follow us on social media!
         </Text>
 
         <Row
@@ -87,18 +96,7 @@ function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
           }}
         >
           <Column>
-            <Link href="https://tiktok.com/khueskitchen">
-              <Img
-                src={`${baseUrl}/socials/whiteTiktok.png`}
-                width="24"
-                height="24"
-                alt="Follow Khue's on TikTok"
-                className="m-4"
-              />
-            </Link>
-          </Column>
-          <Column>
-            <Link href="https://instagram.com/khueskitchen">
+            <Link href="https://www.instagram.com/khueskitchen">
               <Img
                 src={`${baseUrl}/socials/whiteInstagram.png`}
                 width="24"
@@ -109,7 +107,7 @@ function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
             </Link>
           </Column>
           <Column>
-            <Link href="https://facebook.com/khueskitchen">
+            <Link href="https://www.facebook.com/khueskitchen">
               <Img
                 src={`${baseUrl}/socials/whiteFacebook.png`}
                 width="24"
@@ -120,20 +118,20 @@ function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
             </Link>
           </Column>
           <Column>
-            <Link href="https://twitter.com/khueskitchen">
+            <Link href="https://www.tiktok.com/@khues_kitchen">
               <Img
-                src={`${baseUrl}/socials/whiteTwitter.png`}
+                src={`${baseUrl}/socials/whiteTiktok.png`}
                 width="24"
                 height="24"
-                alt="Follow Khue's on Twitter"
-                className="m-4 "
+                alt="Follow Khue's on TikTok"
+                className="m-4"
               />
             </Link>
           </Column>
         </Row>
 
         <Text className="text-xs">
-          © 2024 Khue&apos;s. All rights reserved.
+          © 2025 Khue&apos;s. All rights reserved.
         </Text>
 
         <Section className="w-96 text-center">

@@ -177,10 +177,10 @@ function OrderReady({
                     <Section className="w-64">
                       <Row align="center">
                         <Column>
-                          <Text className="my-0 text-left font-medium underline">
+                          <Text className="!my-0 text-left font-medium underline">
                             Pickup name
                           </Text>
-                          <Text className="my-0 text-left text-xs">
+                          <Text className="!my-0 text-left text-xs">
                             {order.firstName} {order.lastName}
                           </Text>
                         </Column>
@@ -188,10 +188,10 @@ function OrderReady({
 
                       <Row align="center" className="mt-2">
                         <Column>
-                          <Text className="my-0 text-left font-medium underline">
+                          <Text className="!my-0 text-left font-medium underline">
                             Pickup time
                           </Text>
-                          <Text className="my-0 text-left text-xs">
+                          <Text className="!my-0 text-left text-xs">
                             {format(
                               toZonedTime(
                                 order.datetimeToPickup,
@@ -205,10 +205,10 @@ function OrderReady({
 
                       <Row align="center" className="mt-2">
                         <Column>
-                          <Text className="my-0 text-left font-medium underline">
+                          <Text className="!my-0 text-left font-medium underline">
                             Order #
                           </Text>
-                          <Text className="my-0 text-left text-xs">
+                          <Text className="!my-0 text-left text-xs">
                             {getFirstSixNumbers(order.id)}
                           </Text>
                         </Column>
@@ -216,10 +216,10 @@ function OrderReady({
 
                       <Row align="center" className="mt-2">
                         <Column>
-                          <Text className="my-0 text-left font-medium underline">
+                          <Text className="!my-0 text-left font-medium underline">
                             Address
                           </Text>
-                          <Text className="my-0 text-left text-xs">
+                          <Text className="!my-0 text-left text-xs">
                             1234 Lorem Ipsum Dr. Roseville, MN 12345
                           </Text>
                         </Column>
@@ -227,40 +227,40 @@ function OrderReady({
                     </Section>
 
                     {/* loop through items to make an order summary section */}
-                    <Section className="mt-4 w-80 rounded-md border border-solid border-stone-300 bg-stone-200 p-4 text-left sm:w-[350px]">
-                      <Row align="center" className="mb-2 w-80">
+                    <Section className="mt-8 w-80 rounded-md border border-solid border-stone-300 bg-stone-200 p-4 text-left sm:w-[350px]">
+                      <Row align="center" className="!mb-0 w-80">
                         <Column className="w-5 align-top">
-                          <Text className="mb-0 mt-0 text-left text-base font-medium">
+                          <Text className="!mt-0 mb-0 text-left text-base font-medium">
                             {totalItems} {totalItems > 1 ? "Items" : "Item"}
                           </Text>
                         </Column>
 
                         <Column className="w-5 align-bottom text-stone-500">
-                          <Text className="mb-0 mt-0 text-right text-sm font-medium">
+                          <Text className="!mt-0 mb-0 text-right text-sm font-medium">
                             Order #{getFirstSixNumbers(order.id)}
                           </Text>
                         </Column>
                       </Row>
 
-                      <Hr className="mb-4 border-stone-400" />
+                      <Hr className="!mt-0 mb-4 !border-t-stone-500" />
 
                       {order.orderItems.map((item, index) => (
                         <Row key={index} align="center" className="my-2 w-80">
                           <Column className="w-5 align-top">
-                            <Text className="my-0 w-5 text-left text-base font-medium">
+                            <Text className="!my-0 w-5 text-left text-base font-medium">
                               {item.quantity}
                             </Text>
                           </Column>
 
                           <Column className="align-top">
-                            <Text className="my-0 text-left text-base font-medium">
+                            <Text className="!my-0 text-left text-base font-medium">
                               {item.name}
                             </Text>
                             {Object.values(item.customizations).map(
                               (choiceId, idx) => (
                                 <Text
                                   key={idx}
-                                  className="my-0 max-w-64 text-xs sm:max-w-72"
+                                  className="!my-0 max-w-64 text-xs sm:max-w-72"
                                 >
                                   -{" "}
                                   {
@@ -272,14 +272,14 @@ function OrderReady({
                               ),
                             )}
                             {item.specialInstructions && (
-                              <Text className="my-0 max-w-64 text-xs sm:max-w-72">
+                              <Text className="!my-0 max-w-64 text-xs sm:max-w-72">
                                 - {item.specialInstructions}
                               </Text>
                             )}
                           </Column>
 
                           <Column className="align-top">
-                            <Text className="my-0 text-right text-base">
+                            <Text className="!my-0 text-right text-base">
                               {formatPrice(
                                 calculateRelativeTotal({
                                   items: [item] as
@@ -310,35 +310,37 @@ function OrderReady({
                             className={`${order.includeNapkinsAndUtensils ? "w-[250px]" : "w-[278px]"}`}
                           >
                             <Text
-                              className={`my-0 text-sm italic text-stone-400 ${order.includeNapkinsAndUtensils ? "w-[250px]" : "w-[278px]"}`}
+                              className={`!my-0 text-sm italic text-stone-500 ${order.includeNapkinsAndUtensils ? "w-[250px]" : "w-[285px]"}`}
                             >
-                              {`Napkins and utensils were ${
-                                order.includeNapkinsAndUtensils ? "" : "not"
+                              {`Napkins and utensils were${
+                                order.includeNapkinsAndUtensils ? "" : "n't"
                               } requested.`}
                             </Text>
                           </Column>
                         </Row>
                       </Section>
 
-                      <Hr className="border-stone-400" />
+                      <Hr className="!border-t-stone-500" />
 
                       <Section className="w-72">
                         <Row className="h-5">
                           <Column>
-                            <Text className="my-0 h-5 text-left">Subtotal</Text>
+                            <Text className="!my-0 h-5 text-left">
+                              Subtotal
+                            </Text>
                           </Column>
                           <Column>
-                            <Text className="my-0 h-5 text-right">
+                            <Text className="!my-0 h-5 text-right">
                               {formatPrice(order.subtotal)}
                             </Text>
                           </Column>
                         </Row>
                         <Row className="h-5">
                           <Column>
-                            <Text className="my-0 h-5 text-left">Tax</Text>
+                            <Text className="!my-0 h-5 text-left">Tax</Text>
                           </Column>
                           <Column>
-                            <Text className="my-0 h-5 text-right">
+                            <Text className="!my-0 h-5 text-right">
                               {formatPrice(order.tax)}
                             </Text>
                           </Column>
@@ -346,12 +348,12 @@ function OrderReady({
                         {order.tipValue !== 0 && (
                           <Row className="h-5">
                             <Column>
-                              <Text className="my-0 h-5 text-left">
+                              <Text className="!my-0 h-5 text-left">
                                 {`Tip${order.tipPercentage !== null ? ` (${order.tipPercentage}%)` : ""}`}
                               </Text>
                             </Column>
                             <Column>
-                              <Text className="my-0 h-5 text-right">
+                              <Text className="!my-0 h-5 text-right">
                                 {formatPrice(order.tipValue)}
                               </Text>
                             </Column>
@@ -359,12 +361,12 @@ function OrderReady({
                         )}
                         <Row className="mt-1 h-5">
                           <Column>
-                            <Text className="my-0 h-5 text-left text-base font-semibold">
+                            <Text className="!my-0 h-5 text-left text-base font-semibold">
                               Total
                             </Text>
                           </Column>
                           <Column>
-                            <Text className="my-0 h-5 text-right text-base font-semibold">
+                            <Text className="!my-0 h-5 text-right text-base font-semibold">
                               {formatPrice(order.total)}
                             </Text>
                           </Column>
