@@ -10,6 +10,7 @@ import { useMainStore } from "~/stores/MainStore";
 import { formatPrice } from "~/utils/formatters/formatPrice";
 import { getFirstSixNumbers } from "~/utils/formatters/getFirstSixNumbers";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
+import { menuItemImagePaths } from "~/utils/menuItemImagePaths";
 
 interface OrderSummary {
   order: DBOrderSummary;
@@ -65,11 +66,11 @@ function OrderSummary({ order }: OrderSummary) {
               {/* preview image of item */}
               {item.hasImageOfItem && (
                 <Image
-                  src={"/menuItems/sampleImage.webp"}
+                  src={menuItemImagePaths[item.name] ?? ""}
                   alt={`${item.name} at Khue's in St. Paul`}
-                  width={48}
-                  height={48}
-                  className="!size-12 rounded-md drop-shadow-md"
+                  width={300}
+                  height={300}
+                  className="!size-14 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md"
                 />
               )}
 
@@ -78,11 +79,8 @@ function OrderSummary({ order }: OrderSummary) {
                   {/* item quantity, name, dietary restrictions */}
                   <div className="baseFlex !items-start gap-2 text-base font-medium">
                     <p>{item.quantity}</p>
-                    <p>{item.name}</p>
 
-                    {item.includeDietaryRestrictions && (
-                      <div className="my-2 ml-1 size-2 shrink-0 rounded-full bg-primary/75" />
-                    )}
+                    <p>{item.name}</p>
                   </div>
 
                   <div className="baseVertFlex ml-4 w-full !items-start text-xs">
@@ -125,7 +123,7 @@ function OrderSummary({ order }: OrderSummary) {
                   </div>
                 </div>
 
-                <div className="baseVertFlex !items-end">
+                <div className="baseVertFlex !items-end gap-1">
                   <p className="text-base">
                     {formatPrice(
                       calculateRelativeTotal({
@@ -135,6 +133,11 @@ function OrderSummary({ order }: OrderSummary) {
                       }),
                     )}
                   </p>
+
+                  {item.includeDietaryRestrictions && (
+                    <div className="size-2 shrink-0 rounded-full bg-primary/75" />
+                  )}
+
                   {item.discountId && (
                     <div className="baseFlex gap-2 rounded-md border border-primary !px-2 !py-1 text-xs text-primary">
                       {discounts[item.discountId]?.name.includes("Points") && (

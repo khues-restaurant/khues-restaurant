@@ -57,7 +57,7 @@ import { type DBOrderSummary } from "~/server/api/routers/order";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
-
+import { menuItemImagePaths } from "~/utils/menuItemImagePaths";
 import noOrders from "/public/interior/six.jpg";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { type User } from "@prisma/client";
@@ -458,22 +458,26 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                   <div className="baseFlex gap-2">
                     {order.orderItems[0]?.hasImageOfItem && (
                       <Image
-                        src={"/menuItems/sampleImage.webp"}
+                        src={
+                          menuItemImagePaths[order.orderItems[0]?.name] ?? ""
+                        }
                         alt={order.orderItems[0]?.name ?? "First item"}
-                        width={48}
-                        height={48}
-                        className="rounded-md drop-shadow-md"
+                        width={500}
+                        height={500}
+                        className="!size-16 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md"
                       />
                     )}
 
                     {order.orderItems.length > 1 &&
                       order.orderItems[1]?.hasImageOfItem && (
                         <Image
-                          src={"/menuItems/sampleImage.webp"}
+                          src={
+                            menuItemImagePaths[order.orderItems[1]?.name] ?? ""
+                          }
                           alt={order.orderItems[1]?.name ?? "Second item"}
-                          width={48}
-                          height={48}
-                          className="rounded-md drop-shadow-md"
+                          width={500}
+                          height={500}
+                          className="!size-16 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md"
                         />
                       )}
 
@@ -487,11 +491,14 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                             </div>
                           ) : (
                             <Image
-                              src={"/menuItems/sampleImage.webp"}
+                              src={
+                                menuItemImagePaths[order.orderItems[2]?.name] ??
+                                ""
+                              }
                               alt={order.orderItems[2]?.name ?? "Third item"}
-                              width={48}
-                              height={48}
-                              className="rounded-md drop-shadow-md"
+                              width={500}
+                              height={500}
+                              className="!size-16 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md"
                             />
                           )}
                         </>
@@ -639,22 +646,24 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                 <div className="baseFlex relative w-full !justify-start gap-2">
                   {order.orderItems[0]?.hasImageOfItem && (
                     <Image
-                      src={"/menuItems/sampleImage.webp"}
+                      src={menuItemImagePaths[order.orderItems[0]?.name] ?? ""}
                       alt={order.orderItems[0]?.name ?? "First item"}
-                      width={64}
-                      height={64}
-                      className="rounded-md drop-shadow-md"
+                      width={500}
+                      height={500}
+                      className="!size-16 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md"
                     />
                   )}
 
                   {order.orderItems.length > 1 &&
                     order.orderItems[1]?.hasImageOfItem && (
                       <Image
-                        src={"/menuItems/sampleImage.webp"}
+                        src={
+                          menuItemImagePaths[order.orderItems[1]?.name] ?? ""
+                        }
                         alt={order.orderItems[1]?.name ?? "Second item"}
-                        width={64}
-                        height={64}
-                        className="rounded-md drop-shadow-md"
+                        width={500}
+                        height={500}
+                        className="!size-16 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md"
                       />
                     )}
 
@@ -668,11 +677,14 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                           </div>
                         ) : (
                           <Image
-                            src={"/menuItems/sampleImage.webp"}
+                            src={
+                              menuItemImagePaths[order.orderItems[2]?.name] ??
+                              ""
+                            }
                             alt={order.orderItems[2]?.name ?? "Third item"}
-                            width={64}
-                            height={64}
-                            className="rounded-md drop-shadow-md"
+                            width={500}
+                            height={500}
+                            className="!size-16 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md"
                           />
                         )}
                       </>

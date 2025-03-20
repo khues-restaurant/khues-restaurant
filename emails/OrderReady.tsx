@@ -220,7 +220,7 @@ function OrderReady({
                             Address
                           </Text>
                           <Text className="!my-0 text-left text-xs">
-                            1234 Lorem Ipsum Dr. Roseville, MN 12345
+                            693 Raymond Ave, St. Paul, MN 55114
                           </Text>
                         </Column>
                       </Row>

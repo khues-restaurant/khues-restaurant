@@ -63,13 +63,13 @@ function PaymentSuccess({
       transition={{ duration: 0.5 }}
       // TODO: find a way css wise so that you don't have any scrollbar on tablet+ since this is guarenteed
       // to be a tiny tiny element on this page
-      className="baseVertFlex min-h-[calc(100dvh-6rem)] w-full tablet:min-h-[calc(100dvh-7rem)]"
+      className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full tablet:min-h-[calc(100dvh-6rem)]"
     >
       <div className="baseVertFlex relative max-w-80 gap-4 overflow-hidden rounded-lg border bg-gradient-to-br from-offwhite to-primary/10 px-6 py-8 shadow-md tablet:max-w-2xl tablet:p-12 tablet:pb-8">
         {order === null ? (
           <>
-            <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
-            <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50 sm:-bottom-8 sm:-right-8 sm:size-24" />
+            <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50 sm:-bottom-8 sm:-left-8 sm:size-24" />
 
             <MdQuestionMark className="mb-4 size-10" />
 
@@ -95,8 +95,8 @@ function PaymentSuccess({
           </>
         ) : (
           <>
-            <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
-            <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
+            <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50 sm:-bottom-8 sm:-right-8 sm:size-24" />
+            <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50 sm:-bottom-8 sm:-left-8 sm:size-24" />
             <AnimatedLotus className="size-16 fill-primary tablet:size-24" />
 
             <p className="mt-4 text-center text-lg font-medium tablet:mt-6">
@@ -111,7 +111,7 @@ function PaymentSuccess({
                 </div>
               )}
 
-              <p className="text-center">
+              <p className="mb-4 text-center sm:mb-8">
                 Please wait while your order is sent to our kitchen.
               </p>
             </div>

@@ -328,7 +328,7 @@ function Track() {
         transition={{ duration: 0.5 }}
         // TODO: find a way css wise so that you don't have any scrollbar on tablet+ since this is guarenteed
         // to be a tiny tiny element on this page
-        className="baseVertFlex min-h-[calc(100dvh-6rem)] w-full tablet:min-h-[calc(100dvh-7rem)]"
+        className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full tablet:min-h-[calc(100dvh-6rem)]"
       >
         <div className="baseVertFlex relative max-w-80 gap-4 overflow-hidden rounded-lg border bg-gradient-to-br from-offwhite to-primary/10 px-6 py-8 shadow-md tablet:max-w-2xl tablet:p-12 tablet:pb-8">
           <>
@@ -369,7 +369,7 @@ function Track() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex min-h-[calc(100dvh-6rem)] w-full p-4 tablet:min-h-[calc(100dvh-7rem)]"
+      className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full p-4 tablet:min-h-[calc(100dvh-6rem)]"
     >
       <div className="baseVertFlex mb-8 w-full gap-4 px-0 py-4 tablet:max-w-2xl tablet:p-8">
         <AnimatePresence mode="popLayout">
@@ -496,7 +496,7 @@ function Track() {
                       className="baseVertFlex gap-1"
                     >
                       <PiCookingPotBold
-                        className={`h-6 w-6 text-primary  ${
+                        className={`h-6 w-6 text-primary ${
                           passedInProgressCheckpoint ? "shake" : ""
                         }`}
                       />
@@ -627,8 +627,15 @@ function Track() {
                     <p className="font-semibold underline underline-offset-2">
                       Address
                     </p>
-                    <Button variant={"link"} className="h-4 !p-0">
-                      1234 Lorem Ipsum Dr. Roseville, MN 12345
+                    <Button variant={"link"} className="h-4 !p-0" asChild>
+                      <a
+                        href="https://maps.app.goo.gl/CF5wv5oK1SBhsme56"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-primary"
+                      >
+                        693 Raymond Ave, St. Paul, MN 55114
+                      </a>
                     </Button>
                   </div>
                 </div>
@@ -677,8 +684,15 @@ function Track() {
                       <p className="font-semibold underline underline-offset-2">
                         Address
                       </p>
-                      <Button variant={"link"} className="h-4 !p-0">
-                        1234 Lorem Ipsum Dr. Roseville, MN 12345
+                      <Button variant={"link"} className="h-4 !p-0" asChild>
+                        <a
+                          href="https://maps.app.goo.gl/CF5wv5oK1SBhsme56"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-primary"
+                        >
+                          693 Raymond Ave, St. Paul, MN 55114
+                        </a>
                       </Button>
                     </div>
                   </div>
