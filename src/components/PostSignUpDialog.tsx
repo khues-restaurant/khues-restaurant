@@ -48,6 +48,11 @@ import { api } from "~/utils/api";
 import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import { formatPhoneNumber } from "~/utils/formatters/formatPhoneNumber";
 
+import affogato from "/public/menuItems/affogato.png";
+import grilledSirloin from "/public/menuItems/grilled-sirloin.png";
+import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
+import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
+
 const mainFormSchema = z.object({
   firstName: z
     .string({
@@ -1143,14 +1148,15 @@ function PostSignUpDialog({
                       damping: 20,
                       delay: 0.5,
                     }}
-                    className="absolute -left-10 -top-10"
+                    className="absolute -left-8 -top-8"
                   >
                     <Image
-                      src={"/menuItems/sampleImage.webp"}
+                      src={grilledSirloin}
                       alt={"TODO: replace with proper alt tag text"}
-                      width={96}
-                      height={96}
-                      className="!relative transform-gpu drop-shadow-md tablet:drop-shadow-lg"
+                      width={500}
+                      height={500}
+                      priority
+                      className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
                     />
                   </motion.div>
 
@@ -1177,14 +1183,15 @@ function PostSignUpDialog({
                       damping: 20,
                       delay: 0.75,
                     }}
-                    className="absolute -bottom-10 -left-10"
+                    className="absolute -bottom-8 -left-8"
                   >
                     <Image
-                      src={"/menuItems/sampleImage.webp"}
+                      src={roastPorkFriedRice}
                       alt={"TODO: replace with proper alt tag text"}
-                      width={96}
-                      height={96}
-                      className="!relative transform-gpu drop-shadow-md tablet:drop-shadow-lg"
+                      width={500}
+                      height={500}
+                      priority
+                      className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
                     />
                   </motion.div>
 
@@ -1232,14 +1239,15 @@ function PostSignUpDialog({
                       damping: 20,
                       delay: 0.95,
                     }}
-                    className="absolute -right-10 -top-10"
+                    className="absolute -right-8 -top-8"
                   >
                     <Image
-                      src={"/menuItems/sampleImage.webp"}
+                      src={affogato}
                       alt={"TODO: replace with proper alt tag text"}
-                      width={96}
-                      height={96}
-                      className="!relative transform-gpu drop-shadow-md tablet:drop-shadow-lg"
+                      width={500}
+                      height={500}
+                      priority
+                      className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
                     />
                   </motion.div>
 
@@ -1266,14 +1274,15 @@ function PostSignUpDialog({
                       damping: 20,
                       delay: 0.6,
                     }}
-                    className="absolute -bottom-10 -right-10"
+                    className="absolute -bottom-8 -right-8"
                   >
                     <Image
-                      src={"/menuItems/sampleImage.webp"}
+                      src={thaiTeaTresLeches}
                       alt={"TODO: replace with proper alt tag text"}
-                      width={96}
-                      height={96}
-                      className="!relative transform-gpu drop-shadow-md tablet:drop-shadow-lg"
+                      width={500}
+                      height={500}
+                      priority
+                      className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
                     />
                   </motion.div>
                 </div>

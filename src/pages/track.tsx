@@ -1,7 +1,9 @@
 import { SignInButton, useAuth } from "@clerk/nextjs";
 import { format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import {
   useEffect,
@@ -11,24 +13,27 @@ import {
   type ComponentProps,
 } from "react";
 import { LiaShoppingBagSolid } from "react-icons/lia";
+import { MdQuestionMark } from "react-icons/md";
 import { PiCookingPotBold } from "react-icons/pi";
 import { TfiReceipt } from "react-icons/tfi";
+import { io } from "socket.io-client";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import OrderSummary from "~/components/cart/OrderSummary";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
+import StaticLotus from "~/components/ui/StaticLotus";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
+import { env } from "~/env";
+import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getFirstSixNumbers } from "~/utils/formatters/getFirstSixNumbers";
-import { io } from "socket.io-client";
-import { env } from "~/env";
-import { toZonedTime } from "date-fns-tz";
-import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
-import StaticLotus from "~/components/ui/StaticLotus";
-import { MdQuestionMark } from "react-icons/md";
-import Link from "next/link";
+
+import affogato from "/public/menuItems/affogato.png";
+import grilledSirloin from "/public/menuItems/grilled-sirloin.png";
+import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
+import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
 
 function Track() {
   const { isSignedIn } = useAuth();
@@ -701,8 +706,20 @@ function Track() {
                 <div className="baseFlex relative w-full overflow-hidden rounded-md bg-rewardsGradient py-6 shadow-md">
                   <motion.div
                     key={"rewardsHeroMobileImageOne"}
-                    initial={{ opacity: 0, y: -125, x: -125 }}
-                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    initial={{
+                      filter: "blur(5px)",
+                      rotate: "90deg",
+                      opacity: 0,
+                      y: -125,
+                      x: -125,
+                    }}
+                    animate={{
+                      filter: "blur(0px)",
+                      rotate: "0deg",
+                      opacity: 1,
+                      y: 0,
+                      x: 0,
+                    }}
                     transition={{
                       opacity: { duration: 0.2 },
                       type: "spring",
@@ -710,21 +727,34 @@ function Track() {
                       damping: 20,
                       delay: 0.5,
                     }}
-                    className="absolute -left-10 -top-10"
+                    className="absolute -left-8 -top-8"
                   >
                     <Image
-                      src={"/menuItems/sampleImage.webp"}
+                      src={grilledSirloin}
                       alt={"TODO: replace with proper alt tag text"}
-                      width={96}
-                      height={96}
-                      className="!relative transform-gpu drop-shadow-md tablet:drop-shadow-lg"
+                      width={500}
+                      height={500}
+                      priority
+                      className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
                     />
                   </motion.div>
 
                   <motion.div
                     key={"rewardsHeroMobileImageTwo"}
-                    initial={{ opacity: 0, y: 125, x: -125 }}
-                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    initial={{
+                      filter: "blur(5px)",
+                      rotate: "90deg",
+                      opacity: 0,
+                      y: 125,
+                      x: -125,
+                    }}
+                    animate={{
+                      filter: "blur(0px)",
+                      rotate: "0deg",
+                      opacity: 1,
+                      y: 0,
+                      x: 0,
+                    }}
                     transition={{
                       opacity: { duration: 0.2 },
                       type: "spring",
@@ -732,14 +762,15 @@ function Track() {
                       damping: 20,
                       delay: 0.75,
                     }}
-                    className="absolute -bottom-10 -left-10"
+                    className="absolute -bottom-8 -left-8"
                   >
                     <Image
-                      src={"/menuItems/sampleImage.webp"}
+                      src={roastPorkFriedRice}
                       alt={"TODO: replace with proper alt tag text"}
-                      width={96}
-                      height={96}
-                      className="!relative transform-gpu drop-shadow-md tablet:drop-shadow-lg"
+                      width={500}
+                      height={500}
+                      priority
+                      className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
                     />
                   </motion.div>
 
@@ -804,8 +835,20 @@ function Track() {
 
                   <motion.div
                     key={"rewardsHeroMobileImageThree"}
-                    initial={{ opacity: 0, y: -125, x: 125 }}
-                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    initial={{
+                      filter: "blur(5px)",
+                      rotate: "90deg",
+                      opacity: 0,
+                      y: -125,
+                      x: 125,
+                    }}
+                    animate={{
+                      filter: "blur(0px)",
+                      rotate: "0deg",
+                      opacity: 1,
+                      y: 0,
+                      x: 0,
+                    }}
                     transition={{
                       opacity: { duration: 0.2 },
                       type: "spring",
@@ -813,21 +856,34 @@ function Track() {
                       damping: 20,
                       delay: 0.95,
                     }}
-                    className="absolute -right-10 -top-10"
+                    className="absolute -right-8 -top-8"
                   >
                     <Image
-                      src={"/menuItems/sampleImage.webp"}
+                      src={affogato}
                       alt={"TODO: replace with proper alt tag text"}
-                      width={96}
-                      height={96}
-                      className="!relative transform-gpu drop-shadow-md tablet:drop-shadow-lg"
+                      width={500}
+                      height={500}
+                      priority
+                      className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
                     />
                   </motion.div>
 
                   <motion.div
                     key={"rewardsHeroMobileImageFour"}
-                    initial={{ opacity: 0, y: 125, x: 125 }}
-                    animate={{ opacity: 1, y: 0, x: 0 }}
+                    initial={{
+                      filter: "blur(5px)",
+                      rotate: "90deg",
+                      opacity: 0,
+                      y: 125,
+                      x: 125,
+                    }}
+                    animate={{
+                      filter: "blur(0px)",
+                      rotate: "0deg",
+                      opacity: 1,
+                      y: 0,
+                      x: 0,
+                    }}
                     transition={{
                       opacity: { duration: 0.2 },
                       type: "spring",
@@ -835,14 +891,15 @@ function Track() {
                       damping: 20,
                       delay: 0.6,
                     }}
-                    className="absolute -bottom-10 -right-10"
+                    className="absolute -bottom-8 -right-8"
                   >
                     <Image
-                      src={"/menuItems/sampleImage.webp"}
+                      src={thaiTeaTresLeches}
                       alt={"TODO: replace with proper alt tag text"}
-                      width={96}
-                      height={96}
-                      className="!relative transform-gpu drop-shadow-md tablet:drop-shadow-lg"
+                      width={500}
+                      height={500}
+                      priority
+                      className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
                     />
                   </motion.div>
                 </div>

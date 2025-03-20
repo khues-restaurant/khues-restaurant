@@ -23,6 +23,12 @@ import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 import { getRewardsPointCost } from "~/utils/priceHelpers/getRewardsPointCost";
+import { menuItemImagePaths } from "~/utils/menuItemImagePaths";
+
+import affogato from "/public/menuItems/affogato.png";
+import grilledSirloin from "/public/menuItems/grilled-sirloin.png";
+import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
+import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
 
 // okay so we kinda spliced together some basic structure here, just look through it
 // and complete this fully before moving onto backend dashboard improvements
@@ -120,7 +126,7 @@ function RewardsDrawer({
       className="baseVertFlex relative size-full !justify-start"
     >
       <div className="baseVertFlex relative mt-10 w-full !justify-start overflow-y-auto ">
-        <div className="baseFlex relative mt-2 !h-40 w-full shrink-0 overflow-hidden bg-rewardsGradient shadow-sm">
+        <div className="baseFlex relative mt-2 !h-48 w-full shrink-0 overflow-hidden bg-rewardsGradient shadow-sm">
           <motion.div
             key={"rewardsHeroMobileImageOne"}
             initial={{
@@ -144,14 +150,15 @@ function RewardsDrawer({
               damping: 20,
               delay: 0.5,
             }}
-            className="absolute -left-10 -top-10"
+            className="absolute -left-8 -top-8"
           >
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={grilledSirloin}
               alt={"TODO: replace with proper alt tag text"}
-              width={96}
-              height={96}
-              className="!relative drop-shadow-md tablet:drop-shadow-lg"
+              width={500}
+              height={500}
+              priority
+              className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
             />
           </motion.div>
 
@@ -178,14 +185,15 @@ function RewardsDrawer({
               damping: 20,
               delay: 0.75,
             }}
-            className="absolute -bottom-10 -left-10"
+            className="absolute -bottom-8 -left-8"
           >
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={roastPorkFriedRice}
               alt={"TODO: replace with proper alt tag text"}
-              width={96}
-              height={96}
-              className="!relative drop-shadow-md tablet:drop-shadow-lg"
+              width={500}
+              height={500}
+              priority
+              className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
             />
           </motion.div>
 
@@ -233,14 +241,15 @@ function RewardsDrawer({
               damping: 20,
               delay: 0.95,
             }}
-            className="absolute -right-10 -top-10"
+            className="absolute -right-8 -top-8"
           >
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={affogato}
               alt={"TODO: replace with proper alt tag text"}
-              width={96}
-              height={96}
-              className="!relative drop-shadow-md tablet:drop-shadow-lg"
+              width={500}
+              height={500}
+              priority
+              className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
             />
           </motion.div>
 
@@ -267,14 +276,15 @@ function RewardsDrawer({
               damping: 20,
               delay: 0.6,
             }}
-            className="absolute -bottom-10 -right-10"
+            className="absolute -bottom-8 -right-8"
           >
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={thaiTeaTresLeches}
               alt={"TODO: replace with proper alt tag text"}
-              width={96}
-              height={96}
-              className="!relative drop-shadow-md tablet:drop-shadow-lg"
+              width={500}
+              height={500}
+              priority
+              className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
             />
           </motion.div>
         </div>
@@ -404,14 +414,14 @@ function RewardMenuItem({
 
   return (
     <div className="relative w-full max-w-96">
-      <div className="baseFlex size-full !items-start gap-4 rounded-md px-2 py-4">
+      <div className="baseFlex size-full !items-start gap-4 rounded-md py-4">
         {menuItem.hasImageOfItem && (
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={menuItemImagePaths[menuItem.name] ?? ""}
             alt={`${menuItem.name} at Khue's in St. Paul`}
-            width={64}
-            height={64}
-            className="rounded-md drop-shadow-md tablet:drop-shadow-lg"
+            width={500}
+            height={500}
+            className="!size-20 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md"
           />
         )}
 

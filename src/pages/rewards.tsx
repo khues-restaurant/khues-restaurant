@@ -68,13 +68,13 @@ function Rewards() {
             damping: 20,
             delay: 0.5,
           }}
-          className="absolute -left-10 -top-10 tablet:hidden"
+          className="absolute -left-8 -top-8 tablet:hidden"
         >
           <Image
             src={grilledSirloin}
             alt={"TODO: replace with proper alt tag text"}
-            width={96}
-            height={96}
+            width={500}
+            height={500}
             priority
             className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
           />
@@ -103,13 +103,13 @@ function Rewards() {
             damping: 20,
             delay: 0.75,
           }}
-          className="absolute -bottom-10 -left-10 tablet:hidden"
+          className="absolute -bottom-8 -left-8 tablet:hidden"
         >
           <Image
             src={roastPorkFriedRice}
             alt={"TODO: replace with proper alt tag text"}
-            width={96}
-            height={96}
+            width={500}
+            height={500}
             priority
             className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
           />
@@ -260,13 +260,13 @@ function Rewards() {
             damping: 20,
             delay: 0.95,
           }}
-          className="absolute -right-10 -top-10 tablet:hidden"
+          className="absolute -right-8 -top-8 tablet:hidden"
         >
           <Image
             src={affogato}
             alt={"TODO: replace with proper alt tag text"}
-            width={96}
-            height={96}
+            width={500}
+            height={500}
             priority
             className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
           />
@@ -295,13 +295,13 @@ function Rewards() {
             damping: 20,
             delay: 0.6,
           }}
-          className="absolute -bottom-10 -right-10 tablet:hidden"
+          className="absolute -bottom-8 -right-8 tablet:hidden"
         >
           <Image
             src={thaiTeaTresLeches}
             alt={"TODO: replace with proper alt tag text"}
-            width={96}
-            height={96}
+            width={500}
+            height={500}
             priority
             className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:size-36 tablet:drop-shadow-lg"
           />
@@ -411,7 +411,7 @@ function Rewards() {
       </div>
 
       {/* Intro */}
-      <p className="max-w-72 text-sm leading-7 text-primary xs:max-w-96 sm:max-w-xl sm:text-base md:max-w-2xl md:font-medium md:leading-8">
+      <p className="mx-8 text-sm leading-7 text-primary xs:max-w-96 sm:max-w-xl sm:text-base sm:font-medium md:max-w-2xl md:leading-8">
         Welcome to Khue&apos;s Rewards — where every bite takes you closer to
         delightful rewards! As a token of our appreciation, we&apos;ve crafted
         an exclusive program designed to celebrate our loyal customers. Indulge
