@@ -245,10 +245,10 @@ function MobileHeader() {
                           >
                             <Link
                               href={"/profile/preferences"}
-                              className="baseFlex w-48 !justify-start gap-4 !text-lg"
+                              className="baseFlex w-40 !justify-start gap-4 !text-lg"
                             >
                               <IoSettingsOutline
-                                className={`${asPath.includes("/profile/preferences") ? "[&>path]:stroke-[55px]" : "[&>path]:stroke-[40px]"}`}
+                                className={`${asPath.includes("/profile/preferences") ? "[&>path]:stroke-[55px]" : "[&>path]:stroke-[40px]"} shrink-0`}
                               />
                               Preferences
                             </Link>
@@ -263,10 +263,10 @@ function MobileHeader() {
                           >
                             <Link
                               href={"/profile/rewards"}
-                              className="baseFlex w-48 !justify-start gap-4 !text-lg"
+                              className="baseFlex w-40 !justify-start gap-4 !text-lg"
                             >
                               <SlPresent
-                                className={`${asPath.includes("/profile/rewards") ? "[&>path]:stroke-[30px]" : ""}`}
+                                className={`${asPath.includes("/profile/rewards") ? "[&>path]:stroke-[30px]" : ""} shrink-0`}
                               />
                               Rewards
                             </Link>
@@ -281,10 +281,10 @@ function MobileHeader() {
                           >
                             <Link
                               href={"/profile/my-orders"}
-                              className="baseFlex w-48 !justify-start gap-4 !text-lg"
+                              className="baseFlex w-40 !justify-start gap-4 !text-lg"
                             >
                               <TfiReceipt
-                                className={`${asPath.includes("/profile/my-orders") ? "[&>path]:stroke-[0.5px]" : ""}`}
+                                className={`${asPath.includes("/profile/my-orders") ? "[&>path]:stroke-[0.5px]" : ""} shrink-0`}
                               />
                               My orders
                             </Link>
