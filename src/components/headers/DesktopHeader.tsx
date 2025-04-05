@@ -137,15 +137,6 @@ function DesktopHeader() {
           </Button>
 
           <Button
-            variant={asPath.includes("/our-story") ? "activeLink" : "link"}
-            asChild
-          >
-            <Link href={"/our-story"} className="block !text-xl">
-              Our story
-            </Link>
-          </Button>
-
-          <Button
             variant={asPath.includes("/media") ? "activeLink" : "link"}
             asChild
           >

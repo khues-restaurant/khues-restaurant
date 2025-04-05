@@ -768,7 +768,7 @@ export default function Home() {
               </p>
 
               <Button variant={"link"} className="h-8 !p-0" asChild>
-                <Link aria-label="Read more about our story" href="/our-story">
+                <Link aria-label="Read more about our story" href="/media">
                   Read more
                 </Link>
               </Button>
@@ -830,7 +830,7 @@ export default function Home() {
               </p>
 
               <Button variant={"link"} className="h-8 !p-0" asChild>
-                <Link aria-label="Read more about our story" href="/our-story">
+                <Link aria-label="Read more about our story" href="/media">
                   Read more
                 </Link>
               </Button>
