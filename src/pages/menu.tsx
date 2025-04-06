@@ -391,7 +391,7 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="baseVertFlex mb-8 mt-8 size-full gap-8 tablet:mt-0"
+          className="baseVertFlex mb-8 mt-8 size-full gap-8 tablet:mt-6 tablet:gap-16"
         >
           {menuCategories?.map((category) => (
             <MenuCategory

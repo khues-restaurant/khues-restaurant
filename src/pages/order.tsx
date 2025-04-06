@@ -492,7 +492,7 @@ function OrderNow() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
-                className="baseVertFlex mb-8 size-full gap-8 p-4 pb-16 tablet:p-0 tablet:pb-8"
+                className="baseVertFlex mb-8 size-full gap-8 p-4 pb-16 tablet:mt-6 tablet:gap-16 tablet:p-0 tablet:pb-8"
               >
                 {userFavoriteItemIds.length > 0 && (
                   <FavoriteItems
