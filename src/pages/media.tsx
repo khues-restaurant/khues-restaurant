@@ -23,8 +23,27 @@ import mprLogo from "/public/media/mprLogo.png";
 import kare11CulinaryDream from "/public/media/kare11CulinaryDream.png";
 import WCCOLogo from "public/media/WCCOLogo";
 import wccoImage from "/public/media/wccoImage.png";
+import heavyTableLogo from "/public/media/heavyTableLogo.png";
+import heavyTable from "/public/media/heavyTable.jpg";
 
 const mediaArticles: MediaCard[] = [
+  {
+    articleUrl:
+      "https://heavytable.substack.com/i/160888645/now-open-up-to-months",
+    imageSrc: heavyTable,
+    imageAlt: "Outdoor sign on the patio of Khue's Kitchen restaurant.",
+    imageHeight: 314,
+    brandUrl: "https://heavytable.com/",
+    brandLogo: heavyTableLogo,
+    brandLogoAlt: "Heavy Table's logo",
+    brandLogoWidth: 62,
+    brandLogoHeight: 29,
+    cardStyles: "pt-5",
+    title: "Vietnamese Food Beyond the Usual",
+    snippet:
+      "Khue's Kitchen offers a deeply personal exploration of Vietnamese food, shaped by Chef Eric Pham's upbringing as the son of immigrants and his desire to champion the dishes of his Vietnamese-American experience. Moving beyond common expectations, Pham presents a menu that's authentic to his story—where traditional flavors meet new contexts, influenced by adaptation, necessity, and childhood preferences.",
+    date: "4/11/2025",
+  },
   {
     articleUrl:
       "https://www.kare11.com/article/news/local/eric-phams-culinary-dream-reignites-khues-kitchen-st-paul/89-9b917801-8af4-431c-adc4-50ffa1a87a42",
