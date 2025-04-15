@@ -29,6 +29,7 @@ import kare11Logo from "/public/media/kare11Logo.png";
 import mprLogo from "/public/media/mprLogo.png";
 import starTribuneLogo from "/public/media/starTribuneLogo.png";
 import WCCOLogo from "public/media/WCCOLogo";
+import heavyTableLogo from "/public/media/heavyTableLogo.png";
 
 import eric from "/public/ourStory/eric.webp";
 import ericUpscaled from "/public/ourStory/ericUpscaled.jpg";
@@ -557,7 +558,7 @@ export default function Home() {
           }}
         >
           <CarouselContent className="relative mb-5 mt-3 xl:w-[1000px] tablet:mb-4 tablet:mt-4">
-            <CarouselItem className="baseVertFlex basis-[55%] gap-4 rounded-md tablet:basis-1/4">
+            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/5">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.startribune.com/how-these-moms-shaped-the-next-generation-of-great-twin-cities-restaurateurs/600273728/?refresh=true"
@@ -572,7 +573,7 @@ export default function Home() {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[55%] gap-4 rounded-md tablet:basis-1/4">
+            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/5">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.kare11.com/article/news/local/mpls-chef-credits-his-mom-for-inspiration/89-0f237053-85cf-48ae-96f7-8cbebb780555"
@@ -587,7 +588,7 @@ export default function Home() {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[55%] gap-4 rounded-md tablet:basis-1/4">
+            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/5">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.mprnews.org/story/2023/12/27/appetites-looks-back-on-2023-restaurants-vietnamese-meatballs-and-the-secret-to-entertaining"
@@ -602,13 +603,28 @@ export default function Home() {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[55%] gap-4 rounded-md tablet:basis-1/4">
+            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/5">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.cbsnews.com/minnesota/news/khues-kitchen-reopens-midcity-kitchen/"
                   className="baseFlex"
                 >
                   <WCCOLogo className="h-[63.75px] w-[150px]" />
+                </a>
+              </Button>
+            </CarouselItem>
+            <CarouselItem className="baseVertFlex basis-[40%] rounded-md tablet:basis-[15%]">
+              <Button variant={"text"} className="!p-0" asChild>
+                <a
+                  href="https://heavytable.substack.com/i/160888645/now-open-up-to-months"
+                  className="baseFlex"
+                >
+                  <Image
+                    src={heavyTableLogo}
+                    alt="Heavy Table's logo"
+                    width={98}
+                    height={42}
+                  />
                 </a>
               </Button>
             </CarouselItem>
@@ -639,6 +655,12 @@ export default function Home() {
             <div
               className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 3 ? "!bg-primary" : "!bg-stone-300"}`}
               onClick={() => pressReviewsApi?.scrollTo(3)}
+            />
+          </Button>
+          <Button asChild>
+            <div
+              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 4 ? "!bg-primary" : "!bg-stone-300"}`}
+              onClick={() => pressReviewsApi?.scrollTo(4)}
             />
           </Button>
         </div>
