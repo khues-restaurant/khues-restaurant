@@ -186,7 +186,7 @@ function MobileHeader() {
               </Button>
             </SheetTrigger>
             <SheetContent
-              className={`${charis.className} baseVertFlex !h-dvh !justify-between gap-0 !overflow-auto p-6`}
+              className={`${charis.className} baseVertFlex !h-dvh !justify-between gap-0 !overflow-auto p-6 pb-4`}
             >
               <VisuallyHidden>
                 <DialogTitle>Navigation menu</DialogTitle>
