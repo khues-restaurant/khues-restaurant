@@ -50,6 +50,7 @@ import stickyJicamaRibs from "/public/menuItems/sticky-jicama-ribs.png";
 import grilledSirloin from "/public/menuItems/grilled-sirloin.png";
 import affogato from "/public/menuItems/affogato.png";
 import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
+import { IoCalendarOutline } from "react-icons/io5";
 
 const menuItemCategoryImages: Record<string, StaticImageData[]> = {
   Starters: [creamCheeseWantons],
@@ -903,6 +904,16 @@ function MenuItemPreview({
             </div>
 
             <div className="baseFlex !justify-start gap-1">
+              {menuItem.isWeekendSpecial && (
+                <div className="baseFlex w-full !justify-start gap-1 text-sm ">
+                  <IoCalendarOutline className="size-4 shrink-0" />
+                  Only available Fri/Sat
+                  <Separator
+                    orientation="vertical"
+                    className="mx-2 h-4 w-[1px] bg-black"
+                  />
+                </div>
+              )}
               {menuItem.isChefsChoice && (
                 <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
                   K
