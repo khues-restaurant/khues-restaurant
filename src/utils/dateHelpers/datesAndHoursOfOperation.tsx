@@ -35,10 +35,10 @@ interface OperatingHours {
 
 const hoursOpenPerDay: Record<DayOfWeek, OperatingHours> = {
   [DayOfWeek.Sunday]: {
-    openHour: 0,
-    openMinute: 0,
-    closeHour: 0,
-    closeMinute: 0,
+    openHour: 16,
+    openMinute: 30,
+    closeHour: 21,
+    closeMinute: 30,
   },
   [DayOfWeek.Monday]: {
     openHour: 0,
