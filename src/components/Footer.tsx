@@ -79,7 +79,7 @@ p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tab
       {/* privacy policy + business copyright */}
       <div className="baseFlex order-3 gap-2 tablet:order-2">
         <Button variant={"link"} asChild>
-          <Link href="/privacy" className="!text-offwhite">
+          <Link prefetch={false} href="/privacy" className="!text-offwhite">
             Privacy Policy
           </Link>
         </Button>

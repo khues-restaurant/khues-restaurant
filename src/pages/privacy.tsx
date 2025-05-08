@@ -26,7 +26,9 @@ function Privacy() {
           we collect, use, disclose, and safeguard your information when you
           visit our website
           <Button variant="link" className="h-6 !px-1" asChild>
-            <Link href="/">khueskitchen.com</Link>
+            <Link prefetch={false} href="/">
+              khueskitchen.com
+            </Link>
           </Button>
           , use our services, and interact with our platform. Please read this
           policy carefully to understand our practices regarding your personal

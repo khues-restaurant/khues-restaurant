@@ -74,6 +74,7 @@ function OpenGraphTemplate() {
           {/* <div className="baseFlex mt-6 gap-4">
             <Button size={"lg"} asChild>
               <Link
+              prefetch={false}
                 href="/menu"
                 className="baseFlex gap-2 !px-4 !py-6 !text-lg shadow-md"
               >

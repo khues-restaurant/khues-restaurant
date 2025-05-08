@@ -65,6 +65,7 @@ function ogImageTemplate() {
 
           {/* <Button size={"lg"} asChild>
               <Link
+              prefetch={false}
                 href="/order"
                 className="baseFlex mt-6 gap-2 !px-4 !py-6 !text-lg shadow-md "
               >
