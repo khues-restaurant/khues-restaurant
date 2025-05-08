@@ -85,7 +85,11 @@ function PaymentSuccess({
               </p>
 
               <Button asChild>
-                <Link href={"/"} className="baseFlex mt-2 gap-2 tablet:mt-4">
+                <Link
+                  prefetch={false}
+                  href={"/"}
+                  className="baseFlex mt-2 gap-2 tablet:mt-4"
+                >
                   <SideAccentSwirls className="h-4 scale-x-[-1] fill-offwhite" />
                   Return home
                   <SideAccentSwirls className="h-4 fill-offwhite" />

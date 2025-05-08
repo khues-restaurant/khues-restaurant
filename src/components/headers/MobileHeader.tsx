@@ -121,7 +121,7 @@ function MobileHeader() {
       className="baseFlex sticky left-0 top-0 z-50 h-20 w-full !justify-between bg-offwhite p-2 shadow-md"
     >
       <Button variant="text" asChild>
-        <Link href={"/"} className={`ml-3 !px-0 !py-8`}>
+        <Link prefetch={false} href={"/"} className={`ml-3 !px-0 !py-8`}>
           <div className="baseVertFlex gap-0">
             <StaticLotus className="size-10 fill-primary" />
 
@@ -244,6 +244,7 @@ function MobileHeader() {
                             asChild
                           >
                             <Link
+                              prefetch={false}
                               href={"/profile/preferences"}
                               className="baseFlex w-40 !justify-start gap-4 !text-lg"
                             >
@@ -262,6 +263,7 @@ function MobileHeader() {
                             asChild
                           >
                             <Link
+                              prefetch={false}
                               href={"/profile/rewards"}
                               className="baseFlex w-40 !justify-start gap-4 !text-lg"
                             >
@@ -280,6 +282,7 @@ function MobileHeader() {
                             asChild
                           >
                             <Link
+                              prefetch={false}
                               href={"/profile/my-orders"}
                               className="baseFlex w-40 !justify-start gap-4 !text-lg"
                             >
@@ -315,7 +318,7 @@ function MobileHeader() {
                     asChild
                     className="mt-2"
                   >
-                    <Link href={"/menu"} className="!text-xl">
+                    <Link prefetch={false} href={"/menu"} className="!text-xl">
                       Menu
                     </Link>
                   </Button>
@@ -326,7 +329,7 @@ function MobileHeader() {
                     variant={asPath.includes("/order") ? "activeLink" : "link"}
                     asChild
                   >
-                    <Link href={"/order"} className="!text-xl">
+                    <Link prefetch={false} href={"/order"} className="!text-xl">
                       Order
                     </Link>
                   </Button>
@@ -357,6 +360,7 @@ function MobileHeader() {
                       asChild
                     >
                       <Link
+                        prefetch={false}
                         href={"/rewards"}
                         className="block !text-xl smallDesktopHeader:hidden"
                       >
@@ -373,7 +377,11 @@ function MobileHeader() {
                     }
                     asChild
                   >
-                    <Link href={"/our-story"} className="!text-xl">
+                    <Link
+                      prefetch={false}
+                      href={"/our-story"}
+                      className="!text-xl"
+                    >
                       Our story
                     </Link>
                   </Button>
@@ -384,7 +392,7 @@ function MobileHeader() {
                     variant={asPath.includes("/media") ? "activeLink" : "link"}
                     asChild
                   >
-                    <Link href={"/media"} className="!text-xl">
+                    <Link prefetch={false} href={"/media"} className="!text-xl">
                       Media
                     </Link>
                   </Button>

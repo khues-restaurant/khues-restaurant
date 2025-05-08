@@ -100,7 +100,11 @@ function DesktopHeader() {
       `}
     >
       <Button variant="text" asChild>
-        <Link href={"/"} className={`${classes.logo ?? ""} mr-4 !px-0 !py-8`}>
+        <Link
+          prefetch={false}
+          href={"/"}
+          className={`${classes.logo ?? ""} mr-4 !px-0 !py-8`}
+        >
           <div className="baseVertFlex gap-0">
             <StaticLotus className="size-10 fill-primary" />
 
@@ -118,7 +122,7 @@ function DesktopHeader() {
           variant={asPath.includes("/menu") ? "activeLink" : "link"}
           asChild
         >
-          <Link href={"/menu"} className="!text-xl">
+          <Link prefetch={false} href={"/menu"} className="!text-xl">
             Menu
           </Link>
         </Button>
@@ -127,7 +131,7 @@ function DesktopHeader() {
           variant={asPath.includes("/order") ? "activeLink" : "link"}
           asChild
         >
-          <Link href={"/order"} className="!text-xl">
+          <Link prefetch={false} href={"/order"} className="!text-xl">
             Order
           </Link>
         </Button>
@@ -150,6 +154,7 @@ function DesktopHeader() {
             asChild
           >
             <Link
+              prefetch={false}
               href={"/rewards"}
               className="block !text-xl smallDesktopHeader:hidden"
             >
@@ -162,7 +167,7 @@ function DesktopHeader() {
           variant={asPath.includes("/our-story") ? "activeLink" : "link"}
           asChild
         >
-          <Link href={"/our-story"} className="block !text-xl">
+          <Link prefetch={false} href={"/our-story"} className="block !text-xl">
             Our story
           </Link>
         </Button>
@@ -172,6 +177,7 @@ function DesktopHeader() {
           asChild
         >
           <Link
+            prefetch={false}
             href={"/media"}
             className="block !text-xl smallDesktopHeader:hidden"
           >
@@ -200,7 +206,11 @@ function DesktopHeader() {
                 }
                 asChild
               >
-                <Link href={"/reservations"} className="!text-xl">
+                <Link
+                  prefetch={false}
+                  href={"/reservations"}
+                  className="!text-xl"
+                >
                   Reservations
                 </Link>
               </Button>
@@ -211,6 +221,7 @@ function DesktopHeader() {
                   asChild
                 >
                   <Link
+                    prefetch={false}
                     href={"/rewards"}
                     className="block !text-xl smallDesktopHeader:hidden"
                   >
@@ -224,7 +235,7 @@ function DesktopHeader() {
                 onClick={() => setShowSmallViewportPopoverLinks(false)}
                 asChild
               >
-                <Link href={"/media"} className="!text-xl">
+                <Link prefetch={false} href={"/media"} className="!text-xl">
                   Media
                 </Link>
               </Button>
@@ -427,6 +438,7 @@ function DesktopHeader() {
                     asChild
                   >
                     <Link
+                      prefetch={false}
                       href={"/profile/preferences"}
                       className="baseFlex w-48 !justify-start gap-4 !text-lg"
                     >
@@ -445,6 +457,7 @@ function DesktopHeader() {
                     asChild
                   >
                     <Link
+                      prefetch={false}
                       href={"/profile/rewards"}
                       className="baseFlex w-48 !justify-start gap-4 !text-lg"
                     >
@@ -463,6 +476,7 @@ function DesktopHeader() {
                     asChild
                   >
                     <Link
+                      prefetch={false}
                       href={"/profile/my-orders"}
                       className="baseFlex w-48 !justify-start gap-4 !text-lg"
                     >

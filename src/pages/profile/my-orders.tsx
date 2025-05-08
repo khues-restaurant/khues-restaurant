@@ -133,6 +133,7 @@ function RecentOrders() {
           asChild
         >
           <Link
+            prefetch={false}
             href="/profile/preferences"
             className={`baseFlex h-14 w-full gap-2 !rounded-none text-xs
             ${asPath.includes("/profile/preferences") ? "activeUnderline" : "border-b-2 border-stone-300"}`}
@@ -147,6 +148,7 @@ function RecentOrders() {
           asChild
         >
           <Link
+            prefetch={false}
             href="/profile/rewards"
             className={`baseFlex h-14 w-full gap-2 !rounded-none text-xs
             ${asPath.includes("/profile/rewards") ? "activeUnderline" : "border-b-2 border-stone-300"}`}
@@ -163,6 +165,7 @@ function RecentOrders() {
           asChild
         >
           <Link
+            prefetch={false}
             href="/profile/my-orders"
             className={`baseFlex h-14 w-full gap-2 !rounded-none text-xs
             ${asPath.includes("/profile/my-orders") ? "activeUnderline" : "border-b-2 border-stone-300"}`}
@@ -180,7 +183,11 @@ function RecentOrders() {
           }
           asChild
         >
-          <Link href="/profile/preferences" className="baseFlex w-full gap-2">
+          <Link
+            prefetch={false}
+            href="/profile/preferences"
+            className="baseFlex w-full gap-2"
+          >
             <IoSettingsOutline className="size-5" />
             Preferences
           </Link>
@@ -192,7 +199,11 @@ function RecentOrders() {
           variant={asPath.includes("/profile/rewards") ? "default" : "ghost"}
           asChild
         >
-          <Link href="/profile/rewards" className="baseFlex w-full gap-2">
+          <Link
+            prefetch={false}
+            href="/profile/rewards"
+            className="baseFlex w-full gap-2"
+          >
             <CiGift className="size-6" />
             Rewards
           </Link>
@@ -204,7 +215,11 @@ function RecentOrders() {
           variant={asPath.includes("/profile/my-orders") ? "default" : "ghost"}
           asChild
         >
-          <Link href="/profile/my-orders" className="baseFlex w-full gap-2">
+          <Link
+            prefetch={false}
+            href="/profile/my-orders"
+            className="baseFlex w-full gap-2"
+          >
             <TfiReceipt className="size-5" />
             My orders
           </Link>
@@ -292,6 +307,7 @@ function RecentOrders() {
                   </p>
                   <Button asChild>
                     <Link
+                      prefetch={false}
                       href="/order"
                       className="baseFlex gap-2 !px-4 shadow-md tablet:!py-6 tablet:!text-lg"
                     >
@@ -601,7 +617,9 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                     </>
                   ) : (
                     <Button asChild className="baseFlex gap-2">
-                      <Link href={`/track?id=${order.id}`}>Track</Link>
+                      <Link prefetch={false} href={`/track?id=${order.id}`}>
+                        Track
+                      </Link>
                     </Button>
                   )}
                 </div>
@@ -788,7 +806,9 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                     </>
                   ) : (
                     <Button asChild className="baseFlex gap-2">
-                      <Link href={`/track?id=${order.id}`}>Track</Link>
+                      <Link prefetch={false} href={`/track?id=${order.id}`}>
+                        Track
+                      </Link>
                     </Button>
                   )}
                 </div>

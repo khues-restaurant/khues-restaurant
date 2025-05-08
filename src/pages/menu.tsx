@@ -441,6 +441,7 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
 
         <Button size={"lg"} asChild>
           <Link
+            prefetch={false}
             href="/order"
             style={{
               opacity: ableToShowOrderNowButton ? 1 : 0,

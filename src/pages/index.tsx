@@ -303,6 +303,7 @@ function Home({ ourFavoriteMenuItems }: Home) {
 
               <Button size={"lg"} asChild>
                 <Link
+                  prefetch={false}
                   href="/order"
                   className="baseFlex mt-4 w-[206px] gap-2 !px-6 shadow-md"
                 >
@@ -471,6 +472,7 @@ function Home({ ourFavoriteMenuItems }: Home) {
                 <div className="baseFlex mt-6 gap-4">
                   <Button size={"lg"} asChild>
                     <Link
+                      prefetch={false}
                       href="/order"
                       className="baseFlex gap-2 !px-4 !py-6 !text-lg shadow-md"
                     >
@@ -840,6 +842,7 @@ function Home({ ourFavoriteMenuItems }: Home) {
 
               <Button size={"lg"} asChild>
                 <Link
+                  prefetch={false}
                   href="/order"
                   className="baseFlex my-2 mt-4 gap-2 !px-4 !text-base shadow-md"
                 >
@@ -881,6 +884,7 @@ function Home({ ourFavoriteMenuItems }: Home) {
 
               <Button size={"lg"} asChild>
                 <Link
+                  prefetch={false}
                   href="/order"
                   className="baseFlex mt-4 gap-2 self-center !px-4 !text-base shadow-md"
                 >
@@ -959,7 +963,11 @@ function Home({ ourFavoriteMenuItems }: Home) {
               </p>
 
               <Button variant={"link"} className="h-8 !p-0" asChild>
-                <Link aria-label="Read more about our story" href="/our-story">
+                <Link
+                  prefetch={false}
+                  aria-label="Read more about our story"
+                  href="/our-story"
+                >
                   Read more
                 </Link>
               </Button>
@@ -1021,7 +1029,11 @@ function Home({ ourFavoriteMenuItems }: Home) {
               </p>
 
               <Button variant={"link"} className="h-8 !p-0" asChild>
-                <Link aria-label="Read more about our story" href="/our-story">
+                <Link
+                  prefetch={false}
+                  aria-label="Read more about our story"
+                  href="/our-story"
+                >
                   Read more
                 </Link>
               </Button>

@@ -168,6 +168,7 @@ function Rewards() {
           asChild
         >
           <Link
+            prefetch={false}
             href="/profile/preferences"
             className={`baseFlex h-14 w-full gap-2 !rounded-none text-xs
             ${asPath.includes("/profile/preferences") ? "activeUnderline" : "border-b-2 border-stone-300"}`}
@@ -182,6 +183,7 @@ function Rewards() {
           asChild
         >
           <Link
+            prefetch={false}
             href="/profile/rewards"
             className={`baseFlex h-14 w-full gap-2 !rounded-none text-xs
             ${asPath.includes("/profile/rewards") ? "activeUnderline" : "border-b-2 border-stone-300"}`}
@@ -198,6 +200,7 @@ function Rewards() {
           asChild
         >
           <Link
+            prefetch={false}
             href="/profile/my-orders"
             className={`baseFlex h-14 w-full gap-2 !rounded-none text-xs
             ${asPath.includes("/profile/my-orders") ? "activeUnderline" : "border-b-2 border-stone-300"}`}
@@ -215,7 +218,11 @@ function Rewards() {
           }
           asChild
         >
-          <Link href="/profile/preferences" className="baseFlex w-full gap-2">
+          <Link
+            prefetch={false}
+            href="/profile/preferences"
+            className="baseFlex w-full gap-2"
+          >
             <IoSettingsOutline className="size-5" />
             Preferences
           </Link>
@@ -227,7 +234,11 @@ function Rewards() {
           variant={asPath.includes("/profile/rewards") ? "default" : "ghost"}
           asChild
         >
-          <Link href="/profile/rewards" className="baseFlex w-full gap-2">
+          <Link
+            prefetch={false}
+            href="/profile/rewards"
+            className="baseFlex w-full gap-2"
+          >
             <CiGift className="size-6" />
             Rewards
           </Link>
@@ -239,7 +250,11 @@ function Rewards() {
           variant={asPath.includes("/profile/my-orders") ? "default" : "ghost"}
           asChild
         >
-          <Link href="/profile/my-orders" className="baseFlex w-full gap-2">
+          <Link
+            prefetch={false}
+            href="/profile/my-orders"
+            className="baseFlex w-full gap-2"
+          >
             <TfiReceipt className="size-5" />
             My orders
           </Link>
