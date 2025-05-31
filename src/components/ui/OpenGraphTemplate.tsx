@@ -102,7 +102,7 @@ function OpenGraphTemplate() {
             <div className="baseFlex gap-2">
               <Clock className="size-5 text-primary" />
               <p className="text-sm text-stone-500">
-                Open 4:30pm - 9:30pm Wed-Sat
+                Open 4:30pm - 9:30pm Wed-Sun
               </p>
             </div>
 
