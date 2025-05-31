@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import {
+  Fragment,
   useEffect,
   useRef,
   useState,
@@ -51,6 +52,7 @@ import grilledSirloin from "/public/menuItems/grilled-sirloin.png";
 import affogato from "/public/menuItems/affogato.png";
 import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
 import { IoCalendarOutline } from "react-icons/io5";
+import { FaPepperHot } from "react-icons/fa6";
 
 const menuItemCategoryImages: Record<string, StaticImageData[]> = {
   Starters: [creamCheeseWantons],
@@ -337,40 +339,25 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
         >
           <CarouselContent className="h-12">
             {menuCategories?.map((category) => {
-              if (category.name === "Beer") {
-                return (
-                  <div key={category.id} className="baseFlex gap-2">
+              return (
+                <Fragment key={category.id}>
+                  {category.name === "Sparkling" && (
                     <Separator
                       orientation="vertical"
-                      className="ml-4 mr-2 h-full w-[2px]"
+                      className="ml-2 mr-2 mt-2 h-8 w-[2px]"
                     />
-                    <CarouselItem className="baseFlex basis-auto first:ml-2">
-                      <MenuCategoryButton
-                        key={category.id}
-                        name={category.name}
-                        listOrder={menuCategoryIndicies.Beer!}
-                        currentlyInViewCategory={currentlyInViewCategory}
-                        setProgrammaticallyScrolling={
-                          setProgrammaticallyScrolling
-                        }
-                      />
-                    </CarouselItem>
-                  </div>
-                );
-              }
-
-              return (
-                <CarouselItem
-                  className="baseFlex basis-auto first:ml-2 last:mr-2"
-                  key={category.id}
-                >
-                  <MenuCategoryButton
-                    name={category.name}
-                    listOrder={menuCategoryIndicies[category.name] ?? 0}
-                    currentlyInViewCategory={currentlyInViewCategory}
-                    setProgrammaticallyScrolling={setProgrammaticallyScrolling}
-                  />
-                </CarouselItem>
+                  )}
+                  <CarouselItem className="baseFlex basis-auto first:ml-2 last:mr-2">
+                    <MenuCategoryButton
+                      name={category.name}
+                      listOrder={menuCategoryIndicies[category.name] ?? 0}
+                      currentlyInViewCategory={currentlyInViewCategory}
+                      setProgrammaticallyScrolling={
+                        setProgrammaticallyScrolling
+                      }
+                    />
+                  </CarouselItem>
+                </Fragment>
               );
             })}
           </CarouselContent>
@@ -424,6 +411,14 @@ function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
               |
               <div className="baseFlex gap-2">
                 <span>GF</span>-<span>Gluten Free</span>
+              </div>
+              |
+              <div className="baseFlex gap-2">
+                <span>DF</span>-<span>Dairy Free</span>
+              </div>
+              |
+              <div className="baseFlex gap-2">
+                <FaPepperHot className="size-4" />-<p>Spicy</p>
               </div>
             </div>
             <p className="text-center text-xs italic text-stone-500 tablet:text-sm">
@@ -605,34 +600,13 @@ function MenuCategory({
       }}
       className={`baseVertFlex w-full scroll-m-48 !items-start p-2 ${name === "Beverages" || name === "Beer" || name === "Wine" ? "gap-0" : "gap-0 tablet:gap-4"}`}
     >
-      {name === "Beverages" || name === "Beer" || name === "Wine" ? (
-        <>
-          {/* category header */}
-          <div className="baseVertFlex w-full !items-start border-b-2 border-primary">
-            <p
-              className={`${charis.className} baseFlex gap-2 pl-3 text-xl font-medium italic tablet:text-2xl`}
-            >
-              {name}
-            </p>
-          </div>
-
-          {/* wrapping container for each food item in the category */}
-          <div className="grid w-full grid-cols-1 items-start justify-items-center p-1 sm:grid-cols-2 sm:gap-x-16 xl:grid-cols-3 3xl:grid-cols-4">
-            {menuItems.map((item) => (
-              <MenuItemPreview
-                key={item.id}
-                categoryName={name}
-                menuItem={item}
-                activeDiscount={activeDiscount} // TODO: should prob also add ?? item.activeDiscount too right? was giving type error w/ createdAt but 99% sure this should be on there
-                listOrder={item.listOrder}
-              />
-            ))}
-          </div>
-        </>
-      ) : (
+      {name === "Starters" || name === "Entrees" || name === "Desserts" ? (
         <>
           <div className="baseFlex relative h-36 w-full !justify-end overflow-hidden rounded-md bg-gradient-to-br from-primary to-darkPrimary shadow-md tablet:h-48">
             <div className="absolute left-[30%] h-full w-[70%] overflow-hidden">
+              {/* {(viewportLabel.includes("mobile") ||
+              (!viewportLabel.includes("mobile") && name !== "Desserts")) && ( */}
+
               {/* Right-most */}
               {menuItemCategoryImages[name]!.length >= 1 && (
                 <div
@@ -652,6 +626,8 @@ function MenuCategory({
                   />
                 </div>
               )}
+
+              {/* // )} */}
 
               {/* Middle */}
               {menuItemCategoryImages[name]!.length >= 2 && (
@@ -705,6 +681,30 @@ function MenuCategory({
 
           {/* wrapping container for each food item in the category */}
           <div className="grid w-full grid-cols-1 items-start justify-items-center p-1 sm:grid-cols-2 sm:gap-8 xl:grid-cols-3">
+            {menuItems.map((item) => (
+              <MenuItemPreview
+                key={item.id}
+                categoryName={name}
+                menuItem={item}
+                activeDiscount={activeDiscount} // TODO: should prob also add ?? item.activeDiscount too right? was giving type error w/ createdAt but 99% sure this should be on there
+                listOrder={item.listOrder}
+              />
+            ))}
+          </div>
+        </>
+      ) : (
+        <>
+          {/* category header */}
+          <div className="baseVertFlex w-full !items-start border-b-2 border-primary">
+            <p
+              className={`${charis.className} baseFlex gap-2 pl-3 text-xl font-medium italic tablet:text-2xl`}
+            >
+              {name}
+            </p>
+          </div>
+
+          {/* wrapping container for each food item in the category */}
+          <div className="grid w-full grid-cols-1 items-start justify-items-center p-1 sm:grid-cols-2 sm:gap-3 sm:gap-x-16 xl:grid-cols-3 3xl:grid-cols-4">
             {menuItems.map((item) => (
               <MenuItemPreview
                 key={item.id}
@@ -804,41 +804,55 @@ function formatMenuItemPrice(
   //   );
   // }
 
-  return (
-    <p className="self-end text-base">
-      {formatPrice(
-        calculateRelativeTotal({
-          items: [
-            {
-              price: menuItem.price,
-              quantity: 1,
-              discountId: null, //activeDiscount?.id ?? null,
+  // return (
+  //   <p className="self-end text-base">
+  //     {formatPrice(
+  //       calculateRelativeTotal({
+  //         items: [
+  //           {
+  //             price: menuItem.price,
+  //             quantity: 1,
+  //             discountId: null, //activeDiscount?.id ?? null,
 
-              // only necessary to fit Item shape
-              id: 0,
-              itemId: menuItem.id,
-              customizations: {}, // not necessary since all default choices are already included in price
-              includeDietaryRestrictions: false,
-              name: menuItem.name,
-              specialInstructions: "",
-              isChefsChoice: menuItem.isChefsChoice,
-              isAlcoholic: menuItem.isAlcoholic,
-              isVegetarian: menuItem.isVegetarian,
-              isVegan: menuItem.isVegan,
-              isGlutenFree: menuItem.isGlutenFree,
-              showUndercookedOrRawDisclaimer:
-                menuItem.showUndercookedOrRawDisclaimer,
-              hasImageOfItem: menuItem.hasImageOfItem,
-              birthdayReward: false,
-              pointReward: false,
-            },
-          ],
-          customizationChoices,
-          discounts: {},
-        }),
-        true,
+  //             // only necessary to fit Item shape
+  //             id: 0,
+  //             itemId: menuItem.id,
+  //             customizations: {}, // not necessary since all default choices are already included in price
+  //             includeDietaryRestrictions: false,
+  //             name: menuItem.name,
+  //             specialInstructions: "",
+  //             isChefsChoice: menuItem.isChefsChoice,
+  //             isAlcoholic: menuItem.isAlcoholic,
+  //             isVegetarian: menuItem.isVegetarian,
+  //             isVegan: menuItem.isVegan,
+  //             isGlutenFree: menuItem.isGlutenFree,
+  //             showUndercookedOrRawDisclaimer:
+  //               menuItem.showUndercookedOrRawDisclaimer,
+  //             hasImageOfItem: menuItem.hasImageOfItem,
+  //             birthdayReward: false,
+  //             pointReward: false,
+  //           },
+  //         ],
+  //         customizationChoices,
+  //         discounts: {},
+  //       }),
+  //       true,
+  //     )}
+  //   </p>
+  // );
+
+  return (
+    <div className="baseFlex gap-2 self-end text-base">
+      <p>{formatPrice(menuItem.price, true)}</p>
+
+      {menuItem.altPrice && (
+        <>
+          <Separator className="h-4 w-[1px] bg-black" />
+
+          {formatPrice(menuItem.altPrice, true)}
+        </>
       )}
-    </p>
+    </div>
   );
 }
 
@@ -921,11 +935,25 @@ function MenuItemPreview({
               )}
               {menuItem.isVegetarian && <SiLeaflet className="size-4" />}
               {menuItem.isVegan && <LuVegan className="size-4" />}
+              {menuItem.isDairyFree && <p className="text-sm">DF</p>}
               {menuItem.isGlutenFree && <p className="text-sm">GF</p>}
+              {menuItem.isSpicy && <FaPepperHot className="size-4" />}
             </div>
 
             {menuItem.description && (
               <p className="text-sm text-stone-500">{menuItem.description}</p>
+            )}
+
+            {menuItem.askServerForAvailability && (
+              <div className="baseFlex gap-1">
+                {/* <Separator className="my-1 h-[1px] w-4 bg-stone-400" /> */}
+
+                <span className="text-primary">*</span>
+
+                <p className="text-sm text-primary">
+                  By the Bottle - Ask server for availability
+                </p>
+              </div>
             )}
           </div>
         </div>
