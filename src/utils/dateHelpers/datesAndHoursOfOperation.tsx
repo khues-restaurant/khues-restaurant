@@ -67,14 +67,14 @@ const hoursOpenPerDay: Record<DayOfWeek, OperatingHours> = {
   [DayOfWeek.Friday]: {
     openHour: 16,
     openMinute: 30,
-    closeHour: 21,
-    closeMinute: 30,
+    closeHour: 22,
+    closeMinute: 0,
   },
   [DayOfWeek.Saturday]: {
     openHour: 16,
     openMinute: 30,
-    closeHour: 21,
-    closeMinute: 30,
+    closeHour: 22,
+    closeMinute: 0,
   },
 };
 
