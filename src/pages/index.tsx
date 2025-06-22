@@ -499,12 +499,10 @@ function Home({ ourFavoriteMenuItems }: Home) {
                   </Button>
                 </div>
 
-                <div className="baseFlex mt-4 gap-8">
-                  <div className="baseFlex gap-2">
+                <div className="baseFlex mt-4 gap-4">
+                  <div className="baseFlex !items-start gap-2 text-sm text-stone-500">
                     <Clock className="size-5 text-primary" />
-                    <p className="text-sm text-stone-500">
-                      Open 4:30pm - 9:30pm Wed-Sun
-                    </p>
+                    Open Wednesday through Sunday
                   </div>
 
                   <div className="baseFlex gap-2">
