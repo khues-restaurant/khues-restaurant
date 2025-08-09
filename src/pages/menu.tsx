@@ -1060,7 +1060,7 @@ const menuCategories = [
         hasImageOfItem: false,
         menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
         activeDiscountId: null,
-        isWeekendSpecial: false,
+        isWeekendSpecial: true,
         isChefsChoice: false,
         isAlcoholic: false,
         isVegetarian: false,
