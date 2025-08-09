@@ -225,7 +225,7 @@ export default function Home() {
           >
             <Image
               src={topRightHero}
-              alt={"Spicy Chicken Sando at Khue's in St. Paul"}
+              alt={"Spicy Chicken Sandwich at Khue's in St. Paul"}
               priority
               sizes="66vw"
               className="!relative !size-full rounded-md object-cover"
@@ -393,7 +393,7 @@ export default function Home() {
           >
             <Image
               src={topRightHero}
-              alt={"Spicy Chicken Sando at Khue's in St. Paul"}
+              alt={"Spicy Chicken Sandwich at Khue's in St. Paul"}
               priority
               sizes="66vw"
               className="!relative !size-full rounded-md object-cover"

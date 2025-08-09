@@ -45,9 +45,9 @@ import headerBanhMiXiuMai from "/public/miscFood/header-banh-mi-xiu-mai.png";
 
 import creamCheeseWantons from "/public/menuItems/cream-cheese-wantons.png";
 import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
-import spicyChickenSando from "/public/menuItems/spicy-chicken-sando.jpg";
+import spicyChickenSandwich from "/public/menuItems/spicy-chicken-sando.jpg";
 import stickyJicamaRibs from "/public/menuItems/sticky-jicama-ribs.png";
-import grilledSirloin from "/public/menuItems/grilled-sirloin.png";
+import grilledRibeye from "/public/menuItems/20-oz-grilled-ribeye.png";
 import affogato from "/public/menuItems/affogato.png";
 import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
 import { IoCalendarOutline } from "react-icons/io5";
@@ -56,9 +56,9 @@ function Menu() {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const [currentlyInViewCategory, setCurrentlyInViewCategory] = useState("");
-  const [categoryScrollYValues, setCategoryScrollYValues] = useState<
-    Record<string, number>
-  >({});
+  const [categoryScrollYValues, setCategoryScrollYValues] = useState<Record>(
+    {},
+  );
   const [programmaticallyScrolling, setProgrammaticallyScrolling] =
     useState(false);
 
@@ -78,7 +78,7 @@ function Menu() {
         },
       );
 
-      const categoryScrollYValues: Record<string, number> = {};
+      const categoryScrollYValues: Record = {};
       Object.keys(menuCategoryIndicies).forEach((categoryName, index) => {
         categoryScrollYValues[categoryName] = scrollYValues[index] ?? 0;
       });
@@ -328,8 +328,8 @@ function Menu() {
             }}
           >
             <Image
-              src={spicyChickenSando}
-              alt="Spicy Chicken Sando at Khue's in St. Paul"
+              src={spicyChickenSandwich}
+              alt="Spicy Chicken Sandwich at Khue's in St. Paul"
               // sizes="(max-width: 1000px) 400px, 320px"
               priority
               className="!relative !size-full rounded-md object-cover object-center opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(0_0,85%_0,100%_100%,15%_100%)]"
@@ -595,7 +595,7 @@ interface MenuCategoryButton {
   currentlyInViewCategory: string;
   name: string;
   listOrder: number;
-  setProgrammaticallyScrolling: Dispatch<SetStateAction<boolean>>;
+  setProgrammaticallyScrolling: Dispatch;
 }
 
 function MenuCategoryButton({
@@ -796,7 +796,7 @@ function formatMenuItemPrice(
   categoryName: string,
   menuItem: FullMenuItem,
   activeDiscount: Discount | null,
-  customizationChoices: Record<string, CustomizationChoiceAndCategory>,
+  customizationChoices: Record,
 ) {
   // if (categoryName === "Wine") {
   //   return (
@@ -993,19 +993,19 @@ function MenuItemPreview({
   );
 }
 
-const menuItemCategoryImages: Record<string, StaticImageData[]> = {
+const menuItemCategoryImages: Record = {
   Starters: [creamCheeseWantons],
-  Entrees: [roastPorkFriedRice, spicyChickenSando, grilledSirloin],
+  Entrees: [roastPorkFriedRice, spicyChickenSandwich, grilledRibeye],
   Desserts: [affogato, thaiTeaTresLeches],
 };
 
-const menuItemImages: Record<string, StaticImageData> = {
+const menuItemImages: Record = {
   "Cream Cheese Wontons": creamCheeseWantons,
   "Roast Pork Fried Rice": roastPorkFriedRice,
   "Bánh Mì Xíu Mại": headerBanhMiXiuMai,
-  "Spicy Chicken Sando": spicyChickenSando,
+  "Spicy Chicken Sandwich": spicyChickenSandwich,
   "Sticky Jicama Ribs": stickyJicamaRibs,
-  "Grilled Sirloin": grilledSirloin,
+  "20 oz Grilled Ribeye": grilledRibeye,
   "Cà Phê Sữa Đá Affogato": affogato,
   "Thai Tea Tres Leches": thaiTeaTresLeches,
 };
@@ -1060,10 +1060,11 @@ const menuCategories = [
         hasImageOfItem: false,
         menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
         activeDiscountId: null,
-        isWeekendSpecial: true,
+        isWeekendSpecial: false,
         isChefsChoice: false,
         isAlcoholic: false,
         isVegetarian: false,
+        isDairyFree: true,
         isVegan: false,
         isGlutenFree: true,
         showUndercookedOrRawDisclaimer: false,
@@ -1076,10 +1077,10 @@ const menuCategories = [
       {
         id: "2315135f-19f4-4ede-9af7-0ffccadd2557",
         createdAt: "2024-05-15T21:28:07.340Z",
-        name: "Chicken Salad",
+        name: "Khue's Chicken Salad",
         description:
-          "Taiwanese cabbage, rau ram, thai chilis, fish sauce vinaigrette, crushed peanuts",
-        price: 1400,
+          "Taiwanese cabbage, rau ram, thai chiles, fish sauce vinaigrette, crushed peanuts",
+        price: 1500,
         altPrice: null,
         available: true,
         discontinued: false,
@@ -1119,7 +1120,7 @@ const menuCategories = [
         name: "Roast Pork Fried Rice",
         description:
           "Scallion oil, crispy pork, lap xuong, fried egg, chili crunch. Can be vegetarian.",
-        price: 1500,
+        price: 1600,
         altPrice: null,
         available: true,
         discontinued: false,
@@ -1143,7 +1144,7 @@ const menuCategories = [
       {
         id: "a44bfc71-facd-4ce6-a576-afbac6e2b2f3",
         createdAt: "2024-05-15T16:36:35.000Z",
-        name: "Spicy Chicken Sando",
+        name: "Spicy Chicken Sandwich",
         description:
           "Brioche bun, lettuce, tomato, house pickles, herb aioli, chili crunch",
         price: 1700,
@@ -1167,11 +1168,37 @@ const menuCategories = [
         customizationCategories: [],
       },
       {
+        id: "aa7afbc1-8dad-49b8-ac9c-4c7651264dde",
+        createdAt: "2024-02-20T15:53:09.000Z",
+        name: "Bún Chay | Rice Noodle Salad",
+        description:
+          "Crispy tofu, vermicelli, soy vinaigrette, herb salad, perilla leaf, crushed peanuts",
+        price: 1900,
+        altPrice: null,
+        available: true,
+        discontinued: false,
+        listOrder: 8,
+        hasImageOfItem: false,
+        menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
+        activeDiscountId: null,
+        isChefsChoice: false,
+        isAlcoholic: false,
+        isVegetarian: true,
+        isVegan: true,
+        isGlutenFree: false,
+        showUndercookedOrRawDisclaimer: false,
+        pointReward: true,
+        birthdayReward: false,
+        reviews: null,
+        activeDiscount: null,
+        customizationCategories: [],
+      },
+      {
         id: "cab3e737-7b07-423f-9d9c-8bce07a9e3e2",
         createdAt: "2024-02-20T15:53:09.000Z",
         name: "Sticky Jicama Ribs",
         description:
-          "Marinated tofu, fried jicama, soy glaze, toasted sesame seeds, mint, scallions",
+          "Marinated tofu, fried jicama, jasmine rice, soy glaze, toasted sesame seeds, mint, scallions",
         price: 2000,
         altPrice: null,
         available: true,
@@ -1195,10 +1222,10 @@ const menuCategories = [
       {
         id: "7bd980fe-a447-401d-8880-03ec4773a9b2",
         createdAt: "2024-02-20T21:54:12.000Z",
-        name: "Grilled Sirloin",
+        name: "20 oz Grilled Ribeye",
         description:
           "Traditional Vietnamese marinade, jasmine rice, yu choy, scallions",
-        price: 3700,
+        price: 4700,
         altPrice: null,
         available: true,
         discontinued: false,
@@ -1245,35 +1272,9 @@ const menuCategories = [
         customizationCategories: [],
       },
       {
-        id: "1d338b9c-947d-4fb5-9da5-34dfac2d030b",
-        createdAt: "2024-02-21T15:54:46.000Z",
-        name: "Five Spice Tofu",
-        description:
-          "Battered tofu, jasmine rice, five spice glaze, kimchi, herb salad. Can be vegan.",
-        price: 1900,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 6,
-        hasImageOfItem: false,
-        menuCategoryId: "98b3d4ba-4689-4372-a206-448f7eb5ebf4",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: true,
-        isVegan: true,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
         id: "32ca68b1-ec1b-4bdc-b853-51b63d73cb26",
         createdAt: "2024-02-21T15:54:46.000Z",
-        name: "Grilled Pork Chop",
+        name: "Grilled Thick-Cut Pork Chop",
         description:
           "Peppercorn marinade, jasmine rice, scallion oil, nước mắm salad, fried egg",
         price: 2600,
@@ -1340,7 +1341,7 @@ const menuCategories = [
         createdAt: "2024-02-21T09:58:09.000Z",
         name: "Thai Tea Tres Leches",
         description:
-          "Milk-soaked chiffon cake, whipped cream, coconut crumble, brown sugar boba",
+          "Milk soaked chiffon cake, caramelized coconut cream, shortbread crumble, brown sugar boba",
         price: 1100,
         altPrice: null,
         available: true,
