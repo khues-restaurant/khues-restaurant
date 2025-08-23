@@ -30,6 +30,7 @@ import mprLogo from "/public/media/mprLogo.png";
 import starTribuneLogo from "/public/media/starTribuneLogo.png";
 import WCCOLogo from "public/media/WCCOLogo";
 import heavyTableLogo from "/public/media/heavyTableLogo.png";
+import theTastingNotesLogo from "/public/media/theTastingNotesLogo.png";
 
 import eric from "/public/ourStory/eric.webp";
 import ericUpscaled from "/public/ourStory/ericUpscaled.jpg";
@@ -557,11 +558,11 @@ export default function Home() {
             }),
           }}
         >
-          <CarouselContent className="relative mb-5 mt-3 xl:w-[1000px] tablet:mb-4 tablet:mt-4">
-            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/5">
+          <CarouselContent className="relative mb-5 mt-3 xl:w-[1250px] tablet:mb-4 tablet:mt-4">
+            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/6">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
-                  href="https://www.startribune.com/how-these-moms-shaped-the-next-generation-of-great-twin-cities-restaurateurs/600273728/?refresh=true"
+                  href="https://www.startribune.com/the-30-restaurants-most-vital-to-the-twin-cities-area-right-now/601328163"
                   className="baseFlex"
                 >
                   <Image
@@ -569,11 +570,12 @@ export default function Home() {
                     alt="Star Tribune's logo"
                     width={216}
                     height={91.8}
+                    className="mb-2"
                   />
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/5">
+            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/6">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.kare11.com/article/news/local/mpls-chef-credits-his-mom-for-inspiration/89-0f237053-85cf-48ae-96f7-8cbebb780555"
@@ -588,7 +590,7 @@ export default function Home() {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/5">
+            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/6">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.mprnews.org/story/2023/12/27/appetites-looks-back-on-2023-restaurants-vietnamese-meatballs-and-the-secret-to-entertaining"
@@ -603,7 +605,7 @@ export default function Home() {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/5">
+            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/6">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.cbsnews.com/minnesota/news/khues-kitchen-reopens-midcity-kitchen/"
@@ -613,7 +615,7 @@ export default function Home() {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[40%] rounded-md tablet:basis-[15%]">
+            <CarouselItem className="baseVertFlex basis-[40%] rounded-md tablet:basis-[12.5%]">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://heavytable.substack.com/i/160888645/now-open-up-to-months"
@@ -624,6 +626,21 @@ export default function Home() {
                     alt="Heavy Table's logo"
                     width={98}
                     height={42}
+                  />
+                </a>
+              </Button>
+            </CarouselItem>
+            <CarouselItem className="baseVertFlex basis-[50%] rounded-md tablet:basis-1/6">
+              <Button variant={"text"} className="!p-0" asChild>
+                <a
+                  href="https://thetastingnotes.co/khues-kitchen-resilience-and-flavor-in-equal-measure/"
+                  className="baseFlex"
+                >
+                  <Image
+                    src={theTastingNotesLogo}
+                    alt="The Tasting Note's logo"
+                    width={180}
+                    height={100}
                   />
                 </a>
               </Button>
@@ -661,6 +678,12 @@ export default function Home() {
             <div
               className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 4 ? "!bg-primary" : "!bg-stone-300"}`}
               onClick={() => pressReviewsApi?.scrollTo(4)}
+            />
+          </Button>
+          <Button asChild>
+            <div
+              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 5 ? "!bg-primary" : "!bg-stone-300"}`}
+              onClick={() => pressReviewsApi?.scrollTo(5)}
             />
           </Button>
         </div>

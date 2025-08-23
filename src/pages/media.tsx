@@ -25,8 +25,48 @@ import WCCOLogo from "public/media/WCCOLogo";
 import wccoImage from "/public/media/wccoImage.png";
 import heavyTableLogo from "/public/media/heavyTableLogo.png";
 import heavyTable from "/public/media/heavyTable.jpg";
+import top30StarTribune from "/public/media/top30StarTribune.jpg";
+import theTastingNotes from "/public/media/theTastingNotes.jpg";
+import theTastingNotesLogo from "/public/media/theTastingNotesLogo.png";
 
 const mediaArticles: MediaCard[] = [
+  {
+    articleUrl:
+      "https://thetastingnotes.co/khues-kitchen-resilience-and-flavor-in-equal-measure/",
+    imageSrc: theTastingNotes,
+    imageAlt:
+      "Nighttime exterior image of the patio of Khue's Kitchen restaurant.",
+    imageHeight: 325,
+    brandUrl: "https://heavytable.com/",
+    brandLogo: theTastingNotesLogo,
+    brandLogoAlt: "The Tasting Note's logo",
+    brandLogoWidth: 140,
+    brandLogoHeight: 27,
+    brandLogoStyles: "-ml-1 -mb-2",
+    cardStyles: "pt-2",
+    title: "Khue's Kitchen — Resilience and Flavor in Equal Measure",
+    snippet:
+      "Khue's Kitchen in St. Paul is a story of resilience and flavor. After a fire destroyed his first location, Chef Eric Pham reopened in a cozy shared kitchen, serving a focused menu inspired by his family's Quang Restaurant legacy. Highlights include crisp cream cheese wontons, a standout fried chicken sandwich, and unforgettable vegan jicama ribs. Warm hospitality and bold, balanced flavors make Khue's Kitchen a must-visit—proof that the best meals often come from second chances.",
+    date: "8/13/2025",
+  },
+  {
+    articleUrl:
+      "https://www.startribune.com/the-30-restaurants-most-vital-to-the-twin-cities-area-right-now/601328163",
+    imageSrc: top30StarTribune,
+    imageAlt: "Sticky Jicama Ribs at Khue's Kitchen.",
+    imageHeight: 305,
+    brandUrl: "https://heavytable.com/",
+    brandLogo: starTribuneLogo,
+    brandLogoAlt: "Star Tribune's logo",
+    brandLogoWidth: 150,
+    brandLogoHeight: 35,
+    brandLogoStyles: "-ml-5",
+    cardStyles: "pt-3",
+    title: "The 30 restaurants most vital to the Twin Cities area right now",
+    snippet:
+      "Eric Pham, of the legendary Quang family restaurant pedigree, is in pursuit of fresh flavors while ushering in a new era of Vietnamese cuisine: chile crisp-pork fried rice, a supper-club-style steak with a house marinade, Vietnamese coffee affogato topped with black sesame coconut crackers and more. Then there was the reimagined bánh mì xíu mại, a gigantic rice porcupine meatball that sits in a stewed tomato sauce...",
+    date: "7/11/2025",
+  },
   {
     articleUrl:
       "https://heavytable.substack.com/i/160888645/now-open-up-to-months",
