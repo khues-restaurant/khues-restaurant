@@ -7,6 +7,7 @@ await import("./src/env.js");
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: false,
+  bundlePagesRouterDependencies: true,
 
   // not sure if these are really necessary since we will just be using generic user icons right?
   images: {
@@ -27,17 +28,15 @@ const config = {
   },
 
   experimental: {
-    bundlePagesExternals: true, // replace with non-experimental "bundlePagesRouterDependencies: true"
-    // when you upgrade to Next 15
-
-    swcPlugins: [
-      [
-        "next-superjson-plugin",
-        {
-          excluded: [],
-        },
-      ],
-    ],
+    reactCompiler: true,
+    // swcPlugins: [
+    //   [
+    //     "next-superjson-plugin",
+    //     {
+    //       excluded: [],
+    //     },
+    //   ],
+    // ],
   },
 
   // TODO: remove these out before actual production

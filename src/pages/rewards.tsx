@@ -412,7 +412,7 @@ function Rewards() {
 
       {/* Intro */}
       <p className="mx-8 text-sm leading-7 text-primary xs:max-w-96 sm:max-w-xl sm:text-base sm:font-medium md:max-w-2xl md:leading-8">
-        Welcome to Khue&apos;s Rewards — where every bite takes you closer to
+        Welcome to Khue&apos;s Rewards, where every bite takes you closer to
         delightful rewards! As a token of our appreciation, we&apos;ve crafted
         an exclusive program designed to celebrate our loyal customers. Indulge
         in your favorite dishes, and watch your points pile up towards

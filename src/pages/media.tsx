@@ -1,3 +1,5 @@
+
+
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { type StaticImageData } from "next/image";
@@ -6,12 +8,15 @@ import StaticLotus from "~/components/ui/StaticLotus";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/utils/shadcnuiUtils";
 
+
 import { Charis_SIL } from "next/font/google";
+
 
 const charis = Charis_SIL({
   subsets: ["latin"],
   weight: ["400", "700"],
 });
+
 
 import kare11InTheKitchen from "/public/media/kare11InTheKitchen.jpg";
 import kare11MothersDay from "/public/media/kare11MothersDay.jpg";
@@ -25,8 +30,49 @@ import WCCOLogo from "public/media/WCCOLogo";
 import wccoImage from "/public/media/wccoImage.png";
 import heavyTableLogo from "/public/media/heavyTableLogo.png";
 import heavyTable from "/public/media/heavyTable.jpg";
+import top30StarTribune from "/public/media/top30StarTribune.jpg";
+import theTastingNotes from "/public/media/theTastingNotes.jpg";
+import theTastingNotesLogo from "/public/media/theTastingNotesLogo.png";
+
 
 const mediaArticles: MediaCard[] = [
+  {
+    articleUrl:
+      "https://thetastingnotes.co/khues-kitchen-resilience-and-flavor-in-equal-measure/",
+    imageSrc: theTastingNotes,
+    imageAlt:
+      "Nighttime exterior image of the patio of Khue's Kitchen restaurant.",
+    imageHeight: 325,
+    brandUrl: "https://heavytable.com/",
+    brandLogo: theTastingNotesLogo,
+    brandLogoAlt: "The Tasting Note's logo",
+    brandLogoWidth: 140,
+    brandLogoHeight: 27,
+    brandLogoStyles: "-ml-1 -mb-2",
+    cardStyles: "pt-2",
+    title: "Khue's Kitchen — Resilience and Flavor in Equal Measure",
+    snippet:
+      "Khue's Kitchen in St. Paul is a story of resilience and flavor. After a fire destroyed his first location, Chef Eric Pham reopened in a cozy shared kitchen, serving a focused menu inspired by his family's Quang Restaurant legacy. Highlights include crisp cream cheese wontons, a standout fried chicken sandwich, and unforgettable vegan jicama ribs. Warm hospitality and bold, balanced flavors make Khue's Kitchen a must-visit—proof that the best meals often come from second chances.",
+    date: "8/13/2025",
+  },
+  {
+    articleUrl:
+      "https://www.startribune.com/the-30-restaurants-most-vital-to-the-twin-cities-area-right-now/601328163",
+    imageSrc: top30StarTribune,
+    imageAlt: "Sticky Jicama Ribs at Khue's Kitchen.",
+    imageHeight: 305,
+    brandUrl: "https://heavytable.com/",
+    brandLogo: starTribuneLogo,
+    brandLogoAlt: "Star Tribune's logo",
+    brandLogoWidth: 150,
+    brandLogoHeight: 35,
+    brandLogoStyles: "-ml-5",
+    cardStyles: "pt-3",
+    title: "The 30 restaurants most vital to the Twin Cities area right now",
+    snippet:
+      "Eric Pham, of the legendary Quang family restaurant pedigree, is in pursuit of fresh flavors while ushering in a new era of Vietnamese cuisine: chile crisp-pork fried rice, a supper-club-style steak with a house marinade, Vietnamese coffee affogato topped with black sesame coconut crackers and more. Then there was the reimagined bánh mì xíu mại, a gigantic rice porcupine meatball that sits in a stewed tomato sauce...",
+    date: "7/11/2025",
+  },
   {
     articleUrl:
       "https://heavytable.substack.com/i/160888645/now-open-up-to-months",
@@ -154,6 +200,7 @@ const mediaArticles: MediaCard[] = [
   },
 ];
 
+
 function Media() {
   return (
     <motion.div
@@ -176,6 +223,7 @@ function Media() {
             className="!relative !size-full object-cover object-top opacity-20"
           />
 
+
           <Image
             src={kare11InTheKitchen}
             alt="Chef Eric Pham with KARE 11's Jennifer Austin."
@@ -184,6 +232,7 @@ function Media() {
             className="!relative !size-full object-cover object-top opacity-20"
           />
 
+
           <Image
             src={starTribune}
             alt="Khue Pham and young Eric Pham."
@@ -191,6 +240,7 @@ function Media() {
             priority
             className="!relative !size-full object-cover object-top opacity-20"
           />
+
 
           <Image
             src={kare11MothersDay}
@@ -201,6 +251,7 @@ function Media() {
           />
         </div>
 
+
         <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-heroContainer tablet:!flex">
           <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
@@ -210,12 +261,14 @@ function Media() {
         </div>
       </div>
 
+
       {/* Mobile / Tablet grid */}
       <div className="relative grid w-80 grid-cols-1 gap-8 py-16 pb-24 md:w-[700px] md:grid-cols-2 md:gap-8 xl:!hidden">
         {mediaArticles.map((article) => (
           <MediaCard key={article.title} {...article} />
         ))}
       </div>
+
 
       {/* Desktop layout */}
       <div className="baseVertFlex relative !hidden w-[1200px] gap-16 py-16 pb-24 xl:!flex">
@@ -249,6 +302,7 @@ function Media() {
                 </Button>
               )}
 
+
               {/* SVG brand logo */}
               {article.BrandLogoComponent && (
                 <Button variant={"text"} className="!p-0" asChild>
@@ -278,6 +332,7 @@ function Media() {
               </div>
             </div>
 
+
             {/* Right side image */}
             <Button variant={"text"} asChild>
               <a
@@ -305,7 +360,9 @@ function Media() {
   );
 }
 
+
 export default Media;
+
 
 interface MediaCard {
   articleUrl: string;
@@ -324,6 +381,7 @@ interface MediaCard {
   snippet: string;
   date: string;
 }
+
 
 function MediaCard({
   articleUrl,
@@ -359,10 +417,12 @@ function MediaCard({
         </a>
       </Button>
 
+
       <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-b-md bg-offwhite p-4 pb-12 pt-3">
         {/* Decorative Lotuses */}
         <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
         <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
+
 
         {/* Brand Logo or some brand component */}
         <Button variant={"text"} className="!p-0" asChild>
@@ -382,9 +442,12 @@ function MediaCard({
           </a>
         </Button>
 
+
         <p className="pb-2 text-lg font-semibold">{title}</p>
 
+
         <p className="">{snippet}</p>
+
 
         <div className="baseFlex mt-2 w-full !justify-between">
           <Button variant={"link"} className="h-8 !p-0" asChild>
@@ -398,3 +461,5 @@ function MediaCard({
     </div>
   );
 }
+
+

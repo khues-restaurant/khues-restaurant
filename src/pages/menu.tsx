@@ -6,6 +6,7 @@ import Link from "next/link";
 import {
   Fragment,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type Dispatch,
@@ -33,6 +34,7 @@ import { useMainStore } from "~/stores/MainStore";
 import { formatPrice } from "~/utils/formatters/formatPrice";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 import { menuItemImagePaths } from "~/utils/menuItemImagePaths";
+import superjson from "superjson";
 
 import { Charis_SIL } from "next/font/google";
 const charis = Charis_SIL({
@@ -65,7 +67,12 @@ interface Menu {
   menuCategoryIndicies: Record<string, number>;
 }
 
-function Menu({ menuCategories, menuCategoryIndicies }: Menu) {
+function Menu({ json }: { json: string }) {
+  const { menuCategories, menuCategoryIndicies } = useMemo(
+    () => superjson.parse<Menu>(json),
+    [json],
+  );
+
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const [currentlyInViewCategory, setCurrentlyInViewCategory] = useState("");
@@ -518,8 +525,10 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 
   return {
     props: {
-      menuCategories: filteredMenuCategories,
-      menuCategoryIndicies: categoryIndicies,
+      json: superjson.stringify({
+        menuCategories: filteredMenuCategories,
+        menuCategoryIndicies: categoryIndicies,
+      }),
     },
   };
 };
