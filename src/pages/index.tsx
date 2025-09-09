@@ -31,6 +31,7 @@ import starTribuneLogo from "/public/media/starTribuneLogo.png";
 import WCCOLogo from "public/media/WCCOLogo";
 import heavyTableLogo from "/public/media/heavyTableLogo.png";
 import theTastingNotesLogo from "/public/media/theTastingNotesLogo.png";
+import mspMagLogo from "/public/media/mspMagLogo.png";
 
 import eric from "/public/ourStory/eric.webp";
 import ericUpscaled from "/public/ourStory/ericUpscaled.jpg";
@@ -535,7 +536,7 @@ export default function Home() {
         <StaticLotus className="absolute -right-8 -top-8 size-24 rotate-[-135deg] fill-primary/50 " />
         <StaticLotus className="absolute -bottom-8 -left-8 size-24 rotate-[45deg] fill-primary/50 " />
 
-        <div className="baseFlex gap-3 rounded-md rounded-t-none border border-t-0 bg-offwhite/40 p-2 px-8 font-medium shadow-sm tablet:text-xl">
+        <div className="baseFlex gap-3 rounded-md rounded-t-none border border-t-0 bg-offwhite/40 p-2 px-8 font-medium shadow-sm xl:text-xl">
           <HiOutlineNewspaper className="size-5" />
           Find us on
         </div>
@@ -543,7 +544,7 @@ export default function Home() {
           setApi={setPressReviewsApi}
           opts={{
             breakpoints: {
-              "(min-width: 1000px)": {
+              "(min-width: 1250px)": {
                 active: false,
               },
             },
@@ -558,8 +559,8 @@ export default function Home() {
             }),
           }}
         >
-          <CarouselContent className="relative mb-5 mt-3 xl:w-[1250px] tablet:mb-4 tablet:mt-4">
-            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/6">
+          <CarouselContent className="relative mb-5 mt-3 xl:mb-4 xl:mt-4 xl:w-[1250px]">
+            <CarouselItem className="baseVertFlex basis-[55%] rounded-md md:basis-[35%] xl:basis-[15.9%]">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.startribune.com/the-30-restaurants-most-vital-to-the-twin-cities-area-right-now/601328163"
@@ -575,7 +576,7 @@ export default function Home() {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/6">
+            <CarouselItem className="baseVertFlex basis-[55%] rounded-md md:basis-[35%] xl:basis-[15.9%]">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.kare11.com/article/news/local/mpls-chef-credits-his-mom-for-inspiration/89-0f237053-85cf-48ae-96f7-8cbebb780555"
@@ -590,7 +591,7 @@ export default function Home() {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/6">
+            <CarouselItem className="baseVertFlex basis-[55%] rounded-md md:basis-[35%] xl:basis-[15.9%]">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.mprnews.org/story/2023/12/27/appetites-looks-back-on-2023-restaurants-vietnamese-meatballs-and-the-secret-to-entertaining"
@@ -605,7 +606,7 @@ export default function Home() {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/6">
+            <CarouselItem className="baseVertFlex basis-[55%] rounded-md md:basis-[35%] xl:basis-[15.9%]">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.cbsnews.com/minnesota/news/khues-kitchen-reopens-midcity-kitchen/"
@@ -615,7 +616,7 @@ export default function Home() {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[40%] rounded-md tablet:basis-[12.5%]">
+            <CarouselItem className="baseVertFlex basis-[40%] rounded-md md:basis-[30%] xl:basis-[12.5%]">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://heavytable.substack.com/i/160888645/now-open-up-to-months"
@@ -630,7 +631,22 @@ export default function Home() {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[50%] rounded-md tablet:basis-1/6">
+            <CarouselItem className="baseVertFlex basis-[35%] rounded-md md:basis-[25%] xl:basis-[8%]">
+              <Button variant={"text"} className="!p-0" asChild>
+                <a
+                  href="https://mspmag.com/eat-and-drink/restaurant-review-homecoming-khues-kitchen/"
+                  className="baseFlex"
+                >
+                  <Image
+                    src={mspMagLogo}
+                    alt="Mpls.St.Paul Magazine's logo"
+                    width={50.5}
+                    height={34.5}
+                  />
+                </a>
+              </Button>
+            </CarouselItem>
+            <CarouselItem className="baseVertFlex basis-[50%] rounded-md md:basis-[35%] xl:basis-[15.9%]">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://thetastingnotes.co/khues-kitchen-resilience-and-flavor-in-equal-measure/"
@@ -648,8 +664,8 @@ export default function Home() {
           </CarouselContent>
         </Carousel>
 
-        {/* (mobile-only) dots to show which review is being viewed at the moment */}
-        <div className="baseFlex gap-2 tablet:hidden">
+        {/* (below xl breakpoint only) dots to show which review is being viewed at the moment */}
+        <div className="baseFlex gap-2 xl:hidden">
           <Button asChild>
             <div
               className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 0 ? "!bg-primary" : "!bg-stone-300"}`}
@@ -684,6 +700,12 @@ export default function Home() {
             <div
               className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 5 ? "!bg-primary" : "!bg-stone-300"}`}
               onClick={() => pressReviewsApi?.scrollTo(5)}
+            />
+          </Button>
+          <Button asChild>
+            <div
+              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 6 ? "!bg-primary" : "!bg-stone-300"}`}
+              onClick={() => pressReviewsApi?.scrollTo(6)}
             />
           </Button>
         </div>
