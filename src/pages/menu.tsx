@@ -30,6 +30,7 @@ import {
   type FullMenuItem,
 } from "~/server/api/routers/menuCategory";
 import { useMainStore } from "~/stores/MainStore";
+import { IoCalendarOutline } from "react-icons/io5";
 import { formatPrice } from "~/utils/formatters/formatPrice";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 
@@ -40,9 +41,6 @@ const charis = Charis_SIL({
   weight: ["400", "700"],
 });
 
-import headerThaiTeaTresLeches from "/public/miscFood/header-thai-tea-tres-leches.png";
-import headerBanhMiXiuMai from "/public/miscFood/header-banh-mi-xiu-mai.png";
-
 import creamCheeseWantons from "/public/menuItems/cream-cheese-wantons.png";
 import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
 import spicyChickenSandwich from "/public/menuItems/spicy-chicken-sando.jpg";
@@ -50,7 +48,10 @@ import stickyJicamaRibs from "/public/menuItems/sticky-jicama-ribs.png";
 import grilledRibeye from "/public/menuItems/20-oz-grilled-ribeye.png";
 import affogato from "/public/menuItems/affogato.png";
 import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
-import { IoCalendarOutline } from "react-icons/io5";
+import chiliCrunchWings from "/public/menuItems/chili-crunch-wings.png";
+import porkChop from "/public/menuItems/pork-chop.png";
+import chickenSalad from "/public/menuItems/chicken-salad.png";
+import bunChay from "/public/menuItems/bun-chay.png";
 
 function Menu() {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -186,128 +187,8 @@ function Menu() {
       className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem)]"
     >
       {/* Hero */}
-      {/* <div
-        ref={heroRef}
-        className="baseFlex relative h-56 w-full overflow-hidden tablet:h-72"
-      >
-        <div className="baseFlex absolute left-0 top-0 size-full bg-gradient-to-br from-primary to-darkPrimary tablet:gap-8 desktop:gap-16">
-          <Image
-            src={sampleImage}
-            alt={"TODO: fill in w/ appropriate alt text"}
-            width={204}
-            height={204}
-            className="!relative rounded-md drop-shadow-lg tablet:!hidden"
-          />
-
-          <Image
-            src={foodOne}
-            alt={"TODO: fill in w/ appropriate alt text"}
-            sizes="(max-width: 1000px) 160px, 192px"
-            className="!relative !hidden !size-40 rounded-md object-cover drop-shadow-xl tablet:!block desktop:!size-48"
-          />
-          <Image
-            src={foodTwo}
-            alt={"TODO: fill in w/ appropriate alt text"}
-            sizes="(max-width: 1000px) 160px, 192px"
-            className="!relative !hidden !size-40 rounded-md object-cover drop-shadow-xl tablet:!block desktop:!size-48"
-          />
-          <div className="baseFlex z-10 mx-8 !hidden rounded-md bg-offwhite p-2 shadow-heroContainer tablet:!flex">
-            <div className="baseFlex gap-2 font-semibold text-primary tablet:p-2 tablet:text-xl desktop:text-2xl">
-              <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
-              <h1 className={`${charis.className}`}>Menu</h1>
-              <SideAccentSwirls className="h-5 fill-primary" />
-            </div>
-          </div>
-          <Image
-            src={foodThree}
-            alt={"TODO: fill in w/ appropriate alt text"}
-            sizes="(max-width: 1000px) 160px, 192px"
-            className="!relative !hidden !size-40 rounded-md object-cover drop-shadow-xl tablet:!block desktop:!size-48"
-          />
-          <Image
-            src={foodFour}
-            alt={"TODO: fill in w/ appropriate alt text"}
-            sizes="(max-width: 1000px) 160px, 192px"
-            className="!relative !hidden !size-40 rounded-md object-cover drop-shadow-xl tablet:!block desktop:!size-48"
-          />
-        </div>
-
-        <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-heroContainer tablet:!flex">
-          <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
-            <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
-            <h1 className={`${charis.className}`}>Menu</h1>
-            <SideAccentSwirls className="h-4 fill-primary desktop:h-5" />
-          </div>
-        </div>
-      </div> */}
-
-      {/* testing hero */}
-      {/* <div className="baseFlex relative h-56 w-full overflow-hidden bg-darkPrimary shadow-md md:bg-gradient-to-br md:from-primary md:to-darkPrimary tablet:h-72">
-        <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 gap-4 p-4 md:grid-cols-[1fr_1fr_auto_1fr_1fr] md:grid-rows-1 md:gap-8 md:p-8 tablet:h-72">
-          <Image
-            src={foodOne}
-            alt="Chef Eric Pham, owner of Khue's Kitchen, with KARE 11's Jennifer Austin in a kitchen studio. Chef Eric Pham whips up a delicious, hot and juicy fried chicken sandwich with Jennifer Austin."
-            fill
-            // sizes="(max-width: 1000px) 400px, 320px"
-            priority
-            style={{
-              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
-            }}
-            className="!relative !size-full rounded-2xl object-cover object-top opacity-35 md:opacity-100"
-          />
-          <Image
-            src={foodTwo}
-            alt="Khue Pham, lead chef at Quang Restaurant in Minneapolis, converses with her two sons in the kitchen."
-            fill
-            // sizes="(max-width: 1000px) 400px, 320px"
-            priority
-            style={{
-              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
-            }}
-            className="!relative !size-full rounded-2xl object-cover object-top opacity-35 md:opacity-100"
-          />
-          <div className="baseFlex z-10 mx-8 !hidden self-center justify-self-center rounded-md bg-offwhite p-4 shadow-heroContainer md:!flex">
-            <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
-              <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
-              <h1 className={`${charis.className}`}>Menu</h1>
-              <SideAccentSwirls className="h-4 fill-primary desktop:h-5" />
-            </div>
-          </div>
-          <Image
-            src={foodThree}
-            alt="Khue Pham, lead chef at Quang Restaurant, smiling and posing with her young son, Eric Pham, both dressed formally."
-            fill
-            // sizes="(max-width: 1000px) 400px, 320px"
-            priority
-            style={{
-              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
-            }}
-            className="!relative !size-full rounded-2xl object-cover object-top opacity-35 md:opacity-100"
-          />
-          <Image
-            src={foodFour}
-            alt="Chef Eric Pham, owner of Khue's Kitchen, smiling while cooking in a professional kitchen."
-            fill
-            // sizes="(max-width: 1000px) 400px, 320px"
-            priority
-            style={{
-              filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
-            }}
-            className="!relative !size-full rounded-2xl object-cover object-top opacity-35 md:opacity-100"
-          />
-        </div>
-
-        <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-heroContainer md:!hidden">
-          <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
-            <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
-            <h1 className={`${charis.className}`}>Menu</h1>
-            <SideAccentSwirls className="h-4 fill-primary desktop:h-5" />
-          </div>
-        </div>
-      </div> */}
-
-      <div className="baseFlex relative h-56 w-full overflow-hidden bg-darkPrimary shadow-md md:bg-gradient-to-br md:from-primary md:to-darkPrimary tablet:h-72">
-        <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 gap-4 p-4 md:grid-cols-[1fr_1fr_auto_1fr_1fr] md:grid-rows-1 md:gap-0 md:px-8 md:py-0 tablet:h-72 tablet:gap-12">
+      <div className="baseFlex relative h-56 w-full overflow-hidden bg-darkPrimary shadow-md md:bg-gradient-to-br md:from-primary md:to-darkPrimary xl:h-72">
+        <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 gap-4 p-0 md:grid-cols-[1fr_1fr_auto_1fr_1fr] md:grid-rows-1 md:gap-0 xl:h-72 xl:gap-12 xl:px-8 xl:py-0">
           <div
             style={{
               filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
@@ -319,7 +200,7 @@ function Menu() {
               fill
               // sizes="(max-width: 1000px) 400px, 320px"
               priority
-              className="!relative !size-full rounded-md object-cover object-center opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(0_0,85%_0,100%_100%,15%_100%)]"
+              className="!relative !size-full rounded-none object-cover opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(0_0,85%_0,100%_100%,15%_100%)]"
             />
           </div>
           <div
@@ -328,11 +209,11 @@ function Menu() {
             }}
           >
             <Image
-              src={spicyChickenSandwich}
+              src={chiliCrunchWings}
               alt="Spicy Chicken Sandwich at Khue's in St. Paul"
               // sizes="(max-width: 1000px) 400px, 320px"
               priority
-              className="!relative !size-full rounded-md object-cover object-center opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(0_0,85%_0,100%_100%,15%_100%)]"
+              className="!relative !size-full rounded-none object-cover opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(0_0,85%_0,100%_100%,15%_100%)]"
             />
           </div>
 
@@ -350,12 +231,12 @@ function Menu() {
             }}
           >
             <Image
-              src={headerBanhMiXiuMai}
-              alt="Bánh Mì Xíu Mại at Khue's in St. Paul"
+              src={stickyJicamaRibs}
+              alt="Sticky Jicama Ribs at Khue's in St. Paul"
               fill
               // sizes="(max-width: 1000px) 400px, 320px"
               priority
-              className="!relative !size-full rounded-md object-cover object-center opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(100%_0,15%_0,0%_100%,85%_100%)]"
+              className="!relative !size-full rounded-none object-cover opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(100%_0,15%_0,0%_100%,85%_100%)]"
             />
           </div>
           <div
@@ -364,12 +245,12 @@ function Menu() {
             }}
           >
             <Image
-              src={headerThaiTeaTresLeches}
+              src={thaiTeaTresLeches}
               alt="Thai Tea Tres Leches at Khue's in St. Paul"
               fill
               // sizes="(max-width: 1000px) 400px, 320px"
               priority
-              className="!relative !size-full rounded-md object-cover object-top opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(100%_0,15%_0,0%_100%,85%_100%)]"
+              className="!relative !size-full rounded-none object-cover opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(100%_0,15%_0,0%_100%,85%_100%)]"
             />
           </div>
         </div>
@@ -675,16 +556,13 @@ function MenuCategory({
         <>
           <div className="baseFlex relative h-36 w-full !justify-end overflow-hidden rounded-md bg-gradient-to-br from-primary to-darkPrimary shadow-md tablet:h-48">
             <div className="absolute left-[30%] h-full w-[70%] overflow-hidden">
-              {/* {(viewportLabel.includes("mobile") ||
-              (!viewportLabel.includes("mobile") && name !== "Desserts")) && ( */}
-
               {/* Right-most */}
               {menuItemCategoryImages[name]!.length >= 1 && (
                 <div
                   style={{
                     filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
                   }}
-                  className="absolute left-[52%] top-0 h-full w-[40%] tablet:left-[62%] tablet:w-1/3"
+                  className="absolute left-[52%] top-0 h-full w-[45%] tablet:left-[62%] tablet:w-1/3"
                 >
                   <Image
                     src={menuItemCategoryImages[name]![0] ?? ""}
@@ -698,15 +576,13 @@ function MenuCategory({
                 </div>
               )}
 
-              {/* // )} */}
-
               {/* Middle */}
               {menuItemCategoryImages[name]!.length >= 2 && (
                 <div
                   style={{
                     filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
                   }}
-                  className="absolute left-[10%] top-0 h-full w-[40%] tablet:left-[31%] tablet:w-1/3"
+                  className="absolute left-[10%] top-0 h-full w-[45%] tablet:left-[31%] tablet:w-1/3"
                 >
                   <Image
                     src={menuItemCategoryImages[name]![1]!}
@@ -726,7 +602,7 @@ function MenuCategory({
                   style={{
                     filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
                   }}
-                  className="absolute left-[10%] top-0 hidden h-full w-[40%] tablet:left-[0%] tablet:block tablet:w-1/3"
+                  className="absolute left-[10%] top-0 hidden h-full w-[50%] tablet:left-[0%] tablet:block tablet:w-1/3"
                 >
                   <Image
                     src={menuItemCategoryImages[name]![2]!}
@@ -994,15 +870,18 @@ function MenuItemPreview({
 }
 
 const menuItemCategoryImages: Record = {
-  Starters: [creamCheeseWantons],
+  Starters: [creamCheeseWantons, chickenSalad],
   Entrees: [roastPorkFriedRice, spicyChickenSandwich, grilledRibeye],
   Desserts: [affogato, thaiTeaTresLeches],
 };
 
 const menuItemImages: Record = {
   "Cream Cheese Wontons": creamCheeseWantons,
+  "Khue's Chicken Salad": chickenSalad,
   "Roast Pork Fried Rice": roastPorkFriedRice,
-  "Bánh Mì Xíu Mại": headerBanhMiXiuMai,
+  "Chili Crunch Wings": chiliCrunchWings,
+  "Grilled Thick-Cut Pork Chop": porkChop,
+  "Bún Chay | Rice Noodle Salad": bunChay,
   "Spicy Chicken Sandwich": spicyChickenSandwich,
   "Sticky Jicama Ribs": stickyJicamaRibs,
   "20 oz Grilled Ribeye": grilledRibeye,
@@ -1085,7 +964,7 @@ const menuCategories = [
         available: true,
         discontinued: false,
         listOrder: 3,
-        hasImageOfItem: false,
+        hasImageOfItem: true,
         menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
         activeDiscountId: null,
         isChefsChoice: false,
@@ -1178,7 +1057,7 @@ const menuCategories = [
         available: true,
         discontinued: false,
         listOrder: 8,
-        hasImageOfItem: false,
+        hasImageOfItem: true,
         menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
         activeDiscountId: null,
         isChefsChoice: false,
@@ -1256,7 +1135,7 @@ const menuCategories = [
         available: true,
         discontinued: false,
         listOrder: 5,
-        hasImageOfItem: false,
+        hasImageOfItem: true,
         menuCategoryId: "98b3d4ba-4689-4372-a206-448f7eb5ebf4",
         activeDiscountId: null,
         isChefsChoice: false,
@@ -1282,7 +1161,7 @@ const menuCategories = [
         available: true,
         discontinued: false,
         listOrder: 7,
-        hasImageOfItem: false,
+        hasImageOfItem: true,
         menuCategoryId: "98b3d4ba-4689-4372-a206-448f7eb5ebf4",
         activeDiscountId: null,
         isChefsChoice: false,
@@ -1315,7 +1194,7 @@ const menuCategories = [
         createdAt: "2024-05-15T21:38:58.971Z",
         name: "Cà Phê Sữa Đá Affogato",
         description:
-          "Vietnamese coffee, vanilla ice cream, black sesame coconut tuile. * Contains hazelnut",
+          "Vietnamese coffee, vanilla ice cream, black sesame coconut tuile. * Contains hazelnuts",
         price: 900,
         altPrice: null,
         available: true,
@@ -2051,6 +1930,32 @@ const menuCategories = [
         available: true,
         discontinued: false,
         listOrder: 3,
+        hasImageOfItem: false,
+        menuCategoryId: "afbe0627-48a5-40df-bd5d-f6bb25fd2a07",
+        activeDiscountId: null,
+        isChefsChoice: false,
+        isAlcoholic: false,
+        isVegetarian: false,
+        isVegan: false,
+        isGlutenFree: false,
+        showUndercookedOrRawDisclaimer: false,
+        pointReward: true,
+        birthdayReward: false,
+        reviews: null,
+        activeDiscount: null,
+        customizationCategories: [],
+      },
+      {
+        id: "896d0c0d-ee5b-4cdb-9c87-163cbc825e1d",
+        createdAt: "2024-02-20T21:56:45.000Z",
+        name: "Cà Phê Sữa Đá Coffee",
+        description:
+          "Bold, sweet, creamy Vietnamese coffee over ice. * Contains hazelnuts",
+        price: 900,
+        altPrice: null,
+        available: true,
+        discontinued: false,
+        listOrder: 4,
         hasImageOfItem: false,
         menuCategoryId: "afbe0627-48a5-40df-bd5d-f6bb25fd2a07",
         activeDiscountId: null,

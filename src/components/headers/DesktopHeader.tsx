@@ -134,7 +134,7 @@ function DesktopHeader() {
           >
             <a
               href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul"
-              className="block !text-xl smallDesktopHeader:hidden"
+              className="block !text-xl"
             >
               Reservations
             </a>
@@ -144,16 +144,12 @@ function DesktopHeader() {
             variant={asPath.includes("/media") ? "activeLink" : "link"}
             asChild
           >
-            <Link
-              prefetch={false}
-              href={"/media"}
-              className="block !text-xl smallDesktopHeader:hidden"
-            >
+            <Link prefetch={false} href={"/media"} className="block !text-xl">
               Media
             </Link>
           </Button>
 
-          <Popover
+          {/* <Popover
             open={showSmallViewportPopoverLinks}
             onOpenChange={(open) => setShowSmallViewportPopoverLinks(open)}
           >
@@ -194,7 +190,7 @@ function DesktopHeader() {
                 </Button>
               </div>
             </PopoverContent>
-          </Popover>
+          </Popover> */}
         </div>
 
         {/* order icon and auth buttons/user icon */}
@@ -337,7 +333,7 @@ function DesktopHeader() {
                   <Image
                     src={outsideOfRestaurant}
                     alt={
-                      "Interior view of Khue's, located on 799 University Ave W in St. Paul, MN"
+                      "Interior view of Khue's, located on 693 Raymond Ave in St. Paul, MN"
                     }
                     sizes="550px"
                     className="!relative !h-52 !w-full rounded-md object-cover shadow-md"

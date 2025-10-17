@@ -22,7 +22,7 @@ import khuesKitchenLogo from "/public/logos/khuesKitchenLogo.png";
 
 import topLeftHero from "/public/ourStory/cropped-khues-kitchen.png";
 import topRightHero from "/public/menuItems/spicy-chicken-sando.jpg";
-import bottomLeftHero from "/public/miscFood/bottomLeftHero.png";
+import bottomLeftHero from "/public/miscFood/patio-trio.jpg";
 import bottomRightHero from "/public/interior/three.jpg";
 
 import kare11Logo from "/public/media/kare11Logo.png";
@@ -38,9 +38,9 @@ import ericUpscaled from "/public/ourStory/ericUpscaled.jpg";
 
 import reservations from "/public/interior/reservations.jpg";
 
-import masonryFoodOne from "/public/miscFood/grilled-sirloin-rotated.png";
+import masonryFoodOne from "/public/menuItems/sticky-jicama-ribs.png";
 import masonryFoodTwo from "/public/menuItems/cream-cheese-wantons.png";
-import masonryFoodThree from "/public/menuItems/sticky-jicama-ribs.png";
+import masonryFoodThree from "/public/menuItems/coffee.png";
 import masonryFoodFour from "/public/menuItems/thai-tea-tres-leches.png";
 import masonryFoodFive from "/public/menuItems/roast-pork-fried-rice.png";
 import masonryFoodSix from "/public/menuItems/affogato.png";
@@ -317,7 +317,7 @@ export default function Home() {
               alt={"Bánh Mì Xíu Mại at Khue's in St. Paul"}
               priority
               sizes="66vw"
-              className="!relative !size-full rounded-md object-cover"
+              className="!relative !size-full rounded-md object-cover object-[50%_25%]"
             />
           </motion.div>
 
@@ -339,7 +339,7 @@ export default function Home() {
             <Image
               src={bottomRightHero}
               alt={
-                "Interior view of Khue's, located on 799 University Ave W in St. Paul, MN"
+                "Interior view of Khue's, located on 693 Raymond Ave in St. Paul, MN"
               }
               priority
               sizes="33vw"
@@ -351,7 +351,13 @@ export default function Home() {
 
       {/* Desktop Hero */}
       <div className="baseFlex relative !hidden h-[calc(100svh-5rem)] w-full p-4 md:!flex tablet:h-[calc(100svh-6rem)]">
-        <div className="relative grid size-full grid-cols-3 grid-rows-3 gap-4">
+        <div
+          style={{
+            gridTemplateColumns: "33% 66%",
+            gridTemplateRows: "64% 34%",
+          }}
+          className="relative grid size-full gap-4"
+        >
           {/* top left */}
           <motion.div
             initial={{ filter: "blur(5px)", opacity: 0, scale: 0.75 }}
@@ -365,13 +371,14 @@ export default function Home() {
                 duration: 0.7,
               },
             }}
-            className="relative col-span-1 row-span-2 size-full overflow-hidden rounded-md shadow-md"
+            className="relative col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Image
               src={topLeftHero}
               alt={
                 "Khue Pham, lead chef at Quang Restaurant, smiling and posing with her son, Eric Pham, in a professional kitchen."
               }
+              quality={100}
               priority
               sizes="33vw"
               className="!relative !size-full rounded-md object-cover"
@@ -391,7 +398,7 @@ export default function Home() {
                 duration: 0.7,
               },
             }}
-            className="relative col-span-2 row-span-2 size-full overflow-hidden rounded-md shadow-md"
+            className="relative col-start-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Image
               src={topRightHero}
@@ -492,14 +499,14 @@ export default function Home() {
                 duration: 0.7,
               },
             }}
-            className="relative !top-0 col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
+            className="relative !top-0 col-span-1 row-start-2 size-full overflow-hidden rounded-md shadow-md"
           >
             <Image
               src={bottomLeftHero}
               alt={"Bánh Mì Xíu Mại at Khue's in St. Paul"}
               priority
               sizes="33vw"
-              className="!relative !size-full rounded-md object-cover "
+              className="!relative size-full rounded-md object-cover object-[50%_35%]"
             />
           </motion.div>
 
@@ -516,12 +523,12 @@ export default function Home() {
                 duration: 0.7,
               },
             }}
-            className="relative !top-0 col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
+            className="relative !top-0 col-start-2 row-start-2 size-full overflow-hidden rounded-md shadow-md"
           >
             <Image
               src={bottomRightHero}
               alt={
-                "Interior view of Khue's, located on 799 University Ave W in St. Paul, MN"
+                "Interior view of Khue's, located on 693 Raymond Ave in St. Paul, MN"
               }
               priority
               sizes="66vw"
@@ -533,11 +540,11 @@ export default function Home() {
 
       {/* Press Reviews */}
       <div className="baseVertFlex relative w-full overflow-hidden border-y-[1px] bg-gradient-to-br from-offwhite to-primary/10 pb-4">
-        <StaticLotus className="absolute -right-8 -top-8 size-24 rotate-[-135deg] fill-primary/50 " />
-        <StaticLotus className="absolute -bottom-8 -left-8 size-24 rotate-[45deg] fill-primary/50 " />
+        <StaticLotus className="absolute right-[-30px] top-[-30px] size-[90px] rotate-[-135deg] fill-primary/50 sm:-right-8 sm:-top-8 sm:size-24" />
+        <StaticLotus className="absolute bottom-[-30px] left-[-30px] size-[90px] rotate-[45deg] fill-primary/50 sm:-bottom-8 sm:-left-8 sm:size-24" />
 
-        <div className="baseFlex gap-3 rounded-md rounded-t-none border border-t-0 bg-offwhite/40 p-2 px-8 font-medium shadow-sm xl:text-xl">
-          <HiOutlineNewspaper className="size-5" />
+        <div className="baseFlex gap-2 rounded-md rounded-t-none border border-t-0 bg-offwhite/40 p-2 px-8 font-medium shadow-sm xl:text-[18px]">
+          <HiOutlineNewspaper className="size-5 xl:mb-0.5" />
           Find us on
         </div>
         <Carousel
@@ -723,9 +730,9 @@ export default function Home() {
               >
                 <Image
                   src={masonryFoodOne}
-                  alt={"Grilled Sirloin at Khue's in St. Paul"}
+                  alt={"Sticky Jicama Ribs at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 384px, 500px"
-                  className="!relative !size-full rounded-md object-cover"
+                  className="!relative !size-full rounded-md object-cover object-[50%_65%] pr-16"
                 />
               </Parallax>
             </div>
@@ -751,9 +758,9 @@ export default function Home() {
               >
                 <Image
                   src={masonryFoodThree}
-                  alt={"Sticky Jicama Ribs at Khue's in St. Paul"}
+                  alt={"Cà Phê Sữa Đá Coffee at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !h-[110%] !w-full rounded-md object-cover"
+                  className="!relative !h-[110%] !w-full rounded-md object-cover object-[33%_50%]"
                 />
               </Parallax>
             </div>
@@ -767,7 +774,7 @@ export default function Home() {
                   src={masonryFoodFour}
                   alt={"Thai Tea Tres Leches at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !h-[120%] !w-full rounded-md object-cover"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover !object-[52%_50%]"
                 />
               </Parallax>
             </div>
@@ -775,7 +782,7 @@ export default function Home() {
             <div className="fifthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
               <Parallax
                 speed={-3}
-                className="!absolute !top-[-1rem] !size-[100%]"
+                className="!absolute !top-[-1rem] !size-[120%]"
               >
                 <Image
                   src={masonryFoodFive}
@@ -783,7 +790,7 @@ export default function Home() {
                   // when it came into the viewport otherwise
                   alt={"Roast Pork Fried Rice at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 384px, 500px"
-                  className="!relative !h-[120%] !w-full rounded-md object-cover"
+                  className="!relative !h-[110%] !w-full rounded-md object-cover object-[70%_50%]"
                 />
               </Parallax>
             </div>
