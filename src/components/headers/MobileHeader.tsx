@@ -6,7 +6,11 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { CiCalendarDate } from "react-icons/ci";
 import { FaFacebook, FaUserAlt } from "react-icons/fa";
-import { IoLogoInstagram, IoSettingsOutline } from "react-icons/io5";
+import {
+  IoCalendarOutline,
+  IoLogoInstagram,
+  IoSettingsOutline,
+} from "react-icons/io5";
 import { SiTiktok } from "react-icons/si";
 import { Clock, MapPin } from "lucide-react";
 import CartButton from "~/components/cart/CartButton";
@@ -233,8 +237,8 @@ function MobileHeader() {
                           {user?.firstName}
                         </span>
                       </AccordionTrigger>
-                      <AccordionContent className="pb-0 pt-2">
-                        <div className="baseVertFlex gap-2">
+                      <AccordionContent className="baseFlex pb-0 pt-2">
+                        <div className="baseVertFlex w-min !items-start gap-2">
                           <Button
                             variant={
                               asPath.includes("/profile/preferences")
@@ -254,25 +258,23 @@ function MobileHeader() {
                               Preferences
                             </Link>
                           </Button>
+
                           <Button
                             variant={
-                              asPath.includes("/profile/rewards")
+                              asPath.includes("/reservations")
                                 ? "activeLink"
                                 : "link"
                             }
-                            asChild
+                            className="baseFlex w-48 !justify-start gap-4 !text-lg"
                           >
-                            <Link
-                              prefetch={false}
-                              href={"/profile/rewards"}
-                              className="baseFlex w-40 !justify-start gap-4 !text-lg"
-                            >
-                              <SlPresent
-                                className={`${asPath.includes("/profile/rewards") ? "[&>path]:stroke-[30px]" : ""} shrink-0`}
-                              />
-                              Rewards
-                            </Link>
+                            <IoCalendarOutline
+                              className={`${asPath.includes("/profile/preferences") ? "[&>path]:stroke-[55px]" : "[&>path]:stroke-[40px]"}`}
+                            />
+                            <a href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul">
+                              Reservations
+                            </a>
                           </Button>
+
                           <Button
                             variant={
                               asPath.includes("/profile/my-orders")
@@ -295,7 +297,7 @@ function MobileHeader() {
 
                           <Button
                             variant={"link"}
-                            className="mt-2 h-8"
+                            className="mt-2 h-8 self-center"
                             onClick={async () => {
                               clearLocalStorage();
                               resetStore();
@@ -348,42 +350,6 @@ function MobileHeader() {
                     >
                       Reservations
                     </a>
-                  </Button>
-                </motion.div>
-
-                {isLoaded && !isSignedIn && (
-                  <motion.div variants={linkVariants}>
-                    <Button
-                      variant={
-                        asPath.includes("/rewards") ? "activeLink" : "link"
-                      }
-                      asChild
-                    >
-                      <Link
-                        prefetch={false}
-                        href={"/rewards"}
-                        className="block !text-xl smallDesktopHeader:hidden"
-                      >
-                        Rewards
-                      </Link>
-                    </Button>
-                  </motion.div>
-                )}
-
-                <motion.div variants={linkVariants}>
-                  <Button
-                    variant={
-                      asPath.includes("/our-story") ? "activeLink" : "link"
-                    }
-                    asChild
-                  >
-                    <Link
-                      prefetch={false}
-                      href={"/our-story"}
-                      className="!text-xl"
-                    >
-                      Our story
-                    </Link>
                   </Button>
                 </motion.div>
 
@@ -550,7 +516,7 @@ function MobileHeader() {
                             <Image
                               src={outsideOfRestaurant}
                               alt={
-                                "Exterior view of Khue's, located on 799 University Ave W in St. Paul, MN"
+                                "Exterior view of Khue's, located on 693 Raymond Ave in St. Paul, MN"
                               }
                               sizes="(max-width: 640px) 60vw, 700px"
                               className="!relative !h-48 !w-full rounded-md object-cover shadow-sm"

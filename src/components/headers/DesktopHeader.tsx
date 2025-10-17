@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import CartButton from "~/components/cart/CartButton";
 import { CiCalendarDate } from "react-icons/ci";
 import { Clock, MapPin } from "lucide-react";
+import { IoCalendarOutline } from "react-icons/io5";
 import { SlPresent } from "react-icons/sl";
 import { HiOutlineInformationCircle } from "react-icons/hi";
 import { IoMdMore } from "react-icons/io";
@@ -148,30 +149,6 @@ function DesktopHeader() {
           </a>
         </Button>
 
-        {isLoaded && !isSignedIn && (
-          <Button
-            variant={asPath.includes("/rewards") ? "activeLink" : "link"}
-            asChild
-          >
-            <Link
-              prefetch={false}
-              href={"/rewards"}
-              className="block !text-xl smallDesktopHeader:hidden"
-            >
-              Rewards
-            </Link>
-          </Button>
-        )}
-
-        <Button
-          variant={asPath.includes("/our-story") ? "activeLink" : "link"}
-          asChild
-        >
-          <Link prefetch={false} href={"/our-story"} className="block !text-xl">
-            Our story
-          </Link>
-        </Button>
-
         <Button
           variant={asPath.includes("/media") ? "activeLink" : "link"}
           asChild
@@ -214,21 +191,6 @@ function DesktopHeader() {
                   Reservations
                 </Link>
               </Button>
-
-              {isLoaded && !isSignedIn && (
-                <Button
-                  variant={asPath.includes("/rewards") ? "activeLink" : "link"}
-                  asChild
-                >
-                  <Link
-                    prefetch={false}
-                    href={"/rewards"}
-                    className="block !text-xl smallDesktopHeader:hidden"
-                  >
-                    Rewards
-                  </Link>
-                </Button>
-              )}
 
               <Button
                 variant={asPath.includes("/media") ? "activeLink" : "link"}
@@ -382,7 +344,7 @@ function DesktopHeader() {
                 <Image
                   src={outsideOfRestaurant}
                   alt={
-                    "Exterior view of Khue's, located on 799 University Ave W in St. Paul, MN"
+                    "Exterior view of Khue's, located on 693 Raymond Ave in St. Paul, MN"
                   }
                   sizes="550px"
                   className="!relative !h-52 !w-full rounded-md object-cover shadow-md"
@@ -448,25 +410,21 @@ function DesktopHeader() {
                       Preferences
                     </Link>
                   </Button>
+
                   <Button
                     variant={
-                      asPath.includes("/profile/rewards")
-                        ? "activeLink"
-                        : "link"
+                      asPath.includes("/reservations") ? "activeLink" : "link"
                     }
-                    asChild
+                    className="baseFlex w-48 !justify-start gap-4 !text-lg"
                   >
-                    <Link
-                      prefetch={false}
-                      href={"/profile/rewards"}
-                      className="baseFlex w-48 !justify-start gap-4 !text-lg"
-                    >
-                      <SlPresent
-                        className={`${asPath.includes("/profile/rewards") ? "[&>path]:stroke-[30px]" : ""}`}
-                      />
-                      Rewards
-                    </Link>
+                    <IoCalendarOutline
+                      className={`${asPath.includes("/profile/preferences") ? "[&>path]:stroke-[55px]" : "[&>path]:stroke-[40px]"}`}
+                    />
+                    <a href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul">
+                      Reservations
+                    </a>
                   </Button>
+
                   <Button
                     variant={
                       asPath.includes("/profile/my-orders")

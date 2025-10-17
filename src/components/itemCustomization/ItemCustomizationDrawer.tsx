@@ -271,7 +271,7 @@ function ItemCustomizationDrawer({
           {itemToCustomize.hasImageOfItem && (
             <Image
               src={menuItemImagePaths[itemToCustomize.name] ?? ""}
-              alt="Spicy Chicken Sando at Khue's in St. Paul"
+              alt="Spicy Chicken Sandwich at Khue's in St. Paul"
               // sizes="(max-width: 1000px) 400px, 320px"
               priority
               className="h-64 w-full rounded-lg object-cover object-center shadow-md"

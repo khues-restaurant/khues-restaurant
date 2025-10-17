@@ -1,5 +1,4 @@
-
-
+import type { JSX } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { type StaticImageData } from "next/image";
@@ -8,17 +7,13 @@ import StaticLotus from "~/components/ui/StaticLotus";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/utils/shadcnuiUtils";
 
-
 import { Charis_SIL } from "next/font/google";
-
 
 const charis = Charis_SIL({
   subsets: ["latin"],
   weight: ["400", "700"],
 });
 
-
-import kare11InTheKitchen from "/public/media/kare11InTheKitchen.jpg";
 import kare11MothersDay from "/public/media/kare11MothersDay.jpg";
 import starTribune from "/public/media/starTribune.jpg";
 import mpr from "/public/media/mpr.jpg";
@@ -33,9 +28,29 @@ import heavyTable from "/public/media/heavyTable.jpg";
 import top30StarTribune from "/public/media/top30StarTribune.jpg";
 import theTastingNotes from "/public/media/theTastingNotes.jpg";
 import theTastingNotesLogo from "/public/media/theTastingNotesLogo.png";
-
+import mspMagImage from "/public/media/mspMagImage.jpg";
+import mspMagLogo from "/public/media/mspMagLogo.png";
+import ericAndKhue from "/public/media/ericAndKhue.jpg";
 
 const mediaArticles: MediaCard[] = [
+  {
+    articleUrl:
+      "https://mspmag.com/eat-and-drink/restaurant-review-homecoming-khues-kitchen/",
+    imageSrc: mspMagImage,
+    imageAlt:
+      "Three plated dishes from Khue's Kitchen displayed on a wooden table: a Spicy Chicken Sandwich on a bun with lettuce, Crispy Pork Lettuce Wraps with dipping sauce, and a Grilled Thick-Cut Pork Chop topped with a fried egg and served with a fresh salad. A menu and glasses of wine are also on the table.",
+    imageHeight: 335,
+    brandUrl: "https://mspmag.com/",
+    brandLogo: mspMagLogo,
+    brandLogoAlt: "Mpls.St.Paul Magazine's logo",
+    brandLogoWidth: 40.4,
+    brandLogoHeight: 27.6,
+    cardStyles: "pt-5",
+    title: "A Homecoming for Khue's Kitchen",
+    snippet:
+      "At just 25, Eric Pham—son of the chef behind Minneapolis' beloved Quang—has forged his own path with Khue's Kitchen on the Minneapolis-St. Paul border. Overcoming family expectations and a devastating fire, Pham created a refined Vietnamese restaurant named for his mother, featuring Southern-style chicken wings, inventive vegan jicama ribs, thick pork chops, and a standout natural wine list. Khue's Kitchen is both a tribute to family tradition and a bold step forward, proving that fresh flavors and second beginnings can flourish side by side.",
+    date: "8/24/2025",
+  },
   {
     articleUrl:
       "https://thetastingnotes.co/khues-kitchen-resilience-and-flavor-in-equal-measure/",
@@ -118,6 +133,7 @@ const mediaArticles: MediaCard[] = [
     imageHeight: 288,
     brandUrl: "https://www.cbsnews.com/minnesota/",
     BrandLogoComponent: <WCCOLogo className="mb-1 h-[85px] w-[110px]" />,
+    brandLogoAlt: "WCCO's logo",
     cardStyles: "pt-5",
     title:
       "Khue's Kitchen reopens seven months after fire destroyed the restaurant",
@@ -180,26 +196,7 @@ const mediaArticles: MediaCard[] = [
       "The Quang Restaurant is synonymous with Eat Street. The popular Vietnamese restaurant located in Minneapolis has been serving authentic Vietnamese cuisine for over 30 years. It was opened by the Pham family, who immigrated to the U.S. after the Vietnam War...",
     date: "10/14/2023",
   },
-  {
-    articleUrl:
-      "https://www.kare11.com/video/life/food/recipes/kare-in-the-kitchen-fried-chicken-sandwiches-with-eric-pham-from-khues-kitchen/89-ad173b59-cea7-4fdf-b05a-3711b8c97553",
-    imageSrc: kare11InTheKitchen,
-    imageAlt:
-      "Chef Eric Pham, owner of Khue's Kitchen, with KARE 11's Jennifer Austin in a kitchen studio. Chef Eric Pham whips up a delicious, hot and juicy fried chicken sandwich with Jennifer Austin.",
-    imageHeight: 232,
-    brandUrl: "https://www.kare11.com/",
-    brandLogo: kare11Logo,
-    brandLogoAlt: "Kare 11's logo",
-    brandLogoWidth: 86,
-    brandLogoHeight: 40,
-    title:
-      "KARE in the Kitchen: Fried chicken sandwiches with Eric Pham from Khue's Kitchen",
-    snippet:
-      "Chef Eric Pham, the chef and owner behind Khue's Kitchen, whips up a delicious, hot and juicy fried chicken sandwich with KARE 11's Jennifer Austin.",
-    date: "8/13/2022",
-  },
 ];
-
 
 function Media() {
   return (
@@ -223,15 +220,13 @@ function Media() {
             className="!relative !size-full object-cover object-top opacity-20"
           />
 
-
           <Image
-            src={kare11InTheKitchen}
-            alt="Chef Eric Pham with KARE 11's Jennifer Austin."
+            src={ericAndKhue}
+            alt="Chef Eric Pham standing and smiling together with his mother, Khue."
             fill
             priority
             className="!relative !size-full object-cover object-top opacity-20"
           />
-
 
           <Image
             src={starTribune}
@@ -240,7 +235,6 @@ function Media() {
             priority
             className="!relative !size-full object-cover object-top opacity-20"
           />
-
 
           <Image
             src={kare11MothersDay}
@@ -251,7 +245,6 @@ function Media() {
           />
         </div>
 
-
         <div className="baseFlex z-10 mx-8 rounded-md bg-offwhite p-4 shadow-heroContainer tablet:!flex">
           <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
             <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
@@ -261,14 +254,12 @@ function Media() {
         </div>
       </div>
 
-
       {/* Mobile / Tablet grid */}
       <div className="relative grid w-80 grid-cols-1 gap-8 py-16 pb-24 md:w-[700px] md:grid-cols-2 md:gap-8 xl:!hidden">
         {mediaArticles.map((article) => (
           <MediaCard key={article.title} {...article} />
         ))}
       </div>
-
 
       {/* Desktop layout */}
       <div className="baseVertFlex relative !hidden w-[1200px] gap-16 py-16 pb-24 xl:!flex">
@@ -302,7 +293,6 @@ function Media() {
                 </Button>
               )}
 
-
               {/* SVG brand logo */}
               {article.BrandLogoComponent && (
                 <Button variant={"text"} className="!p-0" asChild>
@@ -332,7 +322,6 @@ function Media() {
               </div>
             </div>
 
-
             {/* Right side image */}
             <Button variant={"text"} asChild>
               <a
@@ -360,9 +349,7 @@ function Media() {
   );
 }
 
-
 export default Media;
-
 
 interface MediaCard {
   articleUrl: string;
@@ -371,7 +358,7 @@ interface MediaCard {
   imageHeight: number;
   brandUrl: string;
   brandLogo?: StaticImageData; // if brandLogo is an image
-  brandLogoAlt?: string;
+  brandLogoAlt: string;
   brandLogoWidth?: number;
   brandLogoHeight?: number;
   brandLogoStyles?: string;
@@ -381,7 +368,6 @@ interface MediaCard {
   snippet: string;
   date: string;
 }
-
 
 function MediaCard({
   articleUrl,
@@ -417,12 +403,10 @@ function MediaCard({
         </a>
       </Button>
 
-
-      <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-b-md bg-offwhite p-4 pb-12 pt-3">
+      <div className="baseVertFlex relative w-full !items-start gap-2 overflow-hidden hyphens-auto rounded-b-md bg-offwhite px-4 pb-12 pt-3">
         {/* Decorative Lotuses */}
         <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
         <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
-
 
         {/* Brand Logo or some brand component */}
         <Button variant={"text"} className="!p-0" asChild>
@@ -431,7 +415,7 @@ function MediaCard({
             {brandLogo && (
               <Image
                 src={brandLogo}
-                alt={brandLogoAlt ?? ""}
+                alt={brandLogoAlt}
                 width={brandLogoWidth}
                 height={brandLogoHeight}
                 className={brandLogoStyles}
@@ -442,12 +426,9 @@ function MediaCard({
           </a>
         </Button>
 
-
         <p className="pb-2 text-lg font-semibold">{title}</p>
 
-
         <p className="">{snippet}</p>
-
 
         <div className="baseFlex mt-2 w-full !justify-between">
           <Button variant={"link"} className="h-8 !p-0" asChild>
@@ -461,5 +442,3 @@ function MediaCard({
     </div>
   );
 }
-
-

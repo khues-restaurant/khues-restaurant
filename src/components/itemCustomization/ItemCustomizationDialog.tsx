@@ -230,7 +230,7 @@ function ItemCustomizerDialogContent({
             >
               <Image
                 src={menuItemImagePaths[itemToCustomize.name] ?? ""}
-                alt="Spicy Chicken Sando at Khue's in St. Paul"
+                alt="Spicy Chicken Sandwich at Khue's in St. Paul"
                 // sizes="(max-width: 1000px) 400px, 320px"
                 priority
                 className="!relative mr-8 h-72 w-[500px] rounded-md object-cover object-center opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(0_0,85%_0,100%_100%,15%_100%)]"

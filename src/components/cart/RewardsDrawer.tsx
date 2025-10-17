@@ -25,10 +25,10 @@ import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationC
 import { getRewardsPointCost } from "~/utils/priceHelpers/getRewardsPointCost";
 import { menuItemImagePaths } from "~/utils/menuItemImagePaths";
 
-import affogato from "/public/menuItems/affogato.png";
-import grilledSirloin from "/public/menuItems/grilled-sirloin.png";
-import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
-import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
+// import affogato from "/public/menuItems/affogato.png";
+// import grilledSirloin from "/public/menuItems/grilled-sirloin.png";
+// import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
+// import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
 
 // okay so we kinda spliced together some basic structure here, just look through it
 // and complete this fully before moving onto backend dashboard improvements
@@ -127,7 +127,7 @@ function RewardsDrawer({
     >
       <div className="baseVertFlex relative mt-10 w-full !justify-start overflow-y-auto ">
         <div className="baseFlex relative mt-2 !h-48 w-full shrink-0 overflow-hidden bg-rewardsGradient shadow-sm">
-          <motion.div
+          {/* <motion.div
             key={"rewardsHeroMobileImageOne"}
             initial={{
               filter: "blur(5px)",
@@ -195,7 +195,7 @@ function RewardsDrawer({
               priority
               className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
             />
-          </motion.div>
+          </motion.div> */}
 
           <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite px-8 py-4 text-primary shadow-lg">
             <div className="text-center text-lg font-semibold">
@@ -218,7 +218,7 @@ function RewardsDrawer({
             </div>
           </div>
 
-          <motion.div
+          {/* <motion.div
             key={"rewardsHeroMobileImageThree"}
             initial={{
               filter: "blur(5px)",
@@ -286,7 +286,7 @@ function RewardsDrawer({
               priority
               className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
             />
-          </motion.div>
+          </motion.div> */}
         </div>
 
         <div className="baseFlex sticky top-[-2px] z-10 w-full gap-2 border-b bg-offwhite p-2 shadow-sm">

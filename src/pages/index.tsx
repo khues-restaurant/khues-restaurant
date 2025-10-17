@@ -40,7 +40,7 @@ import khuesKitchenLogo from "/public/logos/khuesKitchenLogo.png";
 
 import topLeftHero from "/public/ourStory/cropped-khues-kitchen.png";
 import topRightHero from "/public/menuItems/spicy-chicken-sando.jpg";
-import bottomLeftHero from "/public/miscFood/bottomLeftHero.png";
+import bottomLeftHero from "/public/miscFood/patio-trio.jpg";
 import bottomRightHero from "/public/interior/three.jpg";
 
 import kare11Logo from "/public/media/kare11Logo.png";
@@ -49,24 +49,25 @@ import starTribuneLogo from "/public/media/starTribuneLogo.png";
 import WCCOLogo from "public/media/WCCOLogo";
 import heavyTableLogo from "/public/media/heavyTableLogo.png";
 import theTastingNotesLogo from "/public/media/theTastingNotesLogo.png";
+import mspMagLogo from "/public/media/mspMagLogo.png";
 
 import eric from "/public/ourStory/eric.webp";
 import ericUpscaled from "/public/ourStory/ericUpscaled.jpg";
 
 import reservations from "/public/interior/reservations.jpg";
 
-import masonryFoodOne from "/public/miscFood/grilled-sirloin-rotated.png";
+import masonryFoodOne from "/public/menuItems/sticky-jicama-ribs.png";
 import masonryFoodTwo from "/public/menuItems/cream-cheese-wantons.png";
-import masonryFoodThree from "/public/menuItems/sticky-jicama-ribs.png";
+import masonryFoodThree from "/public/menuItems/coffee.png";
 import masonryFoodFour from "/public/menuItems/thai-tea-tres-leches.png";
 import masonryFoodFive from "/public/menuItems/roast-pork-fried-rice.png";
 import masonryFoodSix from "/public/menuItems/affogato.png";
 
 import masonryInteriorOne from "/public/interior/one.jpg";
-import masonryInteriorTwo from "/public/interior/two.jpg";
+import masonryInteriorTwo from "/public/exterior/three.jpg";
 import masonryInteriorThree from "/public/interior/three.jpg";
 import masonryInteriorFour from "/public/interior/four.jpg";
-import masonryInteriorFive from "/public/interior/five.jpg";
+import masonryInteriorFive from "/public/interior/two.jpg";
 
 import rewardsPromo from "/public/homepage/rewardsPromo.jpg";
 
@@ -270,7 +271,7 @@ function Home({ json }: { json: string }) {
           >
             <Image
               src={topRightHero}
-              alt={"Spicy Chicken Sando at Khue's in St. Paul"}
+              alt={"Spicy Chicken Sandwich at Khue's in St. Paul"}
               priority
               sizes="66vw"
               className="!relative !size-full rounded-md object-cover"
@@ -300,7 +301,6 @@ function Home({ json }: { json: string }) {
               className="h-[152px] w-[80.5px] drop-shadow-md sm:h-[190px] sm:w-[100.625px]"
             />
             <div className="baseVertFlex gap-1 rounded-md">
-              {/* experimenting with stone-800 instead of black */}
               <h1 className="text-center text-xl font-bold text-stone-800 sm:text-2xl">
                 Welcome to Khue&apos;s
               </h1>
@@ -358,10 +358,12 @@ function Home({ json }: { json: string }) {
           >
             <Image
               src={bottomLeftHero}
-              alt={"Bánh Mì Xíu Mại at Khue's in St. Paul"}
+              alt={
+                "Close-up of our Grilled Ribeye, next to a bowl of Bún Chay and a tall glass of Cà Phê Sữa Đá Coffee, set on our outdoor patio with tables and chairs in the background."
+              }
               priority
               sizes="66vw"
-              className="!relative !size-full rounded-md object-cover"
+              className="!relative !size-full rounded-md object-cover object-[50%_30%]"
             />
           </motion.div>
 
@@ -383,7 +385,7 @@ function Home({ json }: { json: string }) {
             <Image
               src={bottomRightHero}
               alt={
-                "Interior view of Khue's, located on 799 University Ave W in St. Paul, MN"
+                "Interior view of Khue's, located on 693 Raymond Ave in St. Paul, MN"
               }
               priority
               sizes="33vw"
@@ -395,7 +397,13 @@ function Home({ json }: { json: string }) {
 
       {/* Desktop Hero */}
       <div className="baseFlex relative !hidden h-[calc(100svh-5rem)] w-full p-4 md:!flex tablet:h-[calc(100svh-6rem)]">
-        <div className="relative grid size-full min-h-0 flex-1 grid-cols-3 grid-rows-3 gap-4">
+        <div
+          style={{
+            gridTemplateColumns: "33% 66%",
+            gridTemplateRows: "64% 34%",
+          }}
+          className="relative grid size-full gap-4"
+        >
           {/* top left */}
           <motion.div
             initial={{ filter: "blur(5px)", opacity: 0, scale: 0.75 }}
@@ -409,7 +417,7 @@ function Home({ json }: { json: string }) {
                 duration: 0.7,
               },
             }}
-            className="relative col-span-1 row-span-2 size-full overflow-hidden rounded-md shadow-md"
+            className="relative col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Image
               src={topLeftHero}
@@ -418,7 +426,7 @@ function Home({ json }: { json: string }) {
               }
               priority
               sizes="33vw"
-              className="!relative !size-full rounded-md object-cover"
+              className="!relative !size-full rounded-md object-cover object-[50%_35%]"
             />
           </motion.div>
 
@@ -435,11 +443,11 @@ function Home({ json }: { json: string }) {
                 duration: 0.7,
               },
             }}
-            className="relative col-span-2 row-span-2 size-full overflow-hidden rounded-md shadow-md"
+            className="relative col-start-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Image
               src={topRightHero}
-              alt={"Spicy Chicken Sando at Khue's in St. Paul"}
+              alt={"Spicy Chicken Sandwich at Khue's in St. Paul"}
               priority
               sizes="66vw"
               className="!relative !size-full rounded-md object-cover"
@@ -536,14 +544,14 @@ function Home({ json }: { json: string }) {
                 duration: 0.7,
               },
             }}
-            className="relative !top-0 col-span-1 row-span-1 size-full overflow-hidden rounded-md shadow-md"
+            className="row-start2 relative !top-0 col-span-1 size-full overflow-hidden rounded-md shadow-md"
           >
             <Image
               src={bottomLeftHero}
               alt={"Bánh Mì Xíu Mại at Khue's in St. Paul"}
               priority
               sizes="33vw"
-              className="!relative !size-full rounded-md object-cover "
+              className="!relative !size-full rounded-md object-cover object-[50%_30%]"
             />
           </motion.div>
 
@@ -560,12 +568,12 @@ function Home({ json }: { json: string }) {
                 duration: 0.7,
               },
             }}
-            className="relative !top-0 col-span-2 row-span-1 size-full overflow-hidden rounded-md shadow-md"
+            className="relative !top-0 col-start-2 row-start-2 size-full overflow-hidden rounded-md shadow-md"
           >
             <Image
               src={bottomRightHero}
               alt={
-                "Interior view of Khue's, located on 799 University Ave W in St. Paul, MN"
+                "Interior view of Khue's, located on 693 Raymond Ave in St. Paul, MN"
               }
               priority
               sizes="66vw"
@@ -577,18 +585,18 @@ function Home({ json }: { json: string }) {
 
       {/* Press Reviews */}
       <div className="baseVertFlex relative w-full overflow-hidden border-y-[1px] bg-gradient-to-br from-offwhite to-primary/10 pb-4">
-        <StaticLotus className="absolute -right-8 -top-8 size-24 rotate-[-135deg] fill-primary/50 " />
-        <StaticLotus className="absolute -bottom-8 -left-8 size-24 rotate-[45deg] fill-primary/50 " />
+        <StaticLotus className="absolute right-[-30px] top-[-30px] size-[90px] rotate-[-135deg] fill-primary/50 sm:-right-8 sm:-top-8 sm:size-24" />
+        <StaticLotus className="absolute bottom-[-30px] left-[-30px] size-[90px] rotate-[45deg] fill-primary/50 sm:-bottom-8 sm:-left-8 sm:size-24" />
 
-        <div className="baseFlex gap-3 rounded-md rounded-t-none border border-t-0 bg-offwhite/40 p-2 px-8 font-medium shadow-sm tablet:text-xl">
-          <HiOutlineNewspaper className="size-5" />
+        <div className="baseFlex gap-2 rounded-md rounded-t-none border border-t-0 bg-offwhite/40 p-2 px-8 font-medium shadow-sm xl:text-[18px]">
+          <HiOutlineNewspaper className="size-5 xl:mb-0.5" />
           Find us on
         </div>
         <Carousel
           setApi={setPressReviewsApi}
           opts={{
             breakpoints: {
-              "(min-width: 1000px)": {
+              "(min-width: 1250px)": {
                 active: false,
               },
             },
@@ -603,8 +611,8 @@ function Home({ json }: { json: string }) {
             }),
           }}
         >
-          <CarouselContent className="relative mb-5 mt-3 xl:w-[1250px] tablet:mb-4 tablet:mt-4">
-            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/6">
+          <CarouselContent className="relative mb-5 mt-3 xl:mb-4 xl:mt-4 xl:w-[1250px]">
+            <CarouselItem className="baseVertFlex basis-[55%] rounded-md md:basis-[35%] xl:basis-[15.9%]">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.startribune.com/the-30-restaurants-most-vital-to-the-twin-cities-area-right-now/601328163"
@@ -620,7 +628,7 @@ function Home({ json }: { json: string }) {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/6">
+            <CarouselItem className="baseVertFlex basis-[55%] rounded-md md:basis-[35%] xl:basis-[15.9%]">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.kare11.com/article/news/local/mpls-chef-credits-his-mom-for-inspiration/89-0f237053-85cf-48ae-96f7-8cbebb780555"
@@ -635,7 +643,7 @@ function Home({ json }: { json: string }) {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/6">
+            <CarouselItem className="baseVertFlex basis-[55%] rounded-md md:basis-[35%] xl:basis-[15.9%]">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.mprnews.org/story/2023/12/27/appetites-looks-back-on-2023-restaurants-vietnamese-meatballs-and-the-secret-to-entertaining"
@@ -650,7 +658,7 @@ function Home({ json }: { json: string }) {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[55%] rounded-md tablet:basis-1/6">
+            <CarouselItem className="baseVertFlex basis-[55%] rounded-md md:basis-[35%] xl:basis-[15.9%]">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.cbsnews.com/minnesota/news/khues-kitchen-reopens-midcity-kitchen/"
@@ -660,7 +668,7 @@ function Home({ json }: { json: string }) {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[40%] rounded-md tablet:basis-[12.5%]">
+            <CarouselItem className="baseVertFlex basis-[40%] rounded-md md:basis-[30%] xl:basis-[12.5%]">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://heavytable.substack.com/i/160888645/now-open-up-to-months"
@@ -675,7 +683,22 @@ function Home({ json }: { json: string }) {
                 </a>
               </Button>
             </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[50%] rounded-md tablet:basis-1/6">
+            <CarouselItem className="baseVertFlex basis-[35%] rounded-md md:basis-[25%] xl:basis-[8%]">
+              <Button variant={"text"} className="!p-0" asChild>
+                <a
+                  href="https://mspmag.com/eat-and-drink/restaurant-review-homecoming-khues-kitchen/"
+                  className="baseFlex"
+                >
+                  <Image
+                    src={mspMagLogo}
+                    alt="Mpls.St.Paul Magazine's logo"
+                    width={50.5}
+                    height={34.5}
+                  />
+                </a>
+              </Button>
+            </CarouselItem>
+            <CarouselItem className="baseVertFlex basis-[50%] rounded-md md:basis-[35%] xl:basis-[15.9%]">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://thetastingnotes.co/khues-kitchen-resilience-and-flavor-in-equal-measure/"
@@ -693,8 +716,8 @@ function Home({ json }: { json: string }) {
           </CarouselContent>
         </Carousel>
 
-        {/* (mobile-only) dots to show which review is being viewed at the moment */}
-        <div className="baseFlex gap-2 tablet:hidden">
+        {/* (below xl breakpoint only) dots to show which review is being viewed at the moment */}
+        <div className="baseFlex gap-2 xl:hidden">
           <Button asChild>
             <div
               className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 0 ? "!bg-primary" : "!bg-stone-300"}`}
@@ -731,6 +754,12 @@ function Home({ json }: { json: string }) {
               onClick={() => pressReviewsApi?.scrollTo(5)}
             />
           </Button>
+          <Button asChild>
+            <div
+              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 6 ? "!bg-primary" : "!bg-stone-300"}`}
+              onClick={() => pressReviewsApi?.scrollTo(6)}
+            />
+          </Button>
         </div>
       </div>
 
@@ -746,9 +775,9 @@ function Home({ json }: { json: string }) {
               >
                 <Image
                   src={masonryFoodOne}
-                  alt={"Grilled Sirloin at Khue's in St. Paul"}
+                  alt={"Sticky Jicama Ribs at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 384px, 500px"
-                  className="!relative !size-full rounded-md object-cover"
+                  className="!relative !size-full rounded-md object-cover object-[50%_75%] pr-16"
                 />
               </Parallax>
             </div>
@@ -774,9 +803,9 @@ function Home({ json }: { json: string }) {
               >
                 <Image
                   src={masonryFoodThree}
-                  alt={"Sticky Jicama Ribs at Khue's in St. Paul"}
+                  alt={"Cà Phê Sữa Đá Coffee at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !h-[110%] !w-full rounded-md object-cover"
+                  className="!relative !h-[110%] !w-full rounded-md object-cover object-[33%_50%]"
                 />
               </Parallax>
             </div>
@@ -790,7 +819,7 @@ function Home({ json }: { json: string }) {
                   src={masonryFoodFour}
                   alt={"Thai Tea Tres Leches at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !h-[120%] !w-full rounded-md object-cover"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover !object-[52%_50%]"
                 />
               </Parallax>
             </div>
@@ -798,7 +827,7 @@ function Home({ json }: { json: string }) {
             <div className="fifthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
               <Parallax
                 speed={-3}
-                className="!absolute !top-[-1rem] !size-[100%]"
+                className="!absolute !top-[-1rem] !size-[120%]"
               >
                 <Image
                   src={masonryFoodFive}
@@ -806,7 +835,7 @@ function Home({ json }: { json: string }) {
                   // when it came into the viewport otherwise
                   alt={"Roast Pork Fried Rice at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 384px, 500px"
-                  className="!relative !h-[120%] !w-full rounded-md object-cover"
+                  className="!relative !h-[110%] !w-full rounded-md object-cover object-[70%_50%]"
                 />
               </Parallax>
             </div>
@@ -993,7 +1022,7 @@ function Home({ json }: { json: string }) {
                 <Link
                   prefetch={false}
                   aria-label="Read more about our story"
-                  href="/our-story"
+                  href="/media"
                 >
                   Read more
                 </Link>
@@ -1034,7 +1063,7 @@ function Home({ json }: { json: string }) {
                     "Chef Eric Pham, owner of Khue's Kitchen, standing with arms crossed and smiling in front of a rustic door."
                   }
                   sizes="324px"
-                  className="!relative !top-0 !size-full !h-96 rounded-md object-cover object-top"
+                  className="!relative !top-0 !size-full rounded-md object-cover object-top"
                 />
               </motion.div>
             </div>
@@ -1059,7 +1088,7 @@ function Home({ json }: { json: string }) {
                 <Link
                   prefetch={false}
                   aria-label="Read more about our story"
-                  href="/our-story"
+                  href="/media"
                 >
                   Read more
                 </Link>
@@ -1195,10 +1224,10 @@ function Home({ json }: { json: string }) {
                 <Image
                   src={masonryInteriorTwo} /* square */
                   alt={
-                    "Contemporary bar area with a sleek countertop, stylish liquor display, and tall potted plants adding a touch of greenery."
+                    "Two bowls of food on a metal patio table beside a white potted orchid with white flowers, on the outdoor patio with wooden chairs, tables, and benches in the background on a sunny day."
                   }
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !h-[120%] !w-full rounded-md object-cover object-bottom"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover object-[50%_100%]"
                 />
               </Parallax>
             </div>
@@ -1211,7 +1240,7 @@ function Home({ json }: { json: string }) {
                 <Image
                   src={masonryInteriorThree} /* vert rectangle */
                   alt={
-                    "Sunlit corner of a restaurant featuring wooden tables, red chairs, a wall-mounted floral art piece, and potted greenery."
+                    "Sunlit corner inside the restaurant featuring wooden tables, red chairs, a wall-mounted floral art piece, and potted greenery."
                   }
                   sizes="(max-width: 1000px) 159px, 500px"
                   className="!relative !h-[110%] !w-full rounded-md object-cover object-bottom"
@@ -1243,7 +1272,7 @@ function Home({ json }: { json: string }) {
                 <Image
                   src={masonryInteriorFive} /* horiz rectangle */
                   alt={
-                    "Small private dining room with a large rectangular table, black chairs, natural light from tall windows, and a blue geometric rug."
+                    "Contemporary bar area with a sleek countertop, stylish liquor display, and tall potted plants adding a touch of greenery."
                   }
                   sizes="(max-width: 1000px) 384px, 500px"
                   className="!relative !h-[125%] !w-full rounded-md object-cover object-bottom"
@@ -1251,37 +1280,6 @@ function Home({ json }: { json: string }) {
               </Parallax>
             </div>
           </div>
-
-          {/* Rewards program promo section */}
-          {isLoaded && !isSignedIn && (
-            <div className="baseVertFlex relative my-4 w-screen max-w-xl gap-4 overflow-hidden border-y-4 border-y-gold bg-offwhite !p-6 !pb-8 text-primary shadow-md sm:rounded-sm sm:!p-8 sm:!pb-5 tablet:my-12">
-              <StaticLotus className="absolute right-[-21px] top-[-21px] size-16 rotate-[-135deg] fill-gold/80" />
-              <StaticLotus className="absolute left-[-21px] top-[-21px] size-16 rotate-[135deg] fill-gold/80" />
-              <StaticLotus className="absolute bottom-[-21px] right-[-21px] size-16 rotate-[-45deg] fill-gold/80" />
-              <StaticLotus className="absolute bottom-[-21px] left-[-21px] size-16 rotate-[45deg] fill-gold/80" />
-
-              <span className="mt-4 w-64 text-center font-semibold sm:mt-0 sm:w-auto">
-                Join Khue&apos;s Rewards and unlock exclusive benefits!
-              </span>
-              <span className="mt-2 text-center text-sm tablet:text-base">
-                With every order, you&apos;ll earn points which can be redeemed
-                for complimentary meals. Plus, get early access to new dishes
-                and celebrate your birthday with a free dessert of your choice!
-              </span>
-
-              <SignUpButton mode="modal">
-                <Button
-                  variant={"rewards"}
-                  size={"lg"}
-                  className="mt-4 text-base shadow-md"
-                >
-                  Join now
-                </Button>
-              </SignUpButton>
-
-              <WideFancySwirls className="h-14 fill-primary sm:h-16" />
-            </div>
-          )}
 
           {/* Explore Our Favorites section */}
           <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-6xl tablet:max-w-2xl">

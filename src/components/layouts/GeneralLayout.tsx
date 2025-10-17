@@ -1,8 +1,6 @@
 import { useAuth } from "@clerk/nextjs";
-import { Analytics } from "@vercel/analytics/react";
 import { Noto_Sans } from "next/font/google";
 import { useEffect, useState, type ReactNode } from "react";
-import Chat from "~/components/Chat";
 import Footer from "~/components/Footer";
 import HeaderShell from "~/components/headers/HeaderShell";
 import PostSignUpDialog from "~/components/PostSignUpDialog";
@@ -86,8 +84,6 @@ function GeneralLayout({ children }: GeneralLayout) {
 
         {children}
 
-        <Chat />
-
         <Footer />
 
         {shouldRenderPostSignUpDialog && (
@@ -97,8 +93,6 @@ function GeneralLayout({ children }: GeneralLayout) {
         )}
 
         <Toaster />
-
-        <Analytics />
       </main>
     </>
   );

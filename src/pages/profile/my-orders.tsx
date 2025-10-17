@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CiGift } from "react-icons/ci";
-import { IoSettingsOutline } from "react-icons/io5";
+import { IoCalendarOutline, IoSettingsOutline } from "react-icons/io5";
 import { TfiReceipt } from "react-icons/tfi";
 import { z } from "zod";
 import OrderSummary from "~/components/cart/OrderSummary";
@@ -138,24 +138,22 @@ function RecentOrders() {
             className={`baseFlex h-14 w-full gap-2 !rounded-none text-xs
             ${asPath.includes("/profile/preferences") ? "activeUnderline" : "border-b-2 border-stone-300"}`}
           >
-            <IoSettingsOutline className="size-5" />
+            <IoSettingsOutline className="size-4 shrink-0" />
             Preferences
           </Link>
         </Button>
 
         <Button
-          variant={asPath.includes("/profile/rewards") ? "activeLink" : "text"}
+          variant={asPath.includes("/reservations") ? "activeLink" : "text"}
           asChild
         >
-          <Link
-            prefetch={false}
-            href="/profile/rewards"
-            className={`baseFlex h-14 w-full gap-2 !rounded-none text-xs
-            ${asPath.includes("/profile/rewards") ? "activeUnderline" : "border-b-2 border-stone-300"}`}
+          <a
+            href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul"
+            className="baseFlex h-14 w-full gap-2 !rounded-none border-b-2 border-stone-300 text-xs"
           >
-            <CiGift className="size-6" />
-            <span className="pb-0.5">Rewards</span>
-          </Link>
+            <IoCalendarOutline className="size-4 shrink-0" />
+            Reservations
+          </a>
         </Button>
 
         <Button
@@ -170,7 +168,7 @@ function RecentOrders() {
             className={`baseFlex h-14 w-full gap-2 !rounded-none text-xs
             ${asPath.includes("/profile/my-orders") ? "activeUnderline" : "border-b-2 border-stone-300"}`}
           >
-            <TfiReceipt className="size-5" />
+            <TfiReceipt className="size-4 shrink-0" />
             My orders
           </Link>
         </Button>
@@ -196,17 +194,13 @@ function RecentOrders() {
         <Separator className="h-5 w-[1px] bg-stone-400" />
 
         <Button
-          variant={asPath.includes("/profile/rewards") ? "default" : "ghost"}
-          asChild
+          variant={asPath.includes("/reservations") ? "default" : "ghost"}
+          className="baseFlex w-full gap-2"
         >
-          <Link
-            prefetch={false}
-            href="/profile/rewards"
-            className="baseFlex w-full gap-2"
-          >
-            <CiGift className="size-6" />
-            Rewards
-          </Link>
+          <IoCalendarOutline />
+          <a href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul">
+            Reservations
+          </a>
         </Button>
 
         <Separator className="h-5 w-[1px] bg-stone-400" />

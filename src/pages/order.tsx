@@ -54,20 +54,22 @@ const charis = Charis_SIL({
   weight: ["400", "700"],
 });
 
-import headerThaiTeaTresLeches from "/public/miscFood/header-thai-tea-tres-leches.png";
-import headerBanhMiXiuMai from "/public/miscFood/header-banh-mi-xiu-mai.png";
-
 import creamCheeseWantons from "/public/menuItems/cream-cheese-wantons.png";
 import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
-import spicyChickenSando from "/public/menuItems/spicy-chicken-sando.jpg";
+import spicyChickenSandwich from "/public/menuItems/spicy-chicken-sando.jpg";
 import stickyJicamaRibs from "/public/menuItems/sticky-jicama-ribs.png";
-import grilledSirloin from "/public/menuItems/grilled-sirloin.png";
+import grilledRibeye from "/public/menuItems/20-oz-grilled-ribeye.png";
 import affogato from "/public/menuItems/affogato.png";
 import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
+import chiliCrunchWings from "/public/menuItems/chili-crunch-wings.png";
+import chickenSalad from "/public/menuItems/chicken-salad.png";
 
-const menuItemCategoryImages: Record<string, StaticImageData[]> = {
-  Starters: [creamCheeseWantons],
-  Entrees: [roastPorkFriedRice, spicyChickenSando, grilledSirloin],
+const menuItemCategoryImages: Record<
+  "Starters" | "Entrees" | "Desserts",
+  StaticImageData[]
+> = {
+  Starters: [creamCheeseWantons, chickenSalad],
+  Entrees: [roastPorkFriedRice, spicyChickenSandwich, grilledRibeye],
   Desserts: [affogato, thaiTeaTresLeches],
 };
 
@@ -318,8 +320,8 @@ function OrderNow() {
       className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem)]"
     >
       {/* Hero */}
-      <div className="baseFlex relative h-56 w-full overflow-hidden bg-darkPrimary shadow-md md:bg-gradient-to-br md:from-primary md:to-darkPrimary tablet:h-72">
-        <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 gap-4 p-4 md:grid-cols-[1fr_1fr_auto_1fr_1fr] md:grid-rows-1 md:gap-0 md:px-8 md:py-0 tablet:h-72 tablet:gap-12">
+      <div className="baseFlex relative h-56 w-full overflow-hidden bg-darkPrimary shadow-md md:bg-gradient-to-br md:from-primary md:to-darkPrimary xl:h-72">
+        <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 gap-4 p-0 md:grid-cols-[1fr_1fr_auto_1fr_1fr] md:grid-rows-1 md:gap-0 xl:h-72 xl:gap-12 xl:px-8 xl:py-0">
           <div
             style={{
               filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
@@ -331,7 +333,7 @@ function OrderNow() {
               fill
               // sizes="(max-width: 1000px) 400px, 320px"
               priority
-              className="!relative !size-full rounded-md object-cover object-center opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(0_0,85%_0,100%_100%,15%_100%)]"
+              className="!relative !size-full object-cover opacity-35 md:opacity-100 md:[clip-path:polygon(0_0,85%_0,100%_100%,15%_100%)]"
             />
           </div>
           <div
@@ -340,11 +342,11 @@ function OrderNow() {
             }}
           >
             <Image
-              src={spicyChickenSando}
-              alt="Spicy Chicken Sando at Khue's in St. Paul"
+              src={chiliCrunchWings}
+              alt="Chili Crunch Wings at Khue's in St. Paul"
               // sizes="(max-width: 1000px) 400px, 320px"
               priority
-              className="!relative !size-full rounded-md object-cover object-center opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(0_0,85%_0,100%_100%,15%_100%)]"
+              className="!relative !size-full object-cover opacity-35 md:opacity-100 md:[clip-path:polygon(0_0,85%_0,100%_100%,15%_100%)]"
             />
           </div>
 
@@ -362,12 +364,12 @@ function OrderNow() {
             }}
           >
             <Image
-              src={headerBanhMiXiuMai}
-              alt="Bánh Mì Xíu Mại at Khue's in St. Paul"
+              src={stickyJicamaRibs}
+              alt="Sticky Jicama Ribs at Khue's in St. Paul"
               fill
               // sizes="(max-width: 1000px) 400px, 320px"
               priority
-              className="!relative !size-full rounded-md object-cover object-center opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(100%_0,15%_0,0%_100%,85%_100%)]"
+              className="!relative !size-full object-cover opacity-35 md:opacity-100 md:[clip-path:polygon(100%_0,15%_0,0%_100%,85%_100%)]"
             />
           </div>
           <div
@@ -376,12 +378,12 @@ function OrderNow() {
             }}
           >
             <Image
-              src={headerThaiTeaTresLeches}
+              src={thaiTeaTresLeches}
               alt="Thai Tea Tres Leches at Khue's in St. Paul"
               fill
               // sizes="(max-width: 1000px) 400px, 320px"
               priority
-              className="!relative !size-full rounded-md object-cover object-top opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(100%_0,15%_0,0%_100%,85%_100%)]"
+              className="!relative !size-full object-cover opacity-35 md:opacity-100 md:[clip-path:polygon(100%_0,15%_0,0%_100%,85%_100%)]"
             />
           </div>
         </div>
@@ -515,7 +517,7 @@ function OrderNow() {
                 {menuCategories?.map((category) => (
                   <MenuCategory
                     key={category.id}
-                    name={category.name}
+                    name={category.name as MenuCategory["name"]}
                     activeDiscount={category.activeDiscount}
                     menuItems={category.menuItems}
                     listOrder={menuCategoryIndicies![category.name]!}
@@ -678,7 +680,16 @@ function MenuCategoryButton({
 }
 
 interface MenuCategory {
-  name: string;
+  name:
+    | "Starters"
+    | "Entrees"
+    | "Desserts"
+    | "Beverages"
+    | "Beer"
+    | "Wine"
+    | "Sparkling"
+    | "Cocktails"
+    | "Non-Alcoholic";
   activeDiscount: Discount | null;
   menuItems: FullMenuItem[];
   listOrder: number;
@@ -709,47 +720,20 @@ function MenuCategory({
       }}
       className="baseVertFlex w-full scroll-m-48 !items-start gap-4 p-2"
     >
-      {name === "Beverages" || name === "Beer" || name === "Wine" ? (
-        <>
-          {/* category header */}
-          <div className="baseVertFlex w-full !items-start border-b-2 border-primary">
-            <p
-              className={`${charis.className} baseFlex gap-2 pl-3 text-xl font-medium italic tablet:text-2xl`}
-            >
-              {name}
-            </p>
-          </div>
-
-          {/* wrapping container for each food item in the category */}
-          <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 p-1 sm:grid-cols-2 sm:gap-x-16 xl:grid-cols-3 3xl:grid-cols-4">
-            {menuItems.map((item) => (
-              <MenuItemPreviewButton
-                key={item.id}
-                menuItem={item}
-                activeDiscount={activeDiscount} // TODO: should prob also add ?? item.activeDiscount too right? was giving type error w/ createdAt but 99% sure this should be on there
-                listOrder={item.listOrder}
-                setIsDialogOpen={setIsDialogOpen}
-                setIsDrawerOpen={setIsDrawerOpen}
-                setItemToCustomize={setItemToCustomize}
-                user={user}
-              />
-            ))}
-          </div>
-        </>
-      ) : (
+      {name === "Starters" || name === "Entrees" || name === "Desserts" ? (
         <>
           <div className="baseFlex relative h-36 w-full !justify-end overflow-hidden rounded-md bg-gradient-to-br from-primary to-darkPrimary shadow-md tablet:h-48">
             <div className="absolute left-[30%] h-full w-[70%] overflow-hidden">
               {/* Right-most */}
-              {menuItemCategoryImages[name]!.length >= 1 && (
+              {menuItemCategoryImages[name].length >= 1 && (
                 <div
                   style={{
                     filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
                   }}
-                  className="absolute left-[52%] top-0 h-full w-[40%] tablet:left-[62%] tablet:w-1/3"
+                  className="absolute left-[52%] top-0 h-full w-[45%] tablet:left-[62%] tablet:w-1/3"
                 >
                   <Image
-                    src={menuItemCategoryImages[name]![0] ?? ""}
+                    src={menuItemCategoryImages[name][0]!}
                     alt={`${name} at Khue's in St. Paul`}
                     fill
                     style={{
@@ -761,15 +745,15 @@ function MenuCategory({
               )}
 
               {/* Middle */}
-              {menuItemCategoryImages[name]!.length >= 2 && (
+              {menuItemCategoryImages[name].length >= 2 && (
                 <div
                   style={{
                     filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
                   }}
-                  className="absolute left-[10%] top-0 h-full w-[40%] tablet:left-[31%] tablet:w-1/3"
+                  className="absolute left-[10%] top-0 h-full w-[45%] tablet:left-[31%] tablet:w-1/3"
                 >
                   <Image
-                    src={menuItemCategoryImages[name]![1]!}
+                    src={menuItemCategoryImages[name][1]!}
                     alt={`${name} at Khue's in St. Paul`}
                     fill
                     style={{
@@ -781,15 +765,15 @@ function MenuCategory({
               )}
 
               {/* Left-most */}
-              {menuItemCategoryImages[name]!.length >= 3 && (
+              {menuItemCategoryImages[name].length >= 3 && (
                 <div
                   style={{
                     filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
                   }}
-                  className="absolute left-[10%] top-0 hidden h-full w-[40%] tablet:left-[0%] tablet:block tablet:w-1/3"
+                  className="absolute left-[10%] top-0 hidden h-full w-[50%] tablet:left-[0%] tablet:block tablet:w-1/3"
                 >
                   <Image
-                    src={menuItemCategoryImages[name]![2]!}
+                    src={menuItemCategoryImages[name][2]!}
                     alt={`${name} at Khue's in St. Paul`}
                     fill
                     style={{
@@ -811,6 +795,33 @@ function MenuCategory({
           </div>
           {/* wrapping container for each food item in the category */}
           <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {menuItems.map((item) => (
+              <MenuItemPreviewButton
+                key={item.id}
+                menuItem={item}
+                activeDiscount={activeDiscount} // TODO: should prob also add ?? item.activeDiscount too right? was giving type error w/ createdAt but 99% sure this should be on there
+                listOrder={item.listOrder}
+                setIsDialogOpen={setIsDialogOpen}
+                setIsDrawerOpen={setIsDrawerOpen}
+                setItemToCustomize={setItemToCustomize}
+                user={user}
+              />
+            ))}
+          </div>
+        </>
+      ) : (
+        <>
+          {/* category header */}
+          <div className="baseVertFlex w-full !items-start border-b-2 border-primary">
+            <p
+              className={`${charis.className} baseFlex gap-2 pl-3 text-xl font-medium italic tablet:text-2xl`}
+            >
+              {name}
+            </p>
+          </div>
+
+          {/* wrapping container for each food item in the category */}
+          <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 p-1 sm:grid-cols-2 sm:gap-x-16 xl:grid-cols-3 3xl:grid-cols-4">
             {menuItems.map((item) => (
               <MenuItemPreviewButton
                 key={item.id}
@@ -941,7 +952,7 @@ function MenuItemPreviewButton({
               alt={`${menuItem.name} at Khue's in St. Paul`}
               width={500}
               height={500}
-              quality={100}
+              quality={90}
               className="mt-1 !size-28 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md sm:!size-28"
             />
           )}
