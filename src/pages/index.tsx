@@ -49,7 +49,7 @@ import masonryInteriorSix from "/public/interior/one.jpg";
 import masonryInteriorEight from "/public/interior/two.jpg";
 import masonryInteriorTen from "/public/interior/three.jpg";
 import masonryInteriorNine from "/public/interior/four.jpg";
-import masonryInteriorSeven from "/public/interior/five.jpg";
+import masonryInteriorSeven from "/public/exterior/three.jpg";
 
 // interface Home {
 //   ourFavoriteMenuItems: FullMenuItem[];
@@ -381,7 +381,7 @@ export default function Home() {
               quality={100}
               priority
               sizes="33vw"
-              className="!relative !size-full rounded-md object-cover"
+              className="!relative !size-full rounded-md object-cover object-[50%_35%]"
             />
           </motion.div>
 
@@ -506,7 +506,7 @@ export default function Home() {
               alt={"Bánh Mì Xíu Mại at Khue's in St. Paul"}
               priority
               sizes="33vw"
-              className="!relative size-full rounded-md object-cover object-[50%_35%]"
+              className="!relative size-full rounded-md object-cover object-[50%_30%]"
             />
           </motion.div>
 
@@ -732,7 +732,7 @@ export default function Home() {
                   src={masonryFoodOne}
                   alt={"Sticky Jicama Ribs at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 384px, 500px"
-                  className="!relative !size-full rounded-md object-cover object-[50%_65%] pr-16"
+                  className="!relative !size-full rounded-md object-cover object-[50%_75%] pr-16"
                 />
               </Parallax>
             </div>
@@ -1053,12 +1053,12 @@ export default function Home() {
                 className="!absolute !top-[-1rem] !size-[100%]"
               >
                 <Image
-                  src={masonryInteriorEight} /* square */
+                  src={masonryInteriorSeven} /* square */
                   alt={
-                    "Contemporary bar area with a sleek countertop, stylish liquor display, and tall potted plants adding a touch of greenery."
+                    "Two bowls of food on a metal patio table beside a white potted orchid with white flowers, on the outdoor patio with wooden chairs, tables, and benches in the background on a sunny day."
                   }
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !h-[120%] !w-full rounded-md object-cover object-bottom"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover object-[50%_100%]"
                 />
               </Parallax>
             </div>
@@ -1071,7 +1071,7 @@ export default function Home() {
                 <Image
                   src={masonryInteriorTen} /* vert rectangle */
                   alt={
-                    "Sunlit corner of a restaurant featuring wooden tables, red chairs, a wall-mounted floral art piece, and potted greenery."
+                    "Sunlit corner inside the restaurant featuring wooden tables, red chairs, a wall-mounted floral art piece, and potted greenery."
                   }
                   sizes="(max-width: 1000px) 159px, 500px"
                   className="!relative !h-[110%] !w-full rounded-md object-cover object-bottom"
@@ -1101,9 +1101,9 @@ export default function Home() {
                 className="!absolute !top-[-1rem] !size-[100%]"
               >
                 <Image
-                  src={masonryInteriorSeven} /* horiz rectangle */
+                  src={masonryInteriorEight} /* horiz rectangle */
                   alt={
-                    "Small private dining room with a large rectangular table, black chairs, natural light from tall windows, and a blue geometric rug."
+                    "Contemporary bar area with a sleek countertop, stylish liquor display, and tall potted plants adding a touch of greenery."
                   }
                   sizes="(max-width: 1000px) 384px, 500px"
                   className="!relative !h-[125%] !w-full rounded-md object-cover object-bottom"
@@ -1112,498 +1112,9 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Explore Our Favorites section */}
-          {/* <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-6xl tablet:max-w-2xl">
-            <p className="text-lg font-medium tablet:text-xl">
-              Explore Our Favorites
-            </p>
-
-            <div className="baseVertFlex relative w-full gap-4 overflow-hidden rounded-md">
-              <Carousel
-                setApi={setChefSpecialsApi}
-                opts={{
-                  breakpoints: {
-                    "(min-width: 768px)": {
-                      slidesToScroll: 2,
-                    },
-                    "(min-width: 1280px)": {
-                      slidesToScroll: 4,
-                    },
-                  },
-                }}
-                className="baseFlex w-full rounded-md border bg-gradient-to-br from-offwhite to-primary/10 pt-6 shadow-md"
-              >
-                <CarouselContent>
-                  {ourFavoriteMenuItems?.map((menuItem) => (
-                    <CarouselItem
-                      key={menuItem.id}
-                      className="baseVertFlex relative basis-full gap-4 rounded-md p-4 px-6 md:basis-1/2 xl:basis-1/4"
-                    >
-                      <OurFavoriteMenuItemCard
-                        menuItem={menuItem}
-                        user={null}
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-              </Carousel>
-
-              <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-primary/50" />
-              <StaticLotus className="absolute -left-5 -top-5 size-16 rotate-[135deg] fill-primary/50" />
-
-              <div className="baseFlex gap-2">
-                <Button asChild>
-                  <div
-                    className={`!size-2 cursor-pointer rounded-full !p-0 ${chefSpecialsSlide === 0 ? "!bg-primary" : "!bg-stone-300"}`}
-                    onClick={() => chefSpecialsApi?.scrollTo(0)}
-                  />
-                </Button>
-                <Button asChild>
-                  <div
-                    className={`!size-2 cursor-pointer rounded-full !p-0 ${chefSpecialsSlide === 1 ? "!bg-primary" : "!bg-stone-300"}`}
-                    onClick={() => chefSpecialsApi?.scrollTo(1)}
-                  />
-                </Button>
-                <Button asChild>
-                  <div
-                    className={`!size-2 cursor-pointer rounded-full !p-0 xl:hidden ${chefSpecialsSlide === 2 ? "!bg-primary" : "!bg-stone-300"}`}
-                    onClick={() => chefSpecialsApi?.scrollTo(2)}
-                  />
-                </Button>
-                <Button asChild>
-                  <div
-                    className={`!size-2 cursor-pointer rounded-full !p-0 md:hidden ${chefSpecialsSlide === 3 ? "!bg-primary" : "!bg-stone-300"}`}
-                    onClick={() => chefSpecialsApi?.scrollTo(3)}
-                  />
-                </Button>
-                <Button asChild>
-                  <div
-                    className={`!size-2 cursor-pointer rounded-full !p-0 md:hidden ${chefSpecialsSlide === 4 ? "!bg-primary" : "!bg-stone-300"}`}
-                    onClick={() => chefSpecialsApi?.scrollTo(4)}
-                  />
-                </Button>
-                <Button asChild>
-                  <div
-                    className={`!size-2 cursor-pointer rounded-full !p-0 md:hidden ${chefSpecialsSlide === 5 ? "!bg-primary" : "!bg-stone-300"}`}
-                    onClick={() => chefSpecialsApi?.scrollTo(5)}
-                  />
-                </Button>
-              </div>
-            </div>
-          </div> */}
-
           {/* maybe a gallary/slideshow section? Prob not though */}
         </div>
       </ParallaxProvider>
     </motion.div>
   );
 }
-
-// export const getStaticProps: GetStaticProps = async (ctx) => {
-//   const prisma = new PrismaClient();
-
-//   const ourFavoriteMenuItems = await prisma.menuItem.findMany({
-//     where: {
-//       isChefsChoice: true,
-//     },
-//     include: {
-//       activeDiscount: true,
-//       customizationCategories: {
-//         include: {
-//           customizationCategory: {
-//             include: {
-//               customizationChoices: {
-//                 orderBy: {
-//                   listOrder: "asc",
-//                 },
-//               },
-//             },
-//           },
-//         },
-//       },
-//     },
-//     orderBy: {
-//       listOrder: "asc",
-//     },
-//   });
-
-//   return {
-//     props: {
-//       ourFavoriteMenuItems,
-//     },
-//   };
-// };
-
-// interface OurFavoriteMenuItemCard {
-//   menuItem: FullMenuItem;
-//   user: User | null | undefined;
-// }
-
-// function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
-//   // const { orderDetails, getPrevOrderDetails, setPrevOrderDetails } =
-//   //   useMainStore((state) => ({
-//   //     orderDetails: state.orderDetails,
-//   //     getPrevOrderDetails: state.getPrevOrderDetails,
-//   //     setPrevOrderDetails: state.setPrevOrderDetails,
-//   //   }));
-
-//   // const { updateOrder } = useUpdateOrder();
-
-//   // const { toast, dismiss: dismissToasts } = useToast();
-
-//   const [addToOrderText, setAddToOrderText] = useState("Add to order");
-
-//   return (
-//     <>
-//       <Image
-//         src={"/menuItems/sampleImage.webp"}
-//         alt={`${menuItem.name} at Khue's in St. Paul`}
-//         width={160}
-//         height={160}
-//         className="select-none self-center rounded-md drop-shadow-md tablet:drop-shadow-lg"
-//       />
-//       <p className="select-none font-semibold">{menuItem.name}</p>
-//       <p className="line-clamp-3 select-none text-center text-sm">
-//         {menuItem.description}
-//       </p>
-//       {/* <Button
-//         disabled={!menuItem.available || addToOrderText === "Added to order"}
-//         className="w-full select-none"
-//       >
-//         <AnimatePresence mode={"popLayout"} initial={false}>
-//           <motion.div
-//             key={`${menuItem.id}-${addToOrderText}`}
-//             layout
-//             // whileTap={{ scale: 0.95 }}
-//             initial={{ opacity: 0, y: -20 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             exit={{ opacity: 0, y: 20 }}
-//             transition={{
-//               duration: 0.25,
-//             }}
-//             className="baseFlex w-[122.75px] gap-2"
-//           >
-//             {addToOrderText === "Add to order" && "Add to order"}
-
-//             {addToOrderText === "Added to order" && (
-//               <svg
-//                 fill="none"
-//                 viewBox="0 0 24 24"
-//                 stroke="currentColor"
-//                 strokeWidth={2}
-//                 className="size-6 text-offwhite"
-//               >
-//                 <motion.path
-//                   initial={{ pathLength: 0 }}
-//                   animate={{ pathLength: 1 }}
-//                   transition={{
-//                     delay: 0.2,
-//                     type: "tween",
-//                     ease: "easeOut",
-//                     duration: 0.3,
-//                   }}
-//                   strokeLinecap="round"
-//                   strokeLinejoin="round"
-//                   d="M5 13l4 4L19 7"
-//                 />
-//               </svg>
-//             )}
-//           </motion.div>
-//         </AnimatePresence>
-//       </Button> */}
-//     </>
-//   );
-// }
-
-// const ourFavoriteMenuItems = [
-//   {
-//     id: "702b5c80-7d63-43ef-a80f-948c64c21575",
-//     createdAt: "2024-05-15T21:32:32.217Z",
-//     name: "Stir-fried String Beans",
-//     description:
-//       "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-//     price: 1400,
-//     altPrice: null,
-//     available: true,
-//     discontinued: false,
-//     listOrder: 15,
-//     hasImageOfItem: true,
-//     menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-//     activeDiscountId: null,
-//     isChefsChoice: false,
-//     isAlcoholic: false,
-//     isVegetarian: false,
-//     isVegan: false,
-//     isGlutenFree: false,
-//     showUndercookedOrRawDisclaimer: false,
-//     pointReward: false,
-//     birthdayReward: false,
-//     reviews: null,
-//     activeDiscount: null,
-//     customizationCategories: [],
-//   },
-//   {
-//     id: "2315135f-19f4-4ede-9af7-0ffccadd2557",
-//     createdAt: "2024-05-15T21:28:07.340Z",
-//     name: "Chili Crunch Wings",
-//     description:
-//       "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-//     price: 1200,
-//     altPrice: null,
-//     available: true,
-//     discontinued: false,
-//     listOrder: 28,
-//     hasImageOfItem: true,
-//     menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-//     activeDiscountId: null,
-//     isChefsChoice: false,
-//     isAlcoholic: false,
-//     isVegetarian: false,
-//     isVegan: false,
-//     isGlutenFree: false,
-//     showUndercookedOrRawDisclaimer: false,
-//     pointReward: false,
-//     birthdayReward: false,
-//     reviews: null,
-//     activeDiscount: null,
-//     customizationCategories: [],
-//   },
-//   {
-//     id: "77207783-b518-45f5-b43d-9c058dc0994f",
-//     createdAt: "2024-05-15T21:32:32.217Z",
-//     name: "Fresh Bread",
-//     description:
-//       "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-//     price: 1200,
-//     altPrice: null,
-//     available: true,
-//     discontinued: false,
-//     listOrder: 12,
-//     hasImageOfItem: true,
-//     menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-//     activeDiscountId: null,
-//     isChefsChoice: false,
-//     isAlcoholic: false,
-//     isVegetarian: false,
-//     isVegan: false,
-//     isGlutenFree: false,
-//     showUndercookedOrRawDisclaimer: false,
-//     pointReward: false,
-//     birthdayReward: false,
-//     reviews: null,
-//     activeDiscount: null,
-//     customizationCategories: [],
-//   },
-//   {
-//     id: "7b0aa9eb-2a87-48cd-8c98-67b3f5a4b74f",
-//     createdAt: "2024-02-21T03:51:47.000Z",
-//     name: "Vietnamese Bar Nuts",
-//     description:
-//       "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-//     price: 1200,
-//     altPrice: null,
-//     available: true,
-//     discontinued: false,
-//     listOrder: 1,
-//     hasImageOfItem: true,
-//     menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-//     activeDiscountId: null,
-//     isChefsChoice: false,
-//     isAlcoholic: false,
-//     isVegetarian: true,
-//     isVegan: false,
-//     isGlutenFree: true,
-//     showUndercookedOrRawDisclaimer: false,
-//     pointReward: true,
-//     birthdayReward: false,
-//     reviews: null,
-//     activeDiscount: null,
-//     customizationCategories: [],
-//   },
-//   {
-//     id: "bca28f28-839f-4891-a147-95176dec9341",
-//     createdAt: "2024-05-15T11:32:32.000Z",
-//     name: "Crispy Pork Bao",
-//     description:
-//       "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-//     price: 1400,
-//     altPrice: null,
-//     available: true,
-//     discontinued: false,
-//     listOrder: 14,
-//     hasImageOfItem: true,
-//     menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-//     activeDiscountId: null,
-//     isChefsChoice: false,
-//     isAlcoholic: false,
-//     isVegetarian: false,
-//     isVegan: false,
-//     isGlutenFree: false,
-//     showUndercookedOrRawDisclaimer: false,
-//     pointReward: false,
-//     birthdayReward: false,
-//     reviews: null,
-//     activeDiscount: null,
-//     customizationCategories: [],
-//   },
-//   {
-//     id: "cab3e737-7b07-423f-9d9c-8bce07a9e3e2",
-//     createdAt: "2024-02-20T15:53:09.000Z",
-//     name: "Cream Cheese Wontons",
-//     description:
-//       "Silky ricotta, signature red sauce, Italian sausage, mozzarella & parmesan cheeses.",
-//     price: 1100,
-//     altPrice: null,
-//     available: true,
-//     discontinued: false,
-//     listOrder: 2,
-//     hasImageOfItem: true,
-//     menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-//     activeDiscountId: null,
-//     isChefsChoice: true,
-//     isAlcoholic: false,
-//     isVegetarian: false,
-//     isVegan: true,
-//     isGlutenFree: true,
-//     showUndercookedOrRawDisclaimer: false,
-//     pointReward: true,
-//     birthdayReward: false,
-//     reviews: null,
-//     activeDiscount: null,
-//     customizationCategories: [],
-//   },
-// ];
-
-// TODO: readd once online ordering is back
-
-// {/* "Order directly through us" promo section */}
-// <div className="baseVertFlex w-full max-w-sm overflow-hidden rounded-md border shadow-md tablet:hidden">
-//   {/* maybe have stock image of person holding a phone and you would have a proportionally
-//       tilted screenshot of the order page showing on their phone? think about it */}
-//   <div className="relative h-60 w-full overflow-hidden shadow-md">
-//     <Image
-//       src={rewardsPromo}
-//       alt={"TODO: fill in w/ appropriate alt text"}
-//       width={384}
-//       className="!relative !top-0 !size-full !h-96 object-cover !pb-32"
-//     />
-//   </div>
-//   <div className="baseVertFlex relative gap-4 overflow-hidden rounded-b-md bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
-//     <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
-//     <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
-
-//     <p className="text-lg font-medium leading-6">
-//       Enjoy exclusive benefits when you order direct
-//     </p>
-//     <div className="baseVertFlex mt-2 !items-start gap-4 pl-1">
-//       <div className="baseFlex !items-start gap-4">
-//         <MdOutlineMoneyOff className="size-6 shrink-0" />
-//         <p>Shop our lowest menu prices</p>
-//       </div>
-//       <div className="baseFlex !items-start gap-4">
-//         <BsSpeedometer2 className="mt-2 size-6 shrink-0" />
-//         <p>
-//           Priority order processing over third-party delivery services
-//         </p>
-//       </div>
-//       <div className="baseFlex !items-start gap-4">
-//         <TfiReceipt className="mt-2 size-6 shrink-0" />
-//         <p>
-//           Rewards members earn points towards free meals with every
-//           order
-//         </p>
-//       </div>
-//     </div>
-
-//     <Button size={"lg"} asChild>
-//       <Link
-// prefetch={false}
-//         href="/order"
-//         className="baseFlex my-2 mt-4 gap-2 !px-4 !text-base shadow-md"
-//       >
-//         <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
-//         Order now
-//         <SideAccentSwirls className="h-[14px] fill-offwhite" />
-//       </Link>
-//     </Button>
-//   </div>
-// </div>
-
-// <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
-//   <div className="baseVertFlex relative mt-6 !items-start gap-4 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 shadow-md">
-//     <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-primary/50" />
-//     <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
-
-//     <p className="text-lg font-medium">
-//       Enjoy exclusive benefits when you order direct
-//     </p>
-//     <div className="baseVertFlex mt-2 !items-start gap-4">
-//       <div className="baseFlex gap-4">
-//         <MdOutlineMoneyOff className="size-6 shrink-0" />
-//         <p>Shop our lowest menu prices</p>
-//       </div>
-//       <div className="baseFlex gap-4">
-//         <BsSpeedometer2 className="size-6 shrink-0" />
-//         <p>
-//           Priority order processing over third-party delivery services
-//         </p>
-//       </div>
-//       <div className="baseFlex gap-4">
-//         <TfiReceipt className="size-6 shrink-0" />
-//         <p className="max-w-lg">
-//           Rewards members earn points towards free meals with every
-//           order
-//         </p>
-//       </div>
-//     </div>
-
-//     <Button size={"lg"} asChild>
-//       <Link
-// prefetch={false}
-//         href="/order"
-//         className="baseFlex mt-4 gap-2 self-center !px-4 !text-base shadow-md"
-//       >
-//         <SideAccentSwirls className="h-[14px] scale-x-[-1] fill-offwhite" />
-//         Order now
-//         <SideAccentSwirls className="h-[14px] fill-offwhite" />
-//       </Link>
-//     </Button>
-//   </div>
-
-//   <div className="baseFlex relative size-72">
-//     <motion.div
-//       ref={firstBackdropAnimation.elementRef}
-//       initial={{ opacity: 0, x: 50 }}
-//       animate={firstBackdropAnimation.controls}
-//       transition={{
-//         opacity: { duration: 0.2 },
-//         type: "spring",
-//         stiffness: 100,
-//         damping: 15,
-//       }}
-//       className="absolute right-4 top-4 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
-//     ></motion.div>
-
-//     {/* maybe have stock image of person holding a phone and you would have a proportionally
-//       tilted screenshot of the order page showing on their phone? think about it */}
-//     <motion.div
-//       ref={firstPromoImageAnimation.elementRef}
-//       initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
-//       animate={firstPromoImageAnimation.controls}
-//       transition={{
-//         opacity: { duration: 0.2 },
-//         type: "spring",
-//         stiffness: 100,
-//         damping: 15,
-//       }}
-//       className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
-//     >
-//       <Image
-//         src={rewardsPromo}
-//         alt={"TODO: fill in w/ appropriate alt text"}
-//         sizes="500px"
-//         className="!relative !top-0 !size-full !h-96 rounded-md object-cover !pb-8"
-//       />
-//     </motion.div>
-//   </div>
-// </div>

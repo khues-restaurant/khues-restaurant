@@ -800,9 +800,9 @@ function MenuItemPreview({
               width={500}
               height={500}
               // layout="intrinsic"
-              quality={100}
+              quality={90}
               // unoptimized
-              className="mt-1 !size-28 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md sm:!size-32"
+              className="mt-1 !size-28 shrink-0 !self-start rounded-2xl object-cover drop-shadow-md sm:!size-[136px]"
             />
           )}
 
