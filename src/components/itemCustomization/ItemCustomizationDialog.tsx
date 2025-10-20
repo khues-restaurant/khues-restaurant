@@ -222,7 +222,7 @@ function ItemCustomizerDialogContent({
 
       <div className="baseVertFlex relative w-full !justify-start overflow-y-auto pr-4 pt-4 tablet:max-h-[75vh]">
         <div className="baseFlex relative h-72 w-full shrink-0 !justify-end overflow-hidden rounded-md bg-gradient-to-br from-primary to-darkPrimary shadow-md">
-          {itemToCustomize.hasImageOfItem && (
+          {menuItemImagePaths[itemToCustomize.name] && (
             <div
               style={{
                 filter: "drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5))",
@@ -240,7 +240,7 @@ function ItemCustomizerDialogContent({
 
           <div
             style={{
-              bottom: itemToCustomize.hasImageOfItem ? "0px" : "-1px",
+              bottom: menuItemImagePaths[itemToCustomize.name] ? "0px" : "-1px",
             }}
             className="baseFlex absolute left-4 gap-4 rounded-t-md border border-b-0 bg-offwhite px-4 py-2 text-xl font-semibold"
           >
@@ -318,7 +318,7 @@ function ItemCustomizerDialogContent({
 
               <div className="baseFlex mt-2 w-full flex-wrap !justify-start gap-3 text-sm text-stone-500">
                 {itemToCustomize.isChefsChoice && (
-                  <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                  <div className="baseFlex gap-2 rounded-md px-2 py-1 outline outline-[1px]">
                     <p className="baseFlex size-4 rounded-full border border-stone-500 bg-offwhite p-2">
                       K
                     </p>
@@ -327,20 +327,20 @@ function ItemCustomizerDialogContent({
                 )}
 
                 {itemToCustomize.isVegetarian && (
-                  <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                  <div className="baseFlex gap-2 rounded-md px-2 py-1 outline outline-[1px]">
                     <SiLeaflet className="size-4" />
                     <p>Vegetarian</p>
                   </div>
                 )}
 
                 {itemToCustomize.isVegan && (
-                  <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                  <div className="baseFlex gap-2 rounded-md px-2 py-1 outline outline-[1px]">
                     <LuVegan className="size-4" />-<p>Vegan</p>
                   </div>
                 )}
 
                 {itemToCustomize.isGlutenFree && (
-                  <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                  <div className="baseFlex gap-2 rounded-md px-2 py-1 outline outline-[1px]">
                     <span>GF</span>-<span>Gluten Free</span>
                   </div>
                 )}
@@ -482,7 +482,7 @@ function ItemCustomizerDialogContent({
                         variant="outline"
                         size="icon"
                         disabled={localItemOrderDetails.quantity <= 1}
-                        className="size-7 rounded-none p-0 !outline-none"
+                        className="size-7 rounded-none !border-none p-0"
                         onClick={() => {
                           if (localItemOrderDetails.quantity <= 1) return;
 
@@ -502,7 +502,7 @@ function ItemCustomizerDialogContent({
                       <Button
                         variant="outline"
                         disabled={localItemOrderDetails.quantity > 20}
-                        className="size-7 rounded-none p-0 !outline-none"
+                        className="size-7 rounded-none !border-none p-0"
                         onClick={() => {
                           if (localItemOrderDetails.quantity > 20) return;
 

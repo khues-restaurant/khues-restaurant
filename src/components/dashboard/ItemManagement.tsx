@@ -158,9 +158,9 @@ function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
                   {item.available ? "Disable ordering" : "Enable ordering"}
                 </AlertDialogHeader>
                 <AlertDialogDescription>
-                  Are you sure you want to make{" "}
-                  <span className="font-semibold">{item.name}</span>{" "}
-                  {item.available ? "unable" : "able"} to be ordered online?
+                  Are you sure you want to{" "}
+                  {item.available ? "disable" : "enable"} ordering for{" "}
+                  <span className="font-semibold">{item.name}</span>?
                 </AlertDialogDescription>
 
                 <AlertDialogFooter className="baseFlex mt-8 w-full !flex-row gap-8">

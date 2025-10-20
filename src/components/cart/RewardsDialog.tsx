@@ -438,7 +438,7 @@ function RewardMenuItem({
   return (
     <div className="relative w-[400px]">
       <div className="baseFlex size-full !items-start gap-4 rounded-md py-4">
-        {menuItem.hasImageOfItem && (
+        {menuItemImagePaths[menuItem.name] && (
           <Image
             src={menuItemImagePaths[menuItem.name] ?? ""}
             alt={`${menuItem.name} at Khue's in St. Paul`}

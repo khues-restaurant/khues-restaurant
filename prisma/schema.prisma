@@ -10,6 +10,20 @@ datasource db {
 // FYI: all prices/finacial fields are stored in cents to avoid floating point errors
 // FYI: id fields and "@unique" fields are automatically indexed
 
+// Singleton models
+model MinimumOrderPickupTime {
+    id Int @id @default(1)
+
+    value DateTime @default(now()) // will get reset to midnight of current day every day by a cron job
+}
+
+model NumberOfOrdersAllowedPerPickupTimeSlot {
+    id Int @id @default(1)
+
+    value Int @default(3)
+}
+
+// Regular models
 model BlacklistedEmail {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
@@ -53,6 +67,26 @@ model ChatMessage {
     @@index([chatId]) // is this what we want?
 }
 
+model HoursOfOperation {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+
+    dayOfWeek      Int // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    openHour       Int // 24-hour format
+    openMinute     Int
+    closeHour      String // 24-hour format
+    closeMinute    String
+    isClosedAllDay Boolean @default(false)
+}
+
+model Holiday {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+
+    date              DateTime @unique
+    isRecurringAnnual Boolean  @default(false)
+}
+
 // unsure of whether these will make it to prod
 model Review {
     id        String   @id @default(uuid())
@@ -66,12 +100,6 @@ model Review {
 
     user   User   @relation(fields: [userId], references: [userId])
     userId String
-}
-
-model MinimumOrderPickupTime {
-    id Int @id @default(1)
-
-    value DateTime @default(now()) // will get reset to midnight of current day every day by a cron job
 }
 
 model FavoriteItem {
@@ -102,14 +130,13 @@ model MenuItem {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
 
-    name           String
-    description    String
-    price          Int
-    altPrice       Int? // used for singular glass pricing of wine
-    available      Boolean @default(true) // whether item is able to be ordered (86'd or not)
-    discontinued   Boolean @default(false) // whether item is no longer on the menu
-    listOrder      Int     @default(autoincrement())
-    hasImageOfItem Boolean @default(false)
+    name         String
+    description  String
+    price        Int
+    altPrice     Int? // used for full bottle pricing of alcoholic beverages
+    available    Boolean @default(true) // whether item is able to be ordered (86'd or not)
+    discontinued Boolean @default(false) // whether item is no longer on the menu
+    listOrder    Int     @default(autoincrement())
 
     menuCategory     MenuCategory @relation(fields: [menuCategoryId], references: [id])
     menuCategoryId   String
@@ -117,13 +144,15 @@ model MenuItem {
     activeDiscountId String?
 
     isChefsChoice                  Boolean @default(false)
-    isAlcoholic                    Boolean @default(false)
+    isWeekendSpecial               Boolean @default(false)
     isVegetarian                   Boolean @default(false)
     isVegan                        Boolean @default(false)
+    isDairyFree                    Boolean @default(false)
     isGlutenFree                   Boolean @default(false)
+    isSpicy                        Boolean @default(false)
+    askServerForAvailability       Boolean @default(false)
     showUndercookedOrRawDisclaimer Boolean @default(false)
 
-    pointReward    Boolean @default(false)
     birthdayReward Boolean @default(false)
 
     reviews String? // max three hand-picked reviews, separated/delimited by " | "
@@ -171,8 +200,8 @@ model MenuItemCustomizationCategory {
     @@index([menuItemId, customizationCategoryId])
 }
 
-// used to store the order details so before stripe session is created
-// so that upon completion the stripe webhook can fetch the order details
+// used to store the order details before stripe session is created so 
+// that upon order completion the stripe webhook can fetch the order details
 // and properly create the Order row in the database
 model TransientOrder {
     id        String   @id @default(uuid())
@@ -182,7 +211,7 @@ model TransientOrder {
     userId  String @unique // not related to User model so that customers can still place order as a guest
 }
 
-// BTW, if you come back to this and wonder why we have so much "duplicate" information on below Order
+// FYI: if you come back to this and wonder why we have so much "duplicate" information on below Order
 // models, there is some crossover for sure, but I think keeping them separate is the best way to go
 // especially if menu items change, or discounts change, etc. This way we can keep a record of what was
 // ordered at the time of the order for historical purposes. Also, it makes it easier to track down
@@ -206,19 +235,6 @@ model OrderItem {
     discount   Discount? @relation(fields: [discountId], references: [id])
     discountId String?
 
-    // TODO: are these fields below necessary? I thought maybe the isAlcoholic one was for when
-    // reordering an order that had an alcoholic item in it, but I think that can be inferred
-    // to be valid if the original order was valid. Maybe just remove these fields if you can be 100%
-    // sure that they aren't necessary
-    isChefsChoice                  Boolean @default(false)
-    isAlcoholic                    Boolean @default(false)
-    isVegetarian                   Boolean @default(false)
-    isVegan                        Boolean @default(false)
-    isGlutenFree                   Boolean @default(false)
-    showUndercookedOrRawDisclaimer Boolean @default(false)
-    hasImageOfItem                 Boolean @default(false)
-
-    pointReward    Boolean @default(false)
     birthdayReward Boolean @default(false)
 
     customizations OrderItemCustomization[]
@@ -239,6 +255,7 @@ model Order {
     id        String   @id @default(uuid()) // first 6 digits will be used for any customer-facing order number
     createdAt DateTime @default(now())
 
+    orderRefundedAt  DateTime?
     orderStartedAt   DateTime?
     orderCompletedAt DateTime?
     datetimeToPickup DateTime
@@ -260,24 +277,20 @@ model Order {
     tipValue      Int
     total         Int
 
-    prevRewardsPoints   Int
-    earnedRewardsPoints Int
-    spentRewardsPoints  Int
-
     stripeSessionId String @unique // used for tracking the order in Stripe
 
     notableUserDescription String?
-    rewardsPointsRedeemed  Boolean @default(false) // primarily used to check whether an unregistered user has redeemed a specific order's points upon signup
     userLeftFeedback       Boolean @default(false)
 
     user   User?   @relation(fields: [userId], references: [userId])
     userId String?
 
     reviews Review[] // these are just the direct reviews on the order, so that the dashboard can show the user's order
-    // alongside their feedback. This isn't to be confused with the to be made "MenuItemReview" model
+    // alongside their feedback. This isn't to be confused with the to be made "MenuItemReview" modal
 
-    reward          Reward?
     orderPrintQueue OrderPrintQueue[] // maybe this should be a one-to-one relationship, but I think it's fine as is. Playing it safe for now to avoid any issues this might bring concerning reprinting order tickets
+
+    @@index([datetimeToPickup])
 }
 
 model OrderPrintQueue {
@@ -286,30 +299,6 @@ model OrderPrintQueue {
 
     order   Order  @relation(fields: [orderId], references: [id])
     orderId String
-}
-
-// Only used for point rewards. Birthday rewards are handled on a more one-off basis
-// on the User model
-model Reward {
-    id        String   @id @default(uuid())
-    createdAt DateTime @default(now())
-    expiresAt DateTime
-
-    expired Boolean @default(false) // used to narrow down why value might be 0
-    // esp. for Point history section on user's rewards page
-
-    initValue Int // kept for historical purposes
-    value     Int // is 0 if expired/has been fully redeemed
-
-    partiallyRedeemed Boolean @default(false)
-
-    order   Order?  @relation(fields: [orderId], references: [id])
-    orderId String? @unique
-
-    user   User   @relation(fields: [userId], references: [userId])
-    userId String
-
-    @@index([userId])
 }
 
 model Discount {
@@ -357,17 +346,11 @@ model User {
     // ^ this encompasses the "Close to a reward", "Reward(s) are expiring soon",
     // and "Birthday reward available" emails
 
-    orderHasBeenPlacedSinceLastCloseToRewardEmail Boolean @default(false)
-
-    rewardsPoints        Int @default(500) // TODO: most likely change this later
-    lifetimeRewardPoints Int @default(0)
-
     lastBirthdayRewardRedemptionYear Int @default(0)
 
     currentOrder Json?
 
     recentOrders  Order[]
-    rewards       Reward[]
     favoriteItems FavoriteItem[]
     discounts     Discount[]
     reviews       Review[]

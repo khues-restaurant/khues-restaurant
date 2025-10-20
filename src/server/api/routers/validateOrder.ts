@@ -32,7 +32,7 @@ import {
  *      - Item must exist in the database and be available.
  *      - Item's price must match the price in the database.
  *      - Item's quantity must be greater than 0.
- *      - Remove items that are unavailable or have an "isAlcoholic" field set to true.
+ *      - Remove items that are unavailable (86'd).
  *    - Customizations:
  *      - Customization choice IDs must exist and be available in the database.
  *      - If a customization choice ID is invalid, set to default or first available choice.
@@ -170,7 +170,6 @@ export const validateOrderRouter = createTRPCRouter({
             !dbItem.menuCategory.orderableOnline ||
             !dbItem.available ||
             dbItem.price !== item.price ||
-            dbItem.isAlcoholic ||
             item.quantity <= 0
           ) {
             items.splice(i, 1);

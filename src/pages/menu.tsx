@@ -899,7 +899,7 @@ function MenuItemPreview({
         className={`${menuItem.description ? "flex-row" : "flex-row"} flex size-full items-center !justify-between gap-4 py-1`}
       >
         <div className="baseFlex mt-4 w-full !items-start gap-4 tablet:mt-0">
-          {menuItem.hasImageOfItem && (
+          {menuItemImagePaths[menuItem.name] && (
             <Image
               src={menuItemImagePaths[menuItem.name] ?? ""}
               alt={`${menuItem.name} at Khue's in St. Paul`}

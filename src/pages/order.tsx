@@ -494,7 +494,7 @@ function OrderNow() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
-                className="baseVertFlex mb-8 size-full gap-8 p-4 pb-16 tablet:mt-6 tablet:gap-16 tablet:p-0 tablet:pb-8"
+                className="baseVertFlex mb-8 size-full gap-8 px-1 pb-16 pt-4 tablet:mt-6 tablet:gap-16 tablet:p-0 tablet:pb-8"
               >
                 {userFavoriteItemIds.length > 0 && (
                   <FavoriteItems
@@ -922,8 +922,13 @@ function MenuItemPreviewButton({
           <div className={`baseVertFlex h-full !items-start`}>
             <div className="baseVertFlex !items-start gap-2">
               <div className="baseVertFlex !items-start gap-1">
-                <p className="whitespace-normal text-left text-lg font-medium underline underline-offset-2 supports-[text-wrap]:text-wrap">
-                  {menuItem.name}
+                <p className="whitespace-normal text-left text-base font-medium supports-[text-wrap]:text-wrap tablet:text-lg ">
+                  <span
+                    className={`${menuItem.description ? "underline underline-offset-2" : ""}`}
+                  >
+                    {menuItem.name}
+                  </span>
+                  {menuItem.showUndercookedOrRawDisclaimer ? "*" : ""}
                 </p>
 
                 <div className="baseFlex !justify-start gap-1">
@@ -946,7 +951,7 @@ function MenuItemPreviewButton({
             </div>
           </div>
 
-          {menuItem.hasImageOfItem && (
+          {menuItemImagePaths[menuItem.name] && (
             <Image
               src={menuItemImagePaths[menuItem.name] ?? ""}
               alt={`${menuItem.name} at Khue's in St. Paul`}
@@ -981,13 +986,11 @@ function MenuItemPreviewButton({
                     name: menuItem.name,
                     specialInstructions: "",
                     isChefsChoice: menuItem.isChefsChoice,
-                    isAlcoholic: menuItem.isAlcoholic,
                     isVegetarian: menuItem.isVegetarian,
                     isVegan: menuItem.isVegan,
                     isGlutenFree: menuItem.isGlutenFree,
                     showUndercookedOrRawDisclaimer:
                       menuItem.showUndercookedOrRawDisclaimer,
-                    hasImageOfItem: menuItem.hasImageOfItem,
                     birthdayReward: false,
                     pointReward: false,
                   },
@@ -1067,13 +1070,11 @@ function MenuItemPreviewButton({
                         quantity: 1,
                         price: menuItem.price,
                         isChefsChoice: menuItem.isChefsChoice,
-                        isAlcoholic: menuItem.isAlcoholic,
                         isVegetarian: menuItem.isVegetarian,
                         isVegan: menuItem.isVegan,
                         isGlutenFree: menuItem.isGlutenFree,
                         showUndercookedOrRawDisclaimer:
                           menuItem.showUndercookedOrRawDisclaimer,
-                        hasImageOfItem: menuItem.hasImageOfItem,
                         discountId: activeDiscount?.id ?? null,
                         birthdayReward: false,
                         pointReward: false,

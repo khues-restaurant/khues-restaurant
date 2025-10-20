@@ -96,7 +96,7 @@ const isAdmin = t.middleware(async ({ next, ctx }) => {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
-  const user = await clerkClient().users.getUser(userId);
+  const user = await (await clerkClient()).users.getUser(userId);
 
   if (!user.privateMetadata) {
     throw new TRPCError({ code: "UNAUTHORIZED" });

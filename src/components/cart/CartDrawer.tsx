@@ -753,7 +753,7 @@ function CartDrawer({
       </div>
 
       {/* summary of items in cart */}
-      <div className="baseVertFlex size-full max-w-lg !items-start !justify-start gap-2">
+      <div className="baseVertFlex size-full max-w-lg !items-start !justify-start">
         <p className="px-4 text-lg font-semibold underline underline-offset-2">
           Items
         </p>
@@ -771,8 +771,8 @@ function CartDrawer({
               animate={{
                 opacity: 1,
                 height: `${100 + itemNamesRemovedFromCart.length * 24}px`,
-                paddingTop: "0.5rem",
-                paddingBottom: "0.5rem",
+                paddingTop: "1rem",
+                paddingBottom: "1rem",
               }}
               exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }}
               transition={{
@@ -805,7 +805,7 @@ function CartDrawer({
                 </ul>
 
                 <Button
-                  variant={"outline"} // prob diff variant or make a new one
+                  variant={"underline"} // prob diff variant or make a new one
                   // rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary
                   className="absolute right-2 top-2 size-6 bg-primary !p-0 text-offwhite"
                   onClick={() => {
@@ -843,7 +843,7 @@ function CartDrawer({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="baseVertFlex w-full !items-start !justify-start gap-2 px-4 pb-36"
+              className="baseVertFlex w-full !items-start !justify-start gap-2 px-4 pb-36 pt-1"
             >
               <div className="baseVertFlex w-full !justify-start">
                 <AnimatePresence>
@@ -871,7 +871,7 @@ function CartDrawer({
                       className="baseFlex w-full !items-start gap-4"
                     >
                       {/* preview image of item */}
-                      {item.hasImageOfItem ? (
+                      {menuItemImagePaths[item.name] ? (
                         <Image
                           src={menuItemImagePaths[item.name] ?? ""}
                           alt={`${item.name} at Khue's in St. Paul`}
@@ -1057,7 +1057,7 @@ function CartDrawer({
                             className="baseFlex w-full !items-start gap-4"
                           >
                             {/* preview image of item */}
-                            {item.hasImageOfItem ? (
+                            {menuItemImagePaths[item.name] ? (
                               <div className="!size-16 min-h-16 min-w-16 rounded-md bg-rewardsGradient !p-1">
                                 <Image
                                   src={menuItemImagePaths[item.name] ?? ""}

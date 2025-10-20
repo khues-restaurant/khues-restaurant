@@ -781,7 +781,7 @@ function CartSheet({
                 </ul>
 
                 <Button
-                  variant={"outline"} // prob diff variant or make a new one
+                  variant={"underline"} // prob diff variant or make a new one
                   // rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary
                   className="absolute right-2 top-2 size-6 bg-primary !p-0 text-offwhite"
                   onClick={() => {
@@ -819,7 +819,7 @@ function CartSheet({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="baseVertFlex w-full !items-start !justify-start gap-2 p-4 pb-16"
+              className="baseVertFlex w-full !items-start !justify-start gap-2 p-4 pb-16 pt-1"
             >
               <div className="baseVertFlex w-full !justify-start">
                 <AnimatePresence>
@@ -847,7 +847,7 @@ function CartSheet({
                       className="baseFlex w-full !items-start gap-4"
                     >
                       {/* preview image of item */}
-                      {item.hasImageOfItem ? (
+                      {menuItemImagePaths[item.name] ? (
                         <Image
                           src={menuItemImagePaths[item.name] ?? ""}
                           alt={`${item.name} at Khue's in St. Paul`}
@@ -1033,7 +1033,7 @@ function CartSheet({
                             className="baseFlex w-full !items-start gap-4"
                           >
                             {/* preview image of item */}
-                            {item.hasImageOfItem ? (
+                            {menuItemImagePaths[item.name] ? (
                               <div className="size-14 rounded-xl bg-rewardsGradient p-1">
                                 <Image
                                   src={menuItemImagePaths[item.name] ?? ""}

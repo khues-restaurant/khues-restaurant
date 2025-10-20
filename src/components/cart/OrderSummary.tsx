@@ -64,7 +64,7 @@ function OrderSummary({ order }: OrderSummary) {
               className="baseFlex w-full !items-start gap-4"
             >
               {/* preview image of item */}
-              {item.hasImageOfItem && (
+              {menuItemImagePaths[item.name] && (
                 <Image
                   src={menuItemImagePaths[item.name] ?? ""}
                   alt={`${item.name} at Khue's in St. Paul`}

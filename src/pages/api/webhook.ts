@@ -245,7 +245,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         email: customerMetadata.email,
         phoneNumber: customerMetadata.phoneNumber ?? null,
         dietaryRestrictions: includeDietaryRestrictions
-          ? user?.dietaryRestrictions ?? null
+          ? (user?.dietaryRestrictions ?? null)
           : null,
         includeNapkinsAndUtensils: orderDetails.includeNapkinsAndUtensils,
         subtotal: subtotal.toNumber(),
@@ -388,9 +388,6 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
               discountId: null,
             },
             lastBirthdayRewardRedemptionYear,
-            orderHasBeenPlacedSinceLastCloseToRewardEmail: true,
-            // ^ gets set back to false whenever the next "close to reward"
-            // email is sent out
           },
         });
       }

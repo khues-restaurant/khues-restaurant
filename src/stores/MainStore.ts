@@ -33,12 +33,10 @@ const itemSchema = z.object({
   quantity: z.number(),
   price: z.number(),
   isChefsChoice: z.boolean(),
-  isAlcoholic: z.boolean(),
   isVegetarian: z.boolean(),
   isVegan: z.boolean(),
   isGlutenFree: z.boolean(),
   showUndercookedOrRawDisclaimer: z.boolean(),
-  hasImageOfItem: z.boolean(),
   pointReward: z.boolean(),
   birthdayReward: z.boolean(),
 });
@@ -74,12 +72,10 @@ export interface Item {
   quantity: number;
   price: number;
   isChefsChoice: boolean;
-  isAlcoholic: boolean;
   isVegetarian: boolean;
   isVegan: boolean;
   isGlutenFree: boolean;
   showUndercookedOrRawDisclaimer: boolean;
-  hasImageOfItem: boolean;
   pointReward: boolean;
   birthdayReward: boolean;
 }

@@ -268,7 +268,7 @@ function ItemCustomizationDrawer({
             )}
           </div>
 
-          {itemToCustomize.hasImageOfItem && (
+          {menuItemImagePaths[itemToCustomize.name] && (
             <Image
               src={menuItemImagePaths[itemToCustomize.name] ?? ""}
               alt="Spicy Chicken Sandwich at Khue's in St. Paul"
@@ -290,7 +290,7 @@ function ItemCustomizationDrawer({
 
               <div className="baseFlex mt-2 w-full flex-wrap !justify-start gap-3 text-sm text-stone-500">
                 {itemToCustomize.isChefsChoice && (
-                  <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                  <div className="baseFlex gap-2 rounded-md px-2 py-1 outline outline-[1px]">
                     <p className="baseFlex size-4 rounded-full border border-stone-500 bg-offwhite p-2">
                       K
                     </p>
@@ -299,20 +299,20 @@ function ItemCustomizationDrawer({
                 )}
 
                 {itemToCustomize.isVegetarian && (
-                  <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                  <div className="baseFlex gap-2 rounded-md px-2 py-1 outline outline-[1px]">
                     <SiLeaflet className="size-4" />
                     <p>Vegetarian</p>
                   </div>
                 )}
 
                 {itemToCustomize.isVegan && (
-                  <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                  <div className="baseFlex gap-2 rounded-md px-2 py-1 outline outline-[1px]">
                     <LuVegan className="size-4" />-<p>Vegan</p>
                   </div>
                 )}
 
                 {itemToCustomize.isGlutenFree && (
-                  <div className="baseFlex gap-2 rounded-md p-1 outline outline-[1px]">
+                  <div className="baseFlex gap-2 rounded-md px-2 py-1 outline outline-[1px]">
                     <span>GF</span>-<span>Gluten Free</span>
                   </div>
                 )}
@@ -473,7 +473,7 @@ function ItemCustomizationDrawer({
                     variant="outline"
                     size="icon"
                     disabled={localItemOrderDetails.quantity <= 1}
-                    className="size-7 rounded-none p-0 !outline-none"
+                    className="size-7 rounded-none !border-none p-0"
                     onClick={() => {
                       if (localItemOrderDetails.quantity <= 1) return;
 
@@ -493,7 +493,7 @@ function ItemCustomizationDrawer({
                   <Button
                     variant="outline"
                     disabled={localItemOrderDetails.quantity > 20}
-                    className="size-7 rounded-none p-0 !outline-none"
+                    className="size-7 rounded-none !border-none p-0"
                     onClick={() => {
                       if (localItemOrderDetails.quantity > 20) return;
 

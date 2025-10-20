@@ -16,7 +16,7 @@ import Welcome from "emails/Welcome";
 const resend = new Resend(env.RESEND_API_KEY);
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  apiVersion: "2024-06-20",
+  apiVersion: "2025-09-30.clover",
 });
 
 export const userRouter = createTRPCRouter({
@@ -75,38 +75,6 @@ export const userRouter = createTRPCRouter({
         name: `${firstName} ${lastName}`,
         phone: phoneNumber,
       });
-
-      // add inital rewards for user
-      void ctx.prisma.reward.create({
-        data: {
-          userId,
-          expiresAt: addMonths(new Date(), 6),
-          initValue: 500,
-          value: 500,
-        },
-      });
-
-      // if applicable, set orderIdBeingRedeemed's "rewardsPointsRedeemed" to true
-      if (orderIdBeingRedeemed && rewardsPointsBeingRedeemed > 0) {
-        await ctx.prisma.order.update({
-          where: {
-            id: orderIdBeingRedeemed,
-          },
-          data: {
-            rewardsPointsRedeemed: true,
-            userId,
-          },
-        });
-
-        await ctx.prisma.reward.create({
-          data: {
-            userId,
-            expiresAt: addMonths(new Date(), 6),
-            initValue: rewardsPointsBeingRedeemed,
-            value: rewardsPointsBeingRedeemed,
-          },
-        });
-      }
 
       // create email unsubscription token + send welcome email
       const unsubscriptionToken =
@@ -175,8 +143,6 @@ export const userRouter = createTRPCRouter({
           dietaryRestrictions,
           autoApplyDietaryRestrictions,
           currentOrder,
-          rewardsPoints: 500 + rewardsPointsBeingRedeemed,
-          lifetimeRewardPoints: 500 + rewardsPointsBeingRedeemed,
           ...initialEmailPreferences,
         },
       });
@@ -343,13 +309,6 @@ export const userRouter = createTRPCRouter({
         },
       });
 
-      // Delete user's rewards
-      await ctx.prisma.reward.deleteMany({
-        where: {
-          userId,
-        },
-      });
-
       // discounts aren't currently part of the prod plan, so omitting here
 
       const user = await ctx.prisma.user.findFirst({
@@ -360,7 +319,7 @@ export const userRouter = createTRPCRouter({
 
       if (user) await stripe.customers.del(user.stripeUserId);
 
-      await clerkClient().users.deleteUser(userId);
+      await (await clerkClient()).users.deleteUser(userId);
 
       // deleteMany instead of delete because prisma throws an error if the row doesn't exist
       return ctx.prisma.user.deleteMany({
@@ -369,118 +328,4 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
-
-  getInfiniteRewards: protectedProcedure
-    .input(
-      z.object({
-        userId: z.string().min(1).max(100),
-        sortDirection: z.enum(["asc", "desc"]).default("desc"),
-        cursor: z.string().nullish(), // <-- "cursor" needs to exist, but can be any type
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      if (input.userId !== ctx.auth.userId) {
-        throw new Error("Unauthorized");
-      }
-
-      const { userId, sortDirection, cursor } = input;
-      const rewards = await ctx.prisma.order.findMany({
-        where: {
-          userId,
-        },
-        // TODO: unsure of if you need "distinct: ["id"]" here
-        select: {
-          id: true,
-          datetimeToPickup: true,
-          earnedRewardsPoints: true,
-          spentRewardsPoints: true,
-          reward: {
-            select: {
-              expired: true,
-            },
-          },
-        },
-        orderBy: {
-          datetimeToPickup: sortDirection,
-        },
-        take: 25 + 1, // get an extra item at the end which we'll use as next cursor
-        cursor: cursor ? { id: cursor } : undefined,
-      });
-      let nextCursor: typeof cursor | undefined = undefined;
-
-      const rewardsWithExpiredField = rewards.map((reward) => ({
-        id: reward.id,
-        datetimeToPickup: reward.datetimeToPickup,
-        earnedRewardsPoints: reward.earnedRewardsPoints,
-        spentRewardsPoints: reward.spentRewardsPoints,
-        expired: reward.reward?.expired ?? true, // playing it safe, if related reward isn't found, then it's labled as expired
-      }));
-
-      const initialReward = await ctx.prisma.reward.findFirst({
-        where: {
-          userId,
-        },
-        select: {
-          id: true,
-          createdAt: true,
-          initValue: true, // init since the regular value can/will change
-          expired: true,
-        },
-        orderBy: {
-          createdAt: "asc",
-        },
-      });
-
-      // TODO: verify that adding the initial sign up reward doesn't mess with the cursor
-      // later on
-      if (initialReward) {
-        rewardsWithExpiredField.push({
-          id: initialReward.id,
-          datetimeToPickup: initialReward.createdAt,
-          earnedRewardsPoints: initialReward.initValue,
-          spentRewardsPoints: 0,
-          expired: initialReward.expired ?? true,
-        });
-      }
-
-      if (rewardsWithExpiredField.length > 25) {
-        const nextReward = rewardsWithExpiredField.pop();
-
-        if (nextReward) {
-          nextCursor = nextReward.id;
-        }
-      }
-
-      return {
-        rewards: rewardsWithExpiredField,
-        nextCursor,
-      };
-    }),
-
-  // most likely should be deprecated, since if discounts are added they will
-  // almost definitely come with some schema shape changes
-  // getRewards: protectedProcedure
-  //   .input(z.string())
-  //   .query(async ({ ctx, input: userId }) => {
-  //     const rewards = await ctx.prisma.user.findFirst({
-  //       where: {
-  //         userId,
-  //       },
-  //       select: {
-  //         discounts: {
-  //           where: {
-  //             expirationDate: {
-  //               gt: new Date(),
-  //             },
-  //             active: true,
-  //             userId: {
-  //               equals: userId,
-  //             },
-  //           },
-  //         },
-  //       },
-  //     });
-
-  //     return rewards?.discounts;
-  //   }),
 });

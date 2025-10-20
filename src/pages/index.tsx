@@ -450,7 +450,7 @@ function Home({ json }: { json: string }) {
               alt={"Spicy Chicken Sandwich at Khue's in St. Paul"}
               priority
               sizes="66vw"
-              className="!relative !size-full rounded-md object-cover"
+              className="!relative !size-full rounded-md object-cover "
             />
           </motion.div>
 

@@ -466,10 +466,10 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                   <div>{format(new Date(order.createdAt), "PPP")}</div>
                   {/* preview images */}
                   <div className="baseFlex gap-2">
-                    {order.orderItems[0]?.hasImageOfItem && (
+                    {menuItemImagePaths[order.orderItems[0]?.name ?? ""] && (
                       <Image
                         src={
-                          menuItemImagePaths[order.orderItems[0]?.name] ?? ""
+                          menuItemImagePaths[order.orderItems[0]?.name ?? ""]
                         }
                         alt={order.orderItems[0]?.name ?? "First item"}
                         width={500}
@@ -479,10 +479,10 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                     )}
 
                     {order.orderItems.length > 1 &&
-                      order.orderItems[1]?.hasImageOfItem && (
+                      menuItemImagePaths[order.orderItems[1]?.name ?? ""] && (
                         <Image
                           src={
-                            menuItemImagePaths[order.orderItems[1]?.name] ?? ""
+                            menuItemImagePaths[order.orderItems[1]?.name ?? ""]
                           }
                           alt={order.orderItems[1]?.name ?? "Second item"}
                           width={500}
@@ -492,7 +492,7 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                       )}
 
                     {order.orderItems.length > 2 &&
-                      order.orderItems[2]?.hasImageOfItem && (
+                      menuItemImagePaths[order.orderItems[2]?.name ?? ""] && (
                         <>
                           {order.orderItems.length > 3 ? (
                             <div className="baseVertFlex size-12 text-sm">
@@ -502,8 +502,9 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                           ) : (
                             <Image
                               src={
-                                menuItemImagePaths[order.orderItems[2]?.name] ??
-                                ""
+                                menuItemImagePaths[
+                                  order.orderItems[2]?.name ?? ""
+                                ]
                               }
                               alt={order.orderItems[2]?.name ?? "Third item"}
                               width={500}
@@ -656,9 +657,9 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                 </div>
                 {/* item image previews + (date + item names) */}
                 <div className="baseFlex relative w-full !justify-start gap-2">
-                  {order.orderItems[0]?.hasImageOfItem && (
+                  {menuItemImagePaths[order.orderItems[0]?.name ?? ""] && (
                     <Image
-                      src={menuItemImagePaths[order.orderItems[0]?.name] ?? ""}
+                      src={menuItemImagePaths[order.orderItems[0]?.name ?? ""]}
                       alt={order.orderItems[0]?.name ?? "First item"}
                       width={500}
                       height={500}
@@ -667,10 +668,10 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                   )}
 
                   {order.orderItems.length > 1 &&
-                    order.orderItems[1]?.hasImageOfItem && (
+                    menuItemImagePaths[order.orderItems[1]?.name ?? ""] && (
                       <Image
                         src={
-                          menuItemImagePaths[order.orderItems[1]?.name] ?? ""
+                          menuItemImagePaths[order.orderItems[1]?.name ?? ""]
                         }
                         alt={order.orderItems[1]?.name ?? "Second item"}
                         width={500}
@@ -680,7 +681,7 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                     )}
 
                   {order.orderItems.length > 2 &&
-                    order.orderItems[2]?.hasImageOfItem && (
+                    menuItemImagePaths[order.orderItems[2]?.name ?? ""] && (
                       <>
                         {order.orderItems.length > 3 ? (
                           <div className="baseVertFlex size-12 text-sm">
@@ -690,8 +691,9 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                         ) : (
                           <Image
                             src={
-                              menuItemImagePaths[order.orderItems[2]?.name] ??
-                              ""
+                              menuItemImagePaths[
+                                order.orderItems[2]?.name ?? ""
+                              ]
                             }
                             alt={order.orderItems[2]?.name ?? "Third item"}
                             width={500}
