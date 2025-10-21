@@ -105,16 +105,13 @@ function coerceToNormalizedHours(
       } satisfies NormalizedHours;
     }
 
-    const closeHour = Number.parseInt(existing.closeHour, 10);
-    const closeMinute = Number.parseInt(existing.closeMinute, 10);
-
     return {
       id: existing.id,
       dayOfWeek: existing.dayOfWeek as DayOfWeek,
       openHour: existing.openHour,
       openMinute: existing.openMinute,
-      closeHour: Number.isNaN(closeHour) ? 0 : closeHour,
-      closeMinute: Number.isNaN(closeMinute) ? 0 : closeMinute,
+      closeHour: existing.closeHour,
+      closeMinute: existing.closeMinute,
       isClosedAllDay: existing.isClosedAllDay,
     } satisfies NormalizedHours;
   });
@@ -170,8 +167,8 @@ export const hoursOfOperationRouter = createTRPCRouter({
             dayOfWeek: entry.dayOfWeek,
             openHour: entry.openHour,
             openMinute: entry.openMinute,
-            closeHour: entry.closeHour.toString(),
-            closeMinute: entry.closeMinute.toString(),
+            closeHour: entry.closeHour,
+            closeMinute: entry.closeMinute,
             isClosedAllDay: entry.isClosedAllDay,
           };
 
