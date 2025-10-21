@@ -294,12 +294,14 @@ function Row({
 
   return (
     <>
-      <div className="flex flex-col gap-1">
+      <div className="relative flex flex-col gap-1">
         <Label className="text-base font-medium text-primary">
           {row.label}
         </Label>
         {row.isClosedAllDay && (
-          <span className="text-xs text-muted-foreground">Closed</span>
+          <span className="absolute left-0 top-6 text-xs text-muted-foreground">
+            Closed
+          </span>
         )}
       </div>
 
