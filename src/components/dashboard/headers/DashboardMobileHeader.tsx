@@ -86,6 +86,8 @@ function DashboardMobileHeader({
           {viewState === "itemManagement" && "Item management"}
           {viewState === "stats" && "Stats"}
           {viewState === "reviews" && "Customer reviews"}
+          {viewState === "hoursOfOperation" && "Hours of operation"}
+          {viewState === "holidays" && "Holidays"}
         </p>
 
         <Sheet open={sheetIsOpen} onOpenChange={(open) => setSheetIsOpen(open)}>
@@ -204,6 +206,30 @@ function DashboardMobileHeader({
                 }}
               >
                 Reviews
+              </Button>
+
+              <Button
+                variant={
+                  viewState === "hoursOfOperation" ? "activeLink" : "link"
+                }
+                className="text-lg"
+                onClick={() => {
+                  setViewState("hoursOfOperation");
+                  setSheetIsOpen(false);
+                }}
+              >
+                Hours of operation
+              </Button>
+
+              <Button
+                variant={viewState === "holidays" ? "activeLink" : "link"}
+                className="text-lg"
+                onClick={() => {
+                  setViewState("holidays");
+                  setSheetIsOpen(false);
+                }}
+              >
+                Holidays
               </Button>
 
               <Separator className="mt-2 w-4/5 self-center" />

@@ -179,6 +179,28 @@ function DashboardDesktopHeader({
                 Reviews
               </Button>
 
+              <Button
+                variant={"link"}
+                className="!text-xl"
+                onClick={() => {
+                  setViewState("hoursOfOperation");
+                  setPopoverIsOpen(false);
+                }}
+              >
+                Hours of operation
+              </Button>
+
+              <Button
+                variant={"link"}
+                className="!text-xl"
+                onClick={() => {
+                  setViewState("holidays");
+                  setPopoverIsOpen(false);
+                }}
+              >
+                Holidays
+              </Button>
+
               <Separator className="mt-2 h-[1px] w-full" />
 
               <Button

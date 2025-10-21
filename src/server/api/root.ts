@@ -16,6 +16,8 @@ import { blacklistedEmailRouter } from "~/server/api/routers/blacklistedEmail";
 import { orderPrintQueueRouter } from "~/server/api/routers/orderPrintQueue";
 import { statsRouter } from "~/server/api/routers/stats";
 import { storeDBQueriesRouter } from "~/server/api/routers/storeDBQueries";
+import { hoursOfOperationRouter } from "~/server/api/routers/hoursOfOperation";
+import { holidayRouter } from "~/server/api/routers/holiday";
 
 export const appRouter = createTRPCRouter({
   user: userRouter,
@@ -34,6 +36,8 @@ export const appRouter = createTRPCRouter({
   orderPrintQueue: orderPrintQueueRouter,
   stats: statsRouter,
   storeDBQueries: storeDBQueriesRouter,
+  hoursOfOperation: hoursOfOperationRouter,
+  holiday: holidayRouter,
 
   discount: discountRouter, // currently not being used
 });

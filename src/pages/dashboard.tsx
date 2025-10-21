@@ -1,12 +1,14 @@
 import { AnimatePresence } from "framer-motion";
 import { Noto_Sans } from "next/font/google";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import CustomerChats from "~/components/dashboard/CustomerChats";
 import ItemManagement from "~/components/dashboard/ItemManagement";
 import OrderManagement from "~/components/dashboard/OrderManagement";
 import Reviews from "~/components/dashboard/Reviews";
 import Stats from "~/components/dashboard/Stats";
+import Holidays from "~/components/dashboard/Holidays";
+import HoursOfOperation from "~/components/dashboard/HoursOfOperation";
 import DashboardHeaderShell from "~/components/dashboard/headers/DashboardHeaderShell";
 import { Toaster } from "~/components/ui/toaster";
 import { env } from "~/env";
@@ -19,7 +21,9 @@ export type DashboardViewStates =
   | "customerChats"
   | "itemManagement"
   | "stats"
-  | "reviews";
+  | "reviews"
+  | "hoursOfOperation"
+  | "holidays";
 
 const notoSans = Noto_Sans({
   subsets: ["latin"],
@@ -34,22 +38,16 @@ const socket = io(env.NEXT_PUBLIC_SOCKET_IO_URL, {
   retries: 3,
 });
 
-interface Dashboard {
-  children: ReactNode;
-}
-
-function Dashboard({ children }: Dashboard) {
-  const { data: orders, refetch: refetchOrders } =
-    api.order.getDashboardOrders.useQuery();
+function Dashboard() {
+  const { data: orders } = api.order.getDashboardOrders.useQuery();
 
   // const { data: chats, refetch: refetchChats } = api.chats.getAll.useQuery();
 
-  const { data: menuCategories, refetch: refetchItems } =
-    api.menuCategory.getAll.useQuery({
-      onlyOnlineOrderable: true,
-    });
+  const { data: menuCategories } = api.menuCategory.getAll.useQuery({
+    onlyOnlineOrderable: true,
+  });
 
-  const { data: customizationCategories, refetch: refetchCustomizations } =
+  const { data: customizationCategories } =
     api.customizationCategory.getAll.useQuery();
 
   const [viewState, setViewState] =
@@ -145,6 +143,10 @@ function Dashboard({ children }: Dashboard) {
             {viewState === "stats" && <Stats />}
 
             {viewState === "reviews" && <Reviews />}
+
+            {viewState === "hoursOfOperation" && <HoursOfOperation />}
+
+            {viewState === "holidays" && <Holidays />}
           </>
         </AnimatePresence>
 
