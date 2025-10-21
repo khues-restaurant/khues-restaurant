@@ -82,8 +82,7 @@ function Holidays() {
       <div className="baseVertFlex  !items-start gap-2">
         <p className="text-2xl font-semibold text-primary">Holidays</p>
         <p className="text-sm text-muted-foreground">
-          Mark dates when the restaurant will be closed or operating on a
-          special schedule.
+          Mark dates when the restaurant will be closed.
         </p>
       </div>
 
