@@ -335,40 +335,8 @@ export const validateOrderRouter = createTRPCRouter({
           // If a reordered item was a point reward or birthday reward, we (tentatively) are going to
           // still keep it in the order, but set it's values of pointReward and birthdayReward to false
 
-          // fyi: probably only need to set pointReward/birthdayReward to false respectively, but just
-          // being cautious here
-          if (item.pointReward) {
-            if (pointRewardFound || validatingAReorder) {
-              item.pointReward = false;
-              item.birthdayReward = false;
-            } else {
-              pointRewardFound = true;
-
-              // check if the user has enough points to redeem the point reward
-              if (item.pointReward) {
-                const itemRewardPoints = new Decimal(item.price)
-                  .mul(2) // item price (in cents) multiplied by 2
-                  .toNumber();
-
-                const user = await ctx.prisma.user.findFirst({
-                  where: {
-                    userId,
-                  },
-                });
-
-                if (!user || user.rewardsPoints < itemRewardPoints) {
-                  // item is not allowed to be redeemed as a reward,
-                  // but choosing to leave item in order and treat it as a regular item
-                  item.pointReward = false;
-                  item.birthdayReward = false;
-                }
-              }
-            }
-          }
-
           if (item.birthdayReward) {
             if (birthdayRewardFound || validatingAReorder) {
-              item.pointReward = false;
               item.birthdayReward = false;
             } else {
               birthdayRewardFound = true;
@@ -388,7 +356,6 @@ export const validateOrderRouter = createTRPCRouter({
               ) {
                 // item is not allowed to be redeemed as a reward,
                 // but choosing to leave item in order and treat it as a regular item
-                item.pointReward = false;
                 item.birthdayReward = false;
               }
             }

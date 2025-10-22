@@ -110,18 +110,6 @@ export const storeDBQueriesRouter = createTRPCRouter({
 
       // reusing the filteredMenuCategories from above to avoid a redundant query
 
-      let rewardMenuCategories = filteredMenuCategories.filter((category) => {
-        return category.menuItems.some((item) => item.pointReward);
-      });
-
-      // filter further to only include the relevant reward items from each category
-      rewardMenuCategories = rewardMenuCategories.map((category) => {
-        return {
-          ...category,
-          menuItems: category.menuItems.filter((item) => item.pointReward),
-        };
-      });
-
       let birthdayMenuCategories = filteredMenuCategories.filter((category) => {
         return category.menuItems.some((item) => item.birthdayReward);
       });
@@ -183,7 +171,6 @@ export const storeDBQueriesRouter = createTRPCRouter({
         customizationChoices: formattedCustomizationChoices,
         discounts: formattedDiscounts,
         rewardMenuCategories: {
-          rewardMenuCategories,
           birthdayMenuCategories,
         } as RewardCategoriesResponse,
         userFavoriteItemIds,

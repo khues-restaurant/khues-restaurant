@@ -350,7 +350,7 @@ function OrderNow() {
             />
           </div>
 
-          <div className="baseFlex z-10 mx-8 !hidden self-center justify-self-center rounded-md bg-offwhite p-4 shadow-heroContainer md:!flex">
+          <div className="baseFlex z-10 mx-8 !hidden self-center justify-self-center rounded-md bg-offwhite p-2 shadow-heroContainer md:!flex">
             <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
               <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
               <h1 className={`${charis.className}`}>Order</h1>
@@ -423,7 +423,7 @@ function OrderNow() {
                   }}
                   className="baseFlex mb-1 h-12 w-full "
                 >
-                  <CarouselContent className="h-12">
+                  <CarouselContent className="baseFlex h-12">
                     {userFavoriteItemIds.length > 0 && (
                       <CarouselItem className="baseFlex basis-auto first:ml-2">
                         <MenuCategoryButton
@@ -985,14 +985,7 @@ function MenuItemPreviewButton({
                     includeDietaryRestrictions: false,
                     name: menuItem.name,
                     specialInstructions: "",
-                    isChefsChoice: menuItem.isChefsChoice,
-                    isVegetarian: menuItem.isVegetarian,
-                    isVegan: menuItem.isVegan,
-                    isGlutenFree: menuItem.isGlutenFree,
-                    showUndercookedOrRawDisclaimer:
-                      menuItem.showUndercookedOrRawDisclaimer,
                     birthdayReward: false,
-                    pointReward: false,
                   },
                 ],
                 customizationChoices,
@@ -1069,15 +1062,8 @@ function MenuItemPreviewButton({
                           user?.autoApplyDietaryRestrictions ?? false,
                         quantity: 1,
                         price: menuItem.price,
-                        isChefsChoice: menuItem.isChefsChoice,
-                        isVegetarian: menuItem.isVegetarian,
-                        isVegan: menuItem.isVegan,
-                        isGlutenFree: menuItem.isGlutenFree,
-                        showUndercookedOrRawDisclaimer:
-                          menuItem.showUndercookedOrRawDisclaimer,
                         discountId: activeDiscount?.id ?? null,
                         birthdayReward: false,
-                        pointReward: false,
                       },
                     ],
                   },
@@ -1219,7 +1205,7 @@ function FavoriteItems({
         )}
       </div>
 
-      <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 px-2 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
+      <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {userFavoriteItemIds.slice(0, maxItemsToShow).map((itemId, index) => (
           <MenuItemPreviewButton
             key={itemId}
@@ -1295,7 +1281,7 @@ function RecentOrders({ userRecentOrders, viewportWidth, user }: RecentOrders) {
         )}
       </div>
 
-      <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 px-2 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
+      <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {userRecentOrders.slice(0, maxOrdersToShow).map((order) => (
           <PreviousOrder key={order.id} order={order} user={user} />
         ))}
@@ -1389,17 +1375,8 @@ function PreviousOrder({ order, user }: PreviousOrder) {
                   user?.autoApplyDietaryRestrictions ?? false,
                 quantity: item.quantity,
                 price: item.price,
-                isChefsChoice: item.isChefsChoice,
-                isAlcoholic: item.isAlcoholic,
-                isVegetarian: item.isVegetarian,
-                isVegan: item.isVegan,
-                isGlutenFree: item.isGlutenFree,
-                showUndercookedOrRawDisclaimer:
-                  item.showUndercookedOrRawDisclaimer,
-                hasImageOfItem: item.hasImageOfItem,
                 discountId: item.discountId,
                 birthdayReward: item.birthdayReward,
-                pointReward: item.pointReward,
               })),
             ],
           },
@@ -1526,17 +1503,8 @@ function PreviousOrder({ order, user }: PreviousOrder) {
                       user?.autoApplyDietaryRestrictions ?? false,
                     quantity: item.quantity,
                     price: item.price,
-                    isChefsChoice: item.isChefsChoice,
-                    isAlcoholic: item.isAlcoholic,
-                    isVegetarian: item.isVegetarian,
-                    isVegan: item.isVegan,
-                    isGlutenFree: item.isGlutenFree,
-                    showUndercookedOrRawDisclaimer:
-                      item.showUndercookedOrRawDisclaimer,
-                    hasImageOfItem: item.hasImageOfItem,
                     discountId: item.discountId,
                     birthdayReward: item.birthdayReward,
-                    pointReward: item.pointReward,
                   })),
                   discountId: null,
                   tipPercentage: null,

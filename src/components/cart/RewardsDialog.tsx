@@ -24,7 +24,6 @@ import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
-import { getRewardsPointCost } from "~/utils/priceHelpers/getRewardsPointCost";
 import { menuItemImagePaths } from "~/utils/menuItemImagePaths";
 
 // import affogato from "/public/menuItems/affogato.png";
@@ -82,44 +81,9 @@ function RewardsDialogContent({
     viewportLabel: state.viewportLabel,
   }));
 
-  const [rewardsPointsEarned, setRewardsPointsEarned] = useState(0);
-
-  const [rewardsPointsTimerSet, setRewardsPointsTimerSet] = useState(false);
-
-  const [regularSelectedRewardId, setRegularSelectedRewardId] = useState<
-    string | null
-  >(null);
   const [birthdaySelectedRewardId, setBirthdaySelectedRewardId] = useState<
     string | null
   >(null);
-  const [toBeDeductedRewardsPoints, setToBeDeductedRewardsPoints] = useState(0);
-
-  useEffect(() => {
-    if (!user || rewardsPointsTimerSet) return;
-
-    setTimeout(() => {
-      if (user) {
-        setRewardsPointsEarned(user.rewardsPoints);
-      }
-    }, 1500);
-
-    setRewardsPointsTimerSet(true);
-  }, [user, rewardsPointsTimerSet]);
-
-  useEffect(() => {
-    let newRegularSelectedRewardId = null;
-
-    for (const item of orderDetails.items) {
-      if (item.pointReward) {
-        newRegularSelectedRewardId = item.itemId;
-        break;
-      }
-    }
-
-    if (newRegularSelectedRewardId !== regularSelectedRewardId) {
-      setRegularSelectedRewardId(newRegularSelectedRewardId);
-    }
-  }, [orderDetails, regularSelectedRewardId]);
 
   useEffect(() => {
     let newBirthdaySelectedRewardId = null;
@@ -135,16 +99,6 @@ function RewardsDialogContent({
       setBirthdaySelectedRewardId(newBirthdaySelectedRewardId);
     }
   }, [orderDetails, birthdaySelectedRewardId]);
-
-  useEffect(() => {
-    const newToBeDeductedRewardsPoints = getRewardsPointCost({
-      items: orderDetails.items,
-    });
-
-    if (newToBeDeductedRewardsPoints !== toBeDeductedRewardsPoints) {
-      setToBeDeductedRewardsPoints(newToBeDeductedRewardsPoints);
-    }
-  }, [orderDetails.items, toBeDeductedRewardsPoints]);
 
   if (!rewards) return null;
 
@@ -234,21 +188,13 @@ function RewardsDialogContent({
           </motion.div> */}
 
           <div className="baseVertFlex z-8 gap-4 rounded-md bg-offwhite px-8 py-4 text-primary shadow-lg">
-            <div className="text-center text-lg font-semibold">
-              Khue&apos;s Rewards
-            </div>
-
             <div className="baseFlex gap-4 font-bold tracking-wider">
               <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary" />
 
-              <div className="baseVertFlex">
-                <AnimatedNumbers
-                  value={rewardsPointsEarned - toBeDeductedRewardsPoints}
-                  fontSize={viewportLabel.includes("mobile") ? 18 : 24}
-                  padding={0}
-                />
-                <p className="font-semibold tracking-normal">points</p>
+              <div className="text-center text-lg font-semibold">
+                Khue&apos;s Rewards
               </div>
+
               <SideAccentSwirls className="h-5 fill-primary" />
             </div>
           </div>
@@ -333,17 +279,11 @@ function RewardsDialogContent({
         </div>
 
         <div className="baseVertFlex relative !justify-start overflow-y-auto border-y pr-4 pt-2 text-primary tablet:h-[500px]">
-          {/* .map() of Your rewards */}
           <div className="baseVertFlex w-full gap-8">
             {/* Birthday reward options */}
-            {/* {true && (
-
-            )} */}
-
-            {/* Regular reward options */}
             <div className="grid w-full grid-cols-1 !place-items-start gap-4 ">
               {/* Categories */}
-              {rewards.rewardMenuCategories.map((category) => (
+              {rewards.birthdayMenuCategories.map((category) => (
                 <div
                   key={category.id}
                   className="baseVertFlex w-full !items-start"
@@ -361,11 +301,8 @@ function RewardsDialogContent({
                           <RewardMenuItem
                             key={item.id}
                             menuItem={item}
-                            currentlySelectedRewardId={regularSelectedRewardId}
-                            userAvailablePoints={
-                              rewardsPointsEarned - toBeDeductedRewardsPoints
-                            }
-                            forBirthdayReward={false}
+                            currentlySelectedRewardId={birthdaySelectedRewardId}
+                            forBirthdayReward={true}
                             user={user}
                           />
 
@@ -392,7 +329,6 @@ function RewardsDialogContent({
 interface RewardMenuItem {
   menuItem: FullMenuItem;
   currentlySelectedRewardId: string | null;
-  userAvailablePoints: number;
   forBirthdayReward: boolean;
   user: User | null | undefined;
 }
@@ -400,7 +336,6 @@ interface RewardMenuItem {
 function RewardMenuItem({
   menuItem,
   currentlySelectedRewardId,
-  userAvailablePoints,
   forBirthdayReward,
   user,
 }: RewardMenuItem) {
@@ -423,14 +358,6 @@ function RewardMenuItem({
       currentlySelectedRewardId === menuItem.id
     )
       return false;
-
-    if (
-      // conversion: item price (in cents) multiplied by 2
-      userAvailablePoints < new Decimal(menuItem.price).mul(2).toNumber() ||
-      currentlySelectedRewardId !== menuItem.id
-    ) {
-      return true;
-    }
 
     return false;
   }
@@ -486,10 +413,7 @@ function RewardMenuItem({
 
                   for (const item of items) {
                     // Check if this item should be excluded
-                    if (
-                      item.itemId === menuItem.id &&
-                      (item.birthdayReward || item.pointReward)
-                    ) {
+                    if (item.itemId === menuItem.id && item.birthdayReward) {
                       continue;
                     }
 
@@ -511,15 +435,6 @@ function RewardMenuItem({
                   .mul(2) // item price (in cents) multiplied by 2
                   .toNumber();
 
-                if (userAvailablePoints < rewardItemPointsCost) {
-                  toast({
-                    variant: "neutral",
-                    description: `You don't have enough points to redeem this item.`,
-                  });
-
-                  return;
-                }
-
                 updateOrder({
                   newOrderDetails: {
                     ...orderDetails,
@@ -540,16 +455,7 @@ function RewardMenuItem({
                         quantity: 1,
                         price: menuItem.price,
                         discountId: null,
-                        isChefsChoice: menuItem.isChefsChoice,
-                        isAlcoholic: menuItem.isAlcoholic,
-                        isVegetarian: menuItem.isVegetarian,
-                        isVegan: menuItem.isVegan,
-                        isGlutenFree: menuItem.isGlutenFree,
-                        showUndercookedOrRawDisclaimer:
-                          menuItem.showUndercookedOrRawDisclaimer,
-                        hasImageOfItem: menuItem.hasImageOfItem,
                         birthdayReward: forBirthdayReward,
-                        pointReward: !forBirthdayReward,
                       },
                     ],
                   },

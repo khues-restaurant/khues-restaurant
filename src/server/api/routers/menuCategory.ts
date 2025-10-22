@@ -137,18 +137,6 @@ export const menuCategoryRouter = createTRPCRouter({
       };
     });
 
-    let rewardMenuCategories = filteredMenuCategories.filter((category) => {
-      return category.menuItems.some((item) => item.pointReward);
-    });
-
-    // filter further to only include the relevant reward items from each category
-    rewardMenuCategories = rewardMenuCategories.map((category) => {
-      return {
-        ...category,
-        menuItems: category.menuItems.filter((item) => item.pointReward),
-      };
-    });
-
     let birthdayMenuCategories = filteredMenuCategories.filter((category) => {
       return category.menuItems.some((item) => item.birthdayReward);
     });
@@ -162,7 +150,6 @@ export const menuCategoryRouter = createTRPCRouter({
     });
 
     return {
-      rewardMenuCategories,
       birthdayMenuCategories,
     } as RewardCategoriesResponse;
   }),
@@ -170,6 +157,5 @@ export const menuCategoryRouter = createTRPCRouter({
 
 // just for providing type for "rewards" variable in zustand store
 export type RewardCategoriesResponse = {
-  rewardMenuCategories: FilteredMenuCategory[];
   birthdayMenuCategories: FilteredMenuCategory[];
 };

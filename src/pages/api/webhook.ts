@@ -173,30 +173,12 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       // - spending point conversion: item reward price is the cent value multiplied by 2
       // - all prices are in cents
 
-      const prevPoints = new Decimal(user?.rewardsPoints ?? 0);
-      let spentPoints = new Decimal(0);
-
       let subtotal = new Decimal(payment.amount_subtotal ?? 0);
 
       // subtract tip from subtotal (if it exists)
       if (orderDetails.tipValue > 0) {
         subtotal = subtotal.minus(new Decimal(orderDetails.tipValue));
       }
-
-      // check if any item in order has a point-based reward that was redeemed
-      for (const item of orderDetails.items) {
-        if (item.pointReward) {
-          // leaving price in cents, then multiplying by 2 to get the spending point conversion
-          spentPoints = new Decimal(item.price).times(2);
-        }
-      }
-
-      // converting cents to dollars first, then multiplying by 10 to get the reward point conversion
-      const earnedPoints = subtotal.div(100).times(10);
-
-      const lifetimeRewardPoints = new Decimal(
-        user?.lifetimeRewardPoints ?? 0,
-      ).add(earnedPoints);
 
       // 3) create order row
       // fyi: prisma already assigns the uuid of the order being created here to orderId field
@@ -253,10 +235,6 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         tipPercentage,
         tipValue,
         total: total.toNumber(),
-        prevRewardsPoints: prevPoints.toNumber(),
-        earnedRewardsPoints: earnedPoints.toNumber(),
-        spentRewardsPoints: spentPoints.toNumber(),
-        rewardsPointsRedeemed: user ? true : false,
         userId: user ? user.userId : null,
         orderItems: {
           create: orderItemsData, // Nested array for order items and their customizations
@@ -267,139 +245,14 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         data: orderData,
       });
 
-      // 4) set any reward(s) to inactive/partially redeemed as applicable
-
-      // if a reward item was redeemed:
-      // need to get all of user's rewards that are active and not expired, sorted by ascending expiration date
-      // and then loop over adding their values until we get to the rewards item's value. While doing this we
-      // save the ids that were totally used up to then set to active: false, and the last one most likely
-      // would have it's value field subtracted based on how much was left to reach the reward item's value.
-      if (spentPoints.greaterThan(0)) {
-        const rewards = await prisma.reward.findMany({
-          where: {
-            userId: payment.metadata.userId,
-            value: {
-              gt: 0,
-            },
-            expired: false,
-            expiresAt: {
-              gt: new Date(),
-            },
-          },
-          orderBy: {
-            expiresAt: "asc",
-          },
-        });
-
-        const totalValue = new Decimal(0);
-        const zeroPointsRewardIds: string[] = [];
-
-        for (const reward of rewards) {
-          totalValue.add(reward.value);
-
-          if (totalValue >= spentPoints) {
-            // this reward is the last one to be used up
-            if (totalValue === spentPoints) {
-              zeroPointsRewardIds.push(reward.id);
-            } else {
-              // this reward is now partially used up
-              const remainingValue = totalValue.sub(spentPoints);
-
-              await prisma.reward.update({
-                where: {
-                  id: reward.id,
-                },
-                data: {
-                  value: remainingValue.toNumber(),
-                  partiallyRedeemed: true,
-                },
-              });
-            }
-
-            break;
-          }
-
-          zeroPointsRewardIds.push(reward.id);
-        }
-
-        if (zeroPointsRewardIds.length > 0) {
-          await prisma.reward.updateMany({
-            where: {
-              id: {
-                in: zeroPointsRewardIds,
-              },
-            },
-            data: {
-              value: 0,
-            },
-          });
-        }
-      }
-
-      // 5) if user exists, update their rewards points + reset their currentOrder
-      //    and update lastBirthdayRewardRedemptionYear if they redeemed a birthday reward
-      if (user) {
-        if (payment.metadata.userId) {
-          const currentDate = new Date();
-          const sixMonthsLater = addMonths(currentDate, 6);
-          // ^ not setting to midnight of today before adding months because I think it would be bad ux for the user
-          // to lose out on w/e time they made this order if they were to order exactly 6 months later to the day.
-          // small thing but this was intentional.
-
-          await prisma.reward.create({
-            data: {
-              userId: payment.metadata.userId,
-              expiresAt: sixMonthsLater,
-              initValue: earnedPoints.toNumber(),
-              value: earnedPoints.toNumber(),
-              orderId: order.id,
-            },
-          });
-        }
-
-        const currentRewardsPoints = prevPoints
-          .add(earnedPoints)
-          .sub(spentPoints);
-
-        const orderContainedBirthdayReward = orderDetails.items.some(
-          (item) => item.birthdayReward,
-        );
-
-        const zonedCurrentDatetime = toZonedTime(new Date(), "America/Chicago");
-
-        const lastBirthdayRewardRedemptionYear = orderContainedBirthdayReward
-          ? zonedCurrentDatetime.getFullYear()
-          : user.lastBirthdayRewardRedemptionYear;
-
-        await prisma.user.update({
-          where: {
-            userId: payment.metadata.userId,
-          },
-          data: {
-            rewardsPoints: currentRewardsPoints.toNumber(),
-            lifetimeRewardPoints: lifetimeRewardPoints.toNumber(),
-            currentOrder: {
-              datetimeToPickup: getFirstValidMidnightDate(),
-              isASAP: false,
-              items: [],
-              tipPercentage: null,
-              tipValue: 0,
-              includeNapkinsAndUtensils: false,
-              discountId: null,
-            },
-            lastBirthdayRewardRedemptionYear,
-          },
-        });
-      }
-
-      // 6) add order to print queue model in database
+      // 5) add order to print queue model in database
       await prisma.orderPrintQueue.create({
         data: {
           orderId: order.id,
         },
       });
 
-      // 7) send socket emit to socket.io server to notify dashboard of new order
+      // 6) send socket emit to socket.io server to notify dashboard of new order
       const socket = io(env.SOCKET_IO_URL, {
         query: {
           userId: "webhook", // this shouldn't actually be necessary, can probably remove later

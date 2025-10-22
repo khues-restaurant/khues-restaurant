@@ -10,7 +10,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { CiGift } from "react-icons/ci";
 import { IoCalendarOutline, IoSettingsOutline } from "react-icons/io5";
 import { TfiReceipt } from "react-icons/tfi";
 import { z } from "zod";
@@ -46,7 +45,6 @@ import {
 } from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
-import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
 import { ToastAction } from "~/components/ui/toast";
 import { useToast } from "~/components/ui/use-toast";
@@ -403,16 +401,7 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                   user?.autoApplyDietaryRestrictions ?? false,
                 quantity: item.quantity,
                 price: item.price,
-                isChefsChoice: item.isChefsChoice,
-                isAlcoholic: item.isAlcoholic,
-                isVegetarian: item.isVegetarian,
-                isVegan: item.isVegan,
-                isGlutenFree: item.isGlutenFree,
-                showUndercookedOrRawDisclaimer:
-                  item.showUndercookedOrRawDisclaimer,
-                hasImageOfItem: item.hasImageOfItem,
                 discountId: item.discountId,
-                pointReward: item.pointReward,
                 birthdayReward: item.birthdayReward,
               })),
             ],
@@ -469,7 +458,7 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                     {menuItemImagePaths[order.orderItems[0]?.name ?? ""] && (
                       <Image
                         src={
-                          menuItemImagePaths[order.orderItems[0]?.name ?? ""]
+                          menuItemImagePaths[order.orderItems[0]?.name ?? ""]!
                         }
                         alt={order.orderItems[0]?.name ?? "First item"}
                         width={500}
@@ -482,7 +471,7 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                       menuItemImagePaths[order.orderItems[1]?.name ?? ""] && (
                         <Image
                           src={
-                            menuItemImagePaths[order.orderItems[1]?.name ?? ""]
+                            menuItemImagePaths[order.orderItems[1]?.name ?? ""]!
                           }
                           alt={order.orderItems[1]?.name ?? "Second item"}
                           width={500}
@@ -504,7 +493,7 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                               src={
                                 menuItemImagePaths[
                                   order.orderItems[2]?.name ?? ""
-                                ]
+                                ]!
                               }
                               alt={order.orderItems[2]?.name ?? "Third item"}
                               width={500}
@@ -559,17 +548,8 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                                   user?.autoApplyDietaryRestrictions ?? false,
                                 quantity: item.quantity,
                                 price: item.price,
-                                isChefsChoice: item.isChefsChoice,
-                                isAlcoholic: item.isAlcoholic,
-                                isVegetarian: item.isVegetarian,
-                                isVegan: item.isVegan,
-                                isGlutenFree: item.isGlutenFree,
-                                showUndercookedOrRawDisclaimer:
-                                  item.showUndercookedOrRawDisclaimer,
-                                hasImageOfItem: item.hasImageOfItem,
                                 discountId: item.discountId,
                                 birthdayReward: item.birthdayReward,
-                                pointReward: item.pointReward,
                               })),
                               discountId: null,
                               tipPercentage: null,
@@ -659,7 +639,7 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                 <div className="baseFlex relative w-full !justify-start gap-2">
                   {menuItemImagePaths[order.orderItems[0]?.name ?? ""] && (
                     <Image
-                      src={menuItemImagePaths[order.orderItems[0]?.name ?? ""]}
+                      src={menuItemImagePaths[order.orderItems[0]?.name ?? ""]!}
                       alt={order.orderItems[0]?.name ?? "First item"}
                       width={500}
                       height={500}
@@ -671,7 +651,7 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                     menuItemImagePaths[order.orderItems[1]?.name ?? ""] && (
                       <Image
                         src={
-                          menuItemImagePaths[order.orderItems[1]?.name ?? ""]
+                          menuItemImagePaths[order.orderItems[1]?.name ?? ""]!
                         }
                         alt={order.orderItems[1]?.name ?? "Second item"}
                         width={500}
@@ -693,7 +673,7 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                             src={
                               menuItemImagePaths[
                                 order.orderItems[2]?.name ?? ""
-                              ]
+                              ]!
                             }
                             alt={order.orderItems[2]?.name ?? "Third item"}
                             width={500}
@@ -745,17 +725,8 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                                   user?.autoApplyDietaryRestrictions ?? false,
                                 quantity: item.quantity,
                                 price: item.price,
-                                isChefsChoice: item.isChefsChoice,
-                                isAlcoholic: item.isAlcoholic,
-                                isVegetarian: item.isVegetarian,
-                                isVegan: item.isVegan,
-                                isGlutenFree: item.isGlutenFree,
-                                showUndercookedOrRawDisclaimer:
-                                  item.showUndercookedOrRawDisclaimer,
-                                hasImageOfItem: item.hasImageOfItem,
                                 discountId: item.discountId,
                                 birthdayReward: item.birthdayReward,
-                                pointReward: item.pointReward,
                               })),
                               discountId: null,
                               tipPercentage: null,

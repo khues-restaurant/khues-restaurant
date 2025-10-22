@@ -169,15 +169,6 @@ function ItemCustomizerDialogContent({
       price: itemToCustomize.price,
       itemId: itemToCustomize.id,
       discountId: itemToCustomize.activeDiscountId,
-      isChefsChoice: itemToCustomize.isChefsChoice,
-      isAlcoholic: itemToCustomize.isAlcoholic,
-      isVegetarian: itemToCustomize.isVegetarian,
-      isVegan: itemToCustomize.isVegan,
-      isGlutenFree: itemToCustomize.isGlutenFree,
-      showUndercookedOrRawDisclaimer:
-        itemToCustomize.showUndercookedOrRawDisclaimer,
-      hasImageOfItem: itemToCustomize.hasImageOfItem,
-      pointReward: false,
       birthdayReward: false,
     },
   );
@@ -360,11 +351,7 @@ function ItemCustomizerDialogContent({
                     category={category}
                     localItemOrderDetails={localItemOrderDetails}
                     setLocalItemOrderDetails={setLocalItemOrderDetails}
-                    forReward={
-                      itemOrderDetails?.pointReward ??
-                      itemOrderDetails?.birthdayReward ??
-                      false
-                    }
+                    forReward={itemOrderDetails?.birthdayReward ?? false}
                   />
                 ))}
               </div>
@@ -473,50 +460,49 @@ function ItemCustomizerDialogContent({
         to-stone-300 px-4 py-3 shadow-inner tablet:rounded-b-md"
           >
             <div className="baseFlex w-75 !justify-end gap-2 tablet:w-96 tablet:gap-6">
-              {!itemOrderDetails?.birthdayReward &&
-                !itemOrderDetails?.pointReward && (
-                  <div className="baseFlex gap-2">
-                    <span className="font-medium">Quantity</span>
-                    <div className="baseFlex h-8 overflow-hidden rounded-md border-2 border-stone-500">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        disabled={localItemOrderDetails.quantity <= 1}
-                        className="size-7 rounded-none !border-none p-0"
-                        onClick={() => {
-                          if (localItemOrderDetails.quantity <= 1) return;
+              {!itemOrderDetails?.birthdayReward && (
+                <div className="baseFlex gap-2">
+                  <span className="font-medium">Quantity</span>
+                  <div className="baseFlex h-8 overflow-hidden rounded-md border-2 border-stone-500">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      disabled={localItemOrderDetails.quantity <= 1}
+                      className="size-7 rounded-none !border-none p-0"
+                      onClick={() => {
+                        if (localItemOrderDetails.quantity <= 1) return;
 
-                          setLocalItemOrderDetails((prev) => ({
-                            ...prev,
-                            quantity: prev.quantity - 1,
-                          }));
-                        }}
-                      >
-                        <LuMinus className="size-4" />
-                      </Button>
+                        setLocalItemOrderDetails((prev) => ({
+                          ...prev,
+                          quantity: prev.quantity - 1,
+                        }));
+                      }}
+                    >
+                      <LuMinus className="size-4" />
+                    </Button>
 
-                      <div className="baseFlex h-full w-8 bg-offwhite font-semibold">
-                        {localItemOrderDetails.quantity}
-                      </div>
-
-                      <Button
-                        variant="outline"
-                        disabled={localItemOrderDetails.quantity > 20}
-                        className="size-7 rounded-none !border-none p-0"
-                        onClick={() => {
-                          if (localItemOrderDetails.quantity > 20) return;
-
-                          setLocalItemOrderDetails((prev) => ({
-                            ...prev,
-                            quantity: prev.quantity + 1,
-                          }));
-                        }}
-                      >
-                        <LuPlus className="size-4" />
-                      </Button>
+                    <div className="baseFlex h-full w-8 bg-offwhite font-semibold">
+                      {localItemOrderDetails.quantity}
                     </div>
+
+                    <Button
+                      variant="outline"
+                      disabled={localItemOrderDetails.quantity > 20}
+                      className="size-7 rounded-none !border-none p-0"
+                      onClick={() => {
+                        if (localItemOrderDetails.quantity > 20) return;
+
+                        setLocalItemOrderDetails((prev) => ({
+                          ...prev,
+                          quantity: prev.quantity + 1,
+                        }));
+                      }}
+                    >
+                      <LuPlus className="size-4" />
+                    </Button>
                   </div>
-                )}
+                </div>
+              )}
 
               <Button
                 variant="default"

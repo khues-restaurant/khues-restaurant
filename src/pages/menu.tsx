@@ -277,7 +277,7 @@ function Menu({ json }: { json: string }) {
             />
           </div>
 
-          <div className="baseFlex z-10 mx-8 !hidden self-center justify-self-center rounded-md bg-offwhite p-4 shadow-heroContainer md:!flex">
+          <div className="baseFlex z-10 mx-8 !hidden self-center justify-self-center rounded-md bg-offwhite p-2 shadow-heroContainer md:!flex">
             <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
               <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
               <h1 className={`${charis.className}`}>Menu</h1>
@@ -346,14 +346,14 @@ function Menu({ json }: { json: string }) {
           }}
           className="baseFlex mb-1 h-12 w-full"
         >
-          <CarouselContent className="h-12">
+          <CarouselContent className="baseFlex h-12">
             {menuCategories?.map((category) => {
               return (
                 <Fragment key={category.id}>
                   {category.name === "Sparkling" && (
                     <Separator
                       orientation="vertical"
-                      className="ml-2 mr-2 mt-2 h-8 w-[2px]"
+                      className="mx-2 h-8 w-[2px]"
                     />
                   )}
                   <CarouselItem className="baseFlex basis-auto first:ml-2 last:mr-2">

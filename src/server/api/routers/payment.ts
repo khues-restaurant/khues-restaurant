@@ -18,7 +18,7 @@ export const config = {
 };
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  apiVersion: "2024-06-20",
+  apiVersion: "2025-09-30.clover",
 });
 
 export const paymentRouter = createTRPCRouter({
@@ -90,14 +90,6 @@ export const paymentRouter = createTRPCRouter({
                 description += `${customizationCategory.name} - ${customizationChoice}`;
               }
             }
-          }
-
-          if (item.pointReward) {
-            description += `${Object.values(item.customizations).length > 0 ? " | " : ""}${new Decimal(
-              item.price,
-            )
-              .mul(2) // item price (in cents) multiplied by 2
-              .toNumber()} Point reward`;
           }
 
           if (item.birthdayReward) {

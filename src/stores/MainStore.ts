@@ -26,7 +26,7 @@ const discountSchema = z.object({
   userId: z.string().nullable(),
 });
 
-const itemSchema = z.object({
+const orderItemSchema = z.object({
   id: z.number(),
   itemId: z.string(),
   name: z.string(),
@@ -36,19 +36,13 @@ const itemSchema = z.object({
   includeDietaryRestrictions: z.boolean(),
   quantity: z.number(),
   price: z.number(),
-  isChefsChoice: z.boolean(),
-  isVegetarian: z.boolean(),
-  isVegan: z.boolean(),
-  isGlutenFree: z.boolean(),
-  showUndercookedOrRawDisclaimer: z.boolean(),
-  pointReward: z.boolean(),
   birthdayReward: z.boolean(),
 });
 
 export const orderDetailsSchema = z.object({
   datetimeToPickup: z.date().or(z.string().transform((val) => new Date(val))),
   isASAP: z.boolean(),
-  items: z.array(itemSchema),
+  items: z.array(orderItemSchema),
   tipPercentage: z.number().nullable(),
   tipValue: z.number(),
   includeNapkinsAndUtensils: z.boolean(),
@@ -56,7 +50,7 @@ export const orderDetailsSchema = z.object({
   rewardBeingRedeemed: z
     .object({
       reward: discountSchema,
-      item: itemSchema,
+      item: orderItemSchema,
     })
     .optional(),
 });
@@ -81,12 +75,6 @@ export interface Item {
   includeDietaryRestrictions: boolean;
   quantity: number;
   price: number;
-  isChefsChoice: boolean;
-  isVegetarian: boolean;
-  isVegan: boolean;
-  isGlutenFree: boolean;
-  showUndercookedOrRawDisclaimer: boolean;
-  pointReward: boolean;
   birthdayReward: boolean;
 }
 
