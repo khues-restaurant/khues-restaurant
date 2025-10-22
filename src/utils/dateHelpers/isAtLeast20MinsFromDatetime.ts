@@ -1,7 +1,5 @@
-// makes sure that for non-ASAP order pickup times, the selected time is at least
-// 20 minutes from the current time, otherwise you would have both the ASAP (~20 mins)
-// and a time slot that is roughly 20 minutes from the current time, which would be
-// confusing to the user.
+// Ensures the selected pickup time is at least twenty minutes from now so
+// kitchen staff have the minimum prep window.
 
 export function isAtLeast20MinsFromDatetime(
   targetDate: Date,

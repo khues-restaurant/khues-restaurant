@@ -536,7 +536,6 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                             userId,
                             orderDetails: {
                               datetimeToPickup: getFirstValidMidnightDate(),
-                              isASAP: orderDetails.isASAP,
                               includeNapkinsAndUtensils: false,
                               items: order.orderItems.map((item, idx) => ({
                                 id: increasingItemIds[idx]!,
@@ -713,7 +712,6 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                             userId,
                             orderDetails: {
                               datetimeToPickup: getFirstValidMidnightDate(),
-                              isASAP: orderDetails.isASAP,
                               includeNapkinsAndUtensils: false,
                               items: order.orderItems.map((item, idx) => ({
                                 id: increasingItemIds[idx]!,

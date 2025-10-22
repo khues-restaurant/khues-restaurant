@@ -41,7 +41,6 @@ const orderItemSchema = z.object({
 
 export const orderDetailsSchema = z.object({
   datetimeToPickup: z.date().or(z.string().transform((val) => new Date(val))),
-  isASAP: z.boolean(),
   items: z.array(orderItemSchema),
   tipPercentage: z.number().nullable(),
   tipValue: z.number(),
@@ -80,7 +79,6 @@ export interface Item {
 
 export interface OrderDetails {
   datetimeToPickup: Date;
-  isASAP: boolean;
   items: Item[];
   includeNapkinsAndUtensils: boolean;
   discountId: string | null;
@@ -102,7 +100,6 @@ function resetStore() {
   return {
     orderDetails: {
       datetimeToPickup: getFirstValidMidnightDate(),
-      isASAP: false,
       items: [],
       tipPercentage: null,
       tipValue: 0,
@@ -111,7 +108,6 @@ function resetStore() {
     },
     prevOrderDetails: {
       datetimeToPickup: getFirstValidMidnightDate(),
-      isASAP: false,
       items: [],
       tipPercentage: null,
       tipValue: 0,
@@ -220,7 +216,6 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
     (set, get) => ({
       orderDetails: {
         datetimeToPickup: getFirstValidMidnightDate(),
-        isASAP: false,
         items: [],
         tipPercentage: null,
         tipValue: 0,
@@ -233,7 +228,6 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
 
       prevOrderDetails: {
         datetimeToPickup: getFirstValidMidnightDate(),
-        isASAP: false,
         items: [],
         tipPercentage: null,
         tipValue: 0,

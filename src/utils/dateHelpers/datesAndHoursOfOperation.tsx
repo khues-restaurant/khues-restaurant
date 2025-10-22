@@ -22,8 +22,6 @@ export interface OperatingHoursWindow {
   closeMinute: number;
 }
 
-export const ASAP_TIME_LABEL = "ASAP (~20 mins)" as const;
-
 const DISPLAY_DAYS_OF_WEEK = [
   "Monday",
   "Tuesday",
@@ -112,12 +110,10 @@ function formatTime(hour: number, minute: number): string {
 
 function getOpenTimesForDay({
   dayOfWeek,
-  includeASAPOption,
   limitToThirtyMinutesBeforeClose,
   hoursOfOperation,
 }: {
   dayOfWeek: DayOfWeek;
-  includeASAPOption?: boolean;
   limitToThirtyMinutesBeforeClose?: boolean;
   hoursOfOperation: WeekOperatingHours;
 }): string[] {
@@ -149,10 +145,6 @@ function getOpenTimesForDay({
 
   const times: string[] = [];
   let currentTime = openTime;
-
-  if (includeASAPOption) {
-    times.push(ASAP_TIME_LABEL);
-  }
 
   while (currentTime <= closeTime) {
     times.push(format(currentTime, "HH:mm"));

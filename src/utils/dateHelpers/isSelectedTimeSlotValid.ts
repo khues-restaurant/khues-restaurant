@@ -14,7 +14,6 @@ import {
 import { isAtLeast20MinsFromDatetime } from "~/utils/dateHelpers/isAtLeast20MinsFromDatetime";
 
 interface IsSelectedTimeSlotValid {
-  isASAP?: boolean;
   datetimeToPickup: Date;
   minPickupDatetime: Date;
   hoursOfOperation?: WeekOperatingHours;
@@ -22,7 +21,6 @@ interface IsSelectedTimeSlotValid {
 }
 
 export function isSelectedTimeSlotValid({
-  isASAP,
   datetimeToPickup,
   minPickupDatetime,
   hoursOfOperation,
@@ -60,36 +58,23 @@ export function isSelectedTimeSlotValid({
   if (
     pickupTime.getHours() === 0 &&
     pickupTime.getMinutes() === 0 &&
-    pickupTime.getSeconds() === 0 &&
-    !isASAP
+    pickupTime.getSeconds() === 0
   ) {
     return true;
   }
 
-  const asapAdjustedPickupHour = isASAP
-    ? toZonedTime(now, "America/Chicago").getHours()
-    : toZonedTime(pickupTime, "America/Chicago").getHours();
-
-  const asapAdjustedPickupMinute = isASAP
-    ? now.getMinutes()
-    : pickupTime.getMinutes();
+  const pickupHour = toZonedTime(pickupTime, "America/Chicago").getHours();
+  const pickupMinute = pickupTime.getMinutes();
 
   if (
-    asapAdjustedPickupHour < pickupDayHours.openHour ||
-    (asapAdjustedPickupHour === pickupDayHours.openHour &&
-      asapAdjustedPickupMinute < pickupDayHours.openMinute)
+    pickupHour < pickupDayHours.openHour ||
+    (pickupHour === pickupDayHours.openHour &&
+      pickupMinute < pickupDayHours.openMinute)
   ) {
     return false;
   }
 
-  if (isASAP) {
-    if (pickupTime.getDate() !== now.getDate()) {
-      return false;
-    }
-  } else if (
-    pickupTime <= now ||
-    !isAtLeast20MinsFromDatetime(pickupTime, now)
-  ) {
+  if (pickupTime <= now || !isAtLeast20MinsFromDatetime(pickupTime, now)) {
     return false;
   }
 
@@ -99,8 +84,8 @@ export function isSelectedTimeSlotValid({
 
   if (
     isPastFinalPickupPlacementTimeForDay({
-      currentHour: asapAdjustedPickupHour,
-      currentMinute: asapAdjustedPickupMinute,
+      currentHour: pickupHour,
+      currentMinute: pickupMinute,
       closeHour: pickupDayHours.closeHour,
       closeMinute: pickupDayHours.closeMinute,
     })

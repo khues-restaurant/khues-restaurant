@@ -200,13 +200,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         }),
       );
 
-      let adjustedDatetimeToPickup = new Date(orderDetails.datetimeToPickup);
-
-      // add 20 minutes to current time if order is ASAP
-      if (orderDetails.isASAP) {
-        const utcCurrentDatetime = new Date();
-        adjustedDatetimeToPickup = addMinutes(utcCurrentDatetime, 20);
-      }
+      const adjustedDatetimeToPickup = new Date(orderDetails.datetimeToPickup);
 
       // calculate/retrieve subtotal, tax, tip, total values here:
       const tax = new Decimal(payment.total_details?.amount_tax ?? 0);

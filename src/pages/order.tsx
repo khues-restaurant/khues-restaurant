@@ -1491,7 +1491,6 @@ function PreviousOrder({ order, user }: PreviousOrder) {
                 userId,
                 orderDetails: {
                   datetimeToPickup: getFirstValidMidnightDate(),
-                  isASAP: orderDetails.isASAP,
                   includeNapkinsAndUtensils: false,
                   items: order.orderItems.map((item, idx) => ({
                     id: increasingItemIds[idx]!,

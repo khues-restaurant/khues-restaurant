@@ -7,7 +7,6 @@ import { useMainStore } from "~/stores/MainStore";
 import { type DayOfWeek } from "~/types/operatingHours";
 import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import {
-  ASAP_TIME_LABEL,
   getHoursForDay,
   getOpenTimesForDay,
   isHoliday,
@@ -44,7 +43,6 @@ function AvailablePickupTimes({
 
     let basePickupTimes = getOpenTimesForDay({
       dayOfWeek: selectedDate.getDay() as DayOfWeek,
-      includeASAPOption: true,
       limitToThirtyMinutesBeforeClose: true,
       hoursOfOperation,
     });
@@ -58,12 +56,14 @@ function AvailablePickupTimes({
 
     if (selectedDate.getDate() === now.getDate() && minPickupTime) {
       basePickupTimes = basePickupTimes.filter((time) => {
+        const slotDateTime = mergeDateAndTime(selectedDate, time);
+
+        if (!slotDateTime) {
+          return false;
+        }
+
         const pickupTimeIsValid = isSelectedTimeSlotValid({
-          isASAP: time === ASAP_TIME_LABEL,
-          datetimeToPickup:
-            time === ASAP_TIME_LABEL
-              ? now
-              : (mergeDateAndTime(selectedDate, time) ?? now),
+          datetimeToPickup: slotDateTime,
           minPickupDatetime: minPickupTime,
           hoursOfOperation,
           holidays,
@@ -71,10 +71,6 @@ function AvailablePickupTimes({
 
         return pickupTimeIsValid;
       });
-    } else {
-      basePickupTimes = basePickupTimes.filter(
-        (time) => time !== ASAP_TIME_LABEL,
-      );
     }
 
     setAvailablePickupTimes(basePickupTimes);
@@ -186,9 +182,7 @@ function AvailablePickupTimes({
           >
             {availablePickupTimes.map((time) => (
               <SelectItem key={time} value={time}>
-                {time === ASAP_TIME_LABEL
-                  ? ASAP_TIME_LABEL
-                  : formatTimeString(time)}
+                {formatTimeString(time)}
               </SelectItem>
             ))}
           </motion.div>

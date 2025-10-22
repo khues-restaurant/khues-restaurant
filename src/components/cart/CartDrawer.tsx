@@ -50,7 +50,6 @@ import { useMainStore, type Item } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import { getHoursAndMinutesFromDate } from "~/utils/dateHelpers/getHoursAndMinutesFromDate";
-import { ASAP_TIME_LABEL } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
 import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
 import { formatPrice } from "~/utils/formatters/formatPrice";
@@ -214,20 +213,17 @@ function CartDrawer({
           }
 
           const minOrderPickupDatetime = minPickupTime.value;
-          const now = new Date();
           const selectedDate = mainForm.getValues().dateToPickup;
+          const mergedDatetime = mergeDateAndTime(selectedDate, time);
 
-          const isASAP = time === ASAP_TIME_LABEL || orderDetails.isASAP;
+          if (!mergedDatetime) {
+            return false;
+          }
 
-          const pickupTimeIsValid = isSelectedTimeSlotValid({
-            isASAP,
-            datetimeToPickup: orderDetails.isASAP
-              ? now
-              : mergeDateAndTime(selectedDate, time) || now,
+          return isSelectedTimeSlotValid({
+            datetimeToPickup: mergedDatetime,
             minPickupDatetime: minOrderPickupDatetime,
           });
-
-          return pickupTimeIsValid;
         },
         {
           message:
@@ -295,9 +291,7 @@ function CartDrawer({
     resolver: zodResolver(mainFormSchema),
     values: {
       dateToPickup: orderDetails.datetimeToPickup,
-      timeToPickup: orderDetails.isASAP
-        ? ASAP_TIME_LABEL
-        : getHoursAndMinutesFromDate(orderDetails.datetimeToPickup),
+      timeToPickup: getHoursAndMinutesFromDate(orderDetails.datetimeToPickup),
       pickupName,
     },
   });
@@ -339,48 +333,37 @@ function CartDrawer({
       if (value.dateToPickup === undefined || value.timeToPickup === undefined)
         return;
 
-      let newDate =
-        value.timeToPickup === ASAP_TIME_LABEL
-          ? value.dateToPickup
-          : mergeDateAndTime(value.dateToPickup, value.timeToPickup);
-
-      if (newDate === undefined) return;
-
-      // if the day was changed then just set the time to be midnight of w/e the new day is
-      if (
+      const dateChanged =
         value.dateToPickup.getDate() !==
           orderDetails.datetimeToPickup.getDate() ||
         value.dateToPickup.getMonth() !==
           orderDetails.datetimeToPickup.getMonth() ||
         value.dateToPickup.getFullYear() !==
-          orderDetails.datetimeToPickup.getFullYear()
-      ) {
+          orderDetails.datetimeToPickup.getFullYear();
+
+      let newDate: Date | undefined;
+
+      if (dateChanged) {
         newDate = getMidnightCSTInUTC(value.dateToPickup);
-      } else if (
-        value.timeToPickup === ASAP_TIME_LABEL &&
-        !orderDetails.isASAP
-      ) {
-        newDate = getMidnightCSTInUTC(value.dateToPickup);
+      } else {
+        const timeSelection =
+          typeof value.timeToPickup === "string" ? value.timeToPickup : "";
 
-        const newOrderDetails = structuredClone(orderDetails);
-        newOrderDetails.datetimeToPickup = newDate;
-        newOrderDetails.isASAP = true;
-
-        updateOrder({
-          newOrderDetails,
-        });
-
-        return;
+        if (timeSelection.trim().length === 0) {
+          newDate = getMidnightCSTInUTC(value.dateToPickup);
+        } else {
+          newDate = mergeDateAndTime(value.dateToPickup, timeSelection);
+        }
       }
 
-      // make sure that the new date isn't the same as the current orderDetails.datetimeToPickup
+      if (!newDate) return;
+
       if (newDate.getTime() === orderDetails.datetimeToPickup.getTime()) {
         return;
       }
 
       const newOrderDetails = structuredClone(orderDetails);
       newOrderDetails.datetimeToPickup = newDate;
-      newOrderDetails.isASAP = false;
 
       updateOrder({
         newOrderDetails,
@@ -479,20 +462,17 @@ function CartDrawer({
     }
 
     const minOrderPickupDatetime = minPickupTime.value;
-    const now = new Date();
     const selectedDate = mainForm.getValues().dateToPickup;
+    const mergedDatetime = mergeDateAndTime(selectedDate, time);
 
-    const isASAP = time === ASAP_TIME_LABEL || orderDetails.isASAP;
+    if (!mergedDatetime) {
+      return true;
+    }
 
     const pickupTimeIsValid = isSelectedTimeSlotValid({
-      isASAP,
-      datetimeToPickup: orderDetails.isASAP
-        ? now
-        : mergeDateAndTime(selectedDate, time) || now,
+      datetimeToPickup: mergedDatetime,
       minPickupDatetime: minOrderPickupDatetime,
     });
-
-    console.log("returning", !pickupTimeIsValid);
 
     return !pickupTimeIsValid;
   }

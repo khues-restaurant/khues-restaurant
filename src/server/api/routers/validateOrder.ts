@@ -29,7 +29,6 @@ import {
  *    - `datetimeToPickup` must be greater than `minOrderPickupDatetime`.
  *    - Ensure the selected pickup time is within operating hours.
  *    - Ensure `datetimeToPickup` is at least 20 minutes from the current time.
- *    - If `isASAP`, ensure `datetimeToPickup` is today and within operating hours.
  *    - Ensure `datetimeToPickup` is not less than 30 minutes before closing time.
  *
  * 3. Item Validation:
@@ -89,7 +88,6 @@ function validateTimeToPickup(
 ) {
   if (
     isSelectedTimeSlotValid({
-      isASAP: orderDetails.isASAP,
       datetimeToPickup: orderDetails.datetimeToPickup,
       minPickupDatetime: minOrderPickupDatetime,
       hoursOfOperation,
@@ -101,8 +99,7 @@ function validateTimeToPickup(
   }
 
   // at this point datetimeToPickup is invalid, so we need to find the next valid
-  // day to set it to, and by convention we set isASAP to false as a precaution.
-  orderDetails.isASAP = false;
+  // day to set it to.
 
   const nowAtMidnight = getMidnightCSTInUTC();
   console.log("time is invalid, finding next valid day", nowAtMidnight);

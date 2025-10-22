@@ -74,7 +74,6 @@ function useInitLocalStorage() {
 
     const defaultCart = {
       datetimeToPickup: getFirstValidMidnightDate(),
-      isASAP: false,
       items: [],
       tipPercentage: null,
       tipValue: 0,
@@ -166,7 +165,6 @@ function useInitLocalStorage() {
       if (!localStorageOrder) {
         const defaultCart = {
           datetimeToPickup: getFirstValidMidnightDate(),
-          isASAP: false,
           items: [],
           tipPercentage: null,
           tipValue: 0,
