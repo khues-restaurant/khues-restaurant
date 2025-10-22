@@ -5,6 +5,10 @@ import {
   type FilteredMenuCategory,
   type RewardCategoriesResponse,
 } from "~/server/api/routers/menuCategory";
+import {
+  coerceToNormalizedHours,
+  type NormalizedHours,
+} from "~/server/api/routers/helpers/hoursOfOperation";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
@@ -144,6 +148,32 @@ export const storeDBQueriesRouter = createTRPCRouter({
         },
       });
 
+      const hoursRecords = await ctx.prisma.hoursOfOperation.findMany({
+        orderBy: {
+          dayOfWeek: "asc",
+        },
+      });
+
+      const normalizedHours: NormalizedHours[] =
+        coerceToNormalizedHours(hoursRecords);
+
+      const holidays = await ctx.prisma.holiday.findMany({
+        orderBy: {
+          date: "asc",
+        },
+      });
+
+      const normalizedHolidays = holidays.map((holiday) => {
+        const normalizedDate = new Date(holiday.date);
+        normalizedDate.setHours(0, 0, 0, 0);
+
+        return {
+          id: holiday.id,
+          date: normalizedDate,
+          isRecurringAnnual: holiday.isRecurringAnnual,
+        } as const;
+      });
+
       const userFavoriteItemIds = favoriteItemIds.map(
         (favoriteItem) => favoriteItem.menuItemId,
       );
@@ -157,6 +187,8 @@ export const storeDBQueriesRouter = createTRPCRouter({
           birthdayMenuCategories,
         } as RewardCategoriesResponse,
         userFavoriteItemIds,
+        hoursOfOperation: normalizedHours,
+        holidays: normalizedHolidays,
       };
     }),
 });

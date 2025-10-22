@@ -18,6 +18,8 @@ function useInitializeStoreDBQueries() {
     setRefetchMenu,
     refetchMinOrderPickupTime,
     setRefetchMinOrderPickupTime,
+    setHoursOfOperation,
+    setHolidays,
   } = useMainStore((state) => ({
     setMenuItems: state.setMenuItems,
     customizationChoices: state.customizationChoices,
@@ -30,6 +32,8 @@ function useInitializeStoreDBQueries() {
     setRefetchMenu: state.setRefetchMenu,
     refetchMinOrderPickupTime: state.refetchMinOrderPickupTime,
     setRefetchMinOrderPickupTime: state.setRefetchMinOrderPickupTime,
+    setHoursOfOperation: state.setHoursOfOperation,
+    setHolidays: state.setHolidays,
   }));
 
   const { data: initStoreDBQueries } = api.storeDBQueries.getAll.useQuery(
@@ -109,6 +113,18 @@ function useInitializeStoreDBQueries() {
     initStoreDBQueries?.customizationChoices,
     initStoreDBQueries?.discounts,
   ]);
+
+  useEffect(() => {
+    if (!initStoreDBQueries?.hoursOfOperation) return;
+
+    setHoursOfOperation(initStoreDBQueries.hoursOfOperation);
+  }, [initStoreDBQueries?.hoursOfOperation, setHoursOfOperation]);
+
+  useEffect(() => {
+    if (!initStoreDBQueries?.holidays) return;
+
+    setHolidays(initStoreDBQueries.holidays);
+  }, [initStoreDBQueries?.holidays, setHolidays]);
 }
 
 export default useInitializeStoreDBQueries;

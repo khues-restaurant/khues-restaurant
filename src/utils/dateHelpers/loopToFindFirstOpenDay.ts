@@ -1,18 +1,30 @@
 import { toZonedTime, fromZonedTime } from "date-fns-tz";
 import { startOfDay, addDays } from "date-fns";
 import {
+  type HolidayList,
+  type WeekOperatingHours,
+} from "~/types/operatingHours";
+import {
   isRestaurantClosedToday,
   isHoliday,
 } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 
-export function loopToFindFirstOpenDay(datetimeToPickup: Date) {
+export function loopToFindFirstOpenDay(
+  datetimeToPickup: Date,
+  hoursOfOperation: WeekOperatingHours,
+  holidays: HolidayList,
+) {
+  if (!hoursOfOperation.length) {
+    return datetimeToPickup;
+  }
+
   // Convert the given datetime to CST
   let localDatetimeToPickup = toZonedTime(datetimeToPickup, "America/Chicago");
 
   // Check and adjust for days of the week that the restaurant is closed and holidays
   while (
-    isRestaurantClosedToday(localDatetimeToPickup) ||
-    isHoliday(localDatetimeToPickup)
+    isRestaurantClosedToday(localDatetimeToPickup, hoursOfOperation) ||
+    isHoliday(localDatetimeToPickup, holidays)
   ) {
     // Move to the next day in CST
     localDatetimeToPickup = addDays(localDatetimeToPickup, 1);

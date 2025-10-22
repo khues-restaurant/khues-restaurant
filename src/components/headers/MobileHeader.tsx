@@ -91,8 +91,10 @@ function MobileHeader() {
     enabled: Boolean(userId && isSignedIn),
   });
 
-  const { resetStore } = useMainStore((state) => ({
+  const { resetStore, hoursOfOperation, holidays } = useMainStore((state) => ({
     resetStore: state.resetStore,
+    hoursOfOperation: state.hoursOfOperation,
+    holidays: state.holidays,
   }));
 
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
@@ -411,7 +413,7 @@ function MobileHeader() {
                                 <p>Sunday</p>
                               </div>
                               <div className="baseVertFlex w-full !items-start">
-                                {getWeeklyHours()}
+                                {getWeeklyHours({ hoursOfOperation, holidays })}
                               </div>
                             </div>
 

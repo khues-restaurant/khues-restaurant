@@ -9,6 +9,10 @@ import {
   type RewardCategoriesResponse,
 } from "~/server/api/routers/menuCategory";
 import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
+import {
+  type HolidayList,
+  type WeekOperatingHours,
+} from "~/types/operatingHours";
 
 const storeCustomizationChoiceSchema = z.record(z.string());
 
@@ -60,6 +64,12 @@ export const orderDetailsSchema = z.object({
 export type StoreMenuItems = Record<string, FullMenuItem>;
 
 export type StoreCustomizations = Record<string, string>;
+
+export type StoreHoursOfOperation = WeekOperatingHours;
+export type StoreDayHours = WeekOperatingHours[number];
+
+export type StoreHolidays = HolidayList;
+export type StoreHoliday = HolidayList[number];
 
 export interface Item {
   id: number; // unique (increasing int), used to identify the item for map keys + consistent ordering
@@ -129,6 +139,8 @@ function resetStore() {
     discounts: {},
     userFavoriteItemIds: [],
     itemNamesRemovedFromCart: [],
+    hoursOfOperation: [] as StoreHoursOfOperation,
+    holidays: [] as StoreHolidays,
     cartInitiallyValidated: true, // both true because otherwise useInitLocalStorage will revalidate while user is still signed in
     initOrderDetailsRetrieved: true, // both true because otherwise useInitLocalStorage will revalidate while user is still signed in
     validatingCart: true,
@@ -167,6 +179,12 @@ interface StoreState {
 
   userFavoriteItemIds: string[];
   setUserFavoriteItemIds: (userFavoriteItemIds: string[]) => void;
+
+  hoursOfOperation: StoreHoursOfOperation;
+  setHoursOfOperation: (hoursOfOperation: StoreHoursOfOperation) => void;
+
+  holidays: StoreHolidays;
+  setHolidays: (holidays: StoreHolidays) => void;
 
   itemNamesRemovedFromCart: string[];
   setItemNamesRemovedFromCart: (itemNamesRemovedFromCart: string[]) => void;
@@ -271,6 +289,16 @@ export const useMainStore = createWithEqualityFn<StoreState>()(
       userFavoriteItemIds: [],
       setUserFavoriteItemIds: (userFavoriteItemIds: string[]) => {
         set({ userFavoriteItemIds });
+      },
+
+      hoursOfOperation: [] as StoreHoursOfOperation,
+      setHoursOfOperation: (hoursOfOperation: StoreHoursOfOperation) => {
+        set({ hoursOfOperation });
+      },
+
+      holidays: [] as StoreHolidays,
+      setHolidays: (holidays: StoreHolidays) => {
+        set({ holidays });
       },
 
       itemNamesRemovedFromCart: [],

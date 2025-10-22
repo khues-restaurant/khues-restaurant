@@ -3,10 +3,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { SelectGroup, SelectItem, SelectLabel } from "~/components/ui/select";
 import StaticLotus from "~/components/ui/StaticLotus";
+import { useMainStore } from "~/stores/MainStore";
+import { type DayOfWeek } from "~/types/operatingHours";
 import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import {
+  ASAP_TIME_LABEL,
+  getHoursForDay,
   getOpenTimesForDay,
-  hoursOpenPerDay,
   isHoliday,
   isPastFinalPickupPlacementTimeForDay,
   isRestaurantClosedToday,
@@ -15,7 +18,7 @@ import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotV
 import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
 import { formatTimeString } from "~/utils/formatters/formatTimeString";
 
-interface AvailablePickupTimes {
+interface AvailablePickupTimesProps {
   selectedDate: Date;
   minPickupTime: Date | null | undefined;
 }
@@ -23,66 +26,82 @@ interface AvailablePickupTimes {
 function AvailablePickupTimes({
   selectedDate,
   minPickupTime,
-}: AvailablePickupTimes) {
+}: AvailablePickupTimesProps) {
+  const { hoursOfOperation, holidays } = useMainStore((state) => ({
+    hoursOfOperation: state.hoursOfOperation,
+    holidays: state.holidays,
+  }));
+
   const [availablePickupTimes, setAvailablePickupTimes] = useState<string[]>(
-    getOpenTimesForDay({
-      dayOfWeek: selectedDate.getDay() as keyof typeof hoursOpenPerDay,
-      includeASAPOption: true,
-      limitToThirtyMinutesBeforeClose: true,
-    }),
+    [],
   );
 
-  // avoiding brief flash of ASAP time slot if it's not able to be rendered
   useLayoutEffect(() => {
-    if (!minPickupTime) return;
+    if (!hoursOfOperation.length) {
+      setAvailablePickupTimes([]);
+      return;
+    }
 
     let basePickupTimes = getOpenTimesForDay({
-      dayOfWeek: selectedDate.getDay() as keyof typeof hoursOpenPerDay,
+      dayOfWeek: selectedDate.getDay() as DayOfWeek,
       includeASAPOption: true,
       limitToThirtyMinutesBeforeClose: true,
+      hoursOfOperation,
     });
+
+    if (!basePickupTimes.length) {
+      setAvailablePickupTimes([]);
+      return;
+    }
 
     const now = toZonedTime(new Date(), "America/Chicago");
 
-    // if selectedDate is today, then we need to check if the current time
-    // is past the minimum pickup time
     if (selectedDate.getDate() === now.getDate() && minPickupTime) {
       basePickupTimes = basePickupTimes.filter((time) => {
         const pickupTimeIsValid = isSelectedTimeSlotValid({
-          isASAP: time === "ASAP (~20 mins)",
+          isASAP: time === ASAP_TIME_LABEL,
           datetimeToPickup:
-            time === "ASAP (~20 mins)"
+            time === ASAP_TIME_LABEL
               ? now
-              : mergeDateAndTime(selectedDate, time) || now,
+              : (mergeDateAndTime(selectedDate, time) ?? now),
           minPickupDatetime: minPickupTime,
+          hoursOfOperation,
+          holidays,
         });
 
         return pickupTimeIsValid;
       });
     } else {
-      basePickupTimes.splice(0, 1); // remove ASAP time slot
+      basePickupTimes = basePickupTimes.filter(
+        (time) => time !== ASAP_TIME_LABEL,
+      );
     }
 
     setAvailablePickupTimes(basePickupTimes);
-  }, [selectedDate, minPickupTime]);
+  }, [selectedDate, minPickupTime, hoursOfOperation, holidays]);
 
   const orderingIsNotAvailable = useMemo(() => {
+    if (!hoursOfOperation.length) {
+      return true;
+    }
+
     const now = toZonedTime(new Date(), "America/Chicago");
-    const todaysHours =
-      hoursOpenPerDay[now.getDay() as keyof typeof hoursOpenPerDay];
+    const todaysHours = getHoursForDay(
+      hoursOfOperation,
+      now.getDay() as DayOfWeek,
+    );
+
+    if (!todaysHours || todaysHours.isClosedAllDay) {
+      return true;
+    }
+
     const todayAtMidnight = getMidnightCSTInUTC();
 
-    // TODO: maybe refactor these checks into a helper function to be
-    // more explicit
-
     return (
-      // if today is selected
       selectedDate.getTime() === todayAtMidnight.getTime() &&
-      // & if minPickupTime is set to the end of the day
       ((minPickupTime &&
         minPickupTime.getHours() >= todaysHours.closeHour &&
         minPickupTime.getMinutes() >= todaysHours.closeMinute) ||
-        // or if it's past the final pickup time for the day
         isPastFinalPickupPlacementTimeForDay({
           currentHour: now.getHours(),
           currentMinute: now.getMinutes(),
@@ -90,18 +109,47 @@ function AvailablePickupTimes({
           closeMinute: todaysHours.closeMinute,
         }))
     );
-  }, [selectedDate, minPickupTime]);
+  }, [selectedDate, minPickupTime, hoursOfOperation]);
 
-  // should be exceedingly rare that this is true, should only happen if someone manually
-  // enables a disabled day in the date picker <Select />...
-  if (isRestaurantClosedToday(selectedDate) || isHoliday(selectedDate)) {
-    <div className="baseVertFlex w-64 !items-start gap-2 p-4">
-      <p className="font-semibold underline underline-offset-2">Notice:</p>
-      <p className="text-sm">
-        Our restaurant is not open on this day. Please select a future date for
-        your pickup. We apologize for any inconvenience this may cause.
-      </p>
-    </div>;
+  if (!hoursOfOperation.length) {
+    return (
+      <SelectGroup>
+        <SelectLabel>Available pickup times</SelectLabel>
+        <motion.div
+          key={"loading-pickup-times"}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{
+            duration: 0.25,
+          }}
+          className="baseFlex"
+        >
+          <div
+            className="my-8 inline-block size-6 animate-spin rounded-full border-[2px] border-primary border-t-transparent text-primary"
+            role="status"
+            aria-label="loading"
+          >
+            <span className="sr-only">Loading...</span>
+          </div>
+        </motion.div>
+      </SelectGroup>
+    );
+  }
+
+  if (
+    isRestaurantClosedToday(selectedDate, hoursOfOperation) ||
+    isHoliday(selectedDate, holidays)
+  ) {
+    return (
+      <div className="baseVertFlex w-64 !items-start gap-2 p-4">
+        <p className="font-semibold underline underline-offset-2">Notice:</p>
+        <p className="text-sm">
+          Our restaurant is not open on this day. Please select a future date
+          for your pickup. We apologize for any inconvenience this may cause.
+        </p>
+      </div>
+    );
   }
 
   if (orderingIsNotAvailable) {
@@ -126,7 +174,7 @@ function AvailablePickupTimes({
       <AnimatePresence mode="wait">
         {minPickupTime !== undefined &&
         minPickupTime !== null &&
-        availablePickupTimes ? (
+        availablePickupTimes.length > 0 ? (
           <motion.div
             key={"pickup-times"}
             initial={{ opacity: 0 }}
@@ -138,9 +186,8 @@ function AvailablePickupTimes({
           >
             {availablePickupTimes.map((time) => (
               <SelectItem key={time} value={time}>
-                {/* I know this looks weird, but I think it's honestly fine */}
-                {time === "ASAP (~20 mins)"
-                  ? "ASAP (~20 mins)"
+                {time === ASAP_TIME_LABEL
+                  ? ASAP_TIME_LABEL
                   : formatTimeString(time)}
               </SelectItem>
             ))}

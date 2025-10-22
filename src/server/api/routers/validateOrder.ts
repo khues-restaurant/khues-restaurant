@@ -3,6 +3,11 @@ import { type OrderDetails, orderDetailsSchema } from "~/stores/MainStore";
 import isEqual from "lodash.isequal";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import Decimal from "decimal.js";
+import { coerceToNormalizedHours } from "~/server/api/routers/helpers/hoursOfOperation";
+import {
+  type HolidayList,
+  type WeekOperatingHours,
+} from "~/types/operatingHours";
 import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
 import { loopToFindFirstOpenDay } from "~/utils/dateHelpers/loopToFindFirstOpenDay";
 import { isEligibleForBirthdayReward } from "~/utils/dateHelpers/isEligibleForBirthdayReward";
@@ -47,7 +52,11 @@ import {
  *      - For birthday rewards, check eligibility based on user's birthday and redemption year.
  */
 
-function validateDayOfDatetimeToPickup(orderDatetimeToPickup: Date) {
+function validateDayOfDatetimeToPickup(
+  orderDatetimeToPickup: Date,
+  hoursOfOperation: WeekOperatingHours,
+  holidays: HolidayList,
+) {
   let datetimeToPickup = orderDatetimeToPickup
     ? getCSTDateInUTC(orderDatetimeToPickup)
     : getMidnightCSTInUTC();
@@ -62,7 +71,11 @@ function validateDayOfDatetimeToPickup(orderDatetimeToPickup: Date) {
       datetimeToPickup,
       todayAtMidnight,
     );
-    datetimeToPickup = loopToFindFirstOpenDay(todayAtMidnight);
+    datetimeToPickup = loopToFindFirstOpenDay(
+      todayAtMidnight,
+      hoursOfOperation,
+      holidays,
+    );
   }
 
   return datetimeToPickup;
@@ -71,12 +84,16 @@ function validateDayOfDatetimeToPickup(orderDatetimeToPickup: Date) {
 function validateTimeToPickup(
   orderDetails: OrderDetails,
   minOrderPickupDatetime: Date,
+  hoursOfOperation: WeekOperatingHours,
+  holidays: HolidayList,
 ) {
   if (
     isSelectedTimeSlotValid({
       isASAP: orderDetails.isASAP,
       datetimeToPickup: orderDetails.datetimeToPickup,
       minPickupDatetime: minOrderPickupDatetime,
+      hoursOfOperation,
+      holidays,
     })
   ) {
     console.log("time is valid", orderDetails.datetimeToPickup);
@@ -89,7 +106,11 @@ function validateTimeToPickup(
 
   const nowAtMidnight = getMidnightCSTInUTC();
   console.log("time is invalid, finding next valid day", nowAtMidnight);
-  orderDetails.datetimeToPickup = loopToFindFirstOpenDay(nowAtMidnight);
+  orderDetails.datetimeToPickup = loopToFindFirstOpenDay(
+    nowAtMidnight,
+    hoursOfOperation,
+    holidays,
+  );
 }
 
 export const validateOrderRouter = createTRPCRouter({
@@ -112,10 +133,36 @@ export const validateOrderRouter = createTRPCRouter({
 
       const orderDetails = structuredClone(originalOrderDetails);
 
+      const [hoursOfOperationRecords, holidayRecords] = await Promise.all([
+        ctx.prisma.hoursOfOperation.findMany({
+          orderBy: { dayOfWeek: "asc" },
+        }),
+        ctx.prisma.holiday.findMany({
+          orderBy: { date: "asc" },
+        }),
+      ]);
+
+      const normalizedHours = coerceToNormalizedHours(
+        hoursOfOperationRecords,
+      ) as WeekOperatingHours;
+
+      const normalizedHolidays: HolidayList = holidayRecords.map((holiday) => {
+        const normalizedDate = new Date(holiday.date);
+        normalizedDate.setHours(0, 0, 0, 0);
+
+        return {
+          id: holiday.id,
+          date: normalizedDate,
+          isRecurringAnnual: holiday.isRecurringAnnual,
+        };
+      });
+
       if (!validatingAReorder) {
         // Date validation
         orderDetails.datetimeToPickup = validateDayOfDatetimeToPickup(
           orderDetails.datetimeToPickup,
+          normalizedHours,
+          normalizedHolidays,
         );
 
         // Pickup time validation
@@ -134,7 +181,12 @@ export const validateOrderRouter = createTRPCRouter({
         }
 
         const minOrderPickupDatetime = dbMinOrderPickupTime.value;
-        validateTimeToPickup(orderDetails, minOrderPickupDatetime);
+        validateTimeToPickup(
+          orderDetails,
+          minOrderPickupDatetime,
+          normalizedHours,
+          normalizedHolidays,
+        );
       }
 
       // Item validation

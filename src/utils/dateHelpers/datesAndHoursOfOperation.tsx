@@ -7,91 +7,75 @@ import {
   setSeconds,
   startOfDay,
 } from "date-fns";
+import {
+  type DayOfWeek,
+  type DayOperatingHours,
+  type HolidayList,
+  type WeekOperatingHours,
+} from "~/types/operatingHours";
 import { getCSTDateInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 
-enum DayOfWeek {
-  Sunday = 0,
-  Monday = 1,
-  Tuesday = 2,
-  Wednesday = 3,
-  Thursday = 4,
-  Friday = 5,
-  Saturday = 6,
-}
-
-const holidays = [
-  // Christmas / New Year's
-  new Date("2024-12-25"),
-  new Date("2024-12-26"),
-  new Date("2025-01-01"),
-];
-
-interface OperatingHours {
+export interface OperatingHoursWindow {
   openHour: number;
   openMinute: number;
   closeHour: number;
   closeMinute: number;
 }
 
-const hoursOpenPerDay: Record<DayOfWeek, OperatingHours> = {
-  [DayOfWeek.Sunday]: {
-    openHour: 16,
-    openMinute: 30,
-    closeHour: 21,
-    closeMinute: 0,
-  },
-  [DayOfWeek.Monday]: {
-    openHour: 0,
-    openMinute: 0,
-    closeHour: 0,
-    closeMinute: 0,
-  },
-  [DayOfWeek.Tuesday]: {
-    openHour: 0,
-    openMinute: 0,
-    closeHour: 0,
-    closeMinute: 0,
-  },
-  [DayOfWeek.Wednesday]: {
-    openHour: 16,
-    openMinute: 30,
-    closeHour: 21,
-    closeMinute: 0,
-  },
-  [DayOfWeek.Thursday]: {
-    openHour: 16,
-    openMinute: 30,
-    closeHour: 21,
-    closeMinute: 0,
-  },
-  [DayOfWeek.Friday]: {
-    openHour: 16,
-    openMinute: 30,
-    closeHour: 22,
-    closeMinute: 0,
-  },
-  [DayOfWeek.Saturday]: {
-    openHour: 16,
-    openMinute: 30,
-    closeHour: 22,
-    closeMinute: 0,
-  },
-};
+export const ASAP_TIME_LABEL = "ASAP (~20 mins)" as const;
 
-function isRestaurantClosedToday(date: Date) {
-  const dayOfWeek = date.getDay() as DayOfWeek;
-  const hours = hoursOpenPerDay[dayOfWeek];
+const DISPLAY_DAYS_OF_WEEK = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+] as const;
 
-  return (
-    hours.openHour === 0 &&
-    hours.openMinute === 0 &&
-    hours.closeHour === 0 &&
-    hours.closeMinute === 0
-  );
+const DAY_OF_WEEK_ORDER: DayOfWeek[] = [1, 2, 3, 4, 5, 6, 0];
+
+function getHoursForDay(
+  hoursOfOperation: WeekOperatingHours,
+  dayOfWeek: DayOfWeek,
+): DayOperatingHours | undefined {
+  return hoursOfOperation.find((entry) => entry.dayOfWeek === dayOfWeek);
 }
 
-function isHoliday(date: Date) {
-  return holidays.some((holiday) => isSameDay(date, holiday));
+function isRestaurantClosedToday(
+  date: Date,
+  hoursOfOperation: WeekOperatingHours,
+) {
+  const dayOfWeek = date.getDay() as DayOfWeek;
+  const hours = getHoursForDay(hoursOfOperation, dayOfWeek);
+
+  if (!hours) {
+    return true;
+  }
+
+  return hours.isClosedAllDay;
+}
+
+function isHoliday(date: Date, holidays: HolidayList) {
+  if (!holidays.length) {
+    return false;
+  }
+
+  const normalizedDate = startOfDay(date);
+
+  return holidays.some((holiday) => {
+    const holidayDate = startOfDay(holiday.date);
+
+    if (holiday.isRecurringAnnual) {
+      return (
+        holidayDate.getMonth() === normalizedDate.getMonth() &&
+        holidayDate.getDate() === normalizedDate.getDate()
+      );
+    }
+
+    return isSameDay(holidayDate, normalizedDate);
+  });
 }
 
 // final pickup time for day is 30 minutes before close
@@ -130,19 +114,17 @@ function getOpenTimesForDay({
   dayOfWeek,
   includeASAPOption,
   limitToThirtyMinutesBeforeClose,
+  hoursOfOperation,
 }: {
   dayOfWeek: DayOfWeek;
   includeASAPOption?: boolean;
   limitToThirtyMinutesBeforeClose?: boolean;
+  hoursOfOperation: WeekOperatingHours;
 }): string[] {
-  const hours = hoursOpenPerDay[dayOfWeek];
-  if (
-    hours.openHour === 0 &&
-    hours.openMinute === 0 &&
-    hours.closeHour === 0 &&
-    hours.closeMinute === 0
-  ) {
-    return []; // Closed all day
+  const hours = getHoursForDay(hoursOfOperation, dayOfWeek);
+
+  if (!hours || hours.isClosedAllDay) {
+    return [];
   }
 
   const openTime = setSeconds(
@@ -152,6 +134,7 @@ function getOpenTimesForDay({
     ),
     0,
   );
+
   let closeTime = setSeconds(
     setMinutes(
       setHours(startOfDay(new Date()), hours.closeHour),
@@ -168,7 +151,7 @@ function getOpenTimesForDay({
   let currentTime = openTime;
 
   if (includeASAPOption) {
-    times.push("ASAP (~20 mins)");
+    times.push(ASAP_TIME_LABEL);
   }
 
   while (currentTime <= closeTime) {
@@ -179,43 +162,41 @@ function getOpenTimesForDay({
   return times;
 }
 
-function getWeeklyHours() {
-  const displayDaysOfWeek = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
-
-  const dayOfWeekOrder = [
-    DayOfWeek.Monday,
-    DayOfWeek.Tuesday,
-    DayOfWeek.Wednesday,
-    DayOfWeek.Thursday,
-    DayOfWeek.Friday,
-    DayOfWeek.Saturday,
-    DayOfWeek.Sunday,
-  ];
-
+function getWeeklyHours({
+  hoursOfOperation,
+  holidays,
+}: {
+  hoursOfOperation: WeekOperatingHours;
+  holidays: HolidayList;
+}) {
   const today = new Date();
 
   return (
     <>
-      {displayDaysOfWeek.map((day, index) => {
+      {DISPLAY_DAYS_OF_WEEK.map((dayLabel, index) => {
         const date = new Date();
-        const dayOfWeek = dayOfWeekOrder[index]!;
+        const dayOfWeek = DAY_OF_WEEK_ORDER[index]!;
         date.setDate(today.getDate() - today.getDay() + dayOfWeek);
 
-        if (isRestaurantClosedToday(date) || isHoliday(date)) {
-          return <p key={day}>Closed</p>;
+        if (
+          isRestaurantClosedToday(date, hoursOfOperation) ||
+          isHoliday(date, holidays)
+        ) {
+          return <p key={dayLabel}>Closed</p>;
         }
 
-        const hours = hoursOpenPerDay[dayOfWeek];
+        const hours = getHoursForDay(hoursOfOperation, dayOfWeek);
+
+        if (!hours) {
+          return (
+            <p key={dayLabel} className="text-nowrap">
+              Updating...
+            </p>
+          );
+        }
+
         return (
-          <p key={day} className="text-nowrap">
+          <p key={dayLabel} className="text-nowrap">
             {formatTime(hours.openHour, hours.openMinute)} -{" "}
             {formatTime(hours.closeHour, hours.closeMinute)}
           </p>
@@ -225,7 +206,9 @@ function getWeeklyHours() {
   );
 }
 
-function convertOperatingHoursToUTC(hours: OperatingHours): OperatingHours {
+function convertOperatingHoursToUTC(
+  hours: OperatingHoursWindow,
+): OperatingHoursWindow {
   const convertTime = (hour: number, minute: number) => {
     const currentDate = new Date();
     const dateInCST = new Date(
@@ -254,12 +237,12 @@ function convertOperatingHoursToUTC(hours: OperatingHours): OperatingHours {
 }
 
 export {
-  holidays,
-  hoursOpenPerDay,
+  DAY_OF_WEEK_ORDER,
+  getHoursForDay,
+  getOpenTimesForDay,
+  getWeeklyHours,
+  isHoliday,
   isPastFinalPickupPlacementTimeForDay,
   isRestaurantClosedToday,
-  isHoliday,
-  getWeeklyHours,
-  getOpenTimesForDay,
   convertOperatingHoursToUTC,
 };

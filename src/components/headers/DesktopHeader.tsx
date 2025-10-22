@@ -54,10 +54,14 @@ function DesktopHeader() {
   const { asPath, events } = useRouter();
   const userId = useGetUserId();
 
-  const { resetStore, orderDetails } = useMainStore((state) => ({
-    resetStore: state.resetStore,
-    orderDetails: state.orderDetails,
-  }));
+  const { resetStore, orderDetails, hoursOfOperation, holidays } = useMainStore(
+    (state) => ({
+      resetStore: state.resetStore,
+      orderDetails: state.orderDetails,
+      hoursOfOperation: state.hoursOfOperation,
+      holidays: state.holidays,
+    }),
+  );
 
   const { data: user } = api.user.get.useQuery(userId, {
     enabled: Boolean(userId && isSignedIn),
@@ -247,7 +251,7 @@ function DesktopHeader() {
                     <p>Sunday</p>
                   </div>
                   <div className="baseVertFlex w-full !items-start gap-2 pr-4">
-                    {getWeeklyHours()}
+                    {getWeeklyHours({ hoursOfOperation, holidays })}
                   </div>
                 </div>
 

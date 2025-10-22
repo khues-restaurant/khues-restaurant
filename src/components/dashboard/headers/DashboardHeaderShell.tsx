@@ -2,6 +2,7 @@ import { type Dispatch, type SetStateAction } from "react";
 import { type Socket } from "socket.io-client";
 import DashboardDesktopHeader from "~/components/dashboard/headers/DashboardDesktopHeader";
 import DashboardMobileHeader from "~/components/dashboard/headers/DashboardMobileHeader";
+import useInitializeStoreDBQueries from "~/hooks/useInitializeStoreDBQueries";
 import useViewportLabelResizeListener from "~/hooks/useViewportLabelResizeListener";
 import { type DashboardViewStates } from "~/pages/dashboard";
 import { useMainStore } from "~/stores/MainStore";
@@ -26,6 +27,7 @@ function DashboardHeaderShell({
 
   // TODO: set discounts ActionDialog, link to set discounts and reviews page
 
+  useInitializeStoreDBQueries();
   useViewportLabelResizeListener();
 
   if (initViewportLabelSet === false) return null;

@@ -21,7 +21,6 @@ import { FaArrowRight } from "react-icons/fa6";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { LuCakeSlice, LuMinus, LuPlus } from "react-icons/lu";
 import { z } from "zod";
-import AnimatedNumbers from "~/components/AnimatedNumbers";
 import AvailablePickupDays from "~/components/cart/AvailablePickupDays";
 import AvailablePickupTimes from "~/components/cart/AvailablePickupTimes";
 import { Button } from "~/components/ui/button";
@@ -51,6 +50,7 @@ import { useMainStore, type Item } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import { getHoursAndMinutesFromDate } from "~/utils/dateHelpers/getHoursAndMinutesFromDate";
+import { ASAP_TIME_LABEL } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
 import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
 import { formatPrice } from "~/utils/formatters/formatPrice";
@@ -209,7 +209,7 @@ function CartSheet({
           const now = new Date();
           const selectedDate = mainForm.getValues().dateToPickup;
 
-          const isASAP = time === "ASAP (~20 mins)" || orderDetails.isASAP;
+          const isASAP = time === ASAP_TIME_LABEL || orderDetails.isASAP;
 
           const pickupTimeIsValid = isSelectedTimeSlotValid({
             isASAP,
@@ -288,7 +288,7 @@ function CartSheet({
     values: {
       dateToPickup: orderDetails.datetimeToPickup,
       timeToPickup: orderDetails.isASAP
-        ? "ASAP (~20 mins)"
+        ? ASAP_TIME_LABEL
         : getHoursAndMinutesFromDate(orderDetails.datetimeToPickup),
       pickupName,
     },
@@ -332,7 +332,7 @@ function CartSheet({
         return;
 
       let newDate =
-        value.timeToPickup === "ASAP (~20 mins)"
+        value.timeToPickup === ASAP_TIME_LABEL
           ? value.dateToPickup
           : mergeDateAndTime(value.dateToPickup, value.timeToPickup);
 
@@ -349,7 +349,7 @@ function CartSheet({
       ) {
         newDate = getMidnightCSTInUTC(value.dateToPickup);
       } else if (
-        value.timeToPickup === "ASAP (~20 mins)" &&
+        value.timeToPickup === ASAP_TIME_LABEL &&
         !orderDetails.isASAP
       ) {
         newDate = getMidnightCSTInUTC(value.dateToPickup);
@@ -462,7 +462,7 @@ function CartSheet({
     const now = new Date();
     const selectedDate = mainForm.getValues().dateToPickup;
 
-    const isASAP = time === "ASAP (~20 mins)" || orderDetails.isASAP;
+    const isASAP = time === ASAP_TIME_LABEL || orderDetails.isASAP;
 
     const pickupTimeIsValid = isSelectedTimeSlotValid({
       isASAP,
@@ -515,9 +515,7 @@ function CartSheet({
           <p className="text-lg font-medium">Your order</p>
         </div>
         <span className="baseFlex ml-1 h-4 gap-1.5 text-stone-600">
-          <AnimatedNumbers value={numberOfItems} fontSize={16} padding={0} />
-
-          {`item${numberOfItems === 1 ? "" : "s"}`}
+          {`${numberOfItems} item${numberOfItems === 1 ? "" : "s"}`}
         </span>
       </div>
 
@@ -623,7 +621,7 @@ function CartSheet({
                         width:
                           field.value === ""
                             ? "156px"
-                            : field.value === "ASAP (~20 mins)"
+                            : field.value === ASAP_TIME_LABEL
                               ? "176px"
                               : `${field.value.length * 25}px`,
                       }}

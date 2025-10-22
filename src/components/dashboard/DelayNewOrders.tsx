@@ -19,23 +19,25 @@ import {
 } from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
 import { useToast } from "~/components/ui/use-toast";
+import { useMainStore } from "~/stores/MainStore";
+import { type DayOfWeek } from "~/types/operatingHours";
 import { api } from "~/utils/api";
 import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
-import {
-  getOpenTimesForDay,
-  type hoursOpenPerDay,
-} from "~/utils/dateHelpers/datesAndHoursOfOperation";
+import { getOpenTimesForDay } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import { getHoursAndMinutesFromDate } from "~/utils/dateHelpers/getHoursAndMinutesFromDate";
 import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
 import { formatTimeString } from "~/utils/formatters/formatTimeString";
 
 function DelayNewOrders() {
   const ctx = api.useUtils();
+  const { hoursOfOperation } = useMainStore((state) => ({
+    hoursOfOperation: state.hoursOfOperation,
+  }));
   const { data: minOrderPickupTime } =
     api.minimumOrderPickupTime.get.useQuery();
   const { mutate: setDBValue, isLoading: isUpdatingNewMinOrderPickupTime } =
     api.minimumOrderPickupTime.set.useMutation({
-      onSuccess: (test) => {
+      onSuccess: () => {
         void ctx.minimumOrderPickupTime.get.refetch();
         setShowDialog(false);
 
@@ -56,9 +58,12 @@ function DelayNewOrders() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [minOrderPickupTimeValue, setMinOrderPickupTimeValue] = useState("");
 
-  const times = getOpenTimesForDay({
-    dayOfWeek: currentDate.getDay() as keyof typeof hoursOpenPerDay,
-  });
+  const times = hoursOfOperation.length
+    ? getOpenTimesForDay({
+        dayOfWeek: currentDate.getDay() as DayOfWeek,
+        hoursOfOperation,
+      })
+    : [];
 
   const { toast } = useToast();
 
@@ -83,8 +88,11 @@ function DelayNewOrders() {
   // tap into the lifcycle hooks?
 
   function timeIsEqualToStoreCloseTime(time: string) {
+    if (!hoursOfOperation.length) return false;
+
     const storeCloseTime = getOpenTimesForDay({
-      dayOfWeek: currentDate.getDay() as keyof typeof hoursOpenPerDay,
+      dayOfWeek: currentDate.getDay() as DayOfWeek,
+      hoursOfOperation,
     }).slice(-1)[0];
 
     if (!storeCloseTime) return false;
