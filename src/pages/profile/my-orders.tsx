@@ -621,7 +621,7 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                 Order details
                 <ChevronDown
                   data-state={accordionOpen}
-                  className={`h-4 w-4 shrink-0 cursor-pointer transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=open]:rotate-180`}
+                  className={`h-4 w-4 shrink-0 cursor-pointer transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 data-[state=open]:rotate-180`}
                 />
               </Button>
             </div>
@@ -800,7 +800,7 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
                   Order details
                   <ChevronDown
                     data-state={accordionOpen}
-                    className={`h-4 w-4 shrink-0 cursor-pointer transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=open]:rotate-180`}
+                    className={`h-4 w-4 shrink-0 cursor-pointer transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 data-[state=open]:rotate-180`}
                   />
                 </Button>
               </div>

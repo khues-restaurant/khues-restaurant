@@ -640,7 +640,7 @@ function CustomerOrder({ order, view }: CustomerOrder) {
                     accordionOpen === "open" ? "closed" : "open",
                   );
                 }}
-                className={`ml-4 h-4 w-4 shrink-0 cursor-pointer text-primary transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=open]:rotate-180`}
+                className={`ml-4 h-4 w-4 shrink-0 cursor-pointer text-primary transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 data-[state=open]:rotate-180`}
               />
             </div>
           </div>

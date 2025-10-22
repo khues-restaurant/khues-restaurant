@@ -760,7 +760,7 @@ function CartSheet({
 
                 <Button
                   variant={"underline"} // prob diff variant or make a new one
-                  // rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary
+                  // rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-0 disabled:pointer-events-none data-[state=open]:bg-secondary
                   className="absolute right-2 top-2 size-6 bg-primary !p-0 text-offwhite"
                   onClick={() => {
                     setItemNamesRemovedFromCart([]);
