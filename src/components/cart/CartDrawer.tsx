@@ -1334,7 +1334,7 @@ function CartDrawer({
                             ? "default"
                             : "outline"
                         }
-                        className="w-full text-xs font-semibold xs:w-auto"
+                        className="w-full !border !border-input text-xs font-semibold xs:w-auto"
                         onClick={() => {
                           setShowCustomTipInput(true);
 
@@ -1377,7 +1377,7 @@ function CartDrawer({
                   variant={
                     orderDetails.tipPercentage === 10 ? "default" : "outline"
                   }
-                  className="w-full text-xs font-semibold xs:w-auto"
+                  className="w-full !border !border-input text-xs font-semibold xs:w-auto"
                   onClick={() => {
                     setShowCustomTipInput(false);
 
@@ -1396,7 +1396,7 @@ function CartDrawer({
                   variant={
                     orderDetails.tipPercentage === 15 ? "default" : "outline"
                   }
-                  className="w-full text-xs font-semibold xs:w-auto"
+                  className="w-full !border !border-input text-xs font-semibold xs:w-auto"
                   onClick={() => {
                     setShowCustomTipInput(false);
 
@@ -1415,7 +1415,7 @@ function CartDrawer({
                   variant={
                     orderDetails.tipPercentage === 20 ? "default" : "outline"
                   }
-                  className="w-full text-xs font-semibold xs:w-auto"
+                  className="w-full !border !border-input text-xs font-semibold xs:w-auto"
                   onClick={() => {
                     setShowCustomTipInput(false);
 

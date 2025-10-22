@@ -1302,7 +1302,7 @@ function CartSheet({
                           ? "default"
                           : "outline"
                       }
-                      className="text-xs font-semibold"
+                      className="!border !border-input text-xs font-semibold"
                       onClick={() => {
                         setShowCustomTipInput(true);
 
@@ -1345,7 +1345,7 @@ function CartSheet({
                 variant={
                   orderDetails.tipPercentage === 10 ? "default" : "outline"
                 }
-                className="text-xs font-semibold"
+                className="!border !border-input text-xs font-semibold"
                 onClick={() => {
                   setShowCustomTipInput(false);
 
@@ -1364,7 +1364,7 @@ function CartSheet({
                 variant={
                   orderDetails.tipPercentage === 15 ? "default" : "outline"
                 }
-                className="text-xs font-semibold"
+                className="!border !border-input text-xs font-semibold"
                 onClick={() => {
                   setShowCustomTipInput(false);
 
@@ -1383,7 +1383,7 @@ function CartSheet({
                 variant={
                   orderDetails.tipPercentage === 20 ? "default" : "outline"
                 }
-                className="text-xs font-semibold"
+                className="!border !border-input text-xs font-semibold"
                 onClick={() => {
                   setShowCustomTipInput(false);
 
