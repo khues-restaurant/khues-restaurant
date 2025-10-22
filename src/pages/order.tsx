@@ -6,7 +6,7 @@ import { toZonedTime } from "date-fns-tz";
 import { AnimatePresence, motion } from "framer-motion";
 import Image, { type StaticImageData } from "next/image";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
-import { FaRedo } from "react-icons/fa";
+import { FaPepperHot, FaRedo } from "react-icons/fa";
 import { FaWineBottle } from "react-icons/fa6";
 import { IoMdHeart } from "react-icons/io";
 import { LuPlus, LuVegan } from "react-icons/lu";
@@ -548,6 +548,14 @@ function OrderNow() {
                     |
                     <div className="baseFlex gap-2">
                       <span>GF</span>-<span>Gluten Free</span>
+                    </div>
+                    |
+                    <div className="baseFlex gap-2">
+                      <span>DF</span>-<span>Dairy Free</span>
+                    </div>
+                    |
+                    <div className="baseFlex gap-2">
+                      <FaPepperHot className="size-4" />-<p>Spicy</p>
                     </div>
                   </div>
                   <p className="text-center text-xs italic text-stone-500 tablet:text-sm">
