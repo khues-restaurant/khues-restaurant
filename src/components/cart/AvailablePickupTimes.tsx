@@ -1,6 +1,6 @@
 import { toZonedTime } from "date-fns-tz";
 import { AnimatePresence, motion } from "framer-motion";
-import { useLayoutEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { SelectGroup, SelectItem, SelectLabel } from "~/components/ui/select";
 import StaticLotus from "~/components/ui/StaticLotus";
 import { useMainStore } from "~/stores/MainStore";
@@ -31,50 +31,57 @@ function AvailablePickupTimes({
     holidays: state.holidays,
   }));
 
-  const [availablePickupTimes, setAvailablePickupTimes] = useState<string[]>(
-    [],
-  );
+  const selectedDateTimestamp = selectedDate.getTime();
+  const minPickupTimestamp =
+    minPickupTime instanceof Date ? minPickupTime.getTime() : undefined;
 
-  useLayoutEffect(() => {
+  const availablePickupTimes = useMemo(() => {
     if (!hoursOfOperation.length) {
-      setAvailablePickupTimes([]);
-      return;
+      return [];
     }
 
+    const selectedDateForCalculation = new Date(selectedDateTimestamp);
+
     let basePickupTimes = getOpenTimesForDay({
-      dayOfWeek: selectedDate.getDay() as DayOfWeek,
+      dayOfWeek: selectedDateForCalculation.getDay() as DayOfWeek,
       limitToThirtyMinutesBeforeClose: true,
       hoursOfOperation,
     });
 
     if (!basePickupTimes.length) {
-      setAvailablePickupTimes([]);
-      return;
+      return [];
     }
 
     const now = toZonedTime(new Date(), "America/Chicago");
+    const maybeMinPickupDate =
+      typeof minPickupTimestamp === "number"
+        ? new Date(minPickupTimestamp)
+        : null;
 
-    if (selectedDate.getDate() === now.getDate() && minPickupTime) {
+    const isSameCalendarDay =
+      selectedDateForCalculation.getFullYear() === now.getFullYear() &&
+      selectedDateForCalculation.getMonth() === now.getMonth() &&
+      selectedDateForCalculation.getDate() === now.getDate();
+
+    if (isSameCalendarDay && maybeMinPickupDate) {
       basePickupTimes = basePickupTimes.filter((time) => {
-        const slotDateTime = mergeDateAndTime(selectedDate, time);
+        const slotDateTime = mergeDateAndTime(selectedDateForCalculation, time);
 
         if (!slotDateTime) {
           return false;
         }
 
-        const pickupTimeIsValid = isSelectedTimeSlotValid({
+        return isSelectedTimeSlotValid({
           datetimeToPickup: slotDateTime,
-          minPickupDatetime: minPickupTime,
+          minPickupDatetime: maybeMinPickupDate,
           hoursOfOperation,
           holidays,
         });
-
-        return pickupTimeIsValid;
       });
     }
 
-    setAvailablePickupTimes(basePickupTimes);
-  }, [selectedDate, minPickupTime, hoursOfOperation, holidays]);
+    return basePickupTimes;
+  }, [holidays, hoursOfOperation, minPickupTimestamp, selectedDateTimestamp]);
 
   const orderingIsNotAvailable = useMemo(() => {
     if (!hoursOfOperation.length) {
@@ -92,12 +99,16 @@ function AvailablePickupTimes({
     }
 
     const todayAtMidnight = getMidnightCSTInUTC();
+    const maybeMinPickupDate =
+      typeof minPickupTimestamp === "number"
+        ? new Date(minPickupTimestamp)
+        : null;
 
     return (
-      selectedDate.getTime() === todayAtMidnight.getTime() &&
-      ((minPickupTime &&
-        minPickupTime.getHours() >= todaysHours.closeHour &&
-        minPickupTime.getMinutes() >= todaysHours.closeMinute) ||
+      selectedDateTimestamp === todayAtMidnight.getTime() &&
+      ((maybeMinPickupDate !== null &&
+        maybeMinPickupDate.getHours() >= todaysHours.closeHour &&
+        maybeMinPickupDate.getMinutes() >= todaysHours.closeMinute) ||
         isPastFinalPickupPlacementTimeForDay({
           currentHour: now.getHours(),
           currentMinute: now.getMinutes(),
@@ -105,7 +116,7 @@ function AvailablePickupTimes({
           closeMinute: todaysHours.closeMinute,
         }))
     );
-  }, [selectedDate, minPickupTime, hoursOfOperation]);
+  }, [hoursOfOperation, minPickupTimestamp, selectedDateTimestamp]);
 
   if (!hoursOfOperation.length) {
     return (
