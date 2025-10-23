@@ -610,7 +610,7 @@ function CartDrawer({
                         animate={{
                           opacity: 1,
                           height: "auto",
-                          marginTop: "0.5rem",
+                          marginTop: "0.25rem",
                         }}
                         exit={{ opacity: 0, height: 0, marginTop: 0 }}
                         transition={{ duration: 0.2 }}
@@ -670,7 +670,7 @@ function CartDrawer({
                         animate={{
                           opacity: 1,
                           height: "auto",
-                          marginTop: "0.5rem",
+                          marginTop: "0.25rem",
                         }}
                         exit={{ opacity: 0, height: 0, marginTop: 0 }}
                         transition={{ duration: 0.2 }}
@@ -713,7 +713,7 @@ function CartDrawer({
                         animate={{
                           opacity: 1,
                           height: "auto",
-                          marginTop: "0.5rem",
+                          marginTop: "0.25rem",
                         }}
                         exit={{ opacity: 0, height: 0, marginTop: 0 }}
                         transition={{ duration: 0.2 }}
