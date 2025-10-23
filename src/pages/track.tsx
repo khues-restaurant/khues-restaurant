@@ -1,8 +1,6 @@
-import { SignInButton, useAuth } from "@clerk/nextjs";
 import { format } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
@@ -17,7 +15,6 @@ import { MdQuestionMark } from "react-icons/md";
 import { PiCookingPotBold } from "react-icons/pi";
 import { TfiReceipt } from "react-icons/tfi";
 import { io } from "socket.io-client";
-import AnimatedNumbers from "~/components/AnimatedNumbers";
 import OrderSummary from "~/components/cart/OrderSummary";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
@@ -30,13 +27,7 @@ import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getFirstSixNumbers } from "~/utils/formatters/getFirstSixNumbers";
 
-import affogato from "/public/menuItems/affogato.png";
-import grilledSirloin from "/public/menuItems/grilled-sirloin.png";
-import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
-import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
-
 function Track() {
-  const { isSignedIn } = useAuth();
   const { isReady, query } = useRouter();
   const orderId = query.id;
 
@@ -192,27 +183,6 @@ function Track() {
       return;
     }
   }, [order, minTimeoutElapsed, orderStatus]);
-
-  const [rewardsPointsEarned, setRewardsPointsEarned] = useState(0);
-  const [rewardsPointsTimerSet, setRewardsPointsTimerSet] = useState(false);
-
-  useEffect(() => {
-    if (!order || rewardsPointsTimerSet) return;
-
-    setRewardsPointsEarned(order.prevRewardsPoints);
-
-    setTimeout(() => {
-      if (order) {
-        setRewardsPointsEarned(
-          order.prevRewardsPoints +
-            order.earnedRewardsPoints -
-            order.spentRewardsPoints,
-        );
-      }
-    }, 3000);
-
-    setRewardsPointsTimerSet(true);
-  }, [order, rewardsPointsTimerSet]);
 
   useLayoutEffect(() => {
     const progressBar = progressBarRef.current;
@@ -705,207 +675,6 @@ function Track() {
                       </Button>
                     </div>
                   </div>
-                </div>
-
-                <div className="baseFlex relative w-full overflow-hidden rounded-md bg-rewardsGradient py-6 shadow-md">
-                  <motion.div
-                    key={"rewardsHeroMobileImageOne"}
-                    initial={{
-                      filter: "blur(5px)",
-                      rotate: "90deg",
-                      opacity: 0,
-                      y: -125,
-                      x: -125,
-                    }}
-                    animate={{
-                      filter: "blur(0px)",
-                      rotate: "0deg",
-                      opacity: 1,
-                      y: 0,
-                      x: 0,
-                    }}
-                    transition={{
-                      opacity: { duration: 0.2 },
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 20,
-                      delay: 0.5,
-                    }}
-                    className="absolute -left-8 -top-8"
-                  >
-                    <Image
-                      src={grilledSirloin}
-                      alt={"TODO: replace with proper alt tag text"}
-                      width={500}
-                      height={500}
-                      priority
-                      className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
-                    />
-                  </motion.div>
-
-                  <motion.div
-                    key={"rewardsHeroMobileImageTwo"}
-                    initial={{
-                      filter: "blur(5px)",
-                      rotate: "90deg",
-                      opacity: 0,
-                      y: 125,
-                      x: -125,
-                    }}
-                    animate={{
-                      filter: "blur(0px)",
-                      rotate: "0deg",
-                      opacity: 1,
-                      y: 0,
-                      x: 0,
-                    }}
-                    transition={{
-                      opacity: { duration: 0.2 },
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 20,
-                      delay: 0.75,
-                    }}
-                    className="absolute -bottom-8 -left-8"
-                  >
-                    <Image
-                      src={roastPorkFriedRice}
-                      alt={"TODO: replace with proper alt tag text"}
-                      width={500}
-                      height={500}
-                      priority
-                      className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
-                    />
-                  </motion.div>
-
-                  <div className="baseVertFlex z-10 gap-4 rounded-md bg-offwhite p-4 text-primary shadow-lg tablet:px-8 tablet:py-4">
-                    <div className="text-center text-lg font-semibold">
-                      Khue&apos;s Rewards
-                    </div>
-
-                    <div className="baseFlex gap-4 font-bold tracking-wider">
-                      <SideAccentSwirls className="h-5 scale-x-[-1] fill-primary tablet:h-6" />
-                      <div className="baseVertFlex">
-                        <AnimatedNumbers
-                          value={rewardsPointsEarned}
-                          fontSize={viewportLabel.includes("mobile") ? 22 : 28}
-                          padding={0}
-                        />
-                        <p className="font-semibold tracking-normal">points</p>
-                      </div>
-                      <SideAccentSwirls className="h-5 fill-primary tablet:h-6" />
-                    </div>
-
-                    <div className={`baseVertFlex w-full text-sm text-primary`}>
-                      {isSignedIn ? (
-                        <>
-                          <div className="baseFlex gap-1 font-medium">
-                            You earned
-                            <div className="font-bold">
-                              <AnimatedNumbers
-                                value={order.earnedRewardsPoints}
-                                fontSize={
-                                  viewportLabel.includes("mobile") ? 14 : 16
-                                }
-                                padding={0}
-                              />
-                            </div>
-                            points for this order.
-                          </div>
-                        </>
-                      ) : (
-                        <div className="baseVertFlex mt-2 gap-4">
-                          <SignInButton mode="modal">
-                            <Button
-                              variant={"rewards"}
-                              className="px-8"
-                              onClick={() => {
-                                localStorage.setItem(
-                                  "khue's-orderIdToRedeem",
-                                  order.id,
-                                );
-                              }}
-                            >
-                              Sign in
-                            </Button>
-                          </SignInButton>
-                          <span className="font-medium">
-                            to redeem your points for this order.
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <motion.div
-                    key={"rewardsHeroMobileImageThree"}
-                    initial={{
-                      filter: "blur(5px)",
-                      rotate: "90deg",
-                      opacity: 0,
-                      y: -125,
-                      x: 125,
-                    }}
-                    animate={{
-                      filter: "blur(0px)",
-                      rotate: "0deg",
-                      opacity: 1,
-                      y: 0,
-                      x: 0,
-                    }}
-                    transition={{
-                      opacity: { duration: 0.2 },
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 20,
-                      delay: 0.95,
-                    }}
-                    className="absolute -right-8 -top-8"
-                  >
-                    <Image
-                      src={affogato}
-                      alt={"TODO: replace with proper alt tag text"}
-                      width={500}
-                      height={500}
-                      priority
-                      className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
-                    />
-                  </motion.div>
-
-                  <motion.div
-                    key={"rewardsHeroMobileImageFour"}
-                    initial={{
-                      filter: "blur(5px)",
-                      rotate: "90deg",
-                      opacity: 0,
-                      y: 125,
-                      x: 125,
-                    }}
-                    animate={{
-                      filter: "blur(0px)",
-                      rotate: "0deg",
-                      opacity: 1,
-                      y: 0,
-                      x: 0,
-                    }}
-                    transition={{
-                      opacity: { duration: 0.2 },
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 20,
-                      delay: 0.6,
-                    }}
-                    className="absolute -bottom-8 -right-8"
-                  >
-                    <Image
-                      src={thaiTeaTresLeches}
-                      alt={"TODO: replace with proper alt tag text"}
-                      width={500}
-                      height={500}
-                      priority
-                      className="!relative size-24 rounded-full object-cover drop-shadow-md tablet:drop-shadow-lg"
-                    />
-                  </motion.div>
                 </div>
               </div>
               <div className="baseFlex w-full max-w-[400px] sm:max-w-[450px]">
