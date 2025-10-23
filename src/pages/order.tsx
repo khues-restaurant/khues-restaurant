@@ -423,7 +423,8 @@ function OrderNow() {
                   }}
                   className="baseFlex mb-1 h-12 w-full "
                 >
-                  <CarouselContent className="baseFlex h-12">
+                  {/* FYI: cannot have this be baseFlex, since it messes up <Carousel> automatic scrolling */}
+                  <CarouselContent className="h-12">
                     {userFavoriteItemIds.length > 0 && (
                       <CarouselItem className="baseFlex basis-auto first:ml-2">
                         <MenuCategoryButton
@@ -456,7 +457,7 @@ function OrderNow() {
                       (userRecentOrders && userRecentOrders.length > 0)) && (
                       <Separator
                         orientation="vertical"
-                        className="mx-2 h-[35px] w-[2px]"
+                        className="mx-2 mt-2 h-[35px] w-[2px]"
                       />
                     )}
 

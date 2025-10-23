@@ -346,14 +346,15 @@ function Menu({ json }: { json: string }) {
           }}
           className="baseFlex mb-1 h-12 w-full"
         >
-          <CarouselContent className="baseFlex h-12">
+          {/* FYI: cannot have this be baseFlex, since it messes up <Carousel> automatic scrolling */}
+          <CarouselContent className="h-12">
             {menuCategories?.map((category) => {
               return (
                 <Fragment key={category.id}>
                   {category.name === "Sparkling" && (
                     <Separator
                       orientation="vertical"
-                      className="mx-2 h-8 w-[2px]"
+                      className="mx-2 mt-2 h-8 w-[2px]"
                     />
                   )}
                   <CarouselItem className="baseFlex basis-auto first:ml-2 last:mr-2">
