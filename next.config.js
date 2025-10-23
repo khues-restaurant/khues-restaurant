@@ -27,8 +27,9 @@ const config = {
     ],
   },
 
+  reactCompiler: true,
+
   experimental: {
-    reactCompiler: true,
     // swcPlugins: [
     //   [
     //     "next-superjson-plugin",
@@ -40,9 +41,6 @@ const config = {
   },
 
   // TODO: remove these out before actual production
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
