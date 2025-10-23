@@ -118,7 +118,7 @@ export const paymentRouter = createTRPCRouter({
               unit_amount: safePriceInCents,
             },
             quantity: item.quantity,
-            tax_rates: ["txr_1PW1YNKPndF2uHGQ4aBqBTcX"], // Total St. Paul sales tax rate
+            tax_rates: ["txr_1PZ0HxDW2Lu07Ae5N0TK1IbR"], // Total St. Paul sales tax rate
           };
         });
       }
