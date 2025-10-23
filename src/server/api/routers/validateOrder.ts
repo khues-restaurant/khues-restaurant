@@ -1,20 +1,31 @@
 import { z } from "zod";
+import type { PrismaClient } from "@prisma/client";
+import { addDays } from "date-fns";
+import { formatInTimeZone, toZonedTime } from "date-fns-tz";
 import { type OrderDetails, orderDetailsSchema } from "~/stores/MainStore";
 import isEqual from "lodash.isequal";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import Decimal from "decimal.js";
 import { coerceToNormalizedHours } from "~/server/api/routers/helpers/hoursOfOperation";
 import {
+  type DayOfWeek,
   type HolidayList,
   type WeekOperatingHours,
 } from "~/types/operatingHours";
+import {
+  getOpenTimesForDay,
+  isHoliday,
+  isRestaurantClosedToday,
+} from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
 import { loopToFindFirstOpenDay } from "~/utils/dateHelpers/loopToFindFirstOpenDay";
 import { isEligibleForBirthdayReward } from "~/utils/dateHelpers/isEligibleForBirthdayReward";
+import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
 import {
   getCSTDateInUTC,
   getMidnightCSTInUTC,
 } from "~/utils/dateHelpers/cstToUTCHelpers";
+import { TRPCError } from "@trpc/server";
 
 /**
  * Validation Flow and Checks Overview:
@@ -110,6 +121,121 @@ function validateTimeToPickup(
   );
 }
 
+async function findNextAvailableTimeslot({
+  prisma,
+  startingDatetime,
+  hoursOfOperation,
+  holidays,
+  minPickupDatetime,
+  maxOrdersPerTimeslot,
+}: {
+  prisma: PrismaClient;
+  startingDatetime: Date;
+  hoursOfOperation: WeekOperatingHours;
+  holidays: HolidayList;
+  minPickupDatetime: Date;
+  maxOrdersPerTimeslot: number;
+}) {
+  const timezone = "America/Chicago";
+
+  const startingDatetimeCST = toZonedTime(startingDatetime, timezone);
+  const startingTimeString = formatInTimeZone(
+    startingDatetime,
+    timezone,
+    "HH:mm",
+  );
+
+  const startingDay = new Date(startingDatetimeCST);
+  startingDay.setHours(0, 0, 0, 0);
+
+  for (let dayOffset = 0; dayOffset < 14; dayOffset++) {
+    const currentDay = addDays(startingDay, dayOffset);
+
+    if (
+      isRestaurantClosedToday(currentDay, hoursOfOperation) ||
+      isHoliday(currentDay, holidays)
+    ) {
+      continue;
+    }
+
+    const dayOfWeek = currentDay.getDay() as DayOfWeek;
+
+    let timesForDay = getOpenTimesForDay({
+      dayOfWeek,
+      limitToThirtyMinutesBeforeClose: true,
+      hoursOfOperation,
+    });
+
+    if (!timesForDay.length) {
+      continue;
+    }
+
+    if (dayOffset === 0) {
+      timesForDay = timesForDay.filter((time) => time > startingTimeString);
+    }
+
+    if (!timesForDay.length) {
+      continue;
+    }
+
+    const dayStartUTC = mergeDateAndTime(currentDay, "00:00");
+
+    if (!dayStartUTC) {
+      continue;
+    }
+
+    const dayEndUTC = addDays(dayStartUTC, 1);
+
+    const groupedOrders = await prisma.order.groupBy({
+      by: ["datetimeToPickup"],
+      where: {
+        datetimeToPickup: {
+          gte: dayStartUTC,
+          lt: dayEndUTC,
+        },
+        orderRefundedAt: null,
+      },
+      _count: {
+        _all: true,
+      },
+    });
+
+    const countMap = new Map<number, number>(
+      groupedOrders.map((entry) => [
+        entry.datetimeToPickup.getTime(),
+        entry._count._all,
+      ]),
+    );
+
+    for (const time of timesForDay) {
+      const candidateTimeslot = mergeDateAndTime(currentDay, time);
+
+      if (!candidateTimeslot) {
+        continue;
+      }
+
+      if (
+        !isSelectedTimeSlotValid({
+          datetimeToPickup: candidateTimeslot,
+          minPickupDatetime,
+          hoursOfOperation,
+          holidays,
+        })
+      ) {
+        continue;
+      }
+
+      const count = countMap.get(candidateTimeslot.getTime()) ?? 0;
+
+      if (count < maxOrdersPerTimeslot) {
+        return candidateTimeslot;
+      }
+    }
+  }
+
+  return null;
+}
+
 export const validateOrderRouter = createTRPCRouter({
   validate: publicProcedure
     .input(
@@ -184,6 +310,43 @@ export const validateOrderRouter = createTRPCRouter({
           normalizedHours,
           normalizedHolidays,
         );
+
+        const maxOrdersRecord =
+          await ctx.prisma.numberOfOrdersAllowedPerPickupTimeSlot.findFirst({
+            where: {
+              id: 1,
+            },
+          });
+
+        const maxOrdersPerTimeslot = maxOrdersRecord?.value ?? 3;
+
+        const existingOrdersForTimeslot = await ctx.prisma.order.count({
+          where: {
+            datetimeToPickup: orderDetails.datetimeToPickup,
+            orderRefundedAt: null,
+          },
+        });
+
+        if (existingOrdersForTimeslot >= maxOrdersPerTimeslot) {
+          const nextAvailableTimeslot = await findNextAvailableTimeslot({
+            prisma: ctx.prisma,
+            startingDatetime: orderDetails.datetimeToPickup,
+            hoursOfOperation: normalizedHours,
+            holidays: normalizedHolidays,
+            minPickupDatetime: minOrderPickupDatetime,
+            maxOrdersPerTimeslot,
+          });
+
+          if (!nextAvailableTimeslot) {
+            throw new TRPCError({
+              code: "CONFLICT",
+              message:
+                "All pickup times are currently full. Please try again later.",
+            });
+          }
+
+          orderDetails.datetimeToPickup = nextAvailableTimeslot;
+        }
       }
 
       // Item validation

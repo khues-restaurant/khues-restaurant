@@ -1,5 +1,5 @@
 import { type Order, type OrderItem } from "@prisma/client";
-import { addMonths } from "date-fns";
+import { addDays, addMonths } from "date-fns";
 import OrderReady from "emails/OrderReady";
 import { Resend } from "resend";
 import { z } from "zod";
@@ -7,6 +7,7 @@ import { env } from "~/env";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { type Discount as DBDiscount } from "@prisma/client";
 import { io } from "socket.io-client";
+import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 import {
   createTRPCRouter,
   publicProcedure,
@@ -97,6 +98,49 @@ export type DBOrderSummaryItem = OrderItem & {
 export const orderRouter = createTRPCRouter({
   // leverage this skeleton below to get the order details for the OrderReady stuff right?
   // legit just copy and paste
+
+  getTimeslotUsage: publicProcedure
+    .input(
+      z.object({
+        date: z.string().regex(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const startOfDay = fromZonedTime(
+        `${input.date}T00:00:00`,
+        "America/Chicago",
+      );
+      const endOfDay = addDays(startOfDay, 1);
+
+      const groupedOrders = await ctx.prisma.order.groupBy({
+        by: ["datetimeToPickup"],
+        where: {
+          datetimeToPickup: {
+            gte: startOfDay,
+            lt: endOfDay,
+          },
+          orderRefundedAt: null,
+        },
+        _count: {
+          _all: true,
+        },
+      });
+
+      return groupedOrders.reduce(
+        (acc, entry) => {
+          const key = formatInTimeZone(
+            entry.datetimeToPickup,
+            "America/Chicago",
+            "HH:mm",
+          );
+
+          acc[key] = entry._count._all;
+
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
+    }),
 
   getById: publicProcedure
     .input(z.string())

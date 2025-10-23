@@ -9,7 +9,6 @@ import {
 
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { IoMdMore } from "react-icons/io";
-import useGetUserId from "~/hooks/useGetUserId";
 import { api } from "~/utils/api";
 
 // import DiscountManagement from "~/components/dashboard/DiscountManagement";
@@ -17,6 +16,7 @@ import { addDays } from "date-fns";
 import { type Socket } from "socket.io-client";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import DelayNewOrders from "~/components/dashboard/DelayNewOrders";
+import PickupTimeslotCapacity from "~/components/dashboard/PickupTimeslotCapacity";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import { type DashboardViewStates } from "~/pages/dashboard";
@@ -200,6 +200,8 @@ function DashboardDesktopHeader({
               >
                 Holidays
               </Button>
+
+              <PickupTimeslotCapacity />
 
               <Separator className="mt-2 h-[1px] w-full" />
 

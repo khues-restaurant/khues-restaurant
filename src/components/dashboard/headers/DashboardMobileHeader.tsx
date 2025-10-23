@@ -13,6 +13,7 @@ import { addDays } from "date-fns";
 import { type Socket } from "socket.io-client";
 import AnimatedNumbers from "~/components/AnimatedNumbers";
 import DelayNewOrders from "~/components/dashboard/DelayNewOrders";
+import PickupTimeslotCapacity from "~/components/dashboard/PickupTimeslotCapacity";
 import { Separator } from "~/components/ui/separator";
 import { type DashboardViewStates } from "~/pages/dashboard";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
@@ -183,6 +184,8 @@ function DashboardMobileHeader({
               </Button>
 
               <DelayNewOrders />
+
+              <PickupTimeslotCapacity />
 
               <Separator className="mt-2 w-4/5 self-center" />
 

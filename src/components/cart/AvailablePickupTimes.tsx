@@ -1,4 +1,5 @@
-import { toZonedTime } from "date-fns-tz";
+import { formatInTimeZone, toZonedTime } from "date-fns-tz";
+import type { NumberOfOrdersAllowedPerPickupTimeSlot } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo } from "react";
 import { SelectGroup, SelectItem, SelectLabel } from "~/components/ui/select";
@@ -16,6 +17,7 @@ import {
 import { isSelectedTimeSlotValid } from "~/utils/dateHelpers/isSelectedTimeSlotValid";
 import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
 import { formatTimeString } from "~/utils/formatters/formatTimeString";
+import { api } from "~/utils/api";
 
 interface AvailablePickupTimesProps {
   selectedDate: Date;
@@ -34,6 +36,45 @@ function AvailablePickupTimes({
   const selectedDateTimestamp = selectedDate.getTime();
   const minPickupTimestamp =
     minPickupTime instanceof Date ? minPickupTime.getTime() : undefined;
+
+  const selectedDateKey = useMemo(
+    () =>
+      formatInTimeZone(
+        new Date(selectedDateTimestamp),
+        "America/Chicago",
+        "yyyy-MM-dd",
+      ),
+    [selectedDateTimestamp],
+  );
+
+  const timeslotCapacityApi = (
+    api as typeof api & {
+      numberOfOrdersAllowedPerPickupTimeSlot: typeof api.minimumOrderPickupTime;
+    }
+  ).numberOfOrdersAllowedPerPickupTimeSlot;
+
+  const orderApi = api.order as typeof api.order & {
+    getTimeslotUsage: typeof api.order.getDashboardOrders;
+  };
+
+  const { data: numberOfOrdersAllowed } = timeslotCapacityApi.get.useQuery();
+
+  const timeslotUsageQuery = orderApi.getTimeslotUsage.useQuery(
+    { date: selectedDateKey },
+    {
+      enabled: Boolean(selectedDateKey),
+      keepPreviousData: true,
+    },
+  );
+
+  const timeslotUsage =
+    (timeslotUsageQuery.data as Record<string, number> | undefined) ??
+    undefined;
+
+  const capacityRecord = (numberOfOrdersAllowed ??
+    null) as NumberOfOrdersAllowedPerPickupTimeSlot | null;
+
+  const maxOrdersPerTimeslot = capacityRecord?.value ?? null;
 
   const availablePickupTimes = useMemo(() => {
     if (!hoursOfOperation.length) {
@@ -192,8 +233,25 @@ function AvailablePickupTimes({
             }}
           >
             {availablePickupTimes.map((time) => (
-              <SelectItem key={time} value={time}>
+              <SelectItem
+                key={time}
+                value={time}
+                disabled={
+                  maxOrdersPerTimeslot !== null &&
+                  (timeslotUsage?.[time] ?? 0) >= maxOrdersPerTimeslot
+                }
+                className={
+                  maxOrdersPerTimeslot !== null &&
+                  (timeslotUsage?.[time] ?? 0) >= maxOrdersPerTimeslot
+                    ? "text-muted-foreground"
+                    : undefined
+                }
+              >
                 {formatTimeString(time)}
+                {maxOrdersPerTimeslot !== null &&
+                (timeslotUsage?.[time] ?? 0) >= maxOrdersPerTimeslot
+                  ? " (Full)"
+                  : ""}
               </SelectItem>
             ))}
           </motion.div>
