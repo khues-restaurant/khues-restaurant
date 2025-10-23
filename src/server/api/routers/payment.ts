@@ -118,91 +118,12 @@ export const paymentRouter = createTRPCRouter({
               unit_amount: safePriceInCents,
             },
             quantity: item.quantity,
-            tax_rates: ["txr_1PZ0HxDW2Lu07Ae5N0TK1IbR"], // Total St. Paul sales tax rate
+            tax_rates: [env.STRIPE_TAX_RATE_ID], // Total St. Paul sales tax rate
           };
         });
       }
 
       const lineItems = createLineItemsFromOrder(input.orderDetails.items);
-
-      // strongly suspect that this block is referencing an older system we used
-      // if (input.orderDetails.rewardBeingRedeemed) {
-      //   const item = input.orderDetails.rewardBeingRedeemed.item;
-
-      //   const price = calculateRelativeTotal({
-      //     items: [
-      //       {
-      //         ...item,
-      //         quantity: 1,
-      //       },
-      //     ],
-      //     customizationChoices,
-      //     discounts,
-      //   });
-
-      //   let description = "";
-
-      //   if (Object.values(item.customizations).length > 0) {
-      //     description += "Customizations: ";
-      //     for (const choiceId of Object.values(item.customizations)) {
-      //       const customizationCategory =
-      //         customizationChoices[choiceId]?.customizationCategory;
-
-      //       const customizationChoice = customizationChoices[choiceId]?.name;
-
-      //       if (customizationCategory && customizationChoice) {
-      //         description += `${customizationCategory.name} - ${customizationChoice}`;
-      //       }
-      //     }
-      //   }
-
-      //   // if (item.discountId) {
-      //   //   const discount = discounts[item.discountId];
-      //   //   if (discount) {
-      //   //     description += `${Object.values(item.customizations).length > 0 ? " | " : ""}Discount: ${discount.name}`;
-      //   //   }
-      //   // }
-
-      //   const priceInCents = new Decimal(price)
-      //     .mul(100)
-      //     .toDecimalPlaces(0, Decimal.ROUND_HALF_UP)
-      //     .toNumber();
-
-      //   lineItems.push({
-      //     price_data: {
-      //       currency: "usd",
-      //       product_data: {
-      //         name: item.name,
-      //         // stripe doesn't like empty strings for the description
-      //         ...(description.length > 0 && { description }),
-      //       },
-      //       unit_amount: priceInCents,
-      //     },
-      //     quantity: 1,
-      //     // tax_rates: [""], // TODO: replace with production MN/St.Paul sales tax rate
-      //   });
-      // }
-
-      // discounts: not currently being used
-      // let discountToApply = {};
-
-      // if (input.orderDetails.discountId) {
-      //   if (
-      //     discounts[input.orderDetails.discountId]?.name ===
-      //     "Spend $35, Save $5"
-      //   ) {
-      //     discountToApply = {
-      //       price_data: {
-      //         currency: "usd",
-      //         product_data: {
-      //           name: "Spend $35, Save $5",
-      //         },
-      //         unit_amount: -500,
-      //       },
-      //       quantity: 1,
-      //     };
-      //   }
-      // }
 
       // TODO: associate proper 0-tax rate with tips
       // TODO: verify process and correctness of tip calculation logic
@@ -280,7 +201,6 @@ export const paymentRouter = createTRPCRouter({
 
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
-        payment_method_types: ["card"],
         currency: "usd",
         customer: customer?.id,
 

@@ -2,21 +2,19 @@ import type { NextApiResponse, NextApiRequest } from "next";
 import { buffer } from "micro";
 import { env } from "~/env";
 import Stripe from "stripe";
-import { type Discount, PrismaClient, type Order } from "@prisma/client";
+import { type Discount, type Order } from "@prisma/client";
 import { z } from "zod";
 import { type OrderDetails } from "~/stores/MainStore";
 import { orderDetailsSchema } from "~/stores/MainStore";
 import Decimal from "decimal.js";
 import { splitFullName } from "~/utils/formatters/splitFullName";
-import { addMinutes, addMonths } from "date-fns";
+import { addMonths } from "date-fns";
 import { Resend } from "resend";
 import Receipt from "emails/Receipt";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { prisma } from "~/server/db";
 import OpenAI from "openai";
 import { io } from "socket.io-client";
-import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
-import { toZonedTime } from "date-fns-tz";
 
 const resend = new Resend(env.RESEND_API_KEY);
 const openai = new OpenAI({
@@ -33,7 +31,7 @@ export const config = {
   },
 };
 
-const PaymentMetadataSchema = z.object({
+const paymentMetadataSchema = z.object({
   userId: z.string(),
   firstName: z.string(),
   lastName: z.string(),
@@ -51,6 +49,8 @@ interface PaymentMetadata {
 
 // TODO: clean up all of the early returns and try to maybe consolidate them a bit?
 // maybe also send back error status codes for them?
+
+// FYI: all prices are in cents
 
 const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
@@ -75,7 +75,6 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (event.type) {
     case "checkout.session.completed":
       const payment = event.data.object;
-      const prisma = new PrismaClient();
 
       // 0) check if order already exists in database
       const orderExists = await prisma.order.findFirst({
@@ -112,7 +111,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         };
 
         // This will throw an error if the object does not match the schema
-        customerMetadata = PaymentMetadataSchema.parse(customerDetails);
+        customerMetadata = paymentMetadataSchema.parse(customerDetails);
       } catch (error) {
         console.error("Validation failed on customerDetails:", error);
       }
@@ -168,10 +167,6 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
         res.json({ received: true });
         return;
       }
-
-      // - earning point conversion: one dollar spent rewards the user with 10 points
-      // - spending point conversion: item reward price is the cent value multiplied by 2
-      // - all prices are in cents
 
       let subtotal = new Decimal(payment.amount_subtotal ?? 0);
 
