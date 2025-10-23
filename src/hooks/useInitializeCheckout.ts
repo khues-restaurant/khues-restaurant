@@ -1,6 +1,5 @@
 import { useAuth } from "@clerk/nextjs";
 import { type Dispatch, type SetStateAction, useState } from "react";
-import { env } from "~/env";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { useMainStore } from "~/stores/MainStore";
@@ -67,24 +66,19 @@ function useInitializeCheckout({
   });
 
   async function checkout() {
-    const response = await createCheckout.mutateAsync({
+    const checkoutResponse = await createCheckout.mutateAsync({
       userId,
       stripeUserId: user?.stripeUserId,
       orderDetails,
       pickupName,
     });
-    // dynamically import stripe to avoid loading it immediately on page load
-    const stripe = await (
-      await import("@stripe/stripe-js")
-    ).loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
-    setValidatingCart(false);
-
-    if (stripe !== null) {
-      await stripe.redirectToCheckout({
-        sessionId: response.id,
-      });
+    if (!checkoutResponse.url) {
+      console.error("No checkout URL returned");
+      return;
     }
+
+    window.location.href = checkoutResponse.url;
   }
 
   async function initializeCheckout(pickupName: string) {
