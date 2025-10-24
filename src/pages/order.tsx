@@ -1412,9 +1412,9 @@ function PreviousOrder({ order, user }: PreviousOrder) {
   return (
     <div className="relative h-40 w-full max-w-96 bg-offwhite">
       <div className="baseFlex size-full gap-4 rounded-md border border-stone-300 px-4 py-6">
-        <div className="grid w-28 grid-cols-2 grid-rows-2 !place-items-center gap-2">
+        {/* <div className="grid w-28 grid-cols-2 grid-rows-2 !place-items-center gap-2">
           <Image
-            src={"/menuItems/sampleImage.webp"}
+            src={menuItemImagePaths[order.orderItems[0]?.name ?? ""]!}
             alt={order.orderItems[0]?.name ?? "First item"}
             width={32}
             height={32}
@@ -1423,7 +1423,7 @@ function PreviousOrder({ order, user }: PreviousOrder) {
 
           {order.orderItems.length > 1 && (
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={menuItemImagePaths[order.orderItems[1]?.name ?? ""]!}
               alt={order.orderItems[1]?.name ?? "Second item"}
               width={32}
               height={32}
@@ -1432,7 +1432,7 @@ function PreviousOrder({ order, user }: PreviousOrder) {
           )}
           {order.orderItems.length > 2 && (
             <Image
-              src={"/menuItems/sampleImage.webp"}
+              src={menuItemImagePaths[order.orderItems[2]?.name ?? ""]!}
               alt={order.orderItems[2]?.name ?? "Third item"}
               width={32}
               height={32}
@@ -1444,7 +1444,7 @@ function PreviousOrder({ order, user }: PreviousOrder) {
               +{order.orderItems.length - 3} more
             </p>
           )}
-        </div>
+        </div> */}
 
         <div className="baseFlex relative size-full !items-start gap-4">
           <div className="baseVertFlex w-full !items-start gap-2">
@@ -1456,18 +1456,18 @@ function PreviousOrder({ order, user }: PreviousOrder) {
             </p>
 
             <div className="baseVertFlex w-full !items-start text-xs text-stone-500">
-              <p className="max-w-28 truncate">
+              <p className=" truncate">
                 {order.orderItems[0]?.quantity} {order.orderItems[0]?.name}
               </p>
 
               {order.orderItems.length > 1 && (
-                <p className="max-w-28 truncate">
+                <p className=" truncate">
                   {order.orderItems[1]?.quantity} {order.orderItems[1]?.name}
                 </p>
               )}
 
               {order.orderItems.length > 2 && (
-                <p className="max-w-28 truncate">
+                <p className=" truncate">
                   {order.orderItems[2]?.quantity} {order.orderItems[2]?.name}
                 </p>
               )}
