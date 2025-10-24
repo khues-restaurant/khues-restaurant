@@ -453,6 +453,15 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
               <div className="baseFlex w-full !items-end !justify-between gap-12">
                 <div className="baseVertFlex !items-start gap-2 !self-start">
                   <div>{format(new Date(order.createdAt), "PPP")}</div>
+                  {order.orderRefundedAt && (
+                    <span className="rounded-md bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700">
+                      Refunded on{" "}
+                      {format(
+                        toZonedTime(order.orderRefundedAt, "America/Chicago"),
+                        "PPP",
+                      )}
+                    </span>
+                  )}
                   {/* preview images */}
                   <div className="baseFlex gap-2">
                     {menuItemImagePaths[order.orderItems[0]?.name ?? ""] && (
@@ -628,10 +637,21 @@ function OrderAccordion({ userId, order, user }: OrderAccordion) {
           ) : (
             <div className="baseFlex w-full !justify-between">
               <div className="baseVertFlex !items-start gap-4">
-                <div className="text-nowrap">
-                  {format(
-                    toZonedTime(order.datetimeToPickup, "America/Chicago"),
-                    "PPP",
+                <div className="baseVertFlex !items-start gap-1 text-nowrap">
+                  <span>
+                    {format(
+                      toZonedTime(order.datetimeToPickup, "America/Chicago"),
+                      "PPP",
+                    )}
+                  </span>
+                  {order.orderRefundedAt && (
+                    <span className="rounded-md bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700">
+                      Refunded on{" "}
+                      {format(
+                        toZonedTime(order.orderRefundedAt, "America/Chicago"),
+                        "PPP",
+                      )}
+                    </span>
                   )}
                 </div>
                 {/* item image previews + (date + item names) */}

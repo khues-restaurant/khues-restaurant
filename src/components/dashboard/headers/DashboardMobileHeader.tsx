@@ -85,6 +85,7 @@ function DashboardMobileHeader({
           {viewState === "orderManagement" && "Order management"}
           {viewState === "customerChats" && "Customer chats"}
           {viewState === "itemManagement" && "Item management"}
+          {viewState === "refunds" && "Refunds"}
           {viewState === "stats" && "Stats"}
           {viewState === "reviews" && "Customer reviews"}
           {viewState === "hoursOfOperation" && "Hours of operation"}
@@ -185,8 +186,6 @@ function DashboardMobileHeader({
 
               <DelayNewOrders />
 
-              <PickupTimeslotCapacity />
-
               <Separator className="mt-2 w-4/5 self-center" />
 
               <Button
@@ -233,6 +232,19 @@ function DashboardMobileHeader({
                 }}
               >
                 Holidays
+              </Button>
+
+              <PickupTimeslotCapacity />
+
+              <Button
+                variant={viewState === "refunds" ? "activeLink" : "link"}
+                className="text-lg"
+                onClick={() => {
+                  setViewState("refunds");
+                  setSheetIsOpen(false);
+                }}
+              >
+                Refunds
               </Button>
 
               <Separator className="mt-2 w-4/5 self-center" />

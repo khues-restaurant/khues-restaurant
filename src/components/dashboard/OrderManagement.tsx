@@ -132,7 +132,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
       transition={{ duration: 0.5 }}
       className="baseVertFlex size-full"
     >
-      <div className="baseFlex mt-4 !justify-end gap-4 rounded-lg border bg-offwhite p-1 md:mt-2">
+      <div className="baseFlex mt-4 !justify-end gap-2 rounded-lg border bg-offwhite p-1 md:mt-2">
         <Button
           variant={
             selectedTab === "notStarted" || selectedTab === "started"
@@ -211,7 +211,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
       </Button>
 
       {(selectedTab === "notStarted" || selectedTab === "started") && (
-        <div className="baseFlex my-6 w-full !justify-around border-b-2 border-stone-300 pb-2 pr-8 sm:px-0">
+        <div className="baseFlex mt-6 w-full !justify-around border-b-2 border-stone-300 pb-2 pr-8 sm:px-0">
           <div className="relative">
             <p className="hidden text-xl font-semibold text-primary sm:flex">
               Not started
@@ -279,14 +279,14 @@ function OrderManagement({ orders, socket }: OrderManagement) {
 
       <div className="baseFlex w-full">
         {(selectedTab === "notStarted" || selectedTab === "started") && (
-          <div className="baseFlex w-full !items-start">
+          <div className="baseFlex h-full w-full !items-start">
             <motion.div
               key={"notStarted"}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className={`baseVertFlex min-h-[70dvh] w-full !justify-start ${selectedTab === "started" ? "!hidden sm:!flex" : ""}`}
+              className={`baseVertFlex mt-8 min-h-[70dvh] w-full !justify-start ${selectedTab === "started" ? "!hidden sm:!flex" : ""}`}
             >
               <AnimatePresence>
                 <div className="baseVertFlex w-full !justify-start gap-2 overflow-y-auto px-4 pb-4 sm:max-h-[70dvh]">
@@ -309,7 +309,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
 
             <Separator
               orientation="vertical"
-              className="hidden h-[70dvh] w-[2px] bg-stone-300 sm:block"
+              className="hidden h-[73dvh] w-[2px] bg-stone-300 sm:block"
             />
 
             <motion.div
@@ -318,7 +318,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className={`baseVertFlex min-h-[70dvh] w-full !justify-start ${selectedTab === "notStarted" ? "!hidden sm:!flex" : ""}`}
+              className={`baseVertFlex mt-8 min-h-[70dvh] w-full !justify-start ${selectedTab === "notStarted" ? "!hidden sm:!flex" : ""}`}
             >
               <AnimatePresence>
                 <div className="baseVertFlex w-full !justify-start gap-2 overflow-y-auto px-4 pb-4 sm:max-h-[70dvh]">
@@ -348,7 +348,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseVertFlex min-h-[70dvh] w-full !justify-start"
+            className="baseVertFlex min-h-[80.25dvh] w-full !justify-start"
           >
             <AnimatePresence>
               <div className="baseVertFlex mt-8 w-11/12 !justify-start gap-2 overflow-y-auto pb-4 sm:max-h-[70dvh] tablet:w-full tablet:max-w-xl">
@@ -363,7 +363,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
                     ))}
                   </>
                 ) : (
-                  <div>No orders found</div>
+                  <div className="mt-8">No orders found</div>
                 )}
               </div>
             </AnimatePresence>
@@ -377,7 +377,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="baseVertFlex min-h-[70dvh] w-full !justify-start"
+            className="baseVertFlex min-h-[80.25dvh] w-full !justify-start"
           >
             <AnimatePresence>
               <div className="baseVertFlex mt-8 w-11/12 !justify-start gap-2 overflow-y-auto pb-4 sm:max-h-[70dvh] tablet:w-full tablet:max-w-xl">
@@ -392,7 +392,7 @@ function OrderManagement({ orders, socket }: OrderManagement) {
                     ))}
                   </>
                 ) : (
-                  <div>No orders found</div>
+                  <div className="mt-8">No orders found</div>
                 )}
               </div>
             </AnimatePresence>
@@ -465,28 +465,12 @@ function CustomerOrder({ order, view }: CustomerOrder) {
   return (
     <motion.div
       key={order.id}
-      // initial={{
-      //   opacity: 0,
-      //   height: 0,
-      //   marginTop: 0,
-      //   marginBottom: 0,
-      // }}
-      // animate={{
-      //   opacity: 1,
-      //   height: "auto",
-      //   marginTop: "0.25rem",
-      //   marginBottom: "0.25rem",
-      // }}
-      // exit={{ opacity: 0, height: 0, marginTop: 0, marginBottom: 0 }}
-      // transition={{
-      //   opacity: { duration: 0.1 },
-      //   height: { duration: 0.2 },
-      //   marginTop: { duration: 0.2 },
-      //   marginBottom: { duration: 0.2 },
-      // }}
-      className={`baseFlex w-full max-w-lg rounded-md border bg-offwhite p-4
+      className={`baseFlex w-full max-w-lg cursor-pointer rounded-md border bg-offwhite p-4
       ${order.notableUserDescription ? "border-yellow-500 bg-gradient-to-br from-amber-200 to-amber-400" : ""}
       `}
+      onClick={() => {
+        setAccordionOpen(accordionOpen === "open" ? "closed" : "open");
+      }}
     >
       <Accordion
         type="single"
@@ -558,11 +542,17 @@ function CustomerOrder({ order, view }: CustomerOrder) {
                 </p>
 
                 {(view === "notStarted" || view === "started") && (
-                  <AlertDialog open={openDialogId === order.id}>
+                  <AlertDialog
+                    open={openDialogId === order.id}
+                    onOpenChange={(open) => {
+                      if (!open) setDialogJustClosed(true);
+                    }}
+                  >
                     <AlertDialogTrigger asChild>
                       <Button
                         className="text-base"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setOpenDialogId(order.id);
                         }}
                       >
@@ -620,32 +610,26 @@ function CustomerOrder({ order, view }: CustomerOrder) {
                     </AlertDialogContent>
                   </AlertDialog>
                 )}
+
+                {order.orderRefundedAt && (
+                  <span className="rounded-md bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                    Refunded{" "}
+                    {format(
+                      toZonedTime(order.orderRefundedAt, "America/Chicago"),
+                      "PPP",
+                    )}
+                  </span>
+                )}
               </div>
 
-              {/* FYI: I am aware that this is a roundabout way of handling accessibility, but it's the
-                best method I can find for allowing arbitrary content (buttons) within the "Trigger"
-                of the accordion */}
               <ChevronDown
-                tabIndex={0}
                 data-state={accordionOpen}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    setAccordionOpen(
-                      accordionOpen === "open" ? "closed" : "open",
-                    );
-                  }
-                }}
-                onClick={() => {
-                  setAccordionOpen(
-                    accordionOpen === "open" ? "closed" : "open",
-                  );
-                }}
                 className={`ml-4 h-4 w-4 shrink-0 cursor-pointer text-primary transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 data-[state=open]:rotate-180`}
               />
             </div>
           </div>
 
-          <AccordionContent className="pb-0">
+          <AccordionContent className="cursor-default pb-0">
             <OrderItems order={order} />
           </AccordionContent>
         </AccordionItem>
@@ -683,7 +667,7 @@ function OrderItems({ order }: OrderItems) {
 
   return (
     <div
-      className={`baseVertFlex mt-4 !items-start gap-2 border-t p-2 pb-0 pt-4
+      className={`baseVertFlex mt-4 gap-2 border-t p-2 pb-0 pt-4
       ${order.notableUserDescription ? "rounded-md pb-4" : "rounded-b-md"}
     `}
     >
@@ -697,13 +681,14 @@ function OrderItems({ order }: OrderItems) {
         </div>
       )}
 
-      {order.orderItems.map((item) => (
-        <div key={item.id} className="baseFlex">
-          {/* TODO: idk why I couldn't just generically have this be h-full... 
-              setting h-12 but don't want this to be hardcoded */}
-          <div className="baseVertFlex h-full !items-start !justify-start gap-2">
-            <div className="baseFlex gap-2 text-xl font-medium">
-              <p>{item.quantity}</p>
+      <div className="baseVertFlex !items-start">
+        {order.orderItems.map((item) => (
+          <div
+            key={item.id}
+            className="baseVertFlex h-full !items-start !justify-start gap-2"
+          >
+            <div className="baseFlex !justify-start gap-2 text-xl font-medium">
+              <p>{item.quantity}x</p>
               <p>{item.name}</p>
               {item.includeDietaryRestrictions && (
                 <div className="size-2 shrink-0 rounded-full bg-primary/75" />
@@ -737,8 +722,8 @@ function OrderItems({ order }: OrderItems) {
               </div>
             )}
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       {order.orderItems.some((item) => item.includeDietaryRestrictions) && (
         <div className="baseVertFlex my-4 w-full gap-2">
@@ -754,7 +739,7 @@ function OrderItems({ order }: OrderItems) {
 
       {order.includeNapkinsAndUtensils && (
         <div className="baseFlex mt-2 w-full">
-          <div className="baseFlex gap-2 text-sm italic text-stone-400">
+          <div className="baseFlex gap-2 text-sm italic text-stone-500">
             <FaUtensils className="size-4" />
             <p>Napkins and utensils were requested.</p>
           </div>
@@ -763,23 +748,9 @@ function OrderItems({ order }: OrderItems) {
 
       <Separator className="mt-2 h-[1px] w-full" />
 
-      <div className="baseVertFlex w-full gap-2">
-        <div className="baseFlex w-full gap-8">
-          <p>Order #{getFirstSixNumbers(order.id)}</p>
+      <div className="baseFlex w-full flex-wrap !justify-between gap-4">
+        <p>Order #{getFirstSixNumbers(order.id)}</p>
 
-          <Button
-            variant={"secondary"}
-            disabled={orderBeingReprinted}
-            size={"sm"}
-            className="!self-center text-sm"
-            onClick={() => {
-              setOrderBeingReprinted(true);
-              reprintOrder({ orderId: order.id });
-            }}
-          >
-            Reprint ticket
-          </Button>
-        </div>
         {order.phoneNumber && (
           <a
             href={`tel:${order.phoneNumber}`}
@@ -788,6 +759,19 @@ function OrderItems({ order }: OrderItems) {
             {formatPhoneNumber(order.phoneNumber)}
           </a>
         )}
+
+        <Button
+          variant={"secondary"}
+          disabled={orderBeingReprinted}
+          size={"sm"}
+          className="!self-center text-sm"
+          onClick={() => {
+            setOrderBeingReprinted(true);
+            reprintOrder({ orderId: order.id });
+          }}
+        >
+          Reprint ticket
+        </Button>
       </div>
     </div>
   );

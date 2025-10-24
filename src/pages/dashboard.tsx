@@ -9,6 +9,7 @@ import Reviews from "~/components/dashboard/Reviews";
 import Stats from "~/components/dashboard/Stats";
 import Holidays from "~/components/dashboard/Holidays";
 import HoursOfOperation from "~/components/dashboard/HoursOfOperation";
+import Refunds from "~/components/dashboard/Refunds";
 import DashboardHeaderShell from "~/components/dashboard/headers/DashboardHeaderShell";
 import { Toaster } from "~/components/ui/toaster";
 import { env } from "~/env";
@@ -23,7 +24,8 @@ export type DashboardViewStates =
   | "stats"
   | "reviews"
   | "hoursOfOperation"
-  | "holidays";
+  | "holidays"
+  | "refunds";
 
 const notoSans = Noto_Sans({
   subsets: ["latin"],
@@ -139,6 +141,8 @@ function Dashboard() {
                   customizationCategories={customizationCategories}
                 />
               )}
+
+            {viewState === "refunds" && <Refunds />}
 
             {viewState === "stats" && <Stats />}
 

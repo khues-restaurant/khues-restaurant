@@ -1,4 +1,5 @@
-import Decimal from "decimal.js";
+import { format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { CiGift } from "react-icons/ci";
@@ -199,6 +200,18 @@ function OrderSummary({ order }: OrderSummary) {
             <p>Total</p>
             <p>{formatPrice(order.total)}</p>
           </div>
+
+          {order.orderRefundedAt && (
+            <div className="baseFlex w-full !justify-between gap-2 rounded-md bg-amber-100 px-3 py-2 text-xs font-semibold text-amber-700">
+              <span>Refund processed</span>
+              <span>
+                {format(
+                  toZonedTime(order.orderRefundedAt, "America/Chicago"),
+                  "PPP",
+                )}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </motion.div>

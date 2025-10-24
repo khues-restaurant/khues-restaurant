@@ -255,7 +255,9 @@ model Order {
     id        String   @id @default(uuid()) // first 6 digits will be used for any customer-facing order number
     createdAt DateTime @default(now())
 
-    orderRefundedAt  DateTime?
+    orderRefundedAt   DateTime?
+    orderRefundReason String?
+
     orderStartedAt   DateTime?
     orderCompletedAt DateTime?
     datetimeToPickup DateTime

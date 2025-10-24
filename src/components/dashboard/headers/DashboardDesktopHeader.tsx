@@ -203,6 +203,14 @@ function DashboardDesktopHeader({
 
               <PickupTimeslotCapacity />
 
+              <Button
+                variant={viewState === "refunds" ? "activeLink" : "link"}
+                className="text-xl"
+                onClick={() => setViewState("refunds")}
+              >
+                Refunds
+              </Button>
+
               <Separator className="mt-2 h-[1px] w-full" />
 
               <Button
