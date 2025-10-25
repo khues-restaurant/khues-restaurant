@@ -115,6 +115,7 @@ model FavoriteItem {
 model MenuCategory {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
 
     name            String
     active          Boolean @default(true) // probably useful for seasonal categories
@@ -129,6 +130,7 @@ model MenuCategory {
 model MenuItem {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
 
     name         String
     description  String
@@ -163,7 +165,9 @@ model MenuItem {
 }
 
 model CustomizationCategory {
-    id              String @id @default(uuid())
+    id        String   @id @default(uuid())
+    updatedAt DateTime @default(now()) @updatedAt
+
     name            String // e.g., "Size", "Toppings"
     description     String // e.g., "Select your drink size"
     defaultChoiceId String
@@ -176,7 +180,9 @@ model CustomizationCategory {
 }
 
 model CustomizationChoice {
-    id              String  @id @default(uuid())
+    id        String   @id @default(uuid())
+    updatedAt DateTime @default(now()) @updatedAt
+
     name            String // e.g., "Small", "Medium", "Large" for Size
     description     String // e.g., "12 oz", "16 oz", "20 oz" for Size, or description of side dish if applicable
     priceAdjustment Int // Additional cost for this choice, can be negative
@@ -190,7 +196,8 @@ model CustomizationChoice {
 
 // Join table for MenuItem and CustomizationCategory
 model MenuItemCustomizationCategory {
-    id String @id @default(uuid())
+    id        String   @id @default(uuid())
+    updatedAt DateTime @default(now()) @updatedAt
 
     menuItemId              String
     customizationCategoryId String
@@ -200,7 +207,7 @@ model MenuItemCustomizationCategory {
     @@index([menuItemId, customizationCategoryId])
 }
 
-// used to store the order details before stripe session is created so 
+// used to store the order details before stripe session is created so
 // that upon order completion the stripe webhook can fetch the order details
 // and properly create the Order row in the database
 model TransientOrder {
@@ -328,6 +335,7 @@ model Discount {
 model User {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
 
     userId       String @unique // retrieved from Clerk
     stripeUserId String @unique
