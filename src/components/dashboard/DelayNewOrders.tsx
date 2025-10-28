@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { formatInTimeZone, toZonedTime } from "date-fns-tz";
 import { useEffect, useState } from "react";
 import {
   AlertDialog,
@@ -22,7 +22,10 @@ import { useToast } from "~/components/ui/use-toast";
 import { useMainStore } from "~/stores/MainStore";
 import { type DayOfWeek } from "~/types/operatingHours";
 import { api } from "~/utils/api";
-import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
+import {
+  CHICAGO_TIME_ZONE,
+  getMidnightCSTInUTC,
+} from "~/utils/dateHelpers/cstToUTCHelpers";
 import { getOpenTimesForDay } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import { getHoursAndMinutesFromDate } from "~/utils/dateHelpers/getHoursAndMinutesFromDate";
 import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
@@ -58,17 +61,18 @@ function DelayNewOrders() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [minOrderPickupTimeValue, setMinOrderPickupTimeValue] = useState("");
 
+  const chicagoCurrentDate = toZonedTime(currentDate, CHICAGO_TIME_ZONE);
+
   const times = hoursOfOperation.length
     ? getOpenTimesForDay({
-        dayOfWeek: currentDate.getDay() as DayOfWeek,
+        dayOfWeek: chicagoCurrentDate.getDay() as DayOfWeek,
         hoursOfOperation,
       })
     : [];
 
   const { toast } = useToast();
 
-  const todayAtMidnight = new Date();
-  todayAtMidnight.setHours(0, 0, 0, 0);
+  const todayAtMidnight = getMidnightCSTInUTC(currentDate);
 
   useEffect(() => {
     if (!minOrderPickupTime) return;
@@ -91,7 +95,7 @@ function DelayNewOrders() {
     if (!hoursOfOperation.length) return false;
 
     const storeCloseTime = getOpenTimesForDay({
-      dayOfWeek: currentDate.getDay() as DayOfWeek,
+      dayOfWeek: chicagoCurrentDate.getDay() as DayOfWeek,
       hoursOfOperation,
     }).slice(-1)[0];
 
@@ -128,17 +132,25 @@ function DelayNewOrders() {
                   <p>
                     Online ordering is paused until{" "}
                     {timeIsEqualToStoreCloseTime(
-                      format(minOrderPickupTime.value, "p"),
+                      formatInTimeZone(
+                        minOrderPickupTime.value,
+                        CHICAGO_TIME_ZONE,
+                        "p",
+                      ),
                     )
                       ? "Tomorrow"
-                      : format(minOrderPickupTime.value, "p")}
+                      : formatInTimeZone(
+                          minOrderPickupTime.value,
+                          CHICAGO_TIME_ZONE,
+                          "p",
+                        )}
                     .
                   </p>
                   <Button
                     variant="secondary"
                     disabled={isUpdatingNewMinOrderPickupTime}
                     onClick={() => {
-                      const todayAtMidnight = getMidnightCSTInUTC();
+                      const todayAtMidnight = getMidnightCSTInUTC(currentDate);
 
                       setDBValue(todayAtMidnight);
                     }}
@@ -176,9 +188,9 @@ function DelayNewOrders() {
                             {index !== times.length - 2 &&
                               currentDate.getTime() <
                                 (mergeDateAndTime(
-                                  new Date(),
+                                  currentDate,
                                   time,
-                                )?.getTime() ?? new Date().getTime()) && (
+                                )?.getTime() ?? currentDate.getTime()) && (
                                 <SelectItem key={time} value={time}>
                                   {index === times.length - 1
                                     ? "Tomorrow"

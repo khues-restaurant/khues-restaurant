@@ -6,7 +6,10 @@ import { SelectGroup, SelectItem, SelectLabel } from "~/components/ui/select";
 import StaticLotus from "~/components/ui/StaticLotus";
 import { useMainStore } from "~/stores/MainStore";
 import { type DayOfWeek } from "~/types/operatingHours";
-import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
+import {
+  CHICAGO_TIME_ZONE,
+  getMidnightCSTInUTC,
+} from "~/utils/dateHelpers/cstToUTCHelpers";
 import {
   getHoursForDay,
   getOpenTimesForDay,
@@ -41,7 +44,7 @@ function AvailablePickupTimes({
     () =>
       formatInTimeZone(
         new Date(selectedDateTimestamp),
-        "America/Chicago",
+        CHICAGO_TIME_ZONE,
         "yyyy-MM-dd",
       ),
     [selectedDateTimestamp],
@@ -79,9 +82,13 @@ function AvailablePickupTimes({
     }
 
     const selectedDateForCalculation = new Date(selectedDateTimestamp);
+    const selectedDateInChicago = toZonedTime(
+      selectedDateForCalculation,
+      CHICAGO_TIME_ZONE,
+    );
 
     let basePickupTimes = getOpenTimesForDay({
-      dayOfWeek: selectedDateForCalculation.getDay() as DayOfWeek,
+      dayOfWeek: selectedDateInChicago.getDay() as DayOfWeek,
       limitToThirtyMinutesBeforeClose: true,
       hoursOfOperation,
     });
@@ -90,16 +97,16 @@ function AvailablePickupTimes({
       return [];
     }
 
-    const now = toZonedTime(new Date(), "America/Chicago");
+    const now = toZonedTime(new Date(), CHICAGO_TIME_ZONE);
     const maybeMinPickupDate =
       typeof minPickupTimestamp === "number"
         ? new Date(minPickupTimestamp)
         : null;
 
     const isSameCalendarDay =
-      selectedDateForCalculation.getFullYear() === now.getFullYear() &&
-      selectedDateForCalculation.getMonth() === now.getMonth() &&
-      selectedDateForCalculation.getDate() === now.getDate();
+      selectedDateInChicago.getFullYear() === now.getFullYear() &&
+      selectedDateInChicago.getMonth() === now.getMonth() &&
+      selectedDateInChicago.getDate() === now.getDate();
 
     if (isSameCalendarDay && maybeMinPickupDate) {
       basePickupTimes = basePickupTimes.filter((time) => {
@@ -126,7 +133,7 @@ function AvailablePickupTimes({
       return true;
     }
 
-    const now = toZonedTime(new Date(), "America/Chicago");
+    const now = toZonedTime(new Date(), CHICAGO_TIME_ZONE);
     const todaysHours = getHoursForDay(
       hoursOfOperation,
       now.getDay() as DayOfWeek,
@@ -141,12 +148,19 @@ function AvailablePickupTimes({
       typeof minPickupTimestamp === "number"
         ? new Date(minPickupTimestamp)
         : null;
+    const minPickupInChicago = maybeMinPickupDate
+      ? toZonedTime(maybeMinPickupDate, CHICAGO_TIME_ZONE)
+      : null;
+
+    const minPickupIsAfterClose =
+      minPickupInChicago !== null &&
+      (minPickupInChicago.getHours() > todaysHours.closeHour ||
+        (minPickupInChicago.getHours() === todaysHours.closeHour &&
+          minPickupInChicago.getMinutes() >= todaysHours.closeMinute));
 
     return (
       selectedDateTimestamp === todayAtMidnight.getTime() &&
-      ((maybeMinPickupDate !== null &&
-        maybeMinPickupDate.getHours() >= todaysHours.closeHour &&
-        maybeMinPickupDate.getMinutes() >= todaysHours.closeMinute) ||
+      ((minPickupInChicago !== null && minPickupIsAfterClose) ||
         isPastFinalPickupPlacementTimeForDay({
           currentHour: now.getHours(),
           currentMinute: now.getMinutes(),

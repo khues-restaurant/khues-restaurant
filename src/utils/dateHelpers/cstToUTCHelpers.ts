@@ -1,27 +1,21 @@
 import { fromZonedTime, toZonedTime } from "date-fns-tz";
 import { startOfDay } from "date-fns";
 
-function getMidnightCSTInUTC(date?: Date) {
-  // Get the current date and time in UTC
-  const initalDate = date ?? new Date();
+const CHICAGO_TIME_ZONE: string = "America/Chicago";
 
-  // Convert the current date and time to CST/CDT
-  const cstDate = toZonedTime(initalDate, "America/Chicago");
+function getMidnightCSTInUTC(date: Date = new Date()) {
+  // Convert the provided date to the business timezone and zero the clock there.
+  const chicagoDate = toZonedTime(date, CHICAGO_TIME_ZONE);
+  const midnightInChicago = startOfDay(chicagoDate);
 
-  // Get the start of the day (midnight) in CST/CDT
-  const startOfTodayCST = startOfDay(cstDate);
-
-  // Convert the CST/CDT midnight time back to UTC
-  const startOfTodayUTC = fromZonedTime(startOfTodayCST, "America/Chicago");
-
-  return startOfTodayUTC;
+  // Return the equivalent UTC instant so we can store/compare consistently.
+  return fromZonedTime(midnightInChicago, CHICAGO_TIME_ZONE);
 }
 
 function getCSTDateInUTC(date: Date) {
-  const cstDate = toZonedTime(date, "America/Chicago");
-  const utcDate = fromZonedTime(cstDate, "America/Chicago");
-
-  return utcDate;
+  // Normalize a date to the same UTC instant we would persist when treating it as Chicago time.
+  const chicagoDate = toZonedTime(date, CHICAGO_TIME_ZONE);
+  return fromZonedTime(chicagoDate, CHICAGO_TIME_ZONE);
 }
 
-export { getMidnightCSTInUTC, getCSTDateInUTC };
+export { CHICAGO_TIME_ZONE, getMidnightCSTInUTC, getCSTDateInUTC };

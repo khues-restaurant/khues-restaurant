@@ -1,19 +1,26 @@
-import { getCSTDateInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
+import { fromZonedTime, formatInTimeZone } from "date-fns-tz";
+import { CHICAGO_TIME_ZONE } from "~/utils/dateHelpers/cstToUTCHelpers";
 
 export function mergeDateAndTime(date: Date, time: string) {
-  const hoursAndMinutes = time === "" ? ["0", "0"] : time.split(":");
+  const hoursAndMinutes = time?.trim() ? time.split(":") : ["0", "0"];
 
   if (hoursAndMinutes.length !== 2) return;
 
-  const hours = Number(hoursAndMinutes[0]);
-  const minutes = Number(hoursAndMinutes[1]);
+  const [rawHours = "", rawMinutes = ""] = hoursAndMinutes;
+  const hours = Number(rawHours);
+  const minutes = Number(rawMinutes);
 
-  if (isNaN(hours) || isNaN(minutes)) return;
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) return;
 
-  const newDate = new Date(date);
-  newDate.setHours(hours, minutes, 0, 0);
+  const formattedHours = rawHours.padStart(2, "0");
+  const formattedMinutes = rawMinutes.padStart(2, "0");
 
-  const utcJustifiedDate = getCSTDateInUTC(newDate);
+  const chicagoDate = formatInTimeZone(date, CHICAGO_TIME_ZONE, "yyyy-MM-dd");
+  const candidateIso = `${chicagoDate}T${formattedHours}:${formattedMinutes}:00`;
 
-  return utcJustifiedDate;
+  try {
+    return fromZonedTime(candidateIso, CHICAGO_TIME_ZONE);
+  } catch {
+    return undefined;
+  }
 }

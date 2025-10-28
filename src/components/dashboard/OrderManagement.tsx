@@ -30,7 +30,10 @@ import { Separator } from "~/components/ui/separator";
 import { useToast } from "~/components/ui/use-toast";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
-import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
+import {
+  CHICAGO_TIME_ZONE,
+  getMidnightCSTInUTC,
+} from "~/utils/dateHelpers/cstToUTCHelpers";
 import { getFirstSixNumbers } from "~/utils/formatters/getFirstSixNumbers";
 
 type OrderItemTest = OrderItem & {
@@ -420,6 +423,7 @@ function CustomerOrder({ order, view }: CustomerOrder) {
   const [orderIdBeingMutated, setOrderIdBeingMutated] = useState<string | null>(
     null,
   );
+  const [, setDialogJustClosed] = useState(false);
 
   const { mutate: startOrder } = api.order.startOrder.useMutation({
     onError: (error) => {
@@ -457,6 +461,17 @@ function CustomerOrder({ order, view }: CustomerOrder) {
   });
 
   const { toast } = useToast();
+
+  const pickupTimeChicago = toZonedTime(
+    order.datetimeToPickup,
+    CHICAGO_TIME_ZONE,
+  );
+  const orderCompletedAtChicago = order.orderCompletedAt
+    ? toZonedTime(order.orderCompletedAt, CHICAGO_TIME_ZONE)
+    : null;
+  const orderRefundedAtChicago = order.orderRefundedAt
+    ? toZonedTime(order.orderRefundedAt, CHICAGO_TIME_ZONE)
+    : null;
 
   function sumUpNumberOfItemsInOrder(order: OrderWithItems) {
     return order.orderItems.reduce((acc, item) => acc + item.quantity, 0);
@@ -502,27 +517,21 @@ function CustomerOrder({ order, view }: CustomerOrder) {
                   {(view === "notStarted" || view === "started") && (
                     <>
                       Due at{" "}
-                      {format(
-                        toZonedTime(order.datetimeToPickup, "America/Chicago"),
-                        "h:mm a",
-                      )}
+                      {format(pickupTimeChicago, "h:mm a")}
                     </>
                   )}
 
-                  {view === "completed" && order.orderCompletedAt && (
+                  {view === "completed" && orderCompletedAtChicago && (
                     <>
                       Completed at{" "}
-                      {format(
-                        toZonedTime(order.orderCompletedAt, "America/Chicago"),
-                        "h:mm a",
-                      )}
+                      {format(orderCompletedAtChicago, "h:mm a")}
                     </>
                   )}
 
                   {view === "future" && (
                     <>
-                      Due on {format(order.datetimeToPickup, "EEEE, MMM d ")} at{" "}
-                      {format(order.datetimeToPickup, "h:mm a")}
+                      Due on {format(pickupTimeChicago, "EEEE, MMM d ")} at{" "}
+                      {format(pickupTimeChicago, "h:mm a")}
                     </>
                   )}
                 </>
@@ -545,7 +554,9 @@ function CustomerOrder({ order, view }: CustomerOrder) {
                   <AlertDialog
                     open={openDialogId === order.id}
                     onOpenChange={(open) => {
-                      if (!open) setDialogJustClosed(true);
+                      if (!open) {
+                        setDialogJustClosed(true);
+                      }
                     }}
                   >
                     <AlertDialogTrigger asChild>
@@ -611,13 +622,10 @@ function CustomerOrder({ order, view }: CustomerOrder) {
                   </AlertDialog>
                 )}
 
-                {order.orderRefundedAt && (
+                {orderRefundedAtChicago && (
                   <span className="rounded-md bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
                     Refunded{" "}
-                    {format(
-                      toZonedTime(order.orderRefundedAt, "America/Chicago"),
-                      "PPP",
-                    )}
+                    {format(orderRefundedAtChicago, "PPP")}
                   </span>
                 )}
               </div>

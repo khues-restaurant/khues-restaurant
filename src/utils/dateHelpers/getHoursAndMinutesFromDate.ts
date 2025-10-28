@@ -1,7 +1,11 @@
+import { toZonedTime } from "date-fns-tz";
+import { CHICAGO_TIME_ZONE } from "~/utils/dateHelpers/cstToUTCHelpers";
+
 export function getHoursAndMinutesFromDate(date: Date) {
-  // Extract hours and minutes
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
+  const chicagoDate = toZonedTime(date, CHICAGO_TIME_ZONE);
+
+  const hours = chicagoDate.getHours();
+  const minutes = chicagoDate.getMinutes();
 
   // Need to return an empty string since midnight is the "default" time
   // that is set in the validation step(s). This is to properly show the

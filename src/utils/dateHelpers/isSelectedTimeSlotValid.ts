@@ -5,7 +5,10 @@ import {
   type HolidayList,
   type WeekOperatingHours,
 } from "~/types/operatingHours";
-import { getCSTDateInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
+import {
+  CHICAGO_TIME_ZONE,
+  getCSTDateInUTC,
+} from "~/utils/dateHelpers/cstToUTCHelpers";
 import {
   getHoursForDay,
   isHoliday,
@@ -63,7 +66,7 @@ export function isSelectedTimeSlotValid({
     return true;
   }
 
-  const pickupHour = toZonedTime(pickupTime, "America/Chicago").getHours();
+  const pickupHour = toZonedTime(pickupTime, CHICAGO_TIME_ZONE).getHours();
   const pickupMinute = pickupTime.getMinutes();
 
   if (
