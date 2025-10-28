@@ -1,6 +1,7 @@
 import { useAuth } from "@clerk/nextjs";
 import { type CustomizationChoice } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
+import { toZonedTime } from "date-fns-tz";
 import isEqual from "lodash.isequal";
 import Image from "next/image";
 import {
@@ -35,6 +36,7 @@ import {
 } from "~/server/api/routers/menuCategory";
 import { useMainStore, type Item } from "~/stores/MainStore";
 import { api } from "~/utils/api";
+import { CHICAGO_TIME_ZONE } from "~/utils/dateHelpers/cstToUTCHelpers";
 import { formatPrice } from "~/utils/formatters/formatPrice";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
@@ -109,6 +111,18 @@ function ItemCustomizationDrawer({
   }));
 
   const { updateOrder } = useUpdateOrder();
+
+  const pickupDateForAvailability = orderDetails.datetimeToPickup
+    ? toZonedTime(orderDetails.datetimeToPickup, CHICAGO_TIME_ZONE)
+    : null;
+
+  const pickupIsFridayOrSaturday =
+    pickupDateForAvailability !== null &&
+    (pickupDateForAvailability.getDay() === 5 ||
+      pickupDateForAvailability.getDay() === 6);
+
+  const showWeekendSpecialNotice =
+    itemToCustomize.isWeekendSpecial && !pickupIsFridayOrSaturday;
 
   const [localItemOrderDetails, setLocalItemOrderDetails] = useState(
     itemOrderDetails ?? {
@@ -258,6 +272,12 @@ function ItemCustomizationDrawer({
               </AnimatePresence>
             )}
           </div>
+
+          {showWeekendSpecialNotice && (
+            <div className="self-start rounded-md bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
+              Only available on Fri/Sat
+            </div>
+          )}
 
           {menuItemImagePaths[itemToCustomize.name] && (
             <Image

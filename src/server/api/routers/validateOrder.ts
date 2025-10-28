@@ -22,6 +22,7 @@ import { loopToFindFirstOpenDay } from "~/utils/dateHelpers/loopToFindFirstOpenD
 import { isEligibleForBirthdayReward } from "~/utils/dateHelpers/isEligibleForBirthdayReward";
 import { mergeDateAndTime } from "~/utils/dateHelpers/mergeDateAndTime";
 import {
+  CHICAGO_TIME_ZONE,
   getCSTDateInUTC,
   getMidnightCSTInUTC,
 } from "~/utils/dateHelpers/cstToUTCHelpers";
@@ -136,7 +137,7 @@ async function findNextAvailableTimeslot({
   minPickupDatetime: Date;
   maxOrdersPerTimeslot: number;
 }) {
-  const timezone = "America/Chicago";
+  const timezone = CHICAGO_TIME_ZONE;
 
   const startingDatetimeCST = toZonedTime(startingDatetime, timezone);
   const startingTimeString = formatInTimeZone(
@@ -349,6 +350,21 @@ export const validateOrderRouter = createTRPCRouter({
         }
       }
 
+      const pickupAllowsWeekendSpecials = (() => {
+        if (!orderDetails.datetimeToPickup) {
+          return false;
+        }
+
+        const pickupDate = toZonedTime(
+          orderDetails.datetimeToPickup,
+          CHICAGO_TIME_ZONE,
+        );
+
+        const dayOfWeek = pickupDate.getDay();
+
+        return dayOfWeek === 5 || dayOfWeek === 6;
+      })();
+
       // Item validation
       let items = orderDetails.items;
       let removedItemNames = [];
@@ -384,6 +400,12 @@ export const validateOrderRouter = createTRPCRouter({
             dbItem.price !== item.price ||
             item.quantity <= 0
           ) {
+            items.splice(i, 1);
+            removedItemNames.push(item.name);
+            continue;
+          }
+
+          if (dbItem.isWeekendSpecial && !pickupAllowsWeekendSpecials) {
             items.splice(i, 1);
             removedItemNames.push(item.name);
             continue;
