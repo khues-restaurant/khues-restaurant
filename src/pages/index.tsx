@@ -943,14 +943,14 @@ export default function Home() {
                 Celebrate with Us!
               </p>
 
-              <p className="mt-4">
+              <p className="mt-3">
                 Whether it&apos;s a birthday dinner or a casual catch-up,
                 we&apos;re ready to host. Smaller parties are generally walk-in
                 friendly, however we recommend booking ahead for larger groups.
                 Reserve now and let us take care of the rest!
               </p>
 
-              <div className="baseVertFlex mt-8 w-full gap-4">
+              <div className="baseVertFlex mb-2 mt-6 w-full gap-4">
                 <Button
                   className="baseFlex gap-2"
                   onClick={() => setChatIsOpen(true)}
