@@ -791,7 +791,7 @@ function Home({ json }: { json: string }) {
                   src={masonryFoodTwo}
                   alt={"Cream Cheese Wantons at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !h-[120%] !w-full rounded-md object-cover"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover object-[60%_50%]"
                 />
               </Parallax>
             </div>
@@ -827,7 +827,7 @@ function Home({ json }: { json: string }) {
             <div className="fifthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
               <Parallax
                 speed={-3}
-                className="!absolute !top-[-1rem] !size-[120%]"
+                className="!absolute !top-[-1rem] !size-[100%]"
               >
                 <Image
                   src={masonryFoodFive}
@@ -835,7 +835,7 @@ function Home({ json }: { json: string }) {
                   // when it came into the viewport otherwise
                   alt={"Roast Pork Fried Rice at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 384px, 500px"
-                  className="!relative !h-[110%] !w-full rounded-md object-cover object-[70%_50%]"
+                  className="!relative !h-[115%] !w-full rounded-md object-cover object-[50%_100%]"
                 />
               </Parallax>
             </div>
