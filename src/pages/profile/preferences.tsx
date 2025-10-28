@@ -264,7 +264,7 @@ function Preferences() {
           asChild
         >
           <a
-            href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul"
+            href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime"
             className="baseFlex h-14 w-full gap-2 !rounded-none border-b-2 border-stone-300 text-xs"
           >
             <IoCalendarOutline className="size-4 shrink-0" />
@@ -314,7 +314,7 @@ function Preferences() {
           className="baseFlex w-full gap-2"
         >
           <IoCalendarOutline />
-          <a href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul">
+          <a href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime">
             Reservations
           </a>
         </Button>

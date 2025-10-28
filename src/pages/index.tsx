@@ -328,7 +328,7 @@ function Home({ json }: { json: string }) {
 
               <Button size={"lg"} variant={"outline"} asChild>
                 <a
-                  href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul"
+                  href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime"
                   // TODO: was 186px width btw
                   className="baseFlex mt-2 w-[206px] gap-2 !px-4 shadow-md"
                 >
@@ -505,7 +505,7 @@ function Home({ json }: { json: string }) {
 
                   <Button size={"lg"} variant={"outline"} asChild>
                     <a
-                      href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul"
+                      href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime"
                       className="baseFlex gap-3 !px-8 !py-6 !text-lg shadow-sm"
                     >
                       Make a reservation
@@ -1116,16 +1116,16 @@ function Home({ json }: { json: string }) {
                 Celebrate with Us!
               </p>
 
-              <p className="mt-4">
+              <p className="mt-3">
                 Whether it&apos;s a birthday dinner or a casual catch-up,
                 we&apos;re ready to host. Smaller parties are generally walk-in
                 friendly, however we recommend booking ahead for larger groups.
                 Reserve now and let us take care of the rest!
               </p>
 
-              <div className="baseVertFlex mt-8 w-full gap-4">
+              <div className="baseVertFlex mb-2 mt-6 w-full gap-4">
                 <Button className="baseFlex gap-2" asChild>
-                  <a href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul">
+                  <a href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime">
                     Make a reservation
                     <IoCalendarOutline className="size-4 drop-shadow-md" />
                   </a>
@@ -1152,7 +1152,7 @@ function Home({ json }: { json: string }) {
 
               <div className="baseFlex mt-8 gap-4">
                 <Button className="baseFlex gap-2" asChild>
-                  <a href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul">
+                  <a href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime">
                     Make a reservation
                     <IoCalendarOutline className="size-4 drop-shadow-md" />
                   </a>
