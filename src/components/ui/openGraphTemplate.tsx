@@ -89,7 +89,7 @@ function OpenGraphTemplate() {
 
             <Button size={"lg"} variant={"outline"} asChild>
               <a
-                href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul"
+                href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime"
                 className="baseFlex gap-3 !px-8 !py-6 !text-lg shadow-sm"
               >
                 Make a reservation

@@ -133,7 +133,7 @@ function DesktopHeader() {
             asChild
           >
             <a
-              href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul"
+              href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime"
               className="block !text-xl"
             >
               Reservations

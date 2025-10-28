@@ -284,7 +284,7 @@ export default function Home() {
 
               <Button size={"lg"} variant={"outline"} asChild>
                 <a
-                  href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul"
+                  href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime"
                   // TODO: was 186px width btw
                   className="baseFlex mt-2 w-[206px] gap-2 !px-4 shadow-md"
                 >
@@ -460,7 +460,7 @@ export default function Home() {
 
                   <Button size={"lg"} variant={"outline"} asChild>
                     <a
-                      href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul"
+                      href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime"
                       className="baseFlex gap-3 !px-8 !py-6 !text-lg shadow-sm"
                     >
                       Make a reservation
@@ -952,7 +952,7 @@ export default function Home() {
                   onClick={() => setChatIsOpen(true)}
                   asChild
                 >
-                  <a href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul">
+                  <a href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime">
                     Make a reservation
                     <IoCalendarOutline className="size-4 drop-shadow-md" />
                   </a>
@@ -983,7 +983,7 @@ export default function Home() {
                   onClick={() => setChatIsOpen(!chatIsOpen)}
                   asChild
                 >
-                  <a href="https://www.exploretock.com/khues-kitchen-at-midcity-kitchen-saint-paul">
+                  <a href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime">
                     Make a reservation
                     <IoCalendarOutline className="size-4 drop-shadow-md" />
                   </a>
