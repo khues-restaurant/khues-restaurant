@@ -9,6 +9,7 @@
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
+    "test": "vitest",
     "db:studio": "prisma studio",
     "db:push": "prisma db push",
     "email": "email dev"
@@ -81,7 +82,9 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "tailwindcss": "^3.4.8",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^4.0.4"
   },
   "ct3aMetadata": {
     "initVersion": "7.26.0"

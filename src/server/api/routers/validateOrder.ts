@@ -139,15 +139,14 @@ async function findNextAvailableTimeslot({
 }) {
   const timezone = CHICAGO_TIME_ZONE;
 
-  const startingDatetimeCST = toZonedTime(startingDatetime, timezone);
   const startingTimeString = formatInTimeZone(
     startingDatetime,
     timezone,
     "HH:mm",
   );
 
-  const startingDay = new Date(startingDatetimeCST);
-  startingDay.setHours(0, 0, 0, 0);
+  // Get the starting day at midnight in Chicago time, represented in UTC
+  const startingDay = getMidnightCSTInUTC(startingDatetime);
 
   for (let dayOffset = 0; dayOffset < 14; dayOffset++) {
     const currentDay = addDays(startingDay, dayOffset);
