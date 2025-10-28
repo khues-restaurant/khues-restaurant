@@ -82,19 +82,21 @@ function isPastFinalPickupPlacementTimeForDay({
   currentMinute,
   closeHour,
   closeMinute,
+  bufferFromCloseMinutes = 50,
 }: {
   currentHour: number;
   currentMinute: number;
   closeHour: number;
   closeMinute: number;
+  bufferFromCloseMinutes?: number;
 }) {
   const currentTotalMinutes = currentHour * 60 + currentMinute;
   const closeTotalMinutes = closeHour * 60 + closeMinute;
 
-  // "-50" below is to account for the 30 minute buffer before close
-  // along with fact that orders take ~20 minutes to prepare.
+  // Default buffer accounts for 30 minute pickup cutoff plus ~20 minutes of prep.
 
-  const pastFinalPickupTime = currentTotalMinutes > closeTotalMinutes - 50;
+  const pastFinalPickupTime =
+    currentTotalMinutes > closeTotalMinutes - bufferFromCloseMinutes;
 
   return pastFinalPickupTime;
 }

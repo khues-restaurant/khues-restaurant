@@ -88,6 +88,7 @@ export function isSelectedTimeSlotValid({
       currentMinute: pickupMinute,
       closeHour: pickupDayHours.closeHour,
       closeMinute: pickupDayHours.closeMinute,
+      bufferFromCloseMinutes: 30,
     })
   ) {
     return false;

@@ -67,12 +67,9 @@ function AvailablePickupTimes({
     },
   );
 
-  const timeslotUsage =
-    (timeslotUsageQuery.data as Record<string, number> | undefined) ??
-    undefined;
+  const timeslotUsage = timeslotUsageQuery.data ?? undefined;
 
-  const capacityRecord = (numberOfOrdersAllowed ??
-    null) as NumberOfOrdersAllowedPerPickupTimeSlot | null;
+  const capacityRecord = numberOfOrdersAllowed ?? null;
 
   const maxOrdersPerTimeslot = capacityRecord?.value ?? null;
 
