@@ -314,7 +314,9 @@ export default function Home() {
           >
             <Image
               src={bottomLeftHero}
-              alt={"Bánh Mì Xíu Mại at Khue's in St. Paul"}
+              alt={
+                "Close-up of our Grilled Ribeye, next to a bowl of Bún Chay and a tall glass of Cà Phê Sữa Đá Coffee, set on our outdoor patio with tables and chairs in the background."
+              }
               priority
               sizes="66vw"
               className="!relative !size-full rounded-md object-cover object-[50%_25%]"
@@ -503,7 +505,9 @@ export default function Home() {
           >
             <Image
               src={bottomLeftHero}
-              alt={"Bánh Mì Xíu Mại at Khue's in St. Paul"}
+              alt={
+                "Close-up of our Grilled Ribeye, next to a bowl of Bún Chay and a tall glass of Cà Phê Sữa Đá Coffee, set on our outdoor patio with tables and chairs in the background."
+              }
               priority
               sizes="33vw"
               className="!relative size-full rounded-md object-cover object-[50%_30%]"
@@ -746,7 +750,7 @@ export default function Home() {
                   src={masonryFoodTwo}
                   alt={"Cream Cheese Wantons at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 159px, 500px"
-                  className="!relative !h-[120%] !w-full rounded-md object-cover"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover object-[60%_50%]"
                 />
               </Parallax>
             </div>
@@ -782,7 +786,7 @@ export default function Home() {
             <div className="fifthMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
               <Parallax
                 speed={-3}
-                className="!absolute !top-[-1rem] !size-[120%]"
+                className="!absolute !top-[-1rem] !size-[100%]"
               >
                 <Image
                   src={masonryFoodFive}
@@ -790,7 +794,7 @@ export default function Home() {
                   // when it came into the viewport otherwise
                   alt={"Roast Pork Fried Rice at Khue's in St. Paul"}
                   sizes="(max-width: 1000px) 384px, 500px"
-                  className="!relative !h-[110%] !w-full rounded-md object-cover object-[70%_50%]"
+                  className="!relative !h-[120%] !w-full rounded-md object-cover object-[50%_100%]"
                 />
               </Parallax>
             </div>

@@ -210,14 +210,14 @@ function Menu() {
           >
             <Image
               src={chiliCrunchWings}
-              alt="Spicy Chicken Sandwich at Khue's in St. Paul"
+              alt="Chili Crunch Wings at Khue's in St. Paul"
               // sizes="(max-width: 1000px) 400px, 320px"
               priority
               className="!relative !size-full rounded-none object-cover opacity-35 md:rounded-none md:opacity-100 md:[clip-path:polygon(0_0,85%_0,100%_100%,15%_100%)]"
             />
           </div>
 
-          <div className="baseFlex z-10 mx-8 !hidden self-center justify-self-center rounded-md bg-offwhite p-4 shadow-heroContainer md:!flex">
+          <div className="baseFlex z-10 mx-8 !hidden self-center justify-self-center rounded-md bg-offwhite p-2 shadow-heroContainer md:!flex">
             <div className="baseFlex gap-2 text-xl font-semibold text-primary tablet:p-2 desktop:text-2xl">
               <SideAccentSwirls className="h-4 scale-x-[-1] fill-primary desktop:h-5" />
               <h1 className={`${charis.className}`}>Menu</h1>
