@@ -18,9 +18,18 @@ import AnimatedNumbers from "~/components/AnimatedNumbers";
 import DelayNewOrders from "~/components/dashboard/DelayNewOrders";
 import PickupTimeslotCapacity from "~/components/dashboard/PickupTimeslotCapacity";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
-import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
+import {
+  CHICAGO_TIME_ZONE,
+  getMidnightCSTInUTC,
+} from "~/utils/dateHelpers/cstToUTCHelpers";
 import { type DashboardViewStates } from "~/pages/dashboard";
 import { Separator } from "~/components/ui/separator";
+import { Badge } from "~/components/ui/badge";
+import { formatInTimeZone, toZonedTime } from "date-fns-tz";
+import { formatTimeString } from "~/utils/formatters/formatTimeString";
+import { useMainStore } from "~/stores/MainStore";
+import { getOpenTimesForDay } from "~/utils/dateHelpers/datesAndHoursOfOperation";
+import type { DayOfWeek } from "~/types/operatingHours";
 
 interface DashboardDesktopHeader {
   viewState: DashboardViewStates;
@@ -36,13 +45,21 @@ function DashboardDesktopHeader({
   const { signOut } = useAuth();
   const { push } = useRouter();
 
+  const { hoursOfOperation } = useMainStore((state) => ({
+    hoursOfOperation: state.hoursOfOperation,
+  }));
+
   const { data: orders } = api.order.getDashboardOrders.useQuery();
   const { data: databaseChats, refetch: refetchChats } =
     api.chat.getAllMessages.useQuery();
+  const { data: statusReport } = api.dashboard.getHeaderStatusReport.useQuery();
 
   const [numberOfActiveOrders, setNumberOfActiveOrders] = useState(0);
   const [numberOfUnreadMessages, setNumberOfUnreadMessages] = useState(0);
   const [popoverIsOpen, setPopoverIsOpen] = useState(false);
+  const [onLineStatus, setOnlineStatus] = useState<"online" | "offline">(
+    typeof navigator !== "undefined" && navigator.onLine ? "online" : "offline",
+  );
 
   useEffect(() => {
     if (!orders) return;
@@ -77,10 +94,37 @@ function DashboardDesktopHeader({
     });
   }, [socket, refetchChats]);
 
+  useEffect(() => {
+    function updateOnlineStatus() {
+      setOnlineStatus(navigator.onLine ? "online" : "offline");
+    }
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
+    return () => {
+      window.removeEventListener("online", updateOnlineStatus);
+      window.removeEventListener("offline", updateOnlineStatus);
+    };
+  }, []);
+
+  function timeIsEqualToStoreCloseTime(time: string) {
+    if (!hoursOfOperation.length) return false;
+
+    const chicagoCurrentDate = toZonedTime(new Date(), CHICAGO_TIME_ZONE);
+
+    const storeCloseTime = getOpenTimesForDay({
+      dayOfWeek: chicagoCurrentDate.getDay() as DayOfWeek,
+      hoursOfOperation,
+    }).slice(-1)[0];
+
+    if (!storeCloseTime) return false;
+
+    return time === formatTimeString(storeCloseTime);
+  }
+
   return (
     <nav
       id="header"
-      className={`baseFlex sticky left-0 top-0 z-50 grid h-24 w-full gap-4 bg-offwhite shadow-md`}
+      className={`baseVertFlex sticky left-0 top-0 z-50 grid h-24 w-full gap-3 bg-offwhite shadow-md`}
     >
       <div className="baseFlex gap-4">
         <div className="relative">
@@ -227,6 +271,45 @@ function DashboardDesktopHeader({
             </div>
           </PopoverContent>
         </Popover>
+      </div>
+
+      {/* status report */}
+      <div className="baseFlex flex-wrap gap-4">
+        {/* Online/offline status indicator */}
+        {onLineStatus === "offline" && (
+          <Badge variant="destructive">Offline mode</Badge>
+        )}
+
+        {/* Min order pickup time */}
+        {statusReport && statusReport.minOrderPickupTime !== 0 && (
+          <Badge
+            variant={"secondary"}
+            className="bg-yellow-300/50 text-yellow-800"
+          >
+            Online ordering is paused until{" "}
+            {timeIsEqualToStoreCloseTime(
+              formatInTimeZone(
+                statusReport.minOrderPickupTime,
+                CHICAGO_TIME_ZONE,
+                "p",
+              ),
+            )
+              ? "tomorrow"
+              : formatInTimeZone(
+                  statusReport.minOrderPickupTime,
+                  CHICAGO_TIME_ZONE,
+                  "p",
+                )}
+          </Badge>
+        )}
+
+        {/* Number of currently 86'd items */}
+        {statusReport && statusReport.totalDisabledMenuItems > 0 && (
+          <Badge className="bg-yellow-300/50 text-yellow-800">
+            {statusReport.totalDisabledMenuItems} item
+            {statusReport.totalDisabledMenuItems > 1 ? "s" : ""} 86&apos;d
+          </Badge>
+        )}
       </div>
     </nav>
   );

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "next build",
-    "dev": "next dev --webpack",
+    "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
@@ -38,7 +38,7 @@
     "lodash.isequal": "^4.5.0",
     "lucide-react": "^0.546.0",
     "micro": "^10.0.1",
-    "next": "^16.0.0",
+    "next": "^16.0.3",
     "next-superjson-plugin": "^0.6.3",
     "openai": "^4.55.1",
     "pluralize": "^8.0.0",

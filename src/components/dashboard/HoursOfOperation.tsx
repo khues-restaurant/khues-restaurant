@@ -187,7 +187,7 @@ function HoursOfOperation() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="baseVertFlex my-8  !items-start gap-8 px-4"
+      className="baseVertFlex my-8 !items-start gap-8 px-4"
     >
       <div className="baseVertFlex  !items-start gap-2">
         <p className="text-2xl font-semibold text-primary">
@@ -199,8 +199,8 @@ function HoursOfOperation() {
         </p>
       </div>
 
-      <div className=" overflow-x-auto">
-        <div className="grid w-[880px] grid-cols-[160px_repeat(4,120px)_140px] items-center gap-4 rounded-lg border bg-offwhite p-4">
+      <div className="max-w-[90vw] overflow-x-auto rounded-lg border bg-offwhite p-4 lg:w-[880px]">
+        <div className="grid w-full grid-cols-[160px_repeat(4,120px)_140px] items-center gap-4 ">
           <div className="text-sm font-semibold text-muted-foreground">Day</div>
           <div className="text-sm font-semibold text-muted-foreground">
             Opens (hr)

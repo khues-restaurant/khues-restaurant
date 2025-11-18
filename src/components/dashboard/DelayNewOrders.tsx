@@ -36,12 +36,14 @@ function DelayNewOrders() {
   const { hoursOfOperation } = useMainStore((state) => ({
     hoursOfOperation: state.hoursOfOperation,
   }));
+
   const { data: minOrderPickupTime } =
     api.minimumOrderPickupTime.get.useQuery();
   const { mutate: setDBValue, isLoading: isUpdatingNewMinOrderPickupTime } =
     api.minimumOrderPickupTime.set.useMutation({
-      onSuccess: () => {
-        void ctx.minimumOrderPickupTime.get.refetch();
+      onSuccess: async () => {
+        await ctx.minimumOrderPickupTime.get.refetch();
+
         setShowDialog(false);
 
         // TODO: fix this to be more specific. get the actual time that was set
@@ -53,6 +55,9 @@ function DelayNewOrders() {
       onError: (e) => {
         // toast notification here
         console.error(e);
+      },
+      onSettled: () => {
+        void ctx.dashboard.getHeaderStatusReport.invalidate();
       },
     });
 
@@ -138,7 +143,7 @@ function DelayNewOrders() {
                         "p",
                       ),
                     )
-                      ? "Tomorrow"
+                      ? "tomorrow"
                       : formatInTimeZone(
                           minOrderPickupTime.value,
                           CHICAGO_TIME_ZONE,

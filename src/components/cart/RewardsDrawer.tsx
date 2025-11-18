@@ -24,10 +24,10 @@ import { api } from "~/utils/api";
 import { getDefaultCustomizationChoices } from "~/utils/getDefaultCustomizationChoices";
 import { menuItemImagePaths } from "~/utils/menuItemImagePaths";
 
-// import affogato from "/public/menuItems/affogato.png";
-// import grilledSirloin from "/public/menuItems/grilled-sirloin.png";
-// import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
-// import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
+// import affogato from "public/menuItems/affogato.png";
+// import grilledSirloin from "public/menuItems/grilled-sirloin.png";
+// import roastPorkFriedRice from "public/menuItems/roast-pork-fried-rice.png";
+// import thaiTeaTresLeches from "public/menuItems/thai-tea-tres-leches.png";
 
 // okay so we kinda spliced together some basic structure here, just look through it
 // and complete this fully before moving onto backend dashboard improvements

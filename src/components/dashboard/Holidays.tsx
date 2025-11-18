@@ -86,7 +86,7 @@ function Holidays() {
         </p>
       </div>
 
-      <div className="baseVertFlex w-[600px] !items-start gap-4 rounded-lg border bg-offwhite p-4">
+      <div className="baseVertFlex !items-start gap-4 rounded-lg border bg-offwhite p-4 md:w-[600px]">
         <div className="baseFlex w-full !justify-between gap-4">
           <div className="baseFlex gap-3">
             <Switch

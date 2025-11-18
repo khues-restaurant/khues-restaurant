@@ -1,16 +1,16 @@
 import type { StaticImageData } from "next/image";
 
-import creamCheeseWantons from "/public/menuItems/cream-cheese-wantons.png";
-import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
-import spicyChickenSandwich from "/public/menuItems/spicy-chicken-sando.jpg";
-import stickyJicamaRibs from "/public/menuItems/sticky-jicama-ribs.png";
-import grilledRibeye from "/public/menuItems/20-oz-grilled-ribeye.png";
-import affogato from "/public/menuItems/affogato.png";
-import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
-import chiliCrunchWings from "/public/menuItems/chili-crunch-wings.png";
-import porkChop from "/public/menuItems/pork-chop.png";
-import chickenSalad from "/public/menuItems/chicken-salad.png";
-import bunChay from "/public/menuItems/bun-chay.png";
+import creamCheeseWantons from "public/menuItems/cream-cheese-wantons.png";
+import roastPorkFriedRice from "public/menuItems/roast-pork-fried-rice.png";
+import spicyChickenSandwich from "public/menuItems/spicy-chicken-sando.jpg";
+import stickyJicamaRibs from "public/menuItems/sticky-jicama-ribs.png";
+import grilledRibeye from "public/menuItems/20-oz-grilled-ribeye.png";
+import affogato from "public/menuItems/affogato.png";
+import thaiTeaTresLeches from "public/menuItems/thai-tea-tres-leches.png";
+import chiliCrunchWings from "public/menuItems/chili-crunch-wings.png";
+import porkChop from "public/menuItems/pork-chop.png";
+import chickenSalad from "public/menuItems/chicken-salad.png";
+import bunChay from "public/menuItems/bun-chay.png";
 
 export const menuItemImagePaths: Record<string, StaticImageData> = {
   "Cream Cheese Wontons": creamCheeseWantons,

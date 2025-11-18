@@ -36,51 +36,42 @@ import { type FullMenuItem } from "~/server/api/routers/menuCategory";
 import { type GetStaticProps } from "next";
 import superjson from "superjson";
 
-import khuesKitchenLogo from "/public/logos/khuesKitchenLogo.png";
+import khuesKitchenLogo from "public/logos/khuesKitchenLogo.png";
 
-import topLeftHero from "/public/ourStory/cropped-khues-kitchen.png";
-import topRightHero from "/public/menuItems/spicy-chicken-sando.jpg";
-import bottomLeftHero from "/public/miscFood/patio-trio.jpg";
-import bottomRightHero from "/public/interior/three.jpg";
+import topLeftHero from "public/ourStory/cropped-khues-kitchen.png";
+import topRightHero from "public/menuItems/spicy-chicken-sando.jpg";
+import bottomLeftHero from "public/miscFood/patio-trio.jpg";
+import bottomRightHero from "public/interior/three.jpg";
 
-import kare11Logo from "/public/media/kare11Logo.png";
-import mprLogo from "/public/media/mprLogo.png";
-import starTribuneLogo from "/public/media/starTribuneLogo.png";
+import kare11Logo from "public/media/kare11Logo.png";
+import mprLogo from "public/media/mprLogo.png";
+import starTribuneLogo from "public/media/starTribuneLogo.png";
 import WCCOLogo from "public/media/WCCOLogo";
-import heavyTableLogo from "/public/media/heavyTableLogo.png";
-import theTastingNotesLogo from "/public/media/theTastingNotesLogo.png";
-import mspMagLogo from "/public/media/mspMagLogo.png";
+import heavyTableLogo from "public/media/heavyTableLogo.png";
+import theTastingNotesLogo from "public/media/theTastingNotesLogo.png";
+import mspMagLogo from "public/media/mspMagLogo.png";
 
-import eric from "/public/ourStory/eric.webp";
-import ericUpscaled from "/public/ourStory/ericUpscaled.jpg";
+import eric from "public/ourStory/eric.webp";
+import ericUpscaled from "public/ourStory/ericUpscaled.jpg";
 
-import reservations from "/public/interior/reservations.jpg";
+import reservations from "public/interior/reservations.jpg";
 
-import masonryFoodOne from "/public/menuItems/sticky-jicama-ribs.png";
-import masonryFoodTwo from "/public/menuItems/cream-cheese-wantons.png";
-import masonryFoodThree from "/public/menuItems/coffee.png";
-import masonryFoodFour from "/public/menuItems/thai-tea-tres-leches.png";
-import masonryFoodFive from "/public/menuItems/roast-pork-fried-rice.png";
-import masonryFoodSix from "/public/menuItems/affogato.png";
+import masonryFoodOne from "public/menuItems/sticky-jicama-ribs.png";
+import masonryFoodTwo from "public/menuItems/cream-cheese-wantons.png";
+import masonryFoodThree from "public/menuItems/coffee.png";
+import masonryFoodFour from "public/menuItems/thai-tea-tres-leches.png";
+import masonryFoodFive from "public/menuItems/roast-pork-fried-rice.png";
+import masonryFoodSix from "public/menuItems/affogato.png";
 
-import masonryInteriorOne from "/public/interior/one.jpg";
-import masonryInteriorTwo from "/public/exterior/three.jpg";
-import masonryInteriorThree from "/public/interior/three.jpg";
-import masonryInteriorFour from "/public/interior/four.jpg";
-import masonryInteriorFive from "/public/interior/two.jpg";
+import masonryInteriorOne from "public/interior/one.jpg";
+import masonryInteriorTwo from "public/exterior/three.jpg";
+import masonryInteriorThree from "public/interior/three.jpg";
+import masonryInteriorFour from "public/interior/four.jpg";
+import masonryInteriorFive from "public/interior/two.jpg";
 
-import rewardsPromo from "/public/homepage/rewardsPromo.jpg";
+import rewardsPromo from "public/homepage/rewardsPromo.jpg";
 
-interface Home {
-  ourFavoriteMenuItems: FullMenuItem[];
-}
-
-function Home({ json }: { json: string }) {
-  const { ourFavoriteMenuItems } = useMemo(
-    () => superjson.parse<Home>(json),
-    [json],
-  );
-
+function Home() {
   const { isLoaded, isSignedIn } = useAuth();
   const userId = useGetUserId();
 
@@ -1282,7 +1273,7 @@ function Home({ json }: { json: string }) {
           </div>
 
           {/* Explore Our Favorites section */}
-          <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-6xl tablet:max-w-2xl">
+          {/* <div className="baseVertFlex mb-8 max-w-[350px] gap-4 sm:max-w-md xl:!max-w-6xl tablet:max-w-2xl">
             <p className="text-lg font-medium tablet:text-xl">
               Explore Our Favorites
             </p>
@@ -1359,7 +1350,7 @@ function Home({ json }: { json: string }) {
                 </Button>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* maybe a gallary/slideshow section? Prob not though */}
         </div>
@@ -1370,40 +1361,40 @@ function Home({ json }: { json: string }) {
 
 export default Home;
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
-  const prisma = new PrismaClient();
+// export const getStaticProps: GetStaticProps = async (ctx) => {
+//   const prisma = new PrismaClient();
 
-  const ourFavoriteMenuItems = await prisma.menuItem.findMany({
-    where: {
-      isChefsChoice: true,
-    },
-    include: {
-      activeDiscount: true,
-      customizationCategories: {
-        include: {
-          customizationCategory: {
-            include: {
-              customizationChoices: {
-                orderBy: {
-                  listOrder: "asc",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    orderBy: {
-      listOrder: "asc",
-    },
-  });
+//   const ourFavoriteMenuItems = await prisma.menuItem.findMany({
+//     where: {
+//       isChefsChoice: true,
+//     },
+//     include: {
+//       activeDiscount: true,
+//       customizationCategories: {
+//         include: {
+//           customizationCategory: {
+//             include: {
+//               customizationChoices: {
+//                 orderBy: {
+//                   listOrder: "asc",
+//                 },
+//               },
+//             },
+//           },
+//         },
+//       },
+//     },
+//     orderBy: {
+//       listOrder: "asc",
+//     },
+//   });
 
-  return {
-    props: {
-      json: superjson.stringify(ourFavoriteMenuItems),
-    },
-  };
-};
+//   return {
+//     props: {
+//       json: superjson.stringify(ourFavoriteMenuItems),
+//     },
+//   };
+// };
 
 interface OurFavoriteMenuItemCard {
   menuItem: FullMenuItem;
@@ -1506,7 +1497,6 @@ function OurFavoriteMenuItemCard({ menuItem, user }: OurFavoriteMenuItemCard) {
                       isGlutenFree: menuItem.isGlutenFree,
                       showUndercookedOrRawDisclaimer:
                         menuItem.showUndercookedOrRawDisclaimer,
-                      hasImageOfItem: menuItem.hasImageOfItem,
                       discountId: menuItem.activeDiscount?.id ?? null,
                       birthdayReward: false,
                       pointReward: false,

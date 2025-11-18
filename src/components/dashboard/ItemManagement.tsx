@@ -100,6 +100,7 @@ function MenuCategoryContainer({ name, menuItems }: MenuCategoryContainer) {
       },
       onSettled: () => {
         void ctx.menuCategory.getAll.refetch();
+        void ctx.dashboard.getHeaderStatusReport.invalidate();
 
         setOpenDialogId(null);
         setItemIdBeingMutated(null);

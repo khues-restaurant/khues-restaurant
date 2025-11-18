@@ -1,12 +1,12 @@
 import { Clock, MapPin } from "lucide-react";
 import Image from "next/image";
 
-import khuesKitchenLogo from "/public/logos/khuesKitchenLogo.png";
+import khuesKitchenLogo from "public/logos/khuesKitchenLogo.png";
 
-import first from "/public/openGraph/first.jpg";
-import second from "/public/openGraph/second.jpg";
-import third from "/public/openGraph/third.webp";
-import fourth from "/public/openGraph/fourth.webp";
+import first from "public/openGraph/first.jpg";
+import second from "public/openGraph/second.jpg";
+import third from "public/openGraph/third.webp";
+import fourth from "public/openGraph/fourth.webp";
 
 function OpenGraphTemplate() {
   return (

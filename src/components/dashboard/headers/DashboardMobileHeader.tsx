@@ -17,7 +17,16 @@ import PickupTimeslotCapacity from "~/components/dashboard/PickupTimeslotCapacit
 import { Separator } from "~/components/ui/separator";
 import { type DashboardViewStates } from "~/pages/dashboard";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
-import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
+import {
+  CHICAGO_TIME_ZONE,
+  getMidnightCSTInUTC,
+} from "~/utils/dateHelpers/cstToUTCHelpers";
+import { Badge } from "~/components/ui/badge";
+import { formatInTimeZone, toZonedTime } from "date-fns-tz";
+import { formatTimeString } from "~/utils/formatters/formatTimeString";
+import { useMainStore } from "~/stores/MainStore";
+import { getOpenTimesForDay } from "~/utils/dateHelpers/datesAndHoursOfOperation";
+import type { DayOfWeek } from "~/types/operatingHours";
 
 interface DashboardMobileHeader {
   viewState: DashboardViewStates;
@@ -33,13 +42,21 @@ function DashboardMobileHeader({
   const { signOut } = useAuth();
   const { push } = useRouter();
 
+  const { hoursOfOperation } = useMainStore((state) => ({
+    hoursOfOperation: state.hoursOfOperation,
+  }));
+
   const { data: orders } = api.order.getDashboardOrders.useQuery();
   const { data: databaseChats, refetch: refetchChats } =
     api.chat.getAllMessages.useQuery();
+  const { data: statusReport } = api.dashboard.getHeaderStatusReport.useQuery();
 
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
   const [numberOfActiveOrders, setNumberOfActiveOrders] = useState(0);
   const [numberOfUnreadMessages, setNumberOfUnreadMessages] = useState(0);
+  const [onLineStatus, setOnlineStatus] = useState<"online" | "offline">(
+    typeof navigator !== "undefined" && navigator.onLine ? "online" : "offline",
+  );
 
   useEffect(() => {
     if (!orders) return;
@@ -74,10 +91,37 @@ function DashboardMobileHeader({
     });
   }, [socket, refetchChats]);
 
+  useEffect(() => {
+    function updateOnlineStatus() {
+      setOnlineStatus(navigator.onLine ? "online" : "offline");
+    }
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
+    return () => {
+      window.removeEventListener("online", updateOnlineStatus);
+      window.removeEventListener("offline", updateOnlineStatus);
+    };
+  }, []);
+
+  function timeIsEqualToStoreCloseTime(time: string) {
+    if (!hoursOfOperation.length) return false;
+
+    const chicagoCurrentDate = toZonedTime(new Date(), CHICAGO_TIME_ZONE);
+
+    const storeCloseTime = getOpenTimesForDay({
+      dayOfWeek: chicagoCurrentDate.getDay() as DayOfWeek,
+      hoursOfOperation,
+    }).slice(-1)[0];
+
+    if (!storeCloseTime) return false;
+
+    return time === formatTimeString(storeCloseTime);
+  }
+
   return (
     <nav
       id="header"
-      className="baseFlex sticky left-0 top-0 z-50 h-24 w-full bg-offwhite p-2 shadow-md"
+      className="baseVertFlex sticky left-0 top-0 z-50 h-24 w-full gap-4 bg-offwhite p-2 shadow-md"
     >
       <div className="baseFlex w-full !justify-between gap-4">
         {/* currently selected page title */}
@@ -265,6 +309,45 @@ function DashboardMobileHeader({
             </div>
           </SheetContent>
         </Sheet>
+      </div>
+
+      {/* status report */}
+      <div className="baseFlex flex-wrap gap-4">
+        {/* Online/offline status indicator */}
+        {onLineStatus === "offline" && (
+          <Badge variant="destructive">Offline mode</Badge>
+        )}
+
+        {/* Min order pickup time */}
+        {statusReport && statusReport.minOrderPickupTime !== 0 && (
+          <Badge
+            variant={"secondary"}
+            className="bg-yellow-300/50 text-yellow-800"
+          >
+            Online ordering is paused until{" "}
+            {timeIsEqualToStoreCloseTime(
+              formatInTimeZone(
+                statusReport.minOrderPickupTime,
+                CHICAGO_TIME_ZONE,
+                "p",
+              ),
+            )
+              ? "tomorrow"
+              : formatInTimeZone(
+                  statusReport.minOrderPickupTime,
+                  CHICAGO_TIME_ZONE,
+                  "p",
+                )}
+          </Badge>
+        )}
+
+        {/* Number of currently 86'd items */}
+        {statusReport && statusReport.totalDisabledMenuItems > 0 && (
+          <Badge className="bg-yellow-300/50 text-yellow-800">
+            {statusReport.totalDisabledMenuItems} item
+            {statusReport.totalDisabledMenuItems > 1 ? "s" : ""} 86&apos;d
+          </Badge>
+        )}
       </div>
     </nav>
   );

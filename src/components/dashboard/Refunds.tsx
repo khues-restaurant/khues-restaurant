@@ -128,7 +128,7 @@ function Refunds() {
       className="baseVertFlex min-h-[70dvh] w-full !justify-start gap-8 p-4"
     >
       <div className="baseVertFlex w-full max-w-lg !items-start gap-6">
-        <div className="baseFlex gap-2">
+        <div className="baseVertFlex w-full gap-2 xs:!flex-row">
           <Button
             variant={searchMode === "date" ? "default" : "outline"}
             onClick={() => setSearchMode("date")}

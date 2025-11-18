@@ -38,7 +38,7 @@ import { FaUserAlt } from "react-icons/fa";
 import { TfiReceipt } from "react-icons/tfi";
 import { clearLocalStorage } from "~/utils/clearLocalStorage";
 
-import outsideOfRestaurant from "/public/interior/ten.jpg";
+import outsideOfRestaurant from "public/interior/ten.jpg";
 
 const stix = STIX_Two_Text({
   subsets: ["latin"],

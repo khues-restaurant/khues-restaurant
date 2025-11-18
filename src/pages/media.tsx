@@ -14,23 +14,23 @@ const charis = Charis_SIL({
   weight: ["400", "700"],
 });
 
-import kare11MothersDay from "/public/media/kare11MothersDay.jpg";
-import starTribune from "/public/media/starTribune.jpg";
-import mpr from "/public/media/mpr.jpg";
-import kare11Logo from "/public/media/kare11Logo.png";
-import starTribuneLogo from "/public/media/starTribuneLogo.png";
-import mprLogo from "/public/media/mprLogo.png";
-import kare11CulinaryDream from "/public/media/kare11CulinaryDream.png";
+import kare11MothersDay from "public/media/kare11MothersDay.jpg";
+import starTribune from "public/media/starTribune.jpg";
+import mpr from "public/media/mpr.jpg";
+import kare11Logo from "public/media/kare11Logo.png";
+import starTribuneLogo from "public/media/starTribuneLogo.png";
+import mprLogo from "public/media/mprLogo.png";
+import kare11CulinaryDream from "public/media/kare11CulinaryDream.png";
 import WCCOLogo from "public/media/WCCOLogo";
-import wccoImage from "/public/media/wccoImage.png";
-import heavyTableLogo from "/public/media/heavyTableLogo.png";
-import heavyTable from "/public/media/heavyTable.jpg";
-import top30StarTribune from "/public/media/top30StarTribune.jpg";
-import theTastingNotes from "/public/media/theTastingNotes.jpg";
-import theTastingNotesLogo from "/public/media/theTastingNotesLogo.png";
-import mspMagImage from "/public/media/mspMagImage.jpg";
-import mspMagLogo from "/public/media/mspMagLogo.png";
-import ericAndKhue from "/public/media/ericAndKhue.jpg";
+import wccoImage from "public/media/wccoImage.png";
+import heavyTableLogo from "public/media/heavyTableLogo.png";
+import heavyTable from "public/media/heavyTable.jpg";
+import top30StarTribune from "public/media/top30StarTribune.jpg";
+import theTastingNotes from "public/media/theTastingNotes.jpg";
+import theTastingNotesLogo from "public/media/theTastingNotesLogo.png";
+import mspMagImage from "public/media/mspMagImage.jpg";
+import mspMagLogo from "public/media/mspMagLogo.png";
+import ericAndKhue from "public/media/ericAndKhue.jpg";
 
 const mediaArticles: MediaCard[] = [
   {

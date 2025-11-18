@@ -48,10 +48,10 @@ import { api } from "~/utils/api";
 import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
 import { formatPhoneNumber } from "~/utils/formatters/formatPhoneNumber";
 
-// import affogato from "/public/menuItems/affogato.png";
-// import grilledSirloin from "/public/menuItems/grilled-sirloin.png";
-// import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
-// import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
+// import affogato from "public/menuItems/affogato.png";
+// import grilledSirloin from "public/menuItems/grilled-sirloin.png";
+// import roastPorkFriedRice from "public/menuItems/roast-pork-fried-rice.png";
+// import thaiTeaTresLeches from "public/menuItems/thai-tea-tres-leches.png";
 
 const mainFormSchema = z.object({
   firstName: z
