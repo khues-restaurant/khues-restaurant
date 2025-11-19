@@ -1,13 +1,85 @@
 import { z } from "zod";
-import { createTRPCRouter, adminProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  adminProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import {
   type GiftCard,
   type GiftCardTransaction,
   type User,
 } from "@prisma/client";
+import { stripe } from "~/server/api/routers/payment";
+import { env } from "~/env";
+
+import giftCardFront from "public/giftCards/giftCardFront.png";
 
 export const giftCardRouter = createTRPCRouter({
+  createCheckoutSession: publicProcedure
+    .input(
+      z.object({
+        amount: z.number().min(500).max(50000),
+        recipientEmail: z.string().email(),
+        recipientName: z.string().min(1),
+        senderName: z.string().min(1),
+        message: z.string().max(255).optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      console.log(giftCardFront.src);
+
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: "Khue's Kichen Gift Card",
+                description: `Gift card for ${input.recipientName} from ${input.senderName}`,
+                images: ["http://localhost:3000/" + giftCardFront.src],
+              },
+              unit_amount: input.amount,
+            },
+            quantity: 1,
+          },
+        ],
+        metadata: {
+          type: "GIFT_CARD",
+          amount: input.amount,
+          recipientEmail: input.recipientEmail,
+          recipientName: input.recipientName,
+          senderName: input.senderName,
+          message: input.message || "",
+        },
+        success_url: `${env.BASE_URL}/gift-cards/success`,
+        cancel_url: `${env.BASE_URL}/gift-cards`,
+      });
+
+      console.log(session);
+
+      return session.url;
+    }),
+
+  checkBalance: publicProcedure
+    .input(z.object({ code: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const card = await ctx.prisma.giftCard.findUnique({
+        where: { code: input.code },
+      });
+
+      if (!card) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Gift card not found",
+        });
+      }
+
+      return card.balance;
+    }),
+
   create: adminProcedure
     .input(
       z.object({
@@ -103,7 +175,7 @@ export const giftCardRouter = createTRPCRouter({
       const transactions = await ctx.prisma.giftCardTransaction.findMany({
         where: {
           type: {
-            in: ["MANUAL_ADJUSTMENT", "RELOAD"],
+            in: ["PURCHASE", "MANUAL_ADJUSTMENT", "RELOAD"],
           },
         },
         include: {

@@ -12,6 +12,7 @@ import { addMonths } from "date-fns";
 import { Resend } from "resend";
 import Receipt from "emails/Receipt";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
+import GiftCardEmail from "emails/GiftCard";
 import { prisma } from "~/server/db";
 import OpenAI from "openai";
 import { io } from "socket.io-client";
@@ -75,6 +76,65 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (event.type) {
     case "checkout.session.completed":
       const payment = event.data.object;
+
+      if (payment.metadata?.type === "GIFT_CARD") {
+        const amount = parseInt(payment.metadata.amount);
+        const recipientEmail = payment.metadata.recipientEmail;
+        const recipientName = payment.metadata.recipientName;
+        const senderName = payment.metadata.senderName;
+        const message = payment.metadata.message;
+
+        // Generate unique code
+        let code = "";
+        let isUnique = false;
+        while (!isUnique) {
+          const chars = "0123456789";
+          code = "";
+          for (let i = 0; i < 16; i++) {
+            code += chars.charAt(Math.floor(Math.random() * chars.length));
+          }
+
+          const existing = await prisma.giftCard.findUnique({
+            where: { code },
+          });
+          if (!existing) isUnique = true;
+        }
+
+        await prisma.giftCard.create({
+          data: {
+            code,
+            balance: amount,
+            transactions: {
+              create: {
+                amount,
+                type: "PURCHASE",
+                note: `Purchased by ${senderName}`,
+              },
+            },
+          },
+        });
+
+        // Send Email
+        try {
+          await resend.emails.send({
+            from: "onboarding@resend.dev",
+            to: recipientEmail,
+            subject: `You received a gift card from ${senderName}!`,
+            react: GiftCardEmail({
+              senderName,
+              recipientName,
+              amount,
+              code,
+              message,
+            }),
+          });
+        } catch (error) {
+          console.error("Error sending gift card email:", error);
+        }
+
+        res.json({ received: true });
+        return;
+      }
 
       // 0) check if order already exists in database
       const orderExists = await prisma.order.findFirst({
@@ -233,6 +293,34 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       const order = await prisma.order.create({
         data: orderData,
       });
+
+      // Handle Gift Card Transaction if partial payment
+      if (
+        payment.metadata?.giftCardCode &&
+        payment.metadata?.giftCardAmountApplied
+      ) {
+        const code = payment.metadata.giftCardCode;
+        const amount = parseInt(payment.metadata.giftCardAmountApplied);
+
+        const giftCard = await prisma.giftCard.findUnique({ where: { code } });
+        if (giftCard) {
+          await prisma.giftCard.update({
+            where: { id: giftCard.id },
+            data: {
+              balance: { decrement: amount },
+              lastUsedAt: new Date(),
+              transactions: {
+                create: {
+                  amount: -amount,
+                  type: "PURCHASE",
+                  note: `Order ${order.id}`,
+                  orderId: order.id,
+                },
+              },
+            },
+          });
+        }
+      }
 
       // 5) add order to print queue model in database
       await prisma.orderPrintQueue.create({

@@ -57,6 +57,15 @@ import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTo
 import { calculateTotalCartPrices } from "~/utils/priceHelpers/calculateTotalCartPrices";
 import { menuItemImagePaths } from "~/utils/menuItemImagePaths";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "~/components/ui/dialog";
+
 function getSafeAreaInsetBottom() {
   // Create a temporary element to get the CSS variable
   const testElement = document.createElement("div");
@@ -141,6 +150,46 @@ function CartDrawer({
   const customTipInputRef = useRef<HTMLInputElement>(null);
   const [showCustomTipInput, setShowCustomTipInput] = useState(false);
   const [tipValueInitialized, setTipValueInitialized] = useState(false);
+
+  const [giftCardDialogOpen, setGiftCardDialogOpen] = useState(false);
+  const [giftCardCode, setGiftCardCode] = useState("");
+  const [giftCardError, setGiftCardError] = useState("");
+
+  const checkBalanceMutation = api.giftCard.checkBalance.useMutation({
+    onSuccess: (balance) => {
+      if (balance > 0) {
+        updateOrder({
+          newOrderDetails: {
+            ...orderDetails,
+            giftCardCode: giftCardCode,
+          },
+        });
+        setGiftCardDialogOpen(false);
+        setGiftCardError("");
+        setGiftCardCode("");
+      } else {
+        setGiftCardError("Gift card has zero balance.");
+      }
+    },
+    onError: (err) => {
+      setGiftCardError(err.message);
+    },
+  });
+
+  const { data: appliedGiftCardBalance } = api.giftCard.checkBalance.useQuery(
+    { code: orderDetails.giftCardCode || "" },
+    { enabled: !!orderDetails.giftCardCode },
+  );
+
+  const handleApplyGiftCard = () => {
+    if (!giftCardCode) return;
+    checkBalanceMutation.mutate({ code: giftCardCode });
+  };
+
+  const giftCardDeduction = appliedGiftCardBalance
+    ? Math.min(orderCost.total, appliedGiftCardBalance)
+    : 0;
+  const finalTotal = Math.max(0, orderCost.total - giftCardDeduction);
 
   // hacky, but should work for effect you want
   useEffect(() => {
@@ -1209,6 +1258,51 @@ function CartDrawer({
                   My rewards
                 </Button>
               )}
+
+              <Dialog
+                open={giftCardDialogOpen}
+                onOpenChange={setGiftCardDialogOpen}
+              >
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="h-8 text-xs font-semibold"
+                  >
+                    Redeem Gift Card
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Redeem Gift Card</DialogTitle>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="giftCardCode" className="text-right">
+                        Code
+                      </Label>
+                      <Input
+                        id="giftCardCode"
+                        value={giftCardCode}
+                        onChange={(e) => setGiftCardCode(e.target.value)}
+                        className="col-span-3 uppercase"
+                      />
+                    </div>
+                    {giftCardError && (
+                      <p className="text-center text-sm text-red-500">
+                        {giftCardError}
+                      </p>
+                    )}
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      onClick={handleApplyGiftCard}
+                      disabled={checkBalanceMutation.isLoading}
+                    >
+                      {checkBalanceMutation.isLoading ? "Checking..." : "Apply"}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
 
@@ -1459,6 +1553,20 @@ function CartDrawer({
                   <p>Total</p>
                   <p>{formatPrice(orderCost.total)}</p>
                 </div>
+
+                {giftCardDeduction > 0 && (
+                  <div className="baseFlex w-full !justify-between text-sm text-green-600">
+                    <p>Gift Card</p>
+                    <p>-{formatPrice(giftCardDeduction)}</p>
+                  </div>
+                )}
+
+                {giftCardDeduction > 0 && (
+                  <div className="baseFlex w-full !justify-between gap-2 border-t pt-2 text-lg font-bold">
+                    <p>Payable Total</p>
+                    <p>{formatPrice(finalTotal)}</p>
+                  </div>
+                )}
               </div>
 
               <Separator

@@ -125,6 +125,13 @@ export const paymentRouter = createTRPCRouter({
 
       const lineItems = createLineItemsFromOrder(input.orderDetails.items);
 
+      // Calculate subtotal of order in cents
+      const subtotalInCents = lineItems.reduce((acc, item) => {
+        return acc.add(
+          new Decimal(item.price_data.unit_amount).mul(item.quantity),
+        );
+      }, new Decimal(0));
+
       // TODO: associate proper 0-tax rate with tips
       // TODO: verify process and correctness of tip calculation logic
       // Convert initial tip value from dollars to cents
@@ -139,13 +146,6 @@ export const paymentRouter = createTRPCRouter({
         (input.orderDetails.tipPercentage === null &&
           input.orderDetails.tipValue !== 0)
       ) {
-        // Calculate subtotal of order in cents
-        const subtotalInCents = lineItems.reduce((acc, item) => {
-          return acc.add(
-            new Decimal(item.price_data.unit_amount).mul(item.quantity),
-          );
-        }, new Decimal(0));
-
         // If tip percentage is provided, calculate tip value in cents
         if (input.orderDetails.tipPercentage !== null) {
           tipValue = subtotalInCents
@@ -166,6 +166,81 @@ export const paymentRouter = createTRPCRouter({
           quantity: 1,
           tax_rates: [], // No tax on tips
         });
+      }
+
+      // Handle Gift Card Logic
+      let giftCardAmountToApply = 0;
+      const giftCardCode = input.orderDetails.giftCardCode;
+      let giftCardId = "";
+
+      if (giftCardCode) {
+        const giftCard = await ctx.prisma.giftCard.findUnique({
+          where: { code: giftCardCode },
+        });
+
+        if (giftCard && giftCard.balance > 0) {
+          giftCardId = giftCard.id;
+          // Calculate Tax
+          const taxRate = await stripe.taxRates.retrieve(
+            env.STRIPE_TAX_RATE_ID,
+          );
+          const taxPercentage = new Decimal(taxRate.percentage).div(100);
+          const taxValue = subtotalInCents
+            .mul(taxPercentage)
+            .toDecimalPlaces(0, Decimal.ROUND_HALF_UP);
+
+          const totalInCents = subtotalInCents.add(taxValue).add(tipValue);
+
+          giftCardAmountToApply = Math.min(
+            totalInCents.toNumber(),
+            giftCard.balance,
+          );
+
+          // If Gift Card covers part or all of the order
+          if (giftCardAmountToApply > 0) {
+            const remainingAmount = totalInCents
+              .minus(giftCardAmountToApply)
+              .toNumber();
+
+            if (remainingAmount <= 0) {
+              // Full payment by Gift Card
+              // Create Order directly
+              // We need to replicate the webhook logic here or call a shared function
+              // For now, let's throw an error or handle it?
+              // The user wants "Redeem giftcard dialog".
+              // Since we can't easily share the webhook logic (it's in a different file and depends on Stripe event),
+              // we should probably create a new procedure `order.createFromGiftCard` or similar.
+              // But here we are in `createCheckout`.
+              // Let's return a special session object that the frontend can handle?
+              // Or just create the order here and return a dummy session with a success_url?
+              // I'll create the order here.
+              // I need to import the logic from webhook or duplicate it.
+              // Duplication is bad but quick.
+              // Refactoring webhook logic to a service function is better.
+              // For now, I will implement the "Partial Payment" flow which uses Stripe.
+              // If full payment, I'll handle it.
+              // Actually, if full payment, I can't return a Stripe Session.
+              // I'll return { id: "GIFT_CARD_PAID", url: `${env.BASE_URL}/payment-success?orderId=...` }
+            } else {
+              // Partial Payment
+              // Replace line items with a single "Remaining Balance" item
+              // This avoids tax calculation issues on the remainder
+              lineItems.length = 0; // Clear items
+              lineItems.push({
+                price_data: {
+                  currency: "usd",
+                  product_data: {
+                    name: "Order Balance (after Gift Card)",
+                    description: `Original Total: $${totalInCents.div(100).toFixed(2)} | Gift Card Applied: -$${new Decimal(giftCardAmountToApply).div(100).toFixed(2)}`,
+                  },
+                  unit_amount: remainingAmount,
+                },
+                quantity: 1,
+                tax_rates: [], // No tax on this remainder, as we calculated it already
+              });
+            }
+          }
+        }
       }
 
       await ctx.prisma.transientOrder.upsert({
@@ -199,6 +274,107 @@ export const paymentRouter = createTRPCRouter({
         }
       }
 
+      // Check for full gift card payment
+      if (giftCardAmountToApply > 0) {
+        // Recalculate total to check if fully paid
+        const taxRate = await stripe.taxRates.retrieve(env.STRIPE_TAX_RATE_ID);
+        const taxPercentage = new Decimal(taxRate.percentage).div(100);
+        const taxValue = subtotalInCents
+          .mul(taxPercentage)
+          .toDecimalPlaces(0, Decimal.ROUND_HALF_UP);
+        const totalInCents = subtotalInCents.add(taxValue).add(tipValue);
+        const remainingAmount = totalInCents
+          .minus(giftCardAmountToApply)
+          .toNumber();
+
+        if (remainingAmount <= 0) {
+          // FULL PAYMENT LOGIC
+          // 1. Deduct from Gift Card
+          await ctx.prisma.giftCard.update({
+            where: { id: giftCardId },
+            data: {
+              balance: { decrement: giftCardAmountToApply },
+              lastUsedAt: new Date(),
+              transactions: {
+                create: {
+                  amount: -giftCardAmountToApply,
+                  type: "PURCHASE",
+                  note: "Order Payment (Full)",
+                },
+              },
+            },
+          });
+
+          // 2. Create Order
+          // We need to construct the order object similar to webhook
+          // This is a simplified version, assuming validation passed
+          const orderItemsData = input.orderDetails.items.map(
+            ({ itemId, id, customizations, ...rest }) => ({
+              ...rest,
+              menuItemId: itemId,
+              customizations: {
+                create: Object.entries(customizations).map(
+                  ([categoryId, choiceId]) => ({
+                    customizationCategoryId: categoryId,
+                    customizationChoiceId: choiceId,
+                  }),
+                ),
+              },
+            }),
+          );
+
+          const { firstName, lastName } =
+            input.pickupName.split(" ").length > 1
+              ? {
+                  firstName: input.pickupName.split(" ")[0],
+                  lastName: input.pickupName.split(" ").slice(1).join(" "),
+                }
+              : { firstName: input.pickupName, lastName: "" };
+
+          const user = await ctx.prisma.user.findUnique({
+            where: { userId: input.userId },
+          });
+          const email = user?.email ?? "guest@khues.com";
+
+          const order = await ctx.prisma.order.create({
+            data: {
+              stripeSessionId: `GIFT_CARD_${Date.now()}`, // Dummy ID
+              datetimeToPickup: input.orderDetails.datetimeToPickup,
+              firstName,
+              lastName,
+              email,
+              phoneNumber: null,
+              includeNapkinsAndUtensils:
+                input.orderDetails.includeNapkinsAndUtensils,
+              subtotal: subtotalInCents.toNumber(),
+              tax: taxValue.toNumber(),
+              tipPercentage: input.orderDetails.tipPercentage,
+              tipValue: tipValue.toNumber(),
+              total: totalInCents.toNumber(),
+              userId: input.userId,
+              orderItems: { create: orderItemsData },
+              giftCardTransactions: {
+                create: {
+                  amount: -giftCardAmountToApply,
+                  type: "PURCHASE",
+                  giftCardId: giftCardId,
+                },
+              },
+            },
+          });
+
+          // Add to print queue
+          await ctx.prisma.orderPrintQueue.create({
+            data: { orderId: order.id },
+          });
+
+          return {
+            id: "GIFT_CARD_PAID",
+            url: `${env.BASE_URL}/payment-success?session_id=GIFT_CARD_PAID&userId=${input.userId}&orderId=${order.id}`,
+          } as any;
+        }
+      }
+
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
         currency: "usd",
@@ -214,6 +390,9 @@ export const paymentRouter = createTRPCRouter({
         metadata: {
           userId: input.userId,
           pickupName: input.pickupName,
+          giftCardCode: giftCardCode || null,
+          giftCardAmountApplied:
+            giftCardAmountToApply > 0 ? giftCardAmountToApply : null,
         },
 
         success_url: `${env.BASE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}&userId=${input.userId}`,

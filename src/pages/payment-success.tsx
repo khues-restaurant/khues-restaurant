@@ -27,10 +27,24 @@ function PaymentSuccess({
   const userId = query.userId as string;
 
   const { data: order } = api.order.getByStripeSessionId.useQuery(sessionId, {
-    enabled: isReady,
+    enabled: isReady && sessionId !== "GIFT_CARD_PAID",
     retryDelay: 1500,
     retry: 3,
   });
+
+  const { data: giftCardOrder } = api.order.getById.useQuery(
+    query.orderId as string,
+    {
+      enabled:
+        isReady &&
+        sessionId === "GIFT_CARD_PAID" &&
+        typeof query.orderId === "string",
+      retryDelay: 1500,
+      retry: 3,
+    },
+  );
+
+  const finalOrder = order ?? giftCardOrder ?? null;
 
   const { updateOrder } = useUpdateOrder();
 
@@ -38,15 +52,15 @@ function PaymentSuccess({
     useState(false);
 
   useEffect(() => {
-    if (order && !orderHasBeenAcknowledged) {
+    if (finalOrder && !orderHasBeenAcknowledged) {
       setOrderHasBeenAcknowledged(true);
 
       setTimeout(() => {
-        push(`/track?id=${order.id}`).catch(console.error);
+        push(`/track?id=${finalOrder.id}`).catch(console.error);
       }, 3000);
     }
   }, [
-    order,
+    finalOrder,
     updateOrder,
     push,
     orderHasBeenAcknowledged,
@@ -66,7 +80,7 @@ function PaymentSuccess({
       className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full tablet:min-h-[calc(100dvh-6rem)]"
     >
       <div className="baseVertFlex relative max-w-80 gap-4 overflow-hidden rounded-lg border bg-gradient-to-br from-offwhite to-primary/10 px-6 py-8 shadow-md tablet:max-w-2xl tablet:p-12 tablet:pb-8">
-        {order === null ? (
+        {finalOrder === null ? (
           <>
             <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50 sm:-bottom-8 sm:-right-8 sm:size-24" />
             <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50 sm:-bottom-8 sm:-left-8 sm:size-24" />
@@ -151,6 +165,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     return {
       props: {
         emailReceiptsAllowed: user.allowsEmailReceipts,
+      },
+    };
+  }
+
+  if (ctx.query.session_id === "GIFT_CARD_PAID") {
+    return {
+      props: {
+        emailReceiptsAllowed: true,
       },
     };
   }

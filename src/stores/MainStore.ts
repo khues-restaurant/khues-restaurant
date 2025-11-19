@@ -46,6 +46,7 @@ export const orderDetailsSchema = z.object({
   tipValue: z.number(),
   includeNapkinsAndUtensils: z.boolean(),
   discountId: z.string().nullable(),
+  giftCardCode: z.string().nullable().optional(),
   rewardBeingRedeemed: z
     .object({
       reward: discountSchema,
@@ -82,6 +83,7 @@ export interface OrderDetails {
   items: Item[];
   includeNapkinsAndUtensils: boolean;
   discountId: string | null;
+  giftCardCode?: string | null;
 
   tipPercentage: number | null;
   tipValue: number;

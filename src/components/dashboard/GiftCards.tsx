@@ -229,9 +229,10 @@ function RecentPurchasesList() {
                                 </span>
                               </div>
                               <div className="text-xs text-muted-foreground">
-                                {tx.type === "MANUAL_ADJUSTMENT"
-                                  ? "New Card"
-                                  : "Reload"}{" "}
+                                {tx.type === "MANUAL_ADJUSTMENT" &&
+                                  "New Card (in-store)"}
+                                {tx.type === "PURCHASE" && "New Card (online)"}
+                                {tx.type === "RELOAD" && "Reload"}{" "}
                                 {tx.giftCard.user?.email &&
                                   `• ${tx.giftCard.user.email}`}
                               </div>

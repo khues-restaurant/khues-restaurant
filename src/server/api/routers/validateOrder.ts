@@ -364,6 +364,23 @@ export const validateOrderRouter = createTRPCRouter({
         return dayOfWeek === 5 || dayOfWeek === 6;
       })();
 
+      // Gift Card Validation
+      if (orderDetails.giftCardCode) {
+        const giftCard = await ctx.prisma.giftCard.findUnique({
+          where: {
+            code: orderDetails.giftCardCode,
+          },
+        });
+
+        if (
+          !giftCard ||
+          giftCard.isReplaced ||
+          new Decimal(giftCard.balance).lessThanOrEqualTo(0)
+        ) {
+          orderDetails.giftCardCode = null;
+        }
+      }
+
       // Item validation
       let items = orderDetails.items;
       let removedItemNames = [];

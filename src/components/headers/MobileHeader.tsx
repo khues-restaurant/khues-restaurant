@@ -357,6 +357,23 @@ function MobileHeader() {
 
                 <motion.div variants={linkVariants}>
                   <Button
+                    variant={
+                      asPath.includes("/gift-cards") ? "activeLink" : "link"
+                    }
+                    asChild
+                  >
+                    <Link
+                      prefetch={false}
+                      href={"/gift-cards"}
+                      className="!text-xl"
+                    >
+                      Gift Cards
+                    </Link>
+                  </Button>
+                </motion.div>
+
+                <motion.div variants={linkVariants}>
+                  <Button
                     variant={asPath.includes("/media") ? "activeLink" : "link"}
                     asChild
                   >
