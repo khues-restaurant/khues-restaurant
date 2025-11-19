@@ -297,6 +297,8 @@ model Order {
     reviews Review[] // these are just the direct reviews on the order, so that the dashboard can show the user's order
     // alongside their feedback. This isn't to be confused with the to be made "MenuItemReview" modal
 
+    giftCardTransactions GiftCardTransaction[]
+
     orderPrintQueue OrderPrintQueue[] // maybe this should be a one-to-one relationship, but I think it's fine as is. Playing it safe for now to avoid any issues this might bring concerning reprinting order tickets
 
     @@index([datetimeToPickup])
@@ -364,4 +366,47 @@ model User {
     favoriteItems FavoriteItem[]
     discounts     Discount[]
     reviews       Review[]
+    giftCards     GiftCard[]
+}
+
+model GiftCard {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    code    String @unique // The code on the back of the physical card
+    balance Int    @default(0) // In cents
+
+    lastUsedAt DateTime?
+
+    isReplaced Boolean @default(false)
+    replacedBy String? // ID of the new card replacing this one
+
+    user   User?   @relation(fields: [userId], references: [userId])
+    userId String?
+
+    transactions GiftCardTransaction[]
+}
+
+enum GiftCardTransactionType {
+    PURCHASE
+    RELOAD
+    REPLACEMENT_CREDIT
+    REPLACEMENT_DEBIT
+    MANUAL_ADJUSTMENT
+}
+
+model GiftCardTransaction {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+
+    amount Int // Positive for adding funds, negative for spending
+    type   GiftCardTransactionType
+    note   String?
+
+    giftCard   GiftCard @relation(fields: [giftCardId], references: [id])
+    giftCardId String
+
+    order   Order?  @relation(fields: [orderId], references: [id])
+    orderId String?
 }

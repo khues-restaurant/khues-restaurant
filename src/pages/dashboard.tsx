@@ -10,6 +10,7 @@ import Stats from "~/components/dashboard/Stats";
 import Holidays from "~/components/dashboard/Holidays";
 import HoursOfOperation from "~/components/dashboard/HoursOfOperation";
 import Refunds from "~/components/dashboard/Refunds";
+import GiftCards from "~/components/dashboard/GiftCards";
 import DashboardHeaderShell from "~/components/dashboard/headers/DashboardHeaderShell";
 import { Toaster } from "~/components/ui/toaster";
 import { env } from "~/env";
@@ -25,7 +26,8 @@ export type DashboardViewStates =
   | "reviews"
   | "hoursOfOperation"
   | "holidays"
-  | "refunds";
+  | "refunds"
+  | "giftCards";
 
 const notoSans = Noto_Sans({
   subsets: ["latin"],
@@ -151,6 +153,8 @@ function Dashboard() {
             {viewState === "hoursOfOperation" && <HoursOfOperation />}
 
             {viewState === "holidays" && <Holidays />}
+
+            {viewState === "giftCards" && <GiftCards />}
           </>
         </AnimatePresence>
 

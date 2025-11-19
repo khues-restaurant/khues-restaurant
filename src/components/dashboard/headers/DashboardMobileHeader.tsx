@@ -134,6 +134,7 @@ function DashboardMobileHeader({
           {viewState === "reviews" && "Customer reviews"}
           {viewState === "hoursOfOperation" && "Hours of operation"}
           {viewState === "holidays" && "Holidays"}
+          {viewState === "giftCards" && "Gift Cards"}
         </p>
 
         <Sheet open={sheetIsOpen} onOpenChange={(open) => setSheetIsOpen(open)}>
@@ -279,6 +280,17 @@ function DashboardMobileHeader({
               </Button>
 
               <PickupTimeslotCapacity />
+
+              <Button
+                variant={viewState === "giftCards" ? "activeLink" : "link"}
+                className="text-lg"
+                onClick={() => {
+                  setViewState("giftCards");
+                  setSheetIsOpen(false);
+                }}
+              >
+                Gift Cards
+              </Button>
 
               <Button
                 variant={viewState === "refunds" ? "activeLink" : "link"}

@@ -21,6 +21,7 @@ import { holidayRouter } from "~/server/api/routers/holiday";
 import { numberOfOrdersAllowedPerPickupTimeSlotRouter } from "~/server/api/routers/numberOfOrdersAllowedPerPickupTimeSlot";
 import { refundRouter } from "~/server/api/routers/refund";
 import { dashboardRouter } from "~/server/api/routers/dashboard";
+import { giftCardRouter } from "~/server/api/routers/giftCard";
 
 export const appRouter = createTRPCRouter({
   user: userRouter,
@@ -45,6 +46,7 @@ export const appRouter = createTRPCRouter({
     numberOfOrdersAllowedPerPickupTimeSlotRouter,
   refund: refundRouter,
   dashboard: dashboardRouter,
+  giftCard: giftCardRouter,
 
   discount: discountRouter, // currently not being used
 });

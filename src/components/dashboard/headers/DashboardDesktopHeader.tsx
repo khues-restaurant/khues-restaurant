@@ -248,6 +248,17 @@ function DashboardDesktopHeader({
               <PickupTimeslotCapacity />
 
               <Button
+                variant={viewState === "giftCards" ? "activeLink" : "link"}
+                className="text-xl"
+                onClick={() => {
+                  setViewState("giftCards");
+                  setPopoverIsOpen(false);
+                }}
+              >
+                Gift Cards
+              </Button>
+
+              <Button
                 variant={viewState === "refunds" ? "activeLink" : "link"}
                 className="text-xl"
                 onClick={() => setViewState("refunds")}
