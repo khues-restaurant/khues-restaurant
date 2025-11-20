@@ -14,20 +14,50 @@ import { stripe } from "~/server/api/routers/payment";
 import { env } from "~/env";
 
 import giftCardFront from "public/giftCards/giftCardFront.png";
+import { giftCardRecipientTypeEnum } from "~/types/giftCards";
 
 export const giftCardRouter = createTRPCRouter({
   createCheckoutSession: publicProcedure
     .input(
-      z.object({
-        amount: z.number().min(500).max(50000),
-        recipientEmail: z.string().email(),
-        recipientName: z.string().min(1),
-        senderName: z.string().min(1),
-        message: z.string().max(255).optional(),
-      }),
+      z
+        .object({
+          amount: z.number().min(500).max(50000),
+          recipientType: giftCardRecipientTypeEnum,
+          recipientEmail: z.string().email(),
+          recipientName: z.string().min(1).optional(),
+          senderName: z.string().min(1).optional(),
+          message: z.string().max(255).optional(),
+          purchaserUserId: z.string().optional(),
+        })
+        .superRefine((data, ctx) => {
+          if (data.recipientType === "someoneElse") {
+            if (!data.recipientName) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Recipient name is required",
+                path: ["recipientName"],
+              });
+            }
+
+            if (!data.senderName) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Sender name is required",
+                path: ["senderName"],
+              });
+            }
+          }
+        }),
     )
     .mutation(async ({ ctx, input }) => {
       console.log(giftCardFront.src);
+
+      const description =
+        input.recipientType === "someoneElse" &&
+        input.recipientName &&
+        input.senderName
+          ? `Gift card for ${input.recipientName} from ${input.senderName}`
+          : "Personal gift card purchase";
 
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
@@ -38,7 +68,7 @@ export const giftCardRouter = createTRPCRouter({
               currency: "usd",
               product_data: {
                 name: "Khue's Kichen Gift Card",
-                description: `Gift card for ${input.recipientName} from ${input.senderName}`,
+                description,
                 images: ["http://localhost:3000/" + giftCardFront.src],
               },
               unit_amount: input.amount,
@@ -48,11 +78,13 @@ export const giftCardRouter = createTRPCRouter({
         ],
         metadata: {
           type: "GIFT_CARD",
-          amount: input.amount,
+          amount: input.amount.toString(),
+          recipientType: input.recipientType,
           recipientEmail: input.recipientEmail,
-          recipientName: input.recipientName,
-          senderName: input.senderName,
+          recipientName: input.recipientName ?? "",
+          senderName: input.senderName ?? "",
           message: input.message || "",
+          purchaserUserId: input.purchaserUserId ?? "",
         },
         success_url: `${env.BASE_URL}/gift-cards/success`,
         cancel_url: `${env.BASE_URL}/gift-cards`,

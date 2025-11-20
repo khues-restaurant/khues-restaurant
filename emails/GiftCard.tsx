@@ -10,7 +10,6 @@ import {
   Tailwind,
   Text,
   Button,
-  Hr,
 } from "@react-email/components";
 import * as React from "react";
 import { main, container, tailwindConfig } from "emails/utils/styles";
@@ -18,27 +17,58 @@ import Header from "emails/Header";
 import Footer from "emails/Footer";
 import dynamicAssetUrls from "emails/utils/dynamicAssetUrls";
 import { formatPrice } from "~/utils/formatters/formatPrice";
+import { type GiftCardRecipientType } from "~/types/giftCards";
 
 interface GiftCardEmailProps {
-  senderName: string;
-  recipientName: string;
+  senderName?: string | null;
+  recipientName?: string | null;
   amount: number; // in cents
   code: string;
-  message?: string;
+  message?: string | null;
+  recipientType?: GiftCardRecipientType;
 }
 
 export const GiftCardEmail = ({
-  senderName = "John Doe",
-  recipientName = "Jane Doe",
+  senderName,
+  recipientName,
   amount = 5000,
   code = "ABCD-1234-EFGH-5678",
-  message = "Happy Birthday! Enjoy some delicious food!",
+  message,
+  recipientType = "someoneElse",
 }: GiftCardEmailProps) => {
   const { baseUrl } = dynamicAssetUrls;
+  const normalizedSenderName = senderName?.trim() || null;
+  const normalizedRecipientName = recipientName?.trim() || null;
+  const isPersonalPurchase = recipientType === "myself";
+  const trimmedMessage = message?.trim();
+
+  const heading = isPersonalPurchase
+    ? "Your gift card is ready!"
+    : "You've received a gift card!";
+
+  const previewText = isPersonalPurchase
+    ? "Your Khue's Restaurant gift card is ready"
+    : `You received a gift card from ${normalizedSenderName ?? "a Khue's guest"}!`;
+
+  const introCopy = isPersonalPurchase ? (
+    <>
+      Hi {normalizedRecipientName ?? "there"},
+      <br />
+      Thanks for purchasing a Khue&apos;s Restaurant gift card. Keep the code
+      below handy for your next order.
+    </>
+  ) : (
+    <>
+      Hi {normalizedRecipientName ?? "there"},
+      <br />
+      {normalizedSenderName ?? "A Khue's guest"} has sent you a Khue&apos;s
+      Restaurant gift card.
+    </>
+  );
 
   return (
     <Html>
-      <Preview>You received a gift card from {senderName}!</Preview>
+      <Preview>{previewText}</Preview>
       <Tailwind config={tailwindConfig}>
         <Head />
         <Body style={main} className="bg-white font-sans">
@@ -48,13 +78,10 @@ export const GiftCardEmail = ({
 
               <Section className="p-8 text-center">
                 <Heading className="mb-4 text-2xl font-bold text-stone-800">
-                  You&apos;ve received a gift card!
+                  {heading}
                 </Heading>
 
-                <Text className="mb-6 text-stone-600">
-                  Hi {recipientName},<br />
-                  {senderName} has sent you a Khue&apos;s Restaurant gift card.
-                </Text>
+                <Text className="mb-6 text-stone-600">{introCopy}</Text>
 
                 <Section className="mx-auto mb-6 max-w-[400px] rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
                   <Img
@@ -79,13 +106,13 @@ export const GiftCardEmail = ({
                   </Section>
                 </Section>
 
-                {message && (
+                {trimmedMessage && (
                   <Section className="mx-auto mb-6 max-w-[400px] rounded-lg bg-stone-100 p-4">
                     <Text className="mb-2 text-sm italic text-stone-500">
-                      Message from {senderName}:
+                      Message from {normalizedSenderName ?? "the sender"}:
                     </Text>
                     <Text className="font-medium text-stone-800">
-                      &ldquo;{message}&rdquo;
+                      &ldquo;{trimmedMessage}&rdquo;
                     </Text>
                   </Section>
                 )}

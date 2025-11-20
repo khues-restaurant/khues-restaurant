@@ -11,6 +11,7 @@ import { Resend } from "resend";
 import GiftCardEmail from "emails/GiftCard";
 import { prisma } from "~/server/db";
 import { createOrderInDb } from "~/server/utils/createOrderInDb";
+import { type GiftCardRecipientType } from "~/types/giftCards";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -72,12 +73,29 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       if (payment.metadata?.type === "GIFT_CARD") {
         const amount = parseInt(payment.metadata.amount || "0", 10);
         const recipientEmail = payment.metadata.recipientEmail;
-        const recipientName = payment.metadata.recipientName;
-        const senderName = payment.metadata.senderName;
-        const message = payment.metadata.message;
+        const recipientName = payment.metadata.recipientName || undefined;
+        const senderName = payment.metadata.senderName || undefined;
+        const message = payment.metadata.message || undefined;
+        const purchaserUserId = payment.metadata.purchaserUserId || undefined;
+        const recipientType: GiftCardRecipientType =
+          payment.metadata.recipientType === "myself"
+            ? "myself"
+            : "someoneElse";
 
-        if (!recipientEmail || !recipientName || !senderName || amount <= 0) {
+        if (!recipientEmail || amount <= 0) {
           console.error("Invalid gift card metadata:", payment.metadata);
+          res.json({ received: true });
+          return;
+        }
+
+        if (
+          recipientType === "someoneElse" &&
+          (!recipientName || !senderName)
+        ) {
+          console.error(
+            "Missing names for gift card metadata:",
+            payment.metadata,
+          );
           res.json({ received: true });
           return;
         }
@@ -98,15 +116,34 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
           if (!existing) isUnique = true;
         }
 
+        let associatedUserId: string | undefined;
+        if (recipientType === "myself" && purchaserUserId) {
+          const existingUser = await prisma.user.findUnique({
+            where: { userId: purchaserUserId },
+            select: { userId: true },
+          });
+
+          if (existingUser) {
+            associatedUserId = existingUser.userId;
+          }
+        }
+
         await prisma.giftCard.create({
           data: {
             code,
             balance: amount,
+            user: associatedUserId
+              ? {
+                  connect: {
+                    userId: associatedUserId,
+                  },
+                }
+              : undefined,
             transactions: {
               create: {
                 amount,
                 type: "ACTIVATION_ONLINE",
-                note: `Purchased by ${senderName}`,
+                note: senderName ? `Purchased by ${senderName}` : undefined,
               },
             },
           },
@@ -114,16 +151,22 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
         // Send Email
         try {
+          const emailSubject =
+            recipientType === "myself"
+              ? "Your Khue's Restaurant gift card is ready!"
+              : `You received a gift card from ${senderName ?? "Khue's Restaurant"}!`;
+
           await resend.emails.send({
             from: "onboarding@resend.dev",
             to: recipientEmail,
-            subject: `You received a gift card from ${senderName}!`,
+            subject: emailSubject,
             react: GiftCardEmail({
               senderName,
               recipientName,
               amount,
               code,
               message,
+              recipientType,
             }),
           });
         } catch (error) {
