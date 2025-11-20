@@ -331,27 +331,28 @@ function DashboardMobileHeader({
         )}
 
         {/* Min order pickup time */}
-        {statusReport && statusReport.minOrderPickupTime !== 0 && (
-          <Badge
-            variant={"secondary"}
-            className="bg-yellow-300/50 text-yellow-800"
-          >
-            Online ordering is paused until{" "}
-            {timeIsEqualToStoreCloseTime(
-              formatInTimeZone(
-                statusReport.minOrderPickupTime,
-                CHICAGO_TIME_ZONE,
-                "p",
-              ),
-            )
-              ? "tomorrow"
-              : formatInTimeZone(
+        {statusReport &&
+          statusReport.minOrderPickupTime.getTime() > new Date().getTime() && (
+            <Badge
+              variant={"secondary"}
+              className="bg-yellow-300/50 text-yellow-800"
+            >
+              Online ordering is paused until{" "}
+              {timeIsEqualToStoreCloseTime(
+                formatInTimeZone(
                   statusReport.minOrderPickupTime,
                   CHICAGO_TIME_ZONE,
                   "p",
-                )}
-          </Badge>
-        )}
+                ),
+              )
+                ? "tomorrow"
+                : formatInTimeZone(
+                    statusReport.minOrderPickupTime,
+                    CHICAGO_TIME_ZONE,
+                    "p",
+                  )}
+            </Badge>
+          )}
 
         {/* Number of currently 86'd items */}
         {statusReport && statusReport.totalDisabledMenuItems > 0 && (

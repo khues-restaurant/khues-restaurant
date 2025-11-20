@@ -12,7 +12,7 @@ export const dashboardRouter = createTRPCRouter({
     });
 
     return {
-      minOrderPickupTime: minOrderPickupTime?.value || 0,
+      minOrderPickupTime: minOrderPickupTime?.value || new Date(0),
       totalDisabledMenuItems,
     };
   }),
