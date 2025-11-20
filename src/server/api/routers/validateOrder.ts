@@ -365,20 +365,20 @@ export const validateOrderRouter = createTRPCRouter({
       })();
 
       // Gift Card Validation
-      if (orderDetails.giftCardCode) {
-        const giftCard = await ctx.prisma.giftCard.findUnique({
+      if (orderDetails.giftCardCodes && orderDetails.giftCardCodes.length > 0) {
+        const giftCards = await ctx.prisma.giftCard.findMany({
           where: {
-            code: orderDetails.giftCardCode,
+            code: { in: orderDetails.giftCardCodes },
           },
         });
 
-        if (
-          !giftCard ||
-          giftCard.isReplaced ||
-          new Decimal(giftCard.balance).lessThanOrEqualTo(0)
-        ) {
-          orderDetails.giftCardCode = null;
-        }
+        const validCodes = giftCards
+          .filter(
+            (gc) => !gc.isReplaced && new Decimal(gc.balance).greaterThan(0),
+          )
+          .map((gc) => gc.code);
+
+        orderDetails.giftCardCodes = validCodes;
       }
 
       // Item validation

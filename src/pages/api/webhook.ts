@@ -2,25 +2,17 @@ import type { NextApiResponse, NextApiRequest } from "next";
 import { buffer } from "micro";
 import { env } from "~/env";
 import Stripe from "stripe";
-import { type Discount, type Order } from "@prisma/client";
 import { z } from "zod";
 import { type OrderDetails } from "~/stores/MainStore";
 import { orderDetailsSchema } from "~/stores/MainStore";
 import Decimal from "decimal.js";
 import { splitFullName } from "~/utils/formatters/splitFullName";
-import { addMonths } from "date-fns";
 import { Resend } from "resend";
-import Receipt from "emails/Receipt";
-import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import GiftCardEmail from "emails/GiftCard";
 import { prisma } from "~/server/db";
-import OpenAI from "openai";
-import { io } from "socket.io-client";
+import { createOrderInDb } from "~/server/utils/createOrderInDb";
 
 const resend = new Resend(env.RESEND_API_KEY);
-const openai = new OpenAI({
-  apiKey: env.OPEN_AI_KEY,
-});
 
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2025-09-30.clover",
@@ -78,11 +70,17 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
       const payment = event.data.object;
 
       if (payment.metadata?.type === "GIFT_CARD") {
-        const amount = parseInt(payment.metadata.amount);
+        const amount = parseInt(payment.metadata.amount || "0", 10);
         const recipientEmail = payment.metadata.recipientEmail;
         const recipientName = payment.metadata.recipientName;
         const senderName = payment.metadata.senderName;
         const message = payment.metadata.message;
+
+        if (!recipientEmail || !recipientName || !senderName || amount <= 0) {
+          console.error("Invalid gift card metadata:", payment.metadata);
+          res.json({ received: true });
+          return;
+        }
 
         // Generate unique code
         let code = "";
@@ -107,7 +105,7 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
             transactions: {
               create: {
                 amount,
-                type: "PURCHASE",
+                type: "ACTIVATION_ONLINE",
                 note: `Purchased by ${senderName}`,
               },
             },
@@ -132,6 +130,18 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
           console.error("Error sending gift card email:", error);
         }
 
+        res.json({ received: true });
+        return;
+      }
+
+      if (payment.metadata?.type && payment.metadata.type !== "ORDER") {
+        console.log(`Ignoring unknown payment type: ${payment.metadata.type}`);
+        res.json({ received: true });
+        return;
+      }
+
+      if (payment.metadata?.userId === undefined) {
+        console.error("No userId in payment metadata");
         res.json({ received: true });
         return;
       }
@@ -240,20 +250,6 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       // expected shape is almost there, just need to convert customizations to the correct format
       // and add the menuItemId field
-      const orderItemsData = orderDetails.items.map(
-        ({ itemId, id, customizations, ...rest }) => ({
-          ...rest,
-          menuItemId: itemId,
-          customizations: {
-            create: Object.entries(customizations).map(
-              ([categoryId, choiceId]) => ({
-                customizationCategoryId: categoryId,
-                customizationChoiceId: choiceId,
-              }),
-            ),
-          },
-        }),
-      );
 
       const adjustedDatetimeToPickup = new Date(orderDetails.datetimeToPickup);
 
@@ -264,163 +260,36 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const total = new Decimal(payment.amount_total);
 
-      const includeDietaryRestrictions = orderDetails.items.some(
-        (item) => item.includeDietaryRestrictions,
-      );
-
-      const orderData = {
-        stripeSessionId: payment.id,
-        datetimeToPickup: adjustedDatetimeToPickup,
-        firstName: customerMetadata.firstName,
-        lastName: customerMetadata.lastName,
-        email: customerMetadata.email,
-        phoneNumber: customerMetadata.phoneNumber ?? null,
-        dietaryRestrictions: includeDietaryRestrictions
-          ? (user?.dietaryRestrictions ?? null)
-          : null,
-        includeNapkinsAndUtensils: orderDetails.includeNapkinsAndUtensils,
-        subtotal: subtotal.toNumber(),
-        tax: tax.toNumber(),
-        tipPercentage,
-        tipValue,
-        total: total.toNumber(),
-        userId: user ? user.userId : null,
-        orderItems: {
-          create: orderItemsData, // Nested array for order items and their customizations
-        },
-      };
-
-      const order = await prisma.order.create({
-        data: orderData,
-      });
-
-      // Handle Gift Card Transaction if partial payment
-      if (
-        payment.metadata?.giftCardCode &&
-        payment.metadata?.giftCardAmountApplied
-      ) {
-        const code = payment.metadata.giftCardCode;
-        const amount = parseInt(payment.metadata.giftCardAmountApplied);
-
-        const giftCard = await prisma.giftCard.findUnique({ where: { code } });
-        if (giftCard) {
-          await prisma.giftCard.update({
-            where: { id: giftCard.id },
-            data: {
-              balance: { decrement: amount },
-              lastUsedAt: new Date(),
-              transactions: {
-                create: {
-                  amount: -amount,
-                  type: "PURCHASE",
-                  note: `Order ${order.id}`,
-                  orderId: order.id,
-                },
-              },
-            },
-          });
+      let giftCardUsage: { code: string; amount: number; id: string }[] = [];
+      if (payment.metadata?.giftCardUsage) {
+        try {
+          giftCardUsage = JSON.parse(payment.metadata.giftCardUsage);
+        } catch (e) {
+          console.error("Error parsing gift card usage", e);
         }
       }
 
-      // 5) add order to print queue model in database
-      await prisma.orderPrintQueue.create({
-        data: {
-          orderId: order.id,
+      await createOrderInDb({
+        userId: payment.metadata.userId,
+        user,
+        orderDetails,
+        paymentMetadata: {
+          firstName: customerMetadata.firstName,
+          lastName: customerMetadata.lastName,
+          email: customerMetadata.email,
+          phoneNumber: customerMetadata.phoneNumber ?? null,
         },
-      });
-
-      // 6) send socket emit to socket.io server to notify dashboard of new order
-      const socket = io(env.SOCKET_IO_URL, {
-        query: {
-          userId: "webhook", // this shouldn't actually be necessary, can probably remove later
+        paymentDetails: {
+          stripeSessionId: payment.id,
+          subtotal: subtotal.toNumber(),
+          tax: tax.toNumber(),
+          tipPercentage,
+          tipValue,
+          total: total.toNumber(),
         },
-        secure: env.NODE_ENV === "production" ? true : false,
-        retries: 3,
+        giftCardUsage,
       });
 
-      socket.on("connect", () => {
-        console.log("Connected to socket.io server from webhook");
-
-        socket.emit("newOrderPlaced", {
-          orderId: order.id,
-        });
-      });
-
-      // TODO: uncomment for production
-      // // 8) send email receipt (if allowed) to user
-      // if (user?.allowsEmailReceipts) {
-      //   await SendEmailReceipt({
-      //     // email: customerMetadata.email,
-      //     order,
-      //     orderDetails,
-      //     userIsAMember: true,
-      //   });
-      // }
-
-      // // check if customer email is on do not email blacklist in database
-      // else {
-      //   const emailBlacklistValue = await prisma.blacklistedEmail.findFirst({
-      //     where: {
-      //       emailAddress: customerMetadata.email,
-      //     },
-      //   });
-
-      //   if (!emailBlacklistValue) {
-      //     await SendEmailReceipt({
-      //       // email: customerMetadata.email,
-      //       order,
-      //       orderDetails,
-      //       userIsAMember: false,
-      //     });
-      //   }
-      // }
-
-      // TODO: uncomment for production
-      // 9) do chatgpt search for whether or not the user is a notable food critic, news reporter,
-      // writer, or otherwise influential person in the food industry.
-
-      // const params: OpenAI.Chat.ChatCompletionCreateParams = {
-      //   messages: [
-      //     {
-      //       role: "user",
-      //       content: `Given the name ${customerMetadata.firstName} ${customerMetadata.lastName}, provide a brief one-sentence summary indicating if they are a notable food critic, news reporter, writer, influential person related to the food industry, popular on social media, or a 'foodie'. Otherwise, reply with the response: "Person is not notable"`,
-      //     },
-      //   ],
-      //   model: "gpt-4o-mini",
-      // };
-      // const chatCompletion: OpenAI.Chat.ChatCompletion =
-      //   await openai.chat.completions.create(params);
-
-      // const response = chatCompletion.choices[0]?.message.content;
-
-      // if (response && response !== "Person is not notable") {
-      //   // update the Order row with the descripion of the notable person
-      //   await prisma.order.update({
-      //     where: {
-      //       id: order.id,
-      //     },
-      //     data: {
-      //       notableUserDescription: response,
-      //     },
-      //   });
-      //
-      //  need to have dashboard refetch the order to display the notableUserDescription
-
-      //    socket.emit("newOrderPlaced", {
-      //      orderId: order.id,
-      //    });
-      // }
-
-      // 10) cleanup transient order, technically not necessary though right since we just upsert either way?
-      // deleteMany instead of delete because prisma throws an error if the row doesn't exist
-      await prisma.transientOrder.deleteMany({
-        where: {
-          userId: payment.metadata.userId,
-        },
-      });
-
-      // 11) close socket connection
-      socket.close();
       break;
     default:
       console.log(`Unhandled event type ${event.type}`);
@@ -429,122 +298,3 @@ const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export default webhook;
-
-interface SendEmailReceipt {
-  order: Order;
-  orderDetails: {
-    items: {
-      id: number;
-      name: string;
-      quantity: number;
-      price: number;
-      itemId: string;
-      specialInstructions: string;
-      includeDietaryRestrictions: boolean;
-      customizations: Record<string, string>;
-      discountId: string | null;
-      isChefsChoice: boolean;
-      isAlcoholic: boolean;
-      isVegetarian: boolean;
-      isVegan: boolean;
-      isGlutenFree: boolean;
-      showUndercookedOrRawDisclaimer: boolean;
-      pointReward: boolean;
-      birthdayReward: boolean;
-    }[];
-  };
-  userIsAMember: boolean;
-}
-
-async function SendEmailReceipt({
-  order,
-  orderDetails,
-  userIsAMember,
-}: SendEmailReceipt) {
-  console.log("sending email receipt");
-
-  const unsubscriptionToken = await prisma.emailUnsubscriptionToken.create({
-    data: {
-      expiresAt: addMonths(new Date(), 3),
-      emailAddress: order.email,
-    },
-  });
-
-  const rawCustomizationChoices = await prisma.customizationChoice.findMany({
-    include: {
-      customizationCategory: true,
-    },
-  });
-
-  const customizationChoices = rawCustomizationChoices.reduce(
-    (acc, choice) => {
-      acc[choice.id] = choice;
-      return acc;
-    },
-    {} as Record<string, CustomizationChoiceAndCategory>,
-  );
-
-  const rawDiscounts = await prisma.discount.findMany({
-    where: {
-      active: true,
-      expirationDate: {
-        gte: new Date(),
-      },
-      userId: null,
-      menuItem: undefined, // assuming that we are most likely not doing the category/item %/bogo discounts
-      menuCategory: undefined, // assuming that we are most likely not doing the category/item %/bogo discounts
-    },
-  });
-
-  const discounts = rawDiscounts.reduce(
-    (acc, discount) => {
-      acc[discount.id] = discount;
-      return acc;
-    },
-    {} as Record<string, Discount>,
-  );
-
-  try {
-    const { data, error } = await resend.emails.send({
-      from: "onboarding@resend.dev",
-      to: "khues.dev@gmail.com", // order.email,
-      subject: "Hello world",
-      react: Receipt({
-        order: {
-          ...order,
-          orderItems: orderDetails.items.map((item) => ({
-            ...item,
-            id: item.itemId, // not "correct", but the actual id isn't necessary for the email
-            orderId: order.id,
-            menuItemId: item.itemId,
-            customizationChoices: item.customizations
-              ? Object.entries(item.customizations).map(
-                  ([categoryId, choiceId]) => ({
-                    categoryId,
-                    choiceId,
-                    choice: customizationChoices[choiceId],
-                  }),
-                )
-              : [],
-            discount: item.discountId ? discounts[item.discountId]! : null,
-          })),
-        },
-        customizationChoices,
-        discounts,
-        userIsAMember,
-        unsubscriptionToken: unsubscriptionToken.id,
-      }),
-    });
-
-    if (error) {
-      // res.status(400).json({ error });
-      console.error(error);
-    }
-
-    // res.status(200).json({ data });
-    console.log("went through", data);
-  } catch (error) {
-    // res.status(400).json({ error });
-    console.error(error);
-  }
-}

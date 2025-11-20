@@ -152,21 +152,37 @@ function CartDrawer({
   const [tipValueInitialized, setTipValueInitialized] = useState(false);
 
   const [giftCardDialogOpen, setGiftCardDialogOpen] = useState(false);
-  const [giftCardCode, setGiftCardCode] = useState("");
+  const [giftCardInput, setGiftCardInput] = useState("");
   const [giftCardError, setGiftCardError] = useState("");
+  const [appliedGiftCards, setAppliedGiftCards] = useState<
+    { code: string; balance: number }[]
+  >([]);
 
   const checkBalanceMutation = api.giftCard.checkBalance.useMutation({
-    onSuccess: (balance) => {
+    onSuccess: (balance, variables) => {
       if (balance > 0) {
+        if (orderDetails.giftCardCodes?.includes(variables.code)) {
+          setGiftCardError("Gift card already applied.");
+          return;
+        }
+
+        const newCodes = [
+          ...(orderDetails.giftCardCodes || []),
+          variables.code,
+        ];
         updateOrder({
           newOrderDetails: {
             ...orderDetails,
-            giftCardCode: giftCardCode,
+            giftCardCodes: newCodes,
           },
         });
+        setAppliedGiftCards((prev) => [
+          ...prev,
+          { code: variables.code, balance },
+        ]);
         setGiftCardDialogOpen(false);
         setGiftCardError("");
-        setGiftCardCode("");
+        setGiftCardInput("");
       } else {
         setGiftCardError("Gift card has zero balance.");
       }
@@ -176,19 +192,49 @@ function CartDrawer({
     },
   });
 
-  const { data: appliedGiftCardBalance } = api.giftCard.checkBalance.useQuery(
-    { code: orderDetails.giftCardCode || "" },
-    { enabled: !!orderDetails.giftCardCode },
-  );
+  const checkBalancesMutation = api.giftCard.checkBalances.useMutation({
+    onSuccess: (cards) => {
+      setAppliedGiftCards(cards);
+    },
+  });
+
+  useEffect(() => {
+    if (
+      orderDetails.giftCardCodes &&
+      orderDetails.giftCardCodes.length > 0 &&
+      appliedGiftCards.length === 0
+    ) {
+      checkBalancesMutation.mutate({ codes: orderDetails.giftCardCodes });
+    }
+  }, [orderDetails.giftCardCodes]);
 
   const handleApplyGiftCard = () => {
-    if (!giftCardCode) return;
-    checkBalanceMutation.mutate({ code: giftCardCode });
+    if (!giftCardInput) return;
+    checkBalanceMutation.mutate({ code: giftCardInput });
   };
 
-  const giftCardDeduction = appliedGiftCardBalance
-    ? Math.min(orderCost.total, appliedGiftCardBalance)
-    : 0;
+  const removeGiftCard = (code: string) => {
+    const newCodes =
+      orderDetails.giftCardCodes?.filter((c) => c !== code) || [];
+    updateOrder({
+      newOrderDetails: {
+        ...orderDetails,
+        giftCardCodes: newCodes,
+      },
+    });
+    setAppliedGiftCards((prev) => prev.filter((c) => c.code !== code));
+  };
+
+  let remainingTotalForCalc = orderCost.total;
+  let totalDeduction = 0;
+
+  for (const card of appliedGiftCards) {
+    const deduction = Math.min(remainingTotalForCalc, card.balance);
+    remainingTotalForCalc -= deduction;
+    totalDeduction += deduction;
+  }
+
+  const giftCardDeduction = totalDeduction;
   const finalTotal = Math.max(0, orderCost.total - giftCardDeduction);
 
   // hacky, but should work for effect you want
@@ -1282,8 +1328,8 @@ function CartDrawer({
                       </Label>
                       <Input
                         id="giftCardCode"
-                        value={giftCardCode}
-                        onChange={(e) => setGiftCardCode(e.target.value)}
+                        value={giftCardInput}
+                        onChange={(e) => setGiftCardInput(e.target.value)}
                         className="col-span-3 uppercase"
                       />
                     </div>
@@ -1554,12 +1600,40 @@ function CartDrawer({
                   <p>{formatPrice(orderCost.total)}</p>
                 </div>
 
-                {giftCardDeduction > 0 && (
-                  <div className="baseFlex w-full !justify-between text-sm text-green-600">
-                    <p>Gift Card</p>
-                    <p>-{formatPrice(giftCardDeduction)}</p>
-                  </div>
-                )}
+                {appliedGiftCards.map((card, index) => {
+                  let previousDeduction = 0;
+                  for (let i = 0; i < index; i++) {
+                    previousDeduction += Math.min(
+                      Math.max(0, orderCost.total - previousDeduction),
+                      appliedGiftCards[i].balance,
+                    );
+                  }
+                  const remaining = Math.max(
+                    0,
+                    orderCost.total - previousDeduction,
+                  );
+                  const deduction = Math.min(remaining, card.balance);
+
+                  if (deduction <= 0 && remaining <= 0) return null;
+
+                  return (
+                    <div
+                      key={card.code}
+                      className="baseFlex w-full !justify-between text-sm text-green-600"
+                    >
+                      <div className="flex items-center gap-2">
+                        <p>Gift Card (****{card.code.slice(-4)})</p>
+                        <button
+                          onClick={() => removeGiftCard(card.code)}
+                          className="text-xs text-red-500 underline"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                      <p>-{formatPrice(deduction)}</p>
+                    </div>
+                  );
+                })}
 
                 {giftCardDeduction > 0 && (
                   <div className="baseFlex w-full !justify-between gap-2 border-t pt-2 text-lg font-bold">
@@ -1658,7 +1732,10 @@ function CartDrawer({
                       // static width to prevent layout shift
                       className="baseFlex !w-full gap-2"
                     >
-                      {checkoutButtonText}
+                      {checkoutButtonText === "Proceed to checkout" &&
+                      finalTotal === 0
+                        ? "Complete order"
+                        : checkoutButtonText}
 
                       {checkoutButtonText === "Loading" ? (
                         <div

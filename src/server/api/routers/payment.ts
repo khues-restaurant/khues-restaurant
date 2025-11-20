@@ -8,6 +8,7 @@ import { orderDetailsSchema } from "~/stores/MainStore";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 import { env } from "~/env";
 import { waitUntil } from "@vercel/functions";
+import { createOrderInDb } from "~/server/utils/createOrderInDb";
 
 export const config = {
   runtime: "nodejs",
@@ -170,75 +171,64 @@ export const paymentRouter = createTRPCRouter({
 
       // Handle Gift Card Logic
       let giftCardAmountToApply = 0;
-      const giftCardCode = input.orderDetails.giftCardCode;
-      let giftCardId = "";
+      const giftCardCodes = input.orderDetails.giftCardCodes || [];
+      const giftCardUsage: { code: string; amount: number; id: string }[] = [];
 
-      if (giftCardCode) {
-        const giftCard = await ctx.prisma.giftCard.findUnique({
-          where: { code: giftCardCode },
+      if (giftCardCodes.length > 0) {
+        const giftCards = await ctx.prisma.giftCard.findMany({
+          where: { code: { in: giftCardCodes } },
         });
 
-        if (giftCard && giftCard.balance > 0) {
-          giftCardId = giftCard.id;
-          // Calculate Tax
-          const taxRate = await stripe.taxRates.retrieve(
-            env.STRIPE_TAX_RATE_ID,
-          );
-          const taxPercentage = new Decimal(taxRate.percentage).div(100);
-          const taxValue = subtotalInCents
-            .mul(taxPercentage)
-            .toDecimalPlaces(0, Decimal.ROUND_HALF_UP);
+        // Calculate Tax
+        const taxRate = await stripe.taxRates.retrieve(env.STRIPE_TAX_RATE_ID);
+        const taxPercentage = new Decimal(taxRate.percentage).div(100);
+        const taxValue = subtotalInCents
+          .mul(taxPercentage)
+          .toDecimalPlaces(0, Decimal.ROUND_HALF_UP);
 
-          const totalInCents = subtotalInCents.add(taxValue).add(tipValue);
+        const totalInCents = subtotalInCents.add(taxValue).add(tipValue);
+        let remainingTotal = totalInCents.toNumber();
 
-          giftCardAmountToApply = Math.min(
-            totalInCents.toNumber(),
-            giftCard.balance,
-          );
+        for (const giftCard of giftCards) {
+          if (remainingTotal <= 0) break;
+          if (giftCard.balance > 0) {
+            const amountToUse = Math.min(remainingTotal, giftCard.balance);
+            giftCardUsage.push({
+              code: giftCard.code,
+              amount: amountToUse,
+              id: giftCard.id,
+            });
+            remainingTotal -= amountToUse;
+            giftCardAmountToApply += amountToUse;
+          }
+        }
 
-          // If Gift Card covers part or all of the order
-          if (giftCardAmountToApply > 0) {
-            const remainingAmount = totalInCents
-              .minus(giftCardAmountToApply)
-              .toNumber();
+        // If Gift Card covers part or all of the order
+        if (giftCardAmountToApply > 0) {
+          const remainingAmount = totalInCents
+            .minus(giftCardAmountToApply)
+            .toNumber();
 
-            if (remainingAmount <= 0) {
-              // Full payment by Gift Card
-              // Create Order directly
-              // We need to replicate the webhook logic here or call a shared function
-              // For now, let's throw an error or handle it?
-              // The user wants "Redeem giftcard dialog".
-              // Since we can't easily share the webhook logic (it's in a different file and depends on Stripe event),
-              // we should probably create a new procedure `order.createFromGiftCard` or similar.
-              // But here we are in `createCheckout`.
-              // Let's return a special session object that the frontend can handle?
-              // Or just create the order here and return a dummy session with a success_url?
-              // I'll create the order here.
-              // I need to import the logic from webhook or duplicate it.
-              // Duplication is bad but quick.
-              // Refactoring webhook logic to a service function is better.
-              // For now, I will implement the "Partial Payment" flow which uses Stripe.
-              // If full payment, I'll handle it.
-              // Actually, if full payment, I can't return a Stripe Session.
-              // I'll return { id: "GIFT_CARD_PAID", url: `${env.BASE_URL}/payment-success?orderId=...` }
-            } else {
-              // Partial Payment
-              // Replace line items with a single "Remaining Balance" item
-              // This avoids tax calculation issues on the remainder
-              lineItems.length = 0; // Clear items
-              lineItems.push({
-                price_data: {
-                  currency: "usd",
-                  product_data: {
-                    name: "Order Balance (after Gift Card)",
-                    description: `Original Total: $${totalInCents.div(100).toFixed(2)} | Gift Card Applied: -$${new Decimal(giftCardAmountToApply).div(100).toFixed(2)}`,
-                  },
-                  unit_amount: remainingAmount,
+          if (remainingAmount <= 0) {
+            // Full payment by Gift Card
+            // Create Order directly
+          } else {
+            // Partial Payment
+            // Replace line items with a single "Remaining Balance" item
+            // This avoids tax calculation issues on the remainder
+            lineItems.length = 0; // Clear items
+            lineItems.push({
+              price_data: {
+                currency: "usd",
+                product_data: {
+                  name: "Order Balance (after Gift Card)",
+                  description: `Original Total: $${totalInCents.div(100).toFixed(2)} | Gift Card Applied: -$${new Decimal(giftCardAmountToApply).div(100).toFixed(2)}`,
                 },
-                quantity: 1,
-                tax_rates: [], // No tax on this remainder, as we calculated it already
-              });
-            }
+                unit_amount: remainingAmount,
+              },
+              quantity: 1,
+              tax_rates: [], // No tax on this remainder, as we calculated it already
+            });
           }
         }
       }
@@ -274,7 +264,9 @@ export const paymentRouter = createTRPCRouter({
         }
       }
 
-      // Check for full gift card payment
+      // Check for full gift card payment:
+      // Stripe Checkout Session cannot handle $0 payments
+      // so we need to handle this case separately.
       if (giftCardAmountToApply > 0) {
         // Recalculate total to check if fully paid
         const taxRate = await stripe.taxRates.retrieve(env.STRIPE_TAX_RATE_ID);
@@ -289,40 +281,6 @@ export const paymentRouter = createTRPCRouter({
 
         if (remainingAmount <= 0) {
           // FULL PAYMENT LOGIC
-          // 1. Deduct from Gift Card
-          await ctx.prisma.giftCard.update({
-            where: { id: giftCardId },
-            data: {
-              balance: { decrement: giftCardAmountToApply },
-              lastUsedAt: new Date(),
-              transactions: {
-                create: {
-                  amount: -giftCardAmountToApply,
-                  type: "PURCHASE",
-                  note: "Order Payment (Full)",
-                },
-              },
-            },
-          });
-
-          // 2. Create Order
-          // We need to construct the order object similar to webhook
-          // This is a simplified version, assuming validation passed
-          const orderItemsData = input.orderDetails.items.map(
-            ({ itemId, id, customizations, ...rest }) => ({
-              ...rest,
-              menuItemId: itemId,
-              customizations: {
-                create: Object.entries(customizations).map(
-                  ([categoryId, choiceId]) => ({
-                    customizationCategoryId: categoryId,
-                    customizationChoiceId: choiceId,
-                  }),
-                ),
-              },
-            }),
-          );
-
           const { firstName, lastName } =
             input.pickupName.split(" ").length > 1
               ? {
@@ -336,36 +294,25 @@ export const paymentRouter = createTRPCRouter({
           });
           const email = user?.email ?? "guest@khues.com";
 
-          const order = await ctx.prisma.order.create({
-            data: {
-              stripeSessionId: `GIFT_CARD_${Date.now()}`, // Dummy ID
-              datetimeToPickup: input.orderDetails.datetimeToPickup,
-              firstName,
+          const order = await createOrderInDb({
+            userId: input.userId,
+            user,
+            orderDetails: input.orderDetails,
+            paymentMetadata: {
+              firstName: firstName || "Guest",
               lastName,
               email,
               phoneNumber: null,
-              includeNapkinsAndUtensils:
-                input.orderDetails.includeNapkinsAndUtensils,
+            },
+            paymentDetails: {
+              stripeSessionId: `GIFT_CARD_${Date.now()}`,
               subtotal: subtotalInCents.toNumber(),
               tax: taxValue.toNumber(),
               tipPercentage: input.orderDetails.tipPercentage,
               tipValue: tipValue.toNumber(),
               total: totalInCents.toNumber(),
-              userId: input.userId,
-              orderItems: { create: orderItemsData },
-              giftCardTransactions: {
-                create: {
-                  amount: -giftCardAmountToApply,
-                  type: "PURCHASE",
-                  giftCardId: giftCardId,
-                },
-              },
             },
-          });
-
-          // Add to print queue
-          await ctx.prisma.orderPrintQueue.create({
-            data: { orderId: order.id },
+            giftCardUsage,
           });
 
           return {
@@ -388,11 +335,10 @@ export const paymentRouter = createTRPCRouter({
         },
 
         metadata: {
+          type: "ORDER",
           userId: input.userId,
           pickupName: input.pickupName,
-          giftCardCode: giftCardCode || null,
-          giftCardAmountApplied:
-            giftCardAmountToApply > 0 ? giftCardAmountToApply : null,
+          giftCardUsage: JSON.stringify(giftCardUsage),
         },
 
         success_url: `${env.BASE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}&userId=${input.userId}`,

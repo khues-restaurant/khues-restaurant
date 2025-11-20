@@ -80,6 +80,19 @@ export const giftCardRouter = createTRPCRouter({
       return card.balance;
     }),
 
+  checkBalances: publicProcedure
+    .input(z.object({ codes: z.array(z.string()) }))
+    .mutation(async ({ ctx, input }) => {
+      const cards = await ctx.prisma.giftCard.findMany({
+        where: { code: { in: input.codes } },
+      });
+
+      return cards.map((card) => ({
+        code: card.code,
+        balance: card.balance,
+      }));
+    }),
+
   create: adminProcedure
     .input(
       z.object({
@@ -106,7 +119,7 @@ export const giftCardRouter = createTRPCRouter({
           transactions: {
             create: {
               amount: input.initialBalance,
-              type: "MANUAL_ADJUSTMENT", // Or maybe a new type 'INITIAL_BALANCE'? Using MANUAL_ADJUSTMENT for now as it fits "bookkeeping"
+              type: "ACTIVATION_IN_STORE", // Or maybe a new type 'INITIAL_BALANCE'? Using MANUAL_ADJUSTMENT for now as it fits "bookkeeping"
               note: "Initial creation",
             },
           },
@@ -175,7 +188,13 @@ export const giftCardRouter = createTRPCRouter({
       const transactions = await ctx.prisma.giftCardTransaction.findMany({
         where: {
           type: {
-            in: ["PURCHASE", "MANUAL_ADJUSTMENT", "RELOAD"],
+            in: [
+              "ACTIVATION_ONLINE",
+              "ACTIVATION_IN_STORE",
+              "REDEMPTION",
+              "MANUAL_ADJUSTMENT",
+              "RELOAD",
+            ],
           },
         },
         include: {
@@ -261,7 +280,7 @@ export const giftCardRouter = createTRPCRouter({
           transactions: {
             create: {
               amount: -input.amount,
-              type: "PURCHASE",
+              type: "REDEMPTION",
             },
           },
         },

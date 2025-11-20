@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import type { NumberOfOrdersAllowedPerPickupTimeSlot } from "@prisma/client";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -54,8 +53,7 @@ function PickupTimeslotCapacity() {
   const [showDialog, setShowDialog] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
-  const capacityRecord = (numberOfOrdersAllowed ??
-    null) as NumberOfOrdersAllowedPerPickupTimeSlot | null;
+  const capacityRecord = numberOfOrdersAllowed ?? null;
   const capacityValue = capacityRecord?.value ?? null;
 
   useEffect(() => {

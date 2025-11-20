@@ -430,7 +430,7 @@ function RefundOrderCard({
 
       <Separator className="w-full" />
 
-      <div className="baseVertFlex gap-2 text-sm">
+      <div className="baseVertFlex gap-1 text-sm">
         <div className="baseFlex w-full !justify-between gap-16">
           <span>Subtotal</span>
           <span>{formatPrice(order.subtotal)}</span>
@@ -439,15 +439,15 @@ function RefundOrderCard({
           <span>Tax</span>
           <span>{formatPrice(order.tax)}</span>
         </div>
-        {order.tipValue > 0 && (
-          <div className="baseFlex w-full !justify-between gap-16">
-            <span>
-              Tip
-              {order.tipPercentage !== null ? ` (${order.tipPercentage}%)` : ""}
-            </span>
-            <span>{formatPrice(order.tipValue)}</span>
-          </div>
-        )}
+
+        <div className="baseFlex w-full !justify-between gap-16">
+          <span>
+            Tip
+            {order.tipPercentage !== null ? ` (${order.tipPercentage}%)` : ""}
+          </span>
+          <span>{formatPrice(order.tipValue)}</span>
+        </div>
+
         <div className="baseFlex w-full !justify-between gap-16 text-base font-semibold">
           <span>Total collected</span>
           <span>{formatPrice(order.total)}</span>

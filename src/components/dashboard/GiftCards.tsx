@@ -229,9 +229,13 @@ function RecentPurchasesList() {
                                 </span>
                               </div>
                               <div className="text-xs text-muted-foreground">
-                                {tx.type === "MANUAL_ADJUSTMENT" &&
+                                {tx.type === "ACTIVATION_IN_STORE" &&
                                   "New Card (in-store)"}
-                                {tx.type === "PURCHASE" && "New Card (online)"}
+                                {tx.type === "ACTIVATION_ONLINE" &&
+                                  "New Card (online)"}
+                                {tx.type === "REDEMPTION" && "Redemption"}
+                                {tx.type === "MANUAL_ADJUSTMENT" &&
+                                  "Manual Adjustment"}
                                 {tx.type === "RELOAD" && "Reload"}{" "}
                                 {tx.giftCard.user?.email &&
                                   `• ${tx.giftCard.user.email}`}

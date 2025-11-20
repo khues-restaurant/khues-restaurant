@@ -389,7 +389,9 @@ model GiftCard {
 }
 
 enum GiftCardTransactionType {
-    PURCHASE
+    ACTIVATION_IN_STORE
+    ACTIVATION_ONLINE
+    REDEMPTION
     RELOAD
     REPLACEMENT_CREDIT
     REPLACEMENT_DEBIT

@@ -24,7 +24,6 @@ function PaymentSuccess({
   const { isLoaded, isSignedIn } = useAuth();
   const { push, isReady, query } = useRouter();
   const sessionId = query.session_id as string;
-  const userId = query.userId as string;
 
   const { data: order } = api.order.getByStripeSessionId.useQuery(sessionId, {
     enabled: isReady && sessionId !== "GIFT_CARD_PAID",
@@ -180,7 +179,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   // check stripe session to get the email address to be able to check
   // whether it is in EmailBlacklist model in prisma
   const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-    apiVersion: "2024-06-20",
+    apiVersion: "2025-09-30.clover",
   });
 
   const session = await stripe.checkout.sessions.retrieve(
