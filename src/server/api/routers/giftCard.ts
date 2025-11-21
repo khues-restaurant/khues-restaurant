@@ -156,6 +156,76 @@ export const giftCardRouter = createTRPCRouter({
     });
   }),
 
+  attachToAccount: protectedProcedure
+    .input(z.object({ code: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.auth.userId;
+
+      if (!userId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You must be signed in to attach a gift card",
+        });
+      }
+
+      const normalizedCode = input.code.trim().toUpperCase();
+
+      const card = await ctx.prisma.giftCard.findUnique({
+        where: { code: normalizedCode },
+        select: {
+          id: true,
+          createdAt: true,
+          code: true,
+          balance: true,
+          lastUsedAt: true,
+          updatedAt: true,
+          userId: true,
+          isReplaced: true,
+        },
+      });
+
+      if (!card) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Gift card not found",
+        });
+      }
+
+      if (card.isReplaced) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This gift card has already been replaced",
+        });
+      }
+
+      if (card.userId && card.userId !== userId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "This gift card is already attached to another account",
+        });
+      }
+
+      if (card.userId === userId) {
+        const { userId: _userId, isReplaced: _isReplaced, ...rest } = card;
+        return rest;
+      }
+
+      return ctx.prisma.giftCard.update({
+        where: { id: card.id },
+        data: {
+          userId,
+        },
+        select: {
+          id: true,
+          createdAt: true,
+          code: true,
+          balance: true,
+          lastUsedAt: true,
+          updatedAt: true,
+        },
+      });
+    }),
+
   create: adminProcedure
     .input(
       z.object({
@@ -254,7 +324,6 @@ export const giftCardRouter = createTRPCRouter({
             in: [
               "ACTIVATION_ONLINE",
               "ACTIVATION_IN_STORE",
-              "REDEMPTION",
               "MANUAL_ADJUSTMENT",
               "RELOAD",
             ],

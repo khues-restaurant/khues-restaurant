@@ -91,6 +91,12 @@ type AppliedGiftCard = {
   balance: number;
 };
 
+type LocalGiftCard = {
+  code: string;
+  balance: number;
+  createdAt: Date;
+};
+
 interface CartDrawer {
   setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
   setItemOrderDetails: Dispatch<SetStateAction<Item | undefined>>;
@@ -107,6 +113,7 @@ function CartDrawer({
   setPickupName,
 }: CartDrawer) {
   const { isSignedIn } = useAuth();
+  const ctx = api.useUtils();
   const userId = useGetUserId();
 
   const {
@@ -163,6 +170,17 @@ function CartDrawer({
   const [appliedGiftCards, setAppliedGiftCards] = useState<AppliedGiftCard[]>(
     [],
   );
+  const [addingANewGiftCard, setAddingANewGiftCard] = useState(false);
+  const [localGiftCards, setLocalGiftCards] = useState<LocalGiftCard[]>([]);
+
+  const attachGiftCardMutation = api.giftCard.attachToAccount.useMutation({
+    onSuccess: async () => {
+      await ctx.giftCard.getMyCards.invalidate();
+    },
+    onError: (err) => {
+      setGiftCardError(err.message);
+    },
+  });
 
   const checkBalanceMutation = api.giftCard.checkBalance.useMutation({
     onSuccess: (balance, variables) => {
@@ -186,6 +204,33 @@ function CartDrawer({
           ...prev,
           { code: variables.code, balance },
         ]);
+        if (isSignedIn) {
+          attachGiftCardMutation.mutate({ code: variables.code });
+        } else {
+          setLocalGiftCards((prev) => {
+            const existingIndex = prev.findIndex(
+              (card) => card.code === variables.code,
+            );
+
+            if (existingIndex !== -1) {
+              const clone = [...prev];
+              clone[existingIndex] = {
+                ...clone[existingIndex]!,
+                balance,
+              };
+              return clone;
+            }
+
+            return [
+              ...prev,
+              {
+                code: variables.code,
+                balance,
+                createdAt: new Date(),
+              },
+            ];
+          });
+        }
         setGiftCardError("");
         setGiftCardInput("");
       } else {
@@ -195,6 +240,9 @@ function CartDrawer({
     onError: (err) => {
       setGiftCardError(err.message);
     },
+    onSettled: () => {
+      setAddingANewGiftCard(false);
+    },
   });
 
   const checkBalancesMutation = api.giftCard.checkBalances.useMutation({
@@ -203,11 +251,35 @@ function CartDrawer({
     },
   });
 
-  const { data: myGiftCards, isLoading: isLoadingGiftCards } =
+  const { data: myGiftCards, isFetching: isFetchingGiftCards } =
     api.giftCard.getMyCards.useQuery(undefined, {
       enabled: Boolean(isSignedIn),
       staleTime: 30_000,
     });
+
+  const availableGiftCards = useMemo(() => {
+    const remoteCards = (myGiftCards ?? []).map((card) => ({
+      code: card.code,
+      balance: card.balance,
+      createdAt: card.createdAt,
+      source: "account" as const,
+      id: card.id,
+    }));
+
+    const sessionCards = localGiftCards
+      .filter(
+        (localCard) =>
+          !remoteCards.some((remoteCard) => remoteCard.code === localCard.code),
+      )
+      .map((card) => ({
+        code: card.code,
+        balance: card.balance,
+        createdAt: card.createdAt,
+        source: "local" as const,
+      }));
+
+    return [...remoteCards, ...sessionCards];
+  }, [myGiftCards, localGiftCards]);
 
   useEffect(() => {
     const codes = orderDetails.giftCardCodes ?? [];
@@ -484,6 +556,11 @@ function CartDrawer({
       return null; // Return null if Decimal throws an error
     }
   }
+
+  const totalDeduction = Object.values(deductionBreakdown).reduce(
+    (acc, val) => acc + val,
+    0,
+  );
 
   // dynamically updating datetimeToPickup based on changes to date/time inputs
   useEffect(() => {
@@ -1330,10 +1407,10 @@ function CartDrawer({
         <div className="baseVertFlex mt-auto w-full border-t">
           <div className="baseVertFlex w-full gap-4 p-4">
             <div
-              style={{
-                justifyContent: isSignedIn ? "space-between" : "flex-start",
-              }}
-              className="baseFlex w-full gap-4"
+              // style={{
+              //   justifyContent: isSignedIn ? "space-between" : "flex-start",
+              // }}
+              className="baseFlex w-full !justify-between gap-4"
             >
               <div className="baseFlex gap-2">
                 <Switch
@@ -1355,7 +1432,8 @@ function CartDrawer({
                   Include napkins and utensils
                 </Label>
               </div>
-              {isSignedIn && (
+
+              {/* {isSignedIn && (
                 <Button
                   variant={"rewards"}
                   className="baseFlex gap-2 text-xs font-semibold"
@@ -1366,23 +1444,20 @@ function CartDrawer({
                   <CiGift className="size-[22px] drop-shadow-[0_1px_4px_rgb(0_0_0_/_25%)]" />
                   My rewards
                 </Button>
-              )}
+              )} */}
 
               <Dialog
                 open={giftCardDialogOpen}
                 onOpenChange={setGiftCardDialogOpen}
               >
                 <DialogTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="h-8 text-xs font-semibold"
-                  >
+                  <Button variant="outline" className="h-8 text-xs font-medium">
                     Redeem Gift Card
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-lg">
                   <DialogHeader className="space-y-1 text-left">
-                    <DialogTitle className="text-2xl font-semibold">
+                    <DialogTitle className="text-xl font-semibold">
                       My Gift Cards
                     </DialogTitle>
                     <p className="text-sm text-muted-foreground">
@@ -1391,70 +1466,77 @@ function CartDrawer({
                   </DialogHeader>
 
                   <div className="space-y-4">
-                    {isSignedIn ? (
-                      <div className="space-y-3">
-                        <p className="text-sm font-semibold text-stone-600">
-                          Available gift cards
-                        </p>
-                        {isLoadingGiftCards ? (
-                          <div className="flex items-center gap-2 rounded-md border border-dashed p-4 text-sm text-muted-foreground">
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            Loading your cards...
-                          </div>
-                        ) : (myGiftCards?.length ?? 0) > 0 ? (
-                          <div className="max-h-64 space-y-2 overflow-y-auto pr-1">
-                            {myGiftCards?.map((card) => (
-                              <label
-                                key={card.id}
-                                className="flex cursor-pointer items-center gap-3 rounded-md border bg-white/80 p-3 shadow-sm transition hover:border-primary"
-                              >
-                                <Checkbox
-                                  checked={selectedGiftCardCodes.has(card.code)}
-                                  onCheckedChange={(checked) =>
-                                    handleSavedCardToggle(
-                                      card.code,
-                                      card.balance,
-                                      Boolean(checked),
-                                    )
-                                  }
-                                  className="mt-0.5"
-                                  aria-label={`Toggle gift card ending in ${card.code.slice(-4)}`}
+                    <div className="space-y-3">
+                      <p className="text-sm font-semibold text-stone-600">
+                        Available gift cards
+                      </p>
+                      {isFetchingGiftCards ? (
+                        <div className="flex items-center gap-2 rounded-md border border-dashed p-4 text-sm text-muted-foreground">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Loading your cards...
+                        </div>
+                      ) : availableGiftCards.length > 0 ? (
+                        <div className="max-h-64 space-y-2 overflow-y-auto pr-1">
+                          {availableGiftCards.map((card) => (
+                            <div
+                              key={card.code}
+                              onClick={() => {
+                                handleSavedCardToggle(
+                                  card.code,
+                                  card.balance,
+                                  !selectedGiftCardCodes.has(card.code),
+                                );
+                              }}
+                              className={`flex cursor-pointer items-center gap-3 rounded-md border bg-white/80 p-3 shadow-sm transition hover:border-primary ${selectedGiftCardCodes.has(card.code) ? "border-primary" : ""}`}
+                            >
+                              <Checkbox
+                                checked={selectedGiftCardCodes.has(card.code)}
+                                onCheckedChange={(checked) =>
+                                  handleSavedCardToggle(
+                                    card.code,
+                                    card.balance,
+                                    Boolean(checked),
+                                  )
+                                }
+                                className="mt-0.5"
+                                aria-label={`Toggle gift card ending in ${card.code.slice(-4)}`}
+                              />
+                              <div className="flex items-center gap-3">
+                                <Image
+                                  src={giftCardFront}
+                                  alt="Khue's gift card"
+                                  width={80}
+                                  height={48}
+                                  className="h-12 w-20 rounded-md object-cover shadow"
                                 />
-                                <div className="flex items-center gap-3">
-                                  <Image
-                                    src={giftCardFront}
-                                    alt="Khue's gift card"
-                                    width={80}
-                                    height={48}
-                                    className="h-12 w-20 rounded-md object-cover shadow"
-                                  />
-                                  <div className="flex flex-col">
-                                    <span className="text-sm font-medium">
-                                      Card ending in {card.code.slice(-4)}
-                                    </span>
-                                    <span className="text-xs text-muted-foreground">
-                                      Balance {formatPrice(card.balance)}
-                                    </span>
-                                  </div>
+                                <div className="flex flex-col">
+                                  <span className="text-sm font-medium">
+                                    Card ending in {card.code.slice(-4)}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    Issued on{" "}
+                                    {format(
+                                      card.createdAt ?? new Date(),
+                                      "MMM dd, yyyy",
+                                    )}
+                                  </span>
                                 </div>
-                                <span className="ml-auto text-sm font-semibold">
-                                  {formatPrice(card.balance)}
-                                </span>
-                              </label>
-                            ))}
-                          </div>
-                        ) : (
-                          <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
-                            You don&apos;t have any gift cards with a remaining
-                            balance yet.
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
-                        Sign in to see gift cards tied to your account.
-                      </div>
-                    )}
+                              </div>
+                              <span className="ml-auto text-sm font-semibold">
+                                {formatPrice(
+                                  card.balance -
+                                    (deductionBreakdown[card.code] ?? 0),
+                                )}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-sm text-muted-foreground">
+                          No available gift cards found.
+                        </div>
+                      )}
+                    </div>
 
                     <Separator />
 
@@ -1467,31 +1549,55 @@ function CartDrawer({
                           e.preventDefault();
                           handleApplyGiftCard();
                         }}
-                        className="flex flex-col gap-3 sm:flex-row"
+                        className="flex flex-row gap-3"
                       >
                         <Input
                           id="giftCardCode"
                           value={giftCardInput}
                           onChange={(e) => {
                             setGiftCardError("");
-                            setGiftCardInput(e.target.value.toUpperCase());
+                            const val = e.target.value;
+                            if (val.length > 16) return;
+
+                            // only allow numbers to be entered
+                            if (val === "" || /^\d+$/.test(val)) {
+                              setGiftCardInput(val);
+                            }
                           }}
-                          placeholder="Enter gift card code"
-                          className="uppercase sm:flex-1"
+                          placeholder="Enter gift card code..."
+                          className="sm:flex-1"
                         />
                         <Button
                           type="submit"
-                          disabled={checkBalanceMutation.isLoading}
+                          disabled={
+                            addingANewGiftCard || giftCardInput.length === 0
+                          }
                           className="sm:w-24"
                         >
-                          {checkBalanceMutation.isLoading ? (
-                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              Checking
-                            </>
-                          ) : (
-                            "Add"
-                          )}
+                          <AnimatePresence mode={"popLayout"} initial={false}>
+                            <motion.div
+                              key={`cart-sheet-gift-card-dialog-${addingANewGiftCard}`}
+                              initial={{ opacity: 0, y: -20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: 20 }}
+                              transition={{
+                                duration: 0.25,
+                              }}
+                              className="baseFlex !w-full gap-2"
+                            >
+                              {addingANewGiftCard ? (
+                                <div
+                                  className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
+                                  role="status"
+                                  aria-label="loading"
+                                >
+                                  <span className="sr-only">Loading...</span>
+                                </div>
+                              ) : (
+                                "Add"
+                              )}
+                            </motion.div>
+                          </AnimatePresence>
                         </Button>
                       </form>
                       {giftCardError && (
@@ -1756,11 +1862,6 @@ function CartDrawer({
                   <p>{formatPrice(orderCost.tip)}</p>
                 </div>
 
-                <div className="baseFlex w-full !justify-between gap-2 text-lg font-semibold">
-                  <p>Total</p>
-                  <p>{formatPrice(orderCost.total)}</p>
-                </div>
-
                 {sortedAppliedGiftCards.map((card) => {
                   const deduction = deductionBreakdown[card.code] ?? 0;
 
@@ -1769,28 +1870,20 @@ function CartDrawer({
                   return (
                     <div
                       key={card.code}
-                      className="baseFlex w-full !justify-between text-sm text-green-600"
+                      className="baseFlex w-full !justify-between text-sm text-primary"
                     >
                       <div className="flex items-center gap-2">
                         <p>Gift Card (****{card.code.slice(-4)})</p>
-                        <button
-                          onClick={() => removeGiftCard(card.code)}
-                          className="text-xs text-red-500 underline"
-                        >
-                          Remove
-                        </button>
                       </div>
                       <p>-{formatPrice(deduction)}</p>
                     </div>
                   );
                 })}
 
-                {giftCardDeduction > 0 && (
-                  <div className="baseFlex w-full !justify-between gap-2 border-t pt-2 text-lg font-bold">
-                    <p>Payable Total</p>
-                    <p>{formatPrice(finalTotal)}</p>
-                  </div>
-                )}
+                <div className="baseFlex w-full !justify-between gap-2 text-lg font-semibold">
+                  <p>Total</p>
+                  <p>{formatPrice(orderCost.total - totalDeduction)}</p>
+                </div>
               </div>
 
               <Separator

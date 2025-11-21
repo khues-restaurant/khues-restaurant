@@ -361,7 +361,11 @@ export default function GiftCardsPage() {
                                 : "outline"
                             }
                             onClick={() => field.onChange(option.value)}
-                            className="min-w-[150px]"
+                            className={`min-w-[150px] ${
+                              field.value !== option.value
+                                ? "bg-transparent"
+                                : ""
+                            }`}
                           >
                             {option.label}
                           </Button>

@@ -79,6 +79,12 @@ type AppliedGiftCard = {
   balance: number;
 };
 
+type LocalGiftCard = {
+  code: string;
+  balance: number;
+  createdAt: Date;
+};
+
 interface CartSheet {
   setShowCartSheet: Dispatch<SetStateAction<boolean>>;
   setItemToCustomize: Dispatch<SetStateAction<FullMenuItem | null>>;
@@ -99,6 +105,7 @@ function CartSheet({
   setPickupName,
 }: CartSheet) {
   const { isSignedIn } = useAuth();
+  const ctx = api.useUtils();
   const userId = useGetUserId();
 
   const {
@@ -156,6 +163,16 @@ function CartSheet({
     [],
   );
   const [addingANewGiftCard, setAddingANewGiftCard] = useState(false);
+  const [localGiftCards, setLocalGiftCards] = useState<LocalGiftCard[]>([]);
+
+  const attachGiftCardMutation = api.giftCard.attachToAccount.useMutation({
+    onSuccess: async () => {
+      await ctx.giftCard.getMyCards.invalidate();
+    },
+    onError: (err) => {
+      setGiftCardError(err.message);
+    },
+  });
 
   const checkBalanceMutation = api.giftCard.checkBalance.useMutation({
     onSuccess: (balance, variables) => {
@@ -169,16 +186,46 @@ function CartSheet({
           ...(orderDetails.giftCardCodes || []),
           variables.code,
         ];
+
         updateOrder({
           newOrderDetails: {
             ...orderDetails,
             giftCardCodes: newCodes,
           },
         });
+
         setAppliedGiftCards((prev) => [
           ...prev,
           { code: variables.code, balance },
         ]);
+
+        if (isSignedIn) {
+          attachGiftCardMutation.mutate({ code: variables.code });
+        } else {
+          setLocalGiftCards((prev) => {
+            const existingIndex = prev.findIndex(
+              (card) => card.code === variables.code,
+            );
+
+            if (existingIndex !== -1) {
+              const cloned = [...prev];
+              cloned[existingIndex] = {
+                ...cloned[existingIndex]!,
+                balance,
+              };
+              return cloned;
+            }
+
+            return [
+              ...prev,
+              {
+                code: variables.code,
+                balance,
+                createdAt: new Date(),
+              },
+            ];
+          });
+        }
         setGiftCardError("");
         setGiftCardInput("");
       } else {
@@ -199,11 +246,35 @@ function CartSheet({
     },
   });
 
-  const { data: myGiftCards, isLoading: isLoadingGiftCards } =
+  const { data: myGiftCards, isFetching: isFetchingGiftCards } =
     api.giftCard.getMyCards.useQuery(undefined, {
       enabled: Boolean(isSignedIn),
       staleTime: 30_000,
     });
+
+  const availableGiftCards = useMemo(() => {
+    const remoteCards = (myGiftCards ?? []).map((card) => ({
+      code: card.code,
+      balance: card.balance,
+      createdAt: card.createdAt,
+      source: "account" as const,
+      id: card.id,
+    }));
+
+    const sessionCards = localGiftCards
+      .filter(
+        (localCard) =>
+          !remoteCards.some((remoteCard) => remoteCard.code === localCard.code),
+      )
+      .map((card) => ({
+        code: card.code,
+        balance: card.balance,
+        createdAt: card.createdAt,
+        source: "local" as const,
+      }));
+
+    return [...remoteCards, ...sessionCards];
+  }, [myGiftCards, localGiftCards]);
 
   useEffect(() => {
     const codes = orderDetails.giftCardCodes ?? [];
@@ -1320,7 +1391,7 @@ function CartSheet({
             style={{
               justifyContent: isSignedIn ? "space-between" : "flex-start",
             }}
-            className="baseFlex w-full"
+            className="baseFlex w-full !justify-between"
           >
             <div className="baseFlex gap-2">
               <Switch
@@ -1340,7 +1411,7 @@ function CartSheet({
               </Label>
             </div>
 
-            {isSignedIn && (
+            {/* {isSignedIn && (
               <Button
                 variant={"rewards"}
                 className="baseFlex gap-2 font-semibold"
@@ -1351,14 +1422,14 @@ function CartSheet({
                 <CiGift className="size-6 drop-shadow-[0_1px_4px_rgb(0_0_0_/_25%)]" />
                 My rewards
               </Button>
-            )}
+            )} */}
 
             <Dialog
               open={giftCardDialogOpen}
               onOpenChange={setGiftCardDialogOpen}
             >
               <DialogTrigger asChild>
-                <Button variant="outline" className="h-8 text-xs font-semibold">
+                <Button variant="outline" className="h-8 text-sm font-medium">
                   Redeem Gift Card
                 </Button>
               </DialogTrigger>
@@ -1377,16 +1448,16 @@ function CartSheet({
                     <p className="text-sm font-semibold text-stone-600">
                       Available gift cards
                     </p>
-                    {isLoadingGiftCards ? (
+                    {isFetchingGiftCards ? (
                       <div className="flex items-center gap-2 rounded-md border border-dashed p-4 text-sm text-muted-foreground">
                         <Loader2 className="h-4 w-4 animate-spin" />
                         Loading your cards...
                       </div>
-                    ) : (myGiftCards?.length ?? 0) > 0 ? (
+                    ) : availableGiftCards.length > 0 ? (
                       <div className="max-h-64 space-y-2 overflow-y-auto pr-1">
-                        {myGiftCards?.map((card) => (
+                        {availableGiftCards.map((card) => (
                           <div
-                            key={card.id}
+                            key={card.code}
                             onClick={() => {
                               handleSavedCardToggle(
                                 card.code,
@@ -1422,7 +1493,10 @@ function CartSheet({
                                 </span>
                                 <span className="text-xs text-muted-foreground">
                                   Issued on{" "}
-                                  {format(card.createdAt, "MMM dd, yyyy")}
+                                  {format(
+                                    card.createdAt ?? new Date(),
+                                    "MMM dd, yyyy",
+                                  )}
                                 </span>
                               </div>
                             </div>
@@ -1436,9 +1510,8 @@ function CartSheet({
                         ))}
                       </div>
                     ) : (
-                      <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
-                        You don&apos;t have any gift cards with a remaining
-                        balance yet.
+                      <div className="text-sm text-muted-foreground">
+                        No available gift cards found.
                       </div>
                     )}
                   </div>
