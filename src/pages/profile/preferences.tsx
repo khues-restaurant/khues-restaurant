@@ -11,7 +11,8 @@ import { useForm } from "react-hook-form";
 import { CiGift } from "react-icons/ci";
 import { FaLock, FaTrashAlt, FaUserAlt } from "react-icons/fa";
 import { IoIosMail } from "react-icons/io";
-import { IoCalendarOutline, IoSettingsOutline } from "react-icons/io5";
+import { IoSettingsOutline } from "react-icons/io5";
+import { IoCardOutline } from "react-icons/io5";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { TfiReceipt } from "react-icons/tfi";
 import { z } from "zod";
@@ -260,16 +261,20 @@ function Preferences() {
         </Button>
 
         <Button
-          variant={asPath.includes("/reservations") ? "activeLink" : "text"}
+          variant={
+            asPath.includes("/profile/gift-cards") ? "activeLink" : "text"
+          }
           asChild
         >
-          <a
-            href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime"
-            className="baseFlex h-14 w-full gap-2 !rounded-none border-b-2 border-stone-300 text-xs"
+          <Link
+            prefetch={false}
+            href="/profile/gift-cards"
+            className={`baseFlex h-14 w-full gap-2 !rounded-none text-xs
+            ${asPath.includes("/profile/gift-cards") ? "activeUnderline" : "border-b-2 border-stone-300"}`}
           >
-            <IoCalendarOutline className="size-4 shrink-0" />
-            Reservations
-          </a>
+            <CiGift className="size-4 shrink-0" />
+            My gift cards
+          </Link>
         </Button>
 
         <Button
@@ -310,13 +315,17 @@ function Preferences() {
         <Separator className="h-5 w-[1px] bg-stone-400" />
 
         <Button
-          variant={asPath.includes("/reservations") ? "default" : "ghost"}
-          className="baseFlex w-full gap-2"
+          variant={asPath.includes("/profile/gift-cards") ? "default" : "ghost"}
+          asChild
         >
-          <IoCalendarOutline />
-          <a href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime">
-            Reservations
-          </a>
+          <Link
+            prefetch={false}
+            href="/profile/gift-cards"
+            className="baseFlex w-full gap-2"
+          >
+            <IoCardOutline className="size-5" />
+            My Gift Cards
+          </Link>
         </Button>
 
         <Separator className="h-5 w-[1px] bg-stone-400" />
@@ -331,7 +340,7 @@ function Preferences() {
             className="baseFlex w-full gap-2"
           >
             <TfiReceipt className="size-5" />
-            My orders
+            My Orders
           </Link>
         </Button>
       </div>

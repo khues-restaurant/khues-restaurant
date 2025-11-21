@@ -13,6 +13,7 @@ import {
 } from "react-icons/io5";
 import { SiTiktok } from "react-icons/si";
 import { Clock, MapPin } from "lucide-react";
+import { IoCardOutline } from "react-icons/io5";
 import CartButton from "~/components/cart/CartButton";
 import {
   Accordion,
@@ -263,18 +264,22 @@ function MobileHeader() {
 
                           <Button
                             variant={
-                              asPath.includes("/reservations")
+                              asPath.includes("/profile/gift-cards")
                                 ? "activeLink"
                                 : "link"
                             }
-                            className="baseFlex w-48 !justify-start gap-4 !text-lg"
+                            asChild
                           >
-                            <IoCalendarOutline
-                              className={`${asPath.includes("/profile/preferences") ? "[&>path]:stroke-[55px]" : "[&>path]:stroke-[40px]"}`}
-                            />
-                            <a href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime">
-                              Reservations
-                            </a>
+                            <Link
+                              prefetch={false}
+                              href={"/profile/gift-cards"}
+                              className="baseFlex w-40 !justify-start gap-4 !text-lg"
+                            >
+                              <IoCardOutline
+                                className={`${asPath.includes("/profile/gift-cards") ? "[&>path]:stroke-[55px]" : "[&>path]:stroke-[40px]"} shrink-0`}
+                              />
+                              My Gift Cards
+                            </Link>
                           </Button>
 
                           <Button
@@ -293,7 +298,7 @@ function MobileHeader() {
                               <TfiReceipt
                                 className={`${asPath.includes("/profile/my-orders") ? "[&>path]:stroke-[0.5px]" : ""} shrink-0`}
                               />
-                              My orders
+                              My Orders
                             </Link>
                           </Button>
 

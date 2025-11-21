@@ -11,6 +11,7 @@ import { IoCalendarOutline } from "react-icons/io5";
 import { SlPresent } from "react-icons/sl";
 import { HiOutlineInformationCircle } from "react-icons/hi";
 import { IoMdMore } from "react-icons/io";
+import { IoCardOutline } from "react-icons/io5";
 import {
   Dialog,
   DialogContent,
@@ -154,7 +155,7 @@ function DesktopHeader() {
         </Button>
 
         <Button
-          variant={asPath.includes("/gift-cards") ? "activeLink" : "link"}
+          variant={asPath === "/gift-cards" ? "activeLink" : "link"}
           asChild
         >
           <Link prefetch={false} href={"/gift-cards"} className="!text-xl">
@@ -426,16 +427,22 @@ function DesktopHeader() {
 
                   <Button
                     variant={
-                      asPath.includes("/reservations") ? "activeLink" : "link"
+                      asPath.includes("/profile/gift-cards")
+                        ? "activeLink"
+                        : "link"
                     }
-                    className="baseFlex w-48 !justify-start gap-4 !text-lg"
+                    asChild
                   >
-                    <IoCalendarOutline
-                      className={`${asPath.includes("/profile/preferences") ? "[&>path]:stroke-[55px]" : "[&>path]:stroke-[40px]"}`}
-                    />
-                    <a href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime">
-                      Reservations
-                    </a>
+                    <Link
+                      prefetch={false}
+                      href={"/profile/gift-cards"}
+                      className="baseFlex w-48 !justify-start gap-4 !text-lg"
+                    >
+                      <IoCardOutline
+                        className={`${asPath.includes("/profile/gift-cards") ? "[&>path]:stroke-[55px]" : "[&>path]:stroke-[40px]"}`}
+                      />
+                      My Gift Cards
+                    </Link>
                   </Button>
 
                   <Button
@@ -454,10 +461,9 @@ function DesktopHeader() {
                       <TfiReceipt
                         className={`${asPath.includes("/profile/my-orders") ? "[&>path]:stroke-[0.5px]" : ""}`}
                       />
-                      My orders
+                      My Orders
                     </Link>
                   </Button>
-
                   <Button
                     variant={"link"}
                     className="mt-2 h-8"
