@@ -4,11 +4,11 @@ import { format, isToday, parseISO } from "date-fns";
 import Decimal from "decimal.js";
 import { AnimatePresence, motion } from "framer-motion";
 import isEqual from "lodash.isequal";
-import { X } from "lucide-react";
-import { Clock, MapPin } from "lucide-react";
+import { Clock, Loader2, MapPin, X } from "lucide-react";
 import Image from "next/image";
 import {
   useEffect,
+  useMemo,
   useRef,
   useState,
   type Dispatch,
@@ -24,6 +24,7 @@ import { z } from "zod";
 import AvailablePickupDays from "~/components/cart/AvailablePickupDays";
 import AvailablePickupTimes from "~/components/cart/AvailablePickupTimes";
 import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -63,8 +64,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from "~/components/ui/dialog";
+import giftCardFront from "public/giftCards/giftCardFront.png";
 
 interface OrderCost {
   subtotal: number;
@@ -72,6 +73,11 @@ interface OrderCost {
   tip: number;
   total: number;
 }
+
+type AppliedGiftCard = {
+  code: string;
+  balance: number;
+};
 
 interface CartSheet {
   setShowCartSheet: Dispatch<SetStateAction<boolean>>;
@@ -146,9 +152,10 @@ function CartSheet({
   const [giftCardDialogOpen, setGiftCardDialogOpen] = useState(false);
   const [giftCardInput, setGiftCardInput] = useState("");
   const [giftCardError, setGiftCardError] = useState("");
-  const [appliedGiftCards, setAppliedGiftCards] = useState<
-    { code: string; balance: number }[]
-  >([]);
+  const [appliedGiftCards, setAppliedGiftCards] = useState<AppliedGiftCard[]>(
+    [],
+  );
+  const [addingANewGiftCard, setAddingANewGiftCard] = useState(false);
 
   const checkBalanceMutation = api.giftCard.checkBalance.useMutation({
     onSuccess: (balance, variables) => {
@@ -172,7 +179,6 @@ function CartSheet({
           ...prev,
           { code: variables.code, balance },
         ]);
-        setGiftCardDialogOpen(false);
         setGiftCardError("");
         setGiftCardInput("");
       } else {
@@ -182,6 +188,9 @@ function CartSheet({
     onError: (err) => {
       setGiftCardError(err.message);
     },
+    onSettled: () => {
+      setAddingANewGiftCard(false);
+    },
   });
 
   const checkBalancesMutation = api.giftCard.checkBalances.useMutation({
@@ -190,19 +199,36 @@ function CartSheet({
     },
   });
 
+  const { data: myGiftCards, isLoading: isLoadingGiftCards } =
+    api.giftCard.getMyCards.useQuery(undefined, {
+      enabled: Boolean(isSignedIn),
+      staleTime: 30_000,
+    });
+
   useEffect(() => {
-    if (
-      orderDetails.giftCardCodes &&
-      orderDetails.giftCardCodes.length > 0 &&
-      appliedGiftCards.length === 0
-    ) {
-      checkBalancesMutation.mutate({ codes: orderDetails.giftCardCodes });
+    const codes = orderDetails.giftCardCodes ?? [];
+
+    if (codes.length === 0) {
+      return;
     }
-  }, [orderDetails.giftCardCodes]);
+
+    if (appliedGiftCards.length !== codes.length) {
+      checkBalancesMutation.mutate({ codes });
+    }
+  }, [
+    orderDetails.giftCardCodes,
+    appliedGiftCards.length,
+    checkBalancesMutation,
+  ]);
 
   const handleApplyGiftCard = () => {
-    if (!giftCardInput) return;
-    checkBalanceMutation.mutate({ code: giftCardInput });
+    const normalizedCode = giftCardInput.trim().toUpperCase();
+
+    if (!normalizedCode) return;
+
+    setGiftCardError("");
+    setAddingANewGiftCard(true);
+    checkBalanceMutation.mutate({ code: normalizedCode });
   };
 
   const removeGiftCard = (code: string) => {
@@ -217,17 +243,59 @@ function CartSheet({
     setAppliedGiftCards((prev) => prev.filter((c) => c.code !== code));
   };
 
-  let remainingTotalForCalc = orderCost.total;
-  let totalDeduction = 0;
+  const selectedGiftCardCodes = useMemo(
+    () => new Set(orderDetails.giftCardCodes ?? []),
+    [orderDetails.giftCardCodes],
+  );
 
-  for (const card of appliedGiftCards) {
-    const deduction = Math.min(remainingTotalForCalc, card.balance);
-    remainingTotalForCalc -= deduction;
-    totalDeduction += deduction;
-  }
+  const handleSavedCardToggle = (
+    code: string,
+    balance: number,
+    shouldApply: boolean,
+  ) => {
+    if (shouldApply) {
+      if (selectedGiftCardCodes.has(code)) return;
 
-  const giftCardDeduction = totalDeduction;
-  const finalTotal = Math.max(0, orderCost.total - giftCardDeduction);
+      const newCodes = [...(orderDetails.giftCardCodes ?? []), code];
+      updateOrder({
+        newOrderDetails: {
+          ...orderDetails,
+          giftCardCodes: newCodes,
+        },
+      });
+      setAppliedGiftCards((prev) => {
+        const filtered = prev.filter((card) => card.code !== code);
+        return [...filtered, { code, balance }];
+      });
+      return;
+    }
+
+    removeGiftCard(code);
+  };
+
+  const sortedAppliedGiftCards = useMemo(
+    () => [...appliedGiftCards].sort((a, b) => a.balance - b.balance),
+    [appliedGiftCards],
+  );
+
+  const { giftCardDeduction, finalTotal, deductionBreakdown } = useMemo(() => {
+    let remaining = orderCost.total;
+    let total = 0;
+    const breakdown: Record<string, number> = {};
+
+    for (const card of sortedAppliedGiftCards) {
+      const deduction = Math.min(remaining, card.balance);
+      breakdown[card.code] = deduction;
+      remaining -= deduction;
+      total += deduction;
+    }
+
+    return {
+      giftCardDeduction: total,
+      finalTotal: Math.max(0, orderCost.total - total),
+      deductionBreakdown: breakdown,
+    };
+  }, [sortedAppliedGiftCards, orderCost.total]);
 
   // hacky, but should work for effect you want
   useEffect(() => {
@@ -413,6 +481,11 @@ function CartSheet({
       return null; // Return null if Decimal throws an error
     }
   }
+
+  const totalDeduction = Object.values(deductionBreakdown).reduce(
+    (acc, val) => acc + val,
+    0,
+  );
 
   // dynamically updating datetimeToPickup based on changes to date/time inputs
   useEffect(() => {
@@ -1289,36 +1362,165 @@ function CartSheet({
                   Redeem Gift Card
                 </Button>
               </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Redeem Gift Card</DialogTitle>
+              <DialogContent className="sm:max-w-lg">
+                <DialogHeader className="space-y-1 text-left">
+                  <DialogTitle className="text-2xl font-semibold">
+                    My Gift Cards
+                  </DialogTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Apply a saved card or enter a new code below.
+                  </p>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="giftCardCode" className="text-right">
-                      Code
-                    </Label>
-                    <Input
-                      id="giftCardCode"
-                      value={giftCardInput}
-                      onChange={(e) => setGiftCardInput(e.target.value)}
-                      className="col-span-3 uppercase"
-                    />
-                  </div>
-                  {giftCardError && (
-                    <p className="text-center text-sm text-red-500">
-                      {giftCardError}
+
+                <div className="space-y-4">
+                  <div className="space-y-3">
+                    <p className="text-sm font-semibold text-stone-600">
+                      Available gift cards
                     </p>
-                  )}
+                    {isLoadingGiftCards ? (
+                      <div className="flex items-center gap-2 rounded-md border border-dashed p-4 text-sm text-muted-foreground">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Loading your cards...
+                      </div>
+                    ) : (myGiftCards?.length ?? 0) > 0 ? (
+                      <div className="max-h-64 space-y-2 overflow-y-auto pr-1">
+                        {myGiftCards?.map((card) => (
+                          <div
+                            key={card.id}
+                            onClick={() => {
+                              handleSavedCardToggle(
+                                card.code,
+                                card.balance,
+                                !selectedGiftCardCodes.has(card.code),
+                              );
+                            }}
+                            className={`mb-1 flex cursor-pointer items-center gap-3 rounded-md border bg-white/80 p-3 shadow-sm transition hover:border-primary ${selectedGiftCardCodes.has(card.code) ? "border-primary" : ""}`}
+                          >
+                            <Checkbox
+                              checked={selectedGiftCardCodes.has(card.code)}
+                              onCheckedChange={(checked) =>
+                                handleSavedCardToggle(
+                                  card.code,
+                                  card.balance,
+                                  Boolean(checked),
+                                )
+                              }
+                              className="mt-0.5"
+                              aria-label={`Toggle gift card ending in ${card.code.slice(-4)}`}
+                            />
+                            <div className="flex items-center gap-3">
+                              <Image
+                                src={giftCardFront}
+                                alt="Khue's gift card"
+                                width={80}
+                                height={48}
+                                className="h-12 w-20 rounded-md object-cover shadow"
+                              />
+                              <div className="flex flex-col">
+                                <span className="text-sm font-medium">
+                                  Card ending in {card.code.slice(-4)}
+                                </span>
+                                <span className="text-xs text-muted-foreground">
+                                  Issued on{" "}
+                                  {format(card.createdAt, "MMM dd, yyyy")}
+                                </span>
+                              </div>
+                            </div>
+                            <span className="ml-auto text-sm font-semibold">
+                              {formatPrice(
+                                card.balance -
+                                  (deductionBreakdown[card.code] ?? 0),
+                              )}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
+                        You don&apos;t have any gift cards with a remaining
+                        balance yet.
+                      </div>
+                    )}
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-2">
+                    <p className="text-sm font-semibold text-stone-600">
+                      Redeem gift card
+                    </p>
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        handleApplyGiftCard();
+                      }}
+                      className="flex flex-col gap-3 sm:flex-row"
+                    >
+                      <Input
+                        id="giftCardCode"
+                        value={giftCardInput}
+                        onChange={(e) => {
+                          setGiftCardError("");
+                          const val = e.target.value;
+                          if (val.length > 16) return;
+
+                          // only allow numbers to be entered
+                          if (val === "" || /^\d+$/.test(val)) {
+                            setGiftCardInput(val);
+                          }
+                        }}
+                        placeholder="Enter gift card code..."
+                        className="sm:flex-1"
+                      />
+                      <Button
+                        type="submit"
+                        disabled={
+                          addingANewGiftCard || giftCardInput.length === 0
+                        }
+                        className="sm:w-24"
+                      >
+                        <AnimatePresence mode={"popLayout"} initial={false}>
+                          <motion.div
+                            key={`cart-sheet-gift-card-dialog-${addingANewGiftCard}`}
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 20 }}
+                            transition={{
+                              duration: 0.25,
+                            }}
+                            className="baseFlex !w-full gap-2"
+                          >
+                            {addingANewGiftCard ? (
+                              <div
+                                className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
+                                role="status"
+                                aria-label="loading"
+                              >
+                                <span className="sr-only">Loading...</span>
+                              </div>
+                            ) : (
+                              "Add"
+                            )}
+                          </motion.div>
+                        </AnimatePresence>
+                      </Button>
+                    </form>
+                    {giftCardError && (
+                      <p className="ml-3 text-sm text-red-500">
+                        {giftCardError}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <DialogFooter>
-                  <Button
-                    onClick={handleApplyGiftCard}
-                    disabled={checkBalanceMutation.isLoading}
-                  >
-                    {checkBalanceMutation.isLoading ? "Checking..." : "Apply"}
-                  </Button>
-                </DialogFooter>
+
+                <div className="mt-4 rounded-md border bg-stone-100/80 p-4">
+                  <p className="text-xs uppercase text-stone-500">
+                    Remaining balance
+                  </p>
+                  <p className="text-2xl font-semibold">
+                    {formatPrice(finalTotal)}
+                  </p>
+                </div>
               </DialogContent>
             </Dialog>
           </div>
@@ -1559,52 +1761,28 @@ function CartSheet({
                 <p>{formatPrice(orderCost.tip)}</p>
               </div>
 
-              <div className="baseFlex w-full !justify-between gap-2 text-lg font-semibold">
-                <p>Total</p>
-                <p>{formatPrice(orderCost.total)}</p>
-              </div>
+              {sortedAppliedGiftCards.map((card) => {
+                const deduction = deductionBreakdown[card.code] ?? 0;
 
-              {appliedGiftCards.map((card, index) => {
-                let previousDeduction = 0;
-                for (let i = 0; i < index; i++) {
-                  previousDeduction += Math.min(
-                    Math.max(0, orderCost.total - previousDeduction),
-                    appliedGiftCards[i].balance,
-                  );
-                }
-                const remaining = Math.max(
-                  0,
-                  orderCost.total - previousDeduction,
-                );
-                const deduction = Math.min(remaining, card.balance);
-
-                if (deduction <= 0 && remaining <= 0) return null;
+                if (deduction <= 0) return null;
 
                 return (
                   <div
                     key={card.code}
-                    className="baseFlex w-full !justify-between text-sm text-green-600"
+                    className="baseFlex w-full !justify-between text-sm text-primary"
                   >
                     <div className="flex items-center gap-2">
                       <p>Gift Card (****{card.code.slice(-4)})</p>
-                      <button
-                        onClick={() => removeGiftCard(card.code)}
-                        className="text-xs text-red-500 underline"
-                      >
-                        Remove
-                      </button>
                     </div>
                     <p>-{formatPrice(deduction)}</p>
                   </div>
                 );
               })}
 
-              {giftCardDeduction > 0 && (
-                <div className="baseFlex w-full !justify-between gap-2 border-t pt-2 text-lg font-bold">
-                  <p>Payable Total</p>
-                  <p>{formatPrice(finalTotal)}</p>
-                </div>
-              )}
+              <div className="baseFlex w-full !justify-between gap-2 text-lg font-semibold">
+                <p>Total</p>
+                <p>{formatPrice(orderCost.total - totalDeduction)}</p>
+              </div>
             </div>
 
             <Separator

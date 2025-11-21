@@ -299,8 +299,17 @@ export default function GiftCardsPage() {
               <div className="flex gap-4">
                 <Input
                   placeholder="Enter gift card code..."
+                  inputMode="numeric"
                   value={checkBalanceCode}
-                  onChange={(e) => setCheckBalanceCode(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val.length > 16) return;
+
+                    // only allow numbers to be entered
+                    if (val === "" || /^\d+$/.test(val)) {
+                      setCheckBalanceCode(val);
+                    }
+                  }}
                   className="bg-transparent"
                 />
                 <Button
@@ -522,15 +531,13 @@ export default function GiftCardsPage() {
                 >
                   <AnimatePresence mode={"popLayout"} initial={false}>
                     <motion.div
-                      key={`cartDrawer-${checkoutButtonText}`}
-                      // layout
+                      key={`gift-card-${checkoutButtonText}`}
                       initial={{ opacity: 0, y: -20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 20 }}
                       transition={{
                         duration: 0.25,
                       }}
-                      // static width to prevent layout shift
                       className="baseFlex !w-full gap-2"
                     >
                       {checkoutButtonText}

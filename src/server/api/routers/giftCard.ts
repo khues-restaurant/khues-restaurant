@@ -2,6 +2,7 @@ import { z } from "zod";
 import {
   createTRPCRouter,
   adminProcedure,
+  protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
@@ -124,6 +125,36 @@ export const giftCardRouter = createTRPCRouter({
         balance: card.balance,
       }));
     }),
+
+  getMyCards: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.auth.userId;
+
+    if (!userId) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You must be signed in to view gift cards",
+      });
+    }
+
+    return ctx.prisma.giftCard.findMany({
+      where: {
+        userId,
+        balance: { gt: 0 },
+        isReplaced: false,
+      },
+      orderBy: {
+        balance: "asc",
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        code: true,
+        balance: true,
+        lastUsedAt: true,
+        updatedAt: true,
+      },
+    });
+  }),
 
   create: adminProcedure
     .input(
