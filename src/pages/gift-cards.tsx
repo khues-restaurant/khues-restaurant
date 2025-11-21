@@ -110,6 +110,10 @@ export default function GiftCardsPage() {
   const { user: clerkUser, isSignedIn } = useUser();
   const userEmailAddress = clerkUser?.primaryEmailAddress?.emailAddress ?? "";
 
+  const [checkingCardBalance, setCheckingCardBalance] = useState(false);
+  const [checkingCardBalanceError, setCheckingCardBalanceError] = useState<
+    string | null
+  >(null);
   const [checkoutButtonText, setCheckoutButtonText] = useState(
     "Proceed to Checkout",
   );
@@ -121,7 +125,7 @@ export default function GiftCardsPage() {
         toast({
           title: "Error",
           description: "Failed to create checkout session.",
-          variant: "destructive",
+          variant: "neutral",
         });
         setCheckoutButtonText("Proceed to Checkout");
         return;
@@ -133,7 +137,7 @@ export default function GiftCardsPage() {
       toast({
         title: "Error",
         description: error.message,
-        variant: "destructive",
+        variant: "neutral",
       });
     },
   });
@@ -143,12 +147,11 @@ export default function GiftCardsPage() {
       setBalanceResult(balance);
     },
     onError: (error) => {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
+      setCheckingCardBalanceError(error.message);
       setBalanceResult(null);
+    },
+    onSettled: () => {
+      setCheckingCardBalance(false);
     },
   });
 
@@ -251,6 +254,7 @@ export default function GiftCardsPage() {
 
   const handleCheckBalance = () => {
     if (!checkBalanceCode) return;
+    setCheckingCardBalance(true);
     checkBalance.mutate({ code: checkBalanceCode });
   };
 
@@ -314,13 +318,35 @@ export default function GiftCardsPage() {
                 />
                 <Button
                   onClick={handleCheckBalance}
-                  disabled={checkBalance.isLoading || !checkBalanceCode}
+                  disabled={
+                    checkingCardBalance || checkBalanceCode.length === 0
+                  }
+                  className="w-32"
                 >
-                  {checkBalance.isLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    "Check"
-                  )}
+                  <AnimatePresence mode={"popLayout"} initial={false}>
+                    <motion.div
+                      key={`cart-sheet-gift-card-dialog-${checkingCardBalance}`}
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      transition={{
+                        duration: 0.25,
+                      }}
+                      className="baseFlex !w-full gap-2"
+                    >
+                      {checkingCardBalance ? (
+                        <div
+                          className="inline-block size-4 animate-spin rounded-full border-[2px] border-white border-t-transparent text-offwhite"
+                          role="status"
+                          aria-label="loading"
+                        >
+                          <span className="sr-only">Loading...</span>
+                        </div>
+                      ) : (
+                        "Check"
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
                 </Button>
               </div>
               {balanceResult !== null && (
@@ -328,6 +354,13 @@ export default function GiftCardsPage() {
                   <p className="text-sm text-stone-600">Current Balance:</p>
                   <p className="text-2xl font-bold text-stone-900">
                     {formatPrice(balanceResult)}
+                  </p>
+                </div>
+              )}
+              {checkingCardBalanceError && (
+                <div className="mt-4 rounded-md bg-red-100 p-4">
+                  <p className="text-sm text-red-700">
+                    {checkingCardBalanceError}
                   </p>
                 </div>
               )}
