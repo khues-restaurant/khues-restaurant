@@ -40,7 +40,10 @@ function OrderSummary({ order }: OrderSummary) {
       <div className="baseFlex w-full !items-end !justify-between border-b border-stone-300 pb-1">
         <div className="baseFlex gap-1 text-base font-medium">
           <span>{numberOfItems}</span>
-          <span>Items</span>
+          <span>
+            Item
+            {numberOfItems === 1 ? "" : "s"}
+          </span>
         </div>
         <div className="baseFlex gap-1 text-sm font-medium text-stone-500">
           Order #{getFirstSixNumbers(order.id)}
