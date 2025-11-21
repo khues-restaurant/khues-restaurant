@@ -45,7 +45,6 @@
     "next": "^16.0.3",
     "next-superjson-plugin": "^0.6.3",
     "openai": "^4.55.1",
-    "pluralize": "^8.0.0",
     "radix-ui": "^1.4.3",
     "react-day-picker": "^9.0.4",
     "react-email": "^4.3.1",

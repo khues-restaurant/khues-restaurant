@@ -1031,12 +1031,8 @@ function MenuItemPreviewButton({
                 // with toast's undo button
                 setPrevOrderDetails(orderDetails);
 
-                const pluralize = (await import("pluralize")).default;
-                const isPlural = pluralize.isPlural(menuItem.name);
-                const contextAwarePlural = isPlural ? "were" : "was";
-
                 toast({
-                  description: `${menuItem.name} ${contextAwarePlural} added to your order.`,
+                  description: `Added ${menuItem.name} to your order.`,
                   action: (
                     <ToastAction
                       altText={`Undo the addition of ${menuItem.name} to your order.`}
