@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import type { GetServerSideProps } from "next";
 import { MdOutlineMail } from "react-icons/md";
 import { Button } from "~/components/ui/button";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
@@ -8,7 +9,24 @@ import StaticLotus from "~/components/ui/StaticLotus";
 
 import giftCardFront from "public/giftCards/giftCardFront.png";
 
-export default function GiftCardSuccessPage() {
+type GiftCardSuccessPageProps = {
+  isSelfPurchase: boolean;
+};
+
+export default function GiftCardSuccessPage({
+  isSelfPurchase,
+}: GiftCardSuccessPageProps) {
+  const primaryMessage = isSelfPurchase
+    ? "Your Gift Card is successfully attached to your account."
+    : "Thank you! Your Gift Card has been successfully processed.";
+
+  const infoMessage = isSelfPurchase
+    ? "A receipt for your Gift Card has been sent to your email address."
+    : "The e-Gift Card will be sent to the recipient's email address shortly.";
+
+  const buttonLabel = isSelfPurchase ? "View my Gift Cards" : "Return home";
+  const buttonHref = isSelfPurchase ? "/profile/gift-cards" : "/";
+
   return (
     <motion.div
       key={"gift-card-payment-success"}
@@ -32,24 +50,23 @@ export default function GiftCardSuccessPage() {
         />
 
         <p className="mt-4 text-center text-lg font-medium tablet:mt-6">
-          Thank you! Your Gift Card has been successfully processed.
+          {primaryMessage}
         </p>
 
         <div className="baseVertFlex gap-4">
           <div className="baseFlex my-2 gap-4 rounded-md border bg-offwhite/60 p-4 text-sm shadow-inner">
             <MdOutlineMail className="size-5 shrink-0 tablet:size-6" />
-            The e-Gift Card will be sent to the recipient&apos;s email address
-            shortly.
+            {infoMessage}
           </div>
 
           <Button asChild>
             <Link
               prefetch={false}
-              href={"/"}
+              href={buttonHref}
               className="baseFlex mt-2 gap-2 tablet:mt-4"
             >
               <SideAccentSwirls className="h-4 scale-x-[-1] fill-offwhite" />
-              Return home
+              {buttonLabel}
               <SideAccentSwirls className="h-4 fill-offwhite" />
             </Link>
           </Button>
@@ -58,3 +75,20 @@ export default function GiftCardSuccessPage() {
     </motion.div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<
+  GiftCardSuccessPageProps
+> = async ({ query }) => {
+  const rawSelfPurchase = Array.isArray(query.selfPurchase)
+    ? query.selfPurchase[0]
+    : query.selfPurchase;
+
+  const isSelfPurchase =
+    rawSelfPurchase === "1" || rawSelfPurchase?.toLowerCase() === "true";
+
+  return {
+    props: {
+      isSelfPurchase,
+    },
+  };
+};

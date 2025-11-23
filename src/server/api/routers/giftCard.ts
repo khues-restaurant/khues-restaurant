@@ -60,6 +60,15 @@ export const giftCardRouter = createTRPCRouter({
           ? `Gift card for ${input.recipientName} from ${input.senderName}`
           : "Personal gift card purchase";
 
+      const isSelfPurchase =
+        input.recipientType === "myself" && Boolean(input.purchaserUserId);
+
+      const successUrl = new URL(`${env.BASE_URL}/gift-cards/success`);
+
+      if (isSelfPurchase) {
+        successUrl.searchParams.set("selfPurchase", "1");
+      }
+
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
         payment_method_types: ["card"],
@@ -87,7 +96,7 @@ export const giftCardRouter = createTRPCRouter({
           message: input.message || "",
           purchaserUserId: input.purchaserUserId ?? "",
         },
-        success_url: `${env.BASE_URL}/gift-cards/success`,
+        success_url: successUrl.toString(),
         cancel_url: `${env.BASE_URL}/gift-cards`,
       });
 
