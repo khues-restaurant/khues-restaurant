@@ -1,11 +1,15 @@
-import { type Order, type OrderItem } from "@prisma/client";
+import {
+  Prisma,
+  type Discount as DBDiscount,
+  type GiftCard,
+  type GiftCardTransaction,
+} from "@prisma/client";
 import { addDays, addMonths } from "date-fns";
 import OrderReady from "emails/OrderReady";
 import { Resend } from "resend";
 import { z } from "zod";
 import { env } from "~/env";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
-import { type Discount as DBDiscount } from "@prisma/client";
 import { io } from "socket.io-client";
 import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 import {
@@ -17,6 +21,11 @@ import {
 import { prisma } from "~/server/db";
 import type Decimal from "decimal.js";
 import { getMidnightCSTInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
+import {
+  type DBOrderSummary,
+  type DBOrderSummaryItem,
+  type OrderAppliedGiftCard,
+} from "~/types/orderSummary";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -86,14 +95,70 @@ export interface DashboardOrder {
   userId: string | null;
 }
 
-export type DBOrderSummary = Order & {
-  orderItems: DBOrderSummaryItem[];
+type GiftCardTransactionWithCard = GiftCardTransaction & {
+  giftCard: GiftCard;
 };
 
-export type DBOrderSummaryItem = OrderItem & {
-  customizations: Record<string, string>;
-  discount: Discount | null;
-};
+export const orderSummaryInclude = {
+  orderItems: {
+    include: {
+      customizations: true,
+      discount: true,
+    },
+  },
+  giftCardTransactions: {
+    where: {
+      type: "REDEMPTION",
+    },
+    include: {
+      giftCard: true,
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  },
+} as const;
+
+export type OrderSummaryWithRelations = Prisma.OrderGetPayload<{
+  include: typeof orderSummaryInclude;
+}>;
+
+export function transformOrderToSummary(
+  order: OrderSummaryWithRelations,
+): DBOrderSummary {
+  const orderItems = order.orderItems.map((item) => {
+    const customizationsRecord = item.customizations.reduce(
+      (acc, customization) => {
+        acc[customization.customizationCategoryId] =
+          customization.customizationChoiceId;
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
+
+    return {
+      ...item,
+      customizations: customizationsRecord,
+    };
+  });
+
+  const appliedGiftCards = order.giftCardTransactions
+    .filter((transaction) => transaction.giftCard && transaction.amount !== 0)
+    .map((transaction) => ({
+      id: transaction.id,
+      giftCardId: transaction.giftCard.id,
+      code: transaction.giftCard.code,
+      amount: Math.abs(transaction.amount),
+    }));
+
+  const { giftCardTransactions, ...baseOrder } = order;
+
+  return {
+    ...baseOrder,
+    orderItems,
+    appliedGiftCards,
+  };
+}
 
 export const orderRouter = createTRPCRouter({
   // leverage this skeleton below to get the order details for the OrderReady stuff right?
@@ -149,36 +214,12 @@ export const orderRouter = createTRPCRouter({
         where: {
           id,
         },
-        include: {
-          orderItems: {
-            include: {
-              customizations: true,
-              discount: true,
-            },
-          },
-        },
+        include: orderSummaryInclude,
       });
 
       if (!order) return null;
 
-      // turn the item customizations into a Record<string, string>
-      // for easier access in the frontend
-      order.orderItems = order.orderItems.map((item) => {
-        // @ts-expect-error asdf
-        item.customizations = item.customizations.reduce(
-          (acc, customization) => {
-            acc[customization.customizationCategoryId] =
-              customization.customizationChoiceId;
-            return acc;
-          },
-          {} as Record<string, string>,
-        );
-
-        return item;
-      });
-
-      // @ts-expect-error asdf
-      return order as DBOrderSummary;
+      return transformOrderToSummary(order);
     }),
 
   // TODO: technically want this to be infinite scroll
@@ -198,14 +239,7 @@ export const orderRouter = createTRPCRouter({
         where: {
           userId: input.userId,
         },
-        include: {
-          orderItems: {
-            include: {
-              customizations: true,
-              discount: true,
-            },
-          },
-        },
+        include: orderSummaryInclude,
         orderBy: {
           datetimeToPickup: "desc",
         },
@@ -213,31 +247,12 @@ export const orderRouter = createTRPCRouter({
 
       if (!recentOrders) return null;
 
-      // Iterate over each order to transform the item customizations
-      // into a Record<string, string> for each order's items
-      const transformedOrders = recentOrders.map((order) => {
-        order.orderItems = order.orderItems.map((item) => {
-          // @ts-expect-error asdf
-          item.customizations = item.customizations.reduce(
-            (acc, customization) => {
-              acc[customization.customizationCategoryId] =
-                customization.customizationChoiceId;
-              return acc;
-            },
-            {} as Record<string, string>,
-          );
+      const transformedOrders = recentOrders.map(transformOrderToSummary);
 
-          return item;
-        });
-
-        return order;
-      });
-
-      // @ts-expect-error asdf
       return transformedOrders.slice(
         0,
         input.limitToFirstSix ? 6 : transformedOrders.length,
-      ) as DBOrderSummary[];
+      );
     }),
 
   getByStripeSessionId: publicProcedure
@@ -395,36 +410,12 @@ async function queryForOrderDetails(orderId: string) {
     where: {
       id: orderId,
     },
-    include: {
-      orderItems: {
-        include: {
-          customizations: true,
-          discount: true,
-        },
-      },
-    },
+    include: orderSummaryInclude,
   });
 
   if (!order) return null;
 
-  // turn the item customizations into a Record<string, string>
-  // for easier access in the frontend
-  order.orderItems = order.orderItems.map((item) => {
-    // @ts-expect-error asdf
-    item.customizations = item.customizations.reduce(
-      (acc, customization) => {
-        acc[customization.customizationCategoryId] =
-          customization.customizationChoiceId;
-        return acc;
-      },
-      {} as Record<string, string>,
-    );
-
-    return item;
-  });
-
-  // @ts-expect-error asdf
-  return order as DBOrderSummary;
+  return transformOrderToSummary(order);
 }
 
 interface SendOrderReadyEmail {
@@ -481,16 +472,19 @@ async function SendOrderReadyEmail({
     {} as Record<string, DBDiscount>,
   );
 
+  const orderWithSummaryData: DBOrderSummary = {
+    ...order,
+    orderItems: orderDetails.orderItems,
+    appliedGiftCards: orderDetails.appliedGiftCards,
+  };
+
   try {
     const { data, error } = await resend.emails.send({
       from: "onboarding@resend.dev",
       to: "khues.dev@gmail.com", // order.email,
       subject: "Your order is ready for pickup!",
       react: OrderReady({
-        order: {
-          ...order,
-          orderItems: orderDetails.orderItems,
-        },
+        order: orderWithSummaryData,
         customizationChoices,
         discounts,
         userIsAMember,

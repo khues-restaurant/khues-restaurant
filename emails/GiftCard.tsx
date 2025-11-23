@@ -85,7 +85,7 @@ export const GiftCardEmail = ({
 
                 <Section className="mx-auto mb-6 max-w-[400px] rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
                   <Img
-                    src={`${baseUrl}/gift-card-preview.png`} // You might want to replace this with a real image
+                    src={`${baseUrl}/gift-card-front.png`}
                     alt="Gift Card"
                     className="mb-4 h-auto w-full rounded-lg object-cover"
                     width={350}

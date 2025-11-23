@@ -22,7 +22,7 @@ import { type CustomizationChoiceAndCategory } from "~/server/api/routers/custom
 import {
   type DBOrderSummary,
   type DBOrderSummaryItem,
-} from "~/server/api/routers/order";
+} from "~/types/orderSummary";
 import { type Item } from "~/stores/MainStore";
 import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 import { formatPrice } from "~/utils/formatters/formatPrice";

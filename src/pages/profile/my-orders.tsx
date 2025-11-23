@@ -53,7 +53,7 @@ import { useToast } from "~/components/ui/use-toast";
 import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnAsyncComponents";
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
-import { type DBOrderSummary } from "~/server/api/routers/order";
+import { type DBOrderSummary } from "~/types/orderSummary";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";
@@ -173,7 +173,7 @@ function RecentOrders() {
             ${asPath.includes("/profile/my-orders") ? "activeUnderline" : "border-b-2 border-stone-300"}`}
           >
             <TfiReceipt className="size-4 shrink-0" />
-            My orders
+            My Orders
           </Link>
         </Button>
       </div>

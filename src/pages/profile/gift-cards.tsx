@@ -139,7 +139,7 @@ function MyGiftCardsPage() {
             ${asPath.includes("/profile/my-orders") ? "activeUnderline" : "border-b-2 border-stone-300"}`}
           >
             <TfiReceipt className="size-4 shrink-0" />
-            My orders
+            My Orders
           </Link>
         </Button>
       </div>

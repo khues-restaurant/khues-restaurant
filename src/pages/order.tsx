@@ -38,7 +38,7 @@ import useForceScrollToTopOnAsyncComponents from "~/hooks/useForceScrollToTopOnA
 import useGetUserId from "~/hooks/useGetUserId";
 import useUpdateOrder from "~/hooks/useUpdateOrder";
 import { type FullMenuItem } from "~/server/api/routers/menuCategory";
-import { type DBOrderSummary } from "~/server/api/routers/order";
+import { type DBOrderSummary } from "~/types/orderSummary";
 import { useMainStore } from "~/stores/MainStore";
 import { api } from "~/utils/api";
 import { getFirstValidMidnightDate } from "~/utils/dateHelpers/getFirstValidMidnightDate";

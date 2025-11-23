@@ -137,22 +137,26 @@ function Footer({ userIsAMember, unsubscriptionToken }: Footer) {
         <Section className="w-96 text-center">
           {userIsAMember && (
             <Row className="text-center">
-              <Link href="https://khueskitchen.com/profile/preferences">
-                <Text className="mt-0 text-xs text-offwhite underline underline-offset-2">
-                  Manage your email communication preferences
-                </Text>
-              </Link>
+              <Column>
+                <Link href="https://khueskitchen.com/profile/preferences">
+                  <Text className="mt-0 text-xs text-offwhite underline underline-offset-2">
+                    Manage your email communication preferences
+                  </Text>
+                </Link>
+              </Column>
             </Row>
           )}
 
           <Row className="text-center">
-            <Link
-              href={`https://khueskitchen.com/unsubscribe?token=${unsubscriptionToken}`}
-            >
-              <Text className="mt-0 pl-2 text-xs text-offwhite underline underline-offset-2">
-                Unsubscribe from all emails
-              </Text>
-            </Link>
+            <Column>
+              <Link
+                href={`https://khueskitchen.com/unsubscribe?token=${unsubscriptionToken}`}
+              >
+                <Text className="mt-0 pl-2 text-xs text-offwhite underline underline-offset-2">
+                  Unsubscribe from all emails
+                </Text>
+              </Link>
+            </Column>
           </Row>
         </Section>
       </Column>

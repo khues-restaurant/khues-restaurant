@@ -1,6 +1,11 @@
 import { type Review } from "@prisma/client";
 import { z } from "zod";
-import { type DBOrderSummary } from "~/server/api/routers/order";
+import {
+  orderSummaryInclude,
+  transformOrderToSummary,
+  type OrderSummaryWithRelations,
+} from "~/server/api/routers/order";
+import { type DBOrderSummary } from "~/types/orderSummary";
 
 import {
   adminProcedure,
@@ -60,14 +65,7 @@ export const reviewRouter = createTRPCRouter({
           },
         },
         order: {
-          include: {
-            orderItems: {
-              include: {
-                customizations: true,
-                discount: true,
-              },
-            },
-          },
+          include: orderSummaryInclude,
         },
       },
 
@@ -78,27 +76,11 @@ export const reviewRouter = createTRPCRouter({
 
     if (!reviews) return null;
 
-    // Iterate over each order to transform the item customizations
-    // into a Record<string, string> for each order's items
-    const transformedReviews = reviews.map((review) => {
-      review.order.orderItems = review.order.orderItems.map((item) => {
-        // @ts-expect-error asdf
-        item.customizations = item.customizations.reduce(
-          (acc, customization) => {
-            acc[customization.customizationCategoryId] =
-              customization.customizationChoiceId;
-            return acc;
-          },
-          {} as Record<string, string>,
-        );
+    const transformedReviews = reviews.map((review) => ({
+      ...review,
+      order: transformOrderToSummary(review.order as OrderSummaryWithRelations),
+    }));
 
-        return item;
-      });
-
-      return review;
-    });
-
-    // @ts-expect-error asdf
     return transformedReviews as DashboardReview[];
   }),
 });

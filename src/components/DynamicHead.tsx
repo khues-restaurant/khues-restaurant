@@ -109,21 +109,21 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
         ogUrl: "https://www.khueskitchen.com/profile/preferences",
         robots: "noindex,nofollow",
       };
-    case "/profile/rewards":
+    case "/profile/gift-cards":
       return {
-        title: "Rewards | Khue's",
+        title: "My Gift Cards | Khue's",
         description:
-          "Track your Khue's Rewards points, redeem rewards, and view your rewards history.",
+          "View and manage your Khue's gift cards, check balances, and redeem them for delicious meals.",
         ogTitle: "Rewards | Khue's",
-        ogUrl: "https://www.khueskitchen.com/profile/rewards",
+        ogUrl: "https://www.khueskitchen.com/profile/gift-cards",
         robots: "noindex,nofollow",
       };
     case "/profile/my-orders":
       return {
-        title: "My orders | Khue's",
+        title: "My Orders | Khue's",
         description:
           "View your past orders, track your current orders, and access your order history.",
-        ogTitle: "My orders | Khue's",
+        ogTitle: "My Orders | Khue's",
         ogUrl: "https://www.khueskitchen.com/profile/my-orders",
         robots: "noindex,nofollow",
       };

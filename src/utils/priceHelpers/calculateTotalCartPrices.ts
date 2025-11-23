@@ -3,7 +3,7 @@ import Decimal from "decimal.js";
 import { type Discount } from "@prisma/client";
 import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
 import { type Item } from "~/stores/MainStore";
-import { type DBOrderSummaryItem } from "~/server/api/routers/order";
+import { type DBOrderSummaryItem } from "~/types/orderSummary";
 
 interface CalculateTotalCartPrices {
   items: Item[] | DBOrderSummaryItem[];

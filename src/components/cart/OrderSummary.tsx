@@ -6,7 +6,10 @@ import { CiGift } from "react-icons/ci";
 import { FaUtensils } from "react-icons/fa6";
 import { LuCakeSlice } from "react-icons/lu";
 import { MdNoMeals } from "react-icons/md";
-import { type DBOrderSummary } from "~/server/api/routers/order";
+import {
+  type DBOrderSummary,
+  type OrderAppliedGiftCard,
+} from "~/types/orderSummary";
 import { useMainStore } from "~/stores/MainStore";
 import { formatPrice } from "~/utils/formatters/formatPrice";
 import { getFirstSixNumbers } from "~/utils/formatters/getFirstSixNumbers";
@@ -26,6 +29,18 @@ function OrderSummary({ order }: OrderSummary) {
     (acc, item) => acc + item.quantity,
     0,
   );
+
+  const appliedGiftCardsUnknown: unknown = order.appliedGiftCards;
+  const giftCardRedemptions: OrderAppliedGiftCard[] = Array.isArray(
+    appliedGiftCardsUnknown,
+  )
+    ? (appliedGiftCardsUnknown as OrderAppliedGiftCard[])
+    : [];
+  const totalGiftCardDeduction = giftCardRedemptions.reduce(
+    (acc, redemption) => acc + redemption.amount,
+    0,
+  );
+  const adjustedTotal = Math.max(order.total - totalGiftCardDeduction, 0);
 
   return (
     <motion.div
@@ -199,9 +214,25 @@ function OrderSummary({ order }: OrderSummary) {
             </div>
           )}
 
+          {giftCardRedemptions.map((redemption) => {
+            if (redemption.amount === 0) return null;
+
+            const codeSuffix = redemption.code.slice(-4);
+
+            return (
+              <div
+                key={`${redemption.id}-${redemption.giftCardId}`}
+                className="baseFlex w-full !justify-between gap-2 text-sm text-primary"
+              >
+                <p>Gift Card (****{codeSuffix})</p>
+                <p>-{formatPrice(redemption.amount)}</p>
+              </div>
+            );
+          })}
+
           <div className="baseFlex w-full !justify-between gap-2 text-lg font-semibold">
             <p>Total</p>
-            <p>{formatPrice(order.total)}</p>
+            <p>{formatPrice(adjustedTotal)}</p>
           </div>
 
           {order.orderRefundedAt && (
