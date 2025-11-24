@@ -10,7 +10,7 @@ import { IoCardOutline } from "react-icons/io5";
 import { CiGift } from "react-icons/ci";
 import { IoSettingsOutline } from "react-icons/io5";
 import { TfiReceipt } from "react-icons/tfi";
-import giftCardFront from "public/giftCards/giftCardFront.png";
+import giftCardFront from "public/logos/interiorSide.png";
 import AnimatedLotus from "~/components/ui/AnimatedLotus";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";

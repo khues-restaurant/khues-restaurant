@@ -1286,7 +1286,7 @@ function RecentOrders({ userRecentOrders, viewportWidth, user }: RecentOrders) {
         )}
       </div>
 
-      <div className="grid w-full grid-cols-1 items-start justify-items-center gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="ml-4 grid w-full grid-cols-1 items-start justify-items-center gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {userRecentOrders.slice(0, maxOrdersToShow).map((order) => (
           <PreviousOrder key={order.id} order={order} user={user} />
         ))}

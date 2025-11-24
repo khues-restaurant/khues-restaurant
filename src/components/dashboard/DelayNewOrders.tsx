@@ -123,7 +123,7 @@ function DelayNewOrders() {
           className="text-lg tablet:text-xl"
           onClick={() => setShowDialog(true)}
         >
-          Delay new orders
+          Delay New Orders
         </Button>
       </AlertDialogTrigger>
 

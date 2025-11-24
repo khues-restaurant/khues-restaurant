@@ -166,8 +166,6 @@ function CustomerChats({ socket }: CustomerChats) {
 
   const { toast } = useToast();
 
-  console.log(selectedUserId);
-
   if (!databaseChats) return <p>Loading customer messages...</p>;
 
   return (

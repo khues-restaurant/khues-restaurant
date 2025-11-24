@@ -131,7 +131,6 @@ function DashboardMobileHeader({
           {viewState === "itemManagement" && "Item management"}
           {viewState === "refunds" && "Refunds"}
           {viewState === "stats" && "Stats"}
-          {viewState === "reviews" && "Customer reviews"}
           {viewState === "hoursOfOperation" && "Hours of operation"}
           {viewState === "holidays" && "Holidays"}
           {viewState === "giftCards" && "Gift Cards"}
@@ -174,7 +173,7 @@ function DashboardMobileHeader({
                     setSheetIsOpen(false);
                   }}
                 >
-                  Order management
+                  Order Management
                 </Button>
 
                 {/* notification count */}
@@ -200,7 +199,7 @@ function DashboardMobileHeader({
                     setSheetIsOpen(false);
                   }}
                 >
-                  Customer chats
+                  Customer Chats
                 </Button>
 
                 {numberOfUnreadMessages > 0 && (
@@ -226,7 +225,7 @@ function DashboardMobileHeader({
                   setSheetIsOpen(false);
                 }}
               >
-                Item management
+                Item Management
               </Button>
 
               <DelayNewOrders />
@@ -245,17 +244,6 @@ function DashboardMobileHeader({
               </Button>
 
               <Button
-                variant={viewState === "reviews" ? "activeLink" : "link"}
-                className="text-lg"
-                onClick={() => {
-                  setViewState("reviews");
-                  setSheetIsOpen(false);
-                }}
-              >
-                Reviews
-              </Button>
-
-              <Button
                 variant={
                   viewState === "hoursOfOperation" ? "activeLink" : "link"
                 }
@@ -265,7 +253,7 @@ function DashboardMobileHeader({
                   setSheetIsOpen(false);
                 }}
               >
-                Hours of operation
+                Hours of Operation
               </Button>
 
               <Button

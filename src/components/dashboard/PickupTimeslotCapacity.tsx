@@ -81,7 +81,7 @@ function PickupTimeslotCapacity() {
           className="text-lg tablet:text-xl"
           onClick={() => setShowDialog(true)}
         >
-          Set pickup capacity
+          Set Pickup Capacity
         </Button>
       </AlertDialogTrigger>
 

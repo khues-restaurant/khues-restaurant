@@ -20,7 +20,7 @@ import { formatPrice } from "~/utils/formatters/formatPrice";
 import { Loader2 } from "lucide-react";
 import { useToast } from "~/components/ui/use-toast";
 
-import giftCardFront from "public/giftCards/giftCardFront.png";
+import giftCardFront from "public/logos/interiorSide.png";
 import Image from "next/image";
 import { FaArrowRight } from "react-icons/fa";
 import {
@@ -178,7 +178,7 @@ export default function GiftCardsPage() {
   const recipientType = form.watch("recipientType");
   const isForSelf = recipientType === "myself";
   const shouldShowRecipientDetails = !isForSelf;
-  const shouldShowEmailFields = !isSignedIn;
+  const shouldShowEmailFields = (!isSignedIn && isForSelf) || !isForSelf;
   const watchedAmount = form.watch("amount") ?? 0;
 
   const onSubmit = (data: GiftCardFormValues) => {
@@ -281,7 +281,7 @@ export default function GiftCardsPage() {
                   className="!relative !top-0 !size-full object-cover object-top"
                 />
 
-                <div className="absolute bottom-4 right-4 z-10  text-right">
+                <div className="absolute right-4 top-4 z-10 text-right">
                   <p className="text-4xl font-bold">
                     {formatPrice(watchedAmount)}
                   </p>

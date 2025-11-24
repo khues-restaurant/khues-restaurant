@@ -323,8 +323,9 @@ function RefundOrderCard({
                   <AlertDialogTitle>Refund this order?</AlertDialogTitle>
                   <AlertDialogDescription>
                     This will refund the entire payment in Stripe and mark the
-                    order as refunded. This action cannot be undone.
-                    <div className="baseVertFlex mt-4 gap-2">
+                    order as refunded. This action{" "}
+                    <span className="font-semibold">cannot</span> be undone.
+                    <div className="baseVertFlex mt-4 !items-start gap-2">
                       <Label
                         htmlFor="refundReasonSelect"
                         className="text-sm font-medium"
@@ -342,7 +343,7 @@ function RefundOrderCard({
                           )
                         }
                       >
-                        <SelectTrigger id={"delayAmount"} className="w-[180px]">
+                        <SelectTrigger id={"delayAmount"} className="w-[250px]">
                           <SelectValue placeholder="Select a delay" />
                         </SelectTrigger>
                         <SelectContent>
@@ -363,8 +364,12 @@ function RefundOrderCard({
                     </div>
                   </AlertDialogDescription>
                 </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel onClick={onDialogClosed}>
+
+                <AlertDialogFooter className="baseFlex mt-8 w-full !flex-row !justify-between gap-8">
+                  <AlertDialogCancel
+                    onClick={onDialogClosed}
+                    className="w-full"
+                  >
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
@@ -372,6 +377,7 @@ function RefundOrderCard({
                     onClick={() => {
                       onRefund();
                     }}
+                    className="w-full"
                   >
                     {isRefunding ? "Processing…" : "Confirm refund"}
                   </AlertDialogAction>

@@ -133,7 +133,7 @@ function DashboardDesktopHeader({
             className="text-xl"
             onClick={() => setViewState("orderManagement")}
           >
-            Order management
+            Order Management
           </Button>
 
           {/* notification count */}
@@ -158,7 +158,7 @@ function DashboardDesktopHeader({
             className="text-xl"
             onClick={() => setViewState("customerChats")}
           >
-            Customer chats
+            Customer Chats
           </Button>
 
           {numberOfUnreadMessages > 0 && (
@@ -181,7 +181,7 @@ function DashboardDesktopHeader({
           className="text-xl"
           onClick={() => setViewState("itemManagement")}
         >
-          Item management
+          Item Management
         </Button>
 
         <DelayNewOrders />
@@ -216,22 +216,11 @@ function DashboardDesktopHeader({
                 variant={"link"}
                 className="!text-xl"
                 onClick={() => {
-                  setViewState("reviews");
-                  setPopoverIsOpen(false);
-                }}
-              >
-                Reviews
-              </Button>
-
-              <Button
-                variant={"link"}
-                className="!text-xl"
-                onClick={() => {
                   setViewState("hoursOfOperation");
                   setPopoverIsOpen(false);
                 }}
               >
-                Hours of operation
+                Hours of Operation
               </Button>
 
               <Button

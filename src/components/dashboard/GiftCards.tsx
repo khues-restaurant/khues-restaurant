@@ -75,8 +75,6 @@ export default function GiftCards() {
     void search();
   };
 
-  console.log("searchResults", searchResults);
-
   return (
     <div className="flex h-full w-full max-w-4xl flex-col gap-6 overflow-y-auto p-6">
       <div className="flex items-center justify-end">
@@ -352,6 +350,35 @@ function CreateGiftCardDialog({ onSuccess }: { onSuccess: () => void }) {
     },
   });
 
+  const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+
+    // Regex: Allow empty string OR strictly digits
+    if (val === "" || /^\d+$/.test(val)) {
+      const numVal = parseFloat(val);
+
+      if (numVal > 500) {
+        return;
+      }
+
+      setAmount(val);
+
+      if (!isNaN(numVal)) {
+        let amountToStore = numVal;
+
+        if (amountToStore < 5) {
+          amountToStore = 5;
+        }
+
+        if (amountToStore > 500) {
+          amountToStore = 500;
+        }
+
+        // converting to cents
+      }
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const balance = parseFloat(amount) * 100; // Convert to cents
@@ -379,7 +406,15 @@ function CreateGiftCardDialog({ onSuccess }: { onSuccess: () => void }) {
             <Input
               id="code"
               value={code}
-              onChange={(e) => setCode(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (val.length > 16) return;
+
+                // only allow numbers to be entered
+                if (val === "" || /^\d+$/.test(val)) {
+                  setCode(val);
+                }
+              }}
               required
             />
           </div>
@@ -393,16 +428,12 @@ function CreateGiftCardDialog({ onSuccess }: { onSuccess: () => void }) {
             </div>
 
             <Input
-              id="amount"
-              type="number"
-              step="0.01"
-              min="5"
-              max="500"
-              inputMode="decimal"
+              type="text"
+              inputMode="numeric"
+              placeholder="$5 - $500"
+              className="bg-transparent"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              required
-              className="w-full"
+              onChange={handleCustomAmountChange}
             />
           </div>
           <DialogFooter className="p-2">
