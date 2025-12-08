@@ -7,8 +7,6 @@ await import("./src/env.js");
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: false,
-
-  // not sure if these are really necessary since we will just be using generic user icons right?
   images: {
     remotePatterns: [
       {
@@ -25,38 +23,13 @@ const config = {
       },
     ],
   },
-
-  experimental: {
-    bundlePagesExternals: true, // replace with non-experimental "bundlePagesRouterDependencies: true"
-    // when you upgrade to Next 15
-
-    swcPlugins: [
-      [
-        "next-superjson-plugin",
-        {
-          excluded: [],
-        },
-      ],
-    ],
-  },
-
-  // TODO: remove these out before actual production
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: true, // ideally don't want this, but our types are very transient right now
   },
-
-  /**
-   * If you are using `appDir` then you must comment the below `i18n` config out.
-   *
-   * @see https://github.com/vercel/next.js/issues/41980
-   */
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
   },
+  reactCompiler: true,
 };
-
 export default config;

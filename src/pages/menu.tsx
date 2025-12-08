@@ -1,17 +1,13 @@
 import { type Discount } from "@prisma/client";
 import { motion } from "framer-motion";
 import Image, { type StaticImageData } from "next/image";
-import Link from "next/link";
 import {
   Fragment,
   useEffect,
-  useRef,
   useState,
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { FaWineBottle } from "react-icons/fa";
-import { IoIosWine } from "react-icons/io";
 import { LuVegan } from "react-icons/lu";
 import { SiLeaflet } from "react-icons/si";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
@@ -24,15 +20,8 @@ import {
   type CarouselApi,
 } from "~/components/ui/carousel";
 import { Separator } from "~/components/ui/separator";
-import { type CustomizationChoiceAndCategory } from "~/server/api/routers/customizationChoice";
-import {
-  type FilteredMenuCategory,
-  type FullMenuItem,
-} from "~/server/api/routers/menuCategory";
-import { useMainStore } from "~/stores/MainStore";
 import { IoCalendarOutline } from "react-icons/io5";
 import { formatPrice } from "~/utils/formatters/formatPrice";
-import { calculateRelativeTotal } from "~/utils/priceHelpers/calculateRelativeTotal";
 
 import { Charis_SIL } from "next/font/google";
 const charis = Charis_SIL({
@@ -41,25 +30,56 @@ const charis = Charis_SIL({
   weight: ["400", "700"],
 });
 
-import creamCheeseWantons from "/public/menuItems/cream-cheese-wantons.png";
-import roastPorkFriedRice from "/public/menuItems/roast-pork-fried-rice.png";
-import spicyChickenSandwich from "/public/menuItems/spicy-chicken-sando.jpg";
-import stickyJicamaRibs from "/public/menuItems/sticky-jicama-ribs.png";
-import grilledRibeye from "/public/menuItems/20-oz-grilled-ribeye.png";
-import affogato from "/public/menuItems/affogato.png";
-import thaiTeaTresLeches from "/public/menuItems/thai-tea-tres-leches.png";
-import chiliCrunchWings from "/public/menuItems/chili-crunch-wings.png";
-import porkChop from "/public/menuItems/pork-chop.png";
-import chickenSalad from "/public/menuItems/chicken-salad.png";
-import bunChay from "/public/menuItems/bun-chay.png";
+import creamCheeseWantons from "public/menuItems/cream-cheese-wantons.png";
+import roastPorkFriedRice from "public/menuItems/roast-pork-fried-rice.png";
+import spicyChickenSandwich from "public/menuItems/spicy-chicken-sando.jpg";
+import stickyJicamaRibs from "public/menuItems/sticky-jicama-ribs.png";
+import grilledRibeye from "public/menuItems/20-oz-grilled-ribeye.png";
+import affogato from "public/menuItems/affogato.png";
+import thaiTeaTresLeches from "public/menuItems/thai-tea-tres-leches.png";
+import chiliCrunchWings from "public/menuItems/chili-crunch-wings.png";
+import porkChop from "public/menuItems/pork-chop.png";
+import chickenSalad from "public/menuItems/chicken-salad.png";
+import bunChay from "public/menuItems/bun-chay.png";
+
+type FullMenuItem = {
+  id: string;
+  createdAt: string;
+  name: string;
+  description: string;
+  price: number;
+  altPrice: number | null;
+  available: boolean;
+  discontinued: boolean;
+  listOrder: number;
+  hasImageOfItem: boolean;
+  menuCategoryId: string;
+  activeDiscountId: string | null;
+  isChefsChoice: boolean;
+  isAlcoholic: boolean;
+  isVegetarian: boolean;
+  isVegan: boolean;
+  isGlutenFree: boolean;
+  showUndercookedOrRawDisclaimer: boolean;
+  pointReward: boolean;
+  birthdayReward: boolean;
+  reviews: unknown;
+  activeDiscount: Discount | null;
+  customizationCategories: unknown[];
+  // Optional properties (not present on all items)
+  isWeekendSpecial?: boolean;
+  isDairyFree?: boolean;
+  isSpicy?: boolean;
+  askServerForAvailability?: boolean;
+};
 
 function Menu() {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const [currentlyInViewCategory, setCurrentlyInViewCategory] = useState("");
-  const [categoryScrollYValues, setCategoryScrollYValues] = useState<Record>(
-    {},
-  );
+  const [categoryScrollYValues, setCategoryScrollYValues] = useState<
+    Record<string, number>
+  >({});
   const [programmaticallyScrolling, setProgrammaticallyScrolling] =
     useState(false);
 
@@ -79,7 +99,7 @@ function Menu() {
         },
       );
 
-      const categoryScrollYValues: Record = {};
+      const categoryScrollYValues: Record<string, number> = {};
       Object.keys(menuCategoryIndicies).forEach((categoryName, index) => {
         categoryScrollYValues[categoryName] = scrollYValues[index] ?? 0;
       });
@@ -150,7 +170,9 @@ function Menu() {
     if (programmaticallyScrolling || currentlyInViewCategory === "") return;
 
     const currentlyInViewCategoryListOrderIndex =
-      menuCategoryIndicies[currentlyInViewCategory];
+      menuCategoryIndicies[
+        currentlyInViewCategory as keyof typeof menuCategoryIndicies
+      ];
 
     if (currentlyInViewCategoryListOrderIndex === undefined) return;
 
@@ -300,7 +322,11 @@ function Menu() {
                   <CarouselItem className="baseFlex basis-auto first:ml-2 last:mr-2">
                     <MenuCategoryButton
                       name={category.name}
-                      listOrder={menuCategoryIndicies[category.name] ?? 0}
+                      listOrder={
+                        menuCategoryIndicies[
+                          category.name as keyof typeof menuCategoryIndicies
+                        ] ?? 0
+                      }
                       currentlyInViewCategory={currentlyInViewCategory}
                       setProgrammaticallyScrolling={
                         setProgrammaticallyScrolling
@@ -335,21 +361,17 @@ function Menu() {
             <MenuCategory
               key={category.id}
               name={category.name}
-              activeDiscount={category.activeDiscount}
               menuItems={category.menuItems}
-              listOrder={menuCategoryIndicies[category.name]!}
+              listOrder={
+                menuCategoryIndicies[
+                  category.name as keyof typeof menuCategoryIndicies
+                ]
+              }
             />
           ))}
 
           <div className="baseVertFlex order-[999] mt-8 w-full gap-4 px-4 ">
             <div className="baseFlex w-full flex-wrap gap-4 text-sm tablet:text-base">
-              {/* <div className="baseFlex gap-2">
-                <p className="baseFlex size-4 rounded-full border border-black bg-offwhite p-2">
-                  K
-                </p>
-                -<p>Chef&apos;s Choice</p>
-              </div>
-              | */}
               <div className="baseFlex gap-2">
                 <SiLeaflet className="size-4" />-<p>Vegetarian</p>
               </div>
@@ -375,31 +397,8 @@ function Menu() {
               Consuming raw or undercooked meats, poultry, seafood, shellfish,
               or eggs may increase your risk of foodborne illness.
             </p>
-            {/* <div className="baseFlex w-full gap-2 text-stone-500 ">
-              <FaWineBottle className="shrink-0 -rotate-45" />
-              <p className="text-xs italic tablet:text-sm">
-                All alcoholic beverages must be purchased on-site.
-              </p>
-            </div> */}
           </div>
         </motion.div>
-
-        {/* <Button size={"lg"} asChild>
-          <Link
-          prefetch={false}
-            href="/order"
-            style={{
-              opacity: ableToShowOrderNowButton ? 1 : 0,
-              boxShadow:
-                "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
-            }}
-            className="baseFlex !sticky bottom-8 gap-2 !px-4 !py-6 !text-lg transition-all tablet:bottom-10 tablet:!mb-2"
-          >
-            <SideAccentSwirls className="h-4 scale-x-[-1] fill-offwhite" />
-            Order now
-            <SideAccentSwirls className="h-4 fill-offwhite" />
-          </Link>
-        </Button> */}
       </div>
     </motion.div>
   );
@@ -407,77 +406,11 @@ function Menu() {
 
 export default Menu;
 
-// export const getStaticProps: GetStaticProps = async (ctx) => {
-//   const prisma = new PrismaClient();
-
-//   const menuCategories = await prisma.menuCategory.findMany({
-//     where: {
-//       active: true,
-//     },
-//     include: {
-//       activeDiscount: true,
-//       menuItems: {
-//         include: {
-//           activeDiscount: true,
-//           customizationCategories: {
-//             include: {
-//               customizationCategory: {
-//                 include: {
-//                   customizationChoices: {
-//                     orderBy: {
-//                       listOrder: "asc",
-//                     },
-//                   },
-//                 },
-//               },
-//             },
-//           },
-//         },
-//       },
-//     },
-//     orderBy: {
-//       listOrder: "asc",
-//     },
-//   });
-
-//   // filter out the "extra" field for "customizationCategory" for each menu item
-//   const filteredMenuCategories = menuCategories.map((category) => {
-//     return {
-//       ...category,
-//       menuItems: category.menuItems.map((item) => {
-//         return {
-//           ...item,
-//           customizationCategories: item.customizationCategories.map(
-//             (category) => {
-//               return category.customizationCategory;
-//             },
-//           ),
-//         };
-//       }),
-//     };
-//   });
-
-//   const categoryIndicies: Record<string, number> = {};
-//   let currentIndex = 0;
-
-//   menuCategories.forEach((category) => {
-//     categoryIndicies[category.name] = currentIndex;
-//     currentIndex++;
-//   });
-
-//   return {
-//     props: {
-//       menuCategories: filteredMenuCategories,
-//       menuCategoryIndicies: categoryIndicies,
-//     },
-//   };
-// };
-
 interface MenuCategoryButton {
   currentlyInViewCategory: string;
   name: string;
   listOrder: number;
-  setProgrammaticallyScrolling: Dispatch;
+  setProgrammaticallyScrolling: Dispatch<SetStateAction<boolean>>;
 }
 
 function MenuCategoryButton({
@@ -527,21 +460,11 @@ function MenuCategoryButton({
 
 interface MenuCategory {
   name: string;
-  activeDiscount: Discount | null;
   menuItems: FullMenuItem[];
   listOrder: number;
 }
 
-function MenuCategory({
-  name,
-  activeDiscount,
-  menuItems,
-  listOrder,
-}: MenuCategory) {
-  const { viewportLabel } = useMainStore((state) => ({
-    viewportLabel: state.viewportLabel,
-  }));
-
+function MenuCategory({ name, menuItems, listOrder }: MenuCategory) {
   return (
     <motion.div
       key={`${name}MenuCategory`}
@@ -632,9 +555,7 @@ function MenuCategory({
             {menuItems.map((item) => (
               <MenuItemPreview
                 key={item.id}
-                categoryName={name}
                 menuItem={item}
-                activeDiscount={activeDiscount} // TODO: should prob also add ?? item.activeDiscount too right? was giving type error w/ createdAt but 99% sure this should be on there
                 listOrder={item.listOrder}
               />
             ))}
@@ -656,9 +577,7 @@ function MenuCategory({
             {menuItems.map((item) => (
               <MenuItemPreview
                 key={item.id}
-                categoryName={name}
                 menuItem={item}
-                activeDiscount={activeDiscount} // TODO: should prob also add ?? item.activeDiscount too right? was giving type error w/ createdAt but 99% sure this should be on there
                 listOrder={item.listOrder}
               />
             ))}
@@ -669,89 +588,7 @@ function MenuCategory({
   );
 }
 
-function formatMenuItemPrice(
-  categoryName: string,
-  menuItem: FullMenuItem,
-  activeDiscount: Discount | null,
-  customizationChoices: Record,
-) {
-  // if (categoryName === "Wine") {
-  //   return (
-  //     <div className="baseFlex gap-2 text-sm">
-  //       <div className="baseFlex gap-2">
-  //         <IoIosWine className="size-[18px]" />
-  //         {formatPrice(
-  //           calculateRelativeTotal({
-  //             items: [
-  //               {
-  //                 price: menuItem.altPrice ?? menuItem.price,
-  //                 quantity: 1,
-  //                 discountId: null, //activeDiscount?.id ?? null,
-
-  //                 // only necessary to fit Item shape
-  //                 id: 0,
-  //                 itemId: menuItem.id,
-  //                 customizations: {}, // not necessary since all default choices are already included in price
-  //                 includeDietaryRestrictions: false,
-  //                 name: menuItem.name,
-  //                 specialInstructions: "",
-  //                 isChefsChoice: menuItem.isChefsChoice,
-  //                 isAlcoholic: menuItem.isAlcoholic,
-  //                 isVegetarian: menuItem.isVegetarian,
-  //                 isVegan: menuItem.isVegan,
-  //                 isGlutenFree: menuItem.isGlutenFree,
-  //                 showUndercookedOrRawDisclaimer:
-  //                   menuItem.showUndercookedOrRawDisclaimer,
-  //                 hasImageOfItem: menuItem.hasImageOfItem,
-  //                 birthdayReward: false,
-  //                 pointReward: false,
-  //               },
-  //             ],
-  //             customizationChoices,
-  //             discounts: {}, // TODO: do we want to show discount prices on menu? I feel like we should keep it
-  //             // to just the regular prices..
-  //           }),
-  //         )}
-  //       </div>
-  //       |
-  //       <div className="baseFlex gap-2">
-  //         <FaWineBottle className="-rotate-45" />
-  //         {formatPrice(
-  //           calculateRelativeTotal({
-  //             items: [
-  //               {
-  //                 price: menuItem.price,
-  //                 quantity: 1,
-  //                 discountId: null, //activeDiscount?.id ?? null,
-
-  //                 // only necessary to fit Item shape
-  //                 id: 0,
-  //                 itemId: menuItem.id,
-  //                 customizations: {}, // not necessary since all default choices are already included in price
-  //                 includeDietaryRestrictions: false,
-  //                 name: menuItem.name,
-  //                 specialInstructions: "",
-  //                 isChefsChoice: menuItem.isChefsChoice,
-  //                 isAlcoholic: menuItem.isAlcoholic,
-  //                 isVegetarian: menuItem.isVegetarian,
-  //                 isVegan: menuItem.isVegan,
-  //                 isGlutenFree: menuItem.isGlutenFree,
-  //                 showUndercookedOrRawDisclaimer:
-  //                   menuItem.showUndercookedOrRawDisclaimer,
-  //                 hasImageOfItem: menuItem.hasImageOfItem,
-  //                 birthdayReward: false,
-  //                 pointReward: false,
-  //               },
-  //             ],
-  //             customizationChoices,
-  //             discounts: {},
-  //           }),
-  //         )}
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
+function formatMenuItemPrice(menuItem: FullMenuItem) {
   return (
     <div className="baseFlex gap-2 self-end text-base">
       <p>{formatPrice(menuItem.price, true)}</p>
@@ -766,22 +603,11 @@ function formatMenuItemPrice(
 }
 
 interface MenuItemPreview {
-  categoryName: string;
   menuItem: FullMenuItem;
-  activeDiscount: Discount | null;
   listOrder: number;
 }
 
-function MenuItemPreview({
-  categoryName,
-  menuItem,
-  activeDiscount,
-  listOrder,
-}: MenuItemPreview) {
-  const { customizationChoices } = useMainStore((state) => ({
-    customizationChoices: state.customizationChoices,
-  }));
-
+function MenuItemPreview({ menuItem, listOrder }: MenuItemPreview) {
   return (
     <div
       style={{
@@ -815,14 +641,7 @@ function MenuItemPreview({
                 </span>
                 {menuItem.showUndercookedOrRawDisclaimer ? "*" : ""}
               </p>
-              <div>
-                {formatMenuItemPrice(
-                  categoryName,
-                  menuItem,
-                  activeDiscount,
-                  customizationChoices,
-                )}
-              </div>
+              <div>{formatMenuItemPrice(menuItem)}</div>
             </div>
 
             <div className="baseFlex !justify-start gap-1">
@@ -868,13 +687,13 @@ function MenuItemPreview({
   );
 }
 
-const menuItemCategoryImages: Record = {
+const menuItemCategoryImages: Record<string, StaticImageData[]> = {
   Starters: [creamCheeseWantons, chickenSalad],
   Entrees: [roastPorkFriedRice, spicyChickenSandwich, grilledRibeye],
   Desserts: [affogato, thaiTeaTresLeches],
 };
 
-const menuItemImages: Record = {
+const menuItemImages: Record<string, StaticImageData> = {
   "Cream Cheese Wontons": creamCheeseWantons,
   "Khue's Chicken Salad": chickenSalad,
   "Roast Pork Fried Rice": roastPorkFriedRice,

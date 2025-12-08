@@ -18,45 +18,40 @@ import StaticLotus from "~/components/ui/StaticLotus";
 import useHomepageIntersectionObserver from "~/hooks/useHomepageIntersectionObserver";
 import { useMainStore } from "~/stores/MainStore";
 
-import khuesKitchenLogo from "/public/logos/khuesKitchenLogo.png";
+import khuesKitchenLogo from "public/logos/khuesKitchenLogo.png";
 
-import topLeftHero from "/public/ourStory/cropped-khues-kitchen.png";
-import topRightHero from "/public/menuItems/spicy-chicken-sando.jpg";
-import bottomLeftHero from "/public/miscFood/patio-trio.jpg";
-import bottomRightHero from "/public/interior/three.jpg";
+import topLeftHero from "public/ourStory/cropped-khues-kitchen.png";
+import topRightHero from "public/menuItems/spicy-chicken-sando.jpg";
+import bottomLeftHero from "public/miscFood/patio-trio.jpg";
+import bottomRightHero from "public/interior/three.jpg";
 
-import kare11Logo from "/public/media/kare11Logo.png";
-import mprLogo from "/public/media/mprLogo.png";
-import starTribuneLogo from "/public/media/starTribuneLogo.png";
+import kare11Logo from "public/media/kare11Logo.png";
+import mprLogo from "public/media/mprLogo.png";
+import starTribuneLogo from "public/media/starTribuneLogo.png";
 import WCCOLogo from "public/media/WCCOLogo";
-import heavyTableLogo from "/public/media/heavyTableLogo.png";
-import theTastingNotesLogo from "/public/media/theTastingNotesLogo.png";
-import mspMagLogo from "/public/media/mspMagLogo.png";
+import heavyTableLogo from "public/media/heavyTableLogo.png";
+import theTastingNotesLogo from "public/media/theTastingNotesLogo.png";
+import mspMagLogo from "public/media/mspMagLogo.png";
 
-import eric from "/public/ourStory/eric.webp";
-import ericUpscaled from "/public/ourStory/ericUpscaled.jpg";
+import eric from "public/ourStory/eric.webp";
+import ericUpscaled from "public/ourStory/ericUpscaled.jpg";
 
-import reservations from "/public/interior/reservations.jpg";
+import reservations from "public/interior/reservations.jpg";
 
-import masonryFoodOne from "/public/menuItems/sticky-jicama-ribs.png";
-import masonryFoodTwo from "/public/menuItems/cream-cheese-wantons.png";
-import masonryFoodThree from "/public/menuItems/coffee.png";
-import masonryFoodFour from "/public/menuItems/thai-tea-tres-leches.png";
-import masonryFoodFive from "/public/menuItems/roast-pork-fried-rice.png";
-import masonryFoodSix from "/public/menuItems/affogato.png";
+import masonryFoodOne from "public/menuItems/sticky-jicama-ribs.png";
+import masonryFoodTwo from "public/menuItems/cream-cheese-wantons.png";
+import masonryFoodThree from "public/menuItems/coffee.png";
+import masonryFoodFour from "public/menuItems/thai-tea-tres-leches.png";
+import masonryFoodFive from "public/menuItems/roast-pork-fried-rice.png";
+import masonryFoodSix from "public/menuItems/affogato.png";
 
-import masonryInteriorSix from "/public/interior/one.jpg";
-import masonryInteriorEight from "/public/interior/two.jpg";
-import masonryInteriorTen from "/public/interior/three.jpg";
-import masonryInteriorNine from "/public/interior/four.jpg";
-import masonryInteriorSeven from "/public/exterior/three.jpg";
-
-// interface Home {
-//   ourFavoriteMenuItems: FullMenuItem[];
-// }
+import masonryInteriorSix from "public/interior/one.jpg";
+import masonryInteriorEight from "public/interior/two.jpg";
+import masonryInteriorTen from "public/interior/three.jpg";
+import masonryInteriorNine from "public/interior/four.jpg";
+import masonryInteriorSeven from "public/exterior/three.jpg";
 
 export default function Home() {
-  // { ourFavoriteMenuItems }: Home
   const {
     chatIsOpen,
     setChatIsOpen,

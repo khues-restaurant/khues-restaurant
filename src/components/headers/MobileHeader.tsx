@@ -46,7 +46,7 @@ const charis = Charis_SIL({
   weight: ["400", "700"],
 });
 
-import outsideOfRestaurant from "/public/exterior/one.jpg";
+import outsideOfRestaurant from "public/exterior/one.jpg";
 
 const linkContainer = {
   visible: {

@@ -30,7 +30,7 @@ import { STIX_Two_Text } from "next/font/google";
 import { Charis_SIL } from "next/font/google";
 import StaticLotus from "~/components/ui/StaticLotus";
 
-import outsideOfRestaurant from "/public/interior/ten.jpg";
+import outsideOfRestaurant from "public/interior/ten.jpg";
 
 const stix = STIX_Two_Text({
   subsets: ["latin"],
