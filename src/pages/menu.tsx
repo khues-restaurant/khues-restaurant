@@ -41,6 +41,8 @@ import chiliCrunchWings from "public/menuItems/chili-crunch-wings.png";
 import porkChop from "public/menuItems/pork-chop.png";
 import chickenSalad from "public/menuItems/chicken-salad.png";
 import bunChay from "public/menuItems/bun-chay.png";
+import Calendar from "~/components/ui/Calendar";
+import { useMainStore } from "~/stores/MainStore";
 
 type FullMenuItem = {
   id: string;
@@ -74,6 +76,10 @@ type FullMenuItem = {
 };
 
 function Menu() {
+  const { viewportLabel } = useMainStore((state) => ({
+    viewportLabel: state.viewportLabel,
+  }));
+
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const [currentlyInViewCategory, setCurrentlyInViewCategory] = useState("");
@@ -367,10 +373,11 @@ function Menu() {
                   category.name as keyof typeof menuCategoryIndicies
                 ]
               }
+              viewportLabel={viewportLabel}
             />
           ))}
 
-          <div className="baseVertFlex order-[999] mt-8 w-full gap-4 px-4 ">
+          <div className="baseVertFlex order-[999] mt-8 w-full gap-4 px-4">
             <div className="baseFlex w-full flex-wrap gap-4 text-sm tablet:text-base">
               <div className="baseFlex gap-2">
                 <SiLeaflet className="size-4" />-<p>Vegetarian</p>
@@ -462,9 +469,15 @@ interface MenuCategory {
   name: string;
   menuItems: FullMenuItem[];
   listOrder: number;
+  viewportLabel: string;
 }
 
-function MenuCategory({ name, menuItems, listOrder }: MenuCategory) {
+function MenuCategory({
+  name,
+  menuItems,
+  listOrder,
+  viewportLabel,
+}: MenuCategory) {
   return (
     <motion.div
       key={`${name}MenuCategory`}
@@ -535,7 +548,7 @@ function MenuCategory({ name, menuItems, listOrder }: MenuCategory) {
                     style={{
                       clipPath: "polygon(0 0, 85% 0, 100% 100%, 15% 100%)",
                     }}
-                    className="object-cover "
+                    className="object-cover"
                   />
                 </div>
               )}
@@ -557,6 +570,7 @@ function MenuCategory({ name, menuItems, listOrder }: MenuCategory) {
                 key={item.id}
                 menuItem={item}
                 listOrder={item.listOrder}
+                viewportLabel={viewportLabel}
               />
             ))}
           </div>
@@ -579,6 +593,7 @@ function MenuCategory({ name, menuItems, listOrder }: MenuCategory) {
                 key={item.id}
                 menuItem={item}
                 listOrder={item.listOrder}
+                viewportLabel={viewportLabel}
               />
             ))}
           </div>
@@ -605,9 +620,14 @@ function formatMenuItemPrice(menuItem: FullMenuItem) {
 interface MenuItemPreview {
   menuItem: FullMenuItem;
   listOrder: number;
+  viewportLabel: string;
 }
 
-function MenuItemPreview({ menuItem, listOrder }: MenuItemPreview) {
+function MenuItemPreview({
+  menuItem,
+  listOrder,
+  viewportLabel,
+}: MenuItemPreview) {
   return (
     <div
       style={{
@@ -635,7 +655,7 @@ function MenuItemPreview({ menuItem, listOrder }: MenuItemPreview) {
 
           <div className="baseVertFlex w-full !items-start gap-1">
             <div className="baseFlex w-full !items-baseline !justify-between gap-4">
-              <p className="whitespace-normal text-left font-medium supports-[text-wrap]:text-wrap tablet:text-lg ">
+              <p className="whitespace-normal text-left font-medium supports-[text-wrap]:text-wrap tablet:text-lg">
                 <span className="underline underline-offset-2">
                   {menuItem.name}
                 </span>
@@ -646,8 +666,14 @@ function MenuItemPreview({ menuItem, listOrder }: MenuItemPreview) {
 
             <div className="baseFlex !justify-start gap-1">
               {menuItem.isWeekendSpecial && (
-                <div className="baseFlex w-full !justify-start gap-1 text-sm ">
-                  <IoCalendarOutline className="size-4 shrink-0" />
+                <div className="baseFlex w-full !justify-start gap-1 text-sm">
+                  {/* using below icon until chrome fixes it's rendering issues 
+                  with <IoCalendarOutline> at small sizes */}
+                  {viewportLabel.includes("mobile") ? (
+                    <IoCalendarOutline className="size-4 shrink-0" />
+                  ) : (
+                    <Calendar className="size-4 shrink-0" />
+                  )}
                   Only available Fri/Sat
                   <Separator
                     orientation="vertical"
@@ -1074,13 +1100,13 @@ const menuCategories = [
       {
         id: "06eb8dce-1e9d-4053-a843-4dec5c217f14",
         createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Rodica",
-        description: "Sparkling Rosé, Pét-Nat, Refošk, Slovenia",
-        price: 1600,
-        altPrice: 5800,
+        name: "Rosa Luna",
+        description: "Sparkling Red, Lambrusco, Emilia-Romagna, Italy",
+        price: 1500,
+        altPrice: 6000,
         available: true,
         discontinued: false,
-        listOrder: 2,
+        listOrder: 1,
         hasImageOfItem: false,
         menuCategoryId: "a7403e9f-35b7-48f6-add7-a5d9121a5f6d",
         activeDiscountId: null,
@@ -1099,11 +1125,11 @@ const menuCategories = [
       {
         id: "a48bf6eb-c185-49b9-9d53-d1651015ae4f",
         createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Avinyó",
+        name: "J. Laurens",
         description:
-          "Sparkling Pét-Nat, Muscat Frontignan, Macabeo, Catalonia, Spain",
-        price: 1300,
-        altPrice: 4700,
+          "Crémant, Chardonnay, Chenin Blanc, Mauzac, Languedoc, France",
+        price: 1500,
+        altPrice: 6000,
         available: true,
         discontinued: false,
         listOrder: 2,
@@ -1137,13 +1163,13 @@ const menuCategories = [
       {
         id: "a6c44c03-de7f-431f-acee-305fc9ee0c9a",
         createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Schafer-Frohlich",
-        description: "Müller-Thurgau 2022, Franken, Germany",
-        price: 1600,
-        altPrice: 6000,
+        name: "Rebholz",
+        description: "Pinot Blanc, Chardonnay 2022, Pfalz, Germany",
+        price: 1800,
+        altPrice: 7000,
         available: true,
         discontinued: false,
-        listOrder: 2,
+        listOrder: 1,
         hasImageOfItem: false,
         menuCategoryId: "22fe5cbd-8e0b-4387-9456-006b31d5ec72",
         activeDiscountId: null,
@@ -1162,10 +1188,10 @@ const menuCategories = [
       {
         id: "86b82c5c-f764-4041-b2b8-70e60b80ba5d",
         createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Madson",
-        description: "Chardonnay 2022, Central Coast, California",
-        price: 1800,
-        altPrice: 7500,
+        name: "Kühling-Gillot",
+        description: "Riesling 2022, Trocken, Rheinhessen, Germany",
+        price: 1600,
+        altPrice: 6200,
         available: true,
         discontinued: false,
         listOrder: 2,
@@ -1187,13 +1213,13 @@ const menuCategories = [
       {
         id: "36ee18b8-5aff-4a56-be1a-f1ed53f7ed83",
         createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Salvatore Marino",
-        description: '"Turi" 2022, Sicily, Italy',
+        name: "François Cazin",
+        description: "Cheverny, Sauvignon Blanc 2024, Loire Valley, France",
         price: 1500,
-        altPrice: 5500,
+        altPrice: 6000,
         available: true,
         discontinued: false,
-        listOrder: 2,
+        listOrder: 3,
         hasImageOfItem: false,
         menuCategoryId: "22fe5cbd-8e0b-4387-9456-006b31d5ec72",
         activeDiscountId: null,
@@ -1208,58 +1234,6 @@ const menuCategories = [
         reviews: null,
         activeDiscount: null,
         customizationCategories: [],
-      },
-      {
-        id: "ee0bcc63-541c-4dca-a8b1-b2459508af26",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "La Pepie",
-        description: "Muscadet, Loire Valley, France",
-        price: 4400,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "22fe5cbd-8e0b-4387-9456-006b31d5ec72",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-        askServerForAvailability: true,
-      },
-      {
-        id: "b8324c59-a00a-4019-b3d4-3eb49e50618f",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Koehler-Ruprecht",
-        description: "Chardonnay, Pfalz, Germany",
-        price: 5400,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "22fe5cbd-8e0b-4387-9456-006b31d5ec72",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-        askServerForAvailability: true,
       },
     ],
   },
@@ -1276,13 +1250,14 @@ const menuCategories = [
       {
         id: "afdbd5a9-431e-4bc0-9488-7cc44e30fa48",
         createdAt: "2024-03-29T16:10:53.000Z",
-        name: `Maloof, "Where Ya PJ's At"`,
-        description: "Gewürztraminer, Riesling, Pinot Gris",
+        name: "Sanctum",
+        description:
+          "Skin Contact, Pinot Blanc, Chardonnay, Pinot Gris, Slovenia",
         price: 1600,
-        altPrice: 6000,
+        altPrice: 6500,
         available: true,
         discontinued: false,
-        listOrder: 2,
+        listOrder: 1,
         hasImageOfItem: false,
         menuCategoryId: "6b21a3e1-97b4-45d7-9a93-25547c0990d6",
         activeDiscountId: null,
@@ -1301,8 +1276,8 @@ const menuCategories = [
       {
         id: "13ae4b38-92c7-42ab-bc94-ca2edd01049d",
         createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Ioppa",
-        description: "Nebbiolo Rosé, Piedmont, Italy",
+        name: "Moulin de Gassac",
+        description: "Rosé, Grenache, Carignan, Syrah, France",
         price: 1200,
         altPrice: 4500,
         available: true,
@@ -1323,58 +1298,6 @@ const menuCategories = [
         activeDiscount: null,
         customizationCategories: [],
       },
-      {
-        id: "9107f0e1-dc76-4ccb-91c7-a7fa7e24a578",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Fattoria Di Vaira",
-        description: "Orange, Falanghina, Trebbiano, Molise, Italy",
-        price: 5000,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "6b21a3e1-97b4-45d7-9a93-25547c0990d6",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-        askServerForAvailability: true,
-      },
-      {
-        id: "b7e2d082-dc96-4e19-a705-5c5fab95a210",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "New Found",
-        description: "Mourvèdre, Grenache, Rosé, California",
-        price: 5000,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "6b21a3e1-97b4-45d7-9a93-25547c0990d6",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-        askServerForAvailability: true,
-      },
     ],
   },
   {
@@ -1390,13 +1313,13 @@ const menuCategories = [
       {
         id: "35daaaa0-b891-46fa-8f86-f7a3a36984a0",
         createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Chat Fout, Éric Texier",
-        description: "Grenache, White Varietals, Rhône Valley, France",
-        price: 1600,
-        altPrice: 5800,
+        name: "Scar of the Sea",
+        description: "Pinot Noir 2024, SLO Coast, California",
+        price: 1800,
+        altPrice: 7000,
         available: true,
         discontinued: false,
-        listOrder: 2,
+        listOrder: 1,
         hasImageOfItem: false,
         menuCategoryId: "86c7aa2a-64f1-488a-a87e-8efc3a79447f",
         activeDiscountId: null,
@@ -1415,10 +1338,10 @@ const menuCategories = [
       {
         id: "761ce095-71f9-43e0-be42-890d5171c5c5",
         createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Hervé Viellemade",
-        description: "Gamay 2022, Loire Valley, France",
-        price: 1600,
-        altPrice: 5800,
+        name: "Quinta do Infantado",
+        description: "Palhete, Field Blend, Douro Valley, Portugal",
+        price: 1500,
+        altPrice: 6000,
         available: true,
         discontinued: false,
         listOrder: 2,
@@ -1440,13 +1363,13 @@ const menuCategories = [
       {
         id: "83ee68f5-8bac-4105-8b88-c6158a2f47d2",
         createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Torre alle Tolfe",
-        description: "Chianti, Tuscany, Italy",
-        price: 1700,
-        altPrice: 6100,
+        name: "Montepeloso A Quo",
+        description: "Sangiovese, Montepulciano, Tuscany, Italy",
+        price: 1600,
+        altPrice: 6200,
         available: true,
         discontinued: false,
-        listOrder: 2,
+        listOrder: 3,
         hasImageOfItem: false,
         menuCategoryId: "86c7aa2a-64f1-488a-a87e-8efc3a79447f",
         activeDiscountId: null,
@@ -1477,10 +1400,11 @@ const menuCategories = [
       {
         id: "aaea55ae-8889-4d8a-81b5-0bc48f24a721",
         createdAt: "2024-03-29T16:10:10.000Z",
-        name: "Crane of Paradise",
-        description: "Producer: Kawatsuru / Grade: Junmai",
-        price: 1600,
-        altPrice: 6500,
+        name: "Mana 1751 True Vision",
+        description:
+          "Producer: Manatsuru Grade: Tokubetsu, Junmai, Yamahai, Muroka, Genshu",
+        price: 1800,
+        altPrice: 8500,
         available: true,
         discontinued: false,
         listOrder: 1,
@@ -1502,13 +1426,38 @@ const menuCategories = [
       {
         id: "dcb19f40-b0d1-4bb1-95aa-60912b76c385",
         createdAt: "2024-03-29T16:09:49.000Z",
-        name: "Forgotten Fortune",
-        description: "Producer: Fukucho / Grade: Junmai",
-        price: 1800,
-        altPrice: 7200,
+        name: "Sword of the Sun",
+        description: "Producer: Takatenjin / Doi Brewery, Grade: Honjozo",
+        price: 1600,
+        altPrice: 7500,
         available: true,
         discontinued: false,
         listOrder: 2,
+        hasImageOfItem: false,
+        menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
+        activeDiscountId: null,
+        isChefsChoice: false,
+        isAlcoholic: true,
+        isVegetarian: false,
+        isVegan: false,
+        isGlutenFree: false,
+        showUndercookedOrRawDisclaimer: false,
+        pointReward: false,
+        birthdayReward: false,
+        reviews: null,
+        activeDiscount: null,
+        customizationCategories: [],
+      },
+      {
+        id: "75cf423e-f947-45cb-b80c-edb5d2ac6c48",
+        createdAt: "2024-03-29T16:09:49.000Z",
+        name: "Blossom of Peace",
+        description: "Producer: Tozai, Plum Sake, sweet but balanced",
+        price: 1400,
+        altPrice: 5500,
+        available: true,
+        discontinued: false,
+        listOrder: 3,
         hasImageOfItem: false,
         menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
         activeDiscountId: null,
@@ -1533,7 +1482,7 @@ const menuCategories = [
         altPrice: null,
         available: true,
         discontinued: false,
-        listOrder: 3,
+        listOrder: 4,
         hasImageOfItem: false,
         menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
         activeDiscountId: null,
@@ -1558,7 +1507,7 @@ const menuCategories = [
         altPrice: null,
         available: true,
         discontinued: false,
-        listOrder: 4,
+        listOrder: 5,
         hasImageOfItem: false,
         menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
         activeDiscountId: null,
@@ -1583,7 +1532,7 @@ const menuCategories = [
         altPrice: null,
         available: true,
         discontinued: false,
-        listOrder: 5,
+        listOrder: 6,
         hasImageOfItem: false,
         menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
         activeDiscountId: null,
@@ -1608,7 +1557,7 @@ const menuCategories = [
         altPrice: null,
         available: true,
         discontinued: false,
-        listOrder: 6,
+        listOrder: 7,
         hasImageOfItem: false,
         menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
         activeDiscountId: null,
