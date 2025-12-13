@@ -225,6 +225,7 @@ export default function Home() {
               alt={"Spicy Chicken Sandwich at Khue's in St. Paul"}
               priority
               sizes="66vw"
+              fetchPriority="high"
               className="!relative !size-full rounded-md object-cover"
             />
           </motion.div>
@@ -402,6 +403,7 @@ export default function Home() {
               alt={"Spicy Chicken Sandwich at Khue's in St. Paul"}
               priority
               sizes="66vw"
+              fetchPriority="high"
               className="!relative !size-full rounded-md object-cover"
             />
           </motion.div>
@@ -432,7 +434,7 @@ export default function Home() {
                 <h1 className="text-3xl font-bold text-stone-800 tablet:text-4xl">
                   Welcome to Khue&apos;s
                 </h1>
-                <p className=" text-xl text-stone-500 tablet:text-2xl">
+                <p className="text-xl text-stone-500 tablet:text-2xl">
                   A modern take on classic Vietnamese cuisine.
                 </p>
 
@@ -616,6 +618,7 @@ export default function Home() {
               <Button variant={"text"} className="!p-0" asChild>
                 <a
                   href="https://www.cbsnews.com/minnesota/news/khues-kitchen-reopens-midcity-kitchen/"
+                  aria-label="CBS News Logo"
                   className="baseFlex"
                 >
                   <WCCOLogo className="h-[63.75px] w-[150px]" />
@@ -739,7 +742,7 @@ export default function Home() {
             <div className="secondMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
               <Parallax
                 speed={-3}
-                className="!absolute !top-[-1rem] !size-[100%] "
+                className="!absolute !top-[-1rem] !size-[100%]"
               >
                 <Image
                   src={masonryFoodTwo}

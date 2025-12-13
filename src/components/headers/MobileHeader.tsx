@@ -67,7 +67,7 @@ const linkVariants = {
       ease: "easeOut",
     },
   },
-};
+} as const;
 
 function MobileHeader() {
   const { asPath, events } = useRouter();
@@ -132,7 +132,12 @@ function MobileHeader() {
           }}
         >
           <SheetTrigger asChild>
-            <Button variant="ghost" size={"icon"} className="relative mx-2">
+            <Button
+              aria-label="Open navigation menu"
+              variant="ghost"
+              size={"icon"}
+              className="relative mx-2"
+            >
               <span
                 aria-hidden="true"
                 className="ease-in-out absolute top-[12px] block h-0.5 w-6 bg-current transition duration-500"
@@ -160,7 +165,7 @@ function MobileHeader() {
                 variants={linkContainer}
                 initial="hidden"
                 animate="visible"
-                className="baseVertFlex  w-full !justify-start gap-4 overflow-x-hidden pt-12"
+                className="baseVertFlex w-full !justify-start gap-4 overflow-x-hidden pt-12"
               >
                 <motion.div variants={linkVariants}>
                   <Button
