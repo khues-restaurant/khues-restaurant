@@ -49,8 +49,7 @@ function DesktopHeader() {
   return (
     <nav
       id="header"
-      className={`${classes.desktopHeader} sticky left-0 top-0 z-50 grid h-24 w-full bg-offwhite shadow-md
-      `}
+      className={`${classes.desktopHeader} sticky left-0 top-0 z-50 grid h-24 w-full bg-offwhite shadow-md`}
     >
       <Button variant="text" asChild>
         <Link
@@ -89,10 +88,7 @@ function DesktopHeader() {
           </Link>
         </Button> */}
 
-        <Button
-          variant={asPath.includes("/reservations") ? "activeLink" : "link"}
-          asChild
-        >
+        <Button variant={"link"} asChild>
           <a
             href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime"
             className="block !text-xl"
@@ -108,6 +104,15 @@ function DesktopHeader() {
           <Link prefetch={false} href={"/media"} className="block !text-xl">
             Media
           </Link>
+        </Button>
+
+        <Button variant={"link"} asChild>
+          <a
+            href="https://order.toasttab.com/egiftcards/khues-kitchen"
+            className="block !text-xl"
+          >
+            Gift Cards
+          </a>
         </Button>
 
         {/* <Popover
@@ -179,7 +184,7 @@ function DesktopHeader() {
             </VisuallyHidden>
 
             <div className="baseFlex relative !items-start">
-              <StaticLotus className="absolute -bottom-20 -left-20 size-36 rotate-[-315deg] fill-primary/50 " />
+              <StaticLotus className="absolute -bottom-20 -left-20 size-36 rotate-[-315deg] fill-primary/50" />
 
               <div className="baseVertFlex w-[273px] !shrink-0 !items-start gap-2">
                 <div className="baseFlex gap-2 text-lg font-semibold">

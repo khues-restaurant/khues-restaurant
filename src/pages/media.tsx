@@ -31,15 +31,34 @@ import theTastingNotesLogo from "public/media/theTastingNotesLogo.png";
 import mspMagImage from "public/media/mspMagImage.jpg";
 import mspMagLogo from "public/media/mspMagLogo.png";
 import ericAndKhue from "public/media/ericAndKhue.jpg";
+import bestNewRestaurantStarTribune from "public/media/bestNewRestaurantStarTribune.jpg";
 
 const mediaArticles: MediaCard[] = [
+  {
+    articleUrl:
+      "https://www.startribune.com/khues-kitchen-st-paul-best-new-restauarant-quang-minneapolis/601533607",
+    imageSrc: bestNewRestaurantStarTribune,
+    imageAlt:
+      "Khue's Kitchen chef-owner Eric Pham posing confidently in his white chef's coat with dramatic lighting.",
+    imageHeight: 305,
+    brandUrl: "https://startribune.com/",
+    brandLogo: starTribuneLogo,
+    brandLogoAlt: "Star Tribune's logo",
+    brandLogoWidth: 150,
+    brandLogoHeight: 35,
+    brandLogoStyles: "-ml-5",
+    cardStyles: "pt-3",
+    title: "Khue's Kitchen is the Star Tribune's 2025 Best New Restaurant",
+    snippet: `At just 25, Chef Eric Pham has turned a quiet industrial pocket of St. Paul into the home of the Star Tribune's Best New Restaurant of 2025. Blending his family's Quang legacy with fine-dining precision, Pham's "menu as memoir" features electrifying hits like his cult-status fried chicken sandwich and sticky jicama ribs. It is a vibrant, scrappy tribute to resilience, community support, and the next generation of Vietnamese cuisine.`,
+    date: "12/14/2025",
+  },
   {
     articleUrl:
       "https://mspmag.com/eat-and-drink/restaurant-review-homecoming-khues-kitchen/",
     imageSrc: mspMagImage,
     imageAlt:
       "Three plated dishes from Khue's Kitchen displayed on a wooden table: a Spicy Chicken Sandwich on a bun with lettuce, Crispy Pork Lettuce Wraps with dipping sauce, and a Grilled Thick-Cut Pork Chop topped with a fried egg and served with a fresh salad. A menu and glasses of wine are also on the table.",
-    imageHeight: 335,
+    imageHeight: 336,
     brandUrl: "https://mspmag.com/",
     brandLogo: mspMagLogo,
     brandLogoAlt: "Mpls.St.Paul Magazine's logo",
@@ -76,7 +95,7 @@ const mediaArticles: MediaCard[] = [
     imageSrc: top30StarTribune,
     imageAlt: "Sticky Jicama Ribs at Khue's Kitchen.",
     imageHeight: 305,
-    brandUrl: "https://heavytable.com/",
+    brandUrl: "https://startribune.com/",
     brandLogo: starTribuneLogo,
     brandLogoAlt: "Star Tribune's logo",
     brandLogoWidth: 150,

@@ -217,6 +217,17 @@ function MobileHeader() {
                   </Button>
                 </motion.div>
 
+                <motion.div variants={linkVariants}>
+                  <Button variant={"link"} asChild>
+                    <a
+                      href="https://order.toasttab.com/egiftcards/khues-kitchen"
+                      className="block !text-xl"
+                    >
+                      Gift Cards
+                    </a>
+                  </Button>
+                </motion.div>
+
                 <motion.div variants={linkVariants} className="mb-auto w-full">
                   <Accordion
                     value={hoursAndLocationAccordionOpen ? "item-1" : ""}

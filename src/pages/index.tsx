@@ -33,9 +33,9 @@ import heavyTableLogo from "public/media/heavyTableLogo.png";
 import theTastingNotesLogo from "public/media/theTastingNotesLogo.png";
 import mspMagLogo from "public/media/mspMagLogo.png";
 
+import top30StarTribune from "public/media/top30StarTribune.jpg";
 import eric from "public/ourStory/eric.webp";
 import ericUpscaled from "public/ourStory/ericUpscaled.jpg";
-
 import reservations from "public/interior/reservations.jpg";
 
 import masonryFoodOne from "public/menuItems/sticky-jicama-ribs.png";
@@ -571,7 +571,7 @@ export default function Home() {
             <CarouselItem className="baseVertFlex basis-[55%] rounded-md md:basis-[35%] xl:basis-[15.9%]">
               <Button variant={"text"} className="!p-0" asChild>
                 <a
-                  href="https://www.startribune.com/the-30-restaurants-most-vital-to-the-twin-cities-area-right-now/601328163"
+                  href="https://www.startribune.com/khues-kitchen-st-paul-best-new-restauarant-quang-minneapolis/601533607"
                   className="baseFlex"
                 >
                   <Image
@@ -722,7 +722,7 @@ export default function Home() {
 
       <ParallaxProvider scrollAxis="vertical">
         {/* wrapping (prob just for padding?) container of promo sections below */}
-        <div className="baseVertFlex w-full gap-16 p-8 pb-16">
+        <div className="baseVertFlex mt-8 w-full gap-16 p-8 pb-16">
           {/* masonry of featured food items */}
           <div className="homepageFoodMasonry h-[700px] w-full max-w-sm tablet:h-[450px] tablet:max-w-4xl">
             <div className="firstMasonryFood relative left-0 top-0 size-full overflow-hidden rounded-md shadow-md">
@@ -811,6 +811,146 @@ export default function Home() {
                   className="!relative !h-[120%] !w-full rounded-md object-cover"
                 />
               </Parallax>
+            </div>
+          </div>
+
+          {/* Star Tribune Award Section */}
+          <div className="baseVertFlex w-full max-w-sm overflow-hidden rounded-md border shadow-md tablet:hidden">
+            <div className="relative h-60 w-full overflow-hidden shadow-md">
+              <Image
+                src={top30StarTribune}
+                alt={"Sticky Jicama Ribs at Khue's Kitchen."}
+                width={384}
+                className="!relative !bottom-0 !size-full !h-96 object-cover !pb-36"
+              />
+            </div>
+            <div className="baseVertFlex relative !items-start gap-2 overflow-hidden rounded-b-md bg-gradient-to-br from-offwhite to-primary/10 p-4 pb-8">
+              <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
+
+              <div className="baseVertFlex !items-start gap-1">
+                <Button variant={"text"} className="!p-0" asChild>
+                  <a
+                    href="https://www.startribune.com/khues-kitchen-st-paul-best-new-restauarant-quang-minneapolis/601533607"
+                    className="baseFlex"
+                  >
+                    <Image
+                      src={starTribuneLogo}
+                      alt="Star Tribune's logo"
+                      width={150}
+                      height={35}
+                      className="-ml-5 mb-2"
+                    />
+                  </a>
+                </Button>
+
+                <p className="text-lg font-semibold text-stone-800">
+                  Best New Restaurant of 2025
+                </p>
+              </div>
+
+              <p className="mt-2">
+                We are truly humbled to be recognized by the Star Tribune as the
+                Best New Restaurant of 2025. This honor is a testament to the
+                passion of our incredible team and the support of our wonderful
+                community. Thank you for believing in our vision and for making
+                Khue's a place you call home. We couldn't have reached this
+                milestone without you!
+              </p>
+
+              <Button className="baseFlex mb-2 mt-6 gap-2 self-center" asChild>
+                <a
+                  href="https://www.startribune.com/khues-kitchen-st-paul-best-new-restauarant-quang-minneapolis/601533607"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <HiOutlineNewspaper className="size-5" />
+                  Read the article
+                </a>
+              </Button>
+            </div>
+          </div>
+
+          <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
+            <div className="baseVertFlex relative mt-4 max-w-[610px] !items-start gap-2 overflow-hidden rounded-md border bg-gradient-to-br from-offwhite to-primary/10 p-6 pr-10 shadow-md">
+              <StaticLotus className="absolute -right-5 -top-5 size-16 rotate-[-135deg] fill-primary/50" />
+              <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
+
+              <div className="baseVertFlex !items-start gap-1">
+                <Button variant={"text"} className="!p-0" asChild>
+                  <a
+                    href="https://www.startribune.com/khues-kitchen-st-paul-best-new-restauarant-quang-minneapolis/601533607"
+                    className="baseFlex"
+                  >
+                    <Image
+                      src={starTribuneLogo}
+                      alt="Star Tribune's logo"
+                      width={150}
+                      height={35}
+                      className="-ml-5 mb-2"
+                    />
+                  </a>
+                </Button>
+
+                <p className="text-xl font-semibold">
+                  Best New Restaurant of 2025
+                </p>
+              </div>
+
+              <p className="mt-4">
+                We are truly humbled to be recognized by the Star Tribune as the
+                Best New Restaurant of 2025. This honor is a testament to the
+                passion of our incredible team and the support of our wonderful
+                community. Thank you for believing in our vision and for making
+                Khue's a place you call home. We couldn't have reached this
+                milestone without you!
+              </p>
+
+              <Button className="baseFlex mt-6 gap-2" asChild>
+                <a
+                  href="https://www.startribune.com/khues-kitchen-st-paul-best-new-restauarant-quang-minneapolis/601533607"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <HiOutlineNewspaper className="size-5" />
+                  Read the article
+                </a>
+              </Button>
+            </div>
+
+            <div className="baseFlex relative size-72">
+              <motion.div
+                ref={firstBackdropAnimation.elementRef}
+                initial={{ opacity: 0, x: 50 }}
+                animate={firstBackdropAnimation.controls}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 15,
+                }}
+                className="absolute right-4 top-4 size-full rounded-md bg-gradient-to-br from-primary to-darkPrimary"
+              ></motion.div>
+
+              <motion.div
+                ref={firstPromoImageAnimation.elementRef}
+                initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
+                animate={firstPromoImageAnimation.controls}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 15,
+                }}
+                className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
+              >
+                <Image
+                  src={top30StarTribune}
+                  alt={"Sticky Jicama Ribs at Khue's Kitchen."}
+                  sizes="750px"
+                  className="!relative !bottom-0 !size-full !h-96 rounded-md object-cover !pb-20"
+                />
+              </motion.div>
             </div>
           </div>
 
