@@ -215,7 +215,7 @@ function Menu() {
       className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem)]"
     >
       {/* Hero */}
-      <div className="baseFlex relative h-56 w-full overflow-hidden bg-darkPrimary shadow-md md:bg-gradient-to-br md:from-primary md:to-darkPrimary xl:h-72">
+      <div className="baseFlex relative z-30 h-56 w-full overflow-hidden bg-darkPrimary shadow-md md:bg-gradient-to-br md:from-primary md:to-darkPrimary xl:h-72">
         <div className="absolute inset-0 grid h-56 w-full grid-cols-2 grid-rows-2 gap-4 p-0 md:grid-cols-[1fr_1fr_auto_1fr_1fr] md:grid-rows-1 md:gap-0 xl:h-72 xl:gap-12 xl:px-8 xl:py-0">
           <div
             style={{
@@ -299,13 +299,13 @@ function Menu() {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.5 }}
         // bg is background color of the <body>, 1% off from what bg-offwhite is
-        className="baseFlex sticky left-0 top-20 z-10 size-full h-16 w-full overflow-x-hidden bg-body shadow-lg tablet:top-24 tablet:h-16 tablet:w-3/4 tablet:shadow-none"
+        className="baseFlex sticky left-0 top-20 z-10 size-full h-16 w-full overflow-x-hidden bg-body shadow-lg 2xl:w-3/4 2xl:shadow-none tablet:top-24 tablet:h-16"
       >
         <Carousel
           setApi={setStickyCategoriesApi}
           opts={{
             breakpoints: {
-              "(min-width: 1000px)": {
+              "(min-width: 1165px)": {
                 active: false,
               },
             },
