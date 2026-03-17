@@ -1,4 +1,3 @@
-import { type Discount } from "@prisma/client";
 import { motion } from "framer-motion";
 import Image, { type StaticImageData } from "next/image";
 import {
@@ -42,38 +41,20 @@ import porkChop from "public/menuItems/pork-chop.png";
 import chickenSalad from "public/menuItems/chicken-salad.png";
 import bunChay from "public/menuItems/bun-chay.png";
 import Calendar from "~/components/ui/Calendar";
+import {
+  menuCategories,
+  type MenuCategory as MenuCategoryData,
+  type MenuItem as MenuItemData,
+} from "~/data/menu";
 import { useMainStore } from "~/stores/MainStore";
 
-type FullMenuItem = {
-  id: string;
-  createdAt: string;
-  name: string;
-  description: string;
-  price: number;
-  altPrice: number | null;
-  available: boolean;
-  discontinued: boolean;
-  listOrder: number;
-  hasImageOfItem: boolean;
-  menuCategoryId: string;
-  activeDiscountId: string | null;
-  isChefsChoice: boolean;
-  isAlcoholic: boolean;
-  isVegetarian: boolean;
-  isVegan: boolean;
-  isGlutenFree: boolean;
-  showUndercookedOrRawDisclaimer: boolean;
-  pointReward: boolean;
-  birthdayReward: boolean;
-  reviews: unknown;
-  activeDiscount: Discount | null;
-  customizationCategories: unknown[];
-  // Optional properties (not present on all items)
-  isWeekendSpecial?: boolean;
-  isDairyFree?: boolean;
-  isSpicy?: boolean;
-  askServerForAvailability?: boolean;
-};
+const menuCategoryIndices = menuCategories.reduce<Record<string, number>>(
+  (indices, category, index) => {
+    indices[category.name] = index;
+    return indices;
+  },
+  {},
+);
 
 function Menu() {
   const { viewportLabel } = useMainStore((state) => ({
@@ -93,10 +74,8 @@ function Menu() {
 
   // Effect to set category scroll Y values
   useEffect(() => {
-    if (!menuCategoryIndicies) return;
-
     function getCategoryScrollYValues() {
-      const scrollYValues = Object.keys(menuCategoryIndicies).map(
+      const scrollYValues = Object.keys(menuCategoryIndices).map(
         (categoryName) => {
           const categoryContainer = document.getElementById(
             `${categoryName}Container`,
@@ -106,7 +85,7 @@ function Menu() {
       );
 
       const categoryScrollYValues: Record<string, number> = {};
-      Object.keys(menuCategoryIndicies).forEach((categoryName, index) => {
+      Object.keys(menuCategoryIndices).forEach((categoryName, index) => {
         categoryScrollYValues[categoryName] = scrollYValues[index] ?? 0;
       });
 
@@ -176,8 +155,8 @@ function Menu() {
     if (programmaticallyScrolling || currentlyInViewCategory === "") return;
 
     const currentlyInViewCategoryListOrderIndex =
-      menuCategoryIndicies[
-        currentlyInViewCategory as keyof typeof menuCategoryIndicies
+      menuCategoryIndices[
+        currentlyInViewCategory as keyof typeof menuCategoryIndices
       ];
 
     if (currentlyInViewCategoryListOrderIndex === undefined) return;
@@ -315,9 +294,9 @@ function Menu() {
           className="baseFlex mb-1 h-12 w-full"
         >
           <CarouselContent className="h-12">
-            {menuCategories?.map((category) => {
+            {menuCategories.map((category, categoryIndex) => {
               return (
-                <Fragment key={category.id}>
+                <Fragment key={category.name}>
                   {(category.name === "Sparkling" ||
                     category.name === "N/A Beverages") && (
                     <Separator
@@ -328,11 +307,6 @@ function Menu() {
                   <CarouselItem className="baseFlex basis-auto first:ml-2 last:mr-2">
                     <MenuCategoryButton
                       name={category.name}
-                      listOrder={
-                        menuCategoryIndicies[
-                          category.name as keyof typeof menuCategoryIndicies
-                        ] ?? 0
-                      }
                       currentlyInViewCategory={currentlyInViewCategory}
                       setProgrammaticallyScrolling={
                         setProgrammaticallyScrolling
@@ -363,16 +337,11 @@ function Menu() {
           transition={{ duration: 0.5 }}
           className="baseVertFlex mb-8 mt-8 size-full gap-8 tablet:mt-6 tablet:gap-16"
         >
-          {menuCategories?.map((category) => (
+          {menuCategories.map((category) => (
             <MenuCategory
-              key={category.id}
+              key={category.name}
               name={category.name}
               menuItems={category.menuItems}
-              listOrder={
-                menuCategoryIndicies[
-                  category.name as keyof typeof menuCategoryIndicies
-                ]
-              }
               viewportLabel={viewportLabel}
             />
           ))}
@@ -413,28 +382,23 @@ function Menu() {
 
 export default Menu;
 
-interface MenuCategoryButton {
+interface MenuCategoryButtonProps {
   currentlyInViewCategory: string;
   name: string;
-  listOrder: number;
   setProgrammaticallyScrolling: Dispatch<SetStateAction<boolean>>;
 }
 
 function MenuCategoryButton({
   currentlyInViewCategory,
   name,
-  listOrder,
   setProgrammaticallyScrolling,
-}: MenuCategoryButton) {
+}: MenuCategoryButtonProps) {
   return (
     <motion.div
       key={`${name}CategoryButton`}
       id={`${name}Button`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      style={{
-        order: listOrder,
-      }}
       className="flex-none shrink-0 snap-center text-center"
       onClick={() => {
         const categoryContainer = document.getElementById(`${name}Container`);
@@ -465,28 +429,19 @@ function MenuCategoryButton({
   );
 }
 
-interface MenuCategory {
+interface MenuCategoryProps {
   name: string;
-  menuItems: FullMenuItem[];
-  listOrder: number;
+  menuItems: MenuCategoryData["menuItems"];
   viewportLabel: string;
 }
 
-function MenuCategory({
-  name,
-  menuItems,
-  listOrder,
-  viewportLabel,
-}: MenuCategory) {
+function MenuCategory({ name, menuItems, viewportLabel }: MenuCategoryProps) {
   return (
     <motion.div
       key={`${name}MenuCategory`}
       id={`${name}Container`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      style={{
-        order: listOrder,
-      }}
       className={`baseVertFlex w-full scroll-m-48 !items-start p-2 ${name === "Beverages" || name === "Beer" || name === "Wine" ? "gap-0" : "gap-0 tablet:gap-4"}`}
     >
       {name === "Starters" || name === "Entrees" || name === "Desserts" ? (
@@ -567,9 +522,8 @@ function MenuCategory({
           <div className="grid w-full grid-cols-1 items-start justify-items-center p-1 sm:grid-cols-2 sm:gap-8 2xl:grid-cols-3">
             {menuItems.map((item) => (
               <MenuItemPreview
-                key={item.id}
+                key={`${name}-${item.name}`}
                 menuItem={item}
-                listOrder={item.listOrder}
                 viewportLabel={viewportLabel}
               />
             ))}
@@ -590,9 +544,8 @@ function MenuCategory({
           <div className="grid w-full grid-cols-1 items-start justify-items-center p-1 sm:grid-cols-2 sm:gap-3 sm:gap-x-16 xl:grid-cols-3 3xl:grid-cols-4">
             {menuItems.map((item) => (
               <MenuItemPreview
-                key={item.id}
+                key={`${name}-${item.name}`}
                 menuItem={item}
-                listOrder={item.listOrder}
                 viewportLabel={viewportLabel}
               />
             ))}
@@ -603,7 +556,7 @@ function MenuCategory({
   );
 }
 
-function formatMenuItemPrice(menuItem: FullMenuItem) {
+function formatMenuItemPrice(menuItem: MenuItemData) {
   return (
     <div className="baseFlex gap-2 self-end text-base">
       <p>{formatPrice(menuItem.price, true)}</p>
@@ -617,32 +570,23 @@ function formatMenuItemPrice(menuItem: FullMenuItem) {
   );
 }
 
-interface MenuItemPreview {
-  menuItem: FullMenuItem;
-  listOrder: number;
+interface MenuItemPreviewProps {
+  menuItem: MenuItemData;
   viewportLabel: string;
 }
 
-function MenuItemPreview({
-  menuItem,
-  listOrder,
-  viewportLabel,
-}: MenuItemPreview) {
+function MenuItemPreview({ menuItem, viewportLabel }: MenuItemPreviewProps) {
+  const menuItemImage = menuItemImages[menuItem.name];
+
   return (
-    <div
-      style={{
-        order: listOrder + 1,
-      }}
-      className="relative w-full max-w-[400px] px-2"
-    >
+    <div className="relative w-full max-w-[400px] px-2">
       <div
         className={`${menuItem.description ? "flex-row" : "flex-row"} flex size-full items-center !justify-between gap-4 py-1`}
       >
         <div className="baseFlex mt-4 w-full !items-start gap-4 tablet:mt-0">
-          {menuItem.hasImageOfItem && (
+          {menuItemImage && (
             <Image
-              // src={"/menuItems/sampleImage.webp"}
-              src={menuItemImages[menuItem.name] ?? ""}
+              src={menuItemImage}
               alt={`${menuItem.name} at Khue's in St. Paul`}
               width={500}
               height={500}
@@ -731,1394 +675,4 @@ const menuItemImages: Record<string, StaticImageData> = {
   "20 oz Grilled Ribeye": grilledRibeye,
   "Cà Phê Sữa Đá Affogato": affogato,
   "Thai Tea Tres Leches": thaiTeaTresLeches,
-};
-
-const menuCategories = [
-  {
-    id: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-    createdAt: "2024-02-21T03:48:14.000Z",
-    name: "Starters",
-    active: true,
-    orderableOnline: true,
-    listOrder: 1, // was 2
-    activeDiscountId: null,
-    activeDiscount: null,
-    menuItems: [
-      {
-        id: "7b0aa9eb-2a87-48cd-8c98-67b3f5a4b74f",
-        createdAt: "2024-02-21T03:51:47.000Z",
-        name: "Cream Cheese Wontons",
-        description: "Savory cream cheese, sweet and sour sauce",
-        price: 1200,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 1,
-        hasImageOfItem: true,
-        menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: true,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: true,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "702b5c80-7d63-43ef-a80f-948c64c21575",
-        createdAt: "2024-05-15T21:32:32.217Z",
-        name: "Crispy Pork Lettuce Wraps",
-        description:
-          "Vietnamese roast pork, woven noodles, butter lettuce, cucumbers, herb salad, fish sauce vinaigrette",
-        price: 1500,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 2, // first in array
-        hasImageOfItem: false,
-        menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-        activeDiscountId: null,
-        isWeekendSpecial: true,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isDairyFree: true,
-        isVegan: false,
-        isGlutenFree: true,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "2315135f-19f4-4ede-9af7-0ffccadd2557",
-        createdAt: "2024-05-15T21:28:07.340Z",
-        name: "Khue's Chicken Salad",
-        description:
-          "Taiwanese cabbage, rau ram, thai chiles, fish sauce vinaigrette, crushed peanuts",
-        price: 1500,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 3,
-        hasImageOfItem: true,
-        menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isSpicy: true,
-        isDairyFree: true,
-        isGlutenFree: true,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-    ],
-  },
-  {
-    id: "98b3d4ba-4689-4372-a206-448f7eb5ebf4",
-    createdAt: "2024-02-20T21:49:34.000Z",
-    name: "Entrees",
-    active: true,
-    orderableOnline: true,
-    listOrder: 2,
-    activeDiscountId: null,
-    activeDiscount: null,
-    menuItems: [
-      {
-        id: "1663442b-e4a2-4bac-a5ab-b7d2edb7cfd9",
-        createdAt: "2024-05-15T21:36:35.209Z",
-        name: "Roast Pork Fried Rice",
-        description:
-          "Scallion oil, crispy pork, lap xuong, fried egg, chili crunch. Can be vegetarian.",
-        price: 1600,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 1,
-        hasImageOfItem: true,
-        menuCategoryId: "98b3d4ba-4689-4372-a206-448f7eb5ebf4",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isDairyFree: true,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: true,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "a44bfc71-facd-4ce6-a576-afbac6e2b2f3",
-        createdAt: "2024-05-15T16:36:35.000Z",
-        name: "Spicy Chicken Sandwich",
-        description:
-          "Brioche bun, lettuce, tomato, house pickles, herb aioli, chili crunch",
-        price: 1700,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: true,
-        menuCategoryId: "98b3d4ba-4689-4372-a206-448f7eb5ebf4",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "aa7afbc1-8dad-49b8-ac9c-4c7651264dde",
-        createdAt: "2024-02-20T15:53:09.000Z",
-        name: "Bún Chay | Rice Noodle Salad",
-        description:
-          "Crispy tofu, vermicelli, soy vinaigrette, herb salad, perilla leaf, crushed peanuts",
-        price: 1900,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 8,
-        hasImageOfItem: true,
-        menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: true,
-        isVegan: true,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: true,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "cab3e737-7b07-423f-9d9c-8bce07a9e3e2",
-        createdAt: "2024-02-20T15:53:09.000Z",
-        name: "Sticky Jicama Ribs",
-        description:
-          "Marinated tofu, fried jicama, jasmine rice, soy glaze, toasted sesame seeds, mint, scallions",
-        price: 2100,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 4,
-        hasImageOfItem: true,
-        menuCategoryId: "60f90b72-e44a-4775-b071-97ed5dc020d3",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: true,
-        isVegan: true,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: true,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "7bd980fe-a447-401d-8880-03ec4773a9b2",
-        createdAt: "2024-02-20T21:54:12.000Z",
-        name: "20 oz Grilled Ribeye",
-        description:
-          "Traditional Vietnamese marinade, jasmine rice, yu choy, scallions",
-        price: 4900,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 3,
-        hasImageOfItem: true,
-        menuCategoryId: "98b3d4ba-4689-4372-a206-448f7eb5ebf4",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isDairyFree: true,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: true,
-        pointReward: true,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "a776d637-bb2d-4e48-ab52-2c7fe70d16e4",
-        createdAt: "2024-02-21T15:54:46.000Z",
-        name: "Chili Crunch Wings",
-        description: "Green garlic ranch, house pickles",
-        price: 1600,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 5,
-        hasImageOfItem: true,
-        menuCategoryId: "98b3d4ba-4689-4372-a206-448f7eb5ebf4",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "32ca68b1-ec1b-4bdc-b853-51b63d73cb26",
-        createdAt: "2024-02-21T15:54:46.000Z",
-        name: "Grilled Thick-Cut Pork Chop",
-        description:
-          "Peppercorn marinade, jasmine rice, scallion oil, nước mắm salad, fried egg",
-        price: 2800,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 7,
-        hasImageOfItem: true,
-        menuCategoryId: "98b3d4ba-4689-4372-a206-448f7eb5ebf4",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isDairyFree: true,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: true,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-    ],
-  },
-  {
-    id: "7abeebb9-4fce-457a-af05-adb1b89aa1b0",
-    createdAt: "2024-02-20T21:50:03.000Z",
-    name: "Desserts",
-    active: true,
-    orderableOnline: true,
-    listOrder: 3,
-    activeDiscountId: null,
-    activeDiscount: null,
-    menuItems: [
-      {
-        id: "3581eac7-f105-486e-97de-2aa234bb6e0c",
-        createdAt: "2024-05-15T21:38:58.971Z",
-        name: "Cà Phê Sữa Đá Affogato",
-        description:
-          "Vietnamese coffee, vanilla ice cream, black sesame coconut tuile. * Contains hazelnuts",
-        price: 900,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 1,
-        hasImageOfItem: true,
-        menuCategoryId: "7abeebb9-4fce-457a-af05-adb1b89aa1b0",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: true,
-        isVegan: false,
-        isGlutenFree: true,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: true,
-        birthdayReward: true,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "3dad69fb-2607-4563-aeca-79515f93e06d",
-        createdAt: "2024-02-21T09:58:09.000Z",
-        name: "Thai Tea Tres Leches",
-        description:
-          "Milk soaked chiffon cake, caramelized coconut cream, shortbread crumble, brown sugar boba",
-        price: 1200,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: true,
-        menuCategoryId: "7abeebb9-4fce-457a-af05-adb1b89aa1b0",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: true,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: true,
-        birthdayReward: true,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-    ],
-  },
-  {
-    id: "a7403e9f-35b7-48f6-add7-a5d9121a5f6d",
-    createdAt: "2024-03-29T16:03:43.000Z",
-    name: "Sparkling",
-    active: true,
-    orderableOnline: false,
-    listOrder: 4,
-    activeDiscountId: null,
-    activeDiscount: null,
-    menuItems: [
-      {
-        id: "06eb8dce-1e9d-4053-a843-4dec5c217f14",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Rosa Luna",
-        description: "Sparkling Red, Lambrusco, Emilia-Romagna, Italy",
-        price: 1500,
-        altPrice: 6000,
-        available: true,
-        discontinued: false,
-        listOrder: 1,
-        hasImageOfItem: false,
-        menuCategoryId: "a7403e9f-35b7-48f6-add7-a5d9121a5f6d",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "a48bf6eb-c185-49b9-9d53-d1651015ae4f",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "J. Laurens",
-        description:
-          "Crémant, Chardonnay, Chenin Blanc, Mauzac, Languedoc, France",
-        price: 1500,
-        altPrice: 6000,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "a7403e9f-35b7-48f6-add7-a5d9121a5f6d",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-    ],
-  },
-  {
-    id: "22fe5cbd-8e0b-4387-9456-006b31d5ec72",
-    createdAt: "2024-03-29T16:03:43.000Z",
-    name: "White",
-    active: true,
-    orderableOnline: false,
-    listOrder: 5,
-    activeDiscountId: null,
-    activeDiscount: null,
-    menuItems: [
-      {
-        id: "a6c44c03-de7f-431f-acee-305fc9ee0c9a",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Rebholz",
-        description: "Pinot Blanc, Chardonnay 2022, Pfalz, Germany",
-        price: 1800,
-        altPrice: 7000,
-        available: true,
-        discontinued: false,
-        listOrder: 1,
-        hasImageOfItem: false,
-        menuCategoryId: "22fe5cbd-8e0b-4387-9456-006b31d5ec72",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "86b82c5c-f764-4041-b2b8-70e60b80ba5d",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Kühling-Gillot",
-        description: "Riesling 2022, Trocken, Rheinhessen, Germany",
-        price: 1600,
-        altPrice: 6200,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "22fe5cbd-8e0b-4387-9456-006b31d5ec72",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "f1f0dc74-0e54-4c3e-84c0-7fc7a5f0d6fd",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Pierpaolo Pecorari",
-        description: "Sauvignon Blanc 2024, Venezia Giulia, Italy",
-        price: 1500,
-        altPrice: 5600,
-        available: true,
-        discontinued: false,
-        listOrder: 3,
-        hasImageOfItem: false,
-        menuCategoryId: "22fe5cbd-8e0b-4387-9456-006b31d5ec72",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "5dc63b56-57ec-4b66-8bb4-26251e92d232",
-        createdAt: "2026-03-17T00:00:00.000Z",
-        name: "Martin Woods",
-        description: "Aligoté 2023, Chehalem Mountains, Oregon",
-        price: 10000,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 4,
-        hasImageOfItem: false,
-        menuCategoryId: "22fe5cbd-8e0b-4387-9456-006b31d5ec72",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-        askServerForAvailability: true,
-      },
-      {
-        id: "9001c348-c05b-4ad7-a4a7-7f5b66fc9f36",
-        createdAt: "2026-03-17T00:00:00.000Z",
-        name: "Amevive",
-        description: "Roussanne 2023, Los Olivos District, California",
-        price: 8500,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 5,
-        hasImageOfItem: false,
-        menuCategoryId: "22fe5cbd-8e0b-4387-9456-006b31d5ec72",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-        askServerForAvailability: true,
-      },
-      {
-        id: "37db2542-a32e-4c26-b60e-f99e6b1447a5",
-        createdAt: "2026-03-17T00:00:00.000Z",
-        name: "Bodegas Los Bermejos",
-        description: "Malvasía, Volcánica Seco, Canary Islands, Spain",
-        price: 7500,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 6,
-        hasImageOfItem: false,
-        menuCategoryId: "22fe5cbd-8e0b-4387-9456-006b31d5ec72",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-        askServerForAvailability: true,
-      },
-      {
-        id: "65acdc9f-62dd-485a-bde0-e01d52ad0e43",
-        createdAt: "2026-03-17T00:00:00.000Z",
-        name: "Occhipinti",
-        description: "Albanello, Muscat of Alexandria 2024, Sicily, Italy",
-        price: 7000,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 7,
-        hasImageOfItem: false,
-        menuCategoryId: "22fe5cbd-8e0b-4387-9456-006b31d5ec72",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-        askServerForAvailability: true,
-      },
-    ],
-  },
-  {
-    id: "6b21a3e1-97b4-45d7-9a93-25547c0990d6",
-    createdAt: "2024-03-29T16:03:43.000Z",
-    name: "Orange / Rosé",
-    active: true,
-    orderableOnline: false,
-    listOrder: 6,
-    activeDiscountId: null,
-    activeDiscount: null,
-    menuItems: [
-      {
-        id: "afdbd5a9-431e-4bc0-9488-7cc44e30fa48",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Sanctum",
-        description: "Skin Contact, White Blend, Styria, Slovenia",
-        price: 1600,
-        altPrice: 6500,
-        available: true,
-        discontinued: false,
-        listOrder: 1,
-        hasImageOfItem: false,
-        menuCategoryId: "6b21a3e1-97b4-45d7-9a93-25547c0990d6",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "13ae4b38-92c7-42ab-bc94-ca2edd01049d",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Moulin de Gassac",
-        description: "Rosé, Grenache, Carignan, Syrah, France",
-        price: 1200,
-        altPrice: 4500,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "6b21a3e1-97b4-45d7-9a93-25547c0990d6",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-    ],
-  },
-  {
-    id: "86c7aa2a-64f1-488a-a87e-8efc3a79447f",
-    createdAt: "2024-03-29T16:03:43.000Z",
-    name: "Red",
-    active: true,
-    orderableOnline: false,
-    listOrder: 7, // was 8
-    activeDiscountId: null,
-    activeDiscount: null,
-    menuItems: [
-      {
-        id: "35daaaa0-b891-46fa-8f86-f7a3a36984a0",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Scar of the Sea",
-        description: "Pinot Noir 2024, SLO Coast, California",
-        price: 1800,
-        altPrice: 7000,
-        available: true,
-        discontinued: false,
-        listOrder: 1,
-        hasImageOfItem: false,
-        menuCategoryId: "86c7aa2a-64f1-488a-a87e-8efc3a79447f",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "95424f5e-5b4f-4960-b090-6b1827a1672c",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Montepeloso A Quo",
-        description: "Sangiovese, Montepulciano, Tuscany, Italy",
-        price: 1600,
-        altPrice: 6200,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "86c7aa2a-64f1-488a-a87e-8efc3a79447f",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "3815ff8c-e62b-44cc-94cb-f93e5843e95c",
-        createdAt: "2024-03-29T16:10:53.000Z",
-        name: "Maloof",
-        description: "Grenache, Syrah, Viognier, Tualatin Hills, Oregon",
-        price: 1600,
-        altPrice: 5800,
-        available: true,
-        discontinued: false,
-        listOrder: 3,
-        hasImageOfItem: false,
-        menuCategoryId: "86c7aa2a-64f1-488a-a87e-8efc3a79447f",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "0dd295ca-e562-49a3-b267-7f4a00c29d6d",
-        createdAt: "2026-03-17T00:00:00.000Z",
-        name: "Jonata Todos",
-        description: "Bordeaux Blend, Santa Ynez Valley, California",
-        price: 10500,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 4,
-        hasImageOfItem: false,
-        menuCategoryId: "86c7aa2a-64f1-488a-a87e-8efc3a79447f",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-        askServerForAvailability: true,
-      },
-      {
-        id: "8b1d0bce-6952-468f-b36f-62c8cce6650a",
-        createdAt: "2026-03-17T00:00:00.000Z",
-        name: "Santini Au Vin Rouge",
-        description: "Pinot Noir, Gamay, Chardonnay, France",
-        price: 9800,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 5,
-        hasImageOfItem: false,
-        menuCategoryId: "86c7aa2a-64f1-488a-a87e-8efc3a79447f",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-        askServerForAvailability: true,
-      },
-      {
-        id: "568f26d5-8358-45e8-90a1-140f7ae30f16",
-        createdAt: "2026-03-17T00:00:00.000Z",
-        name: "Lady of the Sunshine",
-        description: "Nero d'Avola, Pinot Noir 2024, Edna Valley, California",
-        price: 9500,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 6,
-        hasImageOfItem: false,
-        menuCategoryId: "86c7aa2a-64f1-488a-a87e-8efc3a79447f",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-        askServerForAvailability: true,
-      },
-      {
-        id: "f405b767-37d6-432a-b2ee-f265db0dc110",
-        createdAt: "2026-03-17T00:00:00.000Z",
-        name: "Le Fruit Du Hasard",
-        description: "Carignan, Syrah, Languedoc-Roussillon, France",
-        price: 6000,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 7,
-        hasImageOfItem: false,
-        menuCategoryId: "86c7aa2a-64f1-488a-a87e-8efc3a79447f",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-        askServerForAvailability: true,
-      },
-    ],
-  },
-  {
-    id: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
-    createdAt: "2024-03-29T16:02:56.000Z",
-    name: "Sake",
-    active: true,
-    orderableOnline: false,
-    listOrder: 8,
-    activeDiscountId: null,
-    activeDiscount: null,
-    menuItems: [
-      {
-        id: "aaea55ae-8889-4d8a-81b5-0bc48f24a721",
-        createdAt: "2024-03-29T16:10:10.000Z",
-        name: "Mana 1751 True Vision",
-        description:
-          "Producer: Manatsuru, Grade: Tokubetsu Junmai, Yamahai, Muroka, Genshu",
-        price: 1800,
-        altPrice: 8500,
-        available: true,
-        discontinued: false,
-        listOrder: 1,
-        hasImageOfItem: false,
-        menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "dcb19f40-b0d1-4bb1-95aa-60912b76c385",
-        createdAt: "2024-03-29T16:09:49.000Z",
-        name: "Sword of the Sun",
-        description: "Producer: Takatenjin / Doi Brewery, Grade: Honjozo",
-        price: 1600,
-        altPrice: 7500,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "75cf423e-f947-45cb-b80c-edb5d2ac6c48",
-        createdAt: "2024-03-29T16:09:49.000Z",
-        name: "Blossom of Peace",
-        description: "Producer: Tozai, Plum Sake, sweet but balanced",
-        price: 1400,
-        altPrice: 5500,
-        available: true,
-        discontinued: false,
-        listOrder: 3,
-        hasImageOfItem: false,
-        menuCategoryId: "bc6ad82c-c33c-4e91-93bb-610ac4ecc026",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-    ],
-  },
-  {
-    id: "3e79b62f-612a-43ca-bf71-cbfa5b93dba4",
-    createdAt: "2026-03-17T00:00:00.000Z",
-    name: "Cider",
-    active: true,
-    orderableOnline: false,
-    listOrder: 9,
-    activeDiscountId: null,
-    activeDiscount: null,
-    menuItems: [
-      {
-        id: "9e0d933a-8c4e-49f3-b644-024f7ca3fdde",
-        createdAt: "2026-03-17T00:00:00.000Z",
-        name: "Keepsake",
-        description: "Semi-sweet cider, farmhouse blend, Dundas, Minnesota",
-        price: 900,
-        altPrice: 3200,
-        available: true,
-        discontinued: false,
-        listOrder: 1,
-        hasImageOfItem: false,
-        menuCategoryId: "3e79b62f-612a-43ca-bf71-cbfa5b93dba4",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "d45ae2ce-f759-47d0-8f45-2966a9e95f98",
-        createdAt: "2026-03-17T00:00:00.000Z",
-        name: "Wild State Hazy Pink Pineapple Cider",
-        description: "Juicy, tropical, lightly tart cider, Duluth, MN",
-        price: 700,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "3e79b62f-612a-43ca-bf71-cbfa5b93dba4",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-    ],
-  },
-  {
-    id: "9f62c70d-a241-4afd-a03c-ff951145eaf6",
-    createdAt: "2026-03-17T00:00:00.000Z",
-    name: "Beer",
-    active: true,
-    orderableOnline: false,
-    listOrder: 10,
-    activeDiscountId: null,
-    activeDiscount: null,
-    menuItems: [
-      {
-        id: "bba8827a-e02f-49dd-a601-901d6e4120fa",
-        createdAt: "2026-03-17T00:00:00.000Z",
-        name: "Terra Lager",
-        description: "Crisp, clean, refreshing lager, South Korea",
-        price: 600,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 1,
-        hasImageOfItem: false,
-        menuCategoryId: "9f62c70d-a241-4afd-a03c-ff951145eaf6",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "816fdcc3-cc18-4f2c-9534-e31b38f3f65f",
-        createdAt: "2026-03-17T00:00:00.000Z",
-        name: "BlackStack 'Slopes' Pilsner",
-        description: "Light-bodied, fresh French-style pilsner, Saint Paul, MN",
-        price: 700,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "9f62c70d-a241-4afd-a03c-ff951145eaf6",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "b53f4dc7-a721-4e8c-ae22-8b0d56d573da",
-        createdAt: "2026-03-17T00:00:00.000Z",
-        name: "YOHO 'Wednesday Cat' Belgian White Ale",
-        description: "Bright, citrusy, smooth Belgian white ale, Japan",
-        price: 900,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 3,
-        hasImageOfItem: false,
-        menuCategoryId: "9f62c70d-a241-4afd-a03c-ff951145eaf6",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "327098b7-9fd8-4406-89e5-5abf486d8d53",
-        createdAt: "2026-03-17T00:00:00.000Z",
-        name: "YOHO 'Aooni' IPA",
-        description: "Bold, hoppy, earthy Japanese IPA, Japan",
-        price: 900,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 4,
-        hasImageOfItem: false,
-        menuCategoryId: "9f62c70d-a241-4afd-a03c-ff951145eaf6",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: true,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-    ],
-  },
-  {
-    id: "afbe0627-48a5-40df-bd5d-f6bb25fd2a07",
-    createdAt: "2024-02-20T21:49:55.000Z",
-    name: "N/A Beverages",
-    active: true,
-    orderableOnline: true,
-    listOrder: 11,
-    activeDiscountId: null,
-    activeDiscount: null,
-    menuItems: [
-      {
-        id: "717349d0-4829-4e4a-98ab-a9e00a67768a",
-        createdAt: "2024-02-20T21:56:02.000Z",
-        name: "Unified Ferments",
-        description: "Oolong Tea or Jasmine Green Tea",
-        price: 1500,
-        altPrice: 5400,
-        available: true,
-        discontinued: false,
-        listOrder: 1,
-        hasImageOfItem: false,
-        menuCategoryId: "afbe0627-48a5-40df-bd5d-f6bb25fd2a07",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "b883736a-314d-4b19-a9e2-582a2a543790",
-        createdAt: "2024-02-20T21:57:13.000Z",
-        name: "Aplos (Cocktail)",
-        description: "Negroni or Ume Spritz",
-        price: 800,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "afbe0627-48a5-40df-bd5d-f6bb25fd2a07",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "c998ae56-1738-4a44-a2d0-fc7c253b9247",
-        createdAt: "2026-03-17T00:00:00.000Z",
-        name: "Bauhaus 'NAH' Hazy Pale Ale",
-        description: "Citrusy, tropical, full-bodied pale ale",
-        price: 700,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 3,
-        hasImageOfItem: false,
-        menuCategoryId: "afbe0627-48a5-40df-bd5d-f6bb25fd2a07",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: true,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "896d0c0d-ee5b-4cdb-9c87-163cbc825e1d",
-        createdAt: "2024-02-20T21:56:45.000Z",
-        name: "Cà Phê Sữa Đá Coffee",
-        description:
-          "Bold, sweet, creamy Vietnamese coffee over ice. Contains hazelnuts.",
-        price: 800,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 4,
-        hasImageOfItem: false,
-        menuCategoryId: "afbe0627-48a5-40df-bd5d-f6bb25fd2a07",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: true,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-    ],
-  },
-  {
-    id: "abf33b8e-670d-4e08-98bb-380799928c7f",
-    createdAt: "2024-02-20T21:49:55.000Z",
-    name: "Soda",
-    active: true,
-    orderableOnline: true,
-    listOrder: 12,
-    activeDiscountId: null,
-    activeDiscount: null,
-    menuItems: [
-      {
-        id: "638d4427-3235-486b-b656-67a30458b05f",
-        createdAt: "2024-02-20T21:56:02.000Z",
-        name: "Sprite",
-        description: "",
-        price: 300,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 1,
-        hasImageOfItem: false,
-        menuCategoryId: "abf33b8e-670d-4e08-98bb-380799928c7f",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "25db431c-2a2b-4535-b5f7-67a38a5e4fc1",
-        createdAt: "2024-02-20T21:57:13.000Z",
-        name: "Coke",
-        description: "",
-        price: 300,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 2,
-        hasImageOfItem: false,
-        menuCategoryId: "abf33b8e-670d-4e08-98bb-380799928c7f",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: false,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "f82b585e-d5de-4834-a3cb-ea5e0309df28",
-        createdAt: "2024-02-20T21:56:45.000Z",
-        name: "Diet Coke",
-        description: "",
-        price: 300,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 3,
-        hasImageOfItem: false,
-        menuCategoryId: "abf33b8e-670d-4e08-98bb-380799928c7f",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: true,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "a85b80bc-0f0a-4de9-aacf-1bdfd3a8a557",
-        createdAt: "2024-02-20T21:56:45.000Z",
-        name: "Canada Dry",
-        description: "",
-        price: 300,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 4,
-        hasImageOfItem: false,
-        menuCategoryId: "abf33b8e-670d-4e08-98bb-380799928c7f",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: true,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-      {
-        id: "7a433898-4ebe-4347-b9e1-d932084422f3",
-        createdAt: "2024-02-20T21:56:45.000Z",
-        name: "San Pellegrino",
-        description: "",
-        price: 300,
-        altPrice: null,
-        available: true,
-        discontinued: false,
-        listOrder: 5,
-        hasImageOfItem: false,
-        menuCategoryId: "abf33b8e-670d-4e08-98bb-380799928c7f",
-        activeDiscountId: null,
-        isChefsChoice: false,
-        isAlcoholic: false,
-        isVegetarian: false,
-        isVegan: false,
-        isGlutenFree: false,
-        showUndercookedOrRawDisclaimer: false,
-        pointReward: true,
-        birthdayReward: false,
-        reviews: null,
-        activeDiscount: null,
-        customizationCategories: [],
-      },
-    ],
-  },
-];
-
-const menuCategoryIndicies = {
-  Starters: 0,
-  Entrees: 1,
-  Desserts: 2,
-  Sparkling: 3,
-  White: 4,
-  "Orange / Rosé": 5,
-  Red: 6,
-  Sake: 7,
-  Cider: 8,
-  Beer: 9,
-  "N/A Beverages": 10,
-  Soda: 11,
 };
