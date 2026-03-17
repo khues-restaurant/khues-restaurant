@@ -698,7 +698,7 @@ function MenuItemPreview({
             )}
 
             {menuItem.askServerForAvailability && (
-              <div className="baseFlex gap-1">
+              <div className="baseFlex !items-start gap-1">
                 {/* <Separator className="my-1 h-[1px] w-4 bg-stone-400" /> */}
                 <span className="text-primary">*</span>
                 <p className="text-sm text-primary">
