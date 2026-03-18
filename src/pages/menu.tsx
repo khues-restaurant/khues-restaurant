@@ -442,7 +442,7 @@ function MenuCategory({ name, menuItems, viewportLabel }: MenuCategoryProps) {
       id={`${name}Container`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className={`baseVertFlex w-full scroll-m-48 !items-start p-2 ${name === "Beverages" || name === "Beer" || name === "Wine" ? "gap-0" : "gap-0 tablet:gap-4"}`}
+      className="baseVertFlex w-full scroll-m-48 !items-start gap-0 p-2 tablet:gap-4"
     >
       {name === "Starters" || name === "Entrees" || name === "Desserts" ? (
         <>
