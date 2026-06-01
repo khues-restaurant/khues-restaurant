@@ -8,6 +8,18 @@ await import("./src/env.js");
 const config = {
   reactStrictMode: false,
   images: {
+    localPatterns: [
+      {
+        pathname: "/_next/static/media/**",
+        search: "?ts=*",
+      },
+      {
+        pathname: "/_next/static/media/**",
+      },
+      {
+        pathname: "/**",
+      },
+    ],
     remotePatterns: [
       {
         protocol: "https",
