@@ -114,6 +114,10 @@ function DynamicHead({ currentPath }: DynamicHead) {
         content="https://www.khueskitchen.com/openGraph/opengraphImage.png"
       />
       <meta property="twitter:card" content="summary_large_image" />
+
+      {/* prevents iOS from automatically turning addresses (on menu)
+          into clickable links */}
+      <meta name="format-detection" content="address=no" />
     </Head>
   );
 }
