@@ -3,9 +3,9 @@ import MobileHeader from "~/components/headers/MobileHeader";
 import { useMainStore } from "~/stores/MainStore";
 
 function HeaderShell() {
-  const { viewportLabel } = useMainStore((state) => ({
-    viewportLabel: state.viewportLabel,
-  }));
+  const viewportLabel = useMainStore((state) => state.viewportLabel);
+
+  if (!viewportLabel) return null;
 
   return (
     <>

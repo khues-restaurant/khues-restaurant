@@ -1,54 +1,17 @@
 import Link from "next/link";
-import { useEffect, useRef } from "react";
 import { FaFacebook } from "react-icons/fa";
-import { FaPhone, FaXTwitter } from "react-icons/fa6";
+import { FaPhone } from "react-icons/fa6";
 import { IoLogoInstagram } from "react-icons/io5";
 import { MdOutlineMail } from "react-icons/md";
 import { SiTiktok } from "react-icons/si";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
-import { useMainStore } from "~/stores/MainStore";
 
 function Footer() {
-  const { setFooterIsInView } = useMainStore((state) => ({
-    setFooterIsInView: state.setFooterIsInView,
-  }));
-
-  const footerRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setFooterIsInView(entry?.isIntersecting ?? false);
-      },
-      {
-        root: null,
-        rootMargin: "0px 0px 0px 0px",
-        threshold: 0,
-      },
-    );
-
-    if (footerRef.current) {
-      observer.observe(footerRef.current);
-    }
-
-    const internalFooterRef = footerRef.current;
-
-    return () => {
-      if (internalFooterRef) {
-        observer.unobserve(internalFooterRef);
-      }
-
-      // setFooterIsInView(false); // was this even necessary?
-    };
-  }, [setFooterIsInView]);
-
   return (
     <footer
       id="footer"
-      ref={footerRef}
-      className="baseVertFlex z-20 min-h-10 w-full gap-8 bg-gradient-to-br from-primary to-darkPrimary 
-p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tablet:py-4"
+      className="baseVertFlex z-20 min-h-10 w-full gap-8 bg-gradient-to-br from-primary to-darkPrimary p-4 py-8 text-offwhite tablet:!flex-row tablet:!justify-between tablet:gap-0 tablet:py-4"
     >
       {/* contact info */}
       <div className="baseVertFlex gap-3 tablet:!items-start tablet:!justify-start tablet:gap-0">

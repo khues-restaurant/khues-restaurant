@@ -17,168 +17,121 @@ function Privacy() {
           Privacy Policy
         </h1>
         <p className="mb-4">
-          <span className="font-semibold">Effective Date:</span> May 15th, 2024
+          <span className="font-semibold">Effective Date:</span> August 31, 2026
         </p>
 
         <p className="mb-4">
           Khue&apos;s (&ldquo;we&rdquo;, &ldquo;our&rdquo;, &ldquo;us&rdquo;) is
           committed to protecting your privacy. This Privacy Policy explains how
-          we collect, use, disclose, and safeguard your information when you
-          visit our website
+          we collect, use, and share information when you visit
           <Button variant="link" className="h-6 !px-1" asChild>
             <Link prefetch={false} href="/">
               khueskitchen.com
             </Link>
           </Button>
-          , use our services, and interact with our platform. Please read this
-          policy carefully to understand our practices regarding your personal
-          information.
+          . This website is a static informational site. Reservations, gift card
+          purchases, and any other transactions are handled on third-party
+          websites that have their own privacy policies.
         </p>
 
         <h2 className="mb-4 text-xl font-semibold tablet:text-2xl">
           1. Information We Collect
         </h2>
         <p className="mb-4">
-          We collect the following information from you when you use our website
-          or services:
+          We collect limited information through this website:
         </p>
         <ul className="baseVertFlex mb-4 list-inside list-disc !items-start gap-2">
           <li>
-            <span className="font-semibold">Personal Information:</span> When
-            you create an account, order food, or interact with our services, we
-            may collect personal information, including your first and last
-            name, phone number, email address, and birthdate.
+            <span className="font-semibold">
+              Information you provide directly:
+            </span>{" "}
+            If you contact us by email, phone, or another direct channel, we may
+            receive the information you choose to share with us.
           </li>
           <li>
-            <span className="font-semibold">Order Information:</span> We keep
-            track of all orders made through our website, including items
-            ordered, order history, and any related rewards.
+            <span className="font-semibold">Technical information:</span> Our
+            hosting and infrastructure providers may automatically log standard
+            technical data such as IP address, browser type, device information,
+            referring pages, and basic usage information.
           </li>
           <li>
-            <span className="font-semibold">Usage Data:</span> We collect
-            anonymized data through Vercel&apos;s built-in Web Analytics and
-            Page Speed Insights. This data does not identify you personally and
-            is used to improve our website performance.
-          </li>
-          <li>
-            <span className="font-semibold">Cookies:</span> Clerk, our
-            authentication provider, uses cookies to manage user sessions. You
-            can manage cookie preferences through your browser settings.
+            <span className="font-semibold">
+              No site-managed accounts or orders:
+            </span>{" "}
+            This website does not provide on-site user accounts, customer
+            profiles, or direct online ordering.
           </li>
         </ul>
 
         <h2 className="mb-4 text-xl font-semibold tablet:text-2xl">
-          2. How We Use Your Information
+          2. External Services
         </h2>
         <p className="mb-4">
-          We use the information we collect for the following purposes:
-        </p>
-        <ul className="baseVertFlex mb-4 list-inside list-disc !items-start gap-2">
-          <li>
-            To provide and maintain our services, including processing orders
-            and managing your account.
-          </li>
-          <li>
-            To communicate with you about your account, orders, and other
-            updates.
-          </li>
-          <li>To personalize your experience and improve our services.</li>
-          <li>To analyze usage patterns and improve website performance.</li>
-          <li>To comply with legal obligations and enforce our terms.</li>
-        </ul>
-
-        <h2 className="mb-4 text-xl font-semibold tablet:text-2xl">
-          3. How We Share Your Information
-        </h2>
-        <p className="mb-4">
-          We do not sell your personal information. We may share your
-          information with third parties in the following circumstances:
-        </p>
-        <ul className="baseVertFlex mb-4 list-inside list-disc !items-start gap-2">
-          <li>
-            <span className="font-semibold">Service Providers:</span> We use
-            third-party services such as Clerk for authentication, Stripe for
-            payment processing, and Resend for email communications. These
-            service providers have their own privacy policies and terms of use.
-          </li>
-          <li>
-            <span className="font-semibold">Legal Requirements:</span> We may
-            disclose your information if required to do so by law or in response
-            to valid requests by public authorities.
-          </li>
-        </ul>
-
-        <h2 className="mb-4 text-xl font-semibold tablet:text-2xl">
-          4. Data Retention
-        </h2>
-        <p className="mb-4">
-          We retain your personal information for as long as your account is
-          active or as needed to provide you with our services. Order history is
-          kept indefinitely for your reference. If you delete your account, we
-          will delete or anonymize your personal information across our services
-          (including but not limited to Clerk, Stripe, and our database).
-          However, your order history will be retained for historical and
-          analytical purposes.
+          When you follow links from this website to make a reservation,
+          purchase a gift card, or interact with another third-party service,
+          your information is collected and processed by that third party under
+          its own terms and privacy practices. We recommend reviewing those
+          policies before submitting information.
         </p>
 
         <h2 className="mb-4 text-xl font-semibold tablet:text-2xl">
-          5. Children&apos;s Privacy
+          3. How We Use Information
         </h2>
         <p className="mb-4">
-          We do not knowingly collect personal information from children under
-          the age of 13. If you are under 13, you are not permitted to create an
-          account or use our services. If we become aware that we have
-          inadvertently collected personal information from a child under 13, we
-          will take steps to delete such information.
+          We use information we receive to operate and improve the website,
+          respond to messages you send us, monitor performance and security, and
+          comply with legal obligations.
         </p>
 
         <h2 className="mb-4 text-xl font-semibold tablet:text-2xl">
-          6. Data Security
+          4. How We Share Information
         </h2>
         <p className="mb-4">
-          We implement appropriate security measures to protect your personal
-          information. Our security practices include encryption, access
-          controls, and regular security assessments. However, no method of
-          transmission over the internet or electronic storage is 100% secure.
-          While we strive to use commercially acceptable means to protect your
-          information, we cannot guarantee its absolute security.
+          We do not sell personal information collected through this website. We
+          may share information with service providers that host or secure the
+          website, or when disclosure is required by law.
         </p>
 
         <h2 className="mb-4 text-xl font-semibold tablet:text-2xl">
-          7. International Users
+          5. Cookies and Browser Controls
         </h2>
         <p className="mb-4">
-          Our website is intended for use only within the United States. Access
-          to our website from outside the United States is restricted and not
-          permitted. By using our services, you agree to comply with this
-          limitation.
+          This website does not use on-site account or session cookies for user
+          profiles. Your browser and any third-party sites you visit from this
+          website may use cookies or similar technologies. You can manage cookie
+          settings through your browser controls.
         </p>
 
         <h2 className="mb-4 text-xl font-semibold tablet:text-2xl">
-          8. User Rights
+          6. Data Retention
         </h2>
         <p className="mb-4">
-          You have the right to access, rectify, delete, and restrict the
-          processing of your personal data. To exercise these rights, please
-          contact us at{" "}
-          <Button variant="link" className="h-6 !px-1" asChild>
-            <a href="mailto:khueskitchen@gmail.com">khueskitchen@gmail.com</a>
-          </Button>
-          . We will respond to your request within a reasonable timeframe.
+          We retain direct communications you send us only for as long as needed
+          to respond, maintain business records, or comply with legal
+          obligations. This website does not maintain on-site customer account,
+          order-history, or profile records.
         </p>
 
         <h2 className="mb-4 text-xl font-semibold tablet:text-2xl">
-          9. Changes to This Privacy Policy
+          7. Data Security
         </h2>
         <p className="mb-4">
-          We may update this Privacy Policy from time to time. If we make
-          significant changes, we will notify you via email. Your continued use
-          of our website and services after any changes indicates your
-          acceptance of the new terms.
+          We use reasonable administrative and technical measures to protect the
+          website and the information we receive. No method of transmission or
+          storage is completely secure, and we cannot guarantee absolute
+          security.
         </p>
 
         <h2 className="mb-4 text-xl font-semibold tablet:text-2xl">
-          10. Contact Us
+          8. Changes to This Policy
+        </h2>
+        <p className="mb-4">
+          We may update this Privacy Policy from time to time. The updated
+          version will be posted on this page with a revised effective date.
+        </p>
+
+        <h2 className="mb-4 text-xl font-semibold tablet:text-2xl">
+          9. Contact Us
         </h2>
         <p className="mb-4">
           If you have any questions or concerns about this Privacy Policy,

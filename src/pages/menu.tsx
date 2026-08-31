@@ -57,9 +57,8 @@ const menuCategoryIndices = menuCategories.reduce<Record<string, number>>(
 );
 
 function Menu() {
-  const { viewportLabel } = useMainStore((state) => ({
-    viewportLabel: state.viewportLabel,
-  }));
+  const viewportLabel =
+    useMainStore((state) => state.viewportLabel) ?? "mobile";
 
   const [scrollProgress, setScrollProgress] = useState(0);
 

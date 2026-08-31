@@ -1,14 +1,14 @@
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { motion } from "framer-motion";
+import { Clock, MapPin } from "lucide-react";
 import Image from "next/image";
+import { Charis_SIL, Noto_Sans, STIX_Two_Text } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { CiCalendarDate } from "react-icons/ci";
 import { FaFacebook } from "react-icons/fa";
 import { IoLogoInstagram } from "react-icons/io5";
 import { SiTiktok } from "react-icons/si";
-import { Clock, MapPin } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -16,31 +16,21 @@ import {
   AccordionTrigger,
 } from "~/components/ui/accordion";
 import { Button } from "~/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
+import { DialogDescription, DialogTitle } from "~/components/ui/dialog";
 import { Separator } from "~/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import StaticLotus from "~/components/ui/StaticLotus";
-import { useToast } from "~/components/ui/use-toast";
 import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 
-import { Noto_Sans } from "next/font/google";
 const notoSans = Noto_Sans({
   subsets: ["latin"],
   display: "swap",
 });
 
-import { STIX_Two_Text } from "next/font/google";
 const stix = STIX_Two_Text({
   subsets: ["latin"],
 });
 
-import { Charis_SIL } from "next/font/google";
 const charis = Charis_SIL({
   subsets: ["latin"],
   weight: ["400", "700"],
@@ -78,8 +68,6 @@ function MobileHeader() {
     useState(false);
 
   const hoursAndLocationAccordionRef = useRef<HTMLDivElement>(null);
-
-  const { dismiss: dismissToasts } = useToast();
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -119,10 +107,6 @@ function MobileHeader() {
           open={sheetIsOpen}
           onOpenChange={(open) => {
             setSheetIsOpen(open);
-
-            if (open === true) {
-              dismissToasts();
-            }
 
             if (open === false) {
               setTimeout(() => {
@@ -179,24 +163,8 @@ function MobileHeader() {
                   </Button>
                 </motion.div>
 
-                {/* <motion.div variants={linkVariants}>
-                  <Button
-                    variant={asPath.includes("/order") ? "activeLink" : "link"}
-                    asChild
-                  >
-                    <Link prefetch={false} href={"/order"} className="!text-xl">
-                      Order
-                    </Link>
-                  </Button>
-                </motion.div> */}
-
                 <motion.div variants={linkVariants}>
-                  <Button
-                    variant={
-                      asPath.includes("/reservations") ? "activeLink" : "link"
-                    }
-                    asChild
-                  >
+                  <Button variant={"link"} asChild>
                     <a
                       href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime"
                       className="!text-xl"
@@ -278,66 +246,6 @@ function MobileHeader() {
                                 {getWeeklyHours()}
                               </div>
                             </div>
-
-                            {/* <Dialog>
-                              <DialogTrigger asChild>
-                                <Button
-                                  variant={"underline"}
-                                  className="!self-center"
-                                >
-                                  Holiday hours
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent>
-                                <VisuallyHidden>
-                                  <DialogTitle>Holiday hours</DialogTitle>
-                                  <DialogDescription>
-                                    Our holiday hours
-                                  </DialogDescription>
-                                </VisuallyHidden>
-
-                                <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
-                                <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
-
-                                <div className="baseVertFlex h-full w-full !items-start gap-4">
-                                  <div className="baseVertFlex w-full !items-start gap-2">
-                                    <div className="baseFlex w-full !justify-start gap-2">
-                                      <CiCalendarDate className="size-6 stroke-[0.25px]" />
-                                      <p className="text-lg font-medium">
-                                        Our holiday hours
-                                      </p>
-                                    </div>
-
-                                    <Separator className="h-[1px] w-full" />
-                                  </div>
-
-                                  <div className="baseVertFlex !items-start gap-2 text-sm sm:text-base">
-                                    <p className="font-medium underline underline-offset-2">
-                                      Thanksgiving
-                                    </p>
-                                    <p>
-                                      We are closed from Thursday, November 25th
-                                      to Saturday, November 27th.
-                                    </p>
-                                  </div>
-
-                                  <div className="baseVertFlex !items-start gap-2 text-sm sm:text-base">
-                                    <p className="font-medium underline underline-offset-2">
-                                      Christmas
-                                    </p>
-                                    <p>
-                                      We are closed from Friday, December 24th
-                                      to Sunday, December 26th.
-                                    </p>
-                                  </div>
-                                </div>
-                              </DialogContent>
-                            </Dialog>
-
-                            <p className=" text-center text-xs italic text-stone-400">
-                              * Pickup orders must be placed at least 30 minutes
-                              before closing.
-                            </p> */}
                           </div>
 
                           <Separator className="w-4/5 self-center" />

@@ -27,22 +27,6 @@ function getDynamicHeadJSON(currentPath: string): DynamicHeadJSON {
         ogTitle: "Menu | Khue's",
         ogUrl: "https://www.khueskitchen.com/menu",
       };
-    case "/reservations":
-      return {
-        title: "Reservations | Khue's",
-        description:
-          "Secure your reservations at Khue's Kitchen. Learn about our policies for larger parties and how to guarantee your spot for an unforgettable dining experience.",
-        ogTitle: "Reservations | Khue's",
-        ogUrl: "https://www.khueskitchen.com/reservations",
-      };
-    case "/our-story":
-      return {
-        title: "Our story | Khue's",
-        description:
-          "Discover the inspiring story behind Khue's, where Chef Eric Pham honors his mother's legacy through modern Vietnamese cuisine, blending tradition with innovation.",
-        ogTitle: "Our story | Khue's",
-        ogUrl: "https://www.khueskitchen.com/our-story",
-      };
     case "/media":
       return {
         title: "Media | Khue's",

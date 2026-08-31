@@ -1,13 +1,10 @@
-import Decimal from "decimal.js";
-
 export function formatPrice(price: number, excludeCents = false) {
-  const priceInCents = new Decimal(price);
-  const priceInDollars = priceInCents.div(100).toNumber();
+  const priceInDollars = price / 100;
 
-  return `${priceInDollars.toLocaleString("en-US", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: excludeCents ? 0 : 2,
     maximumFractionDigits: excludeCents ? 0 : 2,
-  })}`;
+  }).format(priceInDollars);
 }

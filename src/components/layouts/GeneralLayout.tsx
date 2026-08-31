@@ -15,9 +15,7 @@ interface GeneralLayout {
 }
 
 function GeneralLayout({ children }: GeneralLayout) {
-  const { viewportLabel } = useMainStore((state) => ({
-    viewportLabel: state.viewportLabel,
-  }));
+  const viewportLabel = useMainStore((state) => state.viewportLabel);
 
   useViewportLabelResizeListener();
 

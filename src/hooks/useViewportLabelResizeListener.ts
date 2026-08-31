@@ -2,17 +2,8 @@ import { useEffect, useLayoutEffect } from "react";
 import { useMainStore } from "~/stores/MainStore";
 
 function useViewportLabelResizeListener() {
-  const {
-    viewportLabel,
-    setViewportLabel,
-    initViewportLabelSet,
-    setInitViewportLabelSet,
-  } = useMainStore((state) => ({
-    viewportLabel: state.viewportLabel,
-    setViewportLabel: state.setViewportLabel,
-    initViewportLabelSet: state.initViewportLabelSet,
-    setInitViewportLabelSet: state.setInitViewportLabelSet,
-  }));
+  const viewportLabel = useMainStore((state) => state.viewportLabel);
+  const setViewportLabel = useMainStore((state) => state.setViewportLabel);
 
   const useIsomorphicLayoutEffect =
     typeof window !== "undefined" ? useLayoutEffect : useEffect;
@@ -38,10 +29,6 @@ function useViewportLabelResizeListener() {
       if (localViewportLabel !== viewportLabel) {
         setViewportLabel(localViewportLabel);
       }
-
-      if (initViewportLabelSet === false) {
-        setInitViewportLabelSet(true);
-      }
     }
 
     handleResize();
@@ -49,12 +36,7 @@ function useViewportLabelResizeListener() {
     window.addEventListener("resize", handleResize);
 
     return () => window.removeEventListener("resize", handleResize);
-  }, [
-    viewportLabel,
-    setViewportLabel,
-    initViewportLabelSet,
-    setInitViewportLabelSet,
-  ]);
+  }, [viewportLabel, setViewportLabel]);
 }
 
 export default useViewportLabelResizeListener;

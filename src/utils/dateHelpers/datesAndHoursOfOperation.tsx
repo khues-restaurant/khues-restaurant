@@ -1,13 +1,4 @@
-import {
-  addMinutes,
-  format,
-  isSameDay,
-  setHours,
-  setMinutes,
-  setSeconds,
-  startOfDay,
-} from "date-fns";
-import { getCSTDateInUTC } from "~/utils/dateHelpers/cstToUTCHelpers";
+import { format, isSameDay } from "date-fns";
 
 enum DayOfWeek {
   Sunday = 0,
@@ -94,29 +85,6 @@ function isHoliday(date: Date) {
   return holidays.some((holiday) => isSameDay(date, holiday));
 }
 
-// final pickup time for day is 30 minutes before close
-function isPastFinalPickupPlacementTimeForDay({
-  currentHour,
-  currentMinute,
-  closeHour,
-  closeMinute,
-}: {
-  currentHour: number;
-  currentMinute: number;
-  closeHour: number;
-  closeMinute: number;
-}) {
-  const currentTotalMinutes = currentHour * 60 + currentMinute;
-  const closeTotalMinutes = closeHour * 60 + closeMinute;
-
-  // "-50" below is to account for the 30 minute buffer before close
-  // along with fact that orders take ~20 minutes to prepare.
-
-  const pastFinalPickupTime = currentTotalMinutes > closeTotalMinutes - 50;
-
-  return pastFinalPickupTime;
-}
-
 function formatTime(hour: number, minute: number): string {
   const date = new Date();
   date.setHours(hour, minute, 0, 0);
@@ -124,59 +92,6 @@ function formatTime(hour: number, minute: number): string {
     return format(date, "h a");
   }
   return format(date, "h:mm a");
-}
-
-function getOpenTimesForDay({
-  dayOfWeek,
-  includeASAPOption,
-  limitToThirtyMinutesBeforeClose,
-}: {
-  dayOfWeek: DayOfWeek;
-  includeASAPOption?: boolean;
-  limitToThirtyMinutesBeforeClose?: boolean;
-}): string[] {
-  const hours = hoursOpenPerDay[dayOfWeek];
-  if (
-    hours.openHour === 0 &&
-    hours.openMinute === 0 &&
-    hours.closeHour === 0 &&
-    hours.closeMinute === 0
-  ) {
-    return []; // Closed all day
-  }
-
-  const openTime = setSeconds(
-    setMinutes(
-      setHours(startOfDay(new Date()), hours.openHour),
-      hours.openMinute,
-    ),
-    0,
-  );
-  let closeTime = setSeconds(
-    setMinutes(
-      setHours(startOfDay(new Date()), hours.closeHour),
-      hours.closeMinute,
-    ),
-    0,
-  );
-
-  if (limitToThirtyMinutesBeforeClose) {
-    closeTime = addMinutes(closeTime, -30); // Limit to 30 minutes before close
-  }
-
-  const times: string[] = [];
-  let currentTime = openTime;
-
-  if (includeASAPOption) {
-    times.push("ASAP (~20 mins)");
-  }
-
-  while (currentTime <= closeTime) {
-    times.push(format(currentTime, "HH:mm"));
-    currentTime = addMinutes(currentTime, 15);
-  }
-
-  return times;
 }
 
 function getWeeklyHours() {
@@ -225,41 +140,4 @@ function getWeeklyHours() {
   );
 }
 
-function convertOperatingHoursToUTC(hours: OperatingHours): OperatingHours {
-  const convertTime = (hour: number, minute: number) => {
-    const currentDate = new Date();
-    const dateInCST = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      currentDate.getDate(),
-      hour,
-      minute,
-    );
-    const utcDate = getCSTDateInUTC(dateInCST);
-    return {
-      hour: utcDate.getUTCHours(),
-      minute: utcDate.getUTCMinutes(),
-    };
-  };
-
-  const openUTC = convertTime(hours.openHour, hours.openMinute);
-  const closeUTC = convertTime(hours.closeHour, hours.closeMinute);
-
-  return {
-    openHour: openUTC.hour,
-    openMinute: openUTC.minute,
-    closeHour: closeUTC.hour,
-    closeMinute: closeUTC.minute,
-  };
-}
-
-export {
-  holidays,
-  hoursOpenPerDay,
-  isPastFinalPickupPlacementTimeForDay,
-  isRestaurantClosedToday,
-  isHoliday,
-  getWeeklyHours,
-  getOpenTimesForDay,
-  convertOperatingHoursToUTC,
-};
+export { getWeeklyHours };

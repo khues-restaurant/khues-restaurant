@@ -1,14 +1,12 @@
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { Clock, MapPin } from "lucide-react";
 import Image from "next/image";
+import { Charis_SIL, STIX_Two_Text } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { CiCalendarDate } from "react-icons/ci";
-import { Clock, MapPin } from "lucide-react";
-import { HiOutlineInformationCircle } from "react-icons/hi";
-import { IoMdMore } from "react-icons/io";
 import { FaFacebook } from "react-icons/fa";
+import { HiOutlineInformationCircle } from "react-icons/hi";
 import { IoLogoInstagram } from "react-icons/io5";
 import { SiTiktok } from "react-icons/si";
 import {
@@ -17,18 +15,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
+import StaticLotus from "~/components/ui/StaticLotus";
 import { Separator } from "~/components/ui/separator";
 import { getWeeklyHours } from "~/utils/dateHelpers/datesAndHoursOfOperation";
 import { Button } from "../ui/button";
 import classes from "./DesktopHeader.module.css";
-import { STIX_Two_Text } from "next/font/google";
-import { Charis_SIL } from "next/font/google";
-import StaticLotus from "~/components/ui/StaticLotus";
 
 import outsideOfRestaurant from "public/interior/ten.jpg";
 
@@ -43,8 +34,6 @@ const charis = Charis_SIL({
 
 function DesktopHeader() {
   const { asPath } = useRouter();
-  const [showSmallViewportPopoverLinks, setShowSmallViewportPopoverLinks] =
-    useState(false);
 
   return (
     <nav
@@ -79,15 +68,6 @@ function DesktopHeader() {
           </Link>
         </Button>
 
-        {/* <Button
-          variant={asPath.includes("/order") ? "activeLink" : "link"}
-          asChild
-        >
-          <Link prefetch={false} href={"/order"} className="!text-xl">
-            Order
-          </Link>
-        </Button> */}
-
         <Button variant={"link"} asChild>
           <a
             href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime"
@@ -114,52 +94,9 @@ function DesktopHeader() {
             Gift Cards
           </a>
         </Button>
-
-        {/* <Popover
-            open={showSmallViewportPopoverLinks}
-            onOpenChange={(open) => setShowSmallViewportPopoverLinks(open)}
-          >
-            <PopoverTrigger asChild>
-              <Button
-                variant="ghost"
-                size={"icon"}
-                className="baseFlex !hidden gap-2 smallDesktopHeader:!flex"
-              >
-                <IoMdMore className="!hidden size-7 text-primary smallDesktopHeader:!flex" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent side="bottom" className="w-auto">
-              <div className="baseVertFlex !items-start gap-2">
-                <Button
-                  variant={
-                    asPath.includes("/reservations") ? "activeLink" : "link"
-                  }
-                  asChild
-                >
-                  <Link
-                    prefetch={false}
-                    href={"/reservations"}
-                    className="!text-xl"
-                  >
-                    Reservations
-                  </Link>
-                </Button>
-
-                <Button
-                  variant={asPath.includes("/media") ? "activeLink" : "link"}
-                  onClick={() => setShowSmallViewportPopoverLinks(false)}
-                  asChild
-                >
-                  <Link prefetch={false} href={"/media"} className="!text-xl">
-                    Media
-                  </Link>
-                </Button>
-              </div>
-            </PopoverContent>
-          </Popover> */}
       </div>
 
-      {/* order icon and auth buttons/user icon */}
+      {/* hours dialog and social links */}
       <div
         className={`${classes.authentication} baseFlex relative gap-4 transition-all`}
       >
@@ -205,60 +142,6 @@ function DesktopHeader() {
                     {getWeeklyHours()}
                   </div>
                 </div>
-
-                {/* <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant={"underline"} className="mt-2 !self-center">
-                      Holiday hours
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <VisuallyHidden>
-                      <DialogTitle>Holiday hours</DialogTitle>
-                      <DialogDescription>Our holiday hours</DialogDescription>
-                    </VisuallyHidden>
-                    <StaticLotus className="absolute -bottom-5 -right-5 size-16 rotate-[-45deg] fill-primary/50" />
-                    <StaticLotus className="absolute -bottom-5 -left-5 size-16 rotate-[45deg] fill-primary/50" />
-
-                    <div className="baseVertFlex w-full !items-start gap-4">
-                      <div className="baseVertFlex w-full !items-start gap-2">
-                        <div className="baseFlex w-full !justify-start gap-2">
-                          <CiCalendarDate className="size-6 stroke-[0.25px]" />
-                          <p className="text-lg font-medium">
-                            Our holiday hours
-                          </p>
-                        </div>
-
-                        <Separator className="h-[1px] w-full" />
-                      </div>
-
-                      <div className="baseVertFlex !items-start gap-2">
-                        <p className="font-medium underline underline-offset-2">
-                          Thanksgiving
-                        </p>
-                        <p>
-                          We are closed from Thursday, November 25th to
-                          Saturday, November 27th.
-                        </p>
-                      </div>
-
-                      <div className="baseVertFlex !items-start gap-2">
-                        <p className="font-medium underline underline-offset-2">
-                          Christmas
-                        </p>
-                        <p>
-                          We are closed from Friday, December 24th to Sunday,
-                          December 26th.
-                        </p>
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-
-                <p className="mt-2 w-[273px] text-center text-sm italic text-stone-400">
-                  * Pickup orders must be placed at least 30 minutes before
-                  closing.
-                </p> */}
               </div>
 
               <Separator

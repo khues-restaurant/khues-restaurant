@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Clock, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { HiOutlineNewspaper } from "react-icons/hi2";
 import { IoCalendarOutline } from "react-icons/io5";
 import { Parallax, ParallaxProvider } from "react-scroll-parallax";
@@ -52,63 +52,36 @@ import masonryInteriorNine from "public/interior/four.jpg";
 import masonryInteriorSeven from "public/exterior/three.jpg";
 
 export default function Home() {
-  const {
-    chatIsOpen,
-    setChatIsOpen,
-    setMobileHeroThresholdInView,
-    viewportLabel,
-  } = useMainStore((state) => ({
-    chatIsOpen: state.chatIsOpen,
-    setChatIsOpen: state.setChatIsOpen,
-    setMobileHeroThresholdInView: state.setMobileHeroThresholdInView,
-    viewportLabel: state.viewportLabel,
-  }));
-
-  const mobileHeroRef = useRef<HTMLDivElement>(null);
+  const viewportLabel =
+    useMainStore((state) => state.viewportLabel) ?? "mobile";
 
   const [pressReviewsApi, setPressReviewsApi] = useState<CarouselApi>();
   const [pressReviewsSlide, setPressReviewsSlide] = useState(0);
+
+  const handleSetPressReviewsApi = useCallback((api: CarouselApi) => {
+    if (!api) {
+      return;
+    }
+
+    setPressReviewsApi(api);
+    setPressReviewsSlide(api.selectedScrollSnap());
+  }, []);
 
   useEffect(() => {
     if (!pressReviewsApi) {
       return;
     }
 
-    setPressReviewsSlide(pressReviewsApi.selectedScrollSnap());
-
-    pressReviewsApi.on("select", () => {
+    const handleSelect = () => {
       setPressReviewsSlide(pressReviewsApi.selectedScrollSnap());
-    });
+    };
 
-    // eventually add proper cleanup functions here
-  }, [pressReviewsApi]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setMobileHeroThresholdInView(entry?.isIntersecting ?? false);
-      },
-      {
-        root: null,
-        rootMargin: "0px 0px 0px 0px",
-        threshold: 0.5,
-      },
-    );
-
-    if (mobileHeroRef.current) {
-      observer.observe(mobileHeroRef.current);
-    }
-
-    const internalMobileHeroRef = mobileHeroRef.current;
+    pressReviewsApi.on("select", handleSelect);
 
     return () => {
-      if (internalMobileHeroRef) {
-        observer.unobserve(internalMobileHeroRef);
-      }
-
-      setMobileHeroThresholdInView(false);
+      pressReviewsApi.off("select", handleSelect);
     };
-  }, [setMobileHeroThresholdInView]);
+  }, [pressReviewsApi]);
 
   const [scrollDir, setScrollDir] = useState<"up" | "down">("down");
 
@@ -131,34 +104,52 @@ export default function Home() {
 
   // Not my favorite approach, ideally would like to have a single hook that can be used for all
   // and leverage arrays but the typing seemed to get messed up with this approach.
-  const firstBackdropAnimation = useHomepageIntersectionObserver({
+  const {
+    controls: firstBackdropControls,
+    elementRef: firstBackdropElementRef,
+  } = useHomepageIntersectionObserver({
     threshold: 0.53,
     axis: "x",
     scrollDir,
   });
-  const firstPromoImageAnimation = useHomepageIntersectionObserver({
+  const {
+    controls: firstPromoImageControls,
+    elementRef: firstPromoImageElementRef,
+  } = useHomepageIntersectionObserver({
     threshold: 0.75,
     axis: "y",
     scrollDir,
   });
 
-  const secondBackdropAnimation = useHomepageIntersectionObserver({
+  const {
+    controls: secondBackdropControls,
+    elementRef: secondBackdropElementRef,
+  } = useHomepageIntersectionObserver({
     threshold: 0.53,
     axis: "x",
     scrollDir,
   });
-  const secondPromoImageAnimation = useHomepageIntersectionObserver({
+  const {
+    controls: secondPromoImageControls,
+    elementRef: secondPromoImageElementRef,
+  } = useHomepageIntersectionObserver({
     threshold: 0.75,
     axis: "y",
     scrollDir,
   });
 
-  const thirdBackdropAnimation = useHomepageIntersectionObserver({
+  const {
+    controls: thirdBackdropControls,
+    elementRef: thirdBackdropElementRef,
+  } = useHomepageIntersectionObserver({
     threshold: 0.53,
     axis: "x",
     scrollDir,
   });
-  const thirdPromoImageAnimation = useHomepageIntersectionObserver({
+  const {
+    controls: thirdPromoImageControls,
+    elementRef: thirdPromoImageElementRef,
+  } = useHomepageIntersectionObserver({
     threshold: 0.75,
     axis: "y",
     scrollDir,
@@ -174,10 +165,7 @@ export default function Home() {
       className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem)]"
     >
       {/* Mobile Hero */}
-      <div
-        ref={mobileHeroRef}
-        className="baseVertFlex relative h-[calc(100svh-5rem)] w-full gap-4 p-4 md:!hidden tablet:h-[calc(100svh-6rem)]"
-      >
+      <div className="baseVertFlex relative h-[calc(100svh-5rem)] w-full gap-4 p-4 md:!hidden tablet:h-[calc(100svh-6rem)]">
         <div className="relative grid size-full min-h-0 flex-1 grid-cols-3 grid-rows-1 gap-4">
           {/* top left */}
           <motion.div
@@ -549,7 +537,7 @@ export default function Home() {
           Find us on
         </div>
         <Carousel
-          setApi={setPressReviewsApi}
+          setApi={handleSetPressReviewsApi}
           opts={{
             breakpoints: {
               "(min-width: 1250px)": {
@@ -854,8 +842,8 @@ export default function Home() {
                 Best New Restaurant of 2025. This honor is a testament to the
                 passion of our incredible team and the support of our wonderful
                 community. Thank you for believing in our vision and for making
-                Khue's a place you call home. We couldn't have reached this
-                milestone without you!
+                Khue&apos;s a place you call home. We couldn&apos;t have reached
+                this milestone without you!
               </p>
 
               <Button className="baseFlex mb-2 mt-6 gap-2 self-center" asChild>
@@ -902,8 +890,8 @@ export default function Home() {
                 Best New Restaurant of 2025. This honor is a testament to the
                 passion of our incredible team and the support of our wonderful
                 community. Thank you for believing in our vision and for making
-                Khue's a place you call home. We couldn't have reached this
-                milestone without you!
+                Khue&apos;s a place you call home. We couldn&apos;t have reached
+                this milestone without you!
               </p>
 
               <Button className="baseFlex mt-6 gap-2" asChild>
@@ -920,9 +908,9 @@ export default function Home() {
 
             <div className="baseFlex relative size-72">
               <motion.div
-                ref={firstBackdropAnimation.elementRef}
+                ref={firstBackdropElementRef}
                 initial={{ opacity: 0, x: 50 }}
-                animate={firstBackdropAnimation.controls}
+                animate={firstBackdropControls}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -933,9 +921,9 @@ export default function Home() {
               ></motion.div>
 
               <motion.div
-                ref={firstPromoImageAnimation.elementRef}
+                ref={firstPromoImageElementRef}
                 initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
-                animate={firstPromoImageAnimation.controls}
+                animate={firstPromoImageControls}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -998,9 +986,9 @@ export default function Home() {
           <div className="baseFlex !hidden w-full gap-16 py-8 tablet:!flex">
             <div className="baseFlex relative size-72">
               <motion.div
-                ref={secondBackdropAnimation.elementRef}
+                ref={secondBackdropElementRef}
                 initial={{ opacity: 0, x: -50 }}
-                animate={secondBackdropAnimation.controls}
+                animate={secondBackdropControls}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -1011,9 +999,9 @@ export default function Home() {
               ></motion.div>
 
               <motion.div
-                ref={secondPromoImageAnimation.elementRef}
+                ref={secondPromoImageElementRef}
                 initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
-                animate={secondPromoImageAnimation.controls}
+                animate={secondPromoImageControls}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -1089,11 +1077,7 @@ export default function Home() {
               </p>
 
               <div className="baseVertFlex mb-2 mt-6 w-full gap-4">
-                <Button
-                  className="baseFlex gap-2"
-                  onClick={() => setChatIsOpen(true)}
-                  asChild
-                >
+                <Button className="baseFlex gap-2" asChild>
                   <a href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime">
                     Make a reservation
                     <IoCalendarOutline className="size-4 drop-shadow-md" />
@@ -1120,11 +1104,7 @@ export default function Home() {
               </p>
 
               <div className="baseFlex mt-8 gap-4">
-                <Button
-                  className="baseFlex gap-2"
-                  onClick={() => setChatIsOpen(!chatIsOpen)}
-                  asChild
-                >
+                <Button className="baseFlex gap-2" asChild>
                   <a href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime">
                     Make a reservation
                     <IoCalendarOutline className="size-4 drop-shadow-md" />
@@ -1135,9 +1115,9 @@ export default function Home() {
 
             <div className="baseFlex relative size-72">
               <motion.div
-                ref={thirdBackdropAnimation.elementRef}
+                ref={thirdBackdropElementRef}
                 initial={{ opacity: 0, x: 50 }}
-                animate={thirdBackdropAnimation.controls}
+                animate={thirdBackdropControls}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
@@ -1148,9 +1128,9 @@ export default function Home() {
               ></motion.div>
 
               <motion.div
-                ref={thirdPromoImageAnimation.elementRef}
+                ref={thirdPromoImageElementRef}
                 initial={{ opacity: 0, y: -50, filter: "blur(5px)" }}
-                animate={thirdPromoImageAnimation.controls}
+                animate={thirdPromoImageControls}
                 transition={{
                   opacity: { duration: 0.2 },
                   type: "spring",
