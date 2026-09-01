@@ -1,5 +1,4 @@
 import { type JSX } from "react";
-import { motion } from "framer-motion";
 import Image from "next/image";
 import { type StaticImageData } from "next/image";
 import SideAccentSwirls from "~/components/ui/SideAccentSwirls";
@@ -219,14 +218,7 @@ const mediaArticles: MediaCard[] = [
 
 function Media() {
   return (
-    <motion.div
-      key={"media"}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem)]"
-    >
+    <div className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem)]">
       {/* Hero */}
       <div className="baseFlex relative h-56 w-full overflow-hidden bg-darkPrimary shadow-md tablet:h-72">
         {/* Image mosaic background */}
@@ -364,7 +356,7 @@ function Media() {
           </div>
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 }
 

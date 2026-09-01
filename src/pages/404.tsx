@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { MdQuestionMark } from "react-icons/md";
 import { Button } from "~/components/ui/button";
@@ -8,12 +7,7 @@ import StaticLotus from "~/components/ui/StaticLotus";
 
 function Custom404() {
   return (
-    <motion.div
-      key={"404"}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
+    <div
       // TODO: find a way css wise so that you don't have any scrollbar on tablet+ since this is guarenteed
       // to be a tiny tiny element on this page
       className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full tablet:min-h-[calc(100dvh-6rem)]"
@@ -46,7 +40,7 @@ function Custom404() {
           </Button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 

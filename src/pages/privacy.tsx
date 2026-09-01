@@ -1,17 +1,9 @@
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 
 function Privacy() {
   return (
-    <motion.div
-      key={"privacy"}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem)]"
-    >
+    <div className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem)]">
       <div className="mx-auto mb-32 mt-8 max-w-2xl p-6 tablet:mb-24">
         <h1 className="mb-6 text-2xl font-bold tablet:text-3xl">
           Privacy Policy
@@ -155,7 +147,7 @@ function Privacy() {
           </div>
         </p>
       </div>
-    </motion.div>
+    </div>
   );
 }
 

@@ -156,14 +156,7 @@ export default function Home() {
   });
 
   return (
-    <motion.div
-      key={"home"}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem)]"
-    >
+    <div className="baseVertFlex min-h-[calc(100dvh-5rem)] w-full !justify-start tablet:min-h-[calc(100dvh-6rem)]">
       {/* Mobile Hero */}
       <div className="baseVertFlex relative h-[calc(100svh-5rem)] w-full gap-4 p-4 md:!hidden tablet:h-[calc(100svh-6rem)]">
         <div className="relative grid size-full min-h-0 flex-1 grid-cols-3 grid-rows-1 gap-4">
@@ -1236,6 +1229,6 @@ export default function Home() {
           {/* maybe a gallary/slideshow section? Prob not though */}
         </div>
       </ParallaxProvider>
-    </motion.div>
+    </div>
   );
 }
