@@ -86,10 +86,7 @@ function MobileHeader() {
   }, [events]);
 
   return (
-    <nav
-      id="header"
-      className="baseFlex sticky left-0 top-0 z-50 h-20 w-full !justify-between bg-offwhite p-2 shadow-md"
-    >
+    <nav className="baseFlex sticky left-0 top-0 z-50 h-20 w-full !justify-between bg-offwhite p-2 shadow-md">
       <Button variant="text" asChild>
         <Link prefetch={false} href={"/"} className={`ml-3 !px-0 !py-8`}>
           <div className="baseVertFlex gap-0">

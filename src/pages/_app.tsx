@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <DynamicHead currentPath={pathname} />
       <GeneralLayout>
         <div className="grid w-full min-w-0 grid-cols-1 grid-rows-1">
-          <AnimatePresence initial={false} mode="sync">
+          <AnimatePresence mode="sync">
             <motion.div
               key={pathname}
               initial={{ opacity: 0 }}

@@ -1,16 +1,17 @@
 import DesktopHeader from "~/components/headers/DesktopHeader";
 import MobileHeader from "~/components/headers/MobileHeader";
-import { useMainStore } from "~/stores/MainStore";
 
 function HeaderShell() {
-  const viewportLabel = useMainStore((state) => state.viewportLabel);
-
-  if (!viewportLabel) return null;
-
   return (
-    <>
-      {viewportLabel.includes("mobile") ? <MobileHeader /> : <DesktopHeader />}
-    </>
+    <header className="sticky top-0 z-50 w-full">
+      <div className="tablet:!hidden">
+        <MobileHeader />
+      </div>
+
+      <div className="!hidden tablet:!block">
+        <DesktopHeader />
+      </div>
+    </header>
   );
 }
 

@@ -8,7 +8,7 @@ interface StoreState {
 }
 
 export const useMainStore = create<StoreState>((set) => ({
-  viewportLabel: undefined,
+  viewportLabel: "mobile",
   setViewportLabel: (viewportLabel: ViewportLabel) => {
     set({ viewportLabel });
   },
