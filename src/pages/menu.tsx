@@ -2,10 +2,11 @@ import { motion } from "framer-motion";
 import Image, { type StaticImageData } from "next/image";
 import {
   Fragment,
+  useCallback,
   useEffect,
+  useLayoutEffect,
+  useRef,
   useState,
-  type Dispatch,
-  type SetStateAction,
 } from "react";
 import { LuVegan } from "react-icons/lu";
 import { SiLeaflet } from "react-icons/si";
@@ -56,6 +57,64 @@ const menuCategoryIndices = menuCategories.reduce<Record<string, number>>(
   {},
 );
 
+const useIsomorphicLayoutEffect =
+  typeof window === "undefined" ? useEffect : useLayoutEffect;
+
+const CATEGORY_SCROLL_TOLERANCE_PX = 4;
+const PROGRAMMATIC_SCROLL_LOCK_TIMEOUT_MS = 1500;
+
+function getCategoryScrollYValue(categoryName: string) {
+  const categoryContainer = document.getElementById(`${categoryName}Container`);
+
+  if (!categoryContainer) return null;
+
+  const scrollMarginTop = Number.parseFloat(
+    window.getComputedStyle(categoryContainer).scrollMarginTop || "0",
+  );
+
+  return Math.max(
+    Math.round(
+      categoryContainer.getBoundingClientRect().top +
+        window.scrollY -
+        scrollMarginTop,
+    ),
+    0,
+  );
+}
+
+function getCategoryScrollYValues() {
+  const nextCategoryScrollYValues: Record<string, number> = {};
+
+  Object.keys(menuCategoryIndices).forEach((categoryName) => {
+    nextCategoryScrollYValues[categoryName] =
+      getCategoryScrollYValue(categoryName) ?? 0;
+  });
+
+  return nextCategoryScrollYValues;
+}
+
+function getCategoryInView(
+  categoryScrollYValues: Record<string, number>,
+  scrollPosition = window.scrollY,
+) {
+  const categoryNames = Object.keys(categoryScrollYValues);
+  let categoryNameInView = categoryNames[0] ?? "";
+
+  for (const categoryName of categoryNames) {
+    const categoryScrollYValue = categoryScrollYValues[categoryName];
+
+    if (categoryScrollYValue === undefined) continue;
+
+    if (scrollPosition >= categoryScrollYValue - CATEGORY_SCROLL_TOLERANCE_PX) {
+      categoryNameInView = categoryName;
+    } else {
+      break;
+    }
+  }
+
+  return categoryNameInView;
+}
+
 function Menu() {
   const viewportLabel =
     useMainStore((state) => state.viewportLabel) ?? "mobile";
@@ -68,34 +127,111 @@ function Menu() {
   >({});
   const [programmaticallyScrolling, setProgrammaticallyScrolling] =
     useState(false);
-
+  const [stickyCategoriesStartIndex, setStickyCategoriesStartIndex] =
+    useState(0);
   const [stickyCategoriesApi, setStickyCategoriesApi] = useState<CarouselApi>();
+  const programmaticCategoryRef = useRef<string | null>(null);
+  const programmaticScrollTimeoutRef = useRef<number | null>(null);
 
-  // Effect to set category scroll Y values
-  useEffect(() => {
-    function getCategoryScrollYValues() {
-      const scrollYValues = Object.keys(menuCategoryIndices).map(
-        (categoryName) => {
-          const categoryContainer = document.getElementById(
-            `${categoryName}Container`,
-          );
-          return categoryContainer?.offsetTop ?? 0;
-        },
-      );
-
-      const categoryScrollYValues: Record<string, number> = {};
-      Object.keys(menuCategoryIndices).forEach((categoryName, index) => {
-        categoryScrollYValues[categoryName] = scrollYValues[index] ?? 0;
-      });
-
-      setCategoryScrollYValues(categoryScrollYValues);
+  const releaseProgrammaticScrollLock = useCallback(() => {
+    if (programmaticScrollTimeoutRef.current !== null) {
+      window.clearTimeout(programmaticScrollTimeoutRef.current);
+      programmaticScrollTimeoutRef.current = null;
     }
 
-    getCategoryScrollYValues();
-    window.addEventListener("resize", getCategoryScrollYValues);
+    programmaticCategoryRef.current = null;
+    setProgrammaticallyScrolling(false);
+  }, []);
+
+  const syncStickyCategoriesCarousel = useCallback(
+    (categoryName: string) => {
+      const categoryIndex = menuCategoryIndices[categoryName];
+
+      if (categoryIndex === undefined) return;
+
+      stickyCategoriesApi?.scrollTo(categoryIndex);
+    },
+    [stickyCategoriesApi],
+  );
+
+  const handleCategoryShortcutClick = useCallback(
+    (categoryName: string) => {
+      const categoryScrollYValue = getCategoryScrollYValue(categoryName);
+
+      if (categoryScrollYValue === null) return;
+
+      setCurrentlyInViewCategory(categoryName);
+      programmaticCategoryRef.current = categoryName;
+      setProgrammaticallyScrolling(true);
+
+      if (programmaticScrollTimeoutRef.current !== null) {
+        window.clearTimeout(programmaticScrollTimeoutRef.current);
+      }
+
+      programmaticScrollTimeoutRef.current = window.setTimeout(() => {
+        releaseProgrammaticScrollLock();
+      }, PROGRAMMATIC_SCROLL_LOCK_TIMEOUT_MS);
+
+      window.scrollTo({
+        top: categoryScrollYValue,
+        behavior: "smooth",
+      });
+    },
+    [releaseProgrammaticScrollLock],
+  );
+
+  useEffect(() => {
+    return () => {
+      if (programmaticScrollTimeoutRef.current !== null) {
+        window.clearTimeout(programmaticScrollTimeoutRef.current);
+        programmaticScrollTimeoutRef.current = null;
+      }
+
+      programmaticCategoryRef.current = null;
+    };
+  }, []);
+
+  useIsomorphicLayoutEffect(() => {
+    function syncCategoryScrollYValuesAndSelection() {
+      const nextCategoryScrollYValues = getCategoryScrollYValues();
+      const nextCategoryInView = getCategoryInView(nextCategoryScrollYValues);
+
+      setCategoryScrollYValues(nextCategoryScrollYValues);
+
+      if (!nextCategoryInView) return;
+
+      const nextStickyCategoriesStartIndex =
+        menuCategoryIndices[nextCategoryInView];
+
+      if (nextStickyCategoriesStartIndex !== undefined) {
+        setStickyCategoriesStartIndex((currentStartIndex) =>
+          currentStartIndex === nextStickyCategoriesStartIndex
+            ? currentStartIndex
+            : nextStickyCategoriesStartIndex,
+        );
+      }
+
+      setCurrentlyInViewCategory((currentCategory) =>
+        currentCategory === nextCategoryInView
+          ? currentCategory
+          : nextCategoryInView,
+      );
+    }
+
+    syncCategoryScrollYValuesAndSelection();
+
+    window.addEventListener("resize", syncCategoryScrollYValuesAndSelection);
+    window.addEventListener("focus", syncCategoryScrollYValuesAndSelection);
 
     return () => {
-      window.removeEventListener("resize", getCategoryScrollYValues);
+      window.removeEventListener(
+        "resize",
+        syncCategoryScrollYValuesAndSelection,
+      );
+      window.removeEventListener(
+        "focus",
+        syncCategoryScrollYValuesAndSelection,
+      );
     };
   }, []);
 
@@ -104,66 +240,56 @@ function Menu() {
     if (Object.keys(categoryScrollYValues).length === 0) return;
 
     function dynamicallySetCurrentlyInViewCategory() {
-      const scrollPosition = window.scrollY;
-      const categoryNames = Object.keys(categoryScrollYValues);
-      let categoryNameInView = categoryNames[0];
+      const programmaticCategory = programmaticCategoryRef.current;
 
-      for (const categoryName of categoryNames) {
-        const categoryScrollYValue = categoryScrollYValues[categoryName];
+      if (programmaticCategory) {
+        const targetScrollYValue = categoryScrollYValues[programmaticCategory];
 
-        if (categoryScrollYValue === undefined) continue;
-
-        if (scrollPosition >= categoryScrollYValue) {
-          categoryNameInView = categoryName;
-        } else {
-          break;
+        if (
+          targetScrollYValue !== undefined &&
+          Math.abs(window.scrollY - targetScrollYValue) >
+            CATEGORY_SCROLL_TOLERANCE_PX
+        ) {
+          return;
         }
+
+        releaseProgrammaticScrollLock();
       }
 
-      if (
-        categoryNameInView &&
-        categoryNameInView !== currentlyInViewCategory
-      ) {
-        setCurrentlyInViewCategory(categoryNameInView);
-      }
+      const nextCategoryInView = getCategoryInView(categoryScrollYValues);
+
+      if (!nextCategoryInView) return;
+
+      setCurrentlyInViewCategory((currentCategory) =>
+        currentCategory === nextCategoryInView
+          ? currentCategory
+          : nextCategoryInView,
+      );
     }
 
     dynamicallySetCurrentlyInViewCategory();
 
     window.addEventListener("scroll", dynamicallySetCurrentlyInViewCategory);
-    window.addEventListener("resize", dynamicallySetCurrentlyInViewCategory);
-    window.addEventListener("focus", dynamicallySetCurrentlyInViewCategory);
 
     return () => {
       window.removeEventListener(
         "scroll",
         dynamicallySetCurrentlyInViewCategory,
       );
-      window.removeEventListener(
-        "resize",
-        dynamicallySetCurrentlyInViewCategory,
-      );
-      window.removeEventListener(
-        "focus",
-        dynamicallySetCurrentlyInViewCategory,
-      );
     };
-  }, [categoryScrollYValues, currentlyInViewCategory]);
+  }, [categoryScrollYValues, releaseProgrammaticScrollLock]);
 
   useEffect(() => {
     if (programmaticallyScrolling || currentlyInViewCategory === "") return;
 
-    const currentlyInViewCategoryListOrderIndex =
-      menuCategoryIndices[
-        currentlyInViewCategory as keyof typeof menuCategoryIndices
-      ];
-
-    if (currentlyInViewCategoryListOrderIndex === undefined) return;
-
-    setTimeout(() => {
-      stickyCategoriesApi?.scrollTo(currentlyInViewCategoryListOrderIndex);
+    window.setTimeout(() => {
+      syncStickyCategoriesCarousel(currentlyInViewCategory);
     }, 0);
-  }, [currentlyInViewCategory, programmaticallyScrolling, stickyCategoriesApi]);
+  }, [
+    currentlyInViewCategory,
+    programmaticallyScrolling,
+    syncStickyCategoriesCarousel,
+  ]);
 
   useEffect(() => {
     const updateScrollProgress = () => {
@@ -289,6 +415,7 @@ function Menu() {
             },
             dragFree: true,
             align: "end",
+            startIndex: stickyCategoriesStartIndex,
           }}
           className="baseFlex mb-1 h-12 w-full"
         >
@@ -307,9 +434,7 @@ function Menu() {
                     <MenuCategoryButton
                       name={category.name}
                       currentlyInViewCategory={currentlyInViewCategory}
-                      setProgrammaticallyScrolling={
-                        setProgrammaticallyScrolling
-                      }
+                      onSelectCategory={handleCategoryShortcutClick}
                     />
                   </CarouselItem>
                 </Fragment>
@@ -384,13 +509,13 @@ export default Menu;
 interface MenuCategoryButtonProps {
   currentlyInViewCategory: string;
   name: string;
-  setProgrammaticallyScrolling: Dispatch<SetStateAction<boolean>>;
+  onSelectCategory: (categoryName: string) => void;
 }
 
 function MenuCategoryButton({
   currentlyInViewCategory,
   name,
-  setProgrammaticallyScrolling,
+  onSelectCategory,
 }: MenuCategoryButtonProps) {
   return (
     <motion.div
@@ -399,23 +524,7 @@ function MenuCategoryButton({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="flex-none shrink-0 snap-center text-center"
-      onClick={() => {
-        const categoryContainer = document.getElementById(`${name}Container`);
-
-        if (categoryContainer) {
-          setProgrammaticallyScrolling(true);
-
-          categoryContainer.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-            inline: "nearest",
-          });
-
-          setTimeout(() => {
-            setProgrammaticallyScrolling(false);
-          }, 600);
-        }
-      }}
+      onClick={() => onSelectCategory(name)}
     >
       <Button
         variant={currentlyInViewCategory === name ? "default" : "outline"}
