@@ -45,7 +45,7 @@ const linkContainer = {
       staggerChildren: 0.09,
     },
   },
-};
+} as const;
 
 const linkVariants = {
   hidden: { opacity: 0, x: 25 },
@@ -137,7 +137,7 @@ function MobileHeader() {
             </Button>
           </SheetTrigger>
           <SheetContent
-            className={`${charis.className} baseVertFlex !h-dvh !justify-between gap-0 !overflow-auto p-6 pb-4`}
+            className={`${charis.className} baseVertFlex !h-dvh !justify-between gap-0 !overflow-auto rounded-none pb-4 pt-6`}
           >
             <VisuallyHidden>
               <DialogTitle>Navigation menu</DialogTitle>
@@ -149,7 +149,7 @@ function MobileHeader() {
                 variants={linkContainer}
                 initial="hidden"
                 animate="visible"
-                className="baseVertFlex w-full !justify-start gap-4 overflow-x-hidden pt-12"
+                className="baseVertFlex w-full !justify-start gap-6 overflow-x-hidden pt-12"
               >
                 <motion.div variants={linkVariants}>
                   <Button
@@ -157,7 +157,11 @@ function MobileHeader() {
                     asChild
                     className="mt-2"
                   >
-                    <Link prefetch={false} href={"/menu"} className="!text-xl">
+                    <Link
+                      prefetch={false}
+                      href={"/menu"}
+                      className="h-8 !text-xl"
+                    >
                       Menu
                     </Link>
                   </Button>
@@ -167,7 +171,7 @@ function MobileHeader() {
                   <Button variant={"link"} asChild>
                     <a
                       href="https://tables.toasttab.com/restaurants/85812ed5-ec36-4179-a993-a278cfcbbc55/findTime"
-                      className="!text-xl"
+                      className="h-8 !text-xl"
                     >
                       Reservations
                     </a>
@@ -179,7 +183,11 @@ function MobileHeader() {
                     variant={asPath.includes("/media") ? "activeLink" : "link"}
                     asChild
                   >
-                    <Link prefetch={false} href={"/media"} className="!text-xl">
+                    <Link
+                      prefetch={false}
+                      href={"/media"}
+                      className="h-8 !text-xl"
+                    >
                       Media
                     </Link>
                   </Button>
@@ -189,14 +197,17 @@ function MobileHeader() {
                   <Button variant={"link"} asChild>
                     <a
                       href="https://order.toasttab.com/egiftcards/khues-kitchen"
-                      className="block !text-xl"
+                      className="block h-8 !text-xl"
                     >
                       Gift Cards
                     </a>
                   </Button>
                 </motion.div>
 
-                <motion.div variants={linkVariants} className="mb-auto w-full">
+                <motion.div
+                  variants={linkVariants}
+                  className="mb-auto w-full px-4"
+                >
                   <Accordion
                     value={hoursAndLocationAccordionOpen ? "item-1" : ""}
                     onValueChange={(value) => {
@@ -269,14 +280,14 @@ function MobileHeader() {
 
                                 <Button
                                   variant={"link"}
-                                  className="h-14 !rounded-t-none !p-0 xs:h-8"
+                                  className="h-12 !rounded-t-none !p-0"
                                   asChild
                                 >
                                   <a
                                     href="https://maps.app.goo.gl/CF5wv5oK1SBhsme56"
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="my-2 whitespace-normal text-primary supports-[text-wrap]:text-wrap"
+                                    className="my-2 mr-4 whitespace-normal text-primary supports-[text-wrap]:text-wrap"
                                   >
                                     693 Raymond Ave, St. Paul, MN 55114
                                   </a>
