@@ -34,8 +34,8 @@ import theTastingNotesLogo from "public/media/theTastingNotesLogo.png";
 import mspMagLogo from "public/media/mspMagLogo.png";
 
 import top30StarTribune from "public/media/top30StarTribune.jpg";
-import eric from "public/ourStory/eric.webp";
-import ericUpscaled from "public/ourStory/ericUpscaled.jpg";
+import eric from "public/ourStory/eric.png";
+import ericUpscaled from "public/ourStory/ericUpscaled.png";
 import reservations from "public/interior/reservations.jpg";
 
 import masonryFoodOne from "public/menuItems/sticky-jicama-ribs.png";
@@ -950,8 +950,7 @@ export default function Home() {
                 alt={
                   "Chef Eric Pham, owner of Khue's Kitchen, standing with arms crossed and smiling in front of a rustic door."
                 }
-                // width={384}
-                unoptimized
+                width={384}
                 className="!relative !top-0 !size-full rounded-none object-cover !object-top"
               />
             </div>
@@ -1015,7 +1014,7 @@ export default function Home() {
                   alt={
                     "Chef Eric Pham, owner of Khue's Kitchen, standing with arms crossed and smiling in front of a rustic door."
                   }
-                  sizes="324px"
+                  width={384}
                   className="!relative !top-0 !size-full rounded-md object-cover object-top"
                 />
               </motion.div>
