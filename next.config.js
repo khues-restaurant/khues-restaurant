@@ -14,7 +14,7 @@ const config = {
         pathname: "/**",
       },
     ],
-    qualities: [75, 100],
+    qualities: [100, 75, 90],
   },
   typescript: {
     ignoreBuildErrors: true, // ideally don't want this, but our types are very transient right now

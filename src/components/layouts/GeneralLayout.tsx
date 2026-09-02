@@ -17,22 +17,15 @@ function GeneralLayout({ children }: GeneralLayout) {
   useViewportLabelResizeListener();
 
   return (
-    <>
-      <style jsx global>{`
-        html {
-          font-family: ${notoSans.style.fontFamily};
-        }
-      `}</style>
-      <main
-        className={`baseVertFlex ${notoSans.className} relative min-h-dvh !justify-between bg-body`}
-      >
-        <HeaderShell />
+    <main
+      className={`baseVertFlex ${notoSans.className} relative min-h-dvh !justify-between bg-body`}
+    >
+      <HeaderShell />
 
-        {children}
+      {children}
 
-        <Footer />
-      </main>
-    </>
+      <Footer />
+    </main>
   );
 }
 
