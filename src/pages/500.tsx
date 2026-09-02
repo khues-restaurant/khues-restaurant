@@ -34,7 +34,12 @@ function Custom500() {
           </p>
 
           <Button asChild>
-            <Link prefetch={false} href={"/"} className="baseFlex mt-2 gap-2">
+            <Link
+              prefetch={false}
+              scroll={false}
+              href={"/"}
+              className="baseFlex mt-2 gap-2"
+            >
               <SideAccentSwirls className="h-4 scale-x-[-1] fill-offwhite" />
               Return home
               <SideAccentSwirls className="h-4 fill-offwhite" />

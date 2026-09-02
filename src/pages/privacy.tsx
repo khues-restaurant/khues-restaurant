@@ -17,7 +17,7 @@ function Privacy() {
           committed to protecting your privacy. This Privacy Policy explains how
           we collect, use, and share information when you visit
           <Button variant="link" className="h-6 !px-1" asChild>
-            <Link prefetch={false} href="/">
+            <Link prefetch={false} scroll={false} href="/">
               khueskitchen.com
             </Link>
           </Button>

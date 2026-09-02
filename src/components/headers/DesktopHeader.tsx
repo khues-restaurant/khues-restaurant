@@ -42,6 +42,7 @@ function DesktopHeader() {
       <Button variant="text" asChild>
         <Link
           prefetch={false}
+          scroll={false}
           href={"/"}
           className={`${classes.logo ?? ""} mr-4 !px-0 !py-8`}
         >
@@ -62,7 +63,12 @@ function DesktopHeader() {
           variant={asPath.includes("/menu") ? "activeLink" : "link"}
           asChild
         >
-          <Link prefetch={false} href={"/menu"} className="!text-xl">
+          <Link
+            prefetch={false}
+            scroll={false}
+            href={"/menu"}
+            className="!text-xl"
+          >
             Menu
           </Link>
         </Button>
@@ -80,7 +86,12 @@ function DesktopHeader() {
           variant={asPath.includes("/media") ? "activeLink" : "link"}
           asChild
         >
-          <Link prefetch={false} href={"/media"} className="block !text-xl">
+          <Link
+            prefetch={false}
+            scroll={false}
+            href={"/media"}
+            className="block !text-xl"
+          >
             Media
           </Link>
         </Button>

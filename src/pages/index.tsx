@@ -244,6 +244,7 @@ export default function Home() {
               <Button size={"lg"} asChild>
                 <Link
                   prefetch={false}
+                  scroll={false}
                   href="/menu"
                   className="baseFlex mt-4 gap-2 !px-4 shadow-md"
                 >
@@ -423,6 +424,7 @@ export default function Home() {
                   <Button size={"lg"} asChild>
                     <Link
                       prefetch={false}
+                      scroll={false}
                       href="/menu"
                       className="baseFlex gap-2 !px-4 !py-6 !text-lg shadow-md"
                     >
@@ -966,6 +968,7 @@ export default function Home() {
               <Button variant={"link"} className="h-8 !p-0" asChild>
                 <Link
                   prefetch={false}
+                  scroll={false}
                   aria-label="Read more about our story"
                   href="/media"
                 >
@@ -1032,6 +1035,7 @@ export default function Home() {
               <Button variant={"link"} className="h-8 !p-0" asChild>
                 <Link
                   prefetch={false}
+                  scroll={false}
                   aria-label="Read more about our story"
                   href="/media"
                 >

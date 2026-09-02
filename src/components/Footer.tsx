@@ -42,7 +42,12 @@ function Footer() {
       {/* privacy policy + business copyright */}
       <div className="baseFlex order-3 gap-2 tablet:order-2">
         <Button variant={"link"} asChild>
-          <Link prefetch={false} href="/privacy" className="!text-offwhite">
+          <Link
+            prefetch={false}
+            scroll={false}
+            href="/privacy"
+            className="!text-offwhite"
+          >
             Privacy Policy
           </Link>
         </Button>

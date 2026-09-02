@@ -88,7 +88,12 @@ function MobileHeader() {
   return (
     <nav className="baseFlex sticky left-0 top-0 z-50 h-20 w-full !justify-between bg-offwhite p-2 shadow-md">
       <Button variant="text" asChild>
-        <Link prefetch={false} href={"/"} className={`ml-3 !px-0 !py-8`}>
+        <Link
+          prefetch={false}
+          scroll={false}
+          href={"/"}
+          className={`ml-3 !px-0 !py-8`}
+        >
           <div className="baseVertFlex gap-0">
             <StaticLotus className="size-10 fill-primary" />
 
@@ -156,6 +161,7 @@ function MobileHeader() {
                   >
                     <Link
                       prefetch={false}
+                      scroll={false}
                       href={"/menu"}
                       className="h-8 !text-xl"
                     >
@@ -182,6 +188,7 @@ function MobileHeader() {
                   >
                     <Link
                       prefetch={false}
+                      scroll={false}
                       href={"/media"}
                       className="h-8 !text-xl"
                     >
