@@ -70,7 +70,7 @@ export const menuCategories: MenuCategory[] = [
         name: "20 oz Grilled Ribeye",
         description:
           "Traditional Vietnamese marinade, jasmine rice, yu choy, scallions",
-        price: 4900,
+        price: 5100,
         showUndercookedOrRawDisclaimer: true,
         isDairyFree: true,
       },
@@ -91,7 +91,7 @@ export const menuCategories: MenuCategory[] = [
         name: "Grilled Thick-Cut Pork Chop",
         description:
           "Peppercorn marinade, jasmine rice, scallion oil, nước mắm salad, fried egg",
-        price: 2800,
+        price: 2900,
         showUndercookedOrRawDisclaimer: true,
         isDairyFree: true,
       },
@@ -111,8 +111,8 @@ export const menuCategories: MenuCategory[] = [
       {
         name: "Cà Phê Sữa Đá Affogato",
         description:
-          "Vietnamese coffee, vanilla ice cream, black sesame coconut tuile. * Contains hazelnuts",
-        price: 900,
+          "Vietnamese coffee, vanilla ice cream, black sesame coconut tuile.",
+        price: 800,
         isVegetarian: true,
         isGlutenFree: true,
       },
