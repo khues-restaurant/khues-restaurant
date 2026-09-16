@@ -37,23 +37,23 @@ import NewYorkTimesLogo from "public/media/NewYorkTimesLogo";
 const mediaArticles: MediaCard[] = [
   {
     articleUrl:
-      "https://www.nytimes.com/shared/v1/custom-open-graph.html?smid=url-share&rsrc=restaurant-share&uri=nyt%3A%2F%2Finteractive%2F5e6cc66c-fd75-5f5d-9d16-50eb6c8d90f7&ca=2043e87809635b3997eada1c74cb5433&imageUrl=https%3A%2F%2Fstatic01.nytimes com%2Fnewsgraphics%2F2026-08-11-national-restaurant-list%2Fassets%2Fkhues-kitchen.jpg&anchor=khues-kitchen",
-    imageSrc: bestNewRestaurantStarTribune,
+      "https://www.nytimes.com/interactive/2026/dining/best-restaurants-america.html?eafs_enabled=false",
+    imageSrc: top50USRestaurantsNewYorkTimes,
     imageAlt:
-      "Khue's Kitchen chef-owner Eric Pham posing confidently in his white chef's coat with dramatic lighting.",
-    imageHeight: 305,
-    brandUrl: "https://startribune.com/",
+      "Overhead view of five dishes from Khue’s Kitchen: a Spicy Chicken Sandwich, Grilled Thick-Cut Pork Chop, Thai Tea Tres Leches cake, Jicama Ribs, and Khue’s Chicken Salad.",
+    imageHeight: 328,
+    brandUrl: "https://www.nytimes.com/",
     BrandLogoComponent: (
-      <NewYorkTimesLogo className="mb-1 h-[85px] w-[110px]" />
+      <NewYorkTimesLogo className="mt-2 w-[150px] fill-black" />
     ),
-    brandLogoAlt: "Star Tribune's logo",
-    brandLogoWidth: 150,
-    brandLogoHeight: 35,
+    brandLogoAlt: "New York Times' logo",
+    brandLogoWidth: 184,
+    brandLogoHeight: 25,
     brandLogoStyles: "-ml-5",
     cardStyles: "pt-3",
-    title: "Khue's Kitchen is the Star Tribune's 2025 Best New Restaurant",
+    title: "America's Best Restaurants 2026",
     snippet:
-      "Khue’s Kitchen heralds the arrival of a gifted young chef, Eric Pham, with the instincts of a seasoned operator. His first sit-down restaurant pays tribute to his mother, Khue Pham, a longtime chef at Quang, the family’s beloved Minneapolis restaurant. Khue’s menu is filled with crowd pleasers like bún chay, a locally famous crispy chicken sandwich and a grilled sirloin that combines steakhouse-grade meat with Vietnamese takeout flavors. But jicama ribs are the showstopper. Honestly, you can hardly tell there is no meat in there. The dish is also among a majority of entrees priced at $21 or less. A budget-friendly restaurant that doesn’t ask you to sacrifice anything? Yep. There are very good wines, too.",
+      "Chef Eric Pham, son of longtime Quang chef Khue Pham, has opened his first sit-down restaurant with the instincts of a seasoned operator. Khue's Kitchen menu is stacked with crowd-pleasers: bún chay, a locally famous crispy chicken sandwich, and a grilled sirloin that fuses steakhouse-grade meat with Vietnamese takeout flavors. But the jicama ribs are the showstopper, so convincing you can hardly tell there's no meat. With most entrees at $21 or less plus a very good wine list, Khue's Kitchen delivers a budget-friendly experience that doesn't ask you to sacrifice anything.",
     date: "9/15/2026",
   },
   {
@@ -62,13 +62,12 @@ const mediaArticles: MediaCard[] = [
     imageSrc: bestNewRestaurantStarTribune,
     imageAlt:
       "Khue's Kitchen chef-owner Eric Pham posing confidently in his white chef's coat with dramatic lighting.",
-    imageHeight: 305,
+    imageHeight: 304,
     brandUrl: "https://startribune.com/",
     brandLogo: starTribuneLogo,
     brandLogoAlt: "Star Tribune's logo",
-    brandLogoWidth: 150,
-    brandLogoHeight: 35,
-    brandLogoStyles: "-ml-5",
+    brandLogoWidth: 120,
+    brandLogoHeight: 28,
     cardStyles: "pt-3",
     title: "Khue's Kitchen is the Star Tribune's 2025 Best New Restaurant",
     snippet: `At just 25, Chef Eric Pham has turned a quiet industrial pocket of St. Paul into the home of the Star Tribune's Best New Restaurant of 2025. Blending his family's Quang legacy with fine-dining precision, Pham's "menu as memoir" features electrifying hits like his cult-status fried chicken sandwich and sticky jicama ribs. It is a vibrant, scrappy tribute to resilience, community support, and the next generation of Vietnamese cuisine.`,
@@ -89,7 +88,7 @@ const mediaArticles: MediaCard[] = [
     cardStyles: "pt-5",
     title: "A Homecoming for Khue's Kitchen",
     snippet:
-      "At just 25, Eric Pham—son of the chef behind Minneapolis' beloved Quang—has forged his own path with Khue's Kitchen on the Minneapolis-St. Paul border. Overcoming family expectations and a devastating fire, Pham created a refined Vietnamese restaurant named for his mother, featuring Southern-style chicken wings, inventive vegan jicama ribs, thick pork chops, and a standout natural wine list. Khue's Kitchen is both a tribute to family tradition and a bold step forward, proving that fresh flavors and second beginnings can flourish side by side.",
+      "Eric Pham, son of the chef behind Minneapolis' beloved Quang, has forged his own path with Khue's Kitchen on the Minneapolis-St. Paul border. Overcoming family expectations and a devastating fire, Pham created a refined Vietnamese restaurant named for his mother, featuring Southern-style chicken wings, inventive vegan jicama ribs, thick pork chops, and a standout natural wine list. Khue's Kitchen is both a tribute to family tradition and a bold step forward, proving that fresh flavors and second beginnings can flourish side by side.",
     date: "8/24/2025",
   },
   {
@@ -120,9 +119,8 @@ const mediaArticles: MediaCard[] = [
     brandUrl: "https://startribune.com/",
     brandLogo: starTribuneLogo,
     brandLogoAlt: "Star Tribune's logo",
-    brandLogoWidth: 150,
-    brandLogoHeight: 35,
-    brandLogoStyles: "-ml-5",
+    brandLogoWidth: 120,
+    brandLogoHeight: 28,
     cardStyles: "pt-3",
     title: "The 30 restaurants most vital to the Twin Cities area right now",
     snippet:
@@ -211,9 +209,8 @@ const mediaArticles: MediaCard[] = [
     brandUrl: "https://www.startribune.com/",
     brandLogo: starTribuneLogo,
     brandLogoAlt: "Star Tribune's logo",
-    brandLogoWidth: 150,
-    brandLogoHeight: 35,
-    brandLogoStyles: "-ml-5",
+    brandLogoWidth: 120,
+    brandLogoHeight: 28,
     cardStyles: "pt-2",
     title: "These 4 Twin Cities area restaurateurs learned from the best: Mom",
     snippet:

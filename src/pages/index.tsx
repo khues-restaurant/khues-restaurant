@@ -32,8 +32,9 @@ import WCCOLogo from "public/media/WCCOLogo";
 import heavyTableLogo from "public/media/heavyTableLogo.png";
 import theTastingNotesLogo from "public/media/theTastingNotesLogo.png";
 import mspMagLogo from "public/media/mspMagLogo.png";
+import NewYorkTimesLogo from "public/media/NewYorkTimesLogo";
 
-import top30StarTribune from "public/media/top30StarTribune.jpg";
+import top50USRestaurantsNewYorkTimes from "public/media/newYorkTimes.jpg";
 import eric from "public/ourStory/eric.png";
 import ericUpscaled from "public/ourStory/ericUpscaled.png";
 import reservations from "public/interior/reservations.jpg";
@@ -50,7 +51,6 @@ import masonryInteriorEight from "public/interior/two.jpg";
 import masonryInteriorTen from "public/interior/three.jpg";
 import masonryInteriorNine from "public/interior/four.jpg";
 import masonryInteriorSeven from "public/exterior/three.jpg";
-import NewYorkTimesLogo from "public/media/NewYorkTimesLogo";
 
 type PressReview = {
   name: string;
@@ -63,14 +63,7 @@ type PressReview = {
 const pressReviews: PressReview[] = [
   {
     name: "The New York Times",
-    href:
-      "https://www.nytimes.com/shared/v1/custom-open-graph.html?" +
-      "smid=url-share&rsrc=restaurant-share&uri=nyt%3A%2F%2F" +
-      "interactive%2F5e6cc66c-fd75-5f5d-9d16-50eb6c8d90f7&" +
-      "ca=2043e87809635b3997eada1c74cb5433&imageUrl=https%3A%2F%2F" +
-      "static01.nytimes.com%2Fnewsgraphics%2F2026-08-11-national-" +
-      "restaurant-list%2Fassets%2Fkhues-kitchen.jpg&" +
-      "anchor=khues-kitchen",
+    href: "https://www.nytimes.com/interactive/2026/dining/best-restaurants-america.html?eafs_enabled=false",
     carouselWidth: 220,
     desktopWidth: 200,
     logo: (
@@ -865,7 +858,7 @@ export default function Home() {
           <div className="baseVertFlex w-full max-w-sm overflow-hidden rounded-md border shadow-md tablet:hidden">
             <div className="relative h-60 w-full overflow-hidden shadow-md">
               <Image
-                src={top30StarTribune}
+                src={top50USRestaurantsNewYorkTimes}
                 alt={"Sticky Jicama Ribs at Khue's Kitchen."}
                 width={384}
                 className="!relative !bottom-0 !size-full !h-96 object-cover !pb-36"
@@ -878,36 +871,30 @@ export default function Home() {
               <div className="baseVertFlex !items-start gap-1">
                 <Button variant={"text"} className="!p-0" asChild>
                   <a
-                    href="https://www.startribune.com/khues-kitchen-st-paul-best-new-restauarant-quang-minneapolis/601533607"
+                    href="https://www.nytimes.com/interactive/2026/dining/best-restaurants-america.html?eafs_enabled=false"
                     className="baseFlex"
                   >
-                    <Image
-                      src={starTribuneLogo}
-                      alt="Star Tribune's logo"
-                      width={150}
-                      height={35}
-                      className="-ml-5 mb-2"
-                    />
+                    <NewYorkTimesLogo className="mt-2 w-[150px] fill-black" />
                   </a>
                 </Button>
 
                 <p className="text-lg font-semibold text-stone-800">
-                  Best New Restaurant of 2025
+                  The Restaurant List 2026
                 </p>
               </div>
 
               <p className="mt-2">
-                We are truly humbled to be recognized by the Star Tribune as the
-                Best New Restaurant of 2025. This honor is a testament to the
-                passion of our incredible team and the support of our wonderful
-                community. Thank you for believing in our vision and for making
-                Khue&apos;s a place you call home. We couldn&apos;t have reached
-                this milestone without you!
+                We are truly humbled to be recognized by the New York Times as
+                being part of their top 50 restaurants in America. This honor is
+                a testament to the passion of our incredible team and the
+                support of our wonderful community. Thank you for believing in
+                our vision and for making Khue&apos;s a place you call home. We
+                couldn&apos;t have reached this milestone without you!
               </p>
 
               <Button className="baseFlex mb-2 mt-6 gap-2 self-center" asChild>
                 <a
-                  href="https://www.startribune.com/khues-kitchen-st-paul-best-new-restauarant-quang-minneapolis/601533607"
+                  href="https://www.nytimes.com/interactive/2026/dining/best-restaurants-america.html?eafs_enabled=false"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -926,36 +913,30 @@ export default function Home() {
               <div className="baseVertFlex !items-start gap-1">
                 <Button variant={"text"} className="!p-0" asChild>
                   <a
-                    href="https://www.startribune.com/khues-kitchen-st-paul-best-new-restauarant-quang-minneapolis/601533607"
+                    href="https://www.nytimes.com/interactive/2026/dining/best-restaurants-america.html?eafs_enabled=false"
                     className="baseFlex"
                   >
-                    <Image
-                      src={starTribuneLogo}
-                      alt="Star Tribune's logo"
-                      width={150}
-                      height={35}
-                      className="-ml-5 mb-2"
-                    />
+                    <NewYorkTimesLogo className="mt-2 w-[150px] fill-black" />
                   </a>
                 </Button>
 
                 <p className="text-xl font-semibold">
-                  Best New Restaurant of 2025
+                  America&apos;s Best Restaurants 2026
                 </p>
               </div>
 
-              <p className="mt-4">
-                We are truly humbled to be recognized by the Star Tribune as the
-                Best New Restaurant of 2025. This honor is a testament to the
-                passion of our incredible team and the support of our wonderful
+              <p className="mt-2">
+                We are deeply humbled to be named one of the New York Times top
+                50 restaurants in America. This honor reflects the passion of
+                our incredible team and the unwavering support of our wonderful
                 community. Thank you for believing in our vision and for making
-                Khue&apos;s a place you call home. We couldn&apos;t have reached
-                this milestone without you!
+                Khue&apos;s a place you call home. We simply could not have
+                reached this milestone without you.
               </p>
 
               <Button className="baseFlex mt-6 gap-2" asChild>
                 <a
-                  href="https://www.startribune.com/khues-kitchen-st-paul-best-new-restauarant-quang-minneapolis/601533607"
+                  href="https://www.nytimes.com/interactive/2026/dining/best-restaurants-america.html?eafs_enabled=false"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -965,7 +946,7 @@ export default function Home() {
               </Button>
             </div>
 
-            <div className="baseFlex relative size-72">
+            <div className="baseFlex relative size-[300px]">
               <motion.div
                 ref={firstBackdropElementRef}
                 initial={{ opacity: 0, x: 50 }}
@@ -989,11 +970,13 @@ export default function Home() {
                   stiffness: 100,
                   damping: 15,
                 }}
-                className="absolute left-0 top-0 h-72 w-full overflow-hidden rounded-md shadow-md"
+                className="absolute left-0 top-0 h-[300px] w-full overflow-hidden rounded-md shadow-md"
               >
                 <Image
-                  src={top30StarTribune}
-                  alt={"Sticky Jicama Ribs at Khue's Kitchen."}
+                  src={top50USRestaurantsNewYorkTimes}
+                  alt={
+                    "Overhead view of five dishes from Khue’s Kitchen: a Spicy Chicken Sandwich, Grilled Thick-Cut Pork Chop, Thai Tea Tres Leches cake, Jicama Ribs, and Khue’s Chicken Salad."
+                  }
                   sizes="750px"
                   className="!relative !bottom-0 !size-full !h-96 rounded-md object-cover !pb-20"
                 />
