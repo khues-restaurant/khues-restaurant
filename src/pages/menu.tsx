@@ -665,6 +665,7 @@ function formatMenuItemPrice(menuItem: MenuItemData) {
         <>
           <Separator className="h-4 w-[1px] bg-black" />
           {formatPrice(menuItem.altPrice, true)}
+          {menuItem.isMagnumBottle && " Magnum"}
         </>
       )}
     </div>

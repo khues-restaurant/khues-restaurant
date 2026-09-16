@@ -12,6 +12,7 @@ export type MenuItem = {
   isGlutenFree?: boolean;
   isSpicy?: boolean;
   askServerForAvailability?: boolean;
+  isMagnumBottle?: boolean;
 };
 
 export type MenuCategory = {
@@ -129,15 +130,15 @@ export const menuCategories: MenuCategory[] = [
     name: "Sparkling",
     menuItems: [
       {
-        name: "Pomalo",
-        description: "Sparkling Rosé, Plavina, Dalmatia and Slavonia, Croatia",
-        price: 1500,
-        altPrice: 5800,
+        name: "Poggio Costa",
+        description:
+          'Sparkling Rosé, Prosecco, Glera, Pinot Nero, "The Hill by the Sea," Italy',
+        price: 1400,
+        altPrice: 5400,
       },
       {
-        name: "J. Laurens",
-        description:
-          "Crémant, Chardonnay, Chenin Blanc, Mauzac, Languedoc, France",
+        name: "Albet i Noya",
+        description: "Xarel·lo, Macabeu, Parellada, Penedès, Spain",
         price: 1500,
         altPrice: 5800,
       },
@@ -147,21 +148,21 @@ export const menuCategories: MenuCategory[] = [
     name: "White",
     menuItems: [
       {
-        name: "Kientzler",
+        name: "Wiley",
         description:
-          "Pinot Gris, Muscat, Sylvaner, Riesling 2022, Alsace, France",
+          "Tocai Friulano, Chardonnay, Oak Knoll and Potter Valley, California",
         price: 1800,
         altPrice: 6800,
       },
       {
-        name: "Elk Cove",
-        description: "Pinot Blanc 2024, Willamette Valley, Oregon",
-        price: 1500,
-        altPrice: 5600,
+        name: "Rodica",
+        description: "Malvasia, Truške, Istria, Slovenia",
+        price: 1600,
+        altPrice: 6000,
       },
       {
-        name: "Topette",
-        description: "Sauvignon Blanc 2024, Loire Valley, France",
+        name: "Sandy Cove",
+        description: "Sauvignon Blanc 2025, Marlborough, New Zealand",
         price: 1400,
         altPrice: 5200,
       },
@@ -201,10 +202,10 @@ export const menuCategories: MenuCategory[] = [
         altPrice: 6300,
       },
       {
-        name: "Bodegas Olivares",
-        description: "Rosé, Garnacha 2025, Murcia, Spain",
-        price: 1300,
-        altPrice: 4800,
+        name: "Moulin de Gassac",
+        description: "Rosé, Grenache, Carignan, Cinsault, Languedoc, France",
+        price: 1200,
+        altPrice: 4400,
       },
     ],
   },
@@ -212,8 +213,9 @@ export const menuCategories: MenuCategory[] = [
     name: "Red",
     menuItems: [
       {
-        name: "Montepeloso A Quo",
-        description: "Sangiovese, Montepulciano 2024, Tuscany, Italy",
+        name: "The Paring",
+        description:
+          "Cabernet Sauvignon, Cabernet Franc, Merlot 2021, Santa Barbara County, California",
         price: 1800,
         altPrice: 6800,
       },
@@ -225,10 +227,10 @@ export const menuCategories: MenuCategory[] = [
         altPrice: 6000,
       },
       {
-        name: "Raisins Gaulois",
-        description: "Gamay 2024, Burgundy, France",
-        price: 1600,
-        altPrice: 6000,
+        name: "Pullus",
+        description: "Pinot Noir, Štajerska, Slovenia",
+        price: 1400,
+        altPrice: 5400,
       },
       {
         name: "Jonata Todos",
@@ -249,7 +251,7 @@ export const menuCategories: MenuCategory[] = [
         askServerForAvailability: true,
       },
       {
-        name: "Le Fruit Du Hasard",
+        name: "Le Fruit du Hasard",
         description: "Carignan, Syrah, Languedoc-Roussillon, France",
         price: 6000,
         askServerForAvailability: true,
@@ -262,19 +264,20 @@ export const menuCategories: MenuCategory[] = [
       {
         name: "Mana 1751 True Vision",
         description:
-          "Producer: Manatsuru Grade: Tokubetsu Junmai, Yamahai, Muroka, Genshu",
+          "Producer: Manatsuru | Grade: Tokubetsu Junmai, Yamahai, Muroka, Genshu",
         price: 1800,
         altPrice: 8500,
       },
       {
         name: "Blue Hue",
-        description: "Producer: Tsukinowa Brewery Grade: Honjozo",
+        description: "Producer: Tsukinowa Brewery | Grade: Honjozo | Magnum",
         price: 1600,
         altPrice: 12800,
+        isMagnumBottle: true,
       },
       {
         name: "Blossom of Peace",
-        description: "Producer: Tozai, Plum sake, sweet but balanced",
+        description: "Producer: Tozai, Plum Sake, sweet but balanced",
         price: 1400,
         altPrice: 5500,
       },
@@ -285,12 +288,12 @@ export const menuCategories: MenuCategory[] = [
     menuItems: [
       {
         name: "Keepsake",
-        description: "Semi-sweet cider, farmhouse blend, Dundas, Minnesota",
+        description: "Semi-sweet cider, farmhouse blend, Dundas, MN",
         price: 900,
         altPrice: 3200,
       },
       {
-        name: "Beak & Skiff",
+        name: "Beak & Skiff 1911",
         description: "Pineapple, mango, refreshing hard cider, Lafayette, NY",
         price: 800,
       },
@@ -326,23 +329,24 @@ export const menuCategories: MenuCategory[] = [
     menuItems: [
       {
         name: "Unified Ferments Jasmine Green",
+        description:
+          "Organic, fermented, caffeinated, eucalyptus, tuberose, and jasmine flowers",
         price: 1200,
-        altPrice: 4800,
+        altPrice: 4600,
       },
       {
-        name: "Aplos Ume Spritz",
-        description: "N/A cocktail",
+        name: "Aplós [N/A Cocktail]",
+        description: "Ume Spritz or Dragon Fruit Martini",
         price: 800,
       },
       {
-        name: "Surly Outlook Hoppy Pale",
+        name: "Surly Outlook Good Hoppy Pale",
         description: "Aromatic hops, citrus, lemon, clean bitterness",
-        price: 700,
+        price: 600,
       },
       {
         name: "Cà Phê Sữa Đá Coffee",
-        description:
-          "Bold, sweet, creamy Vietnamese coffee over ice. Contains hazelnuts.",
+        description: "Bold, sweet, creamy Vietnamese coffee over ice",
         price: 800,
       },
     ],
