@@ -19,7 +19,7 @@ const SheetOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Overlay
     className={cn(
-      "!ease-in-out fixed inset-0 z-50 bg-black/80 !duration-400 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "!ease-in-out fixed inset-0 z-50 bg-black/60 !duration-400 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className,
     )}
     {...props}
@@ -38,7 +38,7 @@ const sheetVariants = cva(
           "inset-x-0 flex-col bottom-0 gap-0 overflow-hidden flex justify-center rounded-t-xl max-w-lg mx-auto border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
         left: "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
         right:
-          "inset-y-0 right-0 h-full w-[80%] border-l rounded-l-xl data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right xs:max-w-sm tablet:max-w-lg",
+          "inset-y-0 right-0 h-full w-[80%] rounded-l-xl data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right xs:max-w-sm tablet:max-w-lg",
       },
     },
     defaultVariants: {
@@ -48,7 +48,8 @@ const sheetVariants = cva(
 );
 
 interface SheetContentProps
-  extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
+  extends
+    React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
     VariantProps<typeof sheetVariants> {}
 
 const SheetContent = React.forwardRef<
