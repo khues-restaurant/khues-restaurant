@@ -36,6 +36,7 @@ const config = {
         smallDesktopHeader: {
           raw: "(min-width: 1000px) and (max-width: 1250px)",
         },
+        pressReviewsCarousel: { raw: "(min-width: 1350px)" },
         tall: { raw: "(min-height: 850px)" }, // this currently is showing up before the default "breakpoint"
         // in className order, ideally find proper way to tell tailwind to put it after the default breakpoint
       },

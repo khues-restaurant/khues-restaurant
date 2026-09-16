@@ -31,8 +31,31 @@ import mspMagImage from "public/media/mspMagImage.jpg";
 import mspMagLogo from "public/media/mspMagLogo.png";
 import ericAndKhue from "public/media/ericAndKhue.jpg";
 import bestNewRestaurantStarTribune from "public/media/bestNewRestaurantStarTribune.jpg";
+import top50USRestaurantsNewYorkTimes from "public/media/newYorkTimes.jpg";
+import NewYorkTimesLogo from "public/media/NewYorkTimesLogo";
 
 const mediaArticles: MediaCard[] = [
+  {
+    articleUrl:
+      "https://www.nytimes.com/shared/v1/custom-open-graph.html?smid=url-share&rsrc=restaurant-share&uri=nyt%3A%2F%2Finteractive%2F5e6cc66c-fd75-5f5d-9d16-50eb6c8d90f7&ca=2043e87809635b3997eada1c74cb5433&imageUrl=https%3A%2F%2Fstatic01.nytimes com%2Fnewsgraphics%2F2026-08-11-national-restaurant-list%2Fassets%2Fkhues-kitchen.jpg&anchor=khues-kitchen",
+    imageSrc: bestNewRestaurantStarTribune,
+    imageAlt:
+      "Khue's Kitchen chef-owner Eric Pham posing confidently in his white chef's coat with dramatic lighting.",
+    imageHeight: 305,
+    brandUrl: "https://startribune.com/",
+    BrandLogoComponent: (
+      <NewYorkTimesLogo className="mb-1 h-[85px] w-[110px]" />
+    ),
+    brandLogoAlt: "Star Tribune's logo",
+    brandLogoWidth: 150,
+    brandLogoHeight: 35,
+    brandLogoStyles: "-ml-5",
+    cardStyles: "pt-3",
+    title: "Khue's Kitchen is the Star Tribune's 2025 Best New Restaurant",
+    snippet:
+      "Khue’s Kitchen heralds the arrival of a gifted young chef, Eric Pham, with the instincts of a seasoned operator. His first sit-down restaurant pays tribute to his mother, Khue Pham, a longtime chef at Quang, the family’s beloved Minneapolis restaurant. Khue’s menu is filled with crowd pleasers like bún chay, a locally famous crispy chicken sandwich and a grilled sirloin that combines steakhouse-grade meat with Vietnamese takeout flavors. But jicama ribs are the showstopper. Honestly, you can hardly tell there is no meat in there. The dish is also among a majority of entrees priced at $21 or less. A budget-friendly restaurant that doesn’t ask you to sacrifice anything? Yep. There are very good wines, too.",
+    date: "9/15/2026",
+  },
   {
     articleUrl:
       "https://www.startribune.com/khues-kitchen-st-paul-best-new-restauarant-quang-minneapolis/601533607",

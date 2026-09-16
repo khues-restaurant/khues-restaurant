@@ -50,6 +50,152 @@ import masonryInteriorEight from "public/interior/two.jpg";
 import masonryInteriorTen from "public/interior/three.jpg";
 import masonryInteriorNine from "public/interior/four.jpg";
 import masonryInteriorSeven from "public/exterior/three.jpg";
+import NewYorkTimesLogo from "public/media/NewYorkTimesLogo";
+
+type PressReview = {
+  name: string;
+  href: string;
+  carouselWidth: number;
+  desktopWidth: number;
+  logo: React.ReactNode;
+};
+
+const pressReviews: PressReview[] = [
+  {
+    name: "The New York Times",
+    href:
+      "https://www.nytimes.com/shared/v1/custom-open-graph.html?" +
+      "smid=url-share&rsrc=restaurant-share&uri=nyt%3A%2F%2F" +
+      "interactive%2F5e6cc66c-fd75-5f5d-9d16-50eb6c8d90f7&" +
+      "ca=2043e87809635b3997eada1c74cb5433&imageUrl=https%3A%2F%2F" +
+      "static01.nytimes.com%2Fnewsgraphics%2F2026-08-11-national-" +
+      "restaurant-list%2Fassets%2Fkhues-kitchen.jpg&" +
+      "anchor=khues-kitchen",
+    carouselWidth: 220,
+    desktopWidth: 200,
+    logo: (
+      <NewYorkTimesLogo
+        aria-hidden="true"
+        className="mt-2 h-auto max-h-[88px] w-auto max-w-full fill-black"
+      />
+    ),
+  },
+  {
+    name: "Star Tribune",
+    href:
+      "https://www.startribune.com/khues-kitchen-st-paul-best-" +
+      "new-restauarant-quang-minneapolis/601533607",
+    carouselWidth: 200,
+    desktopWidth: 180,
+    logo: (
+      <Image
+        src={starTribuneLogo}
+        alt=""
+        width={216}
+        height={91.8}
+        className="mb-1 h-auto max-h-[88px] w-auto max-w-full object-contain"
+      />
+    ),
+  },
+  {
+    name: "KARE 11",
+    href:
+      "https://www.kare11.com/article/news/local/mpls-chef-credits-" +
+      "his-mom-for-inspiration/89-0f237053-85cf-48ae-96f7-8cbebb780555",
+    carouselWidth: 160,
+    desktopWidth: 155,
+    logo: (
+      <Image
+        src={kare11Logo}
+        alt=""
+        width={150}
+        height={63.75}
+        className="mb-[-4px] h-auto max-h-[88px] w-auto max-w-full object-contain"
+      />
+    ),
+  },
+  {
+    name: "MPR News",
+    href:
+      "https://www.mprnews.org/story/2023/12/27/appetites-looks-" +
+      "back-on-2023-restaurants-vietnamese-meatballs-and-the-" +
+      "secret-to-entertaining",
+    carouselWidth: 155,
+    desktopWidth: 155,
+    logo: (
+      <Image
+        src={mprLogo}
+        alt=""
+        width={150}
+        height={63.75}
+        className="!h-[40px] max-h-[88px] w-auto max-w-full object-contain"
+      />
+    ),
+  },
+  {
+    name: "CBS News Minnesota",
+    href:
+      "https://www.cbsnews.com/minnesota/news/khues-kitchen-" +
+      "reopens-midcity-kitchen/",
+    carouselWidth: 170,
+    desktopWidth: 165,
+    logo: (
+      <WCCOLogo
+        aria-hidden="true"
+        className="h-auto max-h-[88px] w-auto max-w-full"
+      />
+    ),
+  },
+  {
+    name: "Heavy Table",
+    href: "https://heavytable.substack.com/i/160888645/now-open-up-to-months",
+    carouselWidth: 115,
+    desktopWidth: 105,
+    logo: (
+      <Image
+        src={heavyTableLogo}
+        alt=""
+        width={98}
+        height={42}
+        className="h-auto max-h-[88px] w-auto max-w-full object-contain"
+      />
+    ),
+  },
+  {
+    name: "Mpls.St.Paul Magazine",
+    href:
+      "https://mspmag.com/eat-and-drink/restaurant-review-" +
+      "homecoming-khues-kitchen/",
+    carouselWidth: 90,
+    desktopWidth: 70,
+    logo: (
+      <Image
+        src={mspMagLogo}
+        alt=""
+        width={50.5}
+        height={34.5}
+        className="h-auto max-h-[88px] w-auto max-w-full object-contain"
+      />
+    ),
+  },
+  {
+    name: "The Tasting Notes",
+    href:
+      "https://thetastingnotes.co/khues-kitchen-resilience-and-" +
+      "flavor-in-equal-measure/",
+    carouselWidth: 210,
+    desktopWidth: 210,
+    logo: (
+      <Image
+        src={theTastingNotesLogo}
+        alt=""
+        width={180}
+        height={100}
+        className="mr-4 h-auto max-h-[88px] w-auto max-w-full object-contain xl:mr-0"
+      />
+    ),
+  },
+];
 
 export default function Home() {
   const viewportLabel =
@@ -57,6 +203,7 @@ export default function Home() {
 
   const [pressReviewsApi, setPressReviewsApi] = useState<CarouselApi>();
   const [pressReviewsSlide, setPressReviewsSlide] = useState(0);
+  const [pressReviewSnaps, setPressReviewSnaps] = useState<number[]>([]);
 
   const handleSetPressReviewsApi = useCallback((api: CarouselApi) => {
     if (!api) {
@@ -527,180 +674,97 @@ export default function Home() {
         <StaticLotus className="absolute right-[-30px] top-[-30px] size-[90px] rotate-[-135deg] fill-primary/50 sm:-right-8 sm:-top-8 sm:size-24" />
         <StaticLotus className="absolute bottom-[-30px] left-[-30px] size-[90px] rotate-[45deg] fill-primary/50 sm:-bottom-8 sm:-left-8 sm:size-24" />
 
-        <div className="baseFlex gap-2 rounded-md rounded-t-none border border-t-0 bg-offwhite/40 p-2 px-8 font-medium shadow-sm xl:text-[18px]">
-          <HiOutlineNewspaper className="size-5 xl:mb-0.5" />
+        <div className="baseFlex gap-2 rounded-md rounded-t-none border border-t-0 bg-offwhite/40 p-2 px-8 font-medium shadow-sm pressReviewsCarousel:text-[18px]">
+          <HiOutlineNewspaper className="size-5 pressReviewsCarousel:mb-0.5" />
           Find us on
         </div>
+
         <Carousel
           setApi={handleSetPressReviewsApi}
           opts={{
+            align: "center",
+            containScroll: false,
+            loop: true,
+            slidesToScroll: 1,
             breakpoints: {
-              "(min-width: 1250px)": {
+              "(min-width: 1350px)": {
                 active: false,
               },
             },
-            loop: true,
           }}
-          style={{
-            overflow: "hidden",
-            ...(viewportLabel.includes("mobile") && {
-              WebkitMask:
-                "linear-gradient(90deg, hsl(40deg, 100%, 99%), white 20%, white 80%, hsla(144deg, 61%, 20%, 0.1))",
-              mask: "linear-gradient(90deg, transparent, white 20%, white 80%, transparent)",
-            }),
-          }}
+          className={[
+            "mx-auto h-[104px] w-full overflow-hidden",
+            "[mask-image:linear-gradient(to_right,transparent,black_8%,",
+            "black_92%,transparent)]",
+            "[-webkit-mask-image:linear-gradient(to_right,transparent,",
+            "black_8%,black_92%,transparent)]",
+            "pressReviewsCarousel:[-webkit-mask-image:none] pressReviewsCarousel:[mask-image:none]",
+          ].join("")}
         >
-          <CarouselContent className="relative mb-5 mt-3 xl:mb-4 xl:mt-4 xl:w-[1250px]">
-            <CarouselItem className="baseVertFlex basis-[55%] rounded-md md:basis-[35%] xl:basis-[15.9%]">
-              <Button variant={"text"} className="!p-0" asChild>
+          <CarouselContent
+            className={[
+              "ml-0 h-[104px] items-center gap-3",
+              "pressReviewsCarousel:flex pressReviewsCarousel:translate-x-0 pressReviewsCarousel:justify-center",
+            ].join(" ")}
+          >
+            {pressReviews.map((review) => (
+              <CarouselItem
+                key={review.name}
+                style={
+                  {
+                    "--slide-width": `${review.carouselWidth}px`,
+                    "--slide-width-xl": `${review.desktopWidth}px`,
+                  } as React.CSSProperties
+                }
+                className={[
+                  "flex min-w-0 shrink-0 grow-0",
+                  "basis-[var(--slide-width)] pl-0",
+                  "pressReviewsCarousel:basis-[var(--slide-width-xl)]",
+                ].join(" ")}
+              >
                 <a
-                  href="https://www.startribune.com/khues-kitchen-st-paul-best-new-restauarant-quang-minneapolis/601533607"
-                  className="baseFlex"
+                  href={review.href}
+                  aria-label={`Read coverage from ${review.name}`}
+                  className={[
+                    "flex w-full items-center justify-center",
+                    "overflow-hidden rounded-md px-2",
+                    "transition-colors duration-200",
+                    "focus-visible:outline-none focus-visible:ring-2",
+                    "focus-visible:ring-inset focus-visible:ring-primary",
+                  ].join(" ")}
                 >
-                  <Image
-                    src={starTribuneLogo}
-                    alt="Star Tribune's logo"
-                    width={216}
-                    height={91.8}
-                    className="mb-2"
-                  />
+                  {review.logo}
                 </a>
-              </Button>
-            </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[55%] rounded-md md:basis-[35%] xl:basis-[15.9%]">
-              <Button variant={"text"} className="!p-0" asChild>
-                <a
-                  href="https://www.kare11.com/article/news/local/mpls-chef-credits-his-mom-for-inspiration/89-0f237053-85cf-48ae-96f7-8cbebb780555"
-                  className="baseFlex"
-                >
-                  <Image
-                    src={kare11Logo}
-                    alt="Kare 11's logo"
-                    width={150}
-                    height={63.75}
-                  />
-                </a>
-              </Button>
-            </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[55%] rounded-md md:basis-[35%] xl:basis-[15.9%]">
-              <Button variant={"text"} className="!p-0" asChild>
-                <a
-                  href="https://www.mprnews.org/story/2023/12/27/appetites-looks-back-on-2023-restaurants-vietnamese-meatballs-and-the-secret-to-entertaining"
-                  className="baseFlex"
-                >
-                  <Image
-                    src={mprLogo}
-                    alt="MPR's logo"
-                    width={150}
-                    height={63.75}
-                  />
-                </a>
-              </Button>
-            </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[55%] rounded-md md:basis-[35%] xl:basis-[15.9%]">
-              <Button variant={"text"} className="!p-0" asChild>
-                <a
-                  href="https://www.cbsnews.com/minnesota/news/khues-kitchen-reopens-midcity-kitchen/"
-                  aria-label="CBS News Logo"
-                  className="baseFlex"
-                >
-                  <WCCOLogo className="h-[63.75px] w-[150px]" />
-                </a>
-              </Button>
-            </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[40%] rounded-md md:basis-[30%] xl:basis-[12.5%]">
-              <Button variant={"text"} className="!p-0" asChild>
-                <a
-                  href="https://heavytable.substack.com/i/160888645/now-open-up-to-months"
-                  className="baseFlex"
-                >
-                  <Image
-                    src={heavyTableLogo}
-                    alt="Heavy Table's logo"
-                    width={98}
-                    height={42}
-                  />
-                </a>
-              </Button>
-            </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[35%] rounded-md md:basis-[25%] xl:basis-[8%]">
-              <Button variant={"text"} className="!p-0" asChild>
-                <a
-                  href="https://mspmag.com/eat-and-drink/restaurant-review-homecoming-khues-kitchen/"
-                  className="baseFlex"
-                >
-                  <Image
-                    src={mspMagLogo}
-                    alt="Mpls.St.Paul Magazine's logo"
-                    width={50.5}
-                    height={34.5}
-                  />
-                </a>
-              </Button>
-            </CarouselItem>
-            <CarouselItem className="baseVertFlex basis-[50%] rounded-md md:basis-[35%] xl:basis-[15.9%]">
-              <Button variant={"text"} className="!p-0" asChild>
-                <a
-                  href="https://thetastingnotes.co/khues-kitchen-resilience-and-flavor-in-equal-measure/"
-                  className="baseFlex"
-                >
-                  <Image
-                    src={theTastingNotesLogo}
-                    alt="The Tasting Note's logo"
-                    width={180}
-                    height={100}
-                  />
-                </a>
-              </Button>
-            </CarouselItem>
+              </CarouselItem>
+            ))}
           </CarouselContent>
         </Carousel>
 
-        {/* (below xl breakpoint only) dots to show which review is being viewed at the moment */}
-        <div className="baseFlex gap-2 xl:hidden">
-          <Button asChild>
-            <div
-              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 0 ? "!bg-primary" : "!bg-stone-300"}`}
-              onClick={() => pressReviewsApi?.scrollTo(0)}
-            />
-          </Button>
-          <Button asChild>
-            <div
-              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 1 ? "!bg-primary" : "!bg-stone-300"}`}
-              onClick={() => pressReviewsApi?.scrollTo(1)}
-            />
-          </Button>
-          <Button asChild>
-            <div
-              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 2 ? "!bg-primary" : "!bg-stone-300"}`}
-              onClick={() => pressReviewsApi?.scrollTo(2)}
-            />
-          </Button>
-          <Button asChild>
-            <div
-              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 3 ? "!bg-primary" : "!bg-stone-300"}`}
-              onClick={() => pressReviewsApi?.scrollTo(3)}
-            />
-          </Button>
-          <Button asChild>
-            <div
-              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 4 ? "!bg-primary" : "!bg-stone-300"}`}
-              onClick={() => pressReviewsApi?.scrollTo(4)}
-            />
-          </Button>
-          <Button asChild>
-            <div
-              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 5 ? "!bg-primary" : "!bg-stone-300"}`}
-              onClick={() => pressReviewsApi?.scrollTo(5)}
-            />
-          </Button>
-          <Button asChild>
-            <div
-              className={`!size-2 cursor-pointer rounded-full !p-0 ${pressReviewsSlide === 6 ? "!bg-primary" : "!bg-stone-300"}`}
-              onClick={() => pressReviewsApi?.scrollTo(6)}
-            />
-          </Button>
-        </div>
+        <nav
+          aria-label="Press review carousel navigation"
+          className="mt-3 flex items-center justify-center gap-2 pressReviewsCarousel:hidden"
+        >
+          {[0, 1, 2, 3, 4, 5, 6, 7].map((_, index) => {
+            const isSelected = pressReviewsSlide === index;
+            const review = pressReviews[index];
+
+            return (
+              <Button
+                key={review?.name ?? index}
+                type="button"
+                aria-label={`Show ${review?.name ?? `review ${index + 1}`}`}
+                aria-current={isSelected ? "true" : undefined}
+                onClick={() => pressReviewsApi?.scrollTo(index)}
+                className={[
+                  "group flex !size-2 items-center justify-center rounded-full !p-0",
+                  "focus-visible:outline-none focus-visible:ring-2",
+                  "focus-visible:ring-primary focus-visible:ring-offset-2",
+                  `${pressReviewsSlide === index ? "!bg-primary" : "!bg-stone-300"}`,
+                ].join(" ")}
+              ></Button>
+            );
+          })}
+        </nav>
       </div>
 
       <ParallaxProvider scrollAxis="vertical">
