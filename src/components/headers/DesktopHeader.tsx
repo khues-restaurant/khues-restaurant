@@ -44,7 +44,7 @@ function DesktopHeader() {
           prefetch={false}
           scroll={false}
           href={"/"}
-          className={`${classes.logo ?? ""} mr-4 !px-0 !py-8`}
+          className={`${classes.logo ?? ""} mr-[8px] !px-0 !py-8`}
         >
           <div className="baseVertFlex h-[60px] w-[65.39px] gap-0">
             <StaticLotus className="size-10 fill-primary" />
@@ -57,7 +57,7 @@ function DesktopHeader() {
       </Button>
 
       <div
-        className={`${classes.mainLinks} ${charis.className} baseFlex w-full !justify-start gap-2`}
+        className={`${classes.mainLinks} ${charis.className} baseFlex ml-8 w-full !justify-start gap-2`}
       >
         <Button
           variant={asPath.includes("/menu") ? "activeLink" : "link"}
