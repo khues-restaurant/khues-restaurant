@@ -92,7 +92,7 @@ export const menuCategories: MenuCategory[] = [
         name: "Grilled Thick-Cut Pork Chop",
         description:
           "Peppercorn marinade, jasmine rice, scallion oil, nước mắm salad, fried egg",
-        price: 3600,
+        price: 3500,
         showUndercookedOrRawDisclaimer: true,
         isDairyFree: true,
       },
