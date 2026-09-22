@@ -34,7 +34,7 @@ export const menuCategories: MenuCategory[] = [
         name: "Crispy Pork Lettuce Wraps",
         description:
           "Vietnamese roast pork, woven noodles, butter lettuce, cucumbers, herb salad, fish sauce vinaigrette",
-        price: 1500,
+        price: 1700,
         isWeekendSpecial: true,
         isDairyFree: true,
         isGlutenFree: true,
@@ -43,7 +43,7 @@ export const menuCategories: MenuCategory[] = [
         name: "Khue's Chicken Salad",
         description:
           "Taiwanese cabbage, rau ram, thai chiles, fish sauce vinaigrette, crushed peanuts",
-        price: 1500,
+        price: 1600,
         isDairyFree: true,
         isGlutenFree: true,
         isSpicy: true,
@@ -57,7 +57,7 @@ export const menuCategories: MenuCategory[] = [
         name: "Roast Pork Fried Rice",
         description:
           "Scallion oil, crispy pork, lap xuong, fried egg, chili crunch. Can be vegetarian.",
-        price: 1600,
+        price: 1700,
         showUndercookedOrRawDisclaimer: true,
         isDairyFree: true,
       },
@@ -65,13 +65,13 @@ export const menuCategories: MenuCategory[] = [
         name: "Spicy Chicken Sandwich",
         description:
           "Brioche bun, lettuce, tomato, house pickles, herb aioli, chili crunch",
-        price: 1700,
+        price: 1800,
       },
       {
         name: "20 oz Grilled Ribeye",
         description:
           "Traditional Vietnamese marinade, jasmine rice, yu choy, scallions",
-        price: 5100,
+        price: 5900,
         showUndercookedOrRawDisclaimer: true,
         isDairyFree: true,
       },
@@ -86,13 +86,13 @@ export const menuCategories: MenuCategory[] = [
       {
         name: "Chili Crunch Wings",
         description: "Green garlic ranch, house pickles",
-        price: 1600,
+        price: 1700,
       },
       {
         name: "Grilled Thick-Cut Pork Chop",
         description:
           "Peppercorn marinade, jasmine rice, scallion oil, nước mắm salad, fried egg",
-        price: 2900,
+        price: 3600,
         showUndercookedOrRawDisclaimer: true,
         isDairyFree: true,
       },
@@ -100,7 +100,7 @@ export const menuCategories: MenuCategory[] = [
         name: "Bún Chay | Rice Noodle Salad",
         description:
           "Crispy tofu, vermicelli, soy vinaigrette, herb salad, perilla leaf, crushed peanuts",
-        price: 1900,
+        price: 2000,
         isVegetarian: true,
         isVegan: true,
       },
@@ -112,8 +112,8 @@ export const menuCategories: MenuCategory[] = [
       {
         name: "Cà Phê Sữa Đá Affogato",
         description:
-          "Vietnamese coffee, vanilla ice cream, black sesame coconut tuile.",
-        price: 800,
+          "Vietnamese coffee, vanilla ice cream, black sesame coconut shard.",
+        price: 900,
         isVegetarian: true,
         isGlutenFree: true,
       },
@@ -121,7 +121,7 @@ export const menuCategories: MenuCategory[] = [
         name: "Thai Tea Tres Leches",
         description:
           "Milk soaked chiffon cake, caramelized coconut cream, shortbread crumble, brown sugar boba",
-        price: 1200,
+        price: 1400,
         isVegetarian: true,
       },
     ],
